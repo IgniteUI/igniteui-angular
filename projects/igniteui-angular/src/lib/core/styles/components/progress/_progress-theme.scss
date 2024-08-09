@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:math';
 @use 'sass:meta';
 @use 'sass:list';
 @use '../../base' as *;
@@ -524,22 +525,31 @@
     }
 
     %circular-text {
+        $scale-factor: 2.28571;
+
+        @if $variant == 'indigo-design' {
+            $scale-factor: 3;
+        }
+
+        @if $variant == 'bootstrap' {
+            $scale-factor: 2.7;
+        }
+
+        --stroke-scale: calc(#{$diameter} / #{unitless(map.get($theme, 'diameter'))});
+        $font-size: calc($diameter / $scale-factor - #{unitless($stroke-width)} * var(--stroke-scale));
+
         position: absolute;
         inset-block-start: 50%;
         inset-inline-start: 50%;
         transform: translate(-50%, -50%);
         color: var-get($theme, 'text-color');
-        font-size: calc($diameter / 2.4 - $stroke-width);
+        font-size: #{$font-size};
         line-height: normal;
         text-align: center;
         font-weight: 600;
 
         @if $variant == 'bootstrap' or $variant == 'fluent' {
             font-weight: 700;
-        }
-
-        @if $variant == 'indigo-design' or $variant == 'bootstrap' {
-            font-size: calc($diameter / 3 - $stroke-width);
         }
     }
 
