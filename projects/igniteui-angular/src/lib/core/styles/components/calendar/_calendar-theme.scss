@@ -1323,10 +1323,10 @@
             &::after {
                 content: '';
                 position: absolute;
-                width: calc(100% - #{$border-size * 2});
-                height: calc(100% - #{$border-size * 2});
-                inset-inline-start: calc(#{$border-size});
-                inset-block-start: calc(#{$border-size});
+                width: 100%;
+                height: 100%;
+                inset-inline-start: 0;
+                inset-block-start: 0;
                 z-index: 0;
                 border-radius: inherit;
                 border: $border-size solid transparent;
@@ -1511,6 +1511,12 @@
     %date-weekend {
         %date-inner {
             color: var-get($theme, 'weekend-color');
+
+            @if $variant == 'indigo-design' {
+                &:hover {
+                    color: var-get($theme, 'date-hover-foreground');
+                }
+            }
         }
     }
 
