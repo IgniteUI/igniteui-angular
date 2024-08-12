@@ -2080,13 +2080,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    protected override calcGridHeadRow() {
-    }
-
     protected override buildDataView(data: any[]) {
         this._dataView = data;
     }
