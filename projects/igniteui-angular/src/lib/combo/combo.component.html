@@ -39,7 +39,7 @@
         <igx-input-group *ngIf="displaySearchInput" theme="material" >
             <input igxInput #searchInput name="searchInput" autocomplete="off" type="text"
                    [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
-                   (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="searchPlaceholder"
+                   (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="getSearchPlaceholderText()"
                    aria-autocomplete="list" role="searchbox" aria-label="search"/>
             <igx-suffix *ngIf="showSearchCaseIcon" (click)="toggleCaseSensitive()">
                 <span [ngClass]="filteringOptions.caseSensitive? 'igx-combo__case-icon--active' : 'igx-combo__case-icon'">
@@ -59,7 +59,7 @@
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id" aria-multiselectable="true"
         [attr.aria-activedescendant]="activeDescendant">
         <igx-combo-item [itemHeight]="itemHeight" *igxFor="let item of data
-            | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction
+            | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction:disableFiltering
             | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
             [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex" [role]="item?.isHeader? 'group' : 'option'">
