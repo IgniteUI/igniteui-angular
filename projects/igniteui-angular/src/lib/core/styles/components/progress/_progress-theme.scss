@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:math';
 @use 'sass:meta';
 @use 'sass:list';
 @use '../../base' as *;
@@ -398,6 +399,7 @@
 /// @param {Color} $base-circle-color [null] - The base circle fill color.
 /// @param {Color | List<Color>} $progress-circle-color [null] - The progress circle fill color.
 /// @param {Color} $text-color [null] - The value text color.
+/// @param {Number} $diameter [null] - The progress circle diameter.
 ///
 /// @requires $light-material-schema
 ///
@@ -412,8 +414,8 @@
 
     $base-circle-color: null,
     $progress-circle-color: null,
-
-    $text-color: null
+    $text-color: null,
+    $diameter: null
 ) {
     $name: 'igx-circular-bar';
     $circular-bar-schema: ();
@@ -446,6 +448,7 @@
         progress-circle-color-start: $progress-circle-color-start,
         progress-circle-color-end: $progress-circle-color-end,
         text-color: $text-color,
+        diameter: $diameter,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -462,26 +465,14 @@
     @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'variant');
-
-    $circular-size: map.get((
-        'material': rem(32px),
-        'fluent': rem(32px),
-        'bootstrap': rem(54px),
-        'indigo': rem(48px),
-    ), $variant);
-
-    $stroke-width: map.get((
-        'material': rem(4px),
-        'fluent': rem(4px),
-        'bootstrap': rem(4px),
-        'indigo': rem(4px),
-    ), $variant);
+    $stroke-width: rem(4px);
+    $diameter: var-get($theme, 'diameter');
 
     %circular-display {
         display: inline-flex;
         flex: 1 1 auto;
-        width: $circular-size;
-        height: $circular-size;
+        width: $diameter;
+        height: $diameter;
         position: relative;
 
         svg {
@@ -533,12 +524,32 @@
     }
 
     %circular-text {
+        $scale-factor: 2.28571;
+
+        @if $variant == 'indigo-design' {
+            $scale-factor: 3;
+        }
+
+        @if $variant == 'bootstrap' {
+            $scale-factor: 2.7;
+        }
+
+        --stroke-scale: calc(#{$diameter} / #{unitless(map.get($theme, 'diameter'))});
+        $font-size: round(calc($diameter / $scale-factor - #{unitless($stroke-width)} * var(--stroke-scale)), 1px);
+
         position: absolute;
         inset-block-start: 50%;
         inset-inline-start: 50%;
         transform: translate(-50%, -50%);
-        text-align: center;
         color: var-get($theme, 'text-color');
+        font-size: #{$font-size};
+        line-height: normal;
+        text-align: center;
+        font-weight: 600;
+
+        @if $variant == 'bootstrap' or $variant == 'fluent' {
+            font-weight: 700;
+        }
     }
 
     %circular-text--hidden {
@@ -561,30 +572,6 @@
 
         to {
             stroke-dashoffset: 120;
-        }
-    }
-}
-
-// Adds typography styles for the igx-circular-bar component.
-/// Uses custom typography
-/// @group typography
-/// @param {Map} $categories [(text: 'h6')] - The categories from the typographic scale used for type styles.
-@mixin circular-bar-typography($categories: (text: 'h6')) {
-    $text: map.get($categories, 'text');
-
-    @if $text {
-        %circular-text {
-            @include type-style($text) {
-                font-size: rem(12px);
-                line-height: rem(16px);
-                margin: 0;
-            }
-        }
-    } @else {
-        %circular-text {
-            font-size: rem(12px);
-            font-weight: 700;
-            line-height: rem(16px);
         }
     }
 }
