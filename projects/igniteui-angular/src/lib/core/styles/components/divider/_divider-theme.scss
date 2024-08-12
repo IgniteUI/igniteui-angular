@@ -69,7 +69,7 @@
     %igx-divider-display:not(%igx-divider--vertical) {
         display: flex;
         min-height: rem(1px);
-        width: 100%;
+        min-width: rem(1px);
         position: relative;
 
         &::after {
