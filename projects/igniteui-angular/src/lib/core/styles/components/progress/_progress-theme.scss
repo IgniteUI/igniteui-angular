@@ -536,7 +536,7 @@
         }
 
         --stroke-scale: calc(#{$diameter} / #{unitless(map.get($theme, 'diameter'))});
-        $font-size: calc($diameter / $scale-factor - #{unitless($stroke-width)} * var(--stroke-scale));
+        $font-size: round(calc($diameter / $scale-factor - #{unitless($stroke-width)} * var(--stroke-scale)), 1px);
 
         position: absolute;
         inset-block-start: 50%;
