@@ -721,6 +721,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /** @hidden */
     public ngAfterViewInit() {
+        this.cdr.detach();
+
         if (!this.theme) {
             this.theme = this.themeService.getComponentTheme(this.element);
         }
@@ -743,6 +745,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                     );
             }
         }
+
+        this.cdr.detectChanges();
+        this.cdr.reattach();
     }
 
     /** @hidden */
