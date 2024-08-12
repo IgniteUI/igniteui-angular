@@ -333,8 +333,6 @@
         'indigo': $button-padding-indigo-inline,
     ), $variant);
 
-    @debug $button-padding-inline;
-
     $button-padding-block: map.get((
         'material': $button-padding-material-block,
         'fluent': $button-padding-fluent-block,
@@ -474,7 +472,6 @@
         align-items: center;
         justify-content: center;
         min-width: $button-width;
-        @debug $button-padding-inline;
         padding-inline: pad-inline(
             map.get($button-padding-inline, 'compact'),
             map.get($button-padding-inline, 'cosy'),
