@@ -277,7 +277,7 @@
         material: .1s,
         fluent: .1s,
         bootstrap: .15s,
-        indigo-design: .15s
+        indigo: .15s
     ), $variant);
 
     $button-transition: color $time ease-in-out,
@@ -327,31 +327,33 @@
     );
 
     $button-padding-inline: map.get((
-        material: $button-padding-inline,
-        fluent: $button-padding-inline,
-        bootstrap: $button-padding-inline,
-        indigo-design: $button-padding-indigo-inline,
+        'material': $button-padding-inline,
+        'fluent': $button-padding-inline,
+        'bootstrap': $button-padding-inline,
+        'indigo': $button-padding-indigo-inline,
     ), $variant);
 
+    @debug $button-padding-inline;
+
     $button-padding-block: map.get((
-        material: $button-padding-material-block,
-        fluent: $button-padding-fluent-block,
-        bootstrap: $button-padding-bootstrap-block,
-        indigo-design: $button-padding-indigo-block,
+        'material': $button-padding-material-block,
+        'fluent': $button-padding-fluent-block,
+        'bootstrap': $button-padding-bootstrap-block,
+        'indigo': $button-padding-indigo-block,
     ), $variant);
 
     $outlined-button-padding-inline: map.get((
-        material: $button-padding-inline,
-        fluent: $button-padding-inline,
-        bootstrap: $button-padding-inline,
-        indigo-design: $button-padding-indigo-inline,
+        'material': $button-padding-inline,
+        'fluent': $button-padding-inline,
+        'bootstrap': $button-padding-inline,
+        'indigo': $button-padding-indigo-inline,
     ), $variant);
 
     $outlined-button-padding-block: map.get((
-        material: $button-padding-material-block,
-        fluent: $button-padding-fluent-block,
-        bootstrap: $button-padding-bootstrap-block,
-        indigo-design: $button-padding-indigo-block
+        'material': $button-padding-material-block,
+        'fluent': $button-padding-fluent-block,
+        'bootstrap': $button-padding-bootstrap-block,
+        'indigo': $button-padding-indigo-block
     ), $variant);
 
     $button-floating-padding-block: (
@@ -387,68 +389,68 @@
     );
 
     $icon-sizes: map.get((
-        material: rem(18px),
-        fluent: rem(18px),
-        bootstrap: rem(18px),
-        indigo-design: rem(16px),
+        'material': rem(18px),
+        'fluent': rem(18px),
+        'bootstrap': rem(18px),
+        'indigo': rem(16px),
     ), $variant);
 
     $icon-in-button-size: $icon-sizes;
 
     $contained-shadow: map.get((
-        material: var-get($contained-theme, 'resting-shadow'),
-        fluent: none,
-        bootstrap: none,
-        indigo-design: none
+        'material': var-get($contained-theme, 'resting-shadow'),
+        'fluent': none,
+        'bootstrap': none,
+        'indigo': none
     ), $variant);
 
     $contained-shadow--hover: map.get((
-        material: var-get($contained-theme, 'hover-shadow'),
-        fluent: none,
-        bootstrap: none,
-        indigo-design: none
+        'material': var-get($contained-theme, 'hover-shadow'),
+        'fluent': none,
+        'bootstrap': none,
+        'indigo': none
     ), $variant);
 
     $contained-shadow--focus: map.get((
-        material: var-get($contained-theme, 'focus-shadow'),
-        fluent: 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
-        bootstrap: 0 0 0 rem(4px) var-get($contained-theme, 'shadow-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color')
+        'material': var-get($contained-theme, 'focus-shadow'),
+        'fluent': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+        'bootstrap': 0 0 0 rem(4px) var-get($contained-theme, 'shadow-color'),
+        'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color')
     ), $variant);
 
     $contained-shadow--active: map.get((
-        material: var-get($contained-theme, 'active-shadow'),
-        fluent: 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
-        bootstrap: 0 0 0 rem(4px) var-get($contained-theme, 'shadow-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color')
+        'material': var-get($contained-theme, 'active-shadow'),
+        'fluent': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color'),
+        'bootstrap': 0 0 0 rem(4px) var-get($contained-theme, 'shadow-color'),
+        'indigo': 0 0 0 rem(3px) var-get($contained-theme, 'shadow-color')
     ), $variant);
 
     $fab-shadow: map.get((
-        material: var-get($fab-theme, 'resting-shadow'),
-        fluent: none,
-        bootstrap: none,
-        indigo-design: none
+        'material': var-get($fab-theme, 'resting-shadow'),
+        'fluent': none,
+        'bootstrap': none,
+        'indigo': none
     ), $variant);
 
     $fab-shadow--hover: map.get((
-        material: var-get($fab-theme, 'hover-shadow'),
-        fluent: none,
-        bootstrap: none,
-        indigo-design: none
+        'material': var-get($fab-theme, 'hover-shadow'),
+        'fluent': none,
+        'bootstrap': none,
+        'indigo': none
     ), $variant);
 
     $fab-shadow--focus: map.get((
-        material: var-get($fab-theme, 'focus-shadow'),
-        fluent:  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
-        bootstrap: 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
+        'material': var-get($fab-theme, 'focus-shadow'),
+        'fluent':  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+        'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
+        'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
     ), $variant);
 
     $fab-shadow--active: map.get((
-        material: var-get($fab-theme, 'active-shadow'),
-        fluent:  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
-        bootstrap: 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
+        'material': var-get($fab-theme, 'active-shadow'),
+        'fluent':  0 0 0 rem(3px) var-get($fab-theme, 'shadow-color'),
+        'bootstrap': 0 0 0 rem(4px) var-get($fab-theme, 'shadow-color'),
+        'indigo': 0 0 0 rem(3px) var-get($fab-theme, 'shadow-color')
     ), $variant);
 
     %fluent-border {
@@ -472,6 +474,7 @@
         align-items: center;
         justify-content: center;
         min-width: $button-width;
+        @debug $button-padding-inline;
         padding-inline: pad-inline(
             map.get($button-padding-inline, 'compact'),
             map.get($button-padding-inline, 'cosy'),
@@ -497,7 +500,7 @@
             map.get($items-gap, 'comfortable')
         );
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             min-width: rem(28px);
         }
 
@@ -562,14 +565,14 @@
                 color: var-get($flat-theme, 'active-foreground');
             }
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 igx-icon {
                     color: var-get($flat-theme, 'icon-color-hover');
                 }
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             border-width: rem(2px);
             gap: pad-inline(
                 map.get($items-gap, 'compact'),
@@ -620,7 +623,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'shadow-color');
 
             &:active {
@@ -648,7 +651,7 @@
             map.get($outlined-button-padding-inline, 'comfortable')
         );
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             gap: pad-inline(
                 map.get($items-gap, 'compact'),
                 map.get($items-gap, 'cosy'),
@@ -681,7 +684,7 @@
                 color: var-get($outlined-theme, 'active-foreground');
             }
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 igx-icon {
                     color: var-get($outlined-theme, 'icon-color-hover');
                 }
@@ -704,7 +707,7 @@
 
         @if $variant == 'bootstrap' {
             box-shadow: 0 0 0 rem(4px) var-get($outlined-theme, 'shadow-color');
-        } @else if $variant == 'indigo-design' {
+        } @else if $variant == 'indigo' {
             box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
 
             igx-icon {
@@ -727,7 +730,7 @@
             color: var-get($outlined-theme, 'focus-foreground');
             border-color: var-get($outlined-theme, 'active-border-color');
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 igx-icon {
                     color: var-get($outlined-theme, 'icon-color-hover');
                 }
@@ -779,7 +782,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             border-width: rem(2px);
             gap: pad-inline(
                 map.get($items-gap, 'compact'),
@@ -838,7 +841,7 @@
             color: var-get($contained-theme, 'focus-foreground');
             background: var-get($contained-theme, 'focus-background');
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 igx-icon {
                     color: var-get($outlined-theme, 'icon-color-hover');
                 }
@@ -875,7 +878,7 @@
             map.get($button-floating-padding-inline, 'comfortable')
         );
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding-inline: pad-inline(
                 map.get($button-floating-padding-indigo-inline, 'compact'),
                 map.get($button-floating-padding-indigo-inline, 'cosy'),
@@ -918,7 +921,7 @@
                 color: var-get($fab-theme, 'active-foreground');
             }
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 igx-icon {
                     color: var-get($outlined-theme, 'icon-color-hover');
                 }
@@ -966,7 +969,7 @@
             background: var-get($fab-theme, 'focus-background');
             color: var-get($fab-theme, 'focus-foreground');
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 igx-icon {
                     color: var-get($outlined-theme, 'icon-color-hover');
                 }
