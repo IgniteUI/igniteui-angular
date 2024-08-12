@@ -224,7 +224,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
     }
 
     public ngAfterViewInit(): void {
-        this.theme = this.themeService.getTheme(this.element);
+        this.theme = this.themeService.getComponentTheme(this.element);
     }
 
     /** @hidden */

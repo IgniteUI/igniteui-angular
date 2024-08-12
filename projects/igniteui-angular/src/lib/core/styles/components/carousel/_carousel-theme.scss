@@ -147,6 +147,8 @@
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     %igx-carousel-display {
+        --theme: #{$variant};
+
         display: flex;
         position: relative;
         justify-content: center;

@@ -23,7 +23,7 @@ export class ThemeService {
      * Sets the theme of the component.
      * Allowed values of type IgxTheme.
      */
-    public theme: IgxTheme;
+    public globalTheme: IgxTheme;
     private theme$ = new BehaviorSubject<IgxTheme>("material");
 
     constructor(
@@ -31,15 +31,15 @@ export class ThemeService {
         private document: any,
     ) {
         this.theme$.asObservable().subscribe((value) => {
-            this.theme = value as IgxTheme;
+            this.globalTheme = value as IgxTheme;
         });
 
         this.init();
     }
 
     private init() {
-        const theme = globalThis
-            .getComputedStyle(this.document.body)
+        const theme = globalThis.window
+            ?.getComputedStyle(this.document.body)
             .getPropertyValue("--ig-theme")
             .trim();
 
@@ -48,7 +48,10 @@ export class ThemeService {
         }
     }
 
-    public getTheme(el: ElementRef) {
-        return globalThis.window.getComputedStyle(el.nativeElement).getPropertyValue('--theme') as IgxTheme;
+    public getComponentTheme(el: ElementRef) {
+        return globalThis.window
+        ?.getComputedStyle(el.nativeElement)
+        .getPropertyValue('--theme')
+        .trim() as IgxTheme;
     }
 }

@@ -1,6 +1,7 @@
 import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
+    AfterViewInit,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -88,7 +89,7 @@ export class CarouselHammerConfig extends HammerGestureConfig {
     imports: [IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 
-export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
+export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterViewInit, AfterContentInit {
 
     /**
      * Sets the `id` of the carousel.
@@ -587,26 +588,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
-        this.theme = this.theme ?? this.themeService.theme;
-
-        for (const icon of this._icons) {
-            switch(this.theme) {
-                case 'indigo':
-                    this.iconService.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get('indigo'),
-                    );
-                    break;
-                case 'material':
-                default:
-                    this.iconService.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get('material'),
-                    );
-            }
-        }
     }
 
 
@@ -735,6 +716,32 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
         if (this.stoppedByInteraction) {
             this.play();
+        }
+    }
+
+    /** @hidden */
+    public ngAfterViewInit() {
+        if (!this.theme) {
+            this.theme = this.themeService.getComponentTheme(this.element);
+        }
+
+        for (const icon of this._icons) {
+            switch(this.theme) {
+                case 'indigo':
+                    this.iconService.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get('indigo'),
+                    );
+                    break;
+                case 'material':
+                default:
+                    this.iconService.addIconRef(
+                        icon.name,
+                        icon.family,
+                        icon.ref.get('material'),
+                    );
+            }
         }
     }
 
