@@ -2261,9 +2261,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._allowFiltering = value;
             this.filteringService.registerSVGIcons();
 
-            if (!this._init) {
-                this.calcGridHeadRow();
-            }
 
             this.filteringService.isFilterRowVisible = false;
             this.filteringService.filteredColumn = null;
@@ -7000,23 +6997,9 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * @hidden
-     * @internal
-     */
-    protected calcGridHeadRow() {
-        if (this.maxLevelHeaderDepth) {
-            this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
-            const hasFilterRow = this._allowFiltering && this._filterMode === FilterMode.quickFilter;
-            const minSize = (this.maxLevelHeaderDepth + 1 + (hasFilterRow ? 1 : 0)) * this.defaultRowHeight / this._baseFontSize;
-            this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
-        }
-    }
-
-    /**
-     * @hidden
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        this.calcGridHeadRow();
 
         this.calcHeight = this._calculateGridBodyHeight();
         if (this.pinnedRowHeight && this.calcHeight) {
@@ -7947,7 +7930,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else {
                 this._shouldRecalcRowHeight = true;
             }
-        }
+        } 
     }
 
     // TODO: About to Move to CRUD

@@ -65,6 +65,19 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(grid.getColumnByName('ContactName').level).toEqual(expectedLevel);
         });
 
+        fit('should initialize a grid with correct header height', () => {
+            fixture = TestBed.createComponent(ColumnGroupTestComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+
+            const expectedGridHeaderHeight = 151;
+            const headerHeight = grid.nativeElement
+            .querySelector("igx-grid-header-row")
+            .getBoundingClientRect().height;
+            
+            expect(Math.round(headerHeight)).toEqual(expectedGridHeaderHeight);
+        });
+
         it('Should render column group headers correctly.', fakeAsync(() => {
             fixture = TestBed.createComponent(BlueWhaleGridComponent);
             fixture.detectChanges();
