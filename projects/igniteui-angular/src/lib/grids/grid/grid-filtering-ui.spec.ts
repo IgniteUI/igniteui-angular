@@ -42,7 +42,8 @@ import {
     IgxGridExternalESFComponent,
     IgxGridExternalESFTemplateComponent,
     IgxGridDatesFilteringComponent,
-    LoadOnDemandFilterStrategy
+    LoadOnDemandFilterStrategy,
+    IgxGridFilteringNumericComponent
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
@@ -71,7 +72,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridFilteringScrollComponent,
                 IgxGridFilteringMCHComponent,
                 IgxGridFilteringTemplateComponent,
-                IgxGridDatesFilteringComponent
+                IgxGridDatesFilteringComponent,
+                IgxGridFilteringNumericComponent
             ]
         });
     }));
@@ -902,6 +904,38 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chips[0].componentInstance.selected).toBeTruthy();
             expect(GridFunctions.getChipText(chips[0])).toEqual('Empty');
             expect(input.properties.readOnly).toBeTruthy();
+        }));
+
+        it('should correctly filter negative values', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridFilteringNumericComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+
+            GridFunctions.clickFilterCellChip(fix, 'Number');
+
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const input = filteringRow.query(By.directive(IgxInputDirective));
+
+            // Set input and confirm
+            GridFunctions.typeValueInFilterRowInput('-1', fix);
+
+            expect(input.componentInstance.value).toEqual('-1');
+            expect(grid.rowList.length).toEqual(1);
+
+            GridFunctions.typeValueInFilterRowInput('0', fix);
+
+            expect(input.componentInstance.value).toEqual('0');
+            expect(grid.rowList.length).toEqual(0);
+
+            GridFunctions.typeValueInFilterRowInput('-0.5', fix);
+
+            expect(input.componentInstance.value).toEqual('-0.5');
+            expect(grid.rowList.length).toEqual(1);
+
+            GridFunctions.typeValueInFilterRowInput('', fix);
+
+            expect(input.componentInstance.value).toEqual(null);
+            expect(grid.rowList.length).toEqual(3);
         }));
 
         it('Should focus input .', fakeAsync(() => {
