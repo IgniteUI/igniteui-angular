@@ -3951,7 +3951,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Clear filtering of ESF search.
             const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
-                .find((icon: any) => icon.innerText === 'cancel');
+                .find((icon: any) => icon.innerText === 'clear');
             clearIcon.click();
             fix.detectChanges();
 
@@ -6065,7 +6065,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Clear filtering of ESF search.
             const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
-                .find((icon: any) => icon.innerText === 'cancel');
+                .find((icon: any) => icon.innerText === 'clear');
             clearIcon.click();
             fix.detectChanges();
 

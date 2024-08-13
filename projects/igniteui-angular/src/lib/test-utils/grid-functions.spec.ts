@@ -1277,7 +1277,7 @@ export class GridFunctions {
     public static getFilterRowInputClearIcon(fix) {
         const suffix = GridFunctions.getFilterRowSuffix(fix);
         const clearIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
-            .find((icon: any) => icon.nativeElement.innerText === 'cancel');
+            .find((icon: any) => icon.nativeElement.innerText === 'clear');
         return clearIcon;
     }
 
