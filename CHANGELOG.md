@@ -18,6 +18,18 @@ All notable changes for each version of this project will be documented in this 
             this.iconService.registerFamilyAlias('my-family', 'my-family-class');
             this.iconService.setFamily('my-family', { className: 'my-family-class' });
         ```
+- `ColumnType`, `IgxColumn`
+    - Added a new `editorOptions` property that allows to pass optional parameters to control properties of the default column editors. Accepts an `IColumnEditorOptions` object with the `dateTimeFormat` property, that would be used as input format for the editors of
+    `date`, `dateTime` and `time` column data types:
+        ```ts
+            const editorOptions: IColumnEditorOptions = {
+                dateTimeFormat: 'MM/dd/YYYY',
+            }
+        ```
+        ```html
+            <igx-column field="sampleDate" dataType="date" [editorOptions]="editorOptions"></igx-column>
+        ```
+        If not set, the `dateTimeFormat` resolves to the `pipeArgs.displayFormat` property of the column, in case it is set and contains only numeric date-time parts or such that can be handled by the editors. Alternatively, a fallback input format as per the `IgxGrid`'s `locale` is used.
 
 ### General
 - `ColumnType`, `IgxColumn`, `IgxColumnGroup`, `IgxColumnLayout`
