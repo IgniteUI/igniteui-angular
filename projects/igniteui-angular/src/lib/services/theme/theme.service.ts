@@ -38,8 +38,8 @@ export class ThemeService {
     }
 
     private init() {
-        const theme = globalThis
-            .getComputedStyle(this.document.body)
+        const theme = globalThis.window
+            ?.getComputedStyle(this.document.body)
             .getPropertyValue("--ig-theme")
             .trim();
 
