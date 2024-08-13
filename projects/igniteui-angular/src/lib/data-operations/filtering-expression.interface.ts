@@ -1,3 +1,4 @@
+import { IExpressionTree } from 'igniteui-angular';
 import { IFilteringOperation } from './filtering-condition';
 
 /* mustCoerceToInt */
@@ -15,6 +16,6 @@ export declare interface IFilteringExpression {
     fieldName: string;
     condition: IFilteringOperation;
     searchVal?: any;
-    searchTree?: any;
+    searchTree?: IExpressionTree;
     ignoreCase?: boolean;
 }
