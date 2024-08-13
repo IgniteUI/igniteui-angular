@@ -137,10 +137,6 @@ const loadIconRefs = () => [
             name: 'clear',
             family: 'material',
         },
-        material: {
-            name: 'cancel',
-            family: 'material',
-        },
     }),
     addIcon('input_expand', {
         default: {
