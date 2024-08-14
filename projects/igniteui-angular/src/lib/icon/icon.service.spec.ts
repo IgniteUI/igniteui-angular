@@ -1,5 +1,6 @@
 import { TestBed, fakeAsync } from "@angular/core/testing";
-import { IconFamily, IconMeta, IgxIconService } from "./icon.service";
+import { IconFamily, IconMeta } from "./types";
+import { IgxIconService } from './icon.service';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
