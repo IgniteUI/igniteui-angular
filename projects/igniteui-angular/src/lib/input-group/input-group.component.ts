@@ -219,6 +219,8 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
         private cdr: ChangeDetectorRef,
         private themeService: ThemeService,
     ) {
+        this._theme = this.themeService.globalTheme;
+
         this._subscription = this._theme$.asObservable().subscribe(value => {
             this._theme = value as IgxTheme;
             this.cdr.detectChanges();
