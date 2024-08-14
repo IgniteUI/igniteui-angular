@@ -89,7 +89,7 @@
     %grid-excel-icon--filtered {
         igx-icon {
             color: if(
-                $variant == 'indigo-design',
+                $variant == 'indigo',
                 color($color: 'warn', $variant: 500),
                 color($color: 'secondary')
             );
@@ -116,12 +116,12 @@
             --item-hover-text-color: #{color($color: 'gray', $variant: 800)};
             --item-hover-icon-color: #{color($color: 'gray', $variant: 800)};
             --item-selected-text-color: #{if(
-                $variant == 'indigo-design',
+                $variant == 'indigo',
                 contrast-color($color: 'surface'),
                 color($color: 'secondary', $variant: 500)
             )};
             --item-selected-icon-color: #{if(
-                $variant == 'indigo-design',
+                $variant == 'indigo',
                 contrast-color($color: 'surface'),
                 color($color: 'secondary', $variant: 500)
             )};
@@ -252,7 +252,7 @@
     %grid-excel-actions--selected {
         igx-icon {
             color: if(
-                $variant == 'indigo-design',
+                $variant == 'indigo',
                 color($color: 'primary', $variant: 200),
                 color($color: 'secondary')
             );

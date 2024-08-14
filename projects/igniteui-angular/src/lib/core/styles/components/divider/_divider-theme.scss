@@ -100,7 +100,7 @@
                 transparent rem(20px)
             );
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 background: repeating-linear-gradient(
                     to right,
                     var-get($theme, 'color'),
@@ -122,7 +122,7 @@
                 transparent rem(20px)
             );
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 background: repeating-linear-gradient(
                     to bottom,
                     var-get($theme, 'color'),
