@@ -110,7 +110,7 @@
             box-shadow: none;
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding: rem(4px) rem(16px);
             min-height: rem(36px);
 

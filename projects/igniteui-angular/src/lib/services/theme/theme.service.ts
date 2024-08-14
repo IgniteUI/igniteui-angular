@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@angular/core";
+import { ElementRef, Inject, Injectable } from "@angular/core";
 import { mkenum } from "../../core/utils";
 import { BehaviorSubject } from "rxjs";
 import { DOCUMENT } from "@angular/common";
@@ -23,7 +23,7 @@ export class ThemeService {
      * Sets the theme of the component.
      * Allowed values of type IgxTheme.
      */
-    public theme: IgxTheme;
+    public globalTheme: IgxTheme;
     private theme$ = new BehaviorSubject<IgxTheme>("material");
 
     constructor(
@@ -31,7 +31,7 @@ export class ThemeService {
         private document: any,
     ) {
         this.theme$.asObservable().subscribe((value) => {
-            this.theme = value as IgxTheme;
+            this.globalTheme = value as IgxTheme;
         });
 
         this.init();
@@ -46,5 +46,12 @@ export class ThemeService {
         if (theme !== "") {
             this.theme$.next(theme as IgxTheme);
         }
+    }
+
+    public getComponentTheme(el: ElementRef) {
+        return globalThis.window
+        ?.getComputedStyle(el.nativeElement)
+        .getPropertyValue('--theme')
+        .trim() as IgxTheme;
     }
 }
