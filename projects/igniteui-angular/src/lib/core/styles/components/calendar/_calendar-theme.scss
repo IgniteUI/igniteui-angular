@@ -1856,7 +1856,6 @@
         }
     }
 
-
     @if $variant == 'indigo' {
         %date-selected-current-special {
             %date-inner {
@@ -1984,7 +1983,6 @@
 
             @if $variant == 'indigo' {
                 border-color: var-get($theme, 'date-current-border-color');
-                background: var-get($theme, 'date-special-range-background');
             }
 
             &:hover {
