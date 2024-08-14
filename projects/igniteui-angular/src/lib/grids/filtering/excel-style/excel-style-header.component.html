@@ -17,7 +17,7 @@
             (click)="esf.onPin()"
             [attr.aria-label]="esf.column.pinned ? esf.grid.resourceStrings.igx_grid_excel_unpin : esf.grid.resourceStrings.igx_grid_excel_pin"
         >
-            <igx-icon family="default" [name]="esf.column.pinned ? 'unpin-left' : 'pin-left'"></igx-icon>
+            <igx-icon family="default" [name]="esf.column.pinned ? 'unpin' : 'pin'"></igx-icon>
         </button>
         <button *ngIf="showHiding"
             type="button"
@@ -25,7 +25,7 @@
             (click)="esf.onHideToggle()"
             [attr.aria-label]="esf.column.hidden ? esf.grid.resourceStrings.igx_grid_excel_show : esf.grid.resourceStrings.igx_grid_excel_hide"
         >
-            <igx-icon family="default" [name]="esf.column.hidden ? 'visibility' : 'visibility_off'"></igx-icon>
+            <igx-icon family="default" [name]="esf.column.hidden ? 'show' : 'hide'"></igx-icon>
         </button>
     </div>
 </header>
