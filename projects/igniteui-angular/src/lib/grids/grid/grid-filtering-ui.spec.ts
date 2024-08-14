@@ -6919,9 +6919,9 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: Size)
     const headerTitle = excelMenu.querySelector('h4');
     const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix, excelMenu);
     const headerAreaPinIcon: HTMLElement =
-        headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin-left"') !== -1) as HTMLElement;
+        headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1) as HTMLElement;
     const headerAreaUnpinIcon: HTMLElement
-        = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin-left"') !== -1) as HTMLElement;
+        = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1) as HTMLElement;
     const headerAreaColumnHidingIcon: HTMLElement =
         headerIcons.find((buttonIcon: any) => buttonIcon.innerText === 'visibility_off') as HTMLElement;
 
