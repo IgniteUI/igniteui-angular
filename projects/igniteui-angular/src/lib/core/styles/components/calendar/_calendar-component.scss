@@ -315,6 +315,14 @@
             @extend %date-selected-current-active !optional;
         }
 
+        @include e(date, $mods: ('current', 'selected', 'special')) {
+            @extend %date-selected-current-special !optional;
+        }
+
+        @include e(date, $mods: ('current', 'selected', 'special', 'active')) {
+            @extend %date-selected-current-special-active !optional;
+        }
+
         @include e(date, 'special') {
             @extend %date-special !optional;
         }

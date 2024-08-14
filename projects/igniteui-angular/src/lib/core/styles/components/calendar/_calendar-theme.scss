@@ -1788,14 +1788,12 @@
     @if $variant == 'indigo-design' {
         %date-special-current-active {
             %date-inner {
-                color: var-get($theme, 'date-current-hover-foreground');
+                color: var-get($theme, 'date-special-focus-foreground');
                 background: var-get($theme, 'date-current-focus-background');
                 border-color: var-get($theme, 'date-current-focus-border-color');
             }
         }
-    }
 
-    @if $variant == 'indigo-design' {
         %date-special-current-selected {
             %date-inner {
                 &::after {
@@ -1840,29 +1838,13 @@
         %date-inner {
             color: var-get($theme, 'date-selected-current-foreground');
             background: var-get($theme, 'date-selected-current-background') ;
+            border-color: var-get($theme, 'date-selected-current-border-color');
 
-            @if $variant != 'indigo-design' {
-                border-color: var-get($theme, 'date-selected-current-border-color');
-            }
-
-            &::after {
-                @if $variant == 'indigo-design' {
-                    border-color: var-get($theme, 'date-current-border-color');
-                }
-            }
 
             &:hover {
                 color: var-get($theme, 'date-selected-current-hover-foreground');
                 background: var-get($theme, 'date-selected-current-hover-background');
-
-                @if $variant != 'indigo-design' {
-                    border-color: var-get($theme, 'date-selected-current-hover-border-color');
-                } @else {
-                    // stylelint-disable-next-line
-                    &::after {
-                        border-color: var-get($theme, 'date-current-hover-border-color');
-                    }
-                }
+                border-color: var-get($theme, 'date-selected-current-hover-border-color');
             }
         }
     }
@@ -1871,14 +1853,30 @@
         %date-inner {
             color: var-get($theme, 'date-selected-current-focus-foreground');
             background: var-get($theme, 'date-selected-current-focus-background');
+            border-color: var-get($theme, 'date-selected-current-focus-border-color');
+        }
+    }
 
-            @if $variant != 'indigo-design' {
-                border-color: var-get($theme, 'date-selected-current-focus-border-color');
+    @if $variant == 'indigo-design' {
+        %date-selected-current-special {
+            %date-inner {
+                &::after {
+                    border-color: var-get($theme, 'date-selected-special-border-color');
+                }
+
+                &:hover {
+                    &::after {
+                        border-color: var-get($theme, 'date-selected-special-hover-border-color');
+                    }
+
+                }
             }
+        }
 
-            &::after {
-                @if $variant == 'indigo-design' {
-                    border-color: var-get($theme, 'date-current-focus-border-color');
+        %date-selected-current-special-active {
+            %date-inner {
+                &::after {
+                    border-color: var-get($theme, 'date-selected-special-focus-border-color');
                 }
             }
         }
@@ -2080,7 +2078,7 @@
                 &::after {
                     width: calc($date-inner-size - #{rem(4px)});
                     height: calc($date-inner-size - #{rem(4px)});
-                    border-color: var-get($theme, 'date-selected-current-border-color');
+                    border-color: var-get($theme, 'date-selected-special-border-color');
                 }
 
                 &:hover {
@@ -2089,7 +2087,7 @@
 
                     // stylelint-disable-next-line
                     &::after {
-                        border-color: var-get($theme, 'date-selected-current-hover-border-color');
+                        border-color: var-get($theme, 'date-selected-special-hover-border-color');
                     }
                 }
             }
@@ -2106,7 +2104,6 @@
                 &::after {
                     width: calc($date-inner-size - #{rem(4px)});
                     height: calc($date-inner-size - #{rem(4px)});
-                    border-color: var-get($theme, 'date-selected-current-focus-border-color');
                 }
             }
         }
