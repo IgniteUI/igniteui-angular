@@ -72,10 +72,10 @@
 
     $variant: map.get($theme, '_meta', 'variant');
     $icon-button-size: map.get((
-        material: rem(36px),
-        fluent: rem(32px),
-        bootstrap: rem(36px),
-        indigo-design: rem(36px),
+        'material': rem(36px),
+        'fluent': rem(32px),
+        'bootstrap': rem(36px),
+        'indigo': rem(36px),
     ), $variant);
     $button-size: sizable(rem(28px), rem(28px), $icon-button-size);
     $icon-size: sizable(rem(14px), rem(14px), rem(18px));
@@ -179,7 +179,7 @@
                 color: var-get($theme, 'icon-color');
             }
 
-            @if $variant == 'indigo-design' or $variant == 'fluent' {
+            @if $variant == 'indigo' or $variant == 'fluent' {
                 border-radius: var-get($theme, 'actions-border-radius');
             }
         }
