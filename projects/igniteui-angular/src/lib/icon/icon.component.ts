@@ -140,7 +140,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
         private ref: ChangeDetectorRef,
     ) {
         this.family = this.iconService.defaultFamily.name;
-        this.iconService.setRefsByTheme(this.themeService.theme);
+        this.iconService.setRefsByTheme(this.themeService.globalTheme);
 
         this.iconService.iconLoaded
             .pipe(
