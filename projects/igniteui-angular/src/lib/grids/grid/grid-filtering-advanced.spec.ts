@@ -2152,6 +2152,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
             expect(input.getAttribute('ng-reflect-input-format')).toMatch(releaseTimeColumn.pipeArgs.format);
+        }));
 
         it('should handle advanced filtering correctly when grid columns and data are dynamically changed', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridAdvancedFilteringDynamicColumnsComponent);
