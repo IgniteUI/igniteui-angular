@@ -73,6 +73,13 @@ export class QueryBuilderComponent implements OnInit {
                 condition: IgxStringFilteringOperand.instance().condition('in'),
                 searchTree: innerTree
             });
+        tree.filteringOperands.push({
+            fieldName: 'Id',
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
+            searchVal: '123',
+            ignoreCase: true
+        });
+
         // tree.filteringOperands.push({
         //     fieldName: 'Structure',
         //     condition: IgxStringFilteringOperand.instance().condition('in'),

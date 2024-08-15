@@ -132,7 +132,7 @@
                     </ng-container>
                 </span>
             </igx-chip>
-            <ng-container *ngIf="isInEditMode()">
+            <!-- <ng-container *ngIf="isInEditMode()"> -->
                 <div
                     class="igx-filter-tree__expression-actions"
                     *ngIf="
@@ -166,7 +166,7 @@
                     >
                     </igx-icon>
                 </div>
-            </ng-container>
+            <!-- </ng-container> -->
         </div>
 
         <div
@@ -366,7 +366,8 @@
                 style="margin: 10px 0px 10px 0px"
                 [entities]="entities"
                 [parentExpression]="expressionItem"
-                [expressionTree]="expressionItem.expression.searchTree">
+                [expressionTree]="expressionItem.expression.searchTree"
+                (inEditModeChange)="onInEditModeChanged($event)">
             </igx-query-builder-tree>
         </ng-container>
 

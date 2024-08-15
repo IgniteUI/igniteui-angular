@@ -222,7 +222,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * ```
      */
     @Output()
-    public expressionTreeChange = new EventEmitter();
+    public expressionTreeChange = new EventEmitter<IExpressionTree>();
+
+    @Output()
+    public inEditModeChange = new EventEmitter<ExpressionOperandItem>();
     
     @ViewChild('entitySelect', { read: IgxSelectComponent })
     protected entitySelect: IgxSelectComponent;
@@ -488,10 +491,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         
         if (this._selectedReturnFields !== value && oldValue !== value) {
             this._selectedReturnFields = value;
-            // if (this._expressionTree) {
-            //     this._expressionTree.returnFields = value.length === 0 ? '*' : value;
-            //     // this.expressionTreeChange.emit();
-            // }
+
+            if (this._expressionTree) {
+                this._expressionTree.returnFields = value;
+                this.expressionTreeChange.emit(this._expressionTree);
+            }
         }
     }
 
@@ -609,7 +613,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     : this.selectedField.field;
 
             const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0]
-            if (innerQuery && (this._editedExpression.expression.condition.name === 'in' || this._editedExpression.expression.condition.name === 'notIn')) {
+            if (innerQuery && (this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) {
+                if (!this._editedExpression.expression.searchTree) {
+                    this._editedExpression.expression.searchTree = new FilteringExpressionsTree(innerQuery.expressionTree.operator);
+                }
+
                 this._editedExpression.expression.searchTree.entity = innerQuery.selectedEntity.name;
                 this._editedExpression.expression.searchTree.returnFields = innerQuery.selectedReturnFields;
                 this._editedExpression.expression.searchTree.filteringOperands = innerQuery.expressionTree.filteringOperands;
@@ -624,7 +632,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup);
         this._expressionTree.entity = this.selectedEntity.name;
         this._expressionTree.returnFields = this.selectedReturnFields;
-        this.expressionTreeChange.emit();
+        this.expressionTreeChange.emit(this._expressionTree);
     }
 
     /**
@@ -663,10 +671,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public operandCanBeCommitted(): boolean {
-        // TODO: fix when creating inner query
+        const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
 
         return this.selectedField && this.selectedCondition &&
-            (!!this.searchValue || !!this._editedExpression.expression.searchTree || this.selectedField.filters.condition(this.selectedCondition).isUnary);
+            (
+                !!this.searchValue ||
+                (innerQuery && !!innerQuery.expressionTree) ||
+                this.selectedField.filters.condition(this.selectedCondition).isUnary
+            );
     }
 
     /**
@@ -731,6 +743,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         if (this._editedExpression) {
             this._editedExpression.inEditMode = false;
+        }
+
+        if (this.parentExpression) {
+            this.inEditModeChange.emit(this.parentExpression);
         }
 
         expressionItem.hovered = false;
@@ -1017,7 +1033,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     public formatReturnFields(returnFields: string | string[]) {
-        
         let text = returnFields;
         if (Array.isArray(returnFields)) {
             text = returnFields.join(', ');
@@ -1028,6 +1043,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     public isInEditMode(): boolean {
         return !this.parentExpression || (this.parentExpression && this.parentExpression.inEditMode);
+    }
+
+    public onInEditModeChanged(expressionItem: ExpressionOperandItem) {
+        this.enterExpressionEdit(expressionItem);
     }
 
     private setFormat(field: FieldType) {
@@ -1245,7 +1264,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.deleteItem(expressionItem.parent);
         }
 
-        this.expressionTreeChange.emit();
+        this.expressionTreeChange.emit(this._expressionTree);
     }
 
     private createGroup(operator: FilteringLogic) {

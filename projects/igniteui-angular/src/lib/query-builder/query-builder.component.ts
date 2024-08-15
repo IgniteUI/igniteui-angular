@@ -207,5 +207,10 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     public setAddButtonFocus() {
         this.queryTree.setAddButtonFocus();
     }
+
+    public onExpressionTreeChange(tree: IExpressionTree) {
+        this.expressionTree = tree;
+        this.expressionTreeChange.emit();
+    }
 }
 
