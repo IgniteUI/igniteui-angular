@@ -691,7 +691,7 @@
         compact: rem(12px)
     );
 
-    $hierarchical-action-icon: rem(24px);
+    $hierarchical-action-icon: if($variant == 'indigo-design', rem(16px), rem(24px));
 
     $hierarchical-indent: (
         comfortable: calc(2 * #{map.get($hierarchical-grid-indent, 'comfortable')} + #{$hierarchical-action-icon}),
@@ -1626,7 +1626,7 @@
         }
 
         igx-icon {
-            --component-size: 3;
+            --component-size: #{if($variant == 'indigo', 2, 3)};;
         }
     }
 
@@ -2961,11 +2961,11 @@
         }
 
         igx-icon {
-            --component-size: 3;
+            --component-size: #{if($variant == 'indigo', 2, 3)};;
 
             color: var-get($theme, 'expand-icon-color');
             max-width: $hierarchical-action-icon;
-            min-width: $hierarchical-action-icon;
+            min-width: min-content;
         }
 
         [dir='rtl'] & {
