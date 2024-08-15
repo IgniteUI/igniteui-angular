@@ -149,12 +149,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     @Input()
     public id: string;
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @Input()
-    public parentElement: ElementRef;
 
     /**
      * @hidden
