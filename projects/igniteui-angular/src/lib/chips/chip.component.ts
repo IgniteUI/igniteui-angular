@@ -23,7 +23,6 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { NgClass, NgTemplateOutlet, NgIf, DOCUMENT } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { Size } from '../grids/common/enums';
-import { IgxIconService } from '../icon/icon.service';
 
 export const IgxChipTypeVariant = /*@__PURE__*/mkenum({
     PRIMARY: 'primary',
@@ -605,36 +604,12 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     protected _movedWhileRemoving = false;
     protected computedStyles;
     private _resourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
-    private _icons = [
-        {
-            name: "selected",
-            family: "default",
-            ref: {
-                name: "done",
-                family: "material",
-            }
-        },
-        {
-            name: "remove",
-            family: "default",
-            ref: {
-                name: "cancel",
-                family: "material",
-            }
-        }
-    ];
 
     constructor(
         public cdr: ChangeDetectorRef,
         private ref: ElementRef<HTMLElement>,
         private renderer: Renderer2,
-        @Inject(DOCUMENT) public document: any,
-        protected iconService: IgxIconService) {
-
-        for (const icon of this._icons) {
-            iconService.addIconRef(icon.name, icon.family, icon.ref);
-        }
-    }
+        @Inject(DOCUMENT) public document: any) { }
 
     /**
      * @hidden
