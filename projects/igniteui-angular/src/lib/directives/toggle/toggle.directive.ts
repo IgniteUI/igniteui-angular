@@ -151,6 +151,13 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     /**
      * @hidden
+     * @internal
+     */
+    @Input()
+    public parentElement: ElementRef;
+
+    /**
+     * @hidden
      */
     public get element(): HTMLElement {
         return this.elementRef.nativeElement;
@@ -224,10 +231,16 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         }
 
         const target = overlaySettings && overlaySettings.target;
-
+        let elementSizeTarget;
         // Get the size from the target element
         if (target && target instanceof Element) {
-            const styles = window.getComputedStyle(target);
+            elementSizeTarget = target;
+        } else {
+            // in case only a simple dropdown is used with default overlaySettings
+            elementSizeTarget = this.parentElement;
+        }
+        if (elementSizeTarget) {
+            const styles = window.getComputedStyle(elementSizeTarget);
             const componentSize = styles.getPropertyValue('--component-size');
             const globalSize = styles.getPropertyValue('--ig-size');
             const size = componentSize || globalSize || '3';
