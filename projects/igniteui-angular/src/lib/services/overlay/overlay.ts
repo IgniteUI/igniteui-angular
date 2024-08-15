@@ -346,6 +346,7 @@ export class IgxOverlayService implements OnDestroy {
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
         info.initialSize = { width: elementRect.width, height: elementRect.height };
+        this.addComponentSize(info);
         this.moveElementToOverlay(info);
         this.contentAppended.emit({ id: info.id, componentRef: info.componentRef });
         info.settings.scrollStrategy.initialize(this._document, this, info.id);
@@ -680,6 +681,11 @@ export class IgxOverlayService implements OnDestroy {
         if (info.initialSize.width !== 0) {
             info.elementRef.nativeElement.parentElement.style.width = info.initialSize.width + 'px';
         }
+
+        // set content div size
+        if (info.size) {
+            info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
+        }
     }
 
     private closeDone(info: OverlayInfo) {
@@ -975,6 +981,16 @@ export class IgxOverlayService implements OnDestroy {
         }
         if (info.closeAnimationPlayer?.hasStarted()) {
             info.closeAnimationPlayer.finish();
+        }
+    }
+
+    private addComponentSize(info: OverlayInfo) {
+        if (info?.elementRef?.nativeElement && info.elementRef.nativeElement instanceof Element) {
+            const styles = window.getComputedStyle(info.elementRef.nativeElement);
+            const componentSize = styles.getPropertyValue('--component-size');
+            const globalSize = styles.getPropertyValue('--ig-size');
+            const size = componentSize || globalSize;
+            info.size = size;
         }
     }
 }
