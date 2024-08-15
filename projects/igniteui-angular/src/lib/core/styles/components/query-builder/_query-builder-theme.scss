@@ -120,7 +120,7 @@
     %advanced-filter__main {
         display: block;
         overflow: auto;
-        min-height: pad(rem(138px), rem(164px), rem(214px));
+        // min-height: pad(rem(138px), rem(164px), rem(214px));
         // max-height: pad(rem(305px), rem(394px), rem(468px));
 
         [igxButton] + [igxButton] {

@@ -59,6 +59,14 @@ export class QueryBuilderComponent implements OnInit {
             searchVal: 'IC60',
             // ignoreCase: true
         });
+
+        const innerTree2 = new FilteringExpressionsTree(FilteringLogic.And, 'Assays', 'Name');
+        innerTree2.filteringOperands.push({
+            fieldName: 'Name',
+            condition: IgxStringFilteringOperand.instance().condition('null'),
+            // ignoreCase: true
+        });
+
         const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Compounds', '*');
         tree.filteringOperands.push({
                 fieldName: 'Id',
@@ -66,10 +74,17 @@ export class QueryBuilderComponent implements OnInit {
                 searchTree: innerTree
             });
         tree.filteringOperands.push({
-            fieldName: 'Structure',
-            condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'abc'
+            fieldName: 'Id',
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
+            searchVal: '123',
+            ignoreCase: true
         });
+
+        // tree.filteringOperands.push({
+        //     fieldName: 'Structure',
+        //     condition: IgxStringFilteringOperand.instance().condition('in'),
+        //     searchTree: innerTree2
+        // });
 
         // const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
         // orTree.filteringOperands.push({
