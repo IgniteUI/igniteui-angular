@@ -27,7 +27,6 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxTheme, ThemeService } from '../services/theme/theme.service';
-import { IgxIconService } from '../icon/icon.service';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -219,16 +218,12 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
         private themeService: ThemeService,
-        private iconService?: IgxIconService
     ) {
+        this._theme = this.themeService.globalTheme;
+
         this._subscription = this._theme$.asObservable().subscribe(value => {
             this._theme = value as IgxTheme;
             this.cdr.detectChanges();
-        });
-
-        this.iconService.addIconRef('clear', 'default', {
-            name: 'clear',
-            family: 'material',
         });
     }
 
