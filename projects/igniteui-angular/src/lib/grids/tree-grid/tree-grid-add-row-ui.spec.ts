@@ -47,8 +47,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
             expect(editActions.length).toBe(4);
 
-            expect(editActions[1].componentInstance.iconName).toBe('add-row');
-            expect(editActions[2].componentInstance.iconName).toBe('add-child');
+            expect(editActions[1].componentInstance.iconName).toBe('add_row');
+            expect(editActions[2].componentInstance.iconName).toBe('add_child');
         });
 
         it('should show action strip "add child" button for all rows.', () => {
@@ -57,7 +57,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
             expect(editActions.length).toBe(3);
-            expect(editActions[1].componentInstance.iconName).toBe('add-child');
+            expect(editActions[1].componentInstance.iconName).toBe('add_child');
         });
 
         it('should allow adding child to row via the UI.', () => {
@@ -68,7 +68,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             expect(treeGrid.rowList.length).toBe(8);
 
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
-            expect(editActions[1].componentInstance.iconName).toBe('add-child');
+            expect(editActions[1].componentInstance.iconName).toBe('add_child');
             const addChildBtn = editActions[1].componentInstance;
             addChildBtn.actionClick.emit();
             fix.detectChanges();
@@ -147,7 +147,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
 
-            expect(editActions[3].componentInstance.iconName).toBe('add-row');
+            expect(editActions[3].componentInstance.iconName).toBe('add_row');
             const addRowBtn = editActions[3].componentInstance;
             addRowBtn.actionClick.emit();
             fix.detectChanges();
@@ -181,7 +181,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
 
-            expect(editActions[3].componentInstance.iconName).toBe('add-row');
+            expect(editActions[3].componentInstance.iconName).toBe('add_row');
             const addRowBtn = editActions[3].componentInstance;
             addRowBtn.actionClick.emit();
             fix.detectChanges();

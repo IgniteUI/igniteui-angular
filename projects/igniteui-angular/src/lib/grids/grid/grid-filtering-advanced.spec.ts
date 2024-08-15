@@ -15,13 +15,15 @@ import {
     IgxGridAdvancedFilteringComponent,
     IgxGridExternalAdvancedFilteringComponent,
     IgxGridAdvancedFilteringBindingComponent,
-    IgxGridAdvancedFilteringOverlaySettingsComponent
+    IgxGridAdvancedFilteringOverlaySettingsComponent,
+    IgxGridAdvancedFilteringDynamicColumnsComponent
 } from '../../test-utils/grid-samples.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs } from '../public_api';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -38,7 +40,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxGridAdvancedFilteringComponent,
                 IgxGridExternalAdvancedFilteringComponent,
                 IgxGridAdvancedFilteringBindingComponent,
-                IgxHierGridExternalAdvancedFilteringComponent
+                IgxHierGridExternalAdvancedFilteringComponent,
+                IgxGridAdvancedFilteringDynamicColumnsComponent
             ]
         });
     }));
@@ -2149,6 +2152,77 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
             expect(input.getAttribute('ng-reflect-input-format')).toMatch(releaseTimeColumn.pipeArgs.format);
+
+        it('should handle advanced filtering correctly when grid columns and data are dynamically changed', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridAdvancedFilteringDynamicColumnsComponent);
+            grid = fixture.componentInstance.grid;
+            fixture.detectChanges();
+
+            expect(grid.filteredData).toBeNull();
+            expect(grid.rowList.length).toBe(8);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+
+            // Open Advanced Filtering dialog
+            GridFunctions.clickAdvancedFilteringButton(fixture);
+            fixture.detectChanges();
+
+            // Click the initial 'Add And Group' button
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fixture, 0);
+            tick(100);
+            fixture.detectChanges();
+
+            // Populate edit inputs
+            selectColumnInEditModeExpression(fixture, 1);
+            selectOperatorInEditModeExpression(fixture, 2);
+            const input = GridFunctions.getAdvancedFilteringValueInput(fixture).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'ign', fixture);
+
+            // Commit the populated expression
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fixture);
+            fixture.detectChanges();
+
+            // Apply the filters
+            GridFunctions.clickAdvancedFilteringApplyButton(fixture);
+            fixture.detectChanges();
+
+            // Verify the filter results
+            expect(grid.filteredData.length).toEqual(2);
+            expect(grid.rowList.length).toBe(2);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
+
+            // Change the grid's columns collection
+            fixture.componentInstance.columns = [
+                { field: 'ID', header: 'ID', width: '200px', type: 'string' },
+                { field: 'CompanyName', header: 'Company Name', width: '200px', type: 'string'},
+                { field: 'ContactName', header: 'Contact Name', width: '200px', type: 'string' },
+                { field: 'ContactTitle', header: 'Contact Title', width: '200px', type: 'string' },
+                { field: 'City', header: 'City', width: '200px', type: 'string' },
+                { field: 'Country', header: 'Country', width: '200px', type: 'string' },
+            ];
+            fixture.detectChanges();
+            flush();
+
+            // Change the grid's data collection
+            grid.data = SampleTestData.contactInfoDataFull();
+            fixture.detectChanges();
+            flush();
+
+            // Spy for error messages in the console
+            const consoleSpy = spyOn(console, 'error');
+
+            // Open Advanced Filtering dialog
+            GridFunctions.clickAdvancedFilteringButton(fixture);
+            fixture.detectChanges();
+            flush();
+
+            // Verify the filters are cleared
+            expect(grid.filteredData).toEqual([]);
+            expect(grid.rowList.length).toBe(0);
+
+            // Check for error messages in the console
+            expect(consoleSpy).not.toHaveBeenCalled();
         }));
 
         describe('Context Menu - ', () => {
@@ -3141,8 +3215,38 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             GridFunctions.clickAdvancedFilteringColumnSelect(fix);
             fix.detectChanges();
             const dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
-            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field'];
+            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field', 'DateTimeCreated'];
             expect(expectedValues).toEqual(dropdownValues);
+        }));
+
+        it('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
+            // Open dialog through API.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            //Create dateTime filtering expression
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'DateTimeCreated', searchVal: '11/11/2000 10:11:11 AM', condition: IgxStringFilteringOperand.instance().condition('equals')
+            });
+
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Hover the last visible expression chip
+            const expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[0];
+            expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            tick();
+            fix.detectChanges();
+
+            // Click the edit icon to enter edit mode of the expression.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChipEditIcon(fix, [0]);
+            tick();
+            fix.detectChanges();
+
+            //Check for the active element
+            let searchValueInput = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            expect(document.activeElement).toBe(searchValueInput, 'The input should be the active element.');
         }));
     });
 

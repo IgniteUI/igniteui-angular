@@ -245,45 +245,45 @@
     $bootstrap-theme: $variant == 'bootstrap';
 
     $theme-padding-block-l: map.get((
-        material: rem(8px),
-        fluent: rem(8px),
-        bootstrap: rem(8px),
-        indigo-design: rem(8px),
+        'material': rem(8px),
+        'fluent': rem(8px),
+        'bootstrap': rem(8px),
+        'indigo': rem(8px),
     ), $variant);
 
     $theme-padding-inline-l: map.get((
-        material: rem(16px),
-        fluent: rem(16px),
-        bootstrap: rem(16px),
-        indigo-design: rem(16px),
+        'material': rem(16px),
+        'fluent': rem(16px),
+        'bootstrap': rem(16px),
+        'indigo': rem(16px),
     ), $variant);
 
     $theme-padding-block-m: map.get((
-        material: rem(4px),
-        fluent: rem(4px),
-        bootstrap: rem(4px),
-        indigo-design: rem(6px),
+        'material': rem(4px),
+        'fluent': rem(4px),
+        'bootstrap': rem(4px),
+        'indigo': rem(6px),
     ), $variant);
 
     $theme-padding-inline-m: map.get((
-        material: rem(8px),
-        fluent: rem(8px),
-        bootstrap: rem(8px),
-        indigo-design: rem(12px),
+        'material': rem(8px),
+        'fluent': rem(8px),
+        'bootstrap': rem(8px),
+        'indigo': rem(12px),
     ), $variant);
 
     $theme-padding-block-s: map.get((
-        material: rem(2px),
-        fluent: rem(2px),
-        bootstrap: rem(2px),
-        indigo-design: rem(4px),
+        'material': rem(2px),
+        'fluent': rem(2px),
+        'bootstrap': rem(2px),
+        'indigo': rem(4px),
     ), $variant);
 
     $theme-padding-inline-s: map.get((
-        material: rem(4px),
-        fluent: rem(4px),
-        bootstrap: rem(4px),
-        indigo-design: rem(8px),
+        'material': rem(4px),
+        'fluent': rem(4px),
+        'bootstrap': rem(4px),
+        'indigo': rem(8px),
     ), $variant);
 
     $list-icon-margin-inline: (
@@ -329,7 +329,7 @@
             outline-style: none;
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             gap: rem(4px);
         }
     }
@@ -354,7 +354,7 @@
         background: var-get($theme, 'header-background');
         user-select: none;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             min-height: sizable(rem(24), rem(28), rem(32));
         }
     }
@@ -430,7 +430,7 @@
         flex-direction: column;
         flex: 1 0 0%;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             gap: rem(2px);
         }
 
@@ -454,7 +454,7 @@
         justify-content: center;
         color: var-get($theme, 'item-action-color');
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             gap: sizable(rem(4), rem(6), rem(8));
         }
 
@@ -463,9 +463,9 @@
         }
 
         > * {
-            --component-size: #{if($variant == 'indigo-design', 2, var(--list-size))};
+            --component-size: #{if($variant == 'indigo', 2, var(--list-size))};
 
-            @if $variant != 'indigo-design' {
+            @if $variant != 'indigo' {
                 margin-inline-start: pad-inline(map.get($list-actions-margin, 'compact'), map.get($list-actions-margin, 'cosy'), map.get($list-actions-margin, 'comfortable'));
             }
         }
@@ -492,7 +492,7 @@
         background: inherit;
         z-index: 2;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             gap: rem(8px);
         }
     }
@@ -507,7 +507,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        align-self: if($variant == 'indigo-design', center, flex-start);
+        align-self: if($variant == 'indigo', center, flex-start);
         padding: 0;
         color: var-get($theme, 'item-thumbnail-color');
         gap: rem(8px);
@@ -515,9 +515,9 @@
 
         > igx-icon,
         > igc-icon {
-            --component-size: #{if($variant == 'indigo-design', 2, var(--list-size))};
+            --component-size: #{if($variant == 'indigo', 2, var(--list-size))};
 
-            @if $variant != 'indigo-design' {
+            @if $variant != 'indigo' {
                 margin-inline-end: pad-inline(map.get($list-icon-margin-inline, 'compact'), map.get($list-icon-margin-inline, 'cosy'), map.get($list-icon-margin-inline, 'comfortable'));
                 margin-inline-start: 0;
                 margin-block: pad-block(map.get($list-icon-margin-block, 'compact'), map.get($list-icon-margin-block, 'cosy'), map.get($list-icon-margin-block, 'comfortable'));
@@ -525,7 +525,7 @@
         }
 
         > igx-avatar {
-            --ig-size: #{if($variant == 'indigo-design', 2, 1)};
+            --ig-size: #{if($variant == 'indigo', 2, 1)};
         }
 
         &:empty {
@@ -536,12 +536,12 @@
     %igx-list__item-thumbnail:not(:empty) + %igx-list__item-lines {
         --component-size: var(--list-size);
 
-        @if $variant != 'indigo-design' {
+        @if $variant != 'indigo' {
             margin-inline-start: pad-inline(map.get($list-line-margin, 'compact'), map.get($list-line-margin, 'cosy'), map.get($list-line-margin, 'comfortable'));
         }
     }
 
-    @if $variant != 'indigo-design' {
+    @if $variant != 'indigo' {
         %igx-list__item-lines + %igx-list__item-actions {
             margin-inline-start: rem(8px);
         }

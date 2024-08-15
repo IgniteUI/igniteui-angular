@@ -188,66 +188,66 @@
     $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
     $switch-width: map.get((
-        material: 36px,
-        fluent: 40px,
-        bootstrap: 32px,
-        indigo-design: 32px
+        'material': 36px,
+        'fluent': 40px,
+        'bootstrap': 32px,
+        'indigo': 32px
     ), $variant);
 
     $switch-height: map.get((
-        material: 14px,
-        fluent: 20px,
-        bootstrap: 16px,
-        indigo-design: 16px
+        'material': 14px,
+        'fluent': 20px,
+        'bootstrap': 16px,
+        'indigo': 16px
     ), $variant);
 
     $switch-thumb-width: map.get((
-        material: 20px,
-        fluent: 12px,
-        bootstrap: 10px,
-        indigo-design: 8px
+        'material': 20px,
+        'fluent': 12px,
+        'bootstrap': 10px,
+        'indigo': 8px
     ), $variant);
 
     $switch-on-offset: map.get((
-        material: 1px,
-        fluent: 5px,
-        bootstrap: 4px,
-        indigo-design: 7px
+        'material': 1px,
+        'fluent': 5px,
+        'bootstrap': 4px,
+        'indigo': 7px
     ), $variant);
 
     $switch-off-offset: map.get((
-        material: -1px,
-        fluent: 3px,
-        bootstrap: math.div($switch-thumb-width, 4),
-        indigo-design: math.div($switch-thumb-width, 3),
+        'material': -1px,
+        'fluent': 3px,
+        'bootstrap': math.div($switch-thumb-width, 4),
+        'indigo': math.div($switch-thumb-width, 3),
     ), $variant);
 
     $ripple-display: map.get((
-        material: block,
-        fluent: none,
-        bootstrap: none,
-        indigo-design: none
+        'material': block,
+        'fluent': none,
+        'bootstrap': none,
+        'indigo': none
     ), $variant);
 
     $thumb-resting-shadow: map.get((
-        material: var-get($theme, 'resting-shadow'),
-        fluent: none,
-        bootstrap: none,
-        indigo-design: none
+        'material': var-get($theme, 'resting-shadow'),
+        'fluent': none,
+        'bootstrap': none,
+        'indigo': none
     ), $variant);
 
     $thumb-hover-shadow: map.get((
-        material: var-get($theme, 'hover-shadow'),
-        fluent: none,
-        bootstrap: none,
-        indigo-design: none
+        'material': var-get($theme, 'hover-shadow'),
+        'fluent': none,
+        'bootstrap': none,
+        'indigo': none
     ), $variant);
 
     $thumb-disabled-shadow: map.get((
-        material: var-get($theme, 'disabled-shadow'),
-        fluent: none,
-        bootstrap: none,
-        indigo-design: none
+        'material': var-get($theme, 'disabled-shadow'),
+        'fluent': none,
+        'bootstrap': none,
+        'indigo': none
     ), $variant);
 
     $switch-thumb-height: $switch-thumb-width;
@@ -256,10 +256,10 @@
     $ripple-radius: math.div($ripple-size, 2);
 
     $label-margin: map.get((
-        material: rem(12px),
-        fluent: rem(8px),
-        bootstrap: rem(8px),
-        indigo-design: rem(8px)
+        'material': rem(12px),
+        'fluent': rem(8px),
+        'bootstrap': rem(8px),
+        'indigo': rem(8px)
     ), $variant);
 
     $input-transition: all .2s $ease-in-out-quad;
@@ -293,7 +293,7 @@
         user-select: none;
         transition: $input-transition;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             border: rem(2px) solid var-get($theme, 'border-color');
         }
 
@@ -458,7 +458,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %switch-composite {
                 border-radius: var-get($theme, 'border-radius-thumb');
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
@@ -488,7 +488,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %switch-composite {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'error-color-hover');
             }
@@ -506,7 +506,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %switch-composite {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-focused');
             }
@@ -517,7 +517,7 @@
         %switch-composite--x {
             background: var-get($theme, 'track-on-disabled-color');
         }
-      
+
         %switch-thumb--x {
             background: var-get($theme, 'thumb-on-disabled-color');
         }
@@ -528,7 +528,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %switch-composite--x {
                 border-color: transparent;
             }

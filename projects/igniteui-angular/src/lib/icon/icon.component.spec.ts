@@ -1,7 +1,9 @@
 import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { IgxIconComponent } from "./icon.component";
-import { IconFamily, IconType, IgxIconService } from "./icon.service";
+import { IgxIconService } from "./icon.service";
+import { IconFamily } from './types';
+import type { IconType } from './types';
 
 import { configureTestSuite } from "../test-utils/configure-suite";
 import { By } from "@angular/platform-browser";

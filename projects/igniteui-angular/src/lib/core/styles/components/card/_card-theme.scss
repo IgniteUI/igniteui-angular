@@ -181,7 +181,7 @@
             margin-inline-end: 0;
             margin-bottom: rem(16px);
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 margin-bottom: rem(8px);
             }
         }
@@ -191,7 +191,7 @@
         align-self: flex-start;
         margin-inline-end: rem(16px);
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             margin-inline-end: rem(8px);
             margin-block: auto;
 
@@ -216,7 +216,7 @@
             display: none;
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             gap: rem(2px);
 
             %igx-card-header-subtitle {
@@ -262,7 +262,7 @@
         align-items: center;
         padding: $card-actions-padding;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             [igxButton],
             [igxIconButton] {
                 --ig-size: 2;
@@ -278,7 +278,7 @@
         }
     }
 
-    @if $variant == 'indigo-design' {
+    @if $variant == 'indigo' {
         %igx-card-content,
         %igx-card-actions {
             padding: rem(16px);
@@ -290,7 +290,7 @@
 
         %igx-card-header + %igx-card-content {
             padding-block-start: 0;
-        }        
+        }
     }
 
     %igx-card-actions--vertical {
