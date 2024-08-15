@@ -2645,14 +2645,13 @@
     %date-disabled-special {
         %date-inner {
             color: var-get($theme, 'date-special-foreground');
-
             opacity: .38;
         }
     }
 
     %date-disabled-special-selected {
         %date-inner {
-            @if $variant == 'indigo' or $variant == 'fluent' {
+            @if $variant == 'fluent' {
                 color: var-get($theme, 'date-selected-foreground');
             }
         }
