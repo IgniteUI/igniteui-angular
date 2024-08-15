@@ -65,6 +65,10 @@ const loadIconRefs = () => [
             name: 'arrow_upward',
             family: 'material',
         },
+        indigo: {
+            name: 'chevron_left',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('arrow_next', {
         default: {
@@ -75,17 +79,29 @@ const loadIconRefs = () => [
             name: 'arrow_downward',
             family: 'material',
         },
+        indigo: {
+            name: 'chevron_right',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('expand', {
         default: {
             name: 'expand_more',
             family: 'material',
+        },
+        indigo: {
+            name: 'chevron_down',
+            family: 'internal_indigo',
         }
     }),
     addIcon('collapse', {
         default: {
             name: 'expand_less',
             family: 'material',
+        },
+        indigo: {
+            name: 'chevron_up',
+            family: 'internal_indigo',
         }
     }),
     addIcon('carousel_prev', {
@@ -95,7 +111,7 @@ const loadIconRefs = () => [
           },
           indigo: {
             name: 'chevron_left',
-            family: 'material',
+            family: 'internal_indigo',
           },
     }),
     addIcon('carousel_next', {
@@ -105,7 +121,7 @@ const loadIconRefs = () => [
           },
           indigo: {
             name: 'chevron_right',
-            family: 'material',
+            family: 'internal_indigo',
           },
     }),
     addIcon('arrow_back', {
@@ -137,6 +153,10 @@ const loadIconRefs = () => [
             name: 'clear',
             family: 'material',
         },
+        indigo: {
+            name: 'clear',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('input_expand', {
         default: {
@@ -147,6 +167,10 @@ const loadIconRefs = () => [
             name: 'expand_more',
             family: 'material',
         },
+        indigo: {
+            name: 'chevron_down',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('input_collapse', {
         default: {
@@ -156,6 +180,10 @@ const loadIconRefs = () => [
         material: {
             name: 'expand_less',
             family: 'material',
+        },
+        indigo: {
+            name: 'chevron_up',
+            family: 'internal_indigo',
         },
     }),
     addIcon('arrow_drop_down', {
@@ -283,11 +311,19 @@ const loadIconRefs = () => [
             name: 'chevron_right',
             family: 'material',
         },
+        indigo: {
+            name: 'chevron_right',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('tree_collapse', {
         default: {
             name: 'expand_more',
             family: 'material',
+        },
+        indigo: {
+            name: 'chevron_down',
+            family: 'internal_indigo',
         },
     }),
     addIcon('chevron_right', {
@@ -325,11 +361,19 @@ const loadIconRefs = () => [
             name: 'unfold_more',
             family: 'material',
         },
+        indigo: {
+            name: 'unfold_more',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('unfold_less', {
         default: {
             name: 'unfold_less',
             family: 'material',
+        },
+        indigo: {
+            name: 'unfold_less',
+            family: 'internal_indigo',
         },
     }),
     addIcon('drag_indicator', {
@@ -349,11 +393,19 @@ const loadIconRefs = () => [
             name: 'arrow_upward',
             family: 'material',
         },
+        indigo: {
+            name: 'arrow_upward',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('sort_desc', {
         default: {
             name: 'arrow_downward',
             family: 'material',
+        },
+        indigo: {
+            name: 'arrow_downward',
+            family: 'internal_indigo',
         },
     }),
     addIcon('search', {
