@@ -1,6 +1,5 @@
 <div class="igx-drop-down__list" [style.width]="width"
     igxToggle
-    [parentElement]="elementRef.nativeElement"
     (appended)="onToggleContentAppended($event)"
     (opening)="onToggleOpening($event)" (opened)="onToggleOpened()"
     (closing)="onToggleClosing($event)" (closed)="onToggleClosed()">
