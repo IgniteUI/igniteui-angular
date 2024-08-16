@@ -664,7 +664,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.innerText).toMatch(grid.emptyGridMessage);
         }));
 
-        fit('should apply correct rowHeight when set as input', () => {
+        it('should apply correct rowHeight when set as input', () => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
             grid.rowHeight = 75;
