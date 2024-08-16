@@ -3229,6 +3229,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         return MINIMUM_COLUMN_WIDTH;
     }
 
+    protected get isCustomSetRowHeight(): boolean {
+        return !isNaN(this._rowHeight);
+    }
+
     /**
      * @hidden @internal
      */
