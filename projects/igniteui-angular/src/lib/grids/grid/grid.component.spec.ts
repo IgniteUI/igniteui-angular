@@ -664,16 +664,15 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.innerText).toMatch(grid.emptyGridMessage);
         }));
 
-        fit('should apply correct rowHeight when set as input', async () => {
+        fit('should apply correct rowHeight when set as input', () => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
             grid.rowHeight = 75;
             fixture.detectChanges();
-            await wait(16); // needed because of the throttleTime on the resize observer
-            fixture.detectChanges();
 
-            const row = fixture.debugElement.query(By.css(TBODY_CLASS)).query(By.css('.igx-grid__tr')).nativeElement;
-            expect(row.offsetHeight).toEqual(75);
+            const cell = fixture.debugElement.query(By.css(TBODY_CLASS)).query(By.css('.igx-grid__td')).nativeElement;
+            const expectedCellHeight = 76; // rowHeight + 1px border
+            expect(cell.offsetHeight).toEqual(expectedCellHeight);
         });
     });
 
