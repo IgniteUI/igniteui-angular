@@ -1046,7 +1046,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     public onInEditModeChanged(expressionItem: ExpressionOperandItem) {
-        this.enterExpressionEdit(expressionItem);
+        if (!expressionItem.inEditMode) {
+            this.enterExpressionEdit(expressionItem);
+        }
     }
 
     private setFormat(field: FieldType) {
