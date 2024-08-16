@@ -129,11 +129,19 @@ const loadIconRefs = () => [
             name: 'arrow_back',
             family: 'material',
         },
+        indigo: {
+            name: 'arrow_back',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('arrow_forward', {
         default: {
             name: 'arrow_forward',
             family: 'material',
+        },
+        indigo: {
+            name: 'arrow_forward',
+            family: 'internal_indigo',
         },
     }),
     addIcon('selected', {
@@ -263,11 +271,19 @@ const loadIconRefs = () => [
             name: 'check',
             family: 'material',
         },
+        indigo: {
+            name: 'check',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('cancel', {
         default: {
             name: 'close',
             family: 'material',
+        },
+        indigo: {
+            name: 'clear',
+            family: 'internal_indigo',
         },
     }),
     addIcon('edit', {
@@ -331,11 +347,19 @@ const loadIconRefs = () => [
             name: 'chevron_right',
             family: 'material',
         },
+        indigo: {
+            name: 'chevron_right',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('chevron_left', {
         default: {
             name: 'chevron_left',
             family: 'material',
+        },
+        indigo: {
+            name: 'chevron_left',
+            family: 'internal_indigo',
         },
     }),
     addIcon('expand_more', {
