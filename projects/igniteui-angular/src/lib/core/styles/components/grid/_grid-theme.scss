@@ -691,7 +691,7 @@
         compact: rem(12px)
     );
 
-    $hierarchical-action-icon: if($variant == 'indigo-design', rem(16px), rem(24px));
+    $hierarchical-action-icon: if($variant == 'indigo', rem(16px), rem(24px));
 
     $hierarchical-indent: (
         comfortable: calc(2 * #{map.get($hierarchical-grid-indent, 'comfortable')} + #{$hierarchical-action-icon}),
