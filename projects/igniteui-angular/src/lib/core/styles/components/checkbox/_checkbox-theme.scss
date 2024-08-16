@@ -116,45 +116,45 @@
     $checkbox-radius: math.div($size, 2);
 
     $size: map.get((
-        material: $size,
-        fluent: $size,
-        bootstrap: $size-bs,
-        indigo-design: $size-bs,
+        'material': $size,
+        'fluent': $size,
+        'bootstrap': $size-bs,
+        'indigo': $size-bs,
     ), $variant);
 
     $border-width: map.get((
-        material: rem(2px),
-        fluent: rem(1px),
-        bootstrap: rem(1px),
-        indigo-design: rem(2px),
+        'material': rem(2px),
+        'fluent': rem(1px),
+        'bootstrap': rem(1px),
+        'indigo': rem(2px),
     ), $variant);
 
     $ripple-display: map.get((
-        material: block,
-        fluent: none,
-        bootstrap: none,
-        indigo-design: none,
+        'material': block,
+        'fluent': none,
+        'bootstrap': none,
+        'indigo': none,
     ), $variant);
 
     $label-margin: map.get((
-        material: rem(12px),
-        fluent: rem(8px),
-        bootstrap: rem(8px),
-        indigo-design: rem(8px),
+        'material': rem(12px),
+        'fluent': rem(8px),
+        'bootstrap': rem(8px),
+        'indigo': rem(8px),
     ), $variant);
 
     $mark-stroke: map.get((
-        material: 3,
-        fluent: 1,
-        bootstrap: 3,
-        indigo-design: 3,
+        'material': 3,
+        'fluent': 1,
+        'bootstrap': 3,
+        'indigo': 3,
     ), $variant);
 
     $mark-offset: map.get((
-        material: .5px,
-        fluent: -1px,
-        bootstrap: .5px,
-        indigo-design: 1px,
+        'material': .5px,
+        'fluent': -1px,
+        'bootstrap': .5px,
+        'indigo': 1px,
     ), $variant);
 
     $mark-length: 24;
@@ -218,7 +218,7 @@
     }
 
     %cbx-composite--hover {
-        @if $variant == 'indigo-design' or $variant == 'bootstrap' {
+        @if $variant == 'indigo' or $variant == 'bootstrap' {
             border-color: var-get($theme, 'empty-color-hover');
         }
     }
@@ -275,7 +275,7 @@
             background: var-get($theme, 'disabled-color');
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             background: var-get($theme, 'disabled-indeterminate-color');
             border-color: transparent;
             stroke-opacity: 40%;
@@ -341,7 +341,7 @@
 
             %cbx-composite {
                 background: transparent;
-                
+
                 &::before {
                     content: '';
                     position: absolute;
@@ -458,7 +458,7 @@
     }
 
     %cbx-label--hover {
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             color: var-get($theme, 'label-color-hover');
         }
     }
@@ -480,7 +480,7 @@
     }
 
     %cbx-label--invalid {
-        @if $variant != 'indigo-design' {
+        @if $variant != 'indigo' {
             color: var-get($theme, 'error-color');
         }
     }
@@ -540,7 +540,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %cbx-composite {
                 border-radius: var-get($theme, 'border-radius');
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
@@ -557,7 +557,7 @@
     }
 
     %igx-checkbox--focused-checked {
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %cbx-composite {
                 border-radius: var-get($theme, 'border-radius');
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-focused');
@@ -585,7 +585,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %cbx-composite {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-error');
             }

@@ -108,57 +108,57 @@
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     $label-margin: map.get((
-        material: rem(2px),
-        fluent: rem(8px),
-        bootstrap: rem(8px),
-        indigo-design: rem(8px),
+        'material': rem(2px),
+        'fluent': rem(8px),
+        'bootstrap': rem(8px),
+        'indigo': rem(8px),
     ), $variant);
 
     $size: map.get((
-        material: rem(40px),
-        fluent: rem(20px),
-        bootstrap: rem(16px),
-        indigo-design: rem(16px),
+        'material': rem(40px),
+        'fluent': rem(20px),
+        'bootstrap': rem(16px),
+        'indigo': rem(16px),
     ), $variant);
 
     $scale: map.get((
-        material: scale(.5),
-        fluent: scale(.5),
-        bootstrap: scale(.4375),
-        indigo-design: scale(.5),
+        'material': scale(.5),
+        'fluent': scale(.5),
+        'bootstrap': scale(.4375),
+        'indigo': scale(.5),
     ), $variant);
 
     $border-width: map.get((
-        material: rem(2px),
-        fluent: rem(1px),
-        bootstrap: rem(1px),
-        indigo-design: rem(2px),
+        'material': rem(2px),
+        'fluent': rem(1px),
+        'bootstrap': rem(1px),
+        'indigo': rem(2px),
     ), $variant);
 
     $radio-hover-scale: map.get((
-        material: null,
-        fluent: scale(.5),
+        'material': null,
+        'fluent': scale(.5),
     ), $variant);
 
     $ripple-display: map.get((
-        material: block,
-        bootstrap: none,
-        fluent: none,
-        indigo-design: none,
+        'material': block,
+        'bootstrap': none,
+        'fluent': none,
+        'indigo': none,
     ), $variant);
 
     $horizontal-group-margin: map.get((
-        material: rem(16px),
-        fluent: rem(12px),
-        bootstrap: rem(8px),
-        indigo-design: rem(16px),
+        'material': rem(16px),
+        'fluent': rem(12px),
+        'bootstrap': rem(8px),
+        'indigo': rem(16px),
     ), $variant);
 
     $vertical-group-margin: map.get((
-        material: 0,
-        fluent: rem(8px),
-        bootstrap: rem(8px),
-        indigo-design: rem(8px),
+        'material': 0,
+        'fluent': rem(8px),
+        'bootstrap': rem(8px),
+        'indigo': rem(8px),
     ), $variant);
 
     $border-style: solid;
@@ -191,7 +191,7 @@
     %radio-label--invalid {
         color: var-get($theme, 'error-color');
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             color: var-get($theme, 'label-color');
 
             &:hover {
@@ -288,7 +288,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' or $variant == 'bootstrap' {
+        @if $variant == 'indigo' or $variant == 'bootstrap' {
             &::after {
                 border: $border-width $border-style var-get($theme, 'hover-color');
                 transition: $transition;
@@ -350,7 +350,7 @@
         &::after {
             border: $border-width $border-style var-get($theme, 'error-color');
         }
-        
+
         &::before {
             background: var-get($theme, 'error-color');
             border: $border-width $border-style transparent;
@@ -361,7 +361,7 @@
                 background: var-get($theme, 'error-color');
                 border-color: var-get($theme, 'error-color');
             }
-    
+
             &::before {
                 background: white;
             }
@@ -409,7 +409,7 @@
     }
 
     %radio-label--hover {
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             color: var-get($theme, 'label-color-hover');
         }
     }
@@ -467,7 +467,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %radio-composite {
                 border-radius: $border-radius;
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
@@ -490,7 +490,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %radio-composite {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-filled');
             }
@@ -512,7 +512,7 @@
                     border: $border-width $border-style var-get($theme, 'error-color-hover');
                 }
             }
-        } @else if $variant == 'indigo-design' {
+        } @else if $variant == 'indigo' {
             %radio-composite {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-error');
             }
