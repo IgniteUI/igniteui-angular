@@ -9,11 +9,13 @@ import {
     ChangeDetectorRef,
     booleanAttribute,
 } from "@angular/core";
-import { IgxIconService, IconReference } from "./icon.service";
+import { IgxIconService } from "./icon.service";
+import type { IconReference } from "./types";
 import { filter, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SafeHtml } from "@angular/platform-browser";
 import { NgIf, NgTemplateOutlet } from "@angular/common";
+import { ThemeService } from "../services/theme/theme.service";
 
 /**
  * Icon provides a way to include material icons to markup
@@ -134,9 +136,11 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         public el: ElementRef,
         private iconService: IgxIconService,
+        private themeService: ThemeService,
         private ref: ChangeDetectorRef,
     ) {
         this.family = this.iconService.defaultFamily.name;
+        this.iconService.setRefsByTheme(this.themeService.globalTheme);
 
         this.iconService.iconLoaded
             .pipe(

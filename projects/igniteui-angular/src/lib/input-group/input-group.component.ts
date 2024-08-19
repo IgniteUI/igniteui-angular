@@ -1,5 +1,6 @@
 import { DOCUMENT, NgIf, NgTemplateOutlet, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import {
+    AfterViewChecked,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -7,6 +8,7 @@ import {
     ElementRef,
     HostBinding,
     HostListener, Inject, Input,
+    OnDestroy,
     Optional, QueryList, booleanAttribute
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
@@ -25,7 +27,7 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxTheme, ThemeService } from '../services/theme/theme.service';
-import { IgxIconService } from '../icon/icon.service';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
     selector: 'igx-input-group',
@@ -34,7 +36,7 @@ import { IgxIconService } from '../icon/icon.service';
     standalone: true,
     imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
 })
-export class IgxInputGroupComponent implements IgxInputGroupBase {
+export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewChecked, OnDestroy {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -122,6 +124,8 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     private _type: IgxInputGroupType = null;
     private _filled = false;
     private _theme: IgxTheme;
+    private _theme$ = new Subject<IgxTheme>();
+    private _subscription: Subscription;
     private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
 
     /** @hidden */
@@ -214,12 +218,12 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
         private themeService: ThemeService,
-        private iconService?: IgxIconService
     ) {
-        this.theme = this.themeService.theme;
-        this.iconService.addIconRef('clear', 'default', {
-            name: 'clear',
-            family: 'material',
+        this._theme = this.themeService.globalTheme;
+
+        this._subscription = this._theme$.asObservable().subscribe(value => {
+            this._theme = value as IgxTheme;
+            this.cdr.detectChanges();
         });
     }
 
@@ -434,5 +438,24 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     /** @hidden */
     public set filled(val) {
         this._filled = val;
+    }
+
+    /** @hidden @internal */
+    public ngAfterViewChecked() {
+        if (!this._theme) {
+            const theme = this.theme ?? this.themeService.getComponentTheme(this.element);
+
+            if (theme) {
+                Promise.resolve().then(() => {
+                    this._theme$.next(theme);
+                    this.cdr.markForCheck();
+                });
+            }
+        }
+    }
+
+    /** @hidden @internal */
+    public ngOnDestroy() {
+        this._subscription.unsubscribe();
     }
 }
