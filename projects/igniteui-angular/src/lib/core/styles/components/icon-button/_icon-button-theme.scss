@@ -143,10 +143,10 @@
     @include css-vars($contained-theme);
 
     $icon-sizes: map.get((
-        material: rem(18px),
-        fluent: rem(18px),
-        bootstrap: rem(18px),
-        indigo-design: rem(16px),
+        'material': rem(18px),
+        'fluent': rem(18px),
+        'bootstrap': rem(18px),
+        'indigo': rem(16px),
     ), $variant);
 
     $icon-in-button-size: $icon-sizes;
@@ -211,7 +211,7 @@
             transition: box-shadow .15s ease-out, color .15s ease-out, background .15s ease-out;
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             transition: color .15s ease-in-out, box-shadow .15s ease-in-out, background .15s ease-in-out, border-color .15s ease-in-out;
         }
     }
@@ -267,7 +267,7 @@
             box-shadow: 0 0 0 rem(4px) var-get($flat-theme, 'shadow-color');
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             border-color: var-get($flat-theme, 'border-color');
             box-shadow: 0 0 0 rem(3px) var-get($flat-theme, 'focus-border-color');
         }
@@ -328,7 +328,7 @@
             box-shadow: 0 0 0 rem(4px) var-get($contained-theme, 'shadow-color');
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             border-color: var-get($contained-theme, 'border-color');
             box-shadow: 0 0 0 rem(3px) var-get($contained-theme, 'focus-border-color');
         }
@@ -343,7 +343,7 @@
         border: rem(1px) solid var-get($outlined-theme, 'border-color');
         border-radius: var-get($outlined-theme, 'border-radius');
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             border-width: rem(2px);
 
             &:hover,
@@ -435,7 +435,7 @@
             box-shadow: 0 0 0 rem(4px) var-get($outlined-theme, 'shadow-color');
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             border-color: var-get($outlined-theme, 'border-color');
             box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'focus-border-color');
 

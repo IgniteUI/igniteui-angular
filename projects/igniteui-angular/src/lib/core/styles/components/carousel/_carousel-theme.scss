@@ -143,6 +143,8 @@
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     %igx-carousel-display {
+        --theme: #{$variant};
+
         display: flex;
         position: relative;
         justify-content: center;
@@ -171,7 +173,7 @@
             --component-size: 1;
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             width: rem(28px);
             height: rem(28px);
             border-width: rem(2px);
@@ -213,7 +215,7 @@
     %igx-carousel-arrow--next {
         inset-inline-end: 0;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %igx-nav-arrow {
                 &::after {
                     transform: rotate(-135deg);
@@ -225,7 +227,7 @@
     %igx-carousel-arrow--prev {
         inset-inline-start: 0;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %igx-nav-arrow {
                 &::after {
                     transform: rotate(45deg);
@@ -261,7 +263,7 @@
             transform: translateX(50%);
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             gap: rem(4px);
             padding: rem(6px);
         }
@@ -303,7 +305,7 @@
         height: rem(12px);
         text-indent: rem(-9999px);
 
-        @if $variant != 'indigo-design' {
+        @if $variant != 'indigo' {
             border: $indicator-border-style;
             border-color: var-get($theme, 'indicator-border-color');
         } @else {
@@ -320,7 +322,7 @@
             border-radius: inherit;
             background: var-get($theme, 'indicator-dot-color');
 
-            @if $variant != 'indigo-design' {
+            @if $variant != 'indigo' {
                 @include animation('scale-out-center' .15s $ease-out-quad forwards);
                 inset: rem(1px);
             } @else {
@@ -335,7 +337,7 @@
         &:hover {
             border-color: var-get($theme, 'indicator-active-border-color');
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 &::after {
                     background: var-get($theme, 'indicator-hover-dot-color');
                 }
@@ -355,7 +357,7 @@
     }
 
     %igx-nav-dot--active {
-        @if $variant != 'indigo-design' {
+        @if $variant != 'indigo' {
             border: $indicator-border-style;
             border-color: var-get($theme, 'indicator-active-border-color');
         } @else {
@@ -373,12 +375,12 @@
 
         &::after {
             background: var-get($theme, 'indicator-active-dot-color');
-            @if $variant != 'indigo-design' {
+            @if $variant != 'indigo' {
                 @include animation('scale-in-center' .15s $ease-out-quad forwards);
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             &:hover {
                 &::after {
                     background: var-get($theme, 'indicator-active-hover-dot-color');
