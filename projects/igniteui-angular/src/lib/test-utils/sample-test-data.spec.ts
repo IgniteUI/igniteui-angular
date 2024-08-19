@@ -68,6 +68,13 @@ export class SampleTestData {
         { Number: 3, String: '3', Boolean: true, Date: new Date(2018, 9, 22) }
     ]);
 
+    /* Fields: Number: number; 3 items. */
+    public static numericData = () => ([
+        { Number: -1 },
+        { Number: 2.5 },
+        { Number: -0.5 }
+    ]);
+
     /* Fields: Name: string, Avatar: string; 3 items. */
     public static personAvatarData = () => ([
         {

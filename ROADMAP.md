@@ -13,7 +13,7 @@
 
 # Previous Milestone
 
-## Milestone 33, (Released Jul 22nd, 2024)
+## Milestone 33, version 18.1 (Released Jul 22nd, 2024)
 
 1. **[DONE]** Horizontal row dimension expansion for Pivot Grid [#14270](https://github.com/IgniteUI/igniteui-angular/issues/14270)
 2. **[DONE]** Headers focus and keyboard navigation for Pivot Grid Row Dimension Headers [#14249](https://github.com/IgniteUI/igniteui-angular/issues/14249)

@@ -18,7 +18,7 @@
     <div class='igx-grid__tr--header igx-grid__row-indentation--level-{{getLevel()}}'>
         <igx-icon
             family="default"
-            [name]="getExpandState() ? 'expand' : 'chevron_right'"
+            [name]="getExpandState() ? 'tree_collapse' : 'tree_expand'"
             [attr.draggable]="false"
             (click)="toggleRowDimension($event)"
             style="--component-size: 3"

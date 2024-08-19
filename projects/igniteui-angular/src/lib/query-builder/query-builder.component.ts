@@ -988,31 +988,33 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         this.currentGroup = groupItem;
     }
 
-    private createExpressionGroupItem(expressionTree: IExpressionTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
-        let groupItem: ExpressionGroupItem;
-        if (expressionTree) {
-            groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
+    private createExpressionGroupItem(expressionTree: IExpressionTree, parent?: ExpressionGroupItem): ExpressionGroupItem | null {
+        if (!expressionTree) {
+            return null;
+        }
 
-            for (const expr of expressionTree.filteringOperands) {
-                if (expr instanceof FilteringExpressionsTree) {
-                    groupItem.children.push(this.createExpressionGroupItem(expr, groupItem));
-                } else {
-                    const filteringExpr = expr as IFilteringExpression;
-                    const exprCopy: IFilteringExpression = {
-                        fieldName: filteringExpr.fieldName,
-                        condition: filteringExpr.condition,
-                        searchVal: filteringExpr.searchVal,
-                        ignoreCase: filteringExpr.ignoreCase
-                    };
+        const groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
+
+        for (const expr of expressionTree.filteringOperands) {
+            if (expr instanceof FilteringExpressionsTree) {
+                const childGroup = this.createExpressionGroupItem(expr, groupItem);
+                if (childGroup) {
+                    groupItem.children.push(childGroup);
+                }
+            } else {
+                const filteringExpr = expr as IFilteringExpression;
+                const field = this.fields.find(el => el.field === filteringExpr.fieldName);
+
+                if (field) {
+                    const exprCopy: IFilteringExpression = { ...filteringExpr };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
-                    const field = this.fields.find(el => el.field === filteringExpr.fieldName);
                     operandItem.fieldLabel = field.label || field.header || field.field;
                     groupItem.children.push(operandItem);
                 }
             }
         }
 
-        return groupItem;
+        return groupItem.children.length > 0 ? groupItem : null;
     }
 
     private createExpressionTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
@@ -1211,35 +1213,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
 
         editorIcons.forEach((icon) => {
             this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
-            this.iconService.addIconRef(icon.name, 'default', {
-                name: icon.name,
-                family: 'imx-icons'
-            });
-        });
-
-        this.iconService.addIconRef('add', 'default', {
-            name: 'add',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('close', 'default', {
-            name: 'close',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('check', 'default', {
-            name: 'check',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('delete', 'default', {
-            name: 'delete',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('edit', 'default', {
-            name: 'edit',
-            family: 'material',
         });
     }
 }
