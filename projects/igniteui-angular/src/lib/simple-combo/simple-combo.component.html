@@ -25,6 +25,7 @@
     </ng-container>
 
     <igx-suffix *ngIf="hasSelectedItem" [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
+    <igx-suffix *ngIf="hasSelectedItem" [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
         (click)="handleClear($event)">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
@@ -90,6 +91,7 @@
         </div>
         <igx-combo-add-item #addItem [itemHeight]="itemHeight" *ngIf="isAddButtonVisible()"
             [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add-item" role="button"
+            [attr.aria-label]="resourceStrings.igx_combo_addCustomValues_placeholder" [index]="virtualScrollContainer.igxForOf.length">
             [attr.aria-label]="resourceStrings.igx_combo_addCustomValues_placeholder" [index]="virtualScrollContainer.igxForOf.length">
             <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault">
             </ng-container>
