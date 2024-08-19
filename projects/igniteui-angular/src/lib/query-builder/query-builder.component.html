@@ -338,6 +338,7 @@
             >
                 <input
                     #input
+                    #searchValueInput
                     igxInput
                     tabindex="0"
                     [placeholder]="
@@ -361,7 +362,7 @@
                     [disabled]="!operandCanBeCommitted()"
                     (click)="commitOperandEdit()"
                 >
-                    <igx-icon family="default" name="check"></igx-icon>
+                    <igx-icon family="default" name="confirm"></igx-icon>
                 </button>
                 <button type="button"
                     igxIconButton="flat"

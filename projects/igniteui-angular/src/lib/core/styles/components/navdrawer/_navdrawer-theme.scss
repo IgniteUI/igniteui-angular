@@ -152,38 +152,38 @@
     $drawer-icon-size: rem(24px);
 
     $aside-padding: map.get((
-        material: rem(8px),
-        fluent: 0,
-        bootstrap: rem(16px),
-        indigo-design: rem(8px),
+        'material': rem(8px),
+        'fluent': 0,
+        'bootstrap': rem(16px),
+        'indigo': rem(8px),
     ), $variant);
 
     $item-padding: map.get((
-        material: rem(12px) rem(8px),
-        fluent: rem(10px) rem(8px),
-        bootstrap: rem(8px) rem(16px),
-        indigo-design: rem(8px) rem(16px),
+        'material': rem(12px) rem(8px),
+        'fluent': rem(10px) rem(8px),
+        'bootstrap': rem(8px) rem(16px),
+        'indigo': rem(8px) rem(16px),
     ), $variant);
 
     $item-gap: map.get((
-        material: rem(32px),
-        fluent: rem(8px),
-        bootstrap: rem(8px),
-        indigo-design: rem(16px),
+        'material': rem(32px),
+        'fluent': rem(8px),
+        'bootstrap': rem(8px),
+        'indigo': rem(16px),
     ), $variant);
 
     $item-min-height: map.get((
-        material: rem(48px),
-        fluent: rem(44px),
-        bootstrap: rem(40px),
-        indigo-design: rem(32px),
+        'material': rem(48px),
+        'fluent': rem(44px),
+        'bootstrap': rem(40px),
+        'indigo': rem(32px),
     ), $variant);
 
     $item-mini-size: map.get((
-        material: rem(56px),
-        fluent: rem(40px),
-        bootstrap: rem(88px),
-        indigo-design: rem(48px),
+        'material': rem(56px),
+        'fluent': rem(40px),
+        'bootstrap': rem(88px),
+        'indigo': rem(48px),
     ), $variant);
 
     %navdrawer-display {
@@ -285,7 +285,7 @@
         %item {
             justify-content: center;
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 //max-width: rem(32px);
                 // important is needed to override the typography margins
                 margin: rem(14px) auto !important;
@@ -344,7 +344,7 @@
         gap: $item-gap;
         padding: $item-padding;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             margin-block-end: rem(4px) !important;
         }
 
@@ -363,7 +363,7 @@
         justify-content: flex-start;
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo-design', 2, 3)};
+            --component-size: #{if($variant == 'indigo', 2, 3)};
 
             color: var-get($theme, 'item-icon-color');
         }
@@ -384,13 +384,18 @@
         }
 
         @if $variant == 'material' {
+	        $reduce-size: rem(8px);
+
+			// The clip path here fixes a bug: https://github.com/IgniteUI/igniteui-angular/issues/14554
+	        clip-path: inset(calc($reduce-size / 2) 0 round var-get($theme, 'item-border-radius'));
+
             &::after {
                 content: '';
                 position: absolute;
                 width: 100%;
                 inset-block-start: rem(4px);
                 inset-inline-start: 0;
-                height: calc(100% - #{rem(8px)});
+                height: calc(100% - #{$reduce-size});
                 border-radius: var-get($theme, 'item-border-radius');
                 z-index: -1;
             }
@@ -479,7 +484,7 @@
         white-space: nowrap;
         color: var-get($theme, 'item-header-text-color');
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             margin-block-end: rem(4px) !important;
         }
     }
