@@ -75,7 +75,7 @@
                                         {{ row.displayName || row.memberName}}
                                         <igx-icon
                                             family="default"
-                                            [name]="row.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward'"
+                                            [name]="row.sortDirection < 2 ? 'sort_asc' : 'sort_desc'"
                                             *ngIf="row.sortDirection"
                                             igxSuffix>
                                         </igx-icon>
@@ -124,7 +124,7 @@
                                 {{col.displayName || col.memberName}}
                                 <igx-icon
                                     family="default"
-                                    [name]="col.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward'"
+                                    [name]="col.sortDirection < 2 ? 'sort_asc' : 'sort_desc'"
                                     *ngIf="col.sortDirection"
                                     igxSuffix>
                                 </igx-icon>
@@ -209,7 +209,7 @@
                                         {{ row.displayName || row.memberName}}
                                         <igx-icon
                                             family="default"
-                                            [name]="row.sortDirection < 2 ? 'arrow_upward' : 'arrow_downward'"
+                                            [name]="row.sortDirection < 2 ? 'sort_asc' : 'sort_desc'"
                                             *ngIf="row.sortDirection"
                                             igxSuffix>
                                         </igx-icon>

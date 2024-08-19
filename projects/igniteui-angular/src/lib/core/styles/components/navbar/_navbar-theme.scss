@@ -140,7 +140,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             igx-avatar,
             igc-icon-button,
             [igxIconButton] {
@@ -165,7 +165,7 @@
 
     %igx-navbar-left {
         &:not(:empty) {
-            @if $variant != 'indigo-design' {
+            @if $variant != 'indigo' {
                 margin-inline-end: rem(16px)
             }
         }
@@ -176,7 +176,7 @@
     }
 
     %igx-navbar-right {
-        gap: if($variant == 'indigo-design', rem(8px), rem(16px));
+        gap: if($variant == 'indigo', rem(8px), rem(16px));
     }
 
     %igx-navbar-left,
@@ -210,7 +210,7 @@
             user-select: none;
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             igx-icon,
             igc-icon {
                 --component-size: 2;
