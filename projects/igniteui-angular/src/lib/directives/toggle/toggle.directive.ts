@@ -224,17 +224,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             return;
         }
 
-        const target = overlaySettings && overlaySettings.target;
-        // TODO: Remove this if not a behaviour change
-        // Get the size from the target element
-        if (target && target instanceof Element) {
-            const styles = window.getComputedStyle(target);
-            const componentSize = styles.getPropertyValue('--component-size');
-            const globalSize = styles.getPropertyValue('--ig-size');
-            const size = componentSize || globalSize || '3';
-            this.elementRef.nativeElement.style.setProperty('--ig-size', size);
-        }
-
         this._collapsed = false;
         this.cdr.detectChanges();
 
