@@ -186,14 +186,14 @@
         igx-icon {
             --component-size: 3;
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 --size: rem(16px);
             }
         }
     }
 
     %igx-bottom-nav-menu-item--disabled {
-        @if $variant != 'indigo-design' {
+        @if $variant != 'indigo' {
             opacity: .5;
         }
 
@@ -226,7 +226,7 @@
         justify-content: center;
         color: var-get($theme, 'icon-color');
 
-        @if $variant != 'indigo-design' {
+        @if $variant != 'indigo' {
             padding: 0 rem(8px);
             height: rem(24px);
             transform: translateZ(0);
@@ -250,7 +250,7 @@
         color: var-get($theme, 'label-selected-color');
     }
 
-    @if $variant != 'indigo-design' {
+    @if $variant != 'indigo' {
         %igx-tab-icon--selected {
             transform: translateY(-2px);
         }
