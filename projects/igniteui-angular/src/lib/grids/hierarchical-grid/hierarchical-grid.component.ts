@@ -69,6 +69,9 @@ import { IgxActionStripToken } from '../../action-strip/token';
 
 let NEXT_ID = 0;
 
+/**
+ * @hidden @internal
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-child-grid-row',
@@ -434,7 +437,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public parent: IgxHierarchicalGridComponent = null;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public childRow: IgxChildGridRowComponent;
 

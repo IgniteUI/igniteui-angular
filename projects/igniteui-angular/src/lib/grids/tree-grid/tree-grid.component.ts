@@ -81,7 +81,6 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
-import { IgxIconService } from '../../icon/icon.service';
 
 let NEXT_ID = 0;
 
@@ -472,7 +471,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-        @Optional() @Inject(IgxIconService) protected override iconService?: IgxIconService
     ) {
         super(
             validationService,
@@ -496,7 +494,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             localeId,
             platform,
             _diTransactions,
-            iconService
         );
     }
 
