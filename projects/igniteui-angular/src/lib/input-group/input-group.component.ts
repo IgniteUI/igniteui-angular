@@ -442,15 +442,11 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
 
     /** @hidden @internal */
     public ngAfterViewChecked() {
-        if (!this._theme) {
-            const theme = this.theme ?? this.themeService.getComponentTheme(this.element);
+        const theme = this.themeService.getComponentTheme(this.element);
 
-            if (theme) {
-                Promise.resolve().then(() => {
-                    this._theme$.next(theme);
-                    this.cdr.markForCheck();
-                });
-            }
+        if (theme) {
+            this._theme$.next(theme);
+            this.cdr.markForCheck();
         }
     }
 
