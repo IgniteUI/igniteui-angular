@@ -167,14 +167,6 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * @hidden
      * @internal
      */
-    public get dropDownSize() {
-        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Medium;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     public children: QueryList<IgxDropDownItemBaseDirective>;
 
     protected _width;

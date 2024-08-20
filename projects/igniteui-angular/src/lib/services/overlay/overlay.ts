@@ -670,6 +670,11 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private updateSize(info: OverlayInfo) {
+        // set content div size
+        if (info.size) {
+            info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
+        }
+        
         if (info.componentRef) {
             //  if we are positioning component this is first time it gets visible
             //  and we can finally get its size
@@ -680,11 +685,6 @@ export class IgxOverlayService implements OnDestroy {
         // set content div width only if element to show has width
         if (info.initialSize.width !== 0) {
             info.elementRef.nativeElement.parentElement.style.width = info.initialSize.width + 'px';
-        }
-
-        // set content div size
-        if (info.size) {
-            info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
         }
     }
 
