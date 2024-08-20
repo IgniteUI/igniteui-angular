@@ -607,8 +607,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private isValid(value: any): boolean {
-        return this.required
-        ? value !== null && value !== '' && value !== undefined
-        : value !== undefined;
+        if (this.ngControl) {
+            return value !== null && value !== '' && value !== undefined;
+        } else {
+            return value !== undefined;
+        }
     }
 }
