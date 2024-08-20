@@ -54,6 +54,11 @@ const QueryBuilderResourceStringsIT_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Seleziona colonna',
     igx_query_builder_condition_placeholder: 'Seleziona filtro',
     igx_query_builder_value_placeholder: 'Valore',
+    igx_query_builder_details: 'Details',
+    igx_query_builder_search: 'Search',
+    igx_query_builder_select_all: 'Select All',
+    igx_query_builder_select_entity: 'Select entity',
+    igx_query_builder_select_return_fields: 'Select return fields',
 };
 
 /**

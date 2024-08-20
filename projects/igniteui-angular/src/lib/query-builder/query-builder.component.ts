@@ -1,44 +1,15 @@
-import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Output, Pipe, PipeTransform } from '@angular/core';
-import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
-import { Inject } from '@angular/core';
+import { AfterViewInit, ContentChild, EventEmitter, Output } from '@angular/core';
+import { NgIf} from '@angular/common';
 import {
-    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
+    Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { editor } from '@igniteui/material-icons-extended';
-import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
-import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
-import { PlatformUtil } from '../core/utils';
-import { DataType, DataUtil } from '../data-operations/data-util';
-import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { FilteringExpressionsTree, IExpressionTree } from '../data-operations/filtering-expressions-tree';
-import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
-
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
-
-import { IgxOverlayOutletDirective, IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { FieldType, EntityType } from '../grids/common/grid.interface';
-import { IgxIconService } from '../icon/icon.service';
-import { IgxSelectComponent } from '../select/select.component';
-import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
-import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
+import { IExpressionTree } from '../data-operations/filtering-expressions-tree';
+import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { EntityType } from '../grids/common/grid.interface';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
-import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-common/picker-icons.common';
-import { IgxInputDirective } from '../directives/input/input.directive';
-import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { IgxSelectItemComponent } from '../select/select-item.component';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
-import { IgxComboComponent } from "../combo/combo.component";
-import { IgxLabelDirective } from '../input-group/public_api';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 
 /**

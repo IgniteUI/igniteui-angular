@@ -66,6 +66,7 @@ export class IgxFieldFormatterPipe implements PipeTransform {
 class ExpressionItem {
     public parent: ExpressionGroupItem;
     public selected: boolean;
+    public expanded: boolean;
     constructor(parent?: ExpressionGroupItem) {
         this.parent = parent;
     }
@@ -1032,6 +1033,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden
+     */
+    public expanderClick(event, expressionItem: ExpressionOperandItem) {
+        expressionItem.expanded = !expressionItem.expanded;
+        event.stopPropagation();
+    }
+
     public formatReturnFields(returnFields: string | string[]) {
         let text = returnFields;
         if (Array.isArray(returnFields)) {
@@ -1417,6 +1426,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this.iconService.addIconRef('edit', 'default', {
             name: 'edit',
+            family: 'material',
+        });
+        
+        this.iconService.addIconRef('unfold_less', 'default', {
+            name: 'unfold_less',
+            family: 'material',
+        });
+        
+        this.iconService.addIconRef('unfold_more', 'default', {
+            name: 'unfold_more',
             family: 'material',
         });
     }
