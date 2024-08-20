@@ -366,6 +366,20 @@ describe('Carousel', () => {
             expect(HelperTestFunctions.getIndicatorsLabel(fixture)).toBeNull();
         });
 
+        it('`indicator` changes visibility of indicators', () => {
+            expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeDefined();
+
+            carousel.indicator = false;
+            fixture.detectChanges();
+            expect(carousel.indicator).toBe(false);
+            expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeNull();
+
+            carousel.indicator = true;
+            fixture.detectChanges();
+            expect(carousel.indicator).toBe(true);
+            expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeDefined();
+        });
+
         it('indicatorsOrientation changes the position of indicators', () => {
             let indicatorsContainer = HelperTestFunctions.getIndicatorsContainer(fixture);
             expect(indicatorsContainer).toBeDefined();

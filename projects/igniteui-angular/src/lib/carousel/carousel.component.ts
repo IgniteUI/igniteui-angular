@@ -33,6 +33,7 @@ import { Direction, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
+import { IgxButtonDirective } from '../directives/button/button.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
 import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
@@ -82,7 +83,7 @@ export class CarouselHammerConfig extends HammerGestureConfig {
         outline-style: none;
     }`],
     standalone: true,
-    imports: [IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
+    imports: [IgxButtonDirective, IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 
 export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
@@ -118,6 +119,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public get labelId() {
         return this.showIndicatorsLabel ? `${this.id}-label` : null;
     }
+
+    /** @hidden */
+    @HostBinding('class.igx-carousel--vertical')
+	public get isVertical(): boolean {
+		return this.vertical;
+	}
 
     /**
      * Returns the class of the carousel component.
@@ -173,6 +180,29 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * @memberOf IgxCarouselComponent
      */
     @Input({ transform: booleanAttribute }) public navigation = true;
+
+    /**
+     * Controls whether the carousel should render the indicators.
+     * Default value is `true`.
+     * ```html
+     * <igx-carousel [indicator]="false"></igx-carousel>
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    @Input({ transform: booleanAttribute }) public indicator = true;
+
+
+    /**
+     * Controls whether the carousel has vertical alignment.
+     * Default value is `false`.
+     * ```html
+     * <igx-carousel [vertical]="true"></igx-carousel>
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    @Input({ transform: booleanAttribute }) public vertical = false;
 
     /**
      * Controls whether the carousel should support keyboard navigation.
@@ -389,6 +419,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private destroy$ = new Subject<any>();
     private differ: IterableDiffer<IgxSlideComponent> | null = null;
     private incomingSlide: IgxSlideComponent;
+    private _hasKeyboardFocusOnIndicators = false;
 
     /**
      * An accessor that sets the resource strings.
@@ -433,18 +464,21 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /** @hidden */
-    public get indicatorsOrientationClass() {
-        return `igx-carousel-indicators--${this.indicatorsOrientation}`;
+    public get indicatorsClass() {
+        return {
+            ['igx-carousel-indicators--focused']: this._hasKeyboardFocusOnIndicators,
+            [`igx-carousel-indicators--${this.indicatorsOrientation}`]: true
+        };
     }
 
     /** @hidden */
     public get showIndicators(): boolean {
-        return this.total <= this.maximumIndicatorsCount && this.total > 0;
+        return this.indicator && this.total <= this.maximumIndicatorsCount && this.total > 0;
     }
 
     /** @hidden */
     public get showIndicatorsLabel(): boolean {
-        return this.total > this.maximumIndicatorsCount;
+        return this.indicator && this.total > this.maximumIndicatorsCount;
     }
 
     /** @hidden */
@@ -695,6 +729,31 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.lastInterval) {
             clearInterval(this.lastInterval);
         }
+    }
+
+    /** @hidden */
+    public handleKeydown(event: KeyboardEvent, dir: 'next' | 'prev'): void {
+        if (this.platformUtil.isActivationKey(event)) {
+            event.preventDefault();
+            dir === 'next' ? this.next() : this.prev();
+        }
+    }
+
+    /** @hidden */
+    public handleKeyUp(event: KeyboardEvent): void {
+        if (event.key === this.platformUtil.KEYMAP.TAB) {
+            this._hasKeyboardFocusOnIndicators = true;
+        }
+    }
+
+    /** @hidden */
+    public handleFocusOut(): void {
+        this._hasKeyboardFocusOnIndicators = false;
+    }
+
+    /** @hidden */
+    public handleClick(): void {
+        this._hasKeyboardFocusOnIndicators = false;
     }
 
     /**
