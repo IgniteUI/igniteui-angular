@@ -350,7 +350,7 @@ const testFilter = () => {
             };
             state.expressionsTree.filteringOperands = [
                 {
-                    fieldName: 'number',
+                    field: 'number',
                     condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                     searchVal: 3
                 }
@@ -367,7 +367,7 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxStringFilteringOperand.instance().condition('contains'),
-                    fieldName: 'string',
+                    field: 'string',
                     searchVal: 'row'
                 }
             ];
@@ -378,7 +378,7 @@ const testFilter = () => {
             stateIgnoreCase.expressionsTree.filteringOperands = [
                 {
                     condition: IgxStringFilteringOperand.instance().condition('contains'),
-                    fieldName: 'string',
+                    field: 'string',
                     ignoreCase: false,
                     searchVal: 'ROW'
                 }
@@ -401,7 +401,7 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxDateFilteringOperand.instance().condition('after'),
-                    fieldName: 'date',
+                    field: 'date',
                     searchVal: new Date()
                 }
             ];
@@ -416,7 +416,7 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxBooleanFilteringOperand.instance().condition('false'),
-                    fieldName: 'boolean'
+                    field: 'boolean'
                 }
             ];
             const res = FilterUtil.filter(data, state);
@@ -431,7 +431,7 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxBooleanFilteringOperand.instance().condition('false'),
-                    fieldName: 'boolean'
+                    field: 'boolean'
                 }
             ];
             const res = FilterUtil.filter(data, state);

@@ -1,5 +1,6 @@
 import { IExpressionTree } from 'igniteui-angular';
 import { IFilteringOperation } from './filtering-condition';
+import { Serializable } from 'node:child_process';
 
 /* mustCoerceToInt */
 export enum FilteringLogic {
@@ -13,9 +14,10 @@ export enum FilteringLogic {
  * Represents filtering expressions.
  */
 export declare interface IFilteringExpression {
-    fieldName: string;
-    condition: IFilteringOperation;
-    searchVal?: any;
+    field: string;
+    condition?: IFilteringOperation;
+    conditionName: string;
+    searchVal?: Serializable;
     searchTree?: IExpressionTree;
     ignoreCase?: boolean;
 }

@@ -11,7 +11,7 @@ import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { ReorderedColumnsComponent,
         GridIDNameJobTitleComponent,
         ProductsComponent,
-        ColumnsAddedOnInitComponent, 
+        ColumnsAddedOnInitComponent,
         EmptyGridComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -341,19 +341,19 @@ describe('CSV Grid Exporter', () => {
         const grid = fix.componentInstance.grid;
         const tree = new FilteringExpressionsTree(FilteringLogic.And);
         tree.filteringOperands.push({
-            fieldName: 'Name',
+            field: 'Name',
             searchVal: 'a',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
             ignoreCase: true
         });
         tree.filteringOperands.push({
-            fieldName: 'Name',
+            field: 'Name',
             searchVal: 'r',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
             ignoreCase: true
         });
         tree.filteringOperands.push({
-            fieldName: 'ID',
+            field: 'ID',
             searchVal: 5,
             condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
         });
@@ -379,7 +379,7 @@ describe('CSV Grid Exporter', () => {
     it('should not export more than one file', async () => {
         const fix = TestBed.createComponent(EmptyGridComponent);
         fix.detectChanges();
-        
+
         const grid = fix.componentInstance.grid;
 
         exporter.export(grid, options);
@@ -492,13 +492,13 @@ describe('CSV Grid Exporter', () => {
         it('Should honor the Advanced filters when exporting', async () => {
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                fieldName: 'Name',
+                field: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
                 ignoreCase: true
             });
             tree.filteringOperands.push({
-                fieldName: 'Name',
+                field: 'Name',
                 searchVal: 'r',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
                 ignoreCase: true

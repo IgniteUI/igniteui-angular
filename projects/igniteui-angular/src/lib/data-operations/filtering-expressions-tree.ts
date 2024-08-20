@@ -10,9 +10,9 @@ export enum FilteringExpressionsTreeType {
 export declare interface IExpressionTree {
     filteringOperands: (IExpressionTree | IFilteringExpression)[];
     operator: FilteringLogic;
-    fieldName?: string;
+    field?: string;
     entity?: string;
-    returnFields?: string | string[];
+    returnFields?: string[];
 }
 
 /* marshalByValue */
@@ -75,7 +75,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      *
      * @memberof FilteringExpressionsTree
      */
-    public fieldName?: string;
+    public field?: string;
 
     /* alternateName: treeType */
     /**
@@ -93,9 +93,9 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     public entity?: string;
 
-    public returnFields?: string | string[];
+    public returnFields?: string[];
 
-    constructor(operator: FilteringLogic, entity?: string, returnFields?: string | string[]) {
+    constructor(operator: FilteringLogic, entity?: string, returnFields?: string[]) {
         this.operator = operator;
         this.entity = entity;
         this.returnFields = returnFields;
@@ -147,7 +147,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
                     return i;
                 }
             } else {
-                if ((expr as IFilteringExpression).fieldName === fieldName) {
+                if ((expr as IFilteringExpression).field === fieldName) {
                     return i;
                 }
             }
@@ -157,14 +157,14 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     }
 
     protected isFilteringExpressionsTreeForColumn(expressionsTree: IFilteringExpressionsTree, fieldName: string): boolean {
-        if (expressionsTree.fieldName === fieldName) {
+        if (expressionsTree.field === fieldName) {
             return true;
         }
 
         for (const expr of expressionsTree.filteringOperands) {
             if ((expr instanceof FilteringExpressionsTree)) {
                 return this.isFilteringExpressionsTreeForColumn(expr, fieldName);
-            } else if ((expr as IFilteringExpression).fieldName === fieldName) {
+            } else if ((expr as IFilteringExpression).field === fieldName) {
                 return true;
             }
         }

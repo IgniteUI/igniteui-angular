@@ -569,7 +569,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                     return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
                         new Date(v).toISOString())];
                 }
-                return [...arr, ...[e.expression.searchVal ? e.expression.searchVal.toISOString() : e.expression.searchVal]];
+                return [...arr, ...[e.expression.searchVal ? (e.expression.searchVal as any).toISOString() : e.expression.searchVal]];
             }, []));
         } else if (this.column.dataType === GridColumnDataType.Time) {
             filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
@@ -577,7 +577,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                     return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
                         typeof v === 'string' ? v : new Date(v).toLocaleTimeString())];
                 }
-                return [...arr, ...[e.expression.searchVal ? e.expression.searchVal.toLocaleTimeString() : e.expression.searchVal]];
+                return [...arr, ...[e.expression.searchVal ? (e.expression.searchVal as any).toLocaleTimeString() : e.expression.searchVal]];
             }, []));
         } else {
             filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
@@ -619,12 +619,12 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private getColumnFilterExpressionsTree() {
         const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
-        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
+        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.field);
 
         for (const operand of gridExpressionsTree.filteringOperands) {
             if (operand instanceof FilteringExpressionsTree) {
                 const columnExprTree = operand as FilteringExpressionsTree;
-                if (columnExprTree.fieldName === this.column.field) {
+                if (columnExprTree.field === this.column.field) {
                     continue;
                 }
             }
