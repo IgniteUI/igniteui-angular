@@ -1604,6 +1604,12 @@
             &:hover {
                 color: var-get($theme, 'date-special-hover-foreground');
                 background: var-get($theme, 'date-special-range-hover-background');
+
+                @if $variant == 'indigo' {
+                    &::after {
+                        border-color: var-get($theme, 'date-special-hover-border-color');
+                    }
+                }
             }
 
             @if $variant == 'material' {
@@ -2042,6 +2048,10 @@
             @if $variant == 'indigo' {
                 background: var-get($theme, 'date-selected-current-range-focus-background');
                 border-color: var-get($theme, 'date-current-focus-border-color');
+
+                &::after {
+                    border-color: var-get($theme, 'date-special-hover-border-color');
+                }
             }
         }
     }
