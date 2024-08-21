@@ -226,6 +226,13 @@
         }
     }
 
+    %form-group-bundle:hover,
+    %form-group-bundle:focus-within {
+        %igx-combo__toggle-button {
+            color: var-get($theme, 'toggle-button-foreground-focus');
+        }
+    }
+
     .igx-input-group:not(.igx-input-group--disabled) {
         %igx-combo__clear-button {
             background: var-get($theme, 'clear-button-background');
