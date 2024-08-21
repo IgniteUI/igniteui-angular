@@ -72,7 +72,8 @@ export class PivotGridSampleComponent {
         this.filterExpTree.filteringOperands = [
             {
                 condition: IgxStringFilteringOperand.instance().condition('equals'),
-                fieldName: 'SellerName',
+                conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
+                field: 'SellerName',
                 searchVal: 'Stanley'
             }
         ];

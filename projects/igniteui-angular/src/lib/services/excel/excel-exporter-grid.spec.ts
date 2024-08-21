@@ -589,19 +589,19 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                fieldName: 'Name',
+                field: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
                 ignoreCase: true
             });
             tree.filteringOperands.push({
-                fieldName: 'Name',
+                field: 'Name',
                 searchVal: 'r',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
                 ignoreCase: true
             });
             tree.filteringOperands.push({
-                fieldName: 'ID',
+                field: 'ID',
                 searchVal: 5,
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
             });
@@ -1144,13 +1144,13 @@ describe('Excel Exporter', () => {
         it('Should honor Advanced filters when exporting', async () => {
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                fieldName: 'Age',
+                field: 'Age',
                 searchVal: 40,
                 condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
                 ignoreCase: true
             });
             tree.filteringOperands.push({
-                fieldName: 'Name',
+                field: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
                 ignoreCase: true

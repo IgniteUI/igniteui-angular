@@ -770,8 +770,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
         gridExpressionsTree.filteringOperands = [
-            { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
-            { fieldName: 'ID', searchVal: 4, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') }
+            { field: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
+            { field: 'ID', searchVal: 4, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') }
         ];
 
         grid.filteringExpressionsTree = gridExpressionsTree;
@@ -839,14 +839,14 @@ describe('IgxGrid - Filtering actions #grid', () => {
     it('Should correctly apply two conditions to two columns at once.', fakeAsync(() => {
         const colDownloadsExprTree = new FilteringExpressionsTree(FilteringLogic.And, 'Downloads');
         colDownloadsExprTree.filteringOperands = [
-            { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
-            { fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo') }
+            { field: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
+            { field: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo') }
         ];
 
         const colIdExprTree = new FilteringExpressionsTree(FilteringLogic.And, 'ID');
         colIdExprTree.filteringOperands = [
-            { fieldName: 'ID', searchVal: 1, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') },
-            { fieldName: 'ID', searchVal: 5, condition: IgxNumberFilteringOperand.instance().condition('lessThan') }
+            { field: 'ID', searchVal: 1, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') },
+            { field: 'ID', searchVal: 5, condition: IgxNumberFilteringOperand.instance().condition('lessThan') }
         ];
 
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);

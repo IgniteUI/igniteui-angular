@@ -2070,7 +2070,7 @@ export class IgxGridFilteringBindingComponent extends BasicGridComponent impleme
         this.filterTree.filteringOperands = [
             {
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-                fieldName: 'Downloads',
+                field: 'Downloads',
                 searchVal: 200
             }
         ];
@@ -2101,7 +2101,7 @@ export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent
         this.filterTree.filteringOperands = [
             {
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-                fieldName: 'Downloads',
+                field: 'Downloads',
                 searchVal: 200
             }
         ];
