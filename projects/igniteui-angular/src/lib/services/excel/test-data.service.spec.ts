@@ -1812,4 +1812,22 @@ export class FileContentData {
 
         return this.createData();
     }
+
+    public get exportGridWithCustomSummaryOnlyWithSummaryLabel() {
+        this._sharedStringsData =
+            `count="10" uniqueCount="10"><si><t>Product ID</t></si><si><t>UnitPrice</t></si><si><t>UnitsInStock</t></si><si><t>GRID_LEVEL_COL</t></si><si><t>210</t></si><si><t>549.75</t></si><si><t>680</t></si><si><t>33</t></si><si><t>176.35</t></si><si><t>46</t></si>`;
+
+        this._tableData =
+            `ref="A1:C23" totalsRowShown="0">
+            <autoFilter ref="A1:C23"/><tableColumns count="3"><tableColumn id="1" name="Product ID"/><tableColumn id="2" name="UnitPrice"/><tableColumn id="3" name="UnitsInStock"/></tableColumns>`;
+
+        this._worksheetData =
+            `<dimension ref="A1:E23"/>
+            <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+            <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
+            <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/><col min="5" max="5" hidden="1"/></cols>
+            <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="E1" t="s"><v>3</v></c></row><row r="2"><c r="A2" s="1"><v>1</v></c><c r="B2" s="1"><v>18</v></c><c r="C2" s="1"><v>39</v></c><c r="E2" s="1"><v>0</v></c></row><row r="3"><c r="A3" s="1"><v>2</v></c><c r="B3" s="1"><v>19</v></c><c r="C3" s="1"><v>17</v></c><c r="E3" s="1"><v>0</v></c></row><row r="4"><c r="A4" s="1"><v>3</v></c><c r="B4" s="1"><v>10</v></c><c r="C4" s="1"><v>13</v></c><c r="E4" s="1"><v>0</v></c></row><row r="5"><c r="A5" s="1"><v>4</v></c><c r="B5" s="1"><v>22</v></c><c r="C5" s="1"><v>53</v></c><c r="E5" s="1"><v>0</v></c></row><row r="6"><c r="A6" s="1"><v>5</v></c><c r="B6" s="1"><v>21.35</v></c><c r="C6" s="1"><v>0</v></c><c r="E6" s="1"><v>0</v></c></row><row r="7"><c r="A7" s="1"><v>6</v></c><c r="B7" s="1"><v>25</v></c><c r="C7" s="1"><v>0</v></c><c r="E7" s="1"><v>0</v></c></row><row r="8"><c r="A8" s="1"><v>7</v></c><c r="B8" s="1"><v>30</v></c><c r="C8" s="1"><v>150</v></c><c r="E8" s="1"><v>0</v></c></row><row r="9"><c r="A9" s="1"><v>8</v></c><c r="B9" s="1"><v>40</v></c><c r="C9" s="1"><v>6</v></c><c r="E9" s="1"><v>0</v></c></row><row r="10"><c r="A10" s="1"><v>9</v></c><c r="B10" s="1"><v>97</v></c><c r="C10" s="1"><v>29</v></c><c r="E10" s="1"><v>0</v></c></row><row r="11"><c r="A11" s="1"><v>10</v></c><c r="B11" s="1"><v>31</v></c><c r="C11" s="1"><v>31</v></c><c r="E11" s="1"><v>0</v></c></row><row r="12"><c r="A12" s="1"><v>11</v></c><c r="B12" s="1"><v>21</v></c><c r="C12" s="1"><v>22</v></c><c r="E12" s="1"><v>0</v></c></row><row r="13"><c r="A13" s="1"><v>12</v></c><c r="B13" s="1"><v>38</v></c><c r="C13" s="1"><v>86</v></c><c r="E13" s="1"><v>0</v></c></row><row r="14"><c r="A14" s="1"><v>13</v></c><c r="B14" s="1"><v>6</v></c><c r="C14" s="1"><v>24</v></c><c r="E14" s="1"><v>0</v></c></row><row r="15"><c r="A15" s="1"><v>14</v></c><c r="B15" s="1"><v>23.25</v></c><c r="C15" s="1"><v>35</v></c><c r="E15" s="1"><v>0</v></c></row><row r="16"><c r="A16" s="1"><v>15</v></c><c r="B16" s="1"><v>15.5</v></c><c r="C16" s="1"><v>39</v></c><c r="E16" s="1"><v>0</v></c></row><row r="17"><c r="A17" s="1"><v>16</v></c><c r="B17" s="1"><v>17.45</v></c><c r="C17" s="1"><v>29</v></c><c r="E17" s="1"><v>0</v></c></row><row r="18"><c r="A18" s="1"><v>17</v></c><c r="B18" s="1"><v>39</v></c><c r="C18" s="1"><v>0</v></c><c r="E18" s="1"><v>0</v></c></row><row r="19"><c r="A19" s="1"><v>18</v></c><c r="B19" s="1"><v>62.5</v></c><c r="C19" s="1"><v>42</v></c><c r="E19" s="1"><v>0</v></c></row><row r="20"><c r="A20" s="1"><v>19</v></c><c r="B20" s="1"><v>9.2</v></c><c r="C20" s="1"><v>25</v></c><c r="E20" s="1"><v>0</v></c></row><row r="21"><c r="A21" s="1"><v>20</v></c><c r="B21" s="1"><v>4.5</v></c><c r="C21" s="1"><v>40</v></c><c r="E21" s="1"><v>0</v></c></row><row r="22"><c r="A22" t="s" s="1"><v>4</v></c><c r="B22" t="s" s="1"><v>5</v></c><c r="C22" t="s" s="1"><v>6</v></c><c r="E22" s="1"><f>""</f></c></row><row r="23"><c r="A23" t="s" s="1"><v>7</v></c><c r="B23" t="s" s="1"><v>8</v></c><c r="C23" t="s" s="1"><v>9</v></c><c r="E23" s="1"><f>""</f></c></row></sheetData>`
+
+        return this.createData();
+    }
 }

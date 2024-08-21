@@ -20,7 +20,8 @@ import {
     GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
     GroupedGridWithSummariesComponent,
     GridCurrencySummariesComponent,
-    GridUserMeetingDataComponent
+    GridUserMeetingDataComponent,
+    GridCustomSummaryComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -75,7 +76,8 @@ describe('Excel Exporter', () => {
                 IgxHierarchicalGridSummariesExportComponent,
                 GroupedGridWithSummariesComponent,
                 GridCurrencySummariesComponent,
-                GridUserMeetingDataComponent
+                GridUserMeetingDataComponent,
+                GridCustomSummaryComponent
             ]
         }).compileComponents();
     }));
@@ -1355,6 +1357,17 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.exportHierarchicalGridWithSummaries);
         });
+
+        it('should export grid with custom summaries, only with summary label', async () => {
+            fix = TestBed.createComponent(GridCustomSummaryComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportGridWithCustomSummaryOnlyWithSummaryLabel);
+        });
+
     });
 
     describe('', () => {

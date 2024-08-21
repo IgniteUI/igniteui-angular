@@ -457,7 +457,16 @@ export class WorksheetFile implements IExcelFile {
                 summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, level, targetCol);
 
                 if (!summaryFunc) {
-                    const cellStr = `${cellValue.label}: ${cellValue.value}`;
+                    let cellStr = '';
+
+                    if (cellValue.label && cellValue.value) {
+                        cellStr = `${cellValue.label}: ${cellValue.value}`;
+                    } else if (cellValue.label) {
+                        cellStr = cellValue.label;
+                    } else if (cellValue.value) {
+                        cellStr = cellValue.value;
+                    }
+
                     const savedValue = dictionary.saveValue(cellStr, false);
                     return `<c r="${columnName}" t="s" s="1"><v>${savedValue}</v></c>`;
                 }
