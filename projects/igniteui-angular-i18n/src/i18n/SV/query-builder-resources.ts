@@ -54,6 +54,7 @@ const QueryBuilderResourceStringsSV_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Välj kolumn',
     igx_query_builder_condition_placeholder: 'Välj filter',
     igx_query_builder_value_placeholder: 'Värde',
+    igx_query_builder_all_fields: 'All fields',
     igx_query_builder_details: 'Details',
     igx_query_builder_search: 'Search',
     igx_query_builder_select_all: 'Select All',

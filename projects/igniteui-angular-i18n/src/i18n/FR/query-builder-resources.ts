@@ -54,6 +54,7 @@ const QueryBuilderResourceStringsFR_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Sélectionner la colonne',
     igx_query_builder_condition_placeholder: 'Sélectionner le filtre',
     igx_query_builder_value_placeholder: 'Valeur',
+    igx_query_builder_all_fields: 'All fields',
     igx_query_builder_details: 'Details',
     igx_query_builder_search: 'Search',
     igx_query_builder_select_all: 'Select All',

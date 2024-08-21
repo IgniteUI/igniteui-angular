@@ -54,6 +54,7 @@ const QueryBuilderResourceStringsZHHANT_: ExpandRequire<IQueryBuilderResourceStr
     igx_query_builder_column_placeholder: '選擇列',
     igx_query_builder_condition_placeholder: '選擇篩選條件',
     igx_query_builder_value_placeholder: '數值',
+    igx_query_builder_all_fields: 'All fields',
     igx_query_builder_details: 'Details',
     igx_query_builder_search: 'Search',
     igx_query_builder_select_all: 'Select All',

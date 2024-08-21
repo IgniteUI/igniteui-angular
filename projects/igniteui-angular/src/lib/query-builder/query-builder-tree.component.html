@@ -100,7 +100,7 @@
                     *ngIf="!expressionItem.expression.condition.isUnary"
                 >
                     <ng-container *ngIf="expressionItem.expression.searchTree">
-                        <strong>{{expressionItem.expression.searchTree.entity}}</strong>&nbsp;/ {{formatReturnFields(expressionItem.expression.searchTree.returnFields)}}
+                        <strong>{{expressionItem.expression.searchTree.entity}}</strong>&nbsp;/ {{formatReturnFields(expressionItem.expression.searchTree)}}
                     </ng-container>
 
                     <ng-container *ngIf="!expressionItem.expression.searchTree">
@@ -421,6 +421,7 @@
                         </igx-select>
 
                         <igx-combo
+                            #selectedReturnFieldsCombo
                             style="margin-left: 10px"
                             [itemsMaxHeight]="250"
                             [data]="fields"
@@ -430,6 +431,19 @@
                             searchPlaceholder="{{ this.resourceStrings.igx_query_builder_search }}"
                             [style.display]="isInEditMode() ? 'block' : 'none'"
                         >
+                            <ng-template igxComboHeader>
+                                <igx-checkbox
+                                    [checked]="this.selectedEntity.fields.length == this.selectedReturnFields.length"
+                                    [indeterminate]="this.selectedReturnFields.length > 0 && this.selectedReturnFields.length < this.selectedEntity.fields.length"
+                                    [readonly]="true"
+                                    [disableRipple]="true"
+                                    [tabindex]="-1"
+                                    (click)="onSelectAllClicked($event)"
+                                    style="margin-left: 16px"
+                                    class="igx-combo__checkbox">
+                                </igx-checkbox>
+                                <span>{{ this.resourceStrings.igx_query_builder_select_all }}</span>
+                            </ng-template>
                             <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_return_fields }}</label>
                         </igx-combo>
                     </ng-container>

@@ -54,6 +54,7 @@ const QueryBuilderResourceStringsHU_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Oszlop kiválasztása',
     igx_query_builder_condition_placeholder: 'Szűrő kiválasztása',
     igx_query_builder_value_placeholder: 'Érték',
+    igx_query_builder_all_fields: 'All fields',
     igx_query_builder_details: 'Details',
     igx_query_builder_search: 'Search',
     igx_query_builder_select_all: 'Select All',

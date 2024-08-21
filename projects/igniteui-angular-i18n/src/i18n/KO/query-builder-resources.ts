@@ -54,6 +54,7 @@ const QueryBuilderResourceStringsKO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: '열 선택',
     igx_query_builder_condition_placeholder: '필터 선택',
     igx_query_builder_value_placeholder: '값',
+    igx_query_builder_all_fields: 'All fields',
     igx_query_builder_details: 'Details',
     igx_query_builder_search: 'Search',
     igx_query_builder_select_all: 'Select All',

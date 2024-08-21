@@ -14,7 +14,7 @@ import { PlatformUtil } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { FilteringExpressionsTree, IExpressionTree } from '../data-operations/filtering-expressions-tree';
+import { FilteringExpressionsTree, IExpressionTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -39,6 +39,8 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxComboComponent } from "../combo/combo.component";
 import { IgxLabelDirective } from '../input-group/public_api';
+import { IgxComboHeaderDirective } from '../combo/public_api';
+import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -108,7 +110,7 @@ class ExpressionOperandItem extends ExpressionItem {
     selector: 'igx-query-builder-tree',
     templateUrl: './query-builder-tree.component.html',
     standalone: true,
-    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective, IgxToggleActionDirective, IgxComboComponent, IgxLabelDirective]
+    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective, IgxToggleActionDirective, IgxComboComponent, IgxLabelDirective, IgxComboHeaderDirective, IgxCheckboxComponent]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
@@ -230,6 +232,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     
     @ViewChild('entitySelect', { read: IgxSelectComponent })
     protected entitySelect: IgxSelectComponent;
+
+    @ViewChild('selectedReturnFieldsCombo', { read: IgxComboComponent })
+    private selectedReturnFieldsCombo: IgxComboComponent;
 
     @ViewChild('fieldSelect', { read: IgxSelectComponent })
     private fieldSelect: IgxSelectComponent;
@@ -403,6 +408,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _addModeExpression: ExpressionOperandItem;
     private _editedExpression: ExpressionOperandItem;
     private _selectedGroups: ExpressionGroupItem[] = [];
+    private _expandedExpressions: IFilteringExpression[] = [];
     private _fields: FieldType[];
     private _expressionTree: IExpressionTree;
     private _locale;
@@ -1038,14 +1044,26 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public expanderClick(event, expressionItem: ExpressionOperandItem) {
         expressionItem.expanded = !expressionItem.expanded;
+        if (expressionItem.expanded) {
+            this._expandedExpressions.push(expressionItem.expression);
+        } else {
+            const matchIndex = this._expandedExpressions.indexOf(expressionItem.expression);
+            this._expandedExpressions.splice(matchIndex, 1);
+        }
         event.stopPropagation();
     }
 
-    public formatReturnFields(returnFields: string | string[]) {
+    public formatReturnFields(innerTree: IFilteringExpressionsTree) {
+        const returnFields = innerTree.returnFields;
         let text = returnFields;
         if (Array.isArray(returnFields)) {
-            text = returnFields.join(', ');
-            text = text.length > 25 ? text.substring(0, 25) + ' ...' : text;
+            const innerTreeEntity = this.entities.find(el => el.name === innerTree.entity);
+            if (returnFields.length === innerTreeEntity.fields.length) {
+                text = this.resourceStrings.igx_query_builder_all_fields;
+            } else {
+                text = returnFields.join(', ');
+                text = text.length > 25 ? text.substring(0, 25) + ' ...' : text;
+            }
         }
         return text;
     }
@@ -1057,6 +1075,17 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public onInEditModeChanged(expressionItem: ExpressionOperandItem) {
         if (!expressionItem.inEditMode) {
             this.enterExpressionEdit(expressionItem);
+        }
+    }
+
+    public onSelectAllClicked(event) {
+        if (
+            (this._selectedReturnFields.length > 0 && this._selectedReturnFields.length < this._selectedEntity.fields.length) ||
+            this._selectedReturnFields.length == this._selectedEntity.fields.length
+        ) {
+            this.selectedReturnFieldsCombo.deselectAllItems();
+        } else {
+            this.selectedReturnFieldsCombo.selectAllItems();
         }
     }
 
@@ -1172,6 +1201,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     }
                     const field = this.fields.find(el => el.field === filteringExpr.fieldName);
                     operandItem.fieldLabel = field.label || field.header || field.field;
+                    if (this._expandedExpressions.filter(e => e.searchTree == operandItem.expression.searchTree).length > 0) {
+                        operandItem.expanded = true;
+                    }
                     groupItem.children.push(operandItem);
                     this._selectedEntity = this.entities.find(el => el.name === expressionTree.entity);
                     this._selectedReturnFields =

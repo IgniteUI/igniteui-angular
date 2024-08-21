@@ -54,6 +54,7 @@ const QueryBuilderResourceStringsRO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Selectați coloana',
     igx_query_builder_condition_placeholder: 'Selectați filtrul',
     igx_query_builder_value_placeholder: 'Valoare',
+    igx_query_builder_all_fields: 'All fields',
     igx_query_builder_details: 'Details',
     igx_query_builder_search: 'Search',
     igx_query_builder_select_all: 'Select All',

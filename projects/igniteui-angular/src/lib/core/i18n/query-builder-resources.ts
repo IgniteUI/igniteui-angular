@@ -52,6 +52,7 @@ export interface IQueryBuilderResourceStrings {
     igx_query_builder_column_placeholder?: string;
     igx_query_builder_condition_placeholder?: string;
     igx_query_builder_value_placeholder?: string;
+    igx_query_builder_all_fields?: string;
     igx_query_builder_details?: string;
     igx_query_builder_search?: string;
     igx_query_builder_select_all?: string;
@@ -113,6 +114,7 @@ export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
     igx_query_builder_column_placeholder: 'Select column',
     igx_query_builder_condition_placeholder: 'Select filter',
     igx_query_builder_value_placeholder: 'Value',
+    igx_query_builder_all_fields: 'All fields',
     igx_query_builder_details: 'Details',
     igx_query_builder_search: 'Search',
     igx_query_builder_select_all: 'Select All',
