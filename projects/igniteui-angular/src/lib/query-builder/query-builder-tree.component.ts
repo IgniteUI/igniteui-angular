@@ -41,6 +41,8 @@ import { IgxComboComponent } from "../combo/combo.component";
 import { IgxLabelDirective } from '../input-group/public_api';
 import { IgxComboHeaderDirective } from '../combo/public_api';
 import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
+import { IgxDialogComponent } from "../dialog/dialog.component";
+import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -110,7 +112,7 @@ class ExpressionOperandItem extends ExpressionItem {
     selector: 'igx-query-builder-tree',
     templateUrl: './query-builder-tree.component.html',
     standalone: true,
-    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective, IgxToggleActionDirective, IgxComboComponent, IgxLabelDirective, IgxComboHeaderDirective, IgxCheckboxComponent]
+    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective, IgxToggleActionDirective, IgxComboComponent, IgxLabelDirective, IgxComboHeaderDirective, IgxCheckboxComponent, IgxDialogComponent]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
@@ -253,6 +255,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('addConditionButton', { read: ElementRef })
     private addConditionButton: ElementRef;
+    
+    @ViewChild('entityChangeDialog', { read: IgxDialogComponent })
+    private entityChangeDialog: IgxDialogComponent;
 
     /**
      * @hidden @internal
@@ -412,6 +417,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _fields: FieldType[];
     private _expressionTree: IExpressionTree;
     private _locale;
+    private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     private _positionSettings = {
@@ -455,39 +461,50 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public set selectedEntity(value: EntityType) {
-        let oldValue = null;
-        if (this.expressionTree) {
-            oldValue = this.expressionTree.entity;
-        }
-        if (this._selectedEntity !== value) {
-            this._selectedEntity = value;
-            this.selectedReturnFields = null;
-            this.fields = value ? value.fields : null;
-            if (oldValue && this._selectedEntity /*&& this._selectedEntity !== oldValue*/) {
-                this.selectedField = null;
-                this.selectedCondition = null;
-                this.searchValue = null;
-                this.cdr.detectChanges();
-            }
-        }
-
-        const entity = this.entities.find(el => el.name === this.selectedEntity.name);
-        this.fields = entity.fields;
-
-        if (this.expressionTree) {
-            this.expressionTree.entity = this.selectedEntity.name;
-            this.expressionTree.returnFields = null;
-
-            // TODO: show dialog alert
-        }
+    public get selectedEntity(): EntityType {
+        return this._selectedEntity;
     }
 
     /**
      * @hidden @internal
      */
-    public get selectedEntity(): EntityType {
-        return this._selectedEntity;
+    public onEntitySelectChanging(event: ISelectionEventArgs) {
+        event.cancel = true;
+        this._entityNewValue = event.newSelection.value;
+        this.entityChangeDialog.open();
+    }
+
+    /**
+     * @hidden
+     */
+    public onEntityChangeCancel() {
+        this.entityChangeDialog.close();
+        this.entitySelect.close();
+        this._entityNewValue = null;
+    }
+
+    /**
+     * @hidden
+     */
+    public onEntityChangeConfirm() {
+        this._selectedEntity = this._entityNewValue;
+        this.fields = this._entityNewValue ? this._entityNewValue.fields : [];
+        this._selectedReturnFields = this._entityNewValue.fields.map(f => f.field);
+        if (this.expressionTree) {
+            this.expressionTree.entity = this._selectedEntity.name;
+            this.expressionTree.returnFields = [];
+            this.expressionTree.filteringOperands = [];
+
+            this.expressionTreeChange.emit(this._expressionTree);
+
+            this._editedExpression = null;
+            this.addAndGroup();
+        }
+
+        this.entityChangeDialog.close();
+        this.entitySelect.close();
+        
+        this._entityNewValue = null;
     }
 
     /**
