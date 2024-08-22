@@ -30,6 +30,7 @@
 @use '../components/toast/toast-theme' as *;
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
+@use '../components/label/label-theme' as *;
 
 @mixin typography() {
     @include badge-typography($categories: (
@@ -118,4 +119,5 @@
         tooltip-text: 'subtitle-2'
     ));
     @include tree-typography();
+    @include label-typography();
 }
