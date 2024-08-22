@@ -50,21 +50,33 @@
         color: var-get($theme, 'color');
         max-width: 100%;
         line-height: normal;
-        font-size: rem(16px);
 
         [dir='rtl'] & {
             transform-origin: top right;
         }
 
-        @if $variant == 'fluent' or $variant == 'indigo-design' {
-            font-size: rem(14px);
-            font-weight: 600;
-            height: auto;
-        }
-
-        @if $variant == 'bootstrap' {
-            line-height: rem(24px);
+        @if $variant != 'material' {
             height: auto;
         }
     }
 }
+
+/// Adds typography styles for the igx-label component.
+/// Uses the 'caption'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $categories [(label: 'caption')] - The categories from the typographic scale used for type styles.
+@mixin label-typography(
+    $categories: (
+        label: 'caption',
+    )
+) {
+    $label: map.get($categories, 'label');
+
+    %label-base {
+        @include type-style($label) {
+            margin: 0;
+        }
+    }
+}
+
