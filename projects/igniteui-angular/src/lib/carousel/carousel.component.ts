@@ -206,14 +206,14 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Controls whether the carousel should support keyboard navigation.
-     * Default value is `true`.
+     * Default value is `false`.
      * ```html
-     * <igx-carousel [keyboardSupport]="false"></igx-carousel>
+     * <igx-carousel [keyboardSupport]="true"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input({ transform: booleanAttribute }) public keyboardSupport = true;
+    @Input({ transform: booleanAttribute }) public keyboardSupport = false;
 
     /**
      * Controls whether the carousel should support gestures.
