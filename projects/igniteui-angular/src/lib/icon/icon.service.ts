@@ -216,9 +216,9 @@ export class IgxIconService {
         };
     }
 
-    private getOrCreateFamily(family: string) {
+    private getOrCreateSvgFamily(family: string) {
         if (!this._families.has(family)) {
-          this._families.set(family, { className: family, type: "svg" });
+            this._families.set(family, { className: family, type: "svg" });
         }
 
         return this._families.get(family);
@@ -237,6 +237,7 @@ export class IgxIconService {
     ) {
         if (name && url) {
             const safeUrl = this._sanitizer.bypassSecurityTrustResourceUrl(url);
+
             if (!safeUrl) {
                 throw new Error(
                     `The provided URL could not be processed as trusted resource URL by Angular's DomSanitizer: "${url}".`,
@@ -247,6 +248,7 @@ export class IgxIconService {
                 SecurityContext.RESOURCE_URL,
                 safeUrl,
             );
+
             if (!sanitizedUrl) {
                 throw new Error(
                     `The URL provided was not trusted as a resource URL: "${url}".`,
@@ -254,7 +256,7 @@ export class IgxIconService {
             }
 
             if (!this.isSvgIconCached(name, family)) {
-                const _family = this.getOrCreateFamily(family);
+                const _family = this.getOrCreateSvgFamily(family);
 
                 this.fetchSvg(url).subscribe((res) => {
                     this.cacheSvgIcon(name, res, _family.className, stripMeta);
@@ -277,7 +279,7 @@ export class IgxIconService {
     public addSvgIconFromText(
         name: string,
         iconText: string,
-        family = "",
+        family = this._defaultFamily.name,
         stripMeta = false,
     ) {
         if (name && iconText) {
@@ -285,7 +287,7 @@ export class IgxIconService {
                 return;
             }
 
-            const _family = this.getOrCreateFamily(family);
+            const _family = this.getOrCreateSvgFamily(family);
             this.cacheSvgIcon(name, iconText, _family.className, stripMeta);
         } else {
             throw new Error(
@@ -300,12 +302,14 @@ export class IgxIconService {
      *   const isSvgCached = this.iconService.isSvgIconCached('aruba', 'svg-flags');
      * ```
      */
-    public isSvgIconCached(name: string, family = ""): boolean {
+    public isSvgIconCached(name: string, family: string): boolean {
         const familyClassName = this.familyClassName(family);
+
         if (this._cachedIcons.has(familyClassName)) {
             const familyRegistry = this._cachedIcons.get(
                 familyClassName,
             ) as Map<string, SafeHtml>;
+
             return familyRegistry.has(name);
         }
 
@@ -318,7 +322,7 @@ export class IgxIconService {
      *   const svgIcon = this.iconService.getSvgIcon('aruba', 'svg-flags');
      * ```
      */
-    public getSvgIcon(name: string, family = "") {
+    public getSvgIcon(name: string, family: string) {
         const familyClassName = this.familyClassName(family);
         return this._cachedIcons.get(familyClassName)?.get(name);
     }
@@ -368,6 +372,7 @@ export class IgxIconService {
                 const safeSvg = this._sanitizer.bypassSecurityTrustHtml(
                     svg.outerHTML,
                 );
+
                 this._cachedIcons.get(family).set(name, safeSvg);
                 this._iconLoaded.next({ name, value, family });
             }
