@@ -88,11 +88,7 @@
 
     %grid-excel-icon--filtered {
         igx-icon {
-            color: if(
-                $variant == 'indigo',
-                color($color: 'warn', $variant: 500),
-                color($color: 'secondary')
-            );
+            color: if($variant == 'indigo', color($color: 'primary', $variant: 400), color($color: 'secondary'));
         }
     }
 
