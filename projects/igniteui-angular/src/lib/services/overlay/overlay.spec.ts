@@ -1357,6 +1357,27 @@ describe('igxOverlay', () => {
 
             overlay.detachAll();
         }));
+
+        it('Should properly move computed size style to the overlay content container.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleRefComponent);
+            fixture.detectChanges();
+
+            fixture.componentInstance.item.nativeElement.style.setProperty('--ig-size', 'var(--ig-size-small)');
+            fixture.detectChanges();
+            const overlayInstance = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(),
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const firstCallId = overlayInstance.attach(fixture.componentInstance.item, overlaySettings);
+            overlayInstance.show(firstCallId);
+            tick();
+
+            const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+            expect(overlayContent.style.getPropertyValue('--ig-size')).toEqual('1');
+            overlayInstance.detach(firstCallId);
+        }));
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
