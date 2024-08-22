@@ -352,6 +352,7 @@ const testFilter = () => {
                 {
                     field: 'number',
                     condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                    conditionName: 'greaterThan',
                     searchVal: 3
                 }
             ];
@@ -367,6 +368,7 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    conditionName: 'contains',
                     field: 'string',
                     searchVal: 'row'
                 }
@@ -378,6 +380,7 @@ const testFilter = () => {
             stateIgnoreCase.expressionsTree.filteringOperands = [
                 {
                     condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    conditionName: 'contains',
                     field: 'string',
                     ignoreCase: false,
                     searchVal: 'ROW'
@@ -401,6 +404,7 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxDateFilteringOperand.instance().condition('after'),
+                    conditionName: 'after',
                     field: 'date',
                     searchVal: new Date()
                 }
@@ -416,6 +420,7 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxBooleanFilteringOperand.instance().condition('false'),
+                    conditionName: 'false',
                     field: 'boolean'
                 }
             ];
@@ -431,6 +436,7 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxBooleanFilteringOperand.instance().condition('false'),
+                    conditionName: 'false',
                     field: 'boolean'
                 }
             ];

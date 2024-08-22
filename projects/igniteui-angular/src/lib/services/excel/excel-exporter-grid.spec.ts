@@ -592,18 +592,21 @@ describe('Excel Exporter', () => {
                 field: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
                 field: 'Name',
                 searchVal: 'r',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
                 field: 'ID',
                 searchVal: 5,
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                conditionName: 'contains',
             });
 
             grid.advancedFilteringExpressionsTree = tree;
@@ -1147,12 +1150,14 @@ describe('Excel Exporter', () => {
                 field: 'Age',
                 searchVal: 40,
                 condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
+                conditionName: 'lessThan',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
                 field: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
 
