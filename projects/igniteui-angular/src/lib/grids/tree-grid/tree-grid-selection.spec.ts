@@ -1398,17 +1398,20 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expressionTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 711
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 998
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 299
                 }
             ];
@@ -1448,17 +1451,20 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expressionTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 711
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 998
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 299
                 }
             ];
@@ -1500,7 +1506,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expressionTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 957
                 },
             ];
@@ -1544,17 +1551,20 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expressionTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 711
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 998
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 299
                 }
             ];
@@ -1615,12 +1625,14 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expressionTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 711
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'ID',
+                    conditionName: 'doesNotEqual',
+                    field: 'ID',
                     searchVal: 998
                 }
             ];

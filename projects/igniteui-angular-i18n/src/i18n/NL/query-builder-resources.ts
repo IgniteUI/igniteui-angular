@@ -54,6 +54,12 @@ const QueryBuilderResourceStringsNL_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Selecteer kolom',
     igx_query_builder_condition_placeholder: 'Selecteer filter',
     igx_query_builder_value_placeholder: 'Waarde',
+    igx_query_builder_all_fields: 'All fields',
+    igx_query_builder_details: 'Details',
+    igx_query_builder_search: 'Search',
+    igx_query_builder_select_all: 'Select All',
+    igx_query_builder_select_entity: 'Select entity',
+    igx_query_builder_select_return_fields: 'Select return fields',
 };
 
 /**

@@ -642,7 +642,7 @@ export class IgxGridStateBaseDirective {
             return null;
         }
 
-        const expressionsTree = new FilteringExpressionsTree(exprTreeObject.operator, exprTreeObject.fieldName);
+        const expressionsTree = new FilteringExpressionsTree(exprTreeObject.operator, exprTreeObject.field);
 
         for (const item of exprTreeObject.filteringOperands) {
             // Check if item is an expressions tree or a single expression.
@@ -653,11 +653,11 @@ export class IgxGridStateBaseDirective {
                 const expr = item as IFilteringExpression;
                 let dataType: string;
                 if (this.currGrid instanceof IgxPivotGridComponent) {
-                    dataType = this.currGrid.allDimensions.find(x => x.memberName === expr.fieldName).dataType;
+                    dataType = this.currGrid.allDimensions.find(x => x.memberName === expr.field).dataType;
                 } else if (this.currGrid.columns.length > 0) {
-                    dataType = this.currGrid.columns.find(c => c.field === expr.fieldName).dataType;
+                    dataType = this.currGrid.columns.find(c => c.field === expr.field).dataType;
                 } else if (this.state.columns) {
-                    dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;
+                    dataType = this.state.columns.find(c => c.field === expr.field).dataType;
                 } else {
                     return null;
                 }
@@ -667,11 +667,11 @@ export class IgxGridStateBaseDirective {
                 if (Array.isArray(expr.searchVal)) {
                     expr.searchVal = new Set(expr.searchVal);
                 } else {
-                    expr.searchVal = expr.searchVal && (dataType === 'date' || dataType === 'dateTime') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
+                    expr.searchVal = expr.searchVal && (dataType === 'date' || dataType === 'dateTime') ? new Date(Date.parse(expr.searchVal.toString())) : expr.searchVal;
                 }
 
                 const condition = this.generateFilteringCondition(dataType, expr.condition.name) ||
-                                this.currGrid.columns.find(c => c.field === expr.fieldName).filters.condition(expr.condition.name);
+                                this.currGrid.columns.find(c => c.field === expr.field).filters.condition(expr.condition.name);
 
                 if (condition) {
                     expr.condition = condition;

@@ -14,7 +14,7 @@ import { PlatformUtil } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { FilteringExpressionsTree, IExpressionTree } from '../data-operations/filtering-expressions-tree';
+import { FilteringExpressionsTree, IExpressionTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -39,6 +39,8 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxComboComponent } from "../combo/combo.component";
 import { IgxLabelDirective } from '../input-group/public_api';
+import { IgxComboHeaderDirective } from '../combo/public_api';
+import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -66,6 +68,7 @@ export class IgxFieldFormatterPipe implements PipeTransform {
 class ExpressionItem {
     public parent: ExpressionGroupItem;
     public selected: boolean;
+    public expanded: boolean;
     constructor(parent?: ExpressionGroupItem) {
         this.parent = parent;
     }
@@ -107,7 +110,7 @@ class ExpressionOperandItem extends ExpressionItem {
     selector: 'igx-query-builder-tree',
     templateUrl: './query-builder-tree.component.html',
     standalone: true,
-    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective, IgxToggleActionDirective, IgxComboComponent, IgxLabelDirective]
+    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective, IgxToggleActionDirective, IgxComboComponent, IgxLabelDirective, IgxComboHeaderDirective, IgxCheckboxComponent]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
@@ -226,9 +229,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @Output()
     public inEditModeChange = new EventEmitter<ExpressionOperandItem>();
-    
+
     @ViewChild('entitySelect', { read: IgxSelectComponent })
     protected entitySelect: IgxSelectComponent;
+
+    @ViewChild('selectedReturnFieldsCombo', { read: IgxComboComponent })
+    private selectedReturnFieldsCombo: IgxComboComponent;
 
     @ViewChild('fieldSelect', { read: IgxSelectComponent })
     private fieldSelect: IgxSelectComponent;
@@ -402,6 +408,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _addModeExpression: ExpressionOperandItem;
     private _editedExpression: ExpressionOperandItem;
     private _selectedGroups: ExpressionGroupItem[] = [];
+    private _expandedExpressions: IFilteringExpression[] = [];
     private _fields: FieldType[];
     private _expressionTree: IExpressionTree;
     private _locale;
@@ -467,7 +474,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         const entity = this.entities.find(el => el.name === this.selectedEntity.name);
         this.fields = entity.fields;
-        
+
         if (this.expressionTree) {
             this.expressionTree.entity = this.selectedEntity.name;
             this.expressionTree.returnFields = null;
@@ -486,9 +493,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public set selectedReturnFields(value: string | string[]) {
+    public set selectedReturnFields(value: string[]) {
         const oldValue = this._selectedReturnFields;
-        
+
         if (this._selectedReturnFields !== value && oldValue !== value) {
             this._selectedReturnFields = value;
 
@@ -502,7 +509,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public get selectedReturnFields(): string | string[] {
+    public get selectedReturnFields(): string[] {
+        if (typeof this._selectedReturnFields == 'string') {
+            return [this._selectedReturnFields];
+        }
         return this._selectedReturnFields;
     }
 
@@ -561,8 +571,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.cancelOperandAdd();
 
         const operandItem = new ExpressionOperandItem({
-            fieldName: null,
+            field: null,
             condition: null,
+            conditionName: null,
             ignoreCase: true,
             searchVal: null
         }, parent);
@@ -603,7 +614,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public commitOperandEdit() {
         if (this._editedExpression) {
-            this._editedExpression.expression.fieldName = this.selectedField.field;
+            this._editedExpression.expression.field = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
             this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
             this._editedExpression.fieldLabel = this.selectedField.label
@@ -659,7 +670,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this._editedExpression) {
             this._editedExpression.inEditMode = false;
 
-            if (!this._editedExpression.expression.fieldName) {
+            if (!this._editedExpression.expression.field) {
                 this.deleteItem(this._editedExpression);
             }
 
@@ -752,8 +763,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         expressionItem.hovered = false;
         this.fields = this.selectedEntity ? this.selectedEntity.fields : null;
         this.selectedField =
-            expressionItem.expression.fieldName ?
-                this.fields.find(field => field.field === expressionItem.expression.fieldName)
+            expressionItem.expression.field ?
+                this.fields.find(field => field.field === expressionItem.expression.field)
                 : null;
         this.selectedCondition =
             expressionItem.expression.condition ?
@@ -1032,9 +1043,27 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public formatReturnFields(returnFields: string | string[]) {
-        let text = returnFields;
-        if (Array.isArray(returnFields)) {
+    /**
+     * @hidden
+     */
+    public expanderClick(event, expressionItem: ExpressionOperandItem) {
+        expressionItem.expanded = !expressionItem.expanded;
+        if (expressionItem.expanded) {
+            this._expandedExpressions.push(expressionItem.expression);
+        } else {
+            const matchIndex = this._expandedExpressions.indexOf(expressionItem.expression);
+            this._expandedExpressions.splice(matchIndex, 1);
+        }
+        event.stopPropagation();
+    }
+
+    public formatReturnFields(innerTree: IFilteringExpressionsTree) {
+        const returnFields = innerTree.returnFields;
+        let text = returnFields.join(', ');
+        const innerTreeEntity = this.entities.find(el => el.name === innerTree.entity);
+        if (returnFields.length === innerTreeEntity.fields.length) {
+            text = this.resourceStrings.igx_query_builder_all_fields;
+        } else {
             text = returnFields.join(', ');
             text = text.length > 25 ? text.substring(0, 25) + ' ...' : text;
         }
@@ -1048,6 +1077,17 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public onInEditModeChanged(expressionItem: ExpressionOperandItem) {
         if (!expressionItem.inEditMode) {
             this.enterExpressionEdit(expressionItem);
+        }
+    }
+
+    public onSelectAllClicked(event) {
+        if (
+            (this._selectedReturnFields.length > 0 && this._selectedReturnFields.length < this._selectedEntity.fields.length) ||
+            this._selectedReturnFields.length == this._selectedEntity.fields.length
+        ) {
+            this.selectedReturnFieldsCombo.deselectAllItems();
+        } else {
+            this.selectedReturnFieldsCombo.selectAllItems();
         }
     }
 
@@ -1150,8 +1190,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 } else {
                     const filteringExpr = expr as IFilteringExpression;
                     const exprCopy: IFilteringExpression = {
-                        fieldName: filteringExpr.fieldName,
+                        field: filteringExpr.field,
                         condition: filteringExpr.condition,
+                        conditionName: filteringExpr.condition.name,
                         searchVal: filteringExpr.searchVal,
                         searchTree: filteringExpr.searchTree, // this.createExpressionGroupItem(filteringExpr.searchTree, groupItem),
                         ignoreCase: filteringExpr.ignoreCase
@@ -1161,12 +1202,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     if (entity) {
                         this.fields = entity.fields;
                     }
-                    const field = this.fields.find(el => el.field === filteringExpr.fieldName);
+                    const field = this.fields.find(el => el.field === filteringExpr.field);
                     operandItem.fieldLabel = field.label || field.header || field.field;
+                    if (this._expandedExpressions.filter(e => e.searchTree == operandItem.expression.searchTree).length > 0) {
+                        operandItem.expanded = true;
+                    }
                     groupItem.children.push(operandItem);
                     this._selectedEntity = this.entities.find(el => el.name === expressionTree.entity);
                     this._selectedReturnFields =
-                        !expressionTree.returnFields || expressionTree.returnFields === '*' || expressionTree.returnFields === 'All'
+                        !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All')
                             ? this.fields.map(f => f.field)
                             : this.fields.filter(f => expressionTree.returnFields.indexOf(f.field) >= 0).map(f => f.field);
                 }
@@ -1417,6 +1461,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this.iconService.addIconRef('edit', 'default', {
             name: 'edit',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('unfold_less', 'default', {
+            name: 'unfold_less',
+            family: 'material',
+        });
+
+        this.iconService.addIconRef('unfold_more', 'default', {
+            name: 'unfold_more',
             family: 'material',
         });
     }

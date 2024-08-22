@@ -2013,14 +2013,16 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.height = '1100px';
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                fieldName: 'UnitsInStock',
+                field: 'UnitsInStock',
                 searchVal: 0,
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                conditionName: 'greaterThan'
             });
             tree.filteringOperands.push({
-                fieldName: 'ProductName',
+                field: 'ProductName',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             grid.advancedFilteringExpressionsTree = tree;

@@ -39,7 +39,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
         const cond = expr.condition;
-        const val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
+        const val = this.getFieldValue(rec, expr.field, isDate, isTime, grid);
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
@@ -72,7 +72,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
                 return true;
             } else {
                 const expression = expressions as IFilteringExpression;
-                const column = grid && grid.getColumnByName(expression.fieldName);
+                const column = grid && grid.getColumnByName(expression.field);
                 const isDate = column ? column.dataType === DateType || column.dataType === DateTimeType : false;
                 const isTime = column ? column.dataType === TimeType : false;
                 return this.findMatchByExpression(rec, expression, isDate, isTime, grid);

@@ -563,7 +563,8 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.filteringExpressionsTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('equals'),
-                    fieldName: 'index',
+                    conditionName: 'equals',
+                    field: 'index',
                     searchVal: 0
                 }
             ];

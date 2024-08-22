@@ -81,20 +81,13 @@
                 [selected]="expressionItem.selected && isInEditMode()"
                 (keydown)="invokeClick($event)"
                 (click)="isInEditMode() ? onChipClick(expressionItem) : null"
-                (dblclick)="isInEditMode() ? onChipDblClick(expressionItem) : null"
+                (dblclick)="onChipDblClick(expressionItem)"
                 (remove)="onChipRemove(expressionItem)"
                 (selectedChanged)="onChipSelectionEnd()"
             >
                 <span igxPrefix class="igx-filter-tree__expression-column">
                     {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
                 </span>
-                <!-- <igx-prefix>
-                    <igx-icon
-                        family="default"
-                        [name]="expressionItem.expression.condition.iconName"
-                    >
-                    </igx-icon>
-                </igx-prefix> -->
                 <span class="igx-filter-tree__expression-condition">
                     {{
                         getConditionFriendlyName(
@@ -107,7 +100,7 @@
                     *ngIf="!expressionItem.expression.condition.isUnary"
                 >
                     <ng-container *ngIf="expressionItem.expression.searchTree">
-                        <strong>{{expressionItem.expression.searchTree.entity}}</strong>&nbsp;/ {{formatReturnFields(expressionItem.expression.searchTree.returnFields)}}
+                        <strong>{{expressionItem.expression.searchTree.entity}}</strong>&nbsp;/ {{formatReturnFields(expressionItem.expression.searchTree)}}
                     </ng-container>
 
                     <ng-container *ngIf="!expressionItem.expression.searchTree">
@@ -132,41 +125,47 @@
                     </ng-container>
                 </span>
             </igx-chip>
-            <!-- <ng-container *ngIf="isInEditMode()"> -->
-                <div
-                    class="igx-filter-tree__expression-actions"
+            <div
+                class="igx-filter-tree__expression-actions"
+                *ngIf="
+                    (expressionItem.selected &&
+                        selectedExpressions.length === 1) ||
+                    expressionItem.hovered
+                "
+            >
+                <igx-icon
+                    family="default"
+                    name="edit"
+                    tabindex="0"
+                    (keydown)="invokeClick($event)"
+                    (click)="enterExpressionEdit(expressionItem)"
+                >
+                </igx-icon>
+                <igx-icon
+                    family="default"
+                    name="add"
+                    tabindex="0"
+                    (keydown)="invokeClick($event)"
+                    (click)="enterExpressionAdd(expressionItem)"
                     *ngIf="
-                        (expressionItem.selected &&
-                            selectedExpressions.length === 1) ||
-                        expressionItem.hovered
+                        !expressionItem.inAddMode &&
+                        (expressionItem.parent !== currentGroup ||
+                            expressionItem !==
+                                currentGroup.children[
+                                    currentGroup.children.length - 1
+                                ])
                     "
                 >
-                    <igx-icon
-                        family="default"
-                        name="edit"
-                        tabindex="0"
-                        (keydown)="invokeClick($event)"
-                        (click)="enterExpressionEdit(expressionItem)"
-                    >
-                    </igx-icon>
-                    <igx-icon
-                        family="default"
-                        name="add"
-                        tabindex="0"
-                        (keydown)="invokeClick($event)"
-                        (click)="enterExpressionAdd(expressionItem)"
-                        *ngIf="
-                            !expressionItem.inAddMode &&
-                            (expressionItem.parent !== currentGroup ||
-                                expressionItem !==
-                                    currentGroup.children[
-                                        currentGroup.children.length - 1
-                                    ])
-                        "
-                    >
-                    </igx-icon>
-                </div>
-            <!-- </ng-container> -->
+                </igx-icon>
+            </div>
+            <div *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree"
+                (click)="expanderClick($event, expressionItem)"
+                style="float: right">
+                <span>{{this.resourceStrings.igx_query_builder_details}}</span>
+                <igx-icon *ngIf="!expressionItem.expanded" family="default" name="unfold_less" role="button"></igx-icon>
+                <igx-icon *ngIf="expressionItem.expanded" family="default" name="unfold_more" role="button"></igx-icon>
+            </div>
+
         </div>
 
         <div
@@ -364,6 +363,7 @@
         <ng-container *ngIf="(!expressionItem.inEditMode && expressionItem.expression.searchTree) || (expressionItem.inEditMode && (selectedCondition === 'in' || selectedCondition === 'notIn'))">
             <igx-query-builder-tree
                 style="margin: 10px 0px 10px 0px"
+                [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
                 [entities]="entities"
                 [parentExpression]="expressionItem"
                 [expressionTree]="expressionItem.expression.searchTree"
@@ -414,23 +414,37 @@
                             [(ngModel)]="selectedEntity"
                             [style.display]="isInEditMode() ? 'block' : 'none'"
                         >
-                            <label igxLabel>Select entity</label>
+                            <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_entity }}</label>
                             <igx-select-item *ngFor="let entity of entities" [value]="entity">
                                 {{entity.name}}
                             </igx-select-item>
                         </igx-select>
 
                         <igx-combo
+                            #selectedReturnFieldsCombo
                             style="margin-left: 10px"
                             [itemsMaxHeight]="250"
                             [data]="fields"
                             [displayKey]="'field'"
                             [valueKey]="'field'"
                             [(ngModel)]="selectedReturnFields"
-                            searchPlaceholder="Search..."
+                            searchPlaceholder="{{ this.resourceStrings.igx_query_builder_search }}"
                             [style.display]="isInEditMode() ? 'block' : 'none'"
                         >
-                            <label igxLabel>Select return fields</label>
+                            <ng-template igxComboHeader>
+                                <igx-checkbox
+                                    [checked]="this.selectedEntity.fields.length == this.selectedReturnFields.length"
+                                    [indeterminate]="this.selectedReturnFields.length > 0 && this.selectedReturnFields.length < this.selectedEntity.fields.length"
+                                    [readonly]="true"
+                                    [disableRipple]="true"
+                                    [tabindex]="-1"
+                                    (click)="onSelectAllClicked($event)"
+                                    style="margin-left: 16px"
+                                    class="igx-combo__checkbox">
+                                </igx-checkbox>
+                                <span>{{ this.resourceStrings.igx_query_builder_select_all }}</span>
+                            </ng-template>
+                            <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_return_fields }}</label>
                         </igx-combo>
                     </ng-container>
                 </div>

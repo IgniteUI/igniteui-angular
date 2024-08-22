@@ -167,7 +167,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         const exprUI = new ExpressionUI();
         exprUI.expression = {
             condition: null,
-            fieldName: this.column.field,
+            conditionName: null,
+            field: this.column.field,
             ignoreCase: this.column.filteringIgnoreCase,
             searchVal: null
         };
@@ -250,9 +251,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
             firstExprUI = this.expressionsList.pop();
         } else {
             this.expressionsList = [];
+            const cond = this.createCondition(this.selectedOperator);
             firstExprUI.expression = {
-                condition: this.createCondition(this.selectedOperator),
-                fieldName: this.column.field,
+                condition: cond,
+                conditionName: cond.name,
+                field: this.column.field,
                 ignoreCase: this.column.filteringIgnoreCase,
                 searchVal: null
             };
@@ -264,7 +267,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         const secondExprUI = new ExpressionUI();
         secondExprUI.expression = {
             condition: null,
-            fieldName: this.column.field,
+            conditionName: null,
+            field: this.column.field,
             ignoreCase: this.column.filteringIgnoreCase,
             searchVal: null
         };

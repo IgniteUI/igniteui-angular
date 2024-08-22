@@ -54,6 +54,12 @@ const QueryBuilderResourceStringsCS_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Vyberte sloupec',
     igx_query_builder_condition_placeholder: 'Vyberte filtr',
     igx_query_builder_value_placeholder: 'Hodnota',
+    igx_query_builder_all_fields: 'All fields',
+    igx_query_builder_details: 'Details',
+    igx_query_builder_search: 'Search',
+    igx_query_builder_select_all: 'Select All',
+    igx_query_builder_select_entity: 'Select entity',
+    igx_query_builder_select_return_fields: 'Select return fields',
 };
 
 /**
