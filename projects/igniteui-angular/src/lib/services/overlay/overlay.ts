@@ -985,8 +985,8 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private addComponentSize(info: OverlayInfo) {
-        if (info?.elementRef?.nativeElement && info.elementRef.nativeElement instanceof Element) {
-            const styles = window.getComputedStyle(info.elementRef.nativeElement);
+        if (info.elementRef?.nativeElement instanceof Element) {
+            const styles = this._document.defaultView.getComputedStyle(info.elementRef.nativeElement);
             const componentSize = styles.getPropertyValue('--component-size');
             const globalSize = styles.getPropertyValue('--ig-size');
             const size = componentSize || globalSize;
