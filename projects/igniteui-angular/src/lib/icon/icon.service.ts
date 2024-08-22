@@ -195,7 +195,6 @@ export class IgxIconService {
 
         const iconFamily = icon?.family ?? family;
         const _name = icon?.name ?? name;
-        const type = icon?.type ?? this.familyType(iconFamily);
         const className = this.familyClassName(iconFamily);
         const prefix = this._families.get(iconFamily)?.prefix;
 
@@ -206,6 +205,9 @@ export class IgxIconService {
             iconName = _name.includes(prefix) ? _name : `${prefix}${_name}`;
         }
 
+        const cached = this.isSvgIconCached(iconName, iconFamily);
+        const type = cached ? "svg" : icon?.type ?? this.familyType(iconFamily);
+
         return {
             className,
             type,
@@ -214,6 +216,13 @@ export class IgxIconService {
         };
     }
 
+    private getOrCreateFamily(family: string) {
+        if (!this._families.has(family)) {
+          this._families.set(family, { className: family, type: "svg" });
+        }
+
+        return this._families.get(family);
+    }
     /**
      *  Adds an SVG image to the cache. SVG source is an url.
      * ```typescript
@@ -245,10 +254,10 @@ export class IgxIconService {
             }
 
             if (!this.isSvgIconCached(name, family)) {
-                this._families.set(family, { className: family, type: "svg" });
+                const _family = this.getOrCreateFamily(family);
 
                 this.fetchSvg(url).subscribe((res) => {
-                    this.cacheSvgIcon(name, res, family, stripMeta);
+                    this.cacheSvgIcon(name, res, _family.className, stripMeta);
                 });
             }
         } else {
@@ -276,8 +285,8 @@ export class IgxIconService {
                 return;
             }
 
-            this._families.set(family, { className: family, type: "svg" });
-            this.cacheSvgIcon(name, iconText, family, stripMeta);
+            const _family = this.getOrCreateFamily(family);
+            this.cacheSvgIcon(name, iconText, _family.className, stripMeta);
         } else {
             throw new Error(
                 "You should provide at least `name` and `iconText` to register an svg icon.",
@@ -328,18 +337,15 @@ export class IgxIconService {
     private cacheSvgIcon(
         name: string,
         value: string,
-        family = this._defaultFamily.name,
+        family = this._defaultFamily.meta.className,
         stripMeta: boolean,
     ) {
-        family = family ? family : this._defaultFamily.name;
-
         if (this._platformUtil?.isBrowser && name && value) {
             const doc = this._domParser.parseFromString(value, "image/svg+xml");
             const svg = doc.querySelector("svg") as SVGElement;
 
             if (!this._cachedIcons.has(family)) {
                 this._cachedIcons.set(family, new Map<string, SafeHtml>());
-                this._iconLoaded.next({ name, value, family });
             }
 
             if (svg) {
@@ -363,6 +369,7 @@ export class IgxIconService {
                     svg.outerHTML,
                 );
                 this._cachedIcons.get(family).set(name, safeSvg);
+                this._iconLoaded.next({ name, value, family });
             }
         }
     }
