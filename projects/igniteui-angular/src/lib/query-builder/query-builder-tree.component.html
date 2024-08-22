@@ -411,7 +411,8 @@
                     <ng-container *ngIf="!expressionItem.parent">
                         <igx-select #entitySelect
                             type="box"
-                            [(ngModel)]="selectedEntity"
+                            (selectionChanging)="onEntitySelectChanging($event)"
+                            [ngModel]="selectedEntity"
                             [style.display]="isInEditMode() ? 'block' : 'none'"
                         >
                             <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_entity }}</label>
@@ -433,8 +434,8 @@
                         >
                             <ng-template igxComboHeader>
                                 <igx-checkbox
-                                    [checked]="this.selectedEntity.fields.length == this.selectedReturnFields.length"
-                                    [indeterminate]="this.selectedReturnFields.length > 0 && this.selectedReturnFields.length < this.selectedEntity.fields.length"
+                                    [checked]="this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length == this.selectedReturnFields.length"
+                                    [indeterminate]="this.selectedEntity && this.selectedReturnFields && this.selectedReturnFields.length > 0 && this.selectedReturnFields.length < this.selectedEntity.fields.length"
                                     [readonly]="true"
                                     [disableRipple]="true"
                                     [tabindex]="-1"
@@ -570,3 +571,13 @@
     class="igx-query-builder__outlet"
     (pointerdown)="onOutletPointerDown($event)"
 ></div>
+
+<igx-dialog
+    #entityChangeDialog
+    title="Confirmation"
+    message="By changing the entity, you will lose your current settings. Are you sure you want to do that?"
+    leftButtonLabel="Cancel"
+    rightButtonLabel="Confirm"
+    (leftButtonSelect)="onEntityChangeCancel()"
+    (rightButtonSelect)="onEntityChangeConfirm()">
+</igx-dialog>
