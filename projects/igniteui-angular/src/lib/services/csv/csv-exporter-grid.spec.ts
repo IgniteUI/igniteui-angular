@@ -344,18 +344,21 @@ describe('CSV Grid Exporter', () => {
             field: 'Name',
             searchVal: 'a',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             ignoreCase: true
         });
         tree.filteringOperands.push({
             field: 'Name',
             searchVal: 'r',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             ignoreCase: true
         });
         tree.filteringOperands.push({
             field: 'ID',
             searchVal: 5,
             condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            conditionName: 'greaterThan'
         });
 
         grid.advancedFilteringExpressionsTree = tree;
@@ -495,12 +498,14 @@ describe('CSV Grid Exporter', () => {
                 field: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
                 field: 'Name',
                 searchVal: 'r',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             treeGrid.advancedFilteringExpressionsTree = tree;
