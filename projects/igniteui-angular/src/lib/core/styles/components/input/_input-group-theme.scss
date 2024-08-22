@@ -377,9 +377,9 @@
         align-items: center;
 
         @if $indigo-theme {
-            height: calc(100% - #{rem(1px)}) !important;
+            min-height: calc(100% - #{rem(1px)}) !important;
         } @else {
-            height: 100% !important;
+            min-height: 100% !important;
         }
         transition: color $transition-timing, background $transition-timing;
 
