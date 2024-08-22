@@ -202,7 +202,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input({ transform: booleanAttribute }) public vertical = false;
+    @Input({ transform: booleanAttribute }) public override vertical = false;
 
     /**
      * Controls whether the carousel should support keyboard navigation.

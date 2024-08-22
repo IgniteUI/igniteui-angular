@@ -42,6 +42,8 @@ export abstract class IgxCarouselComponentBase {
     protected animationPosition = 0;
     /** @hidden */
     protected newDuration = 0;
+    /** @hidden */
+    protected vertical = false;
 
     constructor(
         @Inject(IgxAngularAnimationService) private animationService: AnimationService,
@@ -105,8 +107,8 @@ export abstract class IgxCarouselComponentBase {
                                 duration: `${duration}ms`,
                                 endOpacity: 1,
                                 startOpacity: 1,
-                                fromPosition: `translateX(${this.currentItem.direction === 1 ? trans : -trans}%)`,
-                                toPosition: 'translateX(0%)'
+                                fromPosition: `${this.vertical ? 'translateY' : 'translateX'}(${this.currentItem.direction === 1 ? trans : -trans}%)`,
+                                toPosition: `${this.vertical ? 'translateY(0%)' : 'translateX(0%)'}`
                             }
                         }),
                     leaveAnimation: useAnimation(slideInLeft,
@@ -116,8 +118,8 @@ export abstract class IgxCarouselComponentBase {
                                 duration: `${duration}ms`,
                                 endOpacity: 1,
                                 startOpacity: 1,
-                                fromPosition: `translateX(0%)`,
-                                toPosition: `translateX(${this.currentItem.direction === 1 ? -trans : trans}%)`,
+                                fromPosition: `${this.vertical ? 'translateY(0%)' : 'translateX(0%)'}`,
+                                toPosition: `${this.vertical ? 'translateY' : 'translateX'}(${this.currentItem.direction === 1 ? -trans : trans}%)`,
                             }
                         })
                 };

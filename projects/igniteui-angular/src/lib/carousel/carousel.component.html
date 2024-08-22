@@ -18,13 +18,13 @@
     </span>
 </ng-template>
 
-<div igxButton *ngIf="navigation && slides.length" tabindex="0" class="igx-carousel__arrow--prev" [attr.aria-label]="resourceStrings.igx_carousel_previous_slide" (keydown)="handleKeydown($event, 'prev')" (click)="prev()">
+<button igxButton *ngIf="navigation && slides.length" class="igx-carousel__arrow--prev" [attr.aria-label]="resourceStrings.igx_carousel_previous_slide" (keydown)="handleKeydown($event, 'prev')" (click)="prev()">
     <ng-container *ngTemplateOutlet="getPrevButtonTemplate; context: {$implicit: prevButtonDisabled};"></ng-container>
-</div>
+</button>
 
-<div igxButton *ngIf="navigation && slides.length" tabindex="0" class="igx-carousel__arrow--next" [attr.aria-label]="resourceStrings.igx_carousel_next_slide" (keydown)="handleKeydown($event, 'next')" (click)="next()">
+<button igxButton *ngIf="navigation && slides.length" class="igx-carousel__arrow--next" [attr.aria-label]="resourceStrings.igx_carousel_next_slide" (keydown)="handleKeydown($event, 'next')" (click)="next()">
     <ng-container *ngTemplateOutlet="getNextButtonTemplate; context: {$implicit: nextButtonDisabled};"></ng-container>
-</div>
+</button>
 
 <div *ngIf="showIndicators" [ngClass]="indicatorsClass" [attr.role]="'tablist'" (keyup)="handleKeyUp($event)" (focusout)="handleFocusOut()" (click)="handleClick()">
     <div *ngFor="let slide of slides"
