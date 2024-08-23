@@ -2,6 +2,19 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 18.2.0
+### New Features
+- `IgxCarousel`
+    - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
+    - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicator` property. Defaults to `true`.
+
+### General
+- `IgxCarousel`
+    - `animationType` input property is now of type `CarouselAnimationType`. `HorizontalAnimationType` can also be used, however, to accommodate the new vertical mode, which supports vertical slide animations, it is recommended to use `CarouselAnimationType`.
+
+    - **Behavioral Changes** - the `keyboardSupport` input property now defaults to `false`.
+    - **Breaking Changes** - the `keyboardSupport` input property has been deprecated and will be removed in a future version.
+
 ## 18.1.0
 ### New Features
 - `IgxPivotGrid`
@@ -4587,4 +4600,3 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
-

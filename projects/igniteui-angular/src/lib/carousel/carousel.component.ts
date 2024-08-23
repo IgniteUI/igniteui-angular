@@ -36,7 +36,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
-import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
+import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
 
 let NEXT_ID = 0;
 
@@ -212,6 +212,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * ```
      *
      * @memberOf IgxCarouselComponent
+     * @deprecated in version 18.2.0.
      */
     @Input({ transform: booleanAttribute }) public keyboardSupport = false;
 
@@ -259,7 +260,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public override animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
+    @Input() public override animationType: CarouselAnimationType = CarouselAnimationType.slide;
 
     /**
      * The custom template, if any, that should be used when rendering carousel indicators
@@ -690,7 +691,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 this.incomingSlide.direction = event.deltaX < 0 ? Direction.NEXT : Direction.PREV;
                 this.incomingSlide.previous = false;
 
-                this.animationPosition = this.animationType === HorizontalAnimationType.fade ?
+                this.animationPosition = this.animationType === CarouselAnimationType.fade ?
                     deltaX / slideWidth : (slideWidth - deltaX) / slideWidth;
 
                 if (velocity > 1) {
@@ -701,7 +702,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 this.currentItem.direction = event.deltaX > 0 ? Direction.NEXT : Direction.PREV;
                 this.previousItem = this.incomingSlide;
                 this.previousItem.previous = true;
-                this.animationPosition = this.animationType === HorizontalAnimationType.fade ?
+                this.animationPosition = this.animationType === CarouselAnimationType.fade ?
                     Math.abs((slideWidth - deltaX) / slideWidth) : deltaX / slideWidth;
                 this.playAnimations();
             }
@@ -980,7 +981,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
         this.incomingSlide.previous = true;
 
-        if (this.animationType === HorizontalAnimationType.fade) {
+        if (this.animationType === CarouselAnimationType.fade) {
             this.currentItem.nativeElement.style.opacity = `${Math.abs(offset) / slideWidth}`;
         } else {
             this.currentItem.nativeElement.style.transform = `translateX(${deltaX}px)`;

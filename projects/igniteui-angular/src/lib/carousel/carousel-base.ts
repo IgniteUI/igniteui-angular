@@ -3,7 +3,7 @@ import { ChangeDetectorRef, EventEmitter, Inject } from '@angular/core';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationPlayer, AnimationService } from '../services/animation/animation';
 import { fadeIn, slideInLeft } from 'igniteui-angular/animations';
-import { HorizontalAnimationType } from './enums';
+import { CarouselAnimationType } from './enums';
 
 export enum Direction { NONE, NEXT, PREV }
 
@@ -21,7 +21,7 @@ export interface IgxSlideComponentBase {
 /** @hidden */
 export abstract class IgxCarouselComponentBase {
     /** @hidden */
-    public animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
+    public animationType: CarouselAnimationType = CarouselAnimationType.slide;
 
     /** @hidden @internal */
     public enterAnimationDone = new EventEmitter();
@@ -52,7 +52,7 @@ export abstract class IgxCarouselComponentBase {
 
     /** @hidden */
     protected triggerAnimations() {
-        if (this.animationType !== HorizontalAnimationType.none) {
+        if (this.animationType !== CarouselAnimationType.none) {
             if (this.animationStarted(this.leaveAnimationPlayer) || this.animationStarted(this.enterAnimationPlayer)) {
                 requestAnimationFrame(() => {
                     this.resetAnimations();
@@ -98,7 +98,7 @@ export abstract class IgxCarouselComponentBase {
 
         const trans = this.animationPosition ? this.animationPosition * 100 : 100;
         switch (this.animationType) {
-            case HorizontalAnimationType.slide:
+            case CarouselAnimationType.slide:
                 return {
                     enterAnimation: useAnimation(slideInLeft,
                         {
@@ -123,7 +123,7 @@ export abstract class IgxCarouselComponentBase {
                             }
                         })
                 };
-            case HorizontalAnimationType.fade:
+            case CarouselAnimationType.fade:
                 return {
                     enterAnimation: useAnimation(fadeIn,
                         { params: { duration: `${duration}ms`, startOpacity: `${this.animationPosition}` } }),
