@@ -76,6 +76,8 @@
             (mouseleave)="expressionItem.hovered = false"
         >
             <igx-chip
+                #target="tooltipTarget"
+                [igxTooltipTarget]="tooltipRef"
                 [data]="expressionItem"
                 [removable]="isInEditMode() ? 'true' : 'false'"
                 [selected]="expressionItem.selected && isInEditMode()"
@@ -125,6 +127,15 @@
                     </ng-container>
                 </span>
             </igx-chip>
+            <div #tooltipRef="tooltip" igxTooltip>
+                {{
+                    expressionItem.expression.searchTree ?
+                        expressionItem.expression.searchTree.returnFields :
+                        expressionItem.expression.searchVal ? 
+                            expressionItem.expression.searchVal :
+                            ''
+                }}
+            </div>
             <div
                 class="igx-filter-tree__expression-actions"
                 *ngIf="

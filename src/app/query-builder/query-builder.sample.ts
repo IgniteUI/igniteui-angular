@@ -35,13 +35,15 @@ export class QueryBuilderComponent implements OnInit {
                     { field: 'CompoundId', dataType: 'number' },
                     { field: 'Name', dataType: 'string' },
                     { field: 'EndpointName', dataType: 'string' },
-                    { field: 'EndpointValue', dataType: 'string' }
+                    { field: 'EndpointValue', dataType: 'string' },
+                    { field: 'Date', dataType: 'date' }
                 ]
             },
             {
                 name: 'Compounds', fields: [
                     { field: 'Id', dataType: 'number' },
-                    { field: 'Structure', dataType: 'string' }
+                    { field: 'Structure', dataType: 'string' },
+                    { field: 'Date', dataType: 'date' }
                 ]
             }
         ];
