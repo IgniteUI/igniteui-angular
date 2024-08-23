@@ -256,10 +256,10 @@ export class IgxIconService {
             }
 
             if (!this.isSvgIconCached(name, family)) {
-                const _family = this.getOrCreateSvgFamily(family);
+                this.getOrCreateSvgFamily(family);
 
                 this.fetchSvg(url).subscribe((res) => {
-                    this.cacheSvgIcon(name, res, _family.className, stripMeta);
+                    this.cacheSvgIcon(name, res, family, stripMeta);
                 });
             }
         } else {
@@ -287,8 +287,8 @@ export class IgxIconService {
                 return;
             }
 
-            const _family = this.getOrCreateSvgFamily(family);
-            this.cacheSvgIcon(name, iconText, _family.className, stripMeta);
+            this.getOrCreateSvgFamily(family);
+            this.cacheSvgIcon(name, iconText, family, stripMeta);
         } else {
             throw new Error(
                 "You should provide at least `name` and `iconText` to register an svg icon.",
@@ -303,11 +303,9 @@ export class IgxIconService {
      * ```
      */
     public isSvgIconCached(name: string, family: string): boolean {
-        const familyClassName = this.familyClassName(family);
-
-        if (this._cachedIcons.has(familyClassName)) {
+        if (this._cachedIcons.has(family)) {
             const familyRegistry = this._cachedIcons.get(
-                familyClassName,
+                family,
             ) as Map<string, SafeHtml>;
 
             return familyRegistry.has(name);
@@ -323,8 +321,7 @@ export class IgxIconService {
      * ```
      */
     public getSvgIcon(name: string, family: string) {
-        const familyClassName = this.familyClassName(family);
-        return this._cachedIcons.get(familyClassName)?.get(name);
+        return this._cachedIcons.get(family)?.get(name);
     }
 
     /**
@@ -341,7 +338,7 @@ export class IgxIconService {
     private cacheSvgIcon(
         name: string,
         value: string,
-        family = this._defaultFamily.meta.className,
+        family = this._defaultFamily.name,
         stripMeta: boolean,
     ) {
         if (this._platformUtil?.isBrowser && name && value) {

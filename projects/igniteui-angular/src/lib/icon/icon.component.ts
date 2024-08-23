@@ -144,7 +144,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
 
         this.iconService.iconLoaded
             .pipe(
-                filter((e) => e.name === this.name),
+                filter((e) => e.name === this.name && e.family === this.family),
                 takeUntil(this._destroy$),
             )
             .subscribe(() => {
