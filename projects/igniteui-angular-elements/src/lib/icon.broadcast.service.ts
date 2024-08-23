@@ -72,9 +72,10 @@ export class IgxIconBroadcastService {
             const collection = collections.get(collectionKey);
             for (const iconKey of collection.keys()) {
                 const collectionName = collection.get(iconKey).collection;
+                const iconName = collection.get(iconKey).name;
                 this._iconService.setIconRef(iconKey, 'default', {
                     family: collectionName,
-                    name: iconKey
+                    name: iconName
                 });
             }
         }
