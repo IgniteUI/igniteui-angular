@@ -43,6 +43,8 @@ import { IgxComboHeaderDirective } from '../combo/public_api';
 import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
 import { IgxDialogComponent } from "../dialog/dialog.component";
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
+import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
+import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -112,7 +114,42 @@ class ExpressionOperandItem extends ExpressionItem {
     selector: 'igx-query-builder-tree',
     templateUrl: './query-builder-tree.component.html',
     standalone: true,
-    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective, IgxToggleActionDirective, IgxComboComponent, IgxLabelDirective, IgxComboHeaderDirective, IgxCheckboxComponent, IgxDialogComponent]
+    imports: [
+        NgIf,
+        IgxQueryBuilderHeaderComponent,
+        IgxButtonDirective,
+        IgxIconComponent,
+        IgxChipComponent,
+        IgxPrefixDirective,
+        IgxSuffixDirective,
+        IgxSelectComponent,
+        FormsModule,
+        NgFor,
+        IgxSelectItemComponent,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxDatePickerComponent,
+        IgxPickerToggleComponent, 
+        IgxPickerClearComponent,
+        IgxTimePickerComponent,
+        IgxDateTimeEditorDirective,
+        NgTemplateOutlet,
+        NgClass,
+        IgxToggleDirective,
+        IgxButtonGroupComponent,
+        IgxOverlayOutletDirective,
+        DatePipe,
+        IgxFieldFormatterPipe,
+        IgxIconButtonDirective,
+        IgxToggleActionDirective,
+        IgxComboComponent,
+        IgxLabelDirective,
+        IgxComboHeaderDirective,
+        IgxCheckboxComponent,
+        IgxDialogComponent,
+        IgxTooltipTargetDirective,
+        IgxTooltipDirective
+    ]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
@@ -471,7 +508,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public onEntitySelectChanging(event: ISelectionEventArgs) {
         event.cancel = true;
         this._entityNewValue = event.newSelection.value;
-        this.entityChangeDialog.open();
+        if (event.oldSelection.value) {
+            this.entityChangeDialog.open();
+        } else {
+            this.onEntityChangeConfirm(); 
+        }
     }
 
     /**
@@ -649,6 +690,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this._editedExpression.expression.searchTree.entity = innerQuery.selectedEntity.name;
                 this._editedExpression.expression.searchTree.returnFields = innerQuery.selectedReturnFields;
                 this._editedExpression.expression.searchTree.filteringOperands = innerQuery.expressionTree.filteringOperands;
+                this._editedExpression.expression.searchTree.operator = innerQuery.expressionTree.operator;
+                this._editedExpression.expression.searchTree.field = innerQuery.expressionTree.field;
             } else {
                 this._editedExpression.expression.searchTree = null;
             }
@@ -703,7 +746,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         return this.selectedField && this.selectedCondition &&
             (
-                !!this.searchValue ||
+                (!!this.searchValue && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
                 (innerQuery && !!innerQuery.expressionTree) ||
                 this.selectedField.filters.condition(this.selectedCondition).isUnary
             );
@@ -845,6 +888,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         if (this._addModeExpression) {
             this._addModeExpression.inAddMode = false;
+        }
+
+        if (this.parentExpression) {
+            this.inEditModeChange.emit(this.parentExpression);
         }
 
         expressionItem.inAddMode = true;
@@ -1196,14 +1243,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.currentGroup = groupItem;
     }
 
-    private createExpressionGroupItem(expressionTree: IExpressionTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
+    private createExpressionGroupItem(expressionTree: IExpressionTree, parent?: ExpressionGroupItem, entityName?: string): ExpressionGroupItem {
         let groupItem: ExpressionGroupItem;
         if (expressionTree) {
             groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
 
             for (const expr of expressionTree.filteringOperands) {
                 if (expr instanceof FilteringExpressionsTree) {
-                    groupItem.children.push(this.createExpressionGroupItem(expr, groupItem));
+                    groupItem.children.push(this.createExpressionGroupItem(expr, groupItem, expressionTree.entity));
                 } else {
                     const filteringExpr = expr as IFilteringExpression;
                     const exprCopy: IFilteringExpression = {
@@ -1215,7 +1262,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                         ignoreCase: filteringExpr.ignoreCase
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
-                    const entity = this.entities.find(el => el.name === expressionTree.entity);
+                    if (expressionTree.entity) {
+                        entityName = expressionTree.entity;
+                    }
+                    const entity = this.entities.find(el => el.name === entityName);
                     if (entity) {
                         this.fields = entity.fields;
                     }
@@ -1225,7 +1275,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                         operandItem.expanded = true;
                     }
                     groupItem.children.push(operandItem);
-                    this._selectedEntity = this.entities.find(el => el.name === expressionTree.entity);
+                    this._selectedEntity = this.entities.find(el => el.name === entityName);
                     this._selectedReturnFields =
                         !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All')
                             ? this.fields.map(f => f.field)
