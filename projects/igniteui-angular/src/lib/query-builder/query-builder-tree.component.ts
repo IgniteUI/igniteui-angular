@@ -127,7 +127,7 @@ class ExpressionOperandItem extends ExpressionItem {
         IgxInputGroupComponent,
         IgxInputDirective,
         IgxDatePickerComponent,
-        IgxPickerToggleComponent, 
+        IgxPickerToggleComponent,
         IgxPickerClearComponent,
         IgxTimePickerComponent,
         IgxDateTimeEditorDirective,
@@ -292,7 +292,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('addConditionButton', { read: ElementRef })
     private addConditionButton: ElementRef;
-    
+
     @ViewChild('entityChangeDialog', { read: IgxDialogComponent })
     private entityChangeDialog: IgxDialogComponent;
 
@@ -510,7 +510,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (event.oldSelection.value) {
             this.entityChangeDialog.open();
         } else {
-            this.onEntityChangeConfirm(); 
+            this.onEntityChangeConfirm();
         }
     }
 
@@ -543,7 +543,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this.entityChangeDialog.close();
         this.entitySelect.close();
-        
+
         this._entityNewValue = null;
     }
 
@@ -1145,7 +1145,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public onSelectAllClicked(event) {
+    public onSelectAllClicked(_event) {
         if (
             (this._selectedReturnFields.length > 0 && this._selectedReturnFields.length < this._selectedEntity.fields.length) ||
             this._selectedReturnFields.length == this._selectedEntity.fields.length

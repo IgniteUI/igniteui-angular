@@ -131,7 +131,7 @@
                 {{
                     expressionItem.expression.searchTree ?
                         expressionItem.expression.searchTree.returnFields :
-                        expressionItem.expression.searchVal ? 
+                        expressionItem.expression.searchVal ?
                             expressionItem.expression.searchVal :
                             ''
                 }}
@@ -446,7 +446,7 @@
                         >
                             <ng-template igxComboHeader>
                                 <igx-checkbox
-                                    [checked]="this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length == this.selectedReturnFields.length"
+                                    [checked]="this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length"
                                     [indeterminate]="this.selectedEntity && this.selectedReturnFields && this.selectedReturnFields.length > 0 && this.selectedReturnFields.length < this.selectedEntity.fields.length"
                                     [readonly]="true"
                                     [disableRipple]="true"
