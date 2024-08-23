@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { editor } from '@igniteui/material-icons-extended';
 import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
@@ -22,7 +21,6 @@ import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-
 
 import { IgxOverlayOutletDirective, IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FieldType, EntityType } from '../grids/common/grid.interface';
-import { IgxIconService } from '../icon/icon.service';
 import { IgxSelectComponent } from '../select/select.component';
 import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
@@ -129,7 +127,7 @@ class ExpressionOperandItem extends ExpressionItem {
         IgxInputGroupComponent,
         IgxInputDirective,
         IgxDatePickerComponent,
-        IgxPickerToggleComponent, 
+        IgxPickerToggleComponent,
         IgxPickerClearComponent,
         IgxTimePickerComponent,
         IgxDateTimeEditorDirective,
@@ -191,8 +189,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this._fields = fields;
 
         if (this._fields) {
-            this.registerSVGIcons();
-
             this._fields.forEach(field => {
                 this.setFilters(field);
                 this.setFormat(field);
@@ -213,6 +209,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
         this._expressionTree = expressionTree;
+        if (!expressionTree) {
+            this._selectedEntity = null;
+            this._selectedReturnFields = [];
+        }
 
         this.init();
     }
@@ -292,7 +292,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('addConditionButton', { read: ElementRef })
     private addConditionButton: ElementRef;
-    
+
     @ViewChild('entityChangeDialog', { read: IgxDialogComponent })
     private entityChangeDialog: IgxDialogComponent;
 
@@ -470,7 +470,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     };
 
     constructor(public cdr: ChangeDetectorRef,
-        protected iconService: IgxIconService,
         protected platform: PlatformUtil,
         protected el: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string) {
@@ -511,7 +510,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (event.oldSelection.value) {
             this.entityChangeDialog.open();
         } else {
-            this.onEntityChangeConfirm(); 
+            this.onEntityChangeConfirm();
         }
     }
 
@@ -544,7 +543,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this.entityChangeDialog.close();
         this.entitySelect.close();
-        
+
         this._entityNewValue = null;
     }
 
@@ -701,8 +700,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup);
-        this._expressionTree.entity = this.selectedEntity.name;
-        this._expressionTree.returnFields = this.selectedReturnFields;
+        if (this._expressionTree) {
+            this._expressionTree.entity = this.selectedEntity.name;
+            this._expressionTree.returnFields = this.selectedReturnFields;
+        }
         this.expressionTreeChange.emit(this._expressionTree);
     }
 
@@ -1144,7 +1145,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public onSelectAllClicked(event) {
+    public onSelectAllClicked(_event) {
         if (
             (this._selectedReturnFields.length > 0 && this._selectedReturnFields.length < this._selectedEntity.fields.length) ||
             this._selectedReturnFields.length == this._selectedEntity.fields.length
@@ -1479,67 +1480,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.cancelOperandEdit();
         this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
         this.currentGroup = this.rootGroup;
-    }
-
-    private registerSVGIcons(): void {
-        const editorIcons = editor as any[];
-
-        editorIcons.forEach((icon) => {
-            this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
-            this.iconService.addIconRef(icon.name, 'default', {
-                name: icon.name,
-                family: 'imx-icons'
-            });
-        });
-
-        const inIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M560-280H120v-400h720v120h-80v-40H200v240h360v80Zm-360-80v-240 240Zm560 200v-120H640v-80h120v-120h80v120h120v80H840v120h-80Z"/></svg>';
-        this.iconService.addSvgIconFromText('in', inIcon, 'imx-icons');
-        this.iconService.addIconRef('in', 'default', {
-            name: 'in',
-            family: 'imx-icons'
-        });
-
-        const notInIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M560-280H120v-400h720v120h-80v-40H200v240h360v80Zm-360-80v-240 240Zm440 104 84-84-84-84 56-56 84 84 84-84 56 56-83 84 83 84-56 56-84-83-84 83-56-56Z"/></svg>';
-        this.iconService.addSvgIconFromText('not-in', notInIcon, 'imx-icons');
-        this.iconService.addIconRef('not-in', 'default', {
-            name: 'not-in',
-            family: 'imx-icons'
-        });
-
-        this.iconService.addIconRef('add', 'default', {
-            name: 'add',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('close', 'default', {
-            name: 'close',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('check', 'default', {
-            name: 'check',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('delete', 'default', {
-            name: 'delete',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('edit', 'default', {
-            name: 'edit',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('unfold_less', 'default', {
-            name: 'unfold_less',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('unfold_more', 'default', {
-            name: 'unfold_more',
-            family: 'material',
-        });
     }
 }
 
