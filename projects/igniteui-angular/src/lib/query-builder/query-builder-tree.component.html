@@ -439,6 +439,7 @@
                             [data]="fields"
                             [displayKey]="'field'"
                             [valueKey]="'field'"
+                            [disabled]="!selectedEntity"
                             [(ngModel)]="selectedReturnFields"
                             searchPlaceholder="{{ this.resourceStrings.igx_query_builder_search }}"
                             [style.display]="isInEditMode() ? 'block' : 'none'"
