@@ -99,6 +99,20 @@ describe('IgxQueryBuilder', () => {
                 ControlsFunction.verifyButtonIsDisabled(buttons[i] as HTMLElement, false);
             }
         });
+
+        it('Should render custom header properly.', () => {
+            const fixture = TestBed.createComponent(IgxQueryBuiderCustomHeaderSampleTestComponent);
+            fixture.detectChanges();
+
+            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderText(fixture)).toBe(' Custom Title ');
+            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderLegendItemAnd(fixture)).toBeNull();
+            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderLegendItemOr(fixture)).toBeNull();
+
+            fixture.componentInstance.showLegend = true;
+            fixture.detectChanges();
+            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderLegendItemAnd(fixture).textContent).toBe('and');
+            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderLegendItemOr(fixture).textContent).toBe('or');
+        });
     });
 
     describe('Interactions', () => {
@@ -156,7 +170,7 @@ export class IgxQueryBuiderSampleTestComponent implements OnInit {
 @Component({
     template: `
      <igx-query-builder #queryBuilder [entities]="this.entities">
-         <igx-query-builder-header [title]="'Custom Title'" [showLegend]="false"></igx-query-builder-header>
+         <igx-query-builder-header [title]="'Custom Title'" [showLegend]="showLegend"></igx-query-builder-header>
      </igx-query-builder>
     `,
     standalone: true,
@@ -168,6 +182,7 @@ export class IgxQueryBuiderSampleTestComponent implements OnInit {
 export class IgxQueryBuiderCustomHeaderSampleTestComponent implements OnInit {
     @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
     public entities: Array<any>;
+    public showLegend = false;
 
     public ngOnInit(): void {
         this.entities = [
