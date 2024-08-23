@@ -1,4 +1,4 @@
-import { waitForAsync, TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
+import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -42,9 +42,9 @@ describe('IgxQueryBuilder', () => {
             expect(queryBuilderElement).toBeDefined();
             expect(queryBuilderElement.children.length).toEqual(2);
 
-            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderText(fix)).toBe(' Query Builder ');
-            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderLegendItemAnd(fix).textContent).toBe('and');
-            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderLegendItemOr(fix).textContent).toBe('or');
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' Query Builder ');
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fix).textContent).toBe('and');
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fix).textContent).toBe('or');
             const queryTreeElement = queryBuilderElement.children[1];
             expect(queryTreeElement).toHaveClass(QUERY_BUILDER_CLASS);
 
@@ -104,19 +104,71 @@ describe('IgxQueryBuilder', () => {
             const fixture = TestBed.createComponent(IgxQueryBuiderCustomHeaderSampleTestComponent);
             fixture.detectChanges();
 
-            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderText(fixture)).toBe(' Custom Title ');
-            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderLegendItemAnd(fixture)).toBeNull();
-            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderLegendItemOr(fixture)).toBeNull();
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe(' Custom Title ');
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fixture)).toBeNull();
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fixture)).toBeNull();
 
             fixture.componentInstance.showLegend = true;
             fixture.detectChanges();
-            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderLegendItemAnd(fixture).textContent).toBe('and');
-            expect(QueryBuilderFunctions.getQueryBuilderFilteringHeaderLegendItemOr(fixture).textContent).toBe('or');
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fixture).textContent).toBe('and');
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fixture).textContent).toBe('or');
         });
     });
 
     describe('Interactions', () => {
-        it('', () => { });
+        it('Should correctly initialize a newly added \'And\' group.', fakeAsync(() => {
+            // Click the initial 'Add And Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify there is a new root group, which is empty.
+            const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
+            expect(group).not.toBeNull('There is no root group.');
+            expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(group as HTMLElement).length).toBe(0, 'The group has children.');
+
+            // Verify the operator line of the root group is an 'And' line.
+            QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
+
+            // Verify the enabled/disabled state of each input of the expression in edit mode.
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, false, false, false, false);
+
+            // Verify the edit inputs are empty.
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '', '', '', '');
+
+            // Verify adding buttons are disabled.
+            const buttons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
+            for (const button of buttons) {
+                ControlsFunction.verifyButtonIsDisabled(button as HTMLElement);
+            }
+        }));
+
+        it('Should correctly initialize a newly added \'Or\' group.', fakeAsync(() => {
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify there is a new root group, which is empty.
+            const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
+            expect(group).not.toBeNull('There is no root group.');
+            expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(group as HTMLElement).length).toBe(0, 'The group has children.');
+
+            // Verify the operator line of the root group is an 'Or' line.
+            QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'or');
+
+            // Verify the enabled/disabled state of each input of the expression in edit mode.
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, false, false, false, false);
+
+            // Verify the edit inputs are empty.
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '', '', '', '');
+
+            // Verify adding buttons are disabled.
+            const buttons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
+            for (const button of buttons) {
+                ControlsFunction.verifyButtonIsDisabled(button as HTMLElement);
+            }
+        }));
     });
 
     describe('Keyboard navigation', () => {
