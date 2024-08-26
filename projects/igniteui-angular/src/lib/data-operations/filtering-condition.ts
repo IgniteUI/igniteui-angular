@@ -391,6 +391,15 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
             }
         }].concat(this.operations);
     }
+
+    protected override findValueInSet(target: any, searchVal: Set<any>) {
+        if (!target) {
+            return false;
+        }
+
+        target = target.toISOString().substring(0, 10);
+        return searchVal.has(target);
+    }
 }
 
 /* blazorCSSuppress */
