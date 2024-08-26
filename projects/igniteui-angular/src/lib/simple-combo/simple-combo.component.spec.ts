@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
@@ -950,7 +950,8 @@ describe('IgxSimpleCombo', () => {
                     FormsModule,
                     IgxSimpleComboSampleComponent,
                     IgxComboInContainerTestComponent,
-                    IgxSimpleComboIconTemplatesComponent
+                    IgxSimpleComboIconTemplatesComponent,
+                    IgxSimpleComboDirtyCheckTestComponent
                 ]
             }).compileComponents();
         }));
@@ -1879,6 +1880,36 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             expect(combo.comboInput.value).toEqual('ariz');
+        }));
+
+        it('should not mark form as dirty when tabbing through an empty combo', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboDirtyCheckTestComponent);
+            fixture.detectChanges();
+
+            combo = fixture.componentInstance.combo;
+            input = fixture.debugElement.query(By.css('.igx-input-group__input'));
+            reactiveForm = fixture.componentInstance.form;
+            fixture.detectChanges();
+
+            expect(reactiveForm.dirty).toBe(false);
+
+            input.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            input.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            tick();
+            fixture.detectChanges();
+
+            expect(reactiveForm.dirty).toBe(false);
         }));
     });
 
@@ -3096,5 +3127,44 @@ export class IgxBottomPositionSimpleComboComponent {
                 });
             });
         }
+    }
+}
+
+@Component({
+    template: `
+    <form [formGroup]="form">
+        <div class="combo-section">
+            <igx-simple-combo
+                #combo
+                [data]="cities"
+                [displayKey]="'name'"
+                [valueKey]="'id'"
+                formControlName="city"
+            >
+            </igx-simple-combo>
+        </div>
+    </form>
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, ReactiveFormsModule]
+})
+export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+
+    public cities: any = [];
+
+    public form = new FormGroup({
+        city: new FormControl<number>({ value: undefined, disabled: false }),
+    });
+
+    public ngOnInit(): void {
+        this.cities = [
+            { id: 1, name: 'New York' },
+            { id: 2, name: 'Los Angeles' },
+            { id: 3, name: 'Chicago' },
+            { id: 4, name: 'Houston' },
+            { id: 5, name: 'Phoenix' }
+        ];
     }
 }
