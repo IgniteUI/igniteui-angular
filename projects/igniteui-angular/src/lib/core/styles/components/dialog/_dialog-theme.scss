@@ -90,30 +90,30 @@
     $bootstrap-theme: map.get($theme, variant) == 'bootstrap';
 
     $dialog-min-width: map.get((
-        material: rem(280px),
-        fluent: rem(288px),
-        bootstrap: rem(288px),
+        'material': rem(280px),
+        'fluent': rem(288px),
+        'bootstrap': rem(288px),
     ), $variant);
 
     $dialog-title-padding: map.get((
-        material: rem(24px) rem(24px) rem(12px) rem(24px),
-        fluent: rem(16px) rem(24px) rem(24px) rem(24px),
-        bootstrap: rem(16px),
-        indigo-design: rem(24px) rem(24px) 0 rem(24px),
+        'material': rem(24px) rem(24px) rem(12px) rem(24px),
+        'fluent': rem(16px) rem(24px) rem(24px) rem(24px),
+        'bootstrap': rem(16px),
+        'indigo': rem(24px) rem(24px) 0 rem(24px),
     ), $variant);
 
     $dialog-message-padding: map.get((
-        material: rem(12px) rem(24px),
-        fluent: 0 rem(24px) rem(20px) rem(24px),
-        bootstrap: rem(16px),
-        indigo-design: rem(16px) rem(24px),
+        'material': rem(12px) rem(24px),
+        'fluent': 0 rem(24px) rem(20px) rem(24px),
+        'bootstrap': rem(16px),
+        'indigo': rem(16px) rem(24px),
     ), $variant);
 
     $dialog-actions-padding: map.get((
-        material: rem(8px),
-        fluent: 0 rem(24px) rem(24px) rem(24px),
-        bootstrap: rem(16px),
-        indigo-design: rem(16px) rem(24px) rem(24px) rem(24px),
+        'material': rem(8px),
+        'fluent': 0 rem(24px) rem(24px) rem(24px),
+        'bootstrap': rem(16px),
+        'indigo': rem(16px) rem(24px) rem(24px) rem(24px),
     ), $variant);
 
     %igx-dialog-display {
@@ -167,10 +167,10 @@
         @media all and (-ms-high-contrast: none)
         {
             max-width: map.get((
-                material: 62ch,
-                fluent: 48ch,
-                bootstrap: 60ch,
-                indigo-design: 48ch,
+                'material': 62ch,
+                'fluent': 48ch,
+                'bootstrap': 60ch,
+                'indigo': 48ch,
             ), $variant);
         }
     }
@@ -189,7 +189,7 @@
             margin-inline-start: rem(8px);
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             .igx-button {
                 --ig-size: 2;
             }
