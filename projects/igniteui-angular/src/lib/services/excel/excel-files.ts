@@ -457,18 +457,25 @@ export class WorksheetFile implements IExcelFile {
                 summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, level, targetCol);
 
                 if (!summaryFunc) {
-                    let cellStr = '';
+                    let summaryValue;
+                    
+                    const label = cellValue.label?.toString();
+                    const value = cellValue.value?.toString();
 
-                    if (cellValue.label && cellValue.value) {
-                        cellStr = `${cellValue.label}: ${cellValue.value}`;
-                    } else if (cellValue.label) {
-                        cellStr = cellValue.label;
-                    } else if (cellValue.value) {
-                        cellStr = cellValue.value;
+                    if (label && value) {
+                        summaryValue = `${cellValue.label}: ${cellValue.value}`;
+                    } else if (label) {
+                        summaryValue = cellValue.label;
+                    } else if (value) {
+                        summaryValue = cellValue.value;
                     }
 
-                    const savedValue = dictionary.saveValue(cellStr, false);
-                    return `<c r="${columnName}" t="s" s="1"><v>${savedValue}</v></c>`;
+                    const savedValue = dictionary.saveValue(summaryValue, false);
+                    const isSavedAsString = savedValue !== -1;
+                    const resolvedValue = isSavedAsString ? savedValue : summaryValue;
+                    const type = isSavedAsString ? `t="s"` : "";
+
+                    return `<c r="${columnName}" ${type} s="1"><v>${resolvedValue}</v></c>`;
                 }
 
                 return `<c r="${columnName}"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
@@ -545,7 +552,7 @@ export class WorksheetFile implements IExcelFile {
         let result = '';
         const currencyInfo = this.currencyStyleMap.get(col.currencyCode);
 
-        switch(type.toLowerCase()) {
+        switch(type?.toString().toLowerCase()) {
             case "count":
                 return `"Count: "&amp;_xlfn.COUNTIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel})`
             case "min":
