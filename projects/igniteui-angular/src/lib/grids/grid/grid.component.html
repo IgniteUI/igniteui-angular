@@ -238,7 +238,7 @@
 </div>
 
 <ng-template #defaultRowEditText>
-    {{this.resourceStrings.igx_grid_row_edit_text | igxStringReplace:'{0}':rowChangesCount.toString() | igxStringReplace:'{1}':hiddenColumnsCount.toString()}}
+    {{ this.resourceStrings.igx_grid_row_edit_text | igxStringReplace:'{0}':rowChangesCount.toString() | igxStringReplace:'{1}':hiddenColumnsCount.toString() }}
 </ng-template>
 
 <ng-template #defaultRowEditActions>
