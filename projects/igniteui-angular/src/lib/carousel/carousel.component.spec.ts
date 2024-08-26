@@ -840,32 +840,56 @@ describe('Carousel', () => {
         it('verify changing slides with pan left ', () => {
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, -0.05, 0.1);
-
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.05, 0.1, 'horizontal');
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1);
-
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1, 'horizontal');
             expect(carousel.current).toEqual(3);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2);
-
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2, 'horizontal');
             expect(carousel.current).toEqual(0);
         });
 
         it('verify changing slides with pan right ', () => {
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, 0.1, 0.1);
-
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.1, 0.1, 'horizontal');
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1);
-
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1, 'horizontal');
             expect(carousel.current).toEqual(1);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2);
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2, 'horizontal');
+            expect(carousel.current).toEqual(0);
+        });
 
+        it('verify changing slides with pan up', () => {
+            carousel.vertical = true;
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.05, 0.1, 'vertical');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1, 'vertical');
+            expect(carousel.current).toEqual(3);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2, 'vertical');
+            expect(carousel.current).toEqual(0);
+        });
+
+        it('verify changing slides with pan down', () => {
+            carousel.vertical = true;
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.1, 0.1, 'vertical');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1, 'vertical');
+            expect(carousel.current).toEqual(1);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2, 'vertical');
             expect(carousel.current).toEqual(0);
         });
 
@@ -878,7 +902,7 @@ describe('Carousel', () => {
 
             expect(carousel.current).toEqual(0);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2);
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2, 'horizontal');
 
             expect(carousel.current).toEqual(0);
 
@@ -887,7 +911,7 @@ describe('Carousel', () => {
 
             expect(carousel.current).toEqual(3);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, -0.9, 2);
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.9, 2, 'horizontal');
 
             expect(carousel.current).toEqual(3);
         });
@@ -898,12 +922,52 @@ describe('Carousel', () => {
 
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2);
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2, 'horizontal');
 
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, -0.6, 2);
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.6, 2, 'horizontal');
 
+            expect(carousel.current).toEqual(2);
+        });
+
+        it('verify pan left/right when `vertical` is true', () => {
+            carousel.vertical = true;
+            fixture.detectChanges();
+            expect(carousel.vertical).toBe(true);
+            expect(carousel.current).toEqual(2);
+
+            // pan left
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1, 'horizontal');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2, 'horizontal');
+            expect(carousel.current).toEqual(2);
+
+            // pan right
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1, 'horizontal');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2, 'horizontal');
+            expect(carousel.current).toEqual(2);
+        });
+
+        it('verify pan up/down when `vertical` is false', () => {
+            expect(carousel.vertical).toBe(false);
+            expect(carousel.current).toEqual(2);
+
+            // pan up
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1, 'vertical');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2, 'vertical');
+            expect(carousel.current).toEqual(2);
+
+            // pan down
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1, 'vertical');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2, 'vertical');
             expect(carousel.current).toEqual(2);
         });
     });
@@ -979,14 +1043,21 @@ class HelperTestFunctions {
         // Simulator.gestures.press(activeSlide, { duration: 180 });
     }
 
-    public static simulatePan(fixture, carousel, deltaXOffset, velocity) {
+    public static simulatePan(fixture, carousel, deltaOffset, velocity, dir: 'horizontal' | 'vertical') {
         const activeSlide = carousel.get(carousel.current).nativeElement;
         const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
-        const deltaX = activeSlide.offsetWidth * deltaXOffset;
-        const event = deltaXOffset < 0 ? 'panleft' : 'panright';
+        const deltaX = dir === 'horizontal' ? activeSlide.offsetWidth * deltaOffset : 0;
+        const deltaY = dir === 'horizontal' ? 0 : activeSlide.offsetHeight * deltaOffset;
+
+        let event;
+        if (dir === 'horizontal') {
+            event = deltaOffset < 0 ? 'panleft' : 'panright';
+        } else {
+            event = deltaOffset < 0 ? 'panup' : 'pandown';
+        }
         const panOptions = {
             deltaX,
-            deltaY: 0,
+            deltaY,
             duration: 100,
             velocity,
             preventDefault: ( () => {  })
