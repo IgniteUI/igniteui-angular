@@ -566,7 +566,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.filteredData.length !== this.data.length && !ignoreFilter) {
             newSelection = this.selectionService.delete_items(this.id, this.selectionService.get_all_ids(this.filteredData, this.valueKey));
         }
-        this.setSelection(newSelection);
+        if (this.selectionService.get(this.id).size > 0 || this.comboInput.value.trim()) {
+            this.setSelection(newSelection);
+        }
     }
 
     private clearOnBlur(): void {
