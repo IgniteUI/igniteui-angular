@@ -37,6 +37,7 @@ export interface IGridStateInfo {
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
 /* contentParent: GridBaseDirective */
+/* contentParent: HierarchicalGrid */
 /* jsonAPIManageCollectionInMarkup */
 /**
  * State component allows saving and restoring the state of the grid features.
