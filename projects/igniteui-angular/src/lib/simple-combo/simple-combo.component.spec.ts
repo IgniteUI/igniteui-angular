@@ -2576,7 +2576,7 @@ describe('IgxSimpleCombo', () => {
 
             // scroll to selected item
             combo.virtualScrollContainer.scrollTo(15);
-            await wait(30);
+            await wait(100);
             fixture.detectChanges();
 
             const selectedItem = combo.data[combo.data.length - 1];
