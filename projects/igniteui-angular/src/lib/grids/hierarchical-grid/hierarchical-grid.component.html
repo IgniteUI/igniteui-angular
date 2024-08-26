@@ -198,7 +198,7 @@
     </div>
 </div>
 <ng-template #defaultRowEditText>
-    {{this.resourceStrings.igx_grid_row_edit_text | igxStringReplace:'{0}':rowChangesCount.toString() | igxStringReplace:'{1}':hiddenColumnsCount.toString()}}
+    {{ this.resourceStrings.igx_grid_row_edit_text | igxStringReplace:'{0}':rowChangesCount.toString() | igxStringReplace:'{1}':hiddenColumnsCount.toString() }}
 </ng-template>
 <ng-template #defaultRowEditActions>
     <button type="button" igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_cancel }}</button>
