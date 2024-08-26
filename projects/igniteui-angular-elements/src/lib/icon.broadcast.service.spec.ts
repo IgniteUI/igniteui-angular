@@ -55,10 +55,10 @@ describe('Icon broadcast service', () => {
       it('should correctly process event of setting an icon reference on channel.', async() => {
         const refs: Map<string, Map<string, IconMeta>> = new Map();
         const ref: Map<string, IconMeta> = new Map()
-        ref.set("customIcon", {name: "customIcon", family: "customCollection" });
+        ref.set("customIcon", {name: "customNameOfIcon", collection: "customCollection" } as any);
         refs.set("customCollection", ref);
         const message: BroadcastIconsChangeMessage = {
-            actionType: ActionType.RegisterIcon,
+            actionType: ActionType.UpdateIconReference,
             references: refs
         };
         broadcastChannel.postMessage(message);
@@ -67,9 +67,9 @@ describe('Icon broadcast service', () => {
         fixture.detectChanges();
 
         const iconService = fixture.componentInstance.iconService;
-        const serviceRef = iconService.getIconRef("customIcon", "customCollection");
+        const serviceRef = iconService.getIconRef("customIcon", "default");
         expect(serviceRef.family).toBe("customCollection");
-        expect(serviceRef.name).toBe("customIcon");
+        expect(serviceRef.name).toBe("customNameOfIcon");
       });
 
       it('should send a request to sync state from any peer already on the channel on init.', async() => {
