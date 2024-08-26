@@ -473,7 +473,7 @@
                     </ng-container>
                 </ng-container>
                 <div
-                    *ngIf="currentGroup === expressionItem && isInEditMode()"
+                    *ngIf="currentGroup === expressionItem && isInEditMode() && expressionItem === rootGroup"
                     #currentGroupButtonsContainer
                     class="igx-filter-tree__buttons"
                 >
@@ -484,19 +484,6 @@
                         "
                     >
                     </ng-container>
-                    <button type="button"
-                        igxButton="outlined"
-                        *ngIf="expressionItem !== rootGroup"
-                        [disabled]="
-                            hasEditedExpression ||
-                            expressionItem.children.length < 2
-                        "
-                        (click)="endGroup(expressionItem)"
-                    >
-                        <span>{{
-                            this.resourceStrings.igx_query_builder_end_group
-                        }}</span>
-                    </button>
                 </div>
             </div>
         </div>
