@@ -24,6 +24,10 @@ igx-input-group.igx-input-group--fluent {
     }
 }
 
+.igx-input-group--fluent .igx-input-group__label {
+    transition: none;
+}
+
 igx-input-group.igx-input-group--fluent.igx-input-group--textarea-group.igx-input-group--invalid,
 igx-input-group.igx-input-group--fluent.igx-input-group--invalid {
     --igx-input-group-input-prefix-color: #{color($color: 'error')};
@@ -88,4 +92,8 @@ igx-input-group.igx-input-group--fluent:not(.igx-input-group--suffixed) {
 igx-input-group.igx-input-group--fluent [igxPrefix],
 igx-input-group.igx-input-group--fluent [igxSuffix] {
     padding-inline: rem(12px);
+}
+
+.igx-input-group--fluent.igx-input-group--focused.igx-input-group--textarea-group .igx-input-group__hint {
+    margin-block-start: unset !important;
 }
