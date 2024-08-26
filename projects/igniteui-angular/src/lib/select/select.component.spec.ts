@@ -98,7 +98,8 @@ describe('igxSelect', () => {
                 IgxSelectReactiveFormComponent,
                 IgxSelectTemplateFormComponent,
                 IgxSelectHeaderFooterComponent,
-                IgxSelectCDRComponent
+                IgxSelectCDRComponent,
+                IgxSelectWithIdComponent
             ]
         }).compileComponents();
     }));
@@ -515,6 +516,21 @@ describe('igxSelect', () => {
             expect(dummyInput).toEqual(document.activeElement);
             expect(select.collapsed).toBeFalsy();
         }));
+
+        it('should set the id attribute when using property binding', () => {
+            fixture = TestBed.createComponent(IgxSelectWithIdComponent);
+            fixture.detectChanges();
+
+            select = fixture.componentInstance.select;
+            fixture.detectChanges();
+
+            const selectElement = fixture.debugElement.query(By.css('igx-select')).nativeElement;
+            fixture.detectChanges();
+
+            expect(select).toBeTruthy();
+            expect(select.id).toEqual("id1");
+            expect(selectElement.getAttribute('id')).toBe('id1');
+        });
     });
 
     describe('Form tests: ', () => {
@@ -3090,4 +3106,22 @@ class IgxSelectCDRComponent {
         { field: 'CompanyName', type: 'string' },
         { field: 'ContactName', type: 'string' }
     ];
+}
+
+@Component({
+    template: `
+        <igx-select [id]="'id1'">
+            <igx-select-item *ngFor="let item of items" [value]="item">
+                {{item}}
+            </igx-select-item>
+        </igx-select>
+    `,
+    standalone: true,
+    imports: [NgIf, IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective, NgFor]
+})
+class IgxSelectWithIdComponent {
+    @ViewChild(IgxSelectComponent, { read: IgxSelectComponent, static: true })
+    public select: IgxSelectComponent;
+
+    public items: string[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
 }

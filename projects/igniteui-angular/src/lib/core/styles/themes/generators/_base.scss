@@ -116,7 +116,7 @@
 
     @if $theme {
         #{$scope} {
-            --ig-theme: #{if($theme == 'indigo-design', 'indigo', #{$theme})};
+            --ig-theme: #{$theme};
             --ig-theme-variant: #{$variant};
         }
     }
