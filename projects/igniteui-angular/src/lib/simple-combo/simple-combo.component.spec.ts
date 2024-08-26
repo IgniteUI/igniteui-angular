@@ -950,7 +950,8 @@ describe('IgxSimpleCombo', () => {
                     FormsModule,
                     IgxSimpleComboSampleComponent,
                     IgxComboInContainerTestComponent,
-                    IgxSimpleComboIconTemplatesComponent
+                    IgxSimpleComboIconTemplatesComponent,
+                    IgxSimpleComboDirtyCheckTestComponent
                 ]
             }).compileComponents();
         }));
