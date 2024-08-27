@@ -6,7 +6,7 @@ import { PivotUtil } from './pivot-util';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IMultiRowLayoutNode } from '../public_api';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { take, timeout } from 'rxjs';
+import { take, timeout } from 'rxjs/operators';
 import { IPivotDimension, IPivotGridRecord, PivotSummaryPosition } from './pivot-grid.interface';
 
 @Injectable()
