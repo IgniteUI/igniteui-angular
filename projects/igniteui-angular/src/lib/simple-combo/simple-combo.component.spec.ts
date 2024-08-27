@@ -792,7 +792,7 @@ describe('IgxSimpleCombo', () => {
             const clearButtonAfterSelection = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearButtonAfterSelection).not.toBeNull();
         }));
-        it('should not show clear icon button when no value is selected initially in a form with FormControland', fakeAsync(() => {
+        it('should not show clear icon button when no value is selected initially in a form with FormControl', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSimpleComboFormWithFormControlComponent);
             fixture.detectChanges();
 
