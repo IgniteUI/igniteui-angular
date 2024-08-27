@@ -6,13 +6,11 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { QueryBuilderFunctions } from './query-builder-functions';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 const QUERY_BUILDER_CLASS = 'igx-query-builder';
-const QUERY_BUILDER_HEADER = 'igx-query-builder__header';
 const QUERY_BUILDER_BODY = 'igx-query-builder__main';
 const QUERY_BUILDER_TREE = 'igx-query-builder-tree';
-const QUERY_BUILDER_HEADER_TAG = "IGX-QUERY-BUILDER-HEADER";
-const QUERY_BUILDER_EXPRESSION_ITEM_CLASS = 'igx-filter-tree__expression-item';
 const CHIP_SELECT_CLASS = '.igx-chip__select';
 describe('IgxQueryBuilder', () => {
     configureTestSuite();
@@ -131,7 +129,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
 
             // Verify the enabled/disabled state of each input of the expression in edit mode.
-            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, false, false, false, false);
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false, false, false, false, false);
 
             // Verify the edit inputs are empty.
             QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '', '', '', '');
@@ -158,7 +156,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'or');
 
             // Verify the enabled/disabled state of each input of the expression in edit mode.
-            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, false, false, false, false);
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false, false, false, false, false);
 
             // Verify the edit inputs are empty.
             QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '', '', '', '');
@@ -168,6 +166,117 @@ describe('IgxQueryBuilder', () => {
             for (const button of buttons) {
                 ControlsFunction.verifyButtonIsDisabled(button as HTMLElement);
             }
+        }));
+
+        it(`Should discard newly added group when clicking on the 'cancel' button of its initial condition.`, fakeAsync(() => {
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify there is a new root group, which is empty.
+            let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
+            expect(group).not.toBeNull('There is no root group.');
+
+            // Click on the 'cancel' button
+            const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
+            UIInteractions.simulateClickEvent(closeButton);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify there is a new root group, which is empty.
+            group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
+            expect(group).toBeNull();
+        }));
+
+        it('Should be able to add and define a new group through initial adding button.', fakeAsync(() => {
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the enabled/disabled state of each input of the expression in edit mode.
+            expect(fix.componentInstance.queryBuilder.expressionTree).toBeUndefined();
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false, false, false, false, false);
+
+            // Select an entity
+            // TO DO: refactor the methods when entity and fields drop-downs are in the correct overlay
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, false, false, false);
+            // Select fields
+            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [1, 2])
+            tick(100);
+            fix.detectChanges();
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, false, false, false);
+
+            //Select Column
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, false, false);
+
+            //Select Operator
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, false);
+
+            //Type Value
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, true);
+
+            // Verify all inputs values
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, Released', 'ProductName', 'Contains', 'a');
+
+            //Commit the group
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "field": "ProductName",
+      "condition": {
+        "name": "contains",
+        "isUnary": false,
+        "iconName": "contains"
+      },
+      "conditionName": null,
+      "ignoreCase": true,
+      "searchVal": "a",
+      "searchTree": null
+    }
+  ],
+  "operator": 1,
+  "entity": "Products",
+  "returnFields": [
+    "Id",
+    "Released"
+  ]
+}`);
+        }));
+
+        it('Value input should be disabled for unary operator.', fakeAsync(() => {
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Select an entity
+            // TO DO: refactor the methods when entity and fields drop-downs are in the correct overlay
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            //Select Column
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, false, false);
+
+            //Select Operator
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, false, true);
         }));
     });
 

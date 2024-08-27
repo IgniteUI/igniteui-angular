@@ -1,14 +1,16 @@
 import { DebugElement } from '@angular/core';
-import { ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxIconComponent } from 'igniteui-angular';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 const QUERY_BUILDER_CLASS = 'igx-query-builder';
 const QUERY_BUILDER_HEADER = 'igx-query-builder__header';
 const QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
 const QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
+const CSS_CLASS_DROPDOWN_LIST_SCROLL = 'igx-drop-down__list-scroll';
 
 export class QueryBuilderFunctions {
     public static generateExpressionTree(): FilteringExpressionsTree {
@@ -133,6 +135,7 @@ export class QueryBuilderFunctions {
         const childExpressions = Array.from(QueryBuilderFunctions.getQueryBuilderTreeChildExpressions(group, directChildrenOnly));
         return childGroups.concat(childExpressions);
     }
+
     /**
      * Get a specific item from the tree (could be a group or an expression)
      * by specifying its hierarchical path (not including the root group).
@@ -244,6 +247,23 @@ export class QueryBuilderFunctions {
         return buttons;
     }
 
+    public static getQueryBuilderOutlet(queryBuilderElement: HTMLElement) {
+        const outlet = queryBuilderElement.querySelector('.igx-query-builder__outlet');
+        return outlet;
+    }
+
+    public static getQueryBuilderSelectDropdown(queryBuilderElement: HTMLElement) {
+        const outlet = QueryBuilderFunctions.getQueryBuilderOutlet(queryBuilderElement);
+        const selectDropdown = outlet.querySelector(`.${CSS_CLASS_DROPDOWN_LIST_SCROLL}`);
+        return selectDropdown;
+    }
+
+    public static getQueryBuilderSelectDropdownItems(queryBuilderElement: HTMLElement) {
+        const selectDropdown = QueryBuilderFunctions.getQueryBuilderSelectDropdown(queryBuilderElement);
+        const items = Array.from(selectDropdown.querySelectorAll('.igx-drop-down__item'));
+        return items;
+    }
+
     /**
      * Verifies the type of the operator line ('and' or 'or').
      * (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
@@ -275,11 +295,11 @@ export class QueryBuilderFunctions {
         // Verify the entity select state.
         const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix).querySelector('igx-input-group');
         expect(!entityInputGroup.classList.contains('igx-input-group--disabled')).toBe(entitySelectEnabled,
-            'incorrect column select state');
+            'incorrect entity select state');
         // Verify the fields combo state.
         const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix).querySelector('igx-input-group');
         expect(!fieldInputGroup.classList.contains('igx-input-group--disabled')).toBe(fieldComboEnabled,
-            'incorrect column select state');
+            'incorrect fields combo state');
 
         QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, columnSelectEnabled, operatorSelectEnabled, valueInputEnabled, commitButtonEnabled);
     };
@@ -332,10 +352,117 @@ export class QueryBuilderFunctions {
         operatorText: string,
         valueText: string) {
         const columnInput = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix).querySelector('input');
-        const operatorInput = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix).querySelector('input');
-        const valueInput = QueryBuilderFunctions.getQueryBuilderValueInput(fix) as HTMLInputElement;
+        const operatorInput = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('input');
+        const valueInput = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input') as HTMLInputElement;
         expect(columnInput.value).toBe(columnText);
         expect(operatorInput.value).toBe(operatorText);
         expect(valueInput.value).toBe(valueText);
     };
+
+    /**
+     * Click the entity select for the expression that is currently in edit mode.
+     */
+    public static clickQueryBuilderEntitySelect(fix: ComponentFixture<any>) {
+        const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix).querySelector('igx-input-group') as HTMLElement;
+        entityInputGroup.click();
+    }
+
+    /**
+     * Click the fields combo for the expression that is currently in edit mode.
+     */
+    public static clickQueryBuilderFieldsCombo(fix: ComponentFixture<any>) {
+        const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix).querySelector('igx-input-group') as HTMLElement;
+        fieldInputGroup.click();
+    }
+
+    /**
+     * Click the column select for the expression that is currently in edit mode.
+     */
+    public static clickQueryBuilderColumnSelect(fix: ComponentFixture<any>) {
+        const columnInputGroup = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix).querySelector('igx-input-group') as HTMLElement;
+        columnInputGroup.click();
+    }
+
+    /**
+     * Click the operator select for the expression that is currently in edit mode.
+     */
+    public static clickQueryBuilderOperatorSelect(fix: ComponentFixture<any>) {
+        const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement
+        operatorInputGroup.click();
+    }
+
+    /**
+     * Click the value input for the expression that is currently in edit mode.
+     * (NOTE: The value input could be either an input group or a date picker.)
+     */
+    public static clickQueryBuilderValueInput(fix: ComponentFixture<any>, dateType = false) {
+        // Could be either an input group or a date picker.
+        const valueInput = QueryBuilderFunctions.getQueryBuilderValueInput(fix, dateType) as HTMLElement;
+        valueInput.click();
+    }
+
+    /**
+     * Click the the select dropdown's element that is positioned at the specified 'index'.
+     * (NOTE: This method presumes that the select dropdown is already opened.)
+     */
+    public static clickQueryBuilderSelectDropdownItem(queryBuilderElement: HTMLElement, index: number) {
+        const selectDropdownItems = Array.from(QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement));
+        const item = selectDropdownItems[index] as HTMLElement;
+        item.click();
+    }
+
+    /**
+     * Click the commit button of the expression that is currently in edit mode.
+     */
+    public static clickQueryBuilderExpressionCommitButton(fix: ComponentFixture<any>) {
+        const commitButton = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+        commitButton.click();
+    }
+
+    public static selectEntityInEditModeExpression(fix, dropdownItemIndex: number) {
+        QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix);
+        fix.detectChanges();
+
+        const outlet = fix.debugElement.query(By.css(`.igx-drop-down__list-scroll`)).nativeElement;
+        const item = Array.from(outlet.querySelectorAll('.igx-drop-down__item'))[dropdownItemIndex] as HTMLElement;
+        UIInteractions.simulateClickAndSelectEvent(item)
+        tick();
+        fix.detectChanges();
+    }
+
+    public static selectFieldsInEditModeExpression(fix, deselectItemIndexes) {
+        QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
+        fix.detectChanges();
+
+        const outlet = fix.debugElement.queryAll(By.css(`.igx-drop-down__list-scroll`))[1].nativeElement;
+        deselectItemIndexes.forEach(index => {
+            const item = Array.from(outlet.querySelectorAll('.igx-drop-down__item'))[index] as HTMLElement;
+            UIInteractions.simulateClickAndSelectEvent(item)
+            tick();
+            fix.detectChanges();
+        });
+        //close combo drop-down
+        QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
+        fix.detectChanges();
+    }
+
+    public static selectColumnInEditModeExpression(fix, dropdownItemIndex: number) {
+        QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
+        fix.detectChanges();
+
+        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+        QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, dropdownItemIndex);
+        tick();
+        fix.detectChanges();
+    }
+
+    public static selectOperatorInEditModeExpression(fix, dropdownItemIndex: number) {
+        QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
+        fix.detectChanges();
+
+        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+        QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, dropdownItemIndex);
+        tick();
+        fix.detectChanges();
+    }
 }
