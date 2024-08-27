@@ -1,0 +1,31 @@
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+.igx-checkbox {
+    --size: #{rem(16px)};
+
+    .igx-checkbox__composite {
+        width: var(--size);
+        height: var(--size);
+        min-width: var(--size);
+        background: color(null, 'surface', 500);
+        border-width: rem(1px);
+    }
+
+    &:hover:not(&--checked) .igx-checkbox__composite,
+    &:hover:not(&--indeterminate) .igx-checkbox__composite,
+    &--focused .igx-checkbox__composite {
+        border-color: color(null, 'secondary', 500);
+    }
+
+    &.igx-checkbox--disabled .igx-checkbox__composite {
+        background: var(--disabled-indeterminate-color);
+    }
+
+    &.igx-checkbox--checked.igx-checkbox--disabled,
+    &.igx-checkbox--indeterminate.igx-checkbox--disabled {
+        .igx-checkbox__composite {
+            border-color: var(--disabled-color);
+            --tick-color: var(--disabled-color);
+        }
+    }
+}

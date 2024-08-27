@@ -9,6 +9,9 @@ All notable changes for each version of this project will be documented in this 
     - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicator` property. Defaults to `true`.
 
 ### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - **Breaking Change** The `shouldGenerate` property have been deprecated and will be removed in a future version. Use `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`.
+
 - `IgxCarousel`
     - `animationType` input property is now of type `CarouselAnimationType`. `HorizontalAnimationType` can also be used, however, to accommodate the new vertical mode, which supports vertical slide animations, it is recommended to use `CarouselAnimationType`.
 
@@ -41,6 +44,7 @@ All notable changes for each version of this project will be documented in this 
     - The `isFirstPageDisabled` and `isLastPageDisabled` have been deprecated in favor of the identical `isFirstPage` and `isLastPage` getter.
 - `IgxOverlayService`
     - The `attach` method overload accepting `Type` and `OverlaySettings` now accepts `OverlayCreateSettings` as second parameter. This interface extends `OverlaySettings` with an additional `injector` property used as `ElementInjector` when creating the dynamic component.
+
 
 ## 18.0.0
 ### New Features
