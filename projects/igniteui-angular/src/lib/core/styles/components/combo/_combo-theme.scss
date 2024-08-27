@@ -113,8 +113,8 @@
     }
 
     %igx-combo__search {
-        padding-inline: pad-inline(rem(16px));
-        padding-block: pad-block(rem(8px));
+        padding-inline: if($variant == 'indigo', pad-inline(rem(12px)), pad-inline(rem(16px)));
+        padding-block: if($variant == 'indigo', pad-block(rem(12px)), pad-block(rem(8px)));
         margin: 0 !important;
         z-index: 26;
         border-bottom: rem(1px) dashed var-get($theme, 'search-separator-border-color');
