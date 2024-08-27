@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { RemoteService } from '../shared/remote.service';
-import { IgxButtonDirective, IgxColumnComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxRippleDirective, IgxSwitchComponent, IgxToggleActionDirective } from 'igniteui-angular';
+import { IGX_INPUT_GROUP_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxButtonDirective, IgxColumnComponent, IgxGridComponent, IgxSwitchComponent } from 'igniteui-angular';
 import { data } from '../shared/data';
 
 @Component({
@@ -14,14 +14,24 @@ import { data } from '../shared/data';
     styleUrls: ['grid-selection.sample.scss'],
     standalone: true,
     providers: [RemoteService],
-    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxGridComponent, IgxColumnComponent, NgIf, IgxRippleDirective, AsyncPipe]
+    imports: [
+        AsyncPipe,
+        FormsModule,
+        IGX_INPUT_GROUP_DIRECTIVES,
+        IGX_SELECT_DIRECTIVES,
+        IgxButtonDirective,
+        IgxColumnComponent,
+        IgxGridComponent,
+        IgxSwitchComponent,
+        NgFor,
+        NgIf,
+    ]
 })
 export class GridSelectionComponent implements AfterViewInit {
-    @ViewChild('grid1', { static: true })
-    private grid1: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    protected grid1: IgxGridComponent;
 
     public remote: Observable<any[]>;
-    public selection = true;
     public selectionModes = ['none', 'single', 'multiple'];
     public data = [];
 
@@ -30,52 +40,52 @@ export class GridSelectionComponent implements AfterViewInit {
      }
 
      public ngAfterViewInit() {
-/*         this.remote = this.remoteService.remoteData;
-        this.remoteService.getData(this.grid1.data); */
+        // this.remote = this.remoteService.remoteData;
+        // this.remoteService.getData(this.grid1.data);
         this.data = data;
         this.cdr.detectChanges();
     }
 
-    public onRowSelection(event) {
-        this.grid1.rowSelection = event.newSelection.element.nativeElement.textContent.trim();
+    protected toggleData() {
+        if (this.data !== data) {
+            this.data = data;
+        } else {
+            this.data = this.data.slice(0,10);
+        }
     }
 
-    public onSelection(event) {
-        this.grid1.cellSelection = event.newSelection.element.nativeElement.textContent.trim();
-    }
-
-    public scrScrollTo(index) {
-        this.grid1.verticalScrollContainer.scrollTo(parseInt(index, 10));
+    public scrScrollTo(index: number) {
+        this.grid1.verticalScrollContainer.scrollTo(index);
     }
 
     public handleRowSelection() {
         console.log('ONSELECTIONEVENTFIRED');
-/*         const targetCell = args.cell as IgxGridCellComponent;
-        if  (!this.selection) {
-            this.grid1.selectRows([targetCell.row.key], true);
-        } */
     }
 
     public selectCells() {
         this.grid1.selectRange({rowStart: 1, rowEnd: 3, columnStart: 0, columnEnd: 2});
     }
 
-    public selectCell() {
-        this.grid1.getCellByColumn(1, 'ProductName').selected = this.grid1.getCellByColumn(1, 'ProductName').selected ?
-        false : true;
+    public toggleCell() {
+        const cell = this.grid1.getCellByColumn(1, 'ProductName');
+        cell.selected = !cell.selected;
+        this.grid1.cdr.detectChanges();
+    }
+
+    public toggleThirdRow() {
+        const row = this.grid1.getRowByIndex(2);
+        row.selected = !row.selected;
         this.grid1.cdr.detectChanges();
     }
 
     public toggle() {
-        const currentSelection = this.grid1.selectedRows;
-        if (currentSelection !== undefined) {
-            const currentSelectionSet = new Set(currentSelection);
-            if (currentSelectionSet.has(1) && currentSelectionSet.has(2) && currentSelectionSet.has(5)) {
-                this.grid1.deselectRows([1, 2, 5]);
-                return;
-            }
+        const rows = [1, 2, 5];
+        const currentSelectionSet = new Set(this.grid1.selectedRows);
+        if (rows.every(x => currentSelectionSet.has(x))) {
+            this.grid1.deselectRows(rows);
+            return;
         }
-        this.grid1.selectRows([1, 2, 5], false);
+        this.grid1.selectRows(rows, false);
     }
 
     public toggleAll() {
@@ -88,9 +98,6 @@ export class GridSelectionComponent implements AfterViewInit {
 
     public log(args) {
         console.log(args);
-        console.log('WIDTH ', this.grid1.calcWidth);
-        console.log((this.grid1 as any)._columns.map(c => c.calcWidth));
-        console.log('UnpinnedWidth: ', this.grid1.unpinnedWidth);
     }
 
     public callSelectAll() {
@@ -101,15 +108,8 @@ export class GridSelectionComponent implements AfterViewInit {
         this.grid1.selectRows(['abc']);
     }
 
-    public selectThirdRow() {
-        const row = this.grid1.getRowByIndex(2);
-        row.selected = !row.selected;
-        this.grid1.cdr.detectChanges();
-    }
-
     public deleteSelectedRow() {
         const r = this.grid1.selectedRows[0];
         this.grid1.deleteRow(r);
-
     }
 }
