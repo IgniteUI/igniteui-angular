@@ -2,11 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 18.2.0
-### General
-- `IgxSimpleCombo`
-    - Enhanced validation to align with `ngControl` by considering both the presence of `ngControl` and the `required` property, ensuring consistent behavior and accurate required status representation whether the component is used in a form or with `ngModel`.
-
 ## 18.1.0
 ### New Features
 - `IgxPivotGrid`
