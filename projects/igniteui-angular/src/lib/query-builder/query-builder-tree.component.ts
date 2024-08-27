@@ -203,7 +203,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
     * Returns the expression tree.
     */
-     public get expressionTree(): IExpressionTree {
+    public get expressionTree(): IExpressionTree {
         return this._expressionTree;
     }
 
@@ -874,8 +874,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
-            } else if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
-                this.conditionSelect.input.nativeElement.focus();
+        } else if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
+            this.conditionSelect.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
             input.focus();
@@ -968,6 +968,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onGroupClick(groupItem: ExpressionGroupItem) {
+        const firstChild = groupItem.children[0] as ExpressionOperandItem;
+        if (!this.isInEditMode() && firstChild) {
+            this.enterExpressionEdit(firstChild);
+        }
         this.toggleGroup(groupItem);
     }
 
