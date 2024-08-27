@@ -2515,7 +2515,7 @@ export class GridCurrencySummariesComponent extends BasicGridComponent implement
     }
 }
 
-class DiscontinuedSummaryWithNullAndZero {
+class CustomSummaryWithNullAndZero {
     public operate(): IgxSummaryResult[] {
         const result = [];
 
@@ -2535,7 +2535,7 @@ class DiscontinuedSummaryWithNullAndZero {
     }
 }
 
-class DiscontinuedSummaryWithUndefinedZeroAndValidNumber {
+class CustomSummaryWithUndefinedZeroAndValidNumber {
     public operate(): IgxSummaryResult[] {
         const result = [];
 
@@ -2555,7 +2555,7 @@ class DiscontinuedSummaryWithUndefinedZeroAndValidNumber {
     }
 }
 
-class DiscontinuedSummaryWithUndefinedAndNull {
+class CustomSummaryWithUndefinedAndNull {
     public operate(): IgxSummaryResult[] {
         const result = [];
 
@@ -2597,12 +2597,32 @@ class DiscontinuedSummary {
     }
 }
 
+class CustomSummaryWithDate {
+    public operate(): IgxSummaryResult[] {
+        const result = [];
+
+        result.push({
+            key: 'total',
+            label: new Date(2015, 11, 8),
+            summaryResult: null,
+        });
+
+        result.push({
+            key: 'totalDiscontinued',
+            label: null,
+            summaryResult: new Date(2020, 4, 12),
+        });
+        
+        return result;
+    }
+}
+
 @Component({
     template: `
         <igx-grid #grid1 [data]="data">
-            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
-            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
-            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
         </igx-grid>
     `,
     standalone: true,
@@ -2610,7 +2630,7 @@ class DiscontinuedSummary {
 })
 export class GridCustomSummaryComponent extends BasicGridComponent implements OnInit {
     public override data = [];
-    public discontinuedSummary = DiscontinuedSummary;
+    public customSummary = DiscontinuedSummary;
 
     public ngOnInit(): void {
         this.data = SampleTestData.gridCustomSummaryData();
@@ -2620,9 +2640,9 @@ export class GridCustomSummaryComponent extends BasicGridComponent implements On
 @Component({
     template: `
         <igx-grid #grid1 [data]="data">
-            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
-            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
-            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
         </igx-grid>
     `,
     standalone: true,
@@ -2630,7 +2650,7 @@ export class GridCustomSummaryComponent extends BasicGridComponent implements On
 })
 export class GridCustomSummaryWithNullAndZeroComponent extends BasicGridComponent implements OnInit {
     public override data = [];
-    public discontinuedSummary = DiscontinuedSummaryWithNullAndZero;
+    public customSummary = CustomSummaryWithNullAndZero;
 
     public ngOnInit(): void {
         this.data = SampleTestData.gridCustomSummaryData();
@@ -2640,9 +2660,9 @@ export class GridCustomSummaryWithNullAndZeroComponent extends BasicGridComponen
 @Component({
     template: `
         <igx-grid #grid1 [data]="data">
-            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
-            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
-            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
         </igx-grid>
     `,
     standalone: true,
@@ -2650,7 +2670,7 @@ export class GridCustomSummaryWithNullAndZeroComponent extends BasicGridComponen
 })
 export class GridCustomSummaryWithUndefinedZeroAndValidNumberComponent extends BasicGridComponent implements OnInit {
     public override data = [];
-    public discontinuedSummary = DiscontinuedSummaryWithUndefinedZeroAndValidNumber;
+    public customSummary = CustomSummaryWithUndefinedZeroAndValidNumber;
 
     public ngOnInit(): void {
         this.data = SampleTestData.gridCustomSummaryData();
@@ -2660,9 +2680,9 @@ export class GridCustomSummaryWithUndefinedZeroAndValidNumberComponent extends B
 @Component({
     template: `
         <igx-grid #grid1 [data]="data">
-            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
-            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
-            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="discontinuedSummary"></igx-column>
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
         </igx-grid>
     `,
     standalone: true,
@@ -2670,13 +2690,32 @@ export class GridCustomSummaryWithUndefinedZeroAndValidNumberComponent extends B
 })
 export class GridCustomSummaryWithUndefinedAndNullComponent extends BasicGridComponent implements OnInit {
     public override data = [];
-    public discontinuedSummary = DiscontinuedSummaryWithUndefinedAndNull;
+    public customSummary = CustomSummaryWithUndefinedAndNull;
 
     public ngOnInit(): void {
         this.data = SampleTestData.gridCustomSummaryData();
     }
 }
 
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data">
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+        </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class GridCustomSummaryWithDateComponent extends BasicGridComponent implements OnInit {
+    public override data = [];
+    public customSummary = CustomSummaryWithDate;
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.gridCustomSummaryData();
+    }
+}
 export class ObjectCloneStrategy implements IDataCloneStrategy {
     public clone(data: any): any {
         const clonedData = {};

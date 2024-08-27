@@ -1,6 +1,7 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
+import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
@@ -23,7 +24,8 @@ import {
     GridCustomSummaryComponent,
     GridCustomSummaryWithNullAndZeroComponent,
     GridCustomSummaryWithUndefinedZeroAndValidNumberComponent,
-    GridCustomSummaryWithUndefinedAndNullComponent
+    GridCustomSummaryWithUndefinedAndNullComponent,
+    GridCustomSummaryWithDateComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -82,7 +84,8 @@ describe('Excel Exporter', () => {
                 GridCustomSummaryComponent,
                 GridCustomSummaryWithNullAndZeroComponent,
                 GridCustomSummaryWithUndefinedZeroAndValidNumberComponent,
-                GridCustomSummaryWithUndefinedAndNullComponent
+                GridCustomSummaryWithUndefinedAndNullComponent,
+                GridCustomSummaryWithDateComponent
             ]
         }).compileComponents();
     }));
@@ -1402,6 +1405,17 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithUndefinedAndNull);
         });
+
+        it('should export grid with custom summaries, with date', async () => {
+            fix = TestBed.createComponent(GridCustomSummaryWithDateComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithDate);
+        });
+
 
     });
 

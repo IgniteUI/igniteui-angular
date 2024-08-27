@@ -472,10 +472,19 @@ export class WorksheetFile implements IExcelFile {
 
                     const savedValue = dictionary.saveValue(summaryValue, false);
                     const isSavedAsString = savedValue !== -1;
-                    const resolvedValue = isSavedAsString ? savedValue : summaryValue;
-                    const type = isSavedAsString ? `t="s"` : "";
+                    const isSavedAsDate = !isSavedAsString && summaryValue instanceof Date;
 
-                    return `<c r="${columnName}" ${type} s="1"><v>${resolvedValue}</v></c>`;
+                    if (isSavedAsDate) {
+                        const timeZoneOffset = summaryValue.getTimezoneOffset() * 60000;
+                        const isoString = (new Date(summaryValue - timeZoneOffset)).toISOString();
+                        summaryValue = isoString.substring(0, isoString.indexOf('.'));
+                    }
+
+                    const resolvedValue = isSavedAsString ? savedValue : summaryValue;
+                    const type = isSavedAsString ? `t="s"` : isSavedAsDate ? `t="d"` : '';
+                    const style = isSavedAsDate ? `s="2"` : `s="1"`;
+
+                    return `<c r="${columnName}" ${type} ${style}><v>${resolvedValue}</v></c>`;
                 }
 
                 return `<c r="${columnName}"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
