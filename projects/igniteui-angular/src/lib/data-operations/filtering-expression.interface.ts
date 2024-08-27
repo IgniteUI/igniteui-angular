@@ -1,6 +1,6 @@
-import { IExpressionTree } from 'igniteui-angular';
 import { IFilteringOperation } from './filtering-condition';
 import { Serializable } from 'node:child_process';
+import { IExpressionTree } from './filtering-expressions-tree';
 
 /* mustCoerceToInt */
 export enum FilteringLogic {
