@@ -226,17 +226,16 @@
         }
     }
 
-    %form-group-bundle:hover,
-    %form-group-bundle:focus-within {
+    %form-group-bundle:not(%form-group-bundle--disabled):hover,
+    %form-group-bundle:not(%form-group-bundle--disabled):focus-within {
         %igx-combo__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-focus');
+            background: var-get($theme, 'toggle-button-background-focus');
         }
-    }
 
-    .igx-input-group:not(.igx-input-group--disabled) {
         %igx-combo__clear-button {
-            background: var-get($theme, 'clear-button-background');
-            color: var-get($theme, 'clear-button-foreground');
+            color: var-get($theme, 'clear-button-foreground-focus');
+            background: var-get($theme, 'clear-button-background-focus');
         }
     }
 
