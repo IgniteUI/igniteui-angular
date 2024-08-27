@@ -13,6 +13,7 @@ import { data } from '../shared/data';
     templateUrl: 'grid-selection.sample.html',
     styleUrls: ['grid-selection.sample.scss'],
     standalone: true,
+    providers: [RemoteService],
     imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxGridComponent, IgxColumnComponent, NgIf, IgxRippleDirective, AsyncPipe]
 })
 export class GridSelectionComponent implements AfterViewInit {
