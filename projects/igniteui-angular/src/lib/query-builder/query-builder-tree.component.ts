@@ -427,7 +427,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public fieldSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: false
+        closeOnOutsideClick: true
     };
 
     /**
@@ -436,7 +436,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public conditionSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: false
+        closeOnOutsideClick: true
     };
 
     private destroy$ = new Subject<any>();
