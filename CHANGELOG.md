@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 18.2.0
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - **Breaking Change** The `shouldGenerate` property have been deprecated and will be removed in a future version. Use `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`.
+
 ## 18.1.0
 ### New Features
 - `IgxPivotGrid`
@@ -31,6 +36,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`:
     - **Breaking Change** The `filterable` property is renamed to `disableFiltering`.
     - The placeholder of the searchInput is changed depending on the `disableFiltering` option - 'Enter a Search Term' when `disableFiltering` is false and 'Add Item' when `disableFiltering` is true.
+
 
 ## 18.0.0
 ### New Features
