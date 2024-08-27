@@ -359,6 +359,29 @@ export class QueryBuilderFunctions {
         expect(valueInput.value).toBe(valueText);
     };
 
+    
+    public static verifyGroupContextMenuVisibility = (fix: ComponentFixture<any>, shouldBeVisible: boolean) => {
+        if(shouldBeVisible){
+            const wrapper = fix.debugElement.queryAll(By.css('.igx-overlay__wrapper'));
+            expect(wrapper.length).toBeGreaterThan(0, 'context menu wrapper missing');
+            const contextMenu = wrapper[0].nativeElement.querySelector('.igx-filter-contextual-menu');
+            const contextMenuRect = contextMenu.getBoundingClientRect();
+            expect(contextMenu.classList.contains('igx-toggle--hidden')).toBe(false, 'incorrect context menu visibility');
+            expect(contextMenuRect.width === 0 && contextMenuRect.height === 0).toBe(false, 'incorrect context menu dimensions');
+        }
+        else {
+            const wrapper = fix.debugElement.queryAll(By.css('.igx-overlay__wrapper'));
+            expect(wrapper.length).toBeLessThanOrEqual(0);
+        }
+    };
+
+    public static verifyChipSelectedState = (chip: DebugElement, shouldBeSelected: boolean) => {
+        if(shouldBeSelected)
+            expect(chip.attributes['ng-reflect-selected'] === 'true').toBeTruthy("Chip should have been selected");
+        else 
+            expect(chip.attributes['ng-reflect-selected'] === 'true').toBeFalsy("Chip should have been deselected");
+    };
+
     /**
      * Click the entity select for the expression that is currently in edit mode.
      */
@@ -418,6 +441,16 @@ export class QueryBuilderFunctions {
         const commitButton = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
         commitButton.click();
     }
+
+    /*
+    * Hit a keyboard button upon element, wait for the desired time and detect changes
+    */
+    //TODO maybe move to more commonly used class
+    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: DebugElement, wait: number = null){
+        UIInteractions.triggerKeyDownEvtUponElem(' ', elem.nativeElement, true);
+        tick(wait);
+        fix.detectChanges();
+    }    
 
     public static selectEntityInEditModeExpression(fix, dropdownItemIndex: number) {
         QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix);

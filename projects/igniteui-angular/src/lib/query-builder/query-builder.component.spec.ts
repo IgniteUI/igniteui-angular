@@ -1,5 +1,5 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxBooleanFilteringOperand, IgxChipComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,6 +12,8 @@ const QUERY_BUILDER_CLASS = 'igx-query-builder';
 const QUERY_BUILDER_BODY = 'igx-query-builder__main';
 const QUERY_BUILDER_TREE = 'igx-query-builder-tree';
 const CHIP_SELECT_CLASS = '.igx-chip__select';
+const QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
+
 describe('IgxQueryBuilder', () => {
     configureTestSuite();
     let fix: ComponentFixture<IgxQueryBuiderSampleTestComponent>;
@@ -282,6 +284,69 @@ describe('IgxQueryBuilder', () => {
 
     describe('Keyboard navigation', () => {
         it('', () => { });
+                
+        it('Should select/deselect a chip when pressing "Enter"/"space" on it.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[0];
+            
+            QueryBuilderFunctions.verifyChipSelectedState(chip, false);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chip, true);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chip, false);
+            
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip, 200);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chip, true);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip, 200);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chip, false);
+        }));
+
+        it('Should select/deselect all child conditions/groups and open/close group context menu when pressing "Enter"/"space" on it.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            const line = fixture.debugElement.queryAll(By.css(`.${QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[0];
+            const chips = fixture.debugElement.queryAll(By.directive(IgxChipComponent));
+
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0], false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3], false);
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+ 
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0], true);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3], true);
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0], false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3], false);
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);    
+            
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0], true);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3], true);
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0], false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3], false);
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+        }));
     });
 
     describe('Localization', () => {
