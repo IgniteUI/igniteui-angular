@@ -369,12 +369,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
      /* treatAsRef */
     public set data(value: any[] | null) {
+        const oldData = this._data;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (!this._init) {
             this.validation.updateAll(this._data);
         }
-        if (this.shouldGenerate) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
             this.setupColumns();
         }
         this.cdr.markForCheck();
