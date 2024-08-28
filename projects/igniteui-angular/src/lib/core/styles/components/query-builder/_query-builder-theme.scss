@@ -30,9 +30,9 @@
     $background-or--focus: null,
     $border-color: null,
     $border-radius: null,
-    $query-background: null,
-    $query-border-color: null,
-    $query-border-radius: null,
+    $tree-background: null,
+    $tree-border-color: null,
+    $tree-border-radius: null,
 ) {
     $name: 'igx-query-builder';
     $selector: 'igx-query-builder';
@@ -62,9 +62,9 @@
         background-or: $background-or,
         background-or--focus: $background-or--focus,
         border-color: $border-color,
-        query-background: $query-background,
-        query-border-color: $query-border-color,
-        query-border-radius: $query-border-radius,
+        tree-background: $tree-background,
+        tree-border-color: $tree-border-color,
+        tree-border-radius: $tree-border-radius,
         border-radius: $border-radius,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
@@ -101,7 +101,7 @@
         compact: rem(8px)
     );
 
-    $backgrounds: (var-get($theme, 'background'), var-get($theme, 'query-background'));
+    $backgrounds: (var-get($theme, 'background'), var-get($theme, 'tree-background'));
 
     $gap: sizable(
         map.get($vertical-space, 'compact'),
@@ -129,10 +129,10 @@
     %query-builder-tree {
         width: 100%;
 
-        border-radius: var-get($theme, 'query-border-radius');
+        border-radius: var-get($theme, 'tree-border-radius');
 
         %query-builder-tree {
-            border: rem(1px) solid var-get($theme, 'query-border-color');
+            border: rem(1px) solid var-get($theme, 'tree-border-color');
 
             %filter-empty {
                 display: none;
