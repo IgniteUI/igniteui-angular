@@ -340,17 +340,17 @@
     );
 
     $hint-spacing-block: map.get((
-        material: rem(5px),
-        fluent: rem(5px),
-        bootstrap: rem(4px),
-        indigo: rem(4px),
+        'material': rem(5px),
+        'fluent': rem(5px),
+        'bootstrap': rem(4px),
+        'indigo': rem(4px),
     ), $variant);
 
     $hint-spacing-inline: map.get((
-        material: rem(16px),
-        fluent: 0,
-        bootstrap: 0,
-        indigo: 0,
+        'material': rem(16px),
+        'fluent': 0,
+        'bootstrap': 0,
+        'indigo': 0,
     ), $variant);
 
     // Base Start
