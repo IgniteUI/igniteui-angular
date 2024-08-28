@@ -273,6 +273,7 @@
         input-suffix-background--filled: $input-suffix-background--filled,
         input-suffix-color--focused: $input-suffix-color--focused,
         input-suffix-background--focused: $input-suffix-background--focused,
+        theme: map.get($schema, '_meta', 'theme'),
         variant: map.get($schema, '_meta', 'theme'),
         size: $size,
     ));
@@ -289,11 +290,11 @@
     $variant: map.get($theme, 'variant');
     $transition-timing: .25s $out-cubic;
     $material-theme: $variant == 'material';
-    $indigo-theme: $variant == 'indigo-design';
+    $indigo-theme: $variant == 'indigo';
     $fluent-theme: $variant == 'fluent';
     $bootstrap-theme: $variant == 'bootstrap';
     $NOT-material-theme: $variant != 'material';
-    $NOT-indigo-theme: $variant != 'indigo-design';
+    $NOT-indigo-theme: $variant != 'indigo';
     $NOT-fluent-theme: $variant != 'fluent';
     $NOT-bootstrap-theme: $variant != 'bootstrap';
 
@@ -342,14 +343,14 @@
         material: rem(5px),
         fluent: rem(5px),
         bootstrap: rem(4px),
-        indigo-design: rem(4px),
+        indigo: rem(4px),
     ), $variant);
 
     $hint-spacing-inline: map.get((
         material: rem(16px),
         fluent: 0,
         bootstrap: 0,
-        indigo-design: 0,
+        indigo: 0,
     ), $variant);
 
     // Base Start
@@ -377,9 +378,9 @@
         align-items: center;
 
         @if $indigo-theme {
-            height: calc(100% - #{rem(1px)}) !important;
+            min-height: calc(100% - #{rem(1px)}) !important;
         } @else {
-            height: 100% !important;
+            min-height: 100% !important;
         }
         transition: color $transition-timing, background $transition-timing;
 
@@ -390,12 +391,6 @@
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
         }
-    }
-
-    igx-input-group,
-    igx-date-range-start,
-    igx-date-range-end {
-        --theme: #{$variant};
     }
 
     %form-group-display--box {
@@ -461,7 +456,7 @@
         igx-icon[igxSuffix] {
             --component-size: var(--input-size);
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 --size: var(--input-icon) !important;
             }
         }
@@ -587,13 +582,13 @@
 
     %form-group-bundle--focus {
         &::after {
-            @if $variant != 'indigo-design' {
+            @if $variant != 'indigo' {
                 border-block-end-width: rem(2px);
             }
             border-block-end-color: var-get($theme, 'focused-bottom-line-color');
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             caret-color: var-get($theme, 'focused-bottom-line-color');
         }
     }
@@ -829,7 +824,7 @@
     %form-group-display--search {
         %igx-input-group__notch--search,
         %form-group-bundle-main--search {
-            @if $variant != 'indigo-design' {
+            @if $variant != 'indigo' {
                 padding-inline: rem(4px);
             }
         }
@@ -844,7 +839,7 @@
             overflow: hidden;
         }
 
-        @if $variant != 'indigo-design' {
+        @if $variant != 'indigo' {
             &::after {
                 display: none;
             }
@@ -1106,7 +1101,7 @@
             line-height: normal; /* Fix placeholder position in Safari */
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             height: calc(var-get($theme, 'size') - 1px);
 
             &::placeholder {
@@ -1140,7 +1135,7 @@
             transform: translateY(-50%);
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             font-size: rem(12px);
             line-height: rem(16px);
         }
@@ -1396,7 +1391,7 @@
         }
     }
 
-    @if $variant != 'indigo-design' {
+    @if $variant != 'indigo' {
         %form-group-helper--success {
             color: var-get($theme, 'success-secondary-color');
         }
@@ -1441,7 +1436,7 @@
     // ==============================================
 
     // INDIGO START
-    @if $variant == 'indigo-design' {
+    @if $variant == 'indigo' {
         %form-group-display--search {
             igx-prefix,
             [igxPrefix],
@@ -1488,7 +1483,7 @@
         padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
     }
 
-    @if $variant == 'indigo-design' {
+    @if $variant == 'indigo' {
         %form-group-input--search {
             padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
         }
@@ -1732,7 +1727,7 @@
             transform-origin: top right;
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             font-size: rem(11px);
             line-height: rem(15px);
             font-weight: 400;

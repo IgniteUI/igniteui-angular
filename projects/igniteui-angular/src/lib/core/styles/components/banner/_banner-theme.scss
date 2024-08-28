@@ -102,7 +102,7 @@
         box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'banner-border-color');
         border-radius: var-get($theme, 'border-radius');
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'banner-border-color');
             padding: rem(16px);
         }
@@ -134,7 +134,7 @@
         flex: 1 0 0%;
         gap: rem(16px);
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             gap: rem(8px);
         } @else {
             padding: 0 rem(8px);

@@ -25,7 +25,7 @@ import { ISortingExpression, SortingDirection } from '../../data-operations/sort
 import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
-import { IGridRowEventArgs, IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
+import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
 import { getComponentSize } from '../../core/utils';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
@@ -513,7 +513,6 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Check for loaded rows in grid's container
-            fixture.componentInstance.grid.shouldGenerate = true;
             fixture.componentInstance.data = [
                 { Number: 1, String: '1', Boolean: true, Date: new Date(Date.now()) }
             ];
@@ -1901,6 +1900,56 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(calcWidth).not.toBe(80);
         });
+
+        it('should correctly autosize column headers inside column groups.', async () => {
+            const fix = TestBed.createComponent(IgxGridColumnHeaderInGroupAutoSizeComponent);
+            const grid = fix.componentInstance.grid;
+            grid.data = [{field1: "Test"}];
+
+            //waiting for reqeustAnimationFrame to finish
+            fix.detectChanges();
+            await wait(17);
+            fix.detectChanges();
+
+            const calcWidth = parseInt(grid.getColumnByName("field1").calcWidth);
+            expect(calcWidth).toBe(126);
+        });
+
+        it('should recreate columns when data changes and autoGenerate is true', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+
+            grid.width = '500px';
+            grid.height = '500px';
+            grid.autoGenerate = true;
+            fix.detectChanges();
+
+            const initialData = [
+                { id: 1, name: 'John' },
+                { id: 2, name: 'Jane' }
+            ];
+            grid.data = initialData;
+            tick();
+            fix.detectChanges();
+
+            expect(grid.columns.length).toBe(2);
+            expect(grid.columns[0].field).toBe('id');
+            expect(grid.columns[1].field).toBe('name');
+
+            const newData = [
+                { id: 1, firstName: 'John', lastName: 'Doe' },
+                { id: 2, firstName: 'Jane', lastName: 'Smith' }
+            ];
+            grid.data = newData;
+            tick();
+            fix.detectChanges();
+
+            expect(grid.columns.length).toBe(3);
+            expect(grid.columns[0].field).toBe('id');
+            expect(grid.columns[1].field).toBe('firstName');
+            expect(grid.columns[2].field).toBe('lastName');
+        }));
     });
 
     describe('IgxGrid - API methods', () => {
@@ -2993,6 +3042,36 @@ export class IgxGridColumnHeaderAutoSizeComponent {
 
     public gridContainerHidden = true;
 
+}
+
+@Component({
+    template: `
+    <igx-grid #grid>
+    <igx-column-group>
+      <igx-column
+        field="field1"
+        header="Field 1 Header"
+        width="auto"
+      ></igx-column>
+      <igx-column
+        field="field2"
+        header="Field 2 Header"
+        width="auto"
+      ></igx-column>
+      <igx-column
+        field="field3"
+        header="Field 3 Header"
+        width="auto"
+      ></igx-column>
+      </igx-column-group>
+    </igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
+
+})
+export class IgxGridColumnHeaderInGroupAutoSizeComponent {
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
 }
 
 @Component({

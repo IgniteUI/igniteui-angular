@@ -1,5 +1,5 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { ComponentRef, ElementRef, NgZone } from '@angular/core';
+import { ComponentRef, ElementRef, Injector, NgZone } from '@angular/core';
 import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 import { AnimationPlayer } from '../animation/animation';
@@ -187,6 +187,13 @@ export interface ConnectedFit {
     bottom?: number;
     horizontalOffset?: number;
     verticalOffset?: number;
+}
+
+export interface OverlayCreateSettings extends OverlaySettings {
+    /**
+     * An `Injector` instance to add in the created component ref's injectors tree.
+     */
+    injector?: Injector
 }
 
 /** @hidden @internal */

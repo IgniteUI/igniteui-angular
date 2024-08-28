@@ -81,7 +81,6 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
-import { IgxIconService } from '../../icon/icon.service';
 
 let NEXT_ID = 0;
 
@@ -370,12 +369,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
      /* treatAsRef */
     public set data(value: any[] | null) {
+        const oldData = this._data;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (!this._init) {
             this.validation.updateAll(this._data);
         }
-        if (this.shouldGenerate) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
             this.setupColumns();
         }
         this.cdr.markForCheck();
@@ -471,7 +471,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-        @Optional() @Inject(IgxIconService) protected override iconService?: IgxIconService
     ) {
         super(
             validationService,
@@ -495,7 +494,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             localeId,
             platform,
             _diTransactions,
-            iconService
         );
     }
 
