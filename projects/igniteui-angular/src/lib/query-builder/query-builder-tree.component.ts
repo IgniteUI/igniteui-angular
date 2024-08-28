@@ -1,4 +1,12 @@
-import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Output, Pipe, PipeTransform } from '@angular/core';
+import {
+    AfterViewInit,
+    ContentChild,
+    EventEmitter,
+    LOCALE_ID,
+    Output,
+    Pipe,
+    PipeTransform
+} from '@angular/core';
 import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
@@ -111,6 +119,7 @@ class ExpressionOperandItem extends ExpressionItem {
 @Component({
     selector: 'igx-query-builder-tree',
     templateUrl: './query-builder-tree.component.html',
+    host: { 'class': 'igx-query-builder-tree' },
     standalone: true,
     imports: [
         NgIf,
@@ -153,14 +162,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    @HostBinding('class.igx-query-builder')
-    public cssClass = 'igx-query-builder';
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('style.display')
-    public display = 'block';
+    @HostBinding('class') get getClass() {
+        return `igx-query-builder-tree--level-${this.level}`;
+    }
 
     @Input()
     public entities: EntityType[];
@@ -456,6 +460,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _locale;
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    public level: number = 0;
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Right,
@@ -472,6 +477,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     constructor(public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
         protected el: ElementRef,
+        private elRef: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string) {
         this.locale = this.locale || this._localeId;
     }
@@ -484,6 +490,19 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.entitySelectOverlaySettings.outlet = this.overlayOutlet;
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.calculateNestingLevel();
+        // Trigger additional change detection cycle
+        this.cdr.detectChanges();
+    }
+
+    private calculateNestingLevel() {
+        let parent = this.elRef.nativeElement.parentElement;
+        while (parent) {
+            if (parent.localName === 'igx-query-builder-tree') {
+                this.level++;
+            }
+            parent = parent.parentElement;
+        }
     }
 
     /**

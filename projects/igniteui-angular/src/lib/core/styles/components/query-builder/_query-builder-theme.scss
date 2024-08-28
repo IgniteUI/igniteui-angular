@@ -28,6 +28,11 @@
     $background-and--focus: null,
     $background-or: null,
     $background-or--focus: null,
+    $border-color: null,
+    $border-radius: null,
+    $query-background: null,
+    $query-border-color: null,
+    $query-border-radius: null,
 ) {
     $name: 'igx-query-builder';
     $selector: 'igx-query-builder';
@@ -49,7 +54,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-
         background: $background,
         header-background: $header-background,
         header-foreground: $header-foreground,
@@ -57,6 +61,11 @@
         background-and--focus: $background-and--focus,
         background-or: $background-or,
         background-or--focus: $background-or--focus,
+        border-color: $border-color,
+        query-background: $query-background,
+        query-border-color: $query-border-color,
+        query-border-radius: $query-border-radius,
+        border-radius: $border-radius,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -92,16 +101,61 @@
         compact: rem(8px)
     );
 
+    $backgrounds: (var-get($theme, 'background'), var-get($theme, 'query-background'));
+
+    $gap: sizable(
+        map.get($vertical-space, 'compact'),
+        map.get($vertical-space, 'cosy'),
+        map.get($vertical-space, 'comfortable')
+    );
+
+    $border-radius: var-get($theme, 'border-radius');
+;
+    $max-depth: 10;
     $icon-size: rem(18px);
 
     %advanced-filter {
+        --component-size: var(--ig-size, var(--ig-size-large));
+
         @include sizable();
 
         width: auto;
         min-width: rem(660px);
         background-color: var-get($theme, 'background');
-        border-radius: border-radius(rem(4px));
-        box-shadow: elevation(12);
+        border-radius: $border-radius;
+        border: rem(1px) solid var-get($theme, 'border-color');
+    }
+
+    %query-builder-tree {
+        width: 100%;
+
+        border-radius: var-get($theme, 'query-border-radius');
+
+        %query-builder-tree {
+            border: rem(1px) solid var-get($theme, 'query-border-color');
+
+            %filter-empty {
+                display: none;
+            }
+
+            %advanced-filter__main {
+                padding: pad-inline(
+                    map.get($vertical-space, 'compact'),
+                    map.get($vertical-space, 'cosy'),
+                    map.get($vertical-space, 'comfortable')
+                );
+            }
+        }
+    }
+
+    @for $i from 0 through 5 {
+        %query-level-#{$i} {
+            background: nth($backgrounds, ($i % length($backgrounds)) + 1);
+        }
+    }
+
+    %filter-tree-details-button {
+        margin-inline-start: auto;
     }
 
     %advanced-filter__header {
@@ -110,6 +164,7 @@
         background-color: var-get($theme, 'header-background');
         color: var-get($theme, 'header-foreground');
         user-select: none;
+        border-radius: $border-radius $border-radius 0 0;
 
         h4,
         .ig-typography__h6 {
@@ -118,14 +173,24 @@
     }
 
     %advanced-filter__main {
-        display: block;
+        display: flex;
         overflow: auto;
-        // min-height: pad(rem(138px), rem(164px), rem(214px));
-        // max-height: pad(rem(305px), rem(394px), rem(468px));
+        gap: $gap;
+    }
 
-        [igxButton] + [igxButton] {
-            margin-inline-start: rem(8px);
+    %advanced-filter__root {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        > * {
+            flex-grow: 1;
         }
+    }
+
+    %advanced-filter__root-actions {
+        display: flex;
+        gap: rem(8px);
     }
 
     %advanced-filter__header,
@@ -149,16 +214,7 @@
 
     %filter-tree {
         display: flex;
-
-        + %filter-tree,
-        + %filter-tree__expression-item,
-        + %filter-tree__inputs {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
-        }
+        width: 100%;
     }
 
     %filter-tree__line {
@@ -167,7 +223,7 @@
         background-color: white;
         margin-inline-end: pad(rem(8px), rem(12px), rem(16px));
         outline-style: none;
-        border-radius: border-radius(rem(4px));
+        border-radius: $border-radius;
         cursor: pointer;
     }
 
@@ -199,21 +255,16 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        flex-grow: 1;
+        gap: $gap;
     }
 
     %filter-tree__expression-item {
         display: flex;
         align-items: center;
-
-        + %filter-tree,
-        + %filter-tree__inputs,
-        + %filter-tree__expression-item {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
-        }
+        width: 100%;
+        gap: $gap;
+        position: relative;
 
         > igx-chip {
             @container style(--ig-size: 1) {
@@ -246,7 +297,7 @@
 
     %filter-tree__expression-actions {
         display: inline-flex;
-        margin: 0 rem(8px);
+        gap: $gap;
 
         igx-icon {
             cursor: pointer;
@@ -258,10 +309,6 @@
                 color: color(null, 'gray', 800);
             }
         }
-
-        igx-icon + igx-icon {
-            margin-inline-start: rem(8px);
-        }
     }
 
     %filter-tree__expression-condition {
@@ -272,61 +319,31 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: pad(
-            map.get($vertical-space, 'compact'),
-            map.get($vertical-space, 'cosy'),
-            map.get($vertical-space, 'comfortable')
-        );
-
-        + %filter-tree,
-        + %filter-tree__expression-item,
-        + %filter-tree__inputs {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
-        }
+        gap: rem(8px);
     }
 
     %filter-tree__inputs {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: rem(8px);
 
         igx-input-group {
             --ig-size: 1;
         }
 
-        igx-select + igx-select,
-        igx-select + igx-input-group,
-        igx-select + igx-date-picker,
-        igx-select + igx-time-picker,
-        igx-input-group + igx-select {
-            margin-inline-start: rem(8px);
-        }
-
-        + %filter-tree,
-        + %filter-tree__expression-item {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
+        &:empty {
+            display: none !important;
         }
     }
 
     %filter-tree__inputs-actions {
         display: flex;
-        margin: 0 rem(8px);
+        gap: $gap;
         align-items: center;
 
         [igxIconButton] {
             transition: none;
-        }
-
-        [igxIconButton] + [igxIconButton] {
-            margin-inline-start: rem(8px);
         }
     }
 
@@ -347,7 +364,7 @@
             width: rem(24px);
             height: rem(24px);
             background: white;
-            border-radius: border-radius(rem(4px));
+            border-radius: $border-radius;
             margin-inline-end: rem(8px);
         }
 
@@ -372,7 +389,7 @@
         background-color: var-get($theme, 'background');
         padding: rem(16px);
         margin-inline-start: rem(16px);
-        border-radius: border-radius(rem(4px));
+        border-radius: $border-radius;
         border: rem(1px) solid color(null, 'gray', 200);
 
         > [igxButton] + [igxButton],

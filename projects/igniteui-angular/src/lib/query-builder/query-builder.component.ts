@@ -71,7 +71,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     //     }
     // }
 
-    
+
     @Input()
     public expressionTree: IExpressionTree;
 
@@ -113,13 +113,13 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     @ContentChild(IgxQueryBuilderHeaderComponent)
     public headerContent: IgxQueryBuilderHeaderComponent;
-    
+
     /**
      * @hidden @internal
      */
     @ViewChild(IgxQueryBuilderTreeComponent)
     public queryTree: IgxQueryBuilderTreeComponent;
-    
+
     private destroy$ = new Subject<any>();
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 

@@ -8,6 +8,7 @@
     @include _advanced-filtering-tree();
     @include _advanced-filtering-con-menu();
     @include _advanced-filtering-empty();
+    @include _query-builder-tree();
 
     @include b(igx-query-builder) {
         $this: bem--selector-to-string(&);
@@ -24,6 +25,14 @@
 
         @include e(main) {
             @extend %advanced-filter__main !optional;
+        }
+
+        @include e(root) {
+            @extend %advanced-filter__root !optional;
+        }
+
+        @include e(root-actions) {
+            @extend %advanced-filter__root-actions !optional;
         }
 
         @include e(outlet) {
@@ -111,6 +120,10 @@
         @include e(inputs-actions) {
             @extend %filter-tree__inputs-actions !optional;
         }
+
+        @include e(details-button) {
+            @extend %filter-tree-details-button !optional;;
+        }
     }
 }
 
@@ -134,6 +147,18 @@
 
         @include e(title) {
             @extend %filter-empty__title !optional;
+        }
+    }
+}
+
+@mixin _query-builder-tree {
+    @include b(igx-query-builder-tree) {
+        @extend %query-builder-tree !optional;
+
+        @for $i from 0 through 5 {
+            @include m(level-#{$i}) {
+                @extend %query-level-#{$i} !optional;
+            }
         }
     }
 }
