@@ -460,7 +460,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _locale;
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
-    public level: number = 0;
+
+    public get level(): number {
+        let parent = this.elRef.nativeElement.parentElement;
+        let _level = 0;
+        while (parent) {
+            if (parent.localName === 'igx-query-builder-tree') {
+                _level++;
+            }
+            parent = parent.parentElement;
+        }
+        return _level;
+    }
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Right,
@@ -490,19 +501,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.entitySelectOverlaySettings.outlet = this.overlayOutlet;
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
-        this.calculateNestingLevel();
         // Trigger additional change detection cycle
         this.cdr.detectChanges();
-    }
-
-    private calculateNestingLevel() {
-        let parent = this.elRef.nativeElement.parentElement;
-        while (parent) {
-            if (parent.localName === 'igx-query-builder-tree') {
-                this.level++;
-            }
-            parent = parent.parentElement;
-        }
     }
 
     /**
