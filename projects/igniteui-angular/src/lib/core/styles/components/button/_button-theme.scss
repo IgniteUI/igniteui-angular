@@ -274,10 +274,10 @@
     @include css-vars($fab-theme);
 
     $time: map.get((
-        material: .1s,
-        fluent: .1s,
-        bootstrap: .15s,
-        indigo: .15s
+        'material': .1s,
+        'fluent': .1s,
+        'bootstrap': .15s,
+        'indigo': .15s
     ), $variant);
 
     $button-transition: color $time ease-in-out,

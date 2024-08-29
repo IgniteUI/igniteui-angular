@@ -1,0 +1,59 @@
+@use 'sass:map';
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+$_base-schema: $light-indigo-schema;
+$_checkbox-schema: extend(
+    map.get($_base-schema, 'checkbox'),
+    (
+        empty-color: (
+            color: (
+                'gray',
+                300,
+            ),
+        ),
+        hover-color: (
+            color: (
+                'primary',
+                500,
+            ),
+        ),
+        focus-outline-color: (
+            color: (
+                'secondary',
+                200,
+            ),
+        ),
+        focus-outline-color-focused: (
+            color: (
+                'secondary',
+                200,
+            ),
+        ),
+        disabled-indeterminate-color: (
+            color: (
+                'gray',
+                200,
+            ),
+        ),
+    )
+);
+
+@mixin component() {
+    @include checkbox(
+        checkbox-theme(
+            extend(
+                $_base-schema,
+                (
+                    checkbox: $_checkbox-schema,
+                )
+            )
+        )
+    );
+
+    .ig-typography {
+        @include checkbox-typography(
+            $categories: (label: 'subtitle-2')
+        );
+    }
+}
+
