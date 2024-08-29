@@ -12,8 +12,8 @@ import { RemoteService } from '../shared/remote.service';
     selector: 'app-hierarchical-grid-remote-sample',
     templateUrl: 'hierarchical-grid-remote.sample.html',
     styleUrls: ['hierarchical-grid-remote.sample.scss'],
-    providers: [RemoteService],
     standalone: true,
+    providers: [RemoteService],
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
 export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
