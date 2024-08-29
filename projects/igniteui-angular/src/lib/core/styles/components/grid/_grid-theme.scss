@@ -606,10 +606,10 @@
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     $cbx-size: map.get((
-        material: rem(20px),
-        fluent: rem(20px),
-        bootstrap: rem(14px),
-        indigo-design: rem(20px),
+        'material': rem(20px),
+        'fluent': rem(20px),
+        'bootstrap': rem(14px),
+        'indigo': rem(20px),
     ), $variant);
     $cbx-bs-size: rem(14px);
 
@@ -728,10 +728,10 @@
     $grouping-padding-right: rem(12px);
 
     $grid-header-weight: map.get((
-        material: 600,
-        fluent: 800,
-        bootstrap: 700,
-        indigo-design: 600,
+        'material': 600,
+        'fluent': 800,
+        'bootstrap': 700,
+        'indigo': 600,
     ), $variant);
 
     $editing-outline-width: rem(2px);
@@ -1004,7 +1004,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             @if $theme-variant == 'light' {
                 --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 500)};
                 --igx-chip-disabled-background: #{color($color: 'gray', $variant: 200)};
@@ -1538,7 +1538,7 @@
         &::before {
             content: '';
             position: absolute;
-            width: if($variant == 'indigo-design', rem(4px), rem(2px));
+            width: if($variant == 'indigo', rem(4px), rem(2px));
             height: 100%;
             z-index: 10000;
             background: var-get($theme, 'edited-row-indicator');
@@ -1973,7 +1973,7 @@
         color: var-get($theme, 'header-selected-text-color');
         background: var-get($theme, 'header-selected-background');
 
-        @if $variant != 'indigo-design' {
+        @if $variant != 'indigo' {
             opacity: .7;
 
             &%grid__drag-ghost-image {
@@ -3043,6 +3043,8 @@
             --igx-query-builder-background-or: #{var-get($theme, 'filtering-background-or')};
             --igx-query-builder-background-or--focus: #{var-get($theme, 'filtering-background-or--focus')};
             box-shadow: none;
+            border: none;
+            border-radius: inherit;
         }
 
         igx-query-builder-header {

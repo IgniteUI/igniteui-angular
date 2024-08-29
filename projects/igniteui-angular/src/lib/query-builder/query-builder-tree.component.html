@@ -12,27 +12,30 @@
     (scroll)="onExpressionsScrolled()"
 >
     <ng-container *ngIf="!rootGroup">
-        <button type="button"
-            #addRootAndGroupButton
-            igxButton="outlined"
-            (click)="addAndGroup()"
-        >
-            <ng-container *ngTemplateOutlet="addIcon"></ng-container>
-            <span>{{ this.resourceStrings.igx_query_builder_and_group }}</span>
-        </button>
+        <div class="igx-query-builder__root">
+            <div class="igx-query-builder__root-actions">
+                <button type="button"
+                        #addRootAndGroupButton
+                        igxButton="outlined"
+                        (click)="addAndGroup()"
+                >
+                    <ng-container *ngTemplateOutlet="addIcon"></ng-container>
+                    <span>{{ this.resourceStrings.igx_query_builder_and_group }}</span>
+                </button>
 
-        <button type="button"
-            igxButton="outlined"
-            (click)="addOrGroup()"
-        >
-            <ng-container *ngTemplateOutlet="addIcon"></ng-container>
-            <span>{{ this.resourceStrings.igx_query_builder_or_group }}</span>
-        </button>
-
-        <div class="igx-filter-empty">
-            <h6 class="igx-filter-empty__title">
-                {{ this.resourceStrings.igx_query_builder_initial_text }}
-            </h6>
+                <button type="button"
+                        igxButton="outlined"
+                        (click)="addOrGroup()"
+                >
+                    <ng-container *ngTemplateOutlet="addIcon"></ng-container>
+                    <span>{{ this.resourceStrings.igx_query_builder_or_group }}</span>
+                </button>
+            </div>
+            <div class="igx-filter-empty">
+                <h6 class="igx-filter-empty__title">
+                    {{ this.resourceStrings.igx_query_builder_initial_text }}
+                </h6>
+            </div>
         </div>
     </ng-container>
 
@@ -88,7 +91,7 @@
                 (selectedChanged)="onChipSelectionEnd()"
             >
                 <span igxPrefix class="igx-filter-tree__expression-column">
-                    {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
+                    {{expressionItem.fieldLabel || expressionItem.expression.field}}
                 </span>
                 <span class="igx-filter-tree__expression-condition">
                     {{
@@ -108,17 +111,17 @@
                     <ng-container *ngIf="!expressionItem.expression.searchTree">
                     {{
                         isDate(expressionItem.expression.searchVal)
-                            ? getFormatter(expressionItem.expression.fieldName)
+                            ? getFormatter(expressionItem.expression.field)
                                 ? (expressionItem.expression.searchVal
                                 | fieldFormatter
                                     : getFormatter(
-                                            expressionItem.expression.fieldName
+                                            expressionItem.expression.field
                                         )
                                     : undefined)
                                 : (expressionItem.expression.searchVal
                                 | date
                                     : getFormat(
-                                            expressionItem.expression.fieldName
+                                            expressionItem.expression.field
                                         )
                                     : undefined
                                     : this.locale)
@@ -169,9 +172,8 @@
                 >
                 </igx-icon>
             </div>
-            <div *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree"
-                (click)="expanderClick($event, expressionItem)"
-                style="float: right">
+            <div igxButton class="igx-filter-tree__details-button" *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree"
+                (click)="expanderClick($event, expressionItem)">
                 <span>{{this.resourceStrings.igx_query_builder_details}}</span>
                 <igx-icon *ngIf="!expressionItem.expanded" family="default" name="unfold_less" role="button"></igx-icon>
                 <igx-icon *ngIf="expressionItem.expanded" family="default" name="unfold_more" role="button"></igx-icon>
@@ -183,7 +185,6 @@
             *ngIf="expressionItem.inEditMode"
             #editingInputsContainer
             class="igx-filter-tree__inputs"
-            style = "margin-top: 10px"
         >
             <igx-select
                 #fieldSelect
@@ -373,7 +374,6 @@
 
         <ng-container *ngIf="(!expressionItem.inEditMode && expressionItem.expression.searchTree) || (expressionItem.inEditMode && (selectedCondition === 'in' || selectedCondition === 'notIn'))">
             <igx-query-builder-tree
-                style="margin: 10px 0px 10px 0px"
                 [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
                 [entities]="entities"
                 [parentExpression]="expressionItem"
@@ -418,7 +418,7 @@
             ></div>
 
             <div class="igx-filter-tree__expression">
-                <div class="igx-filter-tree__inputs">
+                <div class="igx-filter-tree__inputs" [style.display]="isInEditMode() ? 'flex' : 'none'">
                     <ng-container *ngIf="!expressionItem.parent">
                         <igx-select #entitySelect
                             type="box"
@@ -434,7 +434,6 @@
 
                         <igx-combo
                             #selectedReturnFieldsCombo
-                            style="margin-left: 10px"
                             [itemsMaxHeight]="250"
                             [data]="fields"
                             [displayKey]="'field'"
@@ -474,7 +473,7 @@
                     </ng-container>
                 </ng-container>
                 <div
-                    *ngIf="currentGroup === expressionItem && isInEditMode()"
+                    *ngIf="currentGroup === expressionItem && isInEditMode() && expressionItem === rootGroup"
                     #currentGroupButtonsContainer
                     class="igx-filter-tree__buttons"
                 >
@@ -485,19 +484,6 @@
                         "
                     >
                     </ng-container>
-                    <button type="button"
-                        igxButton="outlined"
-                        *ngIf="expressionItem !== rootGroup"
-                        [disabled]="
-                            hasEditedExpression ||
-                            expressionItem.children.length < 2
-                        "
-                        (click)="endGroup(expressionItem)"
-                    >
-                        <span>{{
-                            this.resourceStrings.igx_query_builder_end_group
-                        }}</span>
-                    </button>
                 </div>
             </div>
         </div>

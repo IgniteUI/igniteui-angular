@@ -1,4 +1,12 @@
-import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Output, Pipe, PipeTransform } from '@angular/core';
+import {
+    AfterViewInit,
+    ContentChild,
+    EventEmitter,
+    LOCALE_ID,
+    Output,
+    Pipe,
+    PipeTransform
+} from '@angular/core';
 import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
@@ -111,6 +119,7 @@ class ExpressionOperandItem extends ExpressionItem {
 @Component({
     selector: 'igx-query-builder-tree',
     templateUrl: './query-builder-tree.component.html',
+    host: { 'class': 'igx-query-builder-tree' },
     standalone: true,
     imports: [
         NgIf,
@@ -153,14 +162,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    @HostBinding('class.igx-query-builder')
-    public cssClass = 'igx-query-builder';
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('style.display')
-    public display = 'block';
+    @HostBinding('class') get getClass() {
+        return `igx-query-builder-tree--level-${this.level}`;
+    }
 
     @Input()
     public entities: EntityType[];
@@ -199,7 +203,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
     * Returns the expression tree.
     */
-     public get expressionTree(): IExpressionTree {
+    public get expressionTree(): IExpressionTree {
         return this._expressionTree;
     }
 
@@ -423,7 +427,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public fieldSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: false
+        closeOnOutsideClick: true
     };
 
     /**
@@ -432,7 +436,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public conditionSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: false
+        closeOnOutsideClick: true
     };
 
     private destroy$ = new Subject<any>();
@@ -457,6 +461,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
+    public get level(): number {
+        let parent = this.elRef.nativeElement.parentElement;
+        let _level = 0;
+        while (parent) {
+            if (parent.localName === 'igx-query-builder-tree') {
+                _level++;
+            }
+            parent = parent.parentElement;
+        }
+        return _level;
+    }
+
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Top
@@ -472,6 +488,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     constructor(public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
         protected el: ElementRef,
+        private elRef: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string) {
         this.locale = this.locale || this._localeId;
     }
@@ -484,6 +501,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.entitySelectOverlaySettings.outlet = this.overlayOutlet;
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
+        // Trigger additional change detection cycle
+        this.cdr.detectChanges();
     }
 
     /**
@@ -855,8 +874,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
-            } else if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
-                this.conditionSelect.input.nativeElement.focus();
+        } else if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
+            this.conditionSelect.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
             input.focus();
@@ -949,6 +968,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onGroupClick(groupItem: ExpressionGroupItem) {
+        const firstChild = groupItem.children[0] as ExpressionOperandItem;
+        if (!this.isInEditMode() && firstChild) {
+            this.enterExpressionEdit(firstChild);
+        }
         this.toggleGroup(groupItem);
     }
 

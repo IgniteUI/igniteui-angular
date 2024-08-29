@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
@@ -32,6 +32,15 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
 
     @ViewChild('picker')
     private picker: IgxDatePickerComponent | IgxTimePickerComponent;
+
+    @Input()
+    public get searchVal(): any {
+        return this.expressionUI.expression.searchVal;
+    }
+
+    public set searchVal(value: any) {
+        this.expressionUI.expression.searchVal = value ? new Date(Date.parse(value.toString())) : null;
+    }
 
     protected override get inputValuesElement() {
         return this.picker?.getEditElement() || this.input?.nativeElement;

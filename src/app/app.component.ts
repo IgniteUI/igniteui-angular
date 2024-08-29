@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
+import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective } from 'igniteui-angular';
 import { PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { NgFor, NgIf } from '@angular/common';
@@ -12,19 +12,20 @@ import { IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective, IgxNavDrawerM
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     standalone: true,
-    imports: [
-        IgxNavigationDrawerComponent,
-        IgxNavDrawerTemplateDirective,
-        IgxNavDrawerItemDirective,
-        NgFor,
-        RouterLinkActive,
-        RouterLink,
-        IgxIconComponent,
-        NgIf,
-        IgxNavDrawerMiniTemplateDirective,
-        PageHeaderComponent,
-        RouterOutlet
-    ]
+	imports: [
+		IgxNavigationDrawerComponent,
+		IgxNavDrawerTemplateDirective,
+		IgxNavDrawerItemDirective,
+		NgFor,
+		RouterLinkActive,
+		RouterLink,
+		IgxIconComponent,
+		NgIf,
+		IgxNavDrawerMiniTemplateDirective,
+		PageHeaderComponent,
+		RouterOutlet,
+		IgxRippleDirective,
+	],
 })
 export class AppComponent implements OnInit {
     @HostBinding('attr.id')
@@ -141,6 +142,11 @@ export class AppComponent implements OnInit {
             link: '/drag-drop',
             icon: 'view_column',
             name: 'Drag and Drop'
+        },
+        {
+            link: '/hound',
+            icon: 'horizontal_split',
+            name: 'Hound sample'
         },
         {
             link: '/dropDown',
@@ -711,6 +717,8 @@ export class AppComponent implements OnInit {
             });
 
         // register custom SVG icons
+        this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'material');
+        this.iconService.addSvgIcon('fa-breeze', '../assets/images/card/icons/breeze.svg', 'fa-solid');
         this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'weather-icons');
         this.iconService.addSvgIcon('breeze', '../assets/images/card/icons/breeze.svg', 'weather-icons');
     }

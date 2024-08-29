@@ -14,7 +14,7 @@ export class IconSampleComponent implements OnInit {
     constructor(private _iconService: IgxIconService, public router: Router) {}
 
     public ngOnInit(): void {
-        this._iconService.addIconRef('accessible', 'default', { family: 'svg-flags', name: 'copy' });
+        this._iconService.addIconRef('accessible', 'default', { family: 'material', name: 'rain', type: 'svg'});
 
         // register custom svg icons
         this._iconService.addSvgIcon('contains', '/assets/svg/filtering/contains.svg', 'svg-flags');

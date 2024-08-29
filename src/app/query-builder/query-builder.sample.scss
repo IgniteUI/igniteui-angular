@@ -3,6 +3,12 @@
     max-width: 900px;
 }
 
+.sample-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
 .sample-buttons {
     margin-top: 24px;
     display: flex;
@@ -12,8 +18,11 @@
 .output-area{
     overflow-y: auto;
     height: 400px;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
-    margin-top: 15px;
+    border: 1px solid hsla(var(--ig-gray-300));
     border-radius: 4px;
-    padding-left: 16px;
+    padding: 16px;
+
+    pre {
+        margin-block: 0;
+    }
 }

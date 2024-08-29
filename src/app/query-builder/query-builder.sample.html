@@ -1,8 +1,9 @@
 <div class="sample-content">
     <div class="sample-column">
-        <!-- <size-selector #sizeSelector></size-selector> -->
+        <size-selector #sizeSelector></size-selector>
 
         <igx-query-builder #queryBuilder
+           [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
             [entities]="this.entities"
             [expressionTree]="this.expressionTree">
             <!-- Custom header -->

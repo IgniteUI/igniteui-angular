@@ -1,5 +1,5 @@
 import { Component, EnvironmentInjector, EventEmitter, Inject, Injector, Output, ViewContainerRef } from '@angular/core';
-import { IGX_GRID_SERVICE_BASE, GridServiceType, IPinningConfig}  from '../../../igniteui-angular/src/lib/grids/common/grid.interface';
+import { IPinningConfig, GridType, IGX_GRID_BASE}  from '../../../igniteui-angular/src/lib/grids/common/grid.interface';
 import { IFilteringExpressionsTree } from '../../../igniteui-angular/src/lib/data-operations/filtering-expressions-tree';
 import { IPagingState } from '../../../igniteui-angular/src/lib/data-operations/paging-state.interface';
 import { ISortingExpression } from '../../../igniteui-angular/src/lib/data-operations/sorting-strategy';
@@ -37,6 +37,7 @@ export interface IGridStateInfo {
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
 /* contentParent: GridBaseDirective */
+/* contentParent: HierarchicalGrid */
 /* jsonAPIManageCollectionInMarkup */
 /**
  * State component allows saving and restoring the state of the grid features.
@@ -50,11 +51,11 @@ export interface IGridStateInfo {
 export class IgxGridStateComponent extends IgxGridStateBaseDirective {
 
     constructor(
-        @Inject(IGX_GRID_SERVICE_BASE) private api: GridServiceType,
+        @Inject(IGX_GRID_BASE) grid: GridType,
         protected override viewRef: ViewContainerRef, protected  override envInjector: EnvironmentInjector,
         protected override injector: Injector,
         ) {
-            super(api.grid, viewRef, envInjector, injector);
+            super(grid, viewRef, envInjector, injector);
         }
 
     /**
