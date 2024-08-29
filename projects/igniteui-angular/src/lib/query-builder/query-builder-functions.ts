@@ -1,7 +1,7 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxIconComponent } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxIconComponent, IgxDateFilteringOperand } from 'igniteui-angular';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
@@ -41,12 +41,12 @@ export class QueryBuilderFunctions {
             searchVal: 3,
             ignoreCase: true
         });
-        // tree.filteringOperands.push({
-        //     field: 'OrderDate',
-        //     condition: IgxDateFilteringOperand.instance().condition('after'),
-        //     conditionName: 'after',
-        //     searchVal: new Date()
-        // });
+        tree.filteringOperands.push({
+            field: 'OrderDate',
+            condition: IgxDateFilteringOperand.instance().condition('after'),
+            conditionName: 'after',
+            searchVal: new Date()
+        });
         return tree;
     }
 

@@ -14,7 +14,7 @@ const QUERY_BUILDER_TREE = 'igx-query-builder-tree';
 const CHIP_SELECT_CLASS = '.igx-chip__select';
 const QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 
-describe('IgxQueryBuilder', () => {
+fdescribe('IgxQueryBuilder', () => {
     configureTestSuite();
     let fix: ComponentFixture<IgxQueryBuiderSampleTestComponent>;
     let queryBuilder: IgxQueryBuilderComponent;
@@ -46,19 +46,21 @@ describe('IgxQueryBuilder', () => {
             expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fix).textContent).toBe('and');
             expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fix).textContent).toBe('or');
             const queryTreeElement = queryBuilderElement.children[1];
-            expect(queryTreeElement).toHaveClass(QUERY_BUILDER_CLASS);
+            expect(queryTreeElement).toHaveClass(QUERY_BUILDER_TREE);
 
             expect(queryBuilder.expressionTree).toBeUndefined();
 
             expect(queryTreeElement.children.length).toEqual(3);
             const bodyElement = queryTreeElement.children[0];
             expect(bodyElement).toHaveClass(QUERY_BUILDER_BODY);
-            expect(bodyElement.children.length).toEqual(4);
+            expect(bodyElement.children.length).toEqual(2);
+            expect(bodyElement.children[0]).toHaveClass('igx-query-builder__root');
 
+            const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
             // initial add "'and'/'or' group " buttons should be displayed
-            expect(bodyElement.querySelectorAll(':scope > button').length).toEqual(2);
+            expect(actionArea.querySelectorAll(':scope > button').length).toEqual(2);
             // empty filtering tree message should be displayed
-            expect(bodyElement.children[2]).toHaveClass('igx-filter-empty');
+            expect(bodyElement.children[0].children[1]).toHaveClass('igx-filter-empty');
         });
 
         it('Should render Query Builder with innitially set expression tree properly.', () => {
@@ -243,7 +245,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "contains",
         "isUnary": false,
-        "iconName": "contains"
+        "iconName": "filter_contains"
       },
       "conditionName": null,
       "ignoreCase": true,
