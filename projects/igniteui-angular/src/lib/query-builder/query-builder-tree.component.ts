@@ -415,10 +415,19 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public returnFieldSelectOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
+
+    /**
+     * @hidden @internal
+     */
     public entitySelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: false
+        closeOnOutsideClick: true
     };
 
     /**
@@ -501,6 +510,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.entitySelectOverlaySettings.outlet = this.overlayOutlet;
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
         // Trigger additional change detection cycle
         this.cdr.detectChanges();
     }
@@ -547,8 +557,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public onEntityChangeConfirm() {
         this._selectedEntity = this._entityNewValue;
+        if (!this._selectedEntity.fields) {
+            this._selectedEntity.fields = [];
+        }
         this.fields = this._entityNewValue ? this._entityNewValue.fields : [];
-        this._selectedReturnFields = this._entityNewValue.fields.map(f => f.field);
+
+        this._selectedReturnFields = this._entityNewValue.fields?.map(f => f.field);
+
         if (this.expressionTree) {
             this.expressionTree.entity = this._selectedEntity.name;
             this.expressionTree.returnFields = [];
@@ -865,6 +880,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.entitySelectOverlaySettings.target = this.entitySelect.element;
         this.entitySelectOverlaySettings.excludeFromOutsideClick = [this.entitySelect.element as HTMLElement];
         this.entitySelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        this.returnFieldSelectOverlaySettings.target = this.selectedReturnFieldsCombo.getEditElement();
+        this.returnFieldSelectOverlaySettings.excludeFromOutsideClick = [this.selectedReturnFieldsCombo.getEditElement() as HTMLElement];
+        this.returnFieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
         this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
         this.fieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
@@ -1293,8 +1311,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     if (entity) {
                         this.fields = entity.fields;
                     }
-                    const field = this.fields.find(el => el.field === filteringExpr.field);
-                    operandItem.fieldLabel = field.label || field.header || field.field;
+                    const field = this.fields?.find(el => el.field === filteringExpr.field);
+                    operandItem.fieldLabel = field?.label || field?.header || field?.field;
                     if (this._expandedExpressions.filter(e => e.searchTree == operandItem.expression.searchTree).length > 0) {
                         operandItem.expanded = true;
                     }
@@ -1302,8 +1320,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     this._selectedEntity = this.entities.find(el => el.name === entityName);
                     this._selectedReturnFields =
                         !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All')
-                            ? this.fields.map(f => f.field)
-                            : this.fields.filter(f => expressionTree.returnFields.indexOf(f.field) >= 0).map(f => f.field);
+                            ? this.fields?.map(f => f.field)
+                            : this.fields?.filter(f => expressionTree.returnFields.indexOf(f.field) >= 0).map(f => f.field);
                 }
             }
         }
