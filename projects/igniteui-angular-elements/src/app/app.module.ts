@@ -50,7 +50,7 @@ export class AppModule {
 
   ngDoBootstrap() {
 
-    const grid = createIgxCustomElement<IgxGridComponent>(IgxGridComponent, { injector: this.injector, registerConfig });
+    const grid = createIgxCustomElement(IgxGridComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid", grid);
 
     const treegrid = createIgxCustomElement(IgxTreeGridComponent, { injector: this.injector, registerConfig });
@@ -68,13 +68,13 @@ export class AppModule {
     const ri = createIgxCustomElement(IgxRowIslandComponent, { injector: this.injector, registerConfig } );
     customElements.define("igc-row-island", ri);
 
-    const columnGroups = createIgxCustomElement<IgxColumnGroupComponent>(IgxColumnGroupComponent, { injector: this.injector, registerConfig });
+    const columnGroups = createIgxCustomElement(IgxColumnGroupComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-column-group", columnGroups);
 
-    const columnLayout = createIgxCustomElement<IgxColumnLayoutComponent>(IgxColumnLayoutComponent, { injector: this.injector, registerConfig });
+    const columnLayout = createIgxCustomElement(IgxColumnLayoutComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-column-layout", columnLayout);
 
-    const column = createIgxCustomElement<IgxColumnComponent>(IgxColumnComponent, { injector: this.injector, registerConfig });
+    const column = createIgxCustomElement(IgxColumnComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-column", column);
 
     const pager = createIgxCustomElement(IgxPaginatorComponent, { injector: this.injector, registerConfig });

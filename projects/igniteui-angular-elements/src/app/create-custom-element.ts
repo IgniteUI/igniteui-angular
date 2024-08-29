@@ -6,7 +6,7 @@ import { IgxCustomNgElementStrategyFactory } from './custom-strategy';
 
 export type IgxNgElementConfig = Omit<NgElementConfig, 'strategyFactory'> & { registerConfig: ComponentConfig[] };
 
-export function createIgxCustomElement<T>(component: Type<any>, config: IgxNgElementConfig): NgElementConstructor<T> {
+export function createIgxCustomElement<T>(component: Type<T>, config: IgxNgElementConfig): NgElementConstructor<T> {
     const strategyFactory = new IgxCustomNgElementStrategyFactory(component, config.injector, config.registerConfig);
 
     guardAttributeNames<T>(strategyFactory);
