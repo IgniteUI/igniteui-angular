@@ -162,7 +162,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    @HostBinding('class') get getClass() {
+    @HostBinding('class') public get getClass() {
         return `igx-query-builder-tree--level-${this.level}`;
     }
 
