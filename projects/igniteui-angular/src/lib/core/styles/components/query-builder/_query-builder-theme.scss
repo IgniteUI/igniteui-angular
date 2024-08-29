@@ -124,10 +124,6 @@
         background-color: var-get($theme, 'background');
         border-radius: $border-radius;
         border: rem(1px) solid var-get($theme, 'border-color');
-	    
-	    %igx-drop-down__header {
-		    pointer-events: all;
-	    }
     }
 
     %query-builder-tree {
