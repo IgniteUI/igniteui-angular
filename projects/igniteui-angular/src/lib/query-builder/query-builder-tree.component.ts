@@ -415,6 +415,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public returnFieldSelectOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
+
+    /**
+     * @hidden @internal
+     */
     public entitySelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
@@ -501,6 +510,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.entitySelectOverlaySettings.outlet = this.overlayOutlet;
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
         // Trigger additional change detection cycle
         this.cdr.detectChanges();
     }
@@ -870,6 +880,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.entitySelectOverlaySettings.target = this.entitySelect.element;
         this.entitySelectOverlaySettings.excludeFromOutsideClick = [this.entitySelect.element as HTMLElement];
         this.entitySelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        this.returnFieldSelectOverlaySettings.target = this.selectedReturnFieldsCombo.getEditElement();
+        this.returnFieldSelectOverlaySettings.excludeFromOutsideClick = [this.selectedReturnFieldsCombo.getEditElement() as HTMLElement];
+        this.returnFieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
         this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
         this.fieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
