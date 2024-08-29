@@ -415,6 +415,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public returnFieldSelectOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
+
+    /**
+     * @hidden @internal
+     */
     public entitySelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
@@ -501,6 +510,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.entitySelectOverlaySettings.outlet = this.overlayOutlet;
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
         // Trigger additional change detection cycle
         this.cdr.detectChanges();
     }
