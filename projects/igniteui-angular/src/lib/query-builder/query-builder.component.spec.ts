@@ -280,18 +280,141 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
             QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, false, true);
         }));
+
+        it('Fields dropdown should contain proper fields based on the entity.', fakeAsync(() => {
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Select an entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Open fields dropdown and verify the items.
+            QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
+            fix.detectChanges();
+
+            // TO DO: refactor when overlay issue is fixed
+            const outlet = fix.debugElement.queryAll(By.css(`.igx-drop-down__list-scroll`))[1].nativeElement;
+            const dropdownItems = Array.from(outlet.querySelectorAll('.igx-drop-down__item'));;
+            expect(dropdownItems.length).toBe(4);
+            expect((dropdownItems[0] as HTMLElement).innerText).toBe('Id');
+            expect((dropdownItems[1] as HTMLElement).innerText).toBe('ProductName');
+            expect((dropdownItems[2] as HTMLElement).innerText).toBe('OrderId');
+            expect((dropdownItems[3] as HTMLElement).innerText).toBe('Released');
+        }));
+
+        it('Column dropdown should contain proper fields based on the entity.', fakeAsync(() => {
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Select an entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Open columns dropdown and verify the items.
+            QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
+            fix.detectChanges();
+            const dropdownItems = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement);
+            expect(dropdownItems.length).toBe(3);
+            expect((dropdownItems[0] as HTMLElement).innerText).toBe('OrderId');
+            expect((dropdownItems[1] as HTMLElement).innerText).toBe('OrderName');
+            expect((dropdownItems[2] as HTMLElement).innerText).toBe('OrderDate');
+        }));
+
+        it('Operator dropdown should contain operators based on the column\'s datatype (\'string\' or \'number\' or \'date\').', fakeAsync(() => {
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Select an entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Select 'string' type column ('OrderName').
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            // Open the operator dropdown and verify they are 'string' specific.
+            QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
+            fix.detectChanges();
+            let dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
+            let expectedValues = ['Contains', 'Does Not Contain', 'Starts With', 'Ends With', 'Equals',
+                'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null', 'In', 'Not In'];
+            expect(dropdownValues).toEqual(expectedValues);
+
+            // Close current dropdown by a random select.
+            QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, 0);
+            tick();
+            fix.detectChanges();
+
+            // Select 'number' type column ('OrderId').
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
+            // Open the operator dropdown and verify they are 'number' specific.
+            QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
+            fix.detectChanges();
+            dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
+            expectedValues = ['Equals', 'Does Not Equal', 'Greater Than', 'Less Than', 'Greater Than Or Equal To',
+                'Less Than Or Equal To', 'Empty', 'Not Empty', 'Null', 'Not Null', 'In', 'Not In'];
+            expect(dropdownValues).toEqual(expectedValues);
+
+            // Close current dropdown by a random select.
+            QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, 0);
+            tick();
+            fix.detectChanges();
+
+            // Select 'date' type column ('OrderDate').
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2);
+            // Open the operator dropdown and verify they are 'date' specific.
+            QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
+            fix.detectChanges();
+            dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
+            expectedValues = ['Equals', 'Does Not Equal', 'Before', 'After', 'Today', 'Yesterday',
+                'This Month', 'Last Month', 'Next Month', 'This Year', 'Last Year',
+                'Next Year', 'Empty', 'Not Empty', 'Null', 'Not Null', 'In', 'Not In'];
+            expect(dropdownValues).toEqual(expectedValues);
+        }));
+
+        it('Operator dropdown should contain operators based on the column\'s datatype (\'boolean\').', fakeAsync(() => {
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Select an entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Select 'boolean' type column ('Released').
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
+            // Open the operator dropdown and verify they are 'boolean' specific.
+            QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
+            fix.detectChanges();
+            const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
+            const expectedValues = ['All', 'True', 'False', 'Empty', 'Not Empty', 'Null', 'Not Null', 'In', 'Not In'];
+            expect(dropdownValues).toEqual(expectedValues);
+        }));
+
     });
 
     describe('Keyboard navigation', () => {
-        it('', () => { });
-                
         it('Should select/deselect a chip when pressing "Enter"/"space" on it.', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
             tick();
             fixture.detectChanges();
 
             const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[0];
-            
+
             QueryBuilderFunctions.verifyChipSelectedState(chip, false);
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
@@ -301,7 +424,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
 
             QueryBuilderFunctions.verifyChipSelectedState(chip, false);
-            
+
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip, 200);
 
             QueryBuilderFunctions.verifyChipSelectedState(chip, true);
@@ -322,7 +445,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyChipSelectedState(chips[0], false);
             QueryBuilderFunctions.verifyChipSelectedState(chips[3], false);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
- 
+
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line);
 
             QueryBuilderFunctions.verifyChipSelectedState(chips[0], true);
@@ -333,8 +456,8 @@ describe('IgxQueryBuilder', () => {
 
             QueryBuilderFunctions.verifyChipSelectedState(chips[0], false);
             QueryBuilderFunctions.verifyChipSelectedState(chips[3], false);
-            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);    
-            
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line);
 
             QueryBuilderFunctions.verifyChipSelectedState(chips[0], true);

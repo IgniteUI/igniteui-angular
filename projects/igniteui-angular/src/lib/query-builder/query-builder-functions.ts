@@ -85,7 +85,7 @@ export class QueryBuilderFunctions {
 
     public static clickQueryBuilderInitialAddGroupButton(fix: ComponentFixture<any>, buttonIndex: number) {
         const exprContainer = this.getQueryBuilderExpressionsContainer(fix);
-        const andOrAddGroupButton = exprContainer.querySelectorAll(':scope > button')[buttonIndex] as HTMLElement;
+        const andOrAddGroupButton = exprContainer.querySelectorAll('button')[buttonIndex] as HTMLElement;
         andOrAddGroupButton.click();
     }
 
@@ -359,7 +359,6 @@ export class QueryBuilderFunctions {
         expect(valueInput.value).toBe(valueText);
     };
 
-    
     public static verifyGroupContextMenuVisibility = (fix: ComponentFixture<any>, shouldBeVisible: boolean) => {
         if(shouldBeVisible){
             const wrapper = fix.debugElement.queryAll(By.css('.igx-overlay__wrapper'));
@@ -368,8 +367,7 @@ export class QueryBuilderFunctions {
             const contextMenuRect = contextMenu.getBoundingClientRect();
             expect(contextMenu.classList.contains('igx-toggle--hidden')).toBe(false, 'incorrect context menu visibility');
             expect(contextMenuRect.width === 0 && contextMenuRect.height === 0).toBe(false, 'incorrect context menu dimensions');
-        }
-        else {
+        } else {
             const wrapper = fix.debugElement.queryAll(By.css('.igx-overlay__wrapper'));
             expect(wrapper.length).toBeLessThanOrEqual(0);
         }
@@ -378,7 +376,7 @@ export class QueryBuilderFunctions {
     public static verifyChipSelectedState = (chip: DebugElement, shouldBeSelected: boolean) => {
         if(shouldBeSelected)
             expect(chip.attributes['ng-reflect-selected'] === 'true').toBeTruthy("Chip should have been selected");
-        else 
+        else
             expect(chip.attributes['ng-reflect-selected'] === 'true').toBeFalsy("Chip should have been deselected");
     };
 
@@ -450,7 +448,7 @@ export class QueryBuilderFunctions {
         UIInteractions.triggerKeyDownEvtUponElem(key, elem.nativeElement, true);
         tick(wait);
         fix.detectChanges();
-    }    
+    }
 
     public static selectEntityInEditModeExpression(fix, dropdownItemIndex: number) {
         QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix);
