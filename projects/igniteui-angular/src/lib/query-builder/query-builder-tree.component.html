@@ -446,17 +446,18 @@
                             [style.display]="isInEditMode() ? 'block' : 'none'"
                         >
                             <ng-template igxComboHeader>
-                                <igx-checkbox
-                                    [checked]="this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length"
-                                    [indeterminate]="this.selectedEntity && this.selectedReturnFields && this.selectedReturnFields.length > 0 && this.selectedReturnFields.length < this.selectedEntity.fields?.length"
-                                    [readonly]="true"
-                                    [disableRipple]="true"
-                                    [tabindex]="-1"
-                                    (click)="onSelectAllClicked($event)"
-                                    style="margin-left: 16px"
-                                    class="igx-combo__checkbox">
-                                </igx-checkbox>
-                                <span>{{ this.resourceStrings.igx_query_builder_select_all }}</span>
+                                <div class="igx-drop-down__header">
+                                    <igx-checkbox
+                                            [checked]="this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length"
+                                            [indeterminate]="this.selectedEntity && this.selectedReturnFields && this.selectedReturnFields.length > 0 && this.selectedReturnFields.length < this.selectedEntity.fields?.length"
+                                            [readonly]="true"
+                                            [disableRipple]="true"
+                                            [tabindex]="-1"
+                                            (click)="onSelectAllClicked($event)"
+                                            class="igx-combo__checkbox">
+                                        {{ this.resourceStrings.igx_query_builder_select_all }}
+                                    </igx-checkbox>
+                                </div>
                             </ng-template>
                             <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_return_fields }}</label>
                         </igx-combo>
