@@ -282,7 +282,6 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Fields dropdown should contain proper fields based on the entity.', fakeAsync(() => {
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
