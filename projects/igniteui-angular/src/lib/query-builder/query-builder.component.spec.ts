@@ -14,7 +14,7 @@ const QUERY_BUILDER_TREE = 'igx-query-builder-tree';
 const CHIP_SELECT_CLASS = '.igx-chip__select';
 const QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 
-fdescribe('IgxQueryBuilder', () => {
+describe('IgxQueryBuilder', () => {
     configureTestSuite();
     let fix: ComponentFixture<IgxQueryBuiderSampleTestComponent>;
     let queryBuilder: IgxQueryBuilderComponent;
