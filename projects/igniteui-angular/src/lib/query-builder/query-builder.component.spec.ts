@@ -692,6 +692,121 @@ describe('IgxQueryBuilder', () => {
 
             flush();
         }));
+
+        it('Should display an alert dialog when the entity is changed.', fakeAsync(() => {
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+            const queryTreeElement = queryBuilderElement.querySelector(`.${QUERY_BUILDER_TREE}`);
+            const dialog = queryTreeElement.querySelector('igx-dialog');
+            expect(dialog).toBeDefined();
+
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Select entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Alert dialog should not be opened if there is no previous selection
+            expect(dialog.checkVisibility()).toBeFalse();
+
+            // Select entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Alert dialog should be opened
+            expect(dialog.checkVisibility()).toBeTrue();
+        }));
+
+        it('Should reset all inputs when the entity is changed.', fakeAsync(() => {
+            pending();
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Select entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            //Select Column
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
+
+            //Select Operator
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+
+            //Type Value
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '1');
+            tick(100);
+            fix.detectChanges();
+
+            // Verify all inputs values
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released', 'Id', 'Equals', '1');
+
+            // Change the selected entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Confirm the change
+            const dialogOutlet: HTMLElement = fix.debugElement.queryAll(By.css(`.igx-dialog`))[0].nativeElement;
+            const confirmButton = Array.from(dialogOutlet.querySelectorAll('button'))[1];
+            expect(confirmButton.innerText).toEqual('Confirm');
+            confirmButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify all inputs
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Orders', 'OrderId, OrderName, OrderDate', '', '', '');
+        }));
+
+        it('Should NOT reset all inputs when the entity is changed.', fakeAsync(() => {
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Select entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            //Select Column
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
+
+            //Select Operator
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+
+            //Type Value
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '1');
+            tick(100);
+            fix.detectChanges();
+
+            // Verify all inputs values
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released', 'Id', 'Equals', '1');
+
+            // Change the selected entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Decline the change
+            const dialogOutlet: HTMLElement = fix.debugElement.queryAll(By.css(`.igx-dialog`))[0].nativeElement;
+            const cancelButton = Array.from(dialogOutlet.querySelectorAll('button'))[0];
+            expect(cancelButton.innerText).toEqual('Cancel');
+            cancelButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify all inputs
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released', 'Id', 'Equals', '1');
+        }));
     });
 
     describe('Keyboard navigation', () => {
