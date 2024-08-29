@@ -454,9 +454,34 @@ export class WorksheetFile implements IExcelFile {
                 summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, level, targetCol);
 
                 if (!summaryFunc) {
-                    const cellStr = `${cellValue.label}: ${cellValue.value}`;
-                    const savedValue = dictionary.saveValue(cellStr, false);
-                    return `<c r="${columnName}" t="s" s="1"><v>${savedValue}</v></c>`;
+                    let summaryValue;
+
+                    const label = cellValue.label?.toString();
+                    const value = cellValue.value?.toString();
+
+                    if (label && value) {
+                        summaryValue = `${cellValue.label}: ${cellValue.value}`;
+                    } else if (label) {
+                        summaryValue = cellValue.label;
+                    } else if (value) {
+                        summaryValue = cellValue.value;
+                    }
+
+                    const savedValue = dictionary.saveValue(summaryValue, false);
+                    const isSavedAsString = savedValue !== -1;
+                    const isSavedAsDate = !isSavedAsString && summaryValue instanceof Date;
+
+                    if (isSavedAsDate) {
+                        const timeZoneOffset = summaryValue.getTimezoneOffset() * 60000;
+                        const isoString = (new Date(summaryValue - timeZoneOffset)).toISOString();
+                        summaryValue = isoString.substring(0, isoString.indexOf('.'));
+                    }
+
+                    const resolvedValue = isSavedAsString ? savedValue : summaryValue;
+                    const type = isSavedAsString ? `t="s"` : isSavedAsDate ? `t="d"` : '';
+                    const style = isSavedAsDate ? `s="2"` : `s="1"`;
+
+                    return `<c r="${columnName}" ${type} ${style}><v>${resolvedValue}</v></c>`;
                 }
 
                 return `<c r="${columnName}"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
