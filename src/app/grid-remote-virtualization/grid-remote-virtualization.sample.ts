@@ -7,8 +7,8 @@ import { IgxButtonDirective, IgxGridComponent } from 'igniteui-angular';
 @Component({
     selector: 'app-grid-remote-virtualization-sample',
     templateUrl: 'grid-remote-virtualization.sample.html',
-    providers: [RemoteService],
     standalone: true,
+    providers: [RemoteService],
     imports: [IgxGridComponent, IgxButtonDirective, AsyncPipe]
 })
 export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit {
@@ -49,7 +49,6 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
     }
 
     public loadData() {
-        this.grid.shouldGenerate = true;
         this.remoteService.getData(this.grid.virtualizationState, () => {
             this.remoteData = this.remoteService.remoteData;
         });
