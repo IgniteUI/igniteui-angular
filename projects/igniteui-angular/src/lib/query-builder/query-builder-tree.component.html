@@ -423,6 +423,7 @@
                         <igx-select #entitySelect
                             type="box"
                             (selectionChanging)="onEntitySelectChanging($event)"
+                            [overlaySettings]="entitySelectOverlaySettings"
                             [ngModel]="selectedEntity"
                             [style.display]="isInEditMode() ? 'block' : 'none'"
                         >
@@ -440,6 +441,7 @@
                             [valueKey]="'field'"
                             [disabled]="!selectedEntity"
                             [(ngModel)]="selectedReturnFields"
+                            [overlaySettings]="fieldSelectOverlaySettings"
                             searchPlaceholder="{{ this.resourceStrings.igx_query_builder_search }}"
                             [style.display]="isInEditMode() ? 'block' : 'none'"
                         >
