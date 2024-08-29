@@ -3199,7 +3199,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             //Create dateTime filtering expression
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                fieldName: 'DateTimeCreated', searchVal: '11/11/2000 10:11:11 AM', condition: IgxStringFilteringOperand.instance().condition('equals')
+                field: 'DateTimeCreated', searchVal: '11/11/2000 10:11:11 AM', conditionName: 'equals', condition: IgxStringFilteringOperand.instance().condition('equals')
             });
 
             grid.advancedFilteringExpressionsTree = tree;
