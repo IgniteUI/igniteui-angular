@@ -1241,20 +1241,36 @@ describe('IgxSimpleCombo', () => {
             expect(combo.close).toHaveBeenCalledTimes(1);
         });
 
-        it('should clear the input on blur with a partial match', () => {
-            spyOn(combo as any, 'clearSelection').and.callThrough();
-            spyOn(combo.dropdown.closing, 'emit').and.callThrough();
-
+        it('should select first match item on tab key pressed', () => {
             input.triggerEventHandler('focus', {});
             fixture.detectChanges();
-            UIInteractions.simulateTyping('new', input);
+
+            const toggleButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLEBUTTON));
+            toggleButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('connecticut', input);
+            fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('Tab', input);
             fixture.detectChanges();
 
-            expect((combo as any).clearSelection).toHaveBeenCalledOnceWith(true);
+            expect(combo.displayValue).toEqual('Connecticut');
+            expect(combo.comboInput.value).toEqual('Connecticut');
+        });
+
+        it('should not clear the input on blur with a partial match but it should select the match item', () => {
+            spyOn(combo.dropdown.closing, 'emit').and.callThrough();
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+            UIInteractions.simulateTyping('mic', input);
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.displayValue).toEqual('Michigan');
             expect(combo.dropdown.closing.emit).toHaveBeenCalledTimes(1);
-            expect(combo.displayValue).toEqual('');
         });
 
         it('should not clear the selection and input on blur with a match', () => {
@@ -1281,7 +1297,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).toBeDefined()
         });
 
-        it('should clear input on blur when dropdown is collapsed with no match', () => {
+        it('should not clear input on blur when dropdown is collapsed with match', () => {
             input.triggerEventHandler('focus', {});
             fixture.detectChanges();
 
@@ -1294,8 +1310,8 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.triggerEventHandlerKeyDown('Tab', input);
             fixture.detectChanges();
 
-            expect(combo.displayValue).toEqual('');
-            expect(combo.selection).not.toBeDefined()
+            expect(combo.displayValue).toEqual('New Jersey');
+            expect(combo.selection).toBeDefined()
         });
 
         it('should open the combo when input is focused', () => {
@@ -2551,7 +2567,7 @@ describe('IgxSimpleCombo', () => {
             const selectedItem = combo.data[combo.data.length - 1];
             expect(combo.displayValue).toEqual(`${selectedItem[combo.displayKey]}`);
         }));
-        it('should clear input on blur when bound to remote data and no item is selected', () => {
+        it('should not clear input on blur when bound to remote data and item is selected', () => {
             input.triggerEventHandler('focus', {});
             fixture.detectChanges();
 
@@ -2561,7 +2577,7 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.triggerEventHandlerKeyDown('Tab', input);
             fixture.detectChanges();
 
-            expect(combo.comboInput.value).toEqual('');
+            expect(combo.comboInput.value).toEqual('Product 0');
         });
 
         it('should display correct value after the value has been changed from the form and then by the user', fakeAsync(() => {

@@ -3,6 +3,10 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 18.2.0
+### New Features
+- `IgxSimpleCombo`
+    - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
+
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
     - **Breaking Change** The `shouldGenerate` property have been deprecated and will be removed in a future version. Use `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`.
