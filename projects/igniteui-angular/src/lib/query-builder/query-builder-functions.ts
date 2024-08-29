@@ -447,7 +447,7 @@ export class QueryBuilderFunctions {
     */
     //TODO maybe move to more commonly used class
     public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: DebugElement, wait: number = null){
-        UIInteractions.triggerKeyDownEvtUponElem(' ', elem.nativeElement, true);
+        UIInteractions.triggerKeyDownEvtUponElem(key, elem.nativeElement, true);
         tick(wait);
         fix.detectChanges();
     }    
