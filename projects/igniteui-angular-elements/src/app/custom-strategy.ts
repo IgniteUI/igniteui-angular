@@ -74,10 +74,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const parents: IgcNgElement[] = [];
         let parentConfig: ComponentConfig;
         const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
-        if (componentConfig) {
-            // TODO: configure in advance
-            componentConfig.selector = element.tagName.toLocaleLowerCase();
-        }
+
         const configParents = componentConfig?.parents
             .map(parentType => this.config.find(x => x.component === parentType))
             .filter(x => x.selector);
