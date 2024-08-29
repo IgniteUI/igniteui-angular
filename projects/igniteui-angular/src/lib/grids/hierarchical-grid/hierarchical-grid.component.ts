@@ -49,7 +49,7 @@ import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/ex
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxGridHierarchicalPipe, IgxGridHierarchicalPagingPipe } from './hierarchical-grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
-import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
 import { IgxGridSortingPipe, IgxGridFilteringPipe } from '../grid/grid.pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
 import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
@@ -349,8 +349,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxGridRowStylesPipe,
         IgxSummaryDataPipe,
         IgxGridHierarchicalPipe,
-        IgxGridHierarchicalPagingPipe
-    ],
+        IgxGridHierarchicalPagingPipe,
+        IgxStringReplacePipe
+],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirective
