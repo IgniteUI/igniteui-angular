@@ -264,6 +264,11 @@ export class QueryBuilderFunctions {
         return items;
     }
 
+    public static getQueryBuilderCalendar(fix: ComponentFixture<any>) {
+        const calendar = fix.debugElement.queryAll(By.css(`.igx-calendar`))[0].nativeElement;
+        return calendar;
+    }
+
     /**
      * Verifies the type of the operator line ('and' or 'or').
      * (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
@@ -360,7 +365,7 @@ export class QueryBuilderFunctions {
     };
 
     public static verifyGroupContextMenuVisibility = (fix: ComponentFixture<any>, shouldBeVisible: boolean) => {
-        if(shouldBeVisible){
+        if (shouldBeVisible) {
             const wrapper = fix.debugElement.queryAll(By.css('.igx-overlay__wrapper'));
             expect(wrapper.length).toBeGreaterThan(0, 'context menu wrapper missing');
             const contextMenu = wrapper[0].nativeElement.querySelector('.igx-filter-contextual-menu');
@@ -374,7 +379,7 @@ export class QueryBuilderFunctions {
     };
 
     public static verifyChipSelectedState = (chip: DebugElement, shouldBeSelected: boolean) => {
-        if(shouldBeSelected)
+        if (shouldBeSelected)
             expect(chip.attributes['ng-reflect-selected'] === 'true').toBeTruthy("Chip should have been selected");
         else
             expect(chip.attributes['ng-reflect-selected'] === 'true').toBeFalsy("Chip should have been deselected");
@@ -444,7 +449,7 @@ export class QueryBuilderFunctions {
     * Hit a keyboard button upon element, wait for the desired time and detect changes
     */
     //TODO maybe move to more commonly used class
-    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: DebugElement, wait: number = null){
+    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: DebugElement, wait: number = null) {
         UIInteractions.triggerKeyDownEvtUponElem(key, elem.nativeElement, true);
         tick(wait);
         fix.detectChanges();

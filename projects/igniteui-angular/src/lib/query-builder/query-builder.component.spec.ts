@@ -1,4 +1,4 @@
-import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxBooleanFilteringOperand, IgxChipComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -406,6 +406,292 @@ describe('IgxQueryBuilder', () => {
             expect(dropdownValues).toEqual(expectedValues);
         }));
 
+        it('Should correctly apply a \'string\' column condition through UI.', fakeAsync(() => {
+            // Verify there is no expression.
+            expect(queryBuilder.expressionTree).toBeUndefined();
+
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+            //Type Value
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+
+            // Commit the populated expression.
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "field": "ProductName",
+      "condition": {
+        "name": "startsWith",
+        "isUnary": false,
+        "iconName": "filter_starts_with"
+      },
+      "conditionName": null,
+      "ignoreCase": true,
+      "searchVal": "a",
+      "searchTree": null
+    }
+  ],
+  "operator": 0,
+  "entity": "Products",
+  "returnFields": [
+    "Id",
+    "ProductName",
+    "OrderId",
+    "Released"
+  ]
+}`);
+        }));
+
+        it('Should correctly apply a \'Greater Than\' with \'number\' column condition through UI.', fakeAsync(() => {
+            // Verify there is no expression.
+            expect(queryBuilder.expressionTree).toBeUndefined();
+
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'Id' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator
+            //Type Value
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '5');
+            tick(100);
+            fix.detectChanges();
+
+            // Commit the populated expression.
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "field": "Id",
+      "condition": {
+        "name": "greaterThan",
+        "isUnary": false,
+        "iconName": "filter_greater_than"
+      },
+      "conditionName": null,
+      "ignoreCase": true,
+      "searchVal": 5,
+      "searchTree": null
+    }
+  ],
+  "operator": 0,
+  "entity": "Products",
+  "returnFields": [
+    "Id",
+    "ProductName",
+    "OrderId",
+    "Released"
+  ]
+}`);
+        }));
+
+        it('Should correctly apply a \'Equals\' with \'number\' column condition through UI.', fakeAsync(() => {
+            // Verify there is no expression.
+            expect(queryBuilder.expressionTree).toBeUndefined();
+
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'Id' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator
+            //Type Value
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '5');
+            tick(100);
+            fix.detectChanges();
+
+            // Commit the populated expression.
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "field": "Id",
+      "condition": {
+        "name": "equals",
+        "isUnary": false,
+        "iconName": "filter_equal"
+      },
+      "conditionName": null,
+      "ignoreCase": true,
+      "searchVal": 5,
+      "searchTree": null
+    }
+  ],
+  "operator": 0,
+  "entity": "Products",
+  "returnFields": [
+    "Id",
+    "ProductName",
+    "OrderId",
+    "Released"
+  ]
+}`);
+        }));
+
+        it('Should correctly apply a \'boolean\' column condition through UI.', fakeAsync(() => {
+            // Verify there is no expression.
+            expect(queryBuilder.expressionTree).toBeUndefined();
+
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3); // Select 'Released' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1); // Select 'True' operator.
+
+            // Commit the populated expression.
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "field": "Released",
+      "condition": {
+        "name": "true",
+        "isUnary": true,
+        "iconName": "filter_true"
+      },
+      "conditionName": null,
+      "ignoreCase": true,
+      "searchVal": null,
+      "searchTree": null
+    }
+  ],
+  "operator": 0,
+  "entity": "Products",
+  "returnFields": [
+    "Id",
+    "ProductName",
+    "OrderId",
+    "Released"
+  ]
+}`);
+        }));
+
+        it('Should correctly apply a \'date\' column condition through UI with unary operator.', fakeAsync(() => {
+            // Verify there is no expression.
+            expect(queryBuilder.expressionTree).toBeUndefined();
+
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'OrderDate' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 9); // Select 'This Year' operator.
+
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Third input should be disabled for unary operators.
+            // Commit the populated expression.
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "field": "OrderDate",
+      "condition": {
+        "name": "thisYear",
+        "isUnary": true,
+        "iconName": "filter_this_year"
+      },
+      "conditionName": null,
+      "ignoreCase": true,
+      "searchVal": null,
+      "searchTree": null
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "OrderId",
+    "OrderName",
+    "OrderDate"
+  ]
+}`);
+        }));
+
+        it('Should correctly apply a \'date\' column condition through UI with value from calendar.', fakeAsync(() => {
+            // Verify there is no expression.
+            expect(queryBuilder.expressionTree).toBeUndefined();
+
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'OrderDate' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, true, false);
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, true) as HTMLElement;
+            input.click();
+            fix.detectChanges();
+
+            // Click on 'today' item in calendar.
+            const calendar = QueryBuilderFunctions.getQueryBuilderCalendar(fix);
+            const todayItem = calendar.querySelector('.igx-days-view__date--current');
+            todayItem.firstChild.dispatchEvent(new Event('mousedown'));
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, true, true);
+
+            flush();
+        }));
     });
 
     describe('Keyboard navigation', () => {
