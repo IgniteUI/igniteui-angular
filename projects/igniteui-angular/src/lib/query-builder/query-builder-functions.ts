@@ -453,6 +453,18 @@ export class QueryBuilderFunctions {
         UIInteractions.triggerKeyDownEvtUponElem(key, elem.nativeElement, true);
         tick(wait);
         fix.detectChanges();
+    }    
+
+    public static getTabbableElements() {
+        const focusableElements =
+          'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+          
+        return Array.prototype.filter.call(
+            document.querySelectorAll(focusableElements),
+            element => {
+                return (element.offsetWidth > 0 || element.offsetHeight > 0);
+            }
+          );
     }
 
     public static selectEntityInEditModeExpression(fix, dropdownItemIndex: number) {
