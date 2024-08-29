@@ -1,21 +1,10 @@
-.sample-container {
-    margin: 24px;
-}
-
 .sample-actions {
     display: flex;
     flex-wrap: wrap;
-    max-width: 800px;
-    margin: 15px 0;
+    margin: 1rem 0;
+    gap: 0.5rem;
 }
 
-// button {
-//     margin: 8px;
-// }
-
-button,
-.igx-button--flat {
-    color: #FBB13C;
-    background-color: #340068;
-    margin: 0.3rem;
+igx-input-group {
+    --ig-size: var(--ig-size-small);
 }
