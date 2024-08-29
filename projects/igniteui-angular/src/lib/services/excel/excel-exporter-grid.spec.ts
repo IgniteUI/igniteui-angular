@@ -1366,7 +1366,7 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.exportHierarchicalGridWithSummaries);
         });
 
-        fit('should export grid with custom summaries, only with summary label as string', async () => {
+        it('should export grid with custom summaries, only with summary label as string', async () => {
             fix = TestBed.createComponent(GridCustomSummaryComponent);
             fix.detectChanges();
             await wait(300);
@@ -1376,7 +1376,7 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.exportGridWithCustomSummaryOnlyWithSummaryLabel);
         });
 
-        fit('should export grid with custom summaries, with null and zero (as number)', async () => {
+        it('should export grid with custom summaries, with null and zero (as number)', async () => {
             fix = TestBed.createComponent(GridCustomSummaryWithNullAndZeroComponent);
             fix.detectChanges();
             await wait(300);
@@ -1386,7 +1386,7 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithNullAndZero);
         });
 
-        fit('should export grid with custom summaries, with undefined, zero and positive number (as number)', async () => {
+        it('should export grid with custom summaries, with undefined, zero and positive number (as number)', async () => {
             fix = TestBed.createComponent(GridCustomSummaryWithUndefinedZeroAndValidNumberComponent);
             fix.detectChanges();
             await wait(300);
@@ -1396,7 +1396,7 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithUndefinedZeroAndValidNumber);
         });
 
-        fit('should export grid with custom summaries, with undefined and null', async () => {
+        it('should export grid with custom summaries, with undefined and null', async () => {
             fix = TestBed.createComponent(GridCustomSummaryWithUndefinedAndNullComponent);
             fix.detectChanges();
             await wait(300);
@@ -1406,7 +1406,7 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithUndefinedAndNull);
         });
 
-        fit('should export grid with custom summaries, with date', async () => {
+        it('should export grid with custom summaries, with date', async () => {
             fix = TestBed.createComponent(GridCustomSummaryWithDateComponent);
             fix.detectChanges();
             await wait(300);
