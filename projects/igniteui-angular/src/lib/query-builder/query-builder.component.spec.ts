@@ -963,30 +963,29 @@ describe('IgxQueryBuilder', () => {
             tick();
             fixture.detectChanges();
 
-            const tabElements = QueryBuilderFunctions.getTabbableElements(fixture.nativeElement);
+            QueryBuilderFunctions.verifyQueryBuilderTabbableElements(fixture);
+        }));
 
-            let i = 0;
-            tabElements.forEach((element: HTMLElement) => {
-                switch (i) {
-                    case 0: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
-                    case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                    case 2: expect(element).toHaveClass('igx-input-group__input'); break;
-                    case 3: expect(element).toHaveClass('igx-chip'); break;
-                    case 4: expect(element).toHaveClass('igx-chip__remove'); break;
-                    case 5: expect(element).toHaveClass('igx-chip'); break;
-                    case 6: expect(element).toHaveClass('igx-chip__remove'); break;
-                    case 7: expect(element).toHaveClass('igx-chip'); break;
-                    case 8: expect(element).toHaveClass('igx-chip__remove'); break;
-                    case 9: expect(element).toHaveClass('igx-button');
-                        expect(element.innerText).toContain('Condition'); break;
-                    case 10: expect(element).toHaveClass('igx-button');
-                        expect(element.innerText).toContain('"And" Group'); break;
-                    case 11: expect(element).toHaveClass('igx-button');
-                        expect(element.innerText).toContain('"Or" Group'); break;
-                }
+        it('Should navigate with Tab/Shift+Tab through chips" "edit", "cancel" and "adding" buttons, fields of a condition in edit mode', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
 
-                i++;
-            });
+            const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[0];
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
+
+            const chipActions = fixture.debugElement.query(By.css('.igx-filter-tree__expression-actions'));
+            QueryBuilderFunctions.verifyTabbableChipActions(chipActions);
+
+            // Open Edit mode and check condition line elements
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chipActions.children[0], 200);
+
+            const editLine = fixture.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[1];
+            QueryBuilderFunctions.verifyTabbableConditionEditLineElements(editLine);
+
+            const editDialog = fixture.debugElement.queryAll(By.css(`.${QUERY_BUILDER_BODY}`))[1];
+            QueryBuilderFunctions.verifyTabbableInConditionDialogElements(editDialog);
         }));
 
         it('Should select/deselect a chip when pressing "Enter"/"space" on it.', fakeAsync(() => {

@@ -391,6 +391,90 @@ export class QueryBuilderFunctions {
             expect(chip.attributes['ng-reflect-selected'] === 'true').toBeFalsy("Chip should have been deselected");
     };
 
+    public static verifyQueryBuilderTabbableElements = (fixture: ComponentFixture<any>) => {
+        const tabElements = QueryBuilderFunctions.getTabbableElements(fixture.nativeElement);
+
+            let i = 0;
+            tabElements.forEach((element: HTMLElement) => {
+                switch (i) {
+                    case 0: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                    case 1: expect(element).toHaveClass('igx-input-group__input'); break;
+                    case 2: expect(element).toHaveClass('igx-input-group__input'); break;
+                    case 3: expect(element).toHaveClass('igx-chip'); break;
+                    case 4: expect(element).toHaveClass('igx-chip__remove'); break;
+                    case 5: expect(element).toHaveClass('igx-chip'); break;
+                    case 6: expect(element).toHaveClass('igx-chip__remove'); break;
+                    case 7: expect(element).toHaveClass('igx-chip'); break;
+                    case 8: expect(element).toHaveClass('igx-chip__remove'); break;
+                    case 9: expect(element).toHaveClass('igx-button');
+                        expect(element.innerText).toContain('Condition'); break;
+                    case 10: expect(element).toHaveClass('igx-button');
+                        expect(element.innerText).toContain('"And" Group'); break;
+                    case 11: expect(element).toHaveClass('igx-button');
+                        expect(element.innerText).toContain('"Or" Group'); break;
+                }
+                i++;
+            });
+    };
+
+    public static verifyTabbableChipActions = (chipActions: DebugElement) => {
+        const tabElements = QueryBuilderFunctions.getTabbableElements(chipActions.nativeElement);
+
+        let i = 0;
+        tabElements.forEach((element: HTMLElement) => {                
+            switch(i){
+                case 0: expect(element).toHaveClass('igx-icon'); 
+                        expect(element.innerText).toContain('edit');
+                break;
+                case 1: expect(element).toHaveClass('igx-icon'); 
+                        expect(element.innerText).toContain('add');
+                break;
+                }
+            i++;
+        });
+    };
+
+    public static verifyTabbableConditionEditLineElements = (editLine: DebugElement) => {
+        const tabElements = QueryBuilderFunctions.getTabbableElements(editLine.nativeElement);
+
+        let i = 0;
+        tabElements.forEach((element: HTMLElement) => {                
+            switch(i){
+                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 1: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 2: expect(element).toHaveClass('igx-icon-button'); break;
+                case 3: expect(element).toHaveClass('igx-icon-button'); break;
+                }
+            i++;
+        });
+    };
+    
+    public static verifyTabbableInConditionDialogElements = (editDialog: DebugElement) => {
+        const tabElements = QueryBuilderFunctions.getTabbableElements(editDialog.nativeElement);
+
+        let i = 0;
+        tabElements.forEach((element: HTMLElement) => {                
+            switch(i){
+                case 0: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 1: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 2: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 3: expect(element).toHaveClass('igx-chip'); break;
+                case 4: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 5: expect(element).toHaveClass('igx-chip'); break;
+                case 6: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 7: expect(element).toHaveClass('igx-button');
+                        expect(element.innerText).toContain('Condition'); 
+                        break;
+                case 8: expect(element).toHaveClass('igx-button');
+                        expect(element.innerText).toContain('"And" Group'); 
+                        break;
+                case 9: expect(element).toHaveClass('igx-button');
+                        expect(element.innerText).toContain('"Or" Group'); 
+                        break;
+            }
+            i++;
+        });
+    };
     /**
      * Click the entity select for the expression that is currently in edit mode.
      */
