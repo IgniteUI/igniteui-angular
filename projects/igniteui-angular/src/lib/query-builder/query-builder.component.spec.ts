@@ -717,7 +717,7 @@ describe('IgxQueryBuilder', () => {
             const nestedTree = fix.debugElement.query(By.css(QUERY_BUILDER_TREE));
             expect(nestedTree).toBeDefined();
 
-            QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
+            QueryBuilderFunctions.addAndValidateChildGroup(fix, 1, 1);
 
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
@@ -887,6 +887,74 @@ describe('IgxQueryBuilder', () => {
             // Verify all inputs
             QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released', 'Id', 'Equals', '1');
         }));
+
+        it(`Should display 'expand'/'collapse' button properly.`, fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+
+            const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QUERY_BUILDER_TREE))[0].nativeElement;
+            // Nested query tree should have expand collapse button
+            const expressionItems = queryTreeElement.querySelectorAll('.igx-filter-tree__expression-item');
+            expressionItems.forEach(item => {
+                const chip = item.querySelector('igx-chip');
+                const conditionType = (chip.querySelector('.igx-filter-tree__expression-condition') as HTMLElement).innerText;
+                const toggleButton = item.querySelector('.igx-filter-tree__details-button');
+                if (conditionType == 'In' || conditionType == 'Not In') {
+                    expect(toggleButton).toBeDefined();
+                } else {
+                    expect(toggleButton).toBeNull();
+                }
+            });
+        }));
+
+        it('Should collapse nested query when it is commited.', fakeAsync(() => {
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+
+            QueryBuilderFunctions.addChildGroup(fix, 0, 1);
+
+            // Verify that the nested query is expanded
+            expect(fix.debugElement.query(By.css(`.${QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
+
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify that the nested query is collapsed
+            expect(fix.debugElement.query(By.css(`.${QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+        }));
+
+        it(`Should toggle the nested query on 'expand'/'collapse' button click.`, fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+
+            expect(fix.debugElement.query(By.css(`.${QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+
+            const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QUERY_BUILDER_TREE))[0].nativeElement;
+            // Nested query tree should have expand collapse button
+            const expressionItems = Array.from(queryTreeElement.querySelectorAll('.igx-filter-tree__expression-item'));
+            const expandableItem = expressionItems.filter(item =>
+                (item.querySelector('.igx-filter-tree__expression-condition') as HTMLElement).innerText == 'In' ||
+                (item.querySelector('.igx-filter-tree__expression-condition') as HTMLElement).innerText == 'Not In'
+            )[0];
+            const toggleBtn = expandableItem.querySelector('.igx-filter-tree__details-button') as HTMLElement;
+            expect((toggleBtn.querySelector('igx-icon') as HTMLElement).innerText).toBe('unfold_less');
+            toggleBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            expect((toggleBtn.querySelector('igx-icon') as HTMLElement).innerText).toBe('unfold_more');
+            expect(fix.debugElement.query(By.css(`.${QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
+        }));
     });
 
     describe('Keyboard navigation', () => {
@@ -898,9 +966,8 @@ describe('IgxQueryBuilder', () => {
             const tabElements = QueryBuilderFunctions.getTabbableElements(fixture.nativeElement);
 
             let i = 0;
-            tabElements.forEach((element: HTMLElement) =>
-            {                
-                switch(i){
+            tabElements.forEach((element: HTMLElement) => {
+                switch (i) {
                     case 0: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
                     case 1: expect(element).toHaveClass('igx-input-group__input'); break;
                     case 2: expect(element).toHaveClass('igx-input-group__input'); break;
@@ -911,11 +978,11 @@ describe('IgxQueryBuilder', () => {
                     case 7: expect(element).toHaveClass('igx-chip'); break;
                     case 8: expect(element).toHaveClass('igx-chip__remove'); break;
                     case 9: expect(element).toHaveClass('igx-button');
-                            expect(element.innerText).toContain('Condition'); break;
+                        expect(element.innerText).toContain('Condition'); break;
                     case 10: expect(element).toHaveClass('igx-button');
-                             expect(element.innerText).toContain('"And" Group'); break;
+                        expect(element.innerText).toContain('"And" Group'); break;
                     case 11: expect(element).toHaveClass('igx-button');
-                             expect(element.innerText).toContain('"Or" Group'); break;
+                        expect(element.innerText).toContain('"Or" Group'); break;
                 }
 
                 i++;

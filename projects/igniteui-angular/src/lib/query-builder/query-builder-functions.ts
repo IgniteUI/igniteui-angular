@@ -462,18 +462,18 @@ export class QueryBuilderFunctions {
     }
 
     /*
-    * Get tabbable elements in a container element. Result is returned as node elements ordered they way they will be tabbed 
+    * Get tabbable elements in a container element. Result is returned as node elements ordered they way they will be tabbed
     */
     public static getTabbableElements(inElement: HTMLElement) {
         const focusableElements =
-          'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
-          
+            'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+
         return Array.prototype.filter.call(
             inElement.querySelectorAll(focusableElements),
             element => {
                 return (element.offsetWidth > 0 || element.offsetHeight > 0);
             }
-          );
+        );
     }
 
     public static selectEntityInEditModeExpression(fix: ComponentFixture<any>, dropdownItemIndex: number, level = 0) {
@@ -524,9 +524,9 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static addChildGroup(fix: ComponentFixture<any>, level: number) {
+    public static addChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
         // Click the initial 'Add Or Group' button.
-        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1, level);
+        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, groupType, level);
         tick(100);
         fix.detectChanges();
 
@@ -546,9 +546,9 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static addAndValidateChildGroup(fix: ComponentFixture<any>, level: number) {
+    public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
         // Click the initial 'Add Or Group' button.
-        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1, level);
+        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, groupType, level);
         tick(100);
         fix.detectChanges();
 
