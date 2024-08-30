@@ -113,6 +113,7 @@ const GridResourceStringsRO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Anulați fixarea tuturor',
     igx_grid_row_edit_btn_done: 'Terminat',
     igx_grid_row_edit_btn_cancel: 'Anulați',
+    igx_grid_row_edit_text: 'Aveți {0} modificări în acest rând și {1} coloane ascunse',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrează lista coloanelor ...',
     igx_grid_toolbar_pinning_button_tooltip: 'Deschideți meniul derulant de fixare a coloanei',
     igx_grid_toolbar_hiding_button_tooltip: 'Deschideți meniul derulant de ascundere a coloanei',
