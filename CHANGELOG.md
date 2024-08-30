@@ -6,6 +6,10 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
     - **Breaking Change** The `shouldGenerate` property have been deprecated and will be removed in a future version. Use `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`.
+- `IgxCombo`:
+    - **Breaking Change** `filterable` from the `filteringOptions` is removed.
+    - **Breaking Change** The `filterable` property is renamed to `disableFiltering`.
+    - The placeholder of the searchInput is changed depending on the `disableFiltering` option - 'Enter a Search Term' when `disableFiltering` is false and 'Add Item' when `disableFiltering` is true.
 
 ## 18.1.0
 ### New Features
@@ -33,9 +37,6 @@ All notable changes for each version of this project will be documented in this 
     - The `isFirstPageDisabled` and `isLastPageDisabled` have been deprecated in favor of the identical `isFirstPage` and `isLastPage` getter.
 - `IgxOverlayService`
     - The `attach` method overload accepting `Type` and `OverlaySettings` now accepts `OverlayCreateSettings` as second parameter. This interface extends `OverlaySettings` with an additional `injector` property used as `ElementInjector` when creating the dynamic component.
-- `IgxCombo`:
-    - **Breaking Change** The `filterable` property is renamed to `disableFiltering`.
-    - The placeholder of the searchInput is changed depending on the `disableFiltering` option - 'Enter a Search Term' when `disableFiltering` is false and 'Add Item' when `disableFiltering` is true.
 
 
 ## 18.0.0
