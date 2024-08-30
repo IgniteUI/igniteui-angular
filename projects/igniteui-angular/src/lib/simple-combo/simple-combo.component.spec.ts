@@ -807,7 +807,7 @@ describe('IgxSimpleCombo', () => {
             const clearButtonAfterUndefined = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearButtonAfterUndefined).toBeNull();
         }));
-        it('should not show clear icon button when empty object is set with ngModel', fakeAsync(() => {
+        it('should show clear icon button when empty object is set with ngModel', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSimpleComboNgModelComponent);
             fixture.detectChanges();
 
@@ -822,8 +822,11 @@ describe('IgxSimpleCombo', () => {
             tick();
             fixture.detectChanges();
 
-            const clearButtonAfterEmptyObject = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-            expect(clearButtonAfterEmptyObject).toBeNull();
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                const clearButtonAfterEmptyObject = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+                expect(clearButtonAfterEmptyObject).not.toBeNull();
+            });
         }));
     });
 
