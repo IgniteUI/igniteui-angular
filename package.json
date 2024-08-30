@@ -127,7 +127,7 @@
     "ig-typedoc-theme": "^5.0.4",
     "igniteui-dockmanager": "^1.14.2",
     "igniteui-sassdoc-theme": "^1.2.3",
-    "igniteui-webcomponents": "^4.11.0",
+    "igniteui-webcomponents": "5.0.0-rc.1",
     "jasmine": "^5.1.0",
     "jasmine-core": "~5.1.2",
     "karma": "^6.4.2",
