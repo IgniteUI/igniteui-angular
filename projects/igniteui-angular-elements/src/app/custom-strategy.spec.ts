@@ -1,4 +1,4 @@
-/// <reference path="app.module.ts" />
+/// <reference path="components.ts" />
 import { ApplicationRef, importProvidersFrom } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
