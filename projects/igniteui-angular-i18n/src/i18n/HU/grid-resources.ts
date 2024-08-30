@@ -114,6 +114,7 @@ const GridResourceStringsHU_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Összes rögzítésének feloldása',
     igx_grid_row_edit_btn_done: 'Kész',
     igx_grid_row_edit_btn_cancel: 'Mégse',
+    igx_grid_row_edit_text: '{0} módosítása van ebben a sorban és {1} rejtett oszlopban',
     igx_grid_toolbar_actions_filter_prompt: 'Oszloplista szűrése...',
     igx_grid_toolbar_pinning_button_tooltip: 'Nyissa meg az oszlop rögzítésének legördülő',
     igx_grid_toolbar_hiding_button_tooltip: 'Nyissa meg az oszlop elrejtése legördülő',
