@@ -7,6 +7,7 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 const QUERY_BUILDER_CLASS = 'igx-query-builder';
 const QUERY_BUILDER_HEADER = 'igx-query-builder__header';
+const QUERY_BUILDER_TREE = 'igx-query-builder-tree';
 const QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
 const QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
@@ -77,14 +78,15 @@ export class QueryBuilderFunctions {
     /**
      * Get the expressions container that contains all groups and expressions.
      */
-    public static getQueryBuilderExpressionsContainer(fix: ComponentFixture<any>) {
-        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+    public static getQueryBuilderExpressionsContainer(fix: ComponentFixture<any>, level = 0) {
+        const searchClass = level === 0 ? QUERY_BUILDER_CLASS : `${QUERY_BUILDER_TREE}--level-${level}`
+        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${searchClass}`))[0].nativeElement;
         const exprContainer = queryBuilderElement.querySelector('.igx-query-builder__main');
         return exprContainer;
     }
 
-    public static clickQueryBuilderInitialAddGroupButton(fix: ComponentFixture<any>, buttonIndex: number) {
-        const exprContainer = this.getQueryBuilderExpressionsContainer(fix);
+    public static clickQueryBuilderInitialAddGroupButton(fix: ComponentFixture<any>, buttonIndex: number, level = 0) {
+        const exprContainer = this.getQueryBuilderExpressionsContainer(fix, level);
         const andOrAddGroupButton = exprContainer.querySelectorAll('button')[buttonIndex] as HTMLElement;
         andOrAddGroupButton.click();
     }
@@ -172,66 +174,66 @@ export class QueryBuilderFunctions {
         return directOperatorLine;
     }
 
-    public static getQueryBuilderEditModeContainer(fix: ComponentFixture<any>, entityContainer = true) {
-        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix);
+    public static getQueryBuilderEditModeContainer(fix: ComponentFixture<any>, entityContainer = true, level = 0) {
+        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix, level);
         const editModeContainers = Array.from(exprContainer.querySelectorAll('.igx-filter-tree__inputs'));
         const entityEditModeContainer = editModeContainers.find(container => container.querySelector('igx-combo'));
         const conditionEditModeContainer = editModeContainers.find(container => container.querySelector('igx-select') && !container.querySelector('igx-combo'));
         return entityContainer ? entityEditModeContainer : conditionEditModeContainer;
     }
 
-    public static getQueryBuilderEntitySelect(fix: ComponentFixture<any>) {
-        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix);
+    public static getQueryBuilderEntitySelect(fix: ComponentFixture<any>, level = 0) {
+        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, true, level);
         const entitySelect = editModeContainer.querySelector('igx-select');
         return entitySelect;
     }
 
-    public static getQueryBuilderFieldsCombo(fix: ComponentFixture<any>) {
-        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix);
+    public static getQueryBuilderFieldsCombo(fix: ComponentFixture<any>, level = 0) {
+        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, true, level);
         const fieldCombo = editModeContainer.querySelector('igx-combo');
         return fieldCombo;
     }
 
-    public static getQueryBuilderColumnSelect(fix: ComponentFixture<any>) {
-        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false);
+    public static getQueryBuilderColumnSelect(fix: ComponentFixture<any>, level = 0) {
+        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false, level);
         const selects = Array.from(editModeContainer.querySelectorAll('igx-select'));
         const columnSelect = selects[0];
         return columnSelect;
     }
 
-    public static getQueryBuilderOperatorSelect(fix: ComponentFixture<any>) {
-        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false);
+    public static getQueryBuilderOperatorSelect(fix: ComponentFixture<any>, level = 0) {
+        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false, level);
         const selects = Array.from(editModeContainer.querySelectorAll('igx-select'));
         const operatorSelect = selects[1];
         return operatorSelect;
     }
 
-    public static getQueryBuilderValueInput(fix: ComponentFixture<any>, dateType = false) {
-        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false);
+    public static getQueryBuilderValueInput(fix: ComponentFixture<any>, dateType = false, level = 0) {
+        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false, level);
         const input = dateType ?
             editModeContainer.querySelector('igx-date-picker').querySelector('input') :
             Array.from(editModeContainer.querySelectorAll('igx-input-group'))[2];
         return input;
     }
 
-    public static getQueryBuilderExpressionCommitButton(fix: ComponentFixture<any>) {
+    public static getQueryBuilderExpressionCommitButton(fix: ComponentFixture<any>, level = 0) {
         const actionButtons = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs-actions > button'));
-        const commitButton = actionButtons.find((el: DebugElement) => {
+        const commitButton = actionButtons.filter((el: DebugElement) => {
             const icon = el.query(By.directive(IgxIconComponent)).componentInstance;
             return icon.name === 'check';
-        }).nativeElement;
+        });
 
-        return commitButton;
+        return commitButton[level].nativeElement;
     }
 
-    public static getQueryBuilderExpressionCloseButton(fix: ComponentFixture<any>) {
+    public static getQueryBuilderExpressionCloseButton(fix: ComponentFixture<any>, level = 0) {
         const actionButtons = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs-actions > button'));
-        const closeButton = actionButtons.find((el: DebugElement) => {
+        const closeButton = actionButtons.filter((el: DebugElement) => {
             const icon = el.query(By.directive(IgxIconComponent)).componentInstance;
             return icon.name === 'close';
-        }).nativeElement;
+        });
 
-        return closeButton;
+        return closeButton[level].nativeElement;
     }
 
     /**
@@ -296,46 +298,48 @@ export class QueryBuilderFunctions {
         columnSelectEnabled: boolean,
         operatorSelectEnabled: boolean,
         valueInputEnabled: boolean,
-        commitButtonEnabled: boolean) {
+        commitButtonEnabled: boolean,
+        level = 0) {
         // Verify the entity select state.
-        const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix).querySelector('igx-input-group');
+        const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('igx-input-group');
         expect(!entityInputGroup.classList.contains('igx-input-group--disabled')).toBe(entitySelectEnabled,
             'incorrect entity select state');
         // Verify the fields combo state.
-        const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix).querySelector('igx-input-group');
+        const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, level).querySelector('igx-input-group');
         expect(!fieldInputGroup.classList.contains('igx-input-group--disabled')).toBe(fieldComboEnabled,
             'incorrect fields combo state');
 
-        QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, columnSelectEnabled, operatorSelectEnabled, valueInputEnabled, commitButtonEnabled);
+        QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, columnSelectEnabled, operatorSelectEnabled, valueInputEnabled, commitButtonEnabled, level);
     };
 
     public static verifyEditModeExpressionInputStates(fix,
         columnSelectEnabled: boolean,
         operatorSelectEnabled: boolean,
         valueInputEnabled: boolean,
-        commitButtonEnabled: boolean) {
+        commitButtonEnabled: boolean,
+        level = 0) {
         // Verify the column select state.
-        const columnInputGroup = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix).querySelector('igx-input-group');
+        const columnInputGroup = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix, level).querySelector('igx-input-group');
         expect(!columnInputGroup.classList.contains('igx-input-group--disabled')).toBe(columnSelectEnabled,
             'incorrect column select state');
 
         // Verify the operator select state.
-        const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group');
+        const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix, level).querySelector('igx-input-group');
         expect(!operatorInputGroup.classList.contains('igx-input-group--disabled')).toBe(operatorSelectEnabled,
             'incorrect operator select state');
 
         // Verify the value input state.
-        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false);
+        const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false, level);
         const valueInputGroup = Array.from(editModeContainer.querySelectorAll('igx-input-group'))[2];
         expect(!valueInputGroup.classList.contains('igx-input-group--disabled')).toBe(valueInputEnabled,
             'incorrect value input state');
 
         // Verify commit expression button state
-        const commitButton = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+        const commitButton = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, level);
         ControlsFunction.verifyButtonIsDisabled(commitButton, !commitButtonEnabled);
 
         // Verify close expression button is enabled.
-        const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
+        const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix, level);
         ControlsFunction.verifyButtonIsDisabled(closeButton, false);
     };
 
@@ -344,10 +348,11 @@ export class QueryBuilderFunctions {
         fieldsText: string,
         columnText: string,
         operatorText: string,
-        valueText: string) {
-        const entityInput = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix).querySelector('input');
-        const fieldInput = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix).querySelector('input');
-        QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, columnText, operatorText, valueText);
+        valueText: string,
+        level = 0) {
+        const entityInput = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('input');
+        const fieldInput = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, level).querySelector('input');
+        QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, columnText, operatorText, valueText, level);
         expect(entityInput.value).toBe(entityText);
         expect(fieldInput.value).toBe(fieldsText);
     };
@@ -355,10 +360,11 @@ export class QueryBuilderFunctions {
     public static verifyEditModeExpressionInputValues(fix,
         columnText: string,
         operatorText: string,
-        valueText: string) {
-        const columnInput = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix).querySelector('input');
-        const operatorInput = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('input');
-        const valueInput = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input') as HTMLInputElement;
+        valueText: string,
+        level = 0) {
+        const columnInput = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix, level).querySelector('input');
+        const operatorInput = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix, level).querySelector('input');
+        const valueInput = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, level).querySelector('input') as HTMLInputElement;
         expect(columnInput.value).toBe(columnText);
         expect(operatorInput.value).toBe(operatorText);
         expect(valueInput.value).toBe(valueText);
@@ -388,32 +394,32 @@ export class QueryBuilderFunctions {
     /**
      * Click the entity select for the expression that is currently in edit mode.
      */
-    public static clickQueryBuilderEntitySelect(fix: ComponentFixture<any>) {
-        const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix).querySelector('igx-input-group') as HTMLElement;
+    public static clickQueryBuilderEntitySelect(fix: ComponentFixture<any>, level = 0) {
+        const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('igx-input-group') as HTMLElement;
         entityInputGroup.click();
     }
 
     /**
      * Click the fields combo for the expression that is currently in edit mode.
      */
-    public static clickQueryBuilderFieldsCombo(fix: ComponentFixture<any>) {
-        const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix).querySelector('igx-input-group') as HTMLElement;
+    public static clickQueryBuilderFieldsCombo(fix: ComponentFixture<any>, level = 0) {
+        const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, level).querySelector('igx-input-group') as HTMLElement;
         fieldInputGroup.click();
     }
 
     /**
      * Click the column select for the expression that is currently in edit mode.
      */
-    public static clickQueryBuilderColumnSelect(fix: ComponentFixture<any>) {
-        const columnInputGroup = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix).querySelector('igx-input-group') as HTMLElement;
+    public static clickQueryBuilderColumnSelect(fix: ComponentFixture<any>, level = 0) {
+        const columnInputGroup = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix, level).querySelector('igx-input-group') as HTMLElement;
         columnInputGroup.click();
     }
 
     /**
      * Click the operator select for the expression that is currently in edit mode.
      */
-    public static clickQueryBuilderOperatorSelect(fix: ComponentFixture<any>) {
-        const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement
+    public static clickQueryBuilderOperatorSelect(fix: ComponentFixture<any>, level = 0) {
+        const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix, level).querySelector('igx-input-group') as HTMLElement
         operatorInputGroup.click();
     }
 
@@ -440,8 +446,8 @@ export class QueryBuilderFunctions {
     /**
      * Click the commit button of the expression that is currently in edit mode.
      */
-    public static clickQueryBuilderExpressionCommitButton(fix: ComponentFixture<any>) {
-        const commitButton = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+    public static clickQueryBuilderExpressionCommitButton(fix: ComponentFixture<any>, level = 0) {
+        const commitButton = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, level);
         commitButton.click();
     }
 
@@ -453,38 +459,38 @@ export class QueryBuilderFunctions {
         UIInteractions.triggerKeyDownEvtUponElem(key, elem.nativeElement, true);
         tick(wait);
         fix.detectChanges();
-    }    
+    }
 
     public static getTabbableElements() {
         const focusableElements =
-          'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
-          
+            'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+
         return Array.prototype.filter.call(
             document.querySelectorAll(focusableElements),
             element => {
                 return (element.offsetWidth > 0 || element.offsetHeight > 0);
             }
-          );
+        );
     }
 
-    public static selectEntityInEditModeExpression(fix, dropdownItemIndex: number) {
-        QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix);
+    public static selectEntityInEditModeExpression(fix: ComponentFixture<any>, dropdownItemIndex: number, level = 0) {
+        QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix, level);
         fix.detectChanges();
 
-        const outlet = fix.debugElement.query(By.css(`.igx-drop-down__list-scroll`)).nativeElement;
-        const item = Array.from(outlet.querySelectorAll('.igx-drop-down__item'))[dropdownItemIndex] as HTMLElement;
+        const outlet = Array.from(fix.debugElement.nativeElement.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
+        const item = Array.from((outlet as HTMLElement).querySelectorAll('.igx-drop-down__item'))[dropdownItemIndex] as HTMLElement;
         UIInteractions.simulateClickAndSelectEvent(item)
         tick();
         fix.detectChanges();
     }
 
-    public static selectFieldsInEditModeExpression(fix, deselectItemIndexes) {
-        QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
+    public static selectFieldsInEditModeExpression(fix, deselectItemIndexes, level = 0) {
+        QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix, level);
         fix.detectChanges();
 
-        const outlet = fix.debugElement.queryAll(By.css(`.igx-drop-down__list-scroll`))[1].nativeElement;
+        const outlet = Array.from(fix.debugElement.nativeElement.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
         deselectItemIndexes.forEach(index => {
-            const item = Array.from(outlet.querySelectorAll('.igx-drop-down__item'))[index] as HTMLElement;
+            const item = Array.from((outlet as HTMLElement).querySelectorAll('.igx-drop-down__item'))[index] as HTMLElement;
             UIInteractions.simulateClickAndSelectEvent(item)
             tick();
             fix.detectChanges();
@@ -494,23 +500,83 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static selectColumnInEditModeExpression(fix, dropdownItemIndex: number) {
-        QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
+    public static selectColumnInEditModeExpression(fix, dropdownItemIndex: number, level = 0) {
+        QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix, level);
         fix.detectChanges();
 
-        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+        const searchClass = level === 0 ? QUERY_BUILDER_CLASS : `${QUERY_BUILDER_TREE}--level-${level}`
+        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${searchClass}`))[0].nativeElement;
         QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, dropdownItemIndex);
         tick();
         fix.detectChanges();
     }
 
-    public static selectOperatorInEditModeExpression(fix, dropdownItemIndex: number) {
-        QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
+    public static selectOperatorInEditModeExpression(fix, dropdownItemIndex: number, level = 0) {
+        QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix, level);
         fix.detectChanges();
-
-        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+        const searchClass = level === 0 ? QUERY_BUILDER_CLASS : `${QUERY_BUILDER_TREE}--level-${level}`
+        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${searchClass}`))[0].nativeElement;
         QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, dropdownItemIndex);
         tick();
+        fix.detectChanges();
+    }
+
+    public static addChildGroup(fix: ComponentFixture<any>, level: number) {
+        // Click the initial 'Add Or Group' button.
+        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1, level);
+        tick(100);
+        fix.detectChanges();
+
+        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
+        tick(100);
+        fix.detectChanges();
+
+        QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1, level); // Select 'ProductName' column.
+        QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, level); // Select 'Contains' operator.
+        const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, level).querySelector('input');
+        UIInteractions.clickAndSendInputElementValue(input, 'a');
+        tick(100);
+        fix.detectChanges();
+
+        //Commit the populated expression.
+        QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, level);
+        fix.detectChanges();
+    }
+
+    public static addAndValidateChildGroup(fix: ComponentFixture<any>, level: number) {
+        // Click the initial 'Add Or Group' button.
+        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1, level);
+        tick(100);
+        fix.detectChanges();
+
+        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false, false, false, false, false, level);
+        // Enter values in the nested query
+        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
+        tick(100);
+        fix.detectChanges();
+
+        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, false, false, false, level);
+
+        QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1, level); // Select 'ProductName' column.
+
+        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, false, false, level);
+
+        QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, level); // Select 'Contains' operator.
+
+        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, false, level);
+
+        const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, level).querySelector('input');
+        UIInteractions.clickAndSendInputElementValue(input, 'a');
+        tick(100);
+        fix.detectChanges();
+
+        // Verify all inputs
+        QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false, level - 1); // Parent commit button should be disabled
+        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, true, level);
+        QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released', 'ProductName', 'Contains', 'a', level);
+
+        //Commit the populated expression.
+        QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, level);
         fix.detectChanges();
     }
 }

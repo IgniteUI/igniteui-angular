@@ -210,7 +210,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, false, false, false);
             // Select fields
-            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [1, 2])
+            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [2, 3])
             tick(100);
             fix.detectChanges();
             QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, false, false, false);
@@ -301,11 +301,12 @@ describe('IgxQueryBuilder', () => {
             // TO DO: refactor when overlay issue is fixed
             const outlet = fix.debugElement.queryAll(By.css(`.igx-drop-down__list-scroll`))[1].nativeElement;
             const dropdownItems = Array.from(outlet.querySelectorAll('.igx-drop-down__item'));;
-            expect(dropdownItems.length).toBe(4);
-            expect((dropdownItems[0] as HTMLElement).innerText).toBe('Id');
-            expect((dropdownItems[1] as HTMLElement).innerText).toBe('ProductName');
-            expect((dropdownItems[2] as HTMLElement).innerText).toBe('OrderId');
-            expect((dropdownItems[3] as HTMLElement).innerText).toBe('Released');
+            expect(dropdownItems.length).toBe(5);
+            expect((dropdownItems[0] as HTMLElement).innerText).toBe('Select All');
+            expect((dropdownItems[1] as HTMLElement).innerText).toBe('Id');
+            expect((dropdownItems[2] as HTMLElement).innerText).toBe('ProductName');
+            expect((dropdownItems[3] as HTMLElement).innerText).toBe('OrderId');
+            expect((dropdownItems[4] as HTMLElement).innerText).toBe('Released');
         }));
 
         it('Column dropdown should contain proper fields based on the entity.', fakeAsync(() => {
@@ -693,6 +694,85 @@ describe('IgxQueryBuilder', () => {
             flush();
         }));
 
+        it('Should correctly apply an \'in\' column condition through UI.', fakeAsync(() => {
+            // Verify there is no expression.
+            expect(queryBuilder.expressionTree).toBeUndefined();
+
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+
+            // Verify inputs states
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
+
+            // Should render empty query builder tree
+            const nestedTree = fix.debugElement.query(By.css(QUERY_BUILDER_TREE));
+            expect(nestedTree).toBeDefined();
+
+            QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
+
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "field": "OrderId",
+      "condition": {
+        "name": "in",
+        "isUnary": false,
+        "iconName": "in"
+      },
+      "conditionName": null,
+      "ignoreCase": true,
+      "searchVal": null,
+      "searchTree": {
+        "filteringOperands": [
+          {
+            "field": "ProductName",
+            "condition": {
+              "name": "contains",
+              "isUnary": false,
+              "iconName": "filter_contains"
+            },
+            "conditionName": null,
+            "ignoreCase": true,
+            "searchVal": "a",
+            "searchTree": null
+          }
+        ],
+        "operator": 1,
+        "entity": "Products",
+        "returnFields": [
+          "Id",
+          "ProductName",
+          "OrderId",
+          "Released"
+        ]
+      }
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "OrderId",
+    "OrderName",
+    "OrderDate"
+  ]
+}`);
+        }));
+
         it('Should display an alert dialog when the entity is changed.', fakeAsync(() => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
             const queryTreeElement = queryBuilderElement.querySelector(`.${QUERY_BUILDER_TREE}`);
@@ -816,13 +896,12 @@ describe('IgxQueryBuilder', () => {
             fixture.detectChanges();
 
             const tabElements = QueryBuilderFunctions.getTabbableElements();
-            
+
             let i = 0;
-            while(i)
-            {
-                let elementHtml = tabElements[i].outerHTML;
-                
-                switch(i){
+            while (i) {
+                const elementHtml = tabElements[i].outerHTML;
+
+                switch (i) {
                     case 0: expect(elementHtml).toBe('<div tabindex="0" class="igx-filter-tree__line igx-filter-tree__line--and" ng-reflect-ng-class="[object Object]"></div>'); break;
                     case 1: expect(elementHtml).toBe('<input _ngcontent-a-c2154189058="" type="text" igxinput="" readonly="true" role="combobox" aria-haspopup="listbox" class="input igx-input-group__input" ng-reflect-target="[object Object]" ng-reflect-disabled="false" ng-reflect-value="" aria-labelledby="igx-label-0" aria-expanded="false" aria-owns="igx-drop-down-0-list" aria-required="false">'); break;
                     case 2: expect(elementHtml).toBe('<input igxinput="" name="comboInput" type="text" readonly="" role="combobox" aria-haspopup="listbox" ng-reflect-value="" ng-reflect-disabled="false" aria-expanded="false" aria-controls="igx-drop-down-1-list" aria-labelledby="igx-label-1" aria-required="false" class="igx-input-group__input">'); break;
@@ -833,15 +912,15 @@ describe('IgxQueryBuilder', () => {
                     case 7: expect(elementHtml).toBe('<igx-chip ng-reflect-target="[object Object]" ng-reflect-data="[object Object]" ng-reflect-removable="true" id="igx-chip-4" role="option" tabindex="0" aria-selected="false" class="igx-chip"><div ghostclass="igx-chip__ghost" igxdrop="" class="igx-chip__item igx-drag igx-drag--select-disabled" ng-reflect-data="[object Object]" ng-reflect-ghost-class="igx-chip__ghost" ng-reflect-ghost-style="[object Object]" droppable="true" style="visibility: visible; transition-duration: 0s;"><div class="igx-chip__start"><!--bindings={\n  "ng-reflect-ng-if": "false"\n}--><span igxprefix="" class="igx-filter-tree__expression-column"> OrderDate </span></div><div class="igx-chip__content"><span class="igx-filter-tree__expression-condition"> After </span></div><div class="igx-chip__end"><span igxsuffix=""><!--bindings={}--> Aug 29, 2024 <!--ng-container--><!--bindings={\n  "ng-reflect-ng-if": "true"\n}--></span><!--bindings={\n  "ng-reflect-ng-if": "true"\n}--><div class="igx-chip__remove" tabindex="0"><igx-icon family="default" name="remove" ng-reflect-family="default" ng-reflect-name="remove" aria-label="remove chip" aria-hidden="true" class="igx-icon material-icons"><!--container-->cancel<!--container--><!--container--></igx-icon><!--bindings={\n  "ng-reflect-ng-template-outlet": "[object Object]"\n}--></div><!--bindings={\n  "ng-reflect-ng-if": "true"\n}--></div></div><!--container--><!--container--><!--container--></igx-chip>'); break;
                     case 8: expect(elementHtml).toBe('<div class="igx-chip__remove" tabindex="0"><igx-icon family="default" name="remove" ng-reflect-family="default" ng-reflect-name="remove" aria-label="remove chip" aria-hidden="true" class="igx-icon material-icons"><!--container-->cancel<!--container--><!--container--></igx-icon><!--bindings={\n  "ng-reflect-ng-template-outlet": "[object Object]"\n}--></div>'); break;
                     case 9: expect(elementHtml).toBe('<button type="button" igxbutton="outlined" ng-reflect-type="outlined" ng-reflect-disabled="false" role="button" class="igx-button igx-button--outlined"><igx-icon family="default" name="add" ng-reflect-family="default" ng-reflect-name="add" aria-hidden="true" class="igx-icon material-icons"><!--container-->add<!--container--><!--container--></igx-icon><!--bindings={\n  "ng-reflect-ng-template-outlet": "[object Object]"\n}--><span>Condition</span></button>'); break;
-                    case 10:expect(elementHtml).toBe('<button type="button" igxbutton="outlined" ng-reflect-type="outlined" ng-reflect-disabled="false" role="button" class="igx-button igx-button--outlined"><igx-icon family="default" name="add" ng-reflect-family="default" ng-reflect-name="add" aria-hidden="true" class="igx-icon material-icons"><!--container-->add<!--container--><!--container--></igx-icon><!--bindings={\n  "ng-reflect-ng-template-outlet": "[object Object]"\n}--><span>"And" Group</span></button>'); break;
-                    case 11:expect(elementHtml).toBe('<button type="button" igxbutton="outlined" ng-reflect-type="outlined" ng-reflect-disabled="false" role="button" class="igx-button igx-button--outlined"><igx-icon family="default" name="add" ng-reflect-family="default" ng-reflect-name="add" aria-hidden="true" class="igx-icon material-icons"><!--container-->add<!--container--><!--container--></igx-icon><!--bindings={\n  "ng-reflect-ng-template-outlet": "[object Object]"\n}--><span>"Or" Group</span></button>'); break; 
+                    case 10: expect(elementHtml).toBe('<button type="button" igxbutton="outlined" ng-reflect-type="outlined" ng-reflect-disabled="false" role="button" class="igx-button igx-button--outlined"><igx-icon family="default" name="add" ng-reflect-family="default" ng-reflect-name="add" aria-hidden="true" class="igx-icon material-icons"><!--container-->add<!--container--><!--container--></igx-icon><!--bindings={\n  "ng-reflect-ng-template-outlet": "[object Object]"\n}--><span>"And" Group</span></button>'); break;
+                    case 11: expect(elementHtml).toBe('<button type="button" igxbutton="outlined" ng-reflect-type="outlined" ng-reflect-disabled="false" role="button" class="igx-button igx-button--outlined"><igx-icon family="default" name="add" ng-reflect-family="default" ng-reflect-name="add" aria-hidden="true" class="igx-icon material-icons"><!--container-->add<!--container--><!--container--></igx-icon><!--bindings={\n  "ng-reflect-ng-template-outlet": "[object Object]"\n}--><span>"Or" Group</span></button>'); break;
                     default: i = undefined; break;
                 }
 
                 i++;
             }
         }));
-        
+
         it('Should select/deselect a chip when pressing "Enter"/"space" on it.', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
             tick();
@@ -903,7 +982,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyChipSelectedState(chips[0], false);
             QueryBuilderFunctions.verifyChipSelectedState(chips[3], false);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
-        }));       
+        }));
     });
 
     describe('Localization', () => {
