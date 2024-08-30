@@ -461,16 +461,19 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static getTabbableElements() {
+    /*
+    * Get tabbable elements in a container element. Result is returned as node elements ordered they way they will be tabbed 
+    */
+    public static getTabbableElements(inElement: HTMLElement) {
         const focusableElements =
-            'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
-
+          'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+          
         return Array.prototype.filter.call(
-            document.querySelectorAll(focusableElements),
+            inElement.querySelectorAll(focusableElements),
             element => {
                 return (element.offsetWidth > 0 || element.offsetHeight > 0);
             }
-        );
+          );
     }
 
     public static selectEntityInEditModeExpression(fix: ComponentFixture<any>, dropdownItemIndex: number, level = 0) {
