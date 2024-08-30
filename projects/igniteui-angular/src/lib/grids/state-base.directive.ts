@@ -267,11 +267,18 @@ export class IgxGridStateBaseDirective {
             restoreFeatureState: (context: IgxGridStateBaseDirective, state: IGroupingState): void => {
                 const grid = context.currGrid as IgxGridComponent;
                 grid.groupingExpressions = state.expressions as IGroupingExpression[];
+                state.expansion.forEach(exp => {
+                    exp.hierarchy.forEach(h => {
+                        const dataType = grid.columns.find(c => c.field === h.fieldName).dataType;
+                        if (dataType.includes(GridColumnDataType.Date) || dataType.includes(GridColumnDataType.Time)) {
+                            h.value = h.value ? new Date(Date.parse(h.value)) : h.value;
+                        }
+                    });
+                });
                 if (grid.groupsExpanded !== state.defaultExpanded) {
                     grid.toggleAllGroupRows();
-                } else {
-                    grid.groupingExpansionState = state.expansion as IGroupByExpandState[];
                 }
+                grid.groupingExpansionState = state.expansion as IGroupByExpandState[];
             }
         },
         paging: {
