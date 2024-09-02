@@ -1338,6 +1338,34 @@ describe('IgxQueryBuilder', () => {
 
     describe('Localization', () => {
         it('', () => { });
+        //Move to interaction
+        {
+            it('Should close the condition that is currently in edit mode when the "close" button is clicked', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+                tick();
+                fixture.detectChanges();
+    
+                //Select chip
+                const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[3];    
+                QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
+
+                //Open edit mode
+                const editBtn = chip.parent.queryAll(By.css('.igx-icon')).find(i=> i.nativeElement.innerText === "edit");
+                editBtn.nativeElement.click();
+                tick();
+                fixture.detectChanges();
+
+                //Close edit mode
+                const closeBtn = fixture.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[2]
+                                                        .queryAll(By.css('.igx-icon'))
+                                                        .find(i=> i.nativeElement.innerText === "close");    
+                closeBtn.nativeElement.click();
+                tick();
+                fixture.detectChanges();
+
+                expect(chip.nativeElement.innerText).toContain('OrderId  Greater Than  3');
+            }));
+        }
     });
 
     describe('Overlay settings', () => {
