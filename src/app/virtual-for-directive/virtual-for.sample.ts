@@ -10,6 +10,7 @@ import { IgxForOfDirective, ButtonGroupAlignment, IgxListComponent, IgxButtonDir
     styleUrls: ['virtual-for.sample.css'],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
+    providers: [RemoteService],
     imports: [IgxAvatarComponent,IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, NgClass, AsyncPipe]
 })
 export class VirtualForSampleComponent implements OnInit {
