@@ -558,7 +558,7 @@ export class WorksheetFile implements IExcelFile {
         let result = '';
         const currencyInfo = this.currencyStyleMap.get(col.currencyCode);
 
-        switch(type.toLowerCase()) {
+        switch(type?.toString().toLowerCase()) {
             case "count":
                 return `"Count: "&amp;_xlfn.COUNTIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel})`
             case "min":
