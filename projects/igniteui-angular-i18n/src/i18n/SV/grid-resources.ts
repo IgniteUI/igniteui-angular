@@ -113,6 +113,7 @@ const GridResourceStringsSV_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Lossa alla',
     igx_grid_row_edit_btn_done: 'Klar',
     igx_grid_row_edit_btn_cancel: 'Avbryt',
+    igx_grid_row_edit_text: 'Du har {0} ändringar i den här raden och {1} dolda kolumner',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrera kolumnlista ...',
     igx_grid_toolbar_pinning_button_tooltip: 'Öppna rullgardinsmenyn med kolumnfästning',
     igx_grid_toolbar_hiding_button_tooltip: 'Öppna rullgardinsmenyn som döljer kolumnen',
