@@ -1,0 +1,20 @@
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+.igx-drop-down__list {
+
+    padding: rem(4px);
+
+    .igx-drop-down__item {
+        padding-inline: rem(12px);
+
+        .igx-icon {
+            --size: #{rem(20px)};
+            --item-icon-color: #{color($color: 'primary', $variant: 500)};
+            --hover-item-icon-color: #{color($color: 'primary', $variant: 500)};
+        }
+    }
+
+    .igx-drop-down__inner {
+        font-size: rem(14px);
+    }
+}
