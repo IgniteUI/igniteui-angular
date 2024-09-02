@@ -111,6 +111,7 @@ const GridResourceStringsFR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Détacher tout',
     igx_grid_row_edit_btn_done: 'Terminé',
     igx_grid_row_edit_btn_cancel: 'Annuler',
+    igx_grid_row_edit_text: 'Vous avez {0} modifications dans cette ligne et {1} colonnes masquées',
     igx_grid_toolbar_actions_filter_prompt: 'Filtre liste des colonnes ...',
     igx_grid_toolbar_pinning_button_tooltip: 'Ouvrir le menu pour attacher les colonnes',
     igx_grid_toolbar_hiding_button_tooltip: 'Ouvrir le menu pour masquer les colonnes',

@@ -8,6 +8,8 @@ import { CalendarDay } from "../common/model";
 import { DateRangeDescriptor, DateRangeType } from "igniteui-webcomponents";
 import { ScrollDirection } from "../calendar";
 
+const TODAY = new Date(2024, 6, 12);
+
 describe("Days View Component", () => {
     configureTestSuite();
     const baseClass = "igx-days-view";
@@ -71,10 +73,9 @@ describe("Days View Component", () => {
     });
 
     it("should set activeDate to the first day of the current month when no value is provided", () => {
-        const today = new Date();
         const firstMonthDay = new Date(
-            today.getFullYear(),
-            today.getMonth(),
+            TODAY.getFullYear(),
+            TODAY.getMonth(),
             1,
         );
         const fixture = TestBed.createComponent(InitDaysViewComponent);
@@ -115,12 +116,11 @@ describe("Days View Component", () => {
         let fixture: ComponentFixture<InitDaysViewComponent>;
         let el: HTMLElement;
         let instance: IgxDaysViewComponent;
-        const today = new Date();
         const firstDay = CalendarDay.from(
-            new Date(today.getFullYear(), today.getMonth(), 1),
+            new Date(TODAY.getFullYear(), TODAY.getMonth(), 1),
         );
         const lastDay = CalendarDay.from(
-            new Date(today.getFullYear(), today.getMonth() + 1, 0),
+            new Date(TODAY.getFullYear(), TODAY.getMonth() + 1, 0),
         );
 
         beforeEach(waitForAsync(() => {
@@ -397,13 +397,13 @@ function getInactiveDays(fixture: ComponentFixture<InitDaysViewComponent>) {
 class InitDaysViewComponent {
     @ViewChild(IgxDaysViewComponent, { static: true })
     public instance: IgxDaysViewComponent;
-    protected date = new Date();
+    public date = TODAY;
     protected disabledDates: DateRangeDescriptor[] = [
         {
             type: DateRangeType.Specific,
             dateRange: [
-                new Date(this.date.getFullYear(), this.date.getMonth(), 12),
-                new Date(this.date.getFullYear(), this.date.getMonth(), 24),
+                new Date(TODAY.getFullYear(), TODAY.getMonth(), 12),
+                new Date(TODAY.getFullYear(), TODAY.getMonth(), 24),
             ],
         },
     ];
