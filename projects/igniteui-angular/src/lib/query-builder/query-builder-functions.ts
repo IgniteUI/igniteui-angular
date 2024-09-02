@@ -12,6 +12,7 @@ const QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
 const QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
 const CSS_CLASS_DROPDOWN_LIST_SCROLL = 'igx-drop-down__list-scroll';
+const CHIP_SELECT_CLASS = '.igx-chip__select';
 
 export class QueryBuilderFunctions {
     public static generateExpressionTree(): FilteringExpressionsTree {
@@ -385,10 +386,15 @@ export class QueryBuilderFunctions {
     };
 
     public static verifyChipSelectedState = (chip: DebugElement, shouldBeSelected: boolean) => {
-        if (shouldBeSelected)
-            expect(chip.attributes['ng-reflect-selected'] === 'true').toBeTruthy("Chip should have been selected");
-        else
-            expect(chip.attributes['ng-reflect-selected'] === 'true').toBeFalsy("Chip should have been deselected");
+        const chipItem = chip.query(By.css('.igx-chip__item'));
+        if (shouldBeSelected) {
+            expect(chipItem.nativeElement.classList.contains('igx-chip__item--selected')).toBe(true, "Chip should have been selected");
+            expect(chipItem.query(By.css(CHIP_SELECT_CLASS))).not.toBeNull();
+        }
+        else {
+            expect(chipItem.nativeElement.classList.contains('igx-chip__item--selected')).toBe(false, "Chip should have been deselected");
+            expect(chipItem.query(By.css(CHIP_SELECT_CLASS))).toBeNull();
+        }
     };
 
     public static verifyQueryBuilderTabbableElements = (fixture: ComponentFixture<any>) => {
