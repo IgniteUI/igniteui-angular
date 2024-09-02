@@ -929,6 +929,92 @@ describe('IgxQueryBuilder', () => {
 }`);
         }));
 
+        it('Should select/deselect a condition when its respective chip is clicked.', fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify first chip is not selected.
+            QueryBuilderFunctions.verifyExpressionChipSelection(fix, [0], false);
+
+            // Click first chip and verify it is selected.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
+            tick(200);
+            fix.detectChanges();
+            QueryBuilderFunctions.verifyExpressionChipSelection(fix, [0], true);
+
+            // Click first chip again and verify it is not selected.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
+            tick(200);
+            fix.detectChanges();
+            QueryBuilderFunctions.verifyExpressionChipSelection(fix, [0], false);
+        }));
+
+        it('Should display edit and add buttons when hovering a chip.', fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            // Verify actions container is not visible. (This container contains the 'edit' and the 'add' buttons.)
+            expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
+                .toBeNull('actions container is visible');
+
+            // Hover the first chip and verify actions container is visible.
+            UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
+            tick(50);
+            fix.detectChanges();
+            expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
+                .not.toBeNull('actions container is not visible');
+
+            // Unhover the first chip and verify actions container is not visible.
+            UIInteractions.unhoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
+            tick(50);
+            fix.detectChanges();
+            expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
+                .toBeNull('actions container is visible');
+        }));
+
+        it('Should select/deselect all child conditions and groups when clicking a group\'s operator line.', fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            const childGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, undefined);
+            childGroup.filteringOperands.push({
+                field: 'OrderNameName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
+                searchVal: 'a'
+            });
+            queryBuilder.expressionTree.filteringOperands.push(childGroup);
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            // Click root group's operator line and verify that the root group and all of its children become selected.
+            let rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
+            rootOperatorLine.click();
+            tick(200);
+            fix.detectChanges();
+            QueryBuilderFunctions.verifyChildrenSelection(QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix) as HTMLElement, true);
+
+            // Click root group's operator line again and verify that the root group and all of its children become unselected.
+            rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
+            rootOperatorLine.click();
+            tick(200);
+            fix.detectChanges();
+            QueryBuilderFunctions.verifyChildrenSelection(QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix) as HTMLElement, false);
+
+            // Click an inner group's operator line and verify its children become selected.
+            QueryBuilderFunctions.clickQueryBuilderTreeGroupOperatorLine(fix, [0]);
+            tick(200);
+            fix.detectChanges();
+            QueryBuilderFunctions.verifyChildrenSelection(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement, true);
+
+            // Click an inner group's operator line again and verify its children become unselected.
+            QueryBuilderFunctions.clickQueryBuilderTreeGroupOperatorLine(fix, [0]);
+            tick(200);
+            fix.detectChanges();
+            QueryBuilderFunctions.verifyChildrenSelection(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement, false);
+        }));
+
         it('Should display an alert dialog when the entity is changed.', fakeAsync(() => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
             const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`);
@@ -1112,7 +1198,7 @@ describe('IgxQueryBuilder', () => {
             expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
         }));
 
-        fit('Should create an "and"/"or" group from multiple selected conditions when the respective context menu button is clicked and delete conditions when "delete filters" is clicked.', fakeAsync(() => {
+        it('Should create an "and"/"or" group from multiple selected conditions when the respective context menu button is clicked and delete conditions when "delete filters" is clicked.', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
             tick();
             fixture.detectChanges();
@@ -1122,21 +1208,21 @@ describe('IgxQueryBuilder', () => {
             //OR group should have been created
             const orLine = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS}`));
             expect(orLine.length).toBe(1, "OR group was not created");
-            
+
             const orConditions = orLine[0].parent.queryAll(By.directive(IgxChipComponent));
             expect(orConditions[0].nativeElement.innerText).toContain('OrderId\nGreater Than', "Or group not grouping the right chip");
             expect(orConditions[1].nativeElement.innerText).toContain('OrderDate\nAfter', "Or group not grouping the right chip");
-            
+
             QueryBuilderFunctions.createGroupFromBottomTwoChips(fixture, "AND")
-            
+
             //AND group should have been created
             const andLine = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`));
             expect(andLine.length).toBe(3, "AND group was not created");
-            
+
             const andConditions = andLine[2].parent.queryAll(By.directive(IgxChipComponent));
             expect(andConditions[0].nativeElement.innerText).toContain('OrderId\nGreater Than', "Or group not grouping the right chip");
             expect(andConditions[1].nativeElement.innerText).toContain('OrderDate\nAfter', "Or group not grouping the right chip");
-            
+
             //Open Or group context menu
             andLine[2].nativeElement.click();
             tick();
@@ -1193,23 +1279,23 @@ describe('IgxQueryBuilder', () => {
 
             const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
-            QueryBuilderFunctions.verifyChipSelectedState(chip, false);
+            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
 
-            QueryBuilderFunctions.verifyChipSelectedState(chip, true);
+            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, true);
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
 
-            QueryBuilderFunctions.verifyChipSelectedState(chip, false);
+            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip, 200);
 
-            QueryBuilderFunctions.verifyChipSelectedState(chip, true);
+            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, true);
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip, 200);
 
-            QueryBuilderFunctions.verifyChipSelectedState(chip, false);
+            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
         }));
 
         it('Should select/deselect all child conditions/groups and open/close group context menu when pressing "Enter"/"space" on it.', fakeAsync(() => {
@@ -1220,32 +1306,32 @@ describe('IgxQueryBuilder', () => {
             const line = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[0];
             const chips = fixture.debugElement.queryAll(By.directive(IgxChipComponent));
 
-            QueryBuilderFunctions.verifyChipSelectedState(chips[0], false);
-            QueryBuilderFunctions.verifyChipSelectedState(chips[3], false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line);
 
-            QueryBuilderFunctions.verifyChipSelectedState(chips[0], true);
-            QueryBuilderFunctions.verifyChipSelectedState(chips[3], true);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, true);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, true);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line);
 
-            QueryBuilderFunctions.verifyChipSelectedState(chips[0], false);
-            QueryBuilderFunctions.verifyChipSelectedState(chips[3], false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line);
 
-            QueryBuilderFunctions.verifyChipSelectedState(chips[0], true);
-            QueryBuilderFunctions.verifyChipSelectedState(chips[3], true);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, true);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, true);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line);
 
-            QueryBuilderFunctions.verifyChipSelectedState(chips[0], false);
-            QueryBuilderFunctions.verifyChipSelectedState(chips[3], false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
         }));
     });

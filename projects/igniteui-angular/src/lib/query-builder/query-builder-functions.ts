@@ -445,14 +445,42 @@ export class QueryBuilderFunctions {
         }
     };
 
-    public static verifyChipSelectedState = (chip: DebugElement, shouldBeSelected: boolean) => {
-        const chipItem = chip.query(By.css('.igx-chip__item'));
+
+    public static verifyChipSelectedState = (chip: HTMLElement, shouldBeSelected: boolean) => {
+        const chipItem = chip.querySelector('.igx-chip__item');
         if (shouldBeSelected) {
-            expect(chipItem.nativeElement.classList.contains('igx-chip__item--selected')).toBe(true, "Chip should have been selected");
-            expect(chipItem.query(By.css(QueryBuilderConstants.CHIP_SELECT_CLASS))).not.toBeNull();
+            expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(true, "Chip should have been selected");
+            expect(chipItem.querySelector(QueryBuilderConstants.CHIP_SELECT_CLASS)).not.toBeNull();
         } else {
-            expect(chipItem.nativeElement.classList.contains('igx-chip__item--selected')).toBe(false, "Chip should have been deselected");
-            expect(chipItem.query(By.css(QueryBuilderConstants.CHIP_SELECT_CLASS))).toBeNull();
+            expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(false, "Chip should have been deselected");
+            expect(chipItem.querySelector(QueryBuilderConstants.CHIP_SELECT_CLASS)).toBeNull();
+        }
+    };
+
+    public static verifyExpressionChipSelection(fix, path: number[], shouldBeSelected: boolean) {
+        const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path) as HTMLElement;
+        QueryBuilderFunctions.verifyChipSelectedState(chip, shouldBeSelected);
+    };
+
+    /**
+     * Verifies that all children (operator lines and expression chips) of the provided 'parent' are selected.
+     */
+    public static verifyChildrenSelection(parent: HTMLElement, shouldBeSelected: boolean) {
+        const allOperatorLines: any[] = Array.from(parent.querySelectorAll('.igx-filter-tree__line'));
+        const allExpressionChips: any[] = Array.from(parent.querySelectorAll(`.igx-filter-tree__expression-item`));
+        for (const operatorLine of allOperatorLines) {
+            if(operatorLine.checkVisibility()){
+                QueryBuilderFunctions.verifyOperatorLineSelection(operatorLine, shouldBeSelected);
+            } else {
+                QueryBuilderFunctions.verifyOperatorLineSelection(operatorLine, false);
+            }
+        }
+        for (const expressionChip of allExpressionChips) {
+            if(expressionChip.checkVisibility()) {
+                QueryBuilderFunctions.verifyChipSelectedState(expressionChip, shouldBeSelected);
+            } else {
+                QueryBuilderFunctions.verifyChipSelectedState(expressionChip, false);
+            }
         }
     };
 
@@ -648,6 +676,14 @@ export class QueryBuilderFunctions {
         chipAddIcon.click();
     }
 
+    /**
+ * Click the operator line of the group that is located on the provided 'path'.
+ */
+    public static clickQueryBuilderTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
+        const operatorLine = QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, path) as HTMLElement;
+        operatorLine.click();
+    }
+
     /*
     * Hit a keyboard button upon element, wait for the desired time and detect changes
     */
@@ -785,11 +821,11 @@ export class QueryBuilderFunctions {
         let chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[3], 200);
         QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[4], 200);
-        
+
         //context menu should have opened
         let contextMenus = QueryBuilderFunctions.getContextMenus(fix);
         expect(contextMenus.length).toBe(2);
- 
+
         //Click 'create OR group'
         const kindButton = groupKind.toUpperCase() === "AND"? 0 :
                            groupKind.toUpperCase() === "OR"? 1 : null;
