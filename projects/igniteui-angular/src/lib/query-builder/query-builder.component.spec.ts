@@ -13,6 +13,7 @@ const QUERY_BUILDER_BODY = 'igx-query-builder__main';
 const QUERY_BUILDER_TREE = 'igx-query-builder-tree';
 const CHIP_SELECT_CLASS = '.igx-chip__select';
 const QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
+const QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
 
 describe('IgxQueryBuilder', () => {
     configureTestSuite();
@@ -1116,6 +1117,48 @@ describe('IgxQueryBuilder', () => {
 
             expect((toggleBtn.querySelector('igx-icon') as HTMLElement).innerText).toBe('unfold_more');
             expect(fix.debugElement.query(By.css(`.${QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
+        }));
+
+        fit('Should create an "and"/"or" group from multiple selected conditions when the respective context menu button is clicked and delete conditions when "delete filters" is clicked.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            QueryBuilderFunctions.createGroupFromBottomTwoChips(fixture, "OR")
+
+            //OR group should have been created
+            const orLine = fixture.debugElement.queryAll(By.css(`.${QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS}`));
+            expect(orLine.length).toBe(1, "OR group was not created");
+            
+            const orConditions = orLine[0].parent.queryAll(By.directive(IgxChipComponent));
+            expect(orConditions[0].nativeElement.innerText).toContain('OrderId\nGreater Than', "Or group not grouping the right chip");
+            expect(orConditions[1].nativeElement.innerText).toContain('OrderDate\nAfter', "Or group not grouping the right chip");
+            
+            QueryBuilderFunctions.createGroupFromBottomTwoChips(fixture, "AND")
+            
+            //AND group should have been created
+            const andLine = fixture.debugElement.queryAll(By.css(`.${QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`));
+            expect(andLine.length).toBe(3, "AND group was not created");
+            
+            const andConditions = andLine[2].parent.queryAll(By.directive(IgxChipComponent));
+            expect(andConditions[0].nativeElement.innerText).toContain('OrderId\nGreater Than', "Or group not grouping the right chip");
+            expect(andConditions[1].nativeElement.innerText).toContain('OrderDate\nAfter', "Or group not grouping the right chip");
+            
+            //Open Or group context menu
+            andLine[2].nativeElement.click();
+            tick();
+            fixture.detectChanges();
+
+            //Click Delete group
+            const contextMenus = QueryBuilderFunctions.getContextMenus(fixture);
+            const deleteButton = contextMenus[1].query(By.css('.igx-filter-contextual-menu__delete-btn'));
+            deleteButton.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+
+            //Group's conditions should have been deleted
+            const chips = fixture.debugElement.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toBe(3, "Chips ware not deleted");
         }));
     });
 

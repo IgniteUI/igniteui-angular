@@ -1,7 +1,7 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxIconComponent, IgxDateFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxIconComponent, IgxDateFilteringOperand, IgxChipComponent } from 'igniteui-angular';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
@@ -13,6 +13,7 @@ const QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
 const QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
 const CSS_CLASS_DROPDOWN_LIST_SCROLL = 'igx-drop-down__list-scroll';
 const CHIP_SELECT_CLASS = '.igx-chip__select';
+const QUERY_CONTEXT_MENU = 'igx-filter-contextual-menu';
 
 export class QueryBuilderFunctions {
     public static generateExpressionTree(): FilteringExpressionsTree {
@@ -322,6 +323,10 @@ export class QueryBuilderFunctions {
         const buttonsContainer: any = buttonsContainers[buttonsIndex];
         const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
         return buttons;
+    }
+
+    public static getContextMenus(fix: ComponentFixture<any>) {
+        return fix.debugElement.queryAll(By.css(`.${QUERY_CONTEXT_MENU}`));
     }
 
     /**
@@ -771,4 +776,23 @@ export class QueryBuilderFunctions {
         QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, level);
         fix.detectChanges();
     }
+
+    public static createGroupFromBottomTwoChips(fix: ComponentFixture<any>, groupKind: string) {
+        //Select bottom two chips
+        let chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[3], 200);
+        QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[4], 200);
+        
+        //context menu should have opened
+        let contextMenus = QueryBuilderFunctions.getContextMenus(fix);
+        expect(contextMenus.length).toBe(2);
+ 
+        //Click 'create OR group'
+        const kindButton = groupKind.toUpperCase() === "AND"? 0 :
+                           groupKind.toUpperCase() === "OR"? 1 : null;
+        const orButton = contextMenus[1].queryAll(By.css('.igx-button'))[kindButton];
+        orButton.nativeElement.click();
+        tick();
+        fix.detectChanges();
+     }
 }
