@@ -331,8 +331,8 @@ export class ColumnDefinitions {
     `;
 
     public static generatedWithColumnBasedSummariesAndDataType = `
-    <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [hasSummary]="c.hasSummary" [dataType]="c.dataType"></igx-column>
-`;
+        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [hasSummary]="c.hasSummary" [dataType]="c.dataType"></igx-column>
+    `;
 
     public static generatedEditable = `
     <igx-column *ngFor="let col of columns"
