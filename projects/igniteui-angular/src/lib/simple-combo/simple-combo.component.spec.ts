@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
@@ -574,7 +574,10 @@ describe('IgxSimpleCombo', () => {
                     ReactiveFormsModule,
                     FormsModule,
                     IgxSimpleComboSampleComponent,
-                    IgxSimpleComboEmptyComponent
+                    IgxSimpleComboEmptyComponent,
+                    IgxSimpleComboFormControlRequiredComponent,
+                    IgxSimpleComboFormWithFormControlComponent,
+                    IgxSimpleComboNgModelComponent
                 ]
             }).compileComponents();
         }));
@@ -771,6 +774,176 @@ describe('IgxSimpleCombo', () => {
             }).not.toThrow();
             expect(fixture.componentInstance.combo).toBeDefined();
         });
+        it('should not show clear icon button when no value is selected initially with FormControl and required', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboFormControlRequiredComponent);
+            fixture.detectChanges();
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+
+            comboComponent.formControl.setValue(1);
+            tick();
+            fixture.detectChanges();
+
+            const clearButtonAfterSelection = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButtonAfterSelection).not.toBeNull();
+        }));
+        it('should not show clear icon button when no value is selected initially in a form with FormControl', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboFormWithFormControlComponent);
+            fixture.detectChanges();
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+
+            comboComponent.formControl.setValue(1);
+            tick();
+            fixture.detectChanges();
+
+            const clearButtonAfterSelection = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButtonAfterSelection).not.toBeNull();
+        }));
+        it('should show clear icon button when valid value is set with ngModel', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboNgModelComponent);
+            fixture.detectChanges();
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+
+            comboComponent.selectedItem = { id: 1, text: 'Option 1' };
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                const clearButtonAfterSelection = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+                expect(clearButtonAfterSelection).not.toBeNull();
+            });
+        }));
+        it('should show clear icon button when falsy value is set with ngModel', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboNgModelComponent);
+            fixture.detectChanges();
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+
+            comboComponent.selectedItem = null;
+            tick();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                const clearButtonAfterFalsyValue = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+                expect(clearButtonAfterFalsyValue).not.toBeNull();
+            });
+        }));
+        it('should show clear icon button when valid value is set with reactive form', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboFormWithFormControlComponent);
+            fixture.detectChanges();
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+
+            comboComponent.formControl.setValue({ id: 2, text: 'Option 2' });
+            tick();
+            fixture.detectChanges();
+
+            const clearButtonAfterSelection = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButtonAfterSelection).not.toBeNull();
+        }));
+        it('should show clear icon button when falsy value is set with reactive form', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboFormWithFormControlComponent);
+            fixture.detectChanges();
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+
+            comboComponent.formControl.setValue('');
+            tick();
+            fixture.detectChanges();
+
+            const clearButtonAfterFalsyValue = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButtonAfterFalsyValue).not.toBeNull();
+        }));
+        it('should not show clear icon button when empty string is set with ngModel', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboNgModelComponent);
+            fixture.detectChanges();
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+
+            comboComponent.selectedItem = '';
+            tick();
+            fixture.detectChanges();
+
+            const clearButtonAfterEmptyString = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButtonAfterEmptyString).toBeNull();
+        }));
+        it('should not show clear icon button when undefined value is set with ngModel', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboNgModelComponent);
+            fixture.detectChanges();
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+
+            comboComponent.selectedItem = undefined;
+            tick();
+            fixture.detectChanges();
+
+            const clearButtonAfterUndefined = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButtonAfterUndefined).toBeNull();
+        }));
+        it('should show clear icon button when empty object is set with ngModel', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboNgModelComponent);
+            fixture.detectChanges();
+
+            const comboComponent = fixture.componentInstance;
+            tick();
+            fixture.detectChanges();
+
+            const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+
+            comboComponent.selectedItem = {};
+            tick();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                const clearButtonAfterEmptyObject = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+                expect(clearButtonAfterEmptyObject).not.toBeNull();
+            });
+        }));
     });
 
     describe('Binding tests: ', () => {
@@ -3112,5 +3285,91 @@ export class IgxBottomPositionSimpleComboComponent {
                 });
             });
         }
+    }
+}
+
+@Component({
+    template: `
+        <igx-simple-combo [data]="items" [valueKey]="'id'" [displayKey]="'text'" [formControl]="formControl" required></igx-simple-combo>
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
+})
+export class IgxSimpleComboFormControlRequiredComponent implements OnInit {
+    public items: any[];
+
+    public formControl: FormControl = new FormControl();
+
+    constructor() { }
+
+    public ngOnInit() {
+        this.items = [
+            { id: 1, text: 'Option 1' },
+            { id: 2, text: 'Option 2' },
+            { id: 3, text: 'Option 3' },
+            { id: 4, text: 'Option 4' },
+            { id: 5, text: 'Option 5' }
+        ];
+    }
+}
+
+@Component({
+    template: `
+        <form [formGroup]="formGroup">
+            <igx-simple-combo
+              name="simpleCombo"
+              [formControl]="formControl"
+              [data]="items"
+              [valueKey]="'id'"
+              [displayKey]="'text'">
+            </igx-simple-combo>
+        </form>
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
+})
+export class IgxSimpleComboFormWithFormControlComponent implements OnInit {
+    public items: any[];
+
+    public formGroup = new FormGroup({
+        simpleCombo: new FormControl()
+    });
+
+    public formControl: FormControl = new FormControl();
+
+    constructor() { }
+
+    public ngOnInit() {
+        this.items = [
+            { id: 1, text: 'Option 1' },
+            { id: 2, text: 'Option 2' },
+            { id: 3, text: 'Option 3' },
+            { id: 4, text: 'Option 4' },
+            { id: 5, text: 'Option 5' }
+        ];
+    }
+}
+
+@Component({
+    template: `
+        <igx-simple-combo [data]="items" [(ngModel)]="selectedItem" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>
+    `,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
+})
+export class IgxSimpleComboNgModelComponent implements OnInit {
+    public items: any[];
+    public selectedItem: any;
+
+    constructor() { }
+
+    public ngOnInit() {
+        this.items = [
+            { id: 1, text: 'Option 1' },
+            { id: 2, text: 'Option 2' },
+            { id: 3, text: 'Option 3' },
+            { id: 4, text: 'Option 4' },
+            { id: 5, text: 'Option 5' }
+        ];
     }
 }
