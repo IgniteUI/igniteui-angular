@@ -113,6 +113,7 @@ const GridResourceStringsCS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Odepnout vše',
     igx_grid_row_edit_btn_done: 'Hotovo',
     igx_grid_row_edit_btn_cancel: 'Storno',
+    igx_grid_row_edit_text: 'V tomto řádku máte {0} změn a {1} skryté sloupce',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrovat seznam sloupců ...',
     igx_grid_toolbar_pinning_button_tooltip: 'Otevřít rozevírací nabídku připnout sloupec',
     igx_grid_toolbar_hiding_button_tooltip: 'Otevřít rozevírací nabídku skrýt sloupec',

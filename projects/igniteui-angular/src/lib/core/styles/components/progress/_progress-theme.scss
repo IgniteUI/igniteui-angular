@@ -526,7 +526,7 @@
     %circular-text {
         $scale-factor: 2.28571;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             $scale-factor: 3;
         }
 
