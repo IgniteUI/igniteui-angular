@@ -5,15 +5,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
-import { QueryBuilderFunctions } from './query-builder-functions';
+import { QueryBuilderFunctions, QueryBuilderConstants } from './query-builder-functions';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-
-const QUERY_BUILDER_CLASS = 'igx-query-builder';
-const QUERY_BUILDER_BODY = 'igx-query-builder__main';
-const QUERY_BUILDER_TREE = 'igx-query-builder-tree';
-const CHIP_SELECT_CLASS = '.igx-chip__select';
-const QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
-const QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
 
 describe('IgxQueryBuilder', () => {
     configureTestSuite();
@@ -39,7 +32,7 @@ describe('IgxQueryBuilder', () => {
 
     describe('Basic', () => {
         it('Should render empty Query Builder properly.', () => {
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
             expect(queryBuilderElement).toBeDefined();
             expect(queryBuilderElement.children.length).toEqual(2);
 
@@ -47,13 +40,13 @@ describe('IgxQueryBuilder', () => {
             expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fix).textContent).toBe('and');
             expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fix).textContent).toBe('or');
             const queryTreeElement = queryBuilderElement.children[1];
-            expect(queryTreeElement).toHaveClass(QUERY_BUILDER_TREE);
+            expect(queryTreeElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_TREE);
 
             expect(queryBuilder.expressionTree).toBeUndefined();
 
             expect(queryTreeElement.children.length).toEqual(3);
             const bodyElement = queryTreeElement.children[0];
-            expect(bodyElement).toHaveClass(QUERY_BUILDER_BODY);
+            expect(bodyElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_BODY);
             expect(bodyElement.children.length).toEqual(2);
             expect(bodyElement.children[0]).toHaveClass('igx-query-builder__root');
 
@@ -68,9 +61,9 @@ describe('IgxQueryBuilder', () => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
 
-            const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QUERY_BUILDER_TREE))[0].nativeElement;
+            const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
             const bodyElement = queryTreeElement.children[0];
-            expect(bodyElement).toHaveClass(QUERY_BUILDER_BODY);
+            expect(bodyElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_BODY);
             expect(bodyElement.children.length).toEqual(2);
             // initial add "'and'/'or' group " buttons and empty filtering tree message should NOT be displayed
             expect(bodyElement.querySelectorAll(':scope > button').length).toEqual(0);
@@ -92,7 +85,7 @@ describe('IgxQueryBuilder', () => {
             // fields input should have proper value
             expect(queryBuilder.queryTree.selectedReturnFields.length).toEqual(3);
             // nested queries should be collapsed
-            const nestedQueryTrees = queryTreeExpressionContainer.querySelectorAll(QUERY_BUILDER_TREE);
+            const nestedQueryTrees = queryTreeExpressionContainer.querySelectorAll(QueryBuilderConstants.QUERY_BUILDER_TREE);
             for (let i = 0; i < nestedQueryTrees.length; i++) {
                 expect(nestedQueryTrees[i].checkVisibility()).toBeFalse();
             }
@@ -473,7 +466,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Column dropdown should contain proper fields based on the entity.', fakeAsync(() => {
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_TREE}`))[0].nativeElement;
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
@@ -495,7 +488,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Operator dropdown should contain operators based on the column\'s datatype (\'string\' or \'number\' or \'date\').', fakeAsync(() => {
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_TREE}`))[0].nativeElement;
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
@@ -549,7 +542,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Operator dropdown should contain operators based on the column\'s datatype (\'boolean\').', fakeAsync(() => {
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_TREE}`))[0].nativeElement;
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
@@ -877,7 +870,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
 
             // Should render empty query builder tree
-            const nestedTree = fix.debugElement.query(By.css(QUERY_BUILDER_TREE));
+            const nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
             expect(nestedTree).toBeDefined();
 
             QueryBuilderFunctions.addAndValidateChildGroup(fix, 1, 1);
@@ -937,8 +930,8 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should display an alert dialog when the entity is changed.', fakeAsync(() => {
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
-            const queryTreeElement = queryBuilderElement.querySelector(`.${QUERY_BUILDER_TREE}`);
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
+            const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`);
             const dialog = queryTreeElement.querySelector('igx-dialog');
             expect(dialog).toBeDefined();
 
@@ -1055,7 +1048,7 @@ describe('IgxQueryBuilder', () => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
 
-            const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QUERY_BUILDER_TREE))[0].nativeElement;
+            const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
             // Nested query tree should have expand collapse button
             const expressionItems = queryTreeElement.querySelectorAll('.igx-filter-tree__expression-item');
             expressionItems.forEach(item => {
@@ -1086,23 +1079,23 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.addChildGroup(fix, 0, 1);
 
             // Verify that the nested query is expanded
-            expect(fix.debugElement.query(By.css(`.${QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
 
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
             tick(100);
             fix.detectChanges();
 
             // Verify that the nested query is collapsed
-            expect(fix.debugElement.query(By.css(`.${QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
         }));
 
         it(`Should toggle the nested query on 'expand'/'collapse' button click.`, fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
 
-            expect(fix.debugElement.query(By.css(`.${QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
 
-            const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QUERY_BUILDER_TREE))[0].nativeElement;
+            const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
             // Nested query tree should have expand collapse button
             const expressionItems = Array.from(queryTreeElement.querySelectorAll('.igx-filter-tree__expression-item'));
             const expandableItem = expressionItems.filter(item =>
@@ -1116,7 +1109,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             expect((toggleBtn.querySelector('igx-icon') as HTMLElement).innerText).toBe('unfold_more');
-            expect(fix.debugElement.query(By.css(`.${QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
         }));
 
         fit('Should create an "and"/"or" group from multiple selected conditions when the respective context menu button is clicked and delete conditions when "delete filters" is clicked.', fakeAsync(() => {
@@ -1127,7 +1120,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.createGroupFromBottomTwoChips(fixture, "OR")
 
             //OR group should have been created
-            const orLine = fixture.debugElement.queryAll(By.css(`.${QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS}`));
+            const orLine = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS}`));
             expect(orLine.length).toBe(1, "OR group was not created");
             
             const orConditions = orLine[0].parent.queryAll(By.directive(IgxChipComponent));
@@ -1137,7 +1130,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.createGroupFromBottomTwoChips(fixture, "AND")
             
             //AND group should have been created
-            const andLine = fixture.debugElement.queryAll(By.css(`.${QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`));
+            const andLine = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`));
             expect(andLine.length).toBe(3, "AND group was not created");
             
             const andConditions = andLine[2].parent.queryAll(By.directive(IgxChipComponent));
@@ -1189,7 +1182,7 @@ describe('IgxQueryBuilder', () => {
             const editLine = fixture.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[1];
             QueryBuilderFunctions.verifyTabbableConditionEditLineElements(editLine);
 
-            const editDialog = fixture.debugElement.queryAll(By.css(`.${QUERY_BUILDER_BODY}`))[1];
+            const editDialog = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_BODY}`))[1];
             QueryBuilderFunctions.verifyTabbableInConditionDialogElements(editDialog);
         }));
 
@@ -1224,7 +1217,7 @@ describe('IgxQueryBuilder', () => {
             tick();
             fixture.detectChanges();
 
-            const line = fixture.debugElement.queryAll(By.css(`.${QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[0];
+            const line = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[0];
             const chips = fixture.debugElement.queryAll(By.directive(IgxChipComponent));
 
             QueryBuilderFunctions.verifyChipSelectedState(chips[0], false);

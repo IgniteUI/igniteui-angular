@@ -5,15 +5,18 @@ import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, Ig
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
-const QUERY_BUILDER_CLASS = 'igx-query-builder';
-const QUERY_BUILDER_HEADER = 'igx-query-builder__header';
-const QUERY_BUILDER_TREE = 'igx-query-builder-tree';
-const QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
-const QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
-const QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
-const CSS_CLASS_DROPDOWN_LIST_SCROLL = 'igx-drop-down__list-scroll';
-const CHIP_SELECT_CLASS = '.igx-chip__select';
-const QUERY_CONTEXT_MENU = 'igx-filter-contextual-menu';
+export const QueryBuilderConstants = {
+    QUERY_BUILDER_CLASS : 'igx-query-builder',
+    QUERY_BUILDER_HEADER : 'igx-query-builder__header',
+    QUERY_BUILDER_TREE : 'igx-query-builder-tree',
+    QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS : 'igx-filter-tree__line--and',
+    QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS : 'igx-filter-tree__line--or',
+    QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS : 'igx-filter-tree__line--selected',
+    CSS_CLASS_DROPDOWN_LIST_SCROLL : 'igx-drop-down__list-scroll',
+    CHIP_SELECT_CLASS : '.igx-chip__select',
+    QUERY_CONTEXT_MENU : 'igx-filter-contextual-menu',
+    QUERY_BUILDER_BODY : 'igx-query-builder__main',
+}
 
 export class QueryBuilderFunctions {
     public static generateExpressionTree(): FilteringExpressionsTree {
@@ -54,8 +57,8 @@ export class QueryBuilderFunctions {
     }
 
     public static getQueryBuilderHeader(fix: ComponentFixture<any>) {
-        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
-        const header = queryBuilderElement.querySelector(`.${QUERY_BUILDER_HEADER}`);
+        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
+        const header = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_HEADER}`);
         return header;
     }
 
@@ -81,7 +84,7 @@ export class QueryBuilderFunctions {
      * Get the expressions container that contains all groups and expressions.
      */
     public static getQueryBuilderExpressionsContainer(fix: ComponentFixture<any>, level = 0) {
-        const searchClass = `${QUERY_BUILDER_TREE}--level-${level}`
+        const searchClass = `${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-${level}`
         const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${searchClass}`))[0].nativeElement;
         const exprContainer = queryBuilderElement.querySelector('.igx-query-builder__main');
         return exprContainer;
@@ -94,7 +97,7 @@ export class QueryBuilderFunctions {
     }
 
     public static getQueryBuilderAllGroups(fix: ComponentFixture<any>): any[] {
-        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QUERY_BUILDER_CLASS}`))[0].nativeElement;
+        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
         const allGroups = Array.from(QueryBuilderFunctions.getQueryBuilderTreeChildGroups(queryBuilderElement, false));
         return allGroups;
     }
@@ -258,7 +261,7 @@ export class QueryBuilderFunctions {
 
     public static getQueryBuilderSelectDropdown(queryBuilderElement: HTMLElement) {
         const outlet = QueryBuilderFunctions.getQueryBuilderOutlet(queryBuilderElement);
-        const selectDropdown = outlet.querySelector(`.${CSS_CLASS_DROPDOWN_LIST_SCROLL}`);
+        const selectDropdown = outlet.querySelector(`.${QueryBuilderConstants.CSS_CLASS_DROPDOWN_LIST_SCROLL}`);
         return selectDropdown;
     }
 
@@ -326,7 +329,7 @@ export class QueryBuilderFunctions {
     }
 
     public static getContextMenus(fix: ComponentFixture<any>) {
-        return fix.debugElement.queryAll(By.css(`.${QUERY_CONTEXT_MENU}`));
+        return fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_CONTEXT_MENU}`));
     }
 
     /**
@@ -337,16 +340,16 @@ export class QueryBuilderFunctions {
         expect(operator === 'and' || operator === 'or').toBe(true, 'operator must be \'and\' or \'or\'');
 
         if (operator === 'and') {
-            expect(operatorLine.classList.contains(QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS)).toBe(true, 'incorrect operator line');
-            expect(operatorLine.classList.contains(QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS)).toBe(false, 'incorrect operator line');
+            expect(operatorLine.classList.contains(QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS)).toBe(true, 'incorrect operator line');
+            expect(operatorLine.classList.contains(QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS)).toBe(false, 'incorrect operator line');
         } else {
-            expect(operatorLine.classList.contains(QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS)).toBe(false, 'incorrect operator line');
-            expect(operatorLine.classList.contains(QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS)).toBe(true, 'incorrect operator line');
+            expect(operatorLine.classList.contains(QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS)).toBe(false, 'incorrect operator line');
+            expect(operatorLine.classList.contains(QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS)).toBe(true, 'incorrect operator line');
         }
     }
 
     public static verifyOperatorLineSelection(operatorLine: HTMLElement, shouldBeSelected: boolean) {
-        expect(operatorLine.classList.contains(QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS))
+        expect(operatorLine.classList.contains(QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS))
             .toBe(shouldBeSelected, 'incorrect selection state of the operator line');
     }
 
@@ -446,10 +449,10 @@ export class QueryBuilderFunctions {
         const chipItem = chip.query(By.css('.igx-chip__item'));
         if (shouldBeSelected) {
             expect(chipItem.nativeElement.classList.contains('igx-chip__item--selected')).toBe(true, "Chip should have been selected");
-            expect(chipItem.query(By.css(CHIP_SELECT_CLASS))).not.toBeNull();
+            expect(chipItem.query(By.css(QueryBuilderConstants.CHIP_SELECT_CLASS))).not.toBeNull();
         } else {
             expect(chipItem.nativeElement.classList.contains('igx-chip__item--selected')).toBe(false, "Chip should have been deselected");
-            expect(chipItem.query(By.css(CHIP_SELECT_CLASS))).toBeNull();
+            expect(chipItem.query(By.css(QueryBuilderConstants.CHIP_SELECT_CLASS))).toBeNull();
         }
     };
 
@@ -701,7 +704,7 @@ export class QueryBuilderFunctions {
         QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix, level);
         fix.detectChanges();
 
-        const searchClass = `${QUERY_BUILDER_TREE}--level-${level}`
+        const searchClass = `${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-${level}`
         const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${searchClass}`))[0].nativeElement;
         QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, dropdownItemIndex);
         tick();
@@ -711,7 +714,7 @@ export class QueryBuilderFunctions {
     public static selectOperatorInEditModeExpression(fix, dropdownItemIndex: number, level = 0) {
         QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix, level);
         fix.detectChanges();
-        const searchClass = `${QUERY_BUILDER_TREE}--level-${level}`
+        const searchClass = `${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-${level}`
         const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${searchClass}`))[0].nativeElement;
         QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, dropdownItemIndex);
         tick();
