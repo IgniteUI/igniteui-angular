@@ -111,6 +111,7 @@ const GridResourceStringsJA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'すべて固定解除',
     igx_grid_row_edit_btn_done: '完了',
     igx_grid_row_edit_btn_cancel: 'キャンセル',
+    igx_grid_row_edit_text: 'この行には {0} 個の変更があり、{1} 個の非表示の列があります',
     igx_grid_toolbar_actions_filter_prompt: '列リストのフィルター',
     igx_grid_toolbar_pinning_button_tooltip: '列ピン固定のドロップダウンを開く',
     igx_grid_toolbar_hiding_button_tooltip: '列非表示のドロップダウンを開く',
