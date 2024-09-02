@@ -179,7 +179,7 @@
 </div>
 
 <ng-template #defaultRowEditText>
-    You have {{ rowChangesCount }} changes in this row and {{ hiddenColumnsCount }} hidden columns
+    {{ this.resourceStrings.igx_grid_row_edit_text | igxStringReplace:'{0}':rowChangesCount.toString() | igxStringReplace:'{1}':hiddenColumnsCount.toString() }}
 </ng-template>
 
 <ng-template #defaultRowEditActions>

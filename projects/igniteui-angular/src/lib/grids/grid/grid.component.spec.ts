@@ -513,7 +513,6 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Check for loaded rows in grid's container
-            fixture.componentInstance.grid.shouldGenerate = true;
             fixture.componentInstance.data = [
                 { Number: 1, String: '1', Boolean: true, Date: new Date(Date.now()) }
             ];
@@ -1914,6 +1913,42 @@ describe('IgxGrid Component Tests #grid', () => {
             const calcWidth = parseInt(grid.getColumnByName("field1").calcWidth);
             expect(calcWidth).toBe(126);
         });
+
+        it('should recreate columns when data changes and autoGenerate is true', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+
+            grid.width = '500px';
+            grid.height = '500px';
+            grid.autoGenerate = true;
+            fix.detectChanges();
+
+            const initialData = [
+                { id: 1, name: 'John' },
+                { id: 2, name: 'Jane' }
+            ];
+            grid.data = initialData;
+            tick();
+            fix.detectChanges();
+
+            expect(grid.columns.length).toBe(2);
+            expect(grid.columns[0].field).toBe('id');
+            expect(grid.columns[1].field).toBe('name');
+
+            const newData = [
+                { id: 1, firstName: 'John', lastName: 'Doe' },
+                { id: 2, firstName: 'Jane', lastName: 'Smith' }
+            ];
+            grid.data = newData;
+            tick();
+            fix.detectChanges();
+
+            expect(grid.columns.length).toBe(3);
+            expect(grid.columns[0].field).toBe('id');
+            expect(grid.columns[1].field).toBe('firstName');
+            expect(grid.columns[2].field).toBe('lastName');
+        }));
     });
 
     describe('IgxGrid - API methods', () => {
