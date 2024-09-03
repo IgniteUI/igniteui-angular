@@ -20,7 +20,12 @@ import {
     GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
     GroupedGridWithSummariesComponent,
     GridCurrencySummariesComponent,
-    GridUserMeetingDataComponent
+    GridUserMeetingDataComponent,
+    GridCustomSummaryComponent,
+    GridCustomSummaryWithNullAndZeroComponent,
+    GridCustomSummaryWithUndefinedZeroAndValidNumberComponent,
+    GridCustomSummaryWithUndefinedAndNullComponent,
+    GridCustomSummaryWithDateComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -75,7 +80,12 @@ describe('Excel Exporter', () => {
                 IgxHierarchicalGridSummariesExportComponent,
                 GroupedGridWithSummariesComponent,
                 GridCurrencySummariesComponent,
-                GridUserMeetingDataComponent
+                GridUserMeetingDataComponent,
+                GridCustomSummaryComponent,
+                GridCustomSummaryWithNullAndZeroComponent,
+                GridCustomSummaryWithUndefinedZeroAndValidNumberComponent,
+                GridCustomSummaryWithUndefinedAndNullComponent,
+                GridCustomSummaryWithDateComponent
             ]
         }).compileComponents();
     }));
@@ -1355,6 +1365,58 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.exportHierarchicalGridWithSummaries);
         });
+
+        it('should export grid with custom summaries, only with summary label as string', async () => {
+            fix = TestBed.createComponent(GridCustomSummaryComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportGridWithCustomSummaryOnlyWithSummaryLabel);
+        });
+
+        it('should export grid with custom summaries, with null and zero (as number)', async () => {
+            fix = TestBed.createComponent(GridCustomSummaryWithNullAndZeroComponent);
+            fix.detectChanges();
+            await wait(300);
+            
+            grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithNullAndZero);
+        });
+
+        it('should export grid with custom summaries, with undefined, zero and positive number (as number)', async () => {
+            fix = TestBed.createComponent(GridCustomSummaryWithUndefinedZeroAndValidNumberComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithUndefinedZeroAndValidNumber);
+        });
+
+        it('should export grid with custom summaries, with undefined and null', async () => {
+            fix = TestBed.createComponent(GridCustomSummaryWithUndefinedAndNullComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithUndefinedAndNull);
+        });
+
+        it('should export grid with custom summaries, with date', async () => {
+            fix = TestBed.createComponent(GridCustomSummaryWithDateComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithDate);
+        });
+
+
     });
 
     describe('', () => {
