@@ -1,41 +1,30 @@
-/// <reference path="components.ts" />
-import { ApplicationRef, importProvidersFrom } from '@angular/core';
-import { createApplication } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserTestingModule } from '@angular/platform-browser/testing';
-import { IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxPaginatorComponent, IgxPivotGridComponent } from 'igniteui-angular';
+import { IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
 import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
-import { registerConfig } from '../analyzer/elements.config';
-import { createIgxCustomElement } from './create-custom-element';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import hgridData from '../assets/data/projects-hgrid.js';
 import { SampleTestData } from 'igniteui-angular/src/lib/test-utils/sample-test-data.spec';
-import { ELEMENTS_TOKEN } from 'igniteui-angular/src/lib/core/utils';
-import { IgxGridStateComponent } from '../lib/state.component';
+import {
+    IgcGridComponent,
+    IgcHierarchicalGridComponent,
+    IgcPivotGridComponent,
+    IgcColumnComponent,
+    IgcPaginatorComponent,
+    IgcGridStateComponent,
+} from './components';
+import { defineComponents } from '../utils/register';
 
 describe('Elements: ', () => {
     let testContainer: HTMLDivElement;
-    let appRef: ApplicationRef;
 
     beforeAll(async () =>{
-        appRef = await createApplication({ providers: [
-            importProvidersFrom(BrowserTestingModule, NoopAnimationsModule),
-            { provide: ELEMENTS_TOKEN, useValue: true }
-        ]});
-
-        const column = createIgxCustomElement<IgxColumnComponent>(IgxColumnComponent, { injector: appRef.injector, registerConfig });
-        customElements.define("igc-column", column);
-        const grid = createIgxCustomElement<IgxGridComponent>(IgxGridComponent, { injector: appRef.injector, registerConfig });
-        customElements.define("igc-grid", grid);
-        const hgrid = createIgxCustomElement<IgxHierarchicalGridComponent>(IgxHierarchicalGridComponent, { injector: appRef.injector, registerConfig });
-        customElements.define("igc-hierarchical-grid", hgrid);
-        const pivotGrid = createIgxCustomElement<IgxPivotGridComponent>(IgxPivotGridComponent, { injector: appRef.injector, registerConfig });
-        customElements.define("igc-pivot-grid", pivotGrid);
-        const paginator = createIgxCustomElement<IgxPaginatorComponent>(IgxPaginatorComponent, { injector: appRef.injector, registerConfig });
-        customElements.define("igc-paginator", paginator);
-        const stateComponent = createIgxCustomElement<IgxGridStateComponent>(IgxGridStateComponent, { injector: appRef.injector, registerConfig });
-        customElements.define("igc-grid-state", stateComponent);
-
+        defineComponents(
+            IgcGridComponent,
+            IgcHierarchicalGridComponent,
+            IgcPivotGridComponent,
+            IgcColumnComponent,
+            IgcPaginatorComponent,
+            IgcGridStateComponent,
+        );
     });
 
     beforeEach(async () => {
@@ -47,12 +36,8 @@ describe('Elements: ', () => {
         document.body.removeChild(testContainer);
     });
 
-    afterAll(() => {
-        appRef.destroy();
-    })
-
     describe('IgxCustomNgElementStrategy', () => {
-        // TODO: Add Selectors to `registerConfig` & use the config to exercise all component relations, prop handling, etc
+        // TODO: Use the config to exercise all component relations, prop handling, etc
         // OR test strategy handling with dummy test component + config
         it(`should populate parent's content query`, async () => {
             const gridEl = document.createElement("igc-grid") as any as IgcNgElement;

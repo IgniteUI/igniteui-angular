@@ -1,4 +1,4 @@
-import { createEnvironmentInjector, EnvironmentInjector, importProvidersFrom, provideZoneChangeDetection, ɵChangeDetectionScheduler, ɵChangeDetectionSchedulerImpl } from '@angular/core';
+import { createEnvironmentInjector, EnvironmentInjector, getPlatform, importProvidersFrom, provideZoneChangeDetection, ɵChangeDetectionScheduler, ɵChangeDetectionSchedulerImpl } from '@angular/core';
 import { BrowserModule, platformBrowser } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { ELEMENTS_TOKEN } from 'igniteui-angular/src/lib/core/utils';
@@ -18,7 +18,8 @@ import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
 // The only actual async part of creating app are the initializers which we don't use/need
 // Recreation below of the rest of the process in order to get a working env injector for Elements
 
-const platformInjector = platformBrowser().injector;
+// TODO: https://angular.dev/api/core/PlatformRef#onDestroy for Icon service?
+const platformInjector = getPlatform()?.injector ?? platformBrowser().injector;
 
 // createEnvironmentInjector is a public wrapper around EnvironmentNgModuleRefAdapter
 // https://github.com/angular/angular/blob/969dadc8e2fad8ca9d892858bdadbe3abb13de95/packages/core/src/application/create_application.ts#L56C25-L56C54
