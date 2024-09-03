@@ -1382,7 +1382,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
         }));
 
-        it('Should select/deselect all child conditions/groups and open/close group context menu when pressing "Enter"/"space" on it.', fakeAsync(() => {
+        it('Should select/deselect all child conditions/groups and open/close group context menu when pressing "Enter"/"space" on its operator line.', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
             tick();
             fixture.detectChanges();
@@ -1501,6 +1501,43 @@ describe('IgxQueryBuilder', () => {
                 QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
                 tick(200);
                 fixture.detectChanges();
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+            }));
+
+            it('Should show/hide the group"s context menu when clicking its operator line and should close the context menu when clicking its close button.', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+                tick();
+                fixture.detectChanges();
+                
+                const andLine = fixture.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`));
+
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+
+                //Click line to open menu
+                andLine.nativeElement.click();
+                tick(200);
+                fixture.detectChanges();
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+                //Click line to close menu
+                andLine.nativeElement.click();
+                tick(200);
+                fixture.detectChanges();
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+
+                //Click line to open menu
+                andLine.nativeElement.click();
+                tick(200);
+                fixture.detectChanges();
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+                //Click close button to close menu
+                const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
+                const closeButton = contextMenu.query(By.css('.igx-filter-contextual-menu__close-btn'));
+                closeButton.nativeElement.click();
+                tick(200);
+                fixture.detectChanges();
+
                 QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
             }));
         }
