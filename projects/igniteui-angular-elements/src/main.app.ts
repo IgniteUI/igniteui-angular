@@ -1,4 +1,3 @@
-import * as components from './app/components';
-import { defineComponents } from './utils/register';
+import { defineAllComponents } from './utils/define-all';
 
-defineComponents(...Object.values(components));
+defineAllComponents();
