@@ -5371,7 +5371,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             }));
 
         it('Should filter ISO 8601 dates for date column ignoring the time portion - issue #14643', fakeAsync(() => {
-            // add hours part to the ReleaseDate so some records differ only by the time portion
+            // Add hours part to the ReleaseDate so some records differ only by the time portion
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
 
@@ -5392,9 +5392,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu);
+            const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu)[1];
 
-            checkbox[1].click();
+            checkbox.click();
             tick();
             fix.detectChanges();
 
@@ -5412,6 +5412,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cell2 = GridFunctions.getRowCells(fix, 3)[4].nativeElement;
             expect(cell1.textContent.toString()).toEqual(cell2.textContent.toString());
             expect(rows.length).toBe(6, 'incorrect number of rows');
+
+            //Check if checkboxes have correct state on ESF menu reopening
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix));
+            expect(checkboxes[0].indeterminate).toBeTrue();
+            expect(checkboxes[1].checked).toBeFalse();
+            const listItemsCheckboxes = checkboxes.slice(2, checkboxes.length-1);
+            for (const checkboxItem of listItemsCheckboxes) {
+                ControlsFunction.verifyCheckboxState(checkboxItem.parentElement);
+            }
         }));
 
         it('Should filter date by input string', fakeAsync(() => {

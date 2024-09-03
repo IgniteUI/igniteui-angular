@@ -587,7 +587,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     ignoreCase: this.esf.column.filteringIgnoreCase,
                     searchVal: new Set(
                         this.esf.column.dataType === GridColumnDataType.Date ?
-                            selectedItems.map(d => d.value.toISOString().substring(0, 10)) :
+                            selectedItems.map(d => d.value.toDateString()) :
                         this.esf.column.dataType === GridColumnDataType.DateTime ?
                             selectedItems.map(d => d.value.toISOString()) :
                         this.esf.column.dataType === GridColumnDataType.Time ?
