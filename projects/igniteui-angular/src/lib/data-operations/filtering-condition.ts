@@ -397,7 +397,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
             return false;
         }
 
-        target = target.toISOString().substring(0, 10);
+        target = target.toDateString();
         return searchVal.has(target);
     }
 }
