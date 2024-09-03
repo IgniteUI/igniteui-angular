@@ -1424,7 +1424,7 @@ describe('IgxQueryBuilder', () => {
         it('', () => { });
         //Move to interaction
         {
-            fit('Should be able to open edit mode when condition is selected, close the condition that is currently in edit mode when the "close" button is clicked and not commit currently edited condition', fakeAsync(() => {
+            it('Should be able to open edit mode when condition is selected, close the condition that is currently in edit mode when the "close" button is clicked and not commit currently edited condition', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
                 tick();
                 fixture.detectChanges();
@@ -1464,6 +1464,44 @@ describe('IgxQueryBuilder', () => {
       
                 //Verify changes are reverted
                 QueryBuilderFunctions.verifyExpressionChipContent(fixture, [1], 'OrderId', 'Greater Than', '3');
+            }));
+
+            it('Selecting multiple conditions should display the (create group)/(delete filters) context menu. Unselecting conditions until one selected remains should hide the context menu', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+                tick();
+                fixture.detectChanges();
+    
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+
+                //select 1
+                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [0]);
+                tick(200);
+                fixture.detectChanges();
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+
+                //select 2
+                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
+                tick(200);
+                fixture.detectChanges();
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+                //select 3
+                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [2]);
+                tick(200);
+                fixture.detectChanges();
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+                //deselect 3
+                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [2]);
+                tick(200);
+                fixture.detectChanges();
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+                //deselect 2
+                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
+                tick(200);
+                fixture.detectChanges();
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
             }));
         }
     });
