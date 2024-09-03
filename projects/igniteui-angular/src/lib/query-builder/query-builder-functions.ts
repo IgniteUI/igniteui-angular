@@ -296,23 +296,12 @@ export class QueryBuilderFunctions {
     }
 
     /**
-     * Get the edit icon of the expression that is located on the provided 'path'.
+     * Get the specified icon (add, edit, close) of the expression that is located on the provided 'path'.
      */
-    public static getQueryBuilderTreeExpressionEditIcon(fix: ComponentFixture<any>, path: number[]) {
+    public static getQueryBuilderTreeExpressionIcon(fix: ComponentFixture<any>, path: number[], iconType: string) {
         const actionsContainer = QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, path);
         const icons = Array.from(actionsContainer.querySelectorAll('igx-icon'));
-        const editIcon: any = icons.find((icon: any) => icon.innerText === 'edit');
-        return editIcon;
-    }
-
-    /**
-     * Get the add icon of the expression that is located on the provided 'path'.
-     */
-    public static getQueryBuilderTreeExpressionAddIcon(fix: ComponentFixture<any>, path: number[]) {
-        const actionsContainer = QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, path);
-        const icons = Array.from(actionsContainer.querySelectorAll('igx-icon'));
-        const addIcon: any = icons.find((icon: any) => icon.innerText === 'add');
-        return addIcon;
+        return icons.find((icon: any) => icon.innerText === iconType) as any;
     }
 
     /**
@@ -662,19 +651,11 @@ export class QueryBuilderFunctions {
     }
 
     /**
-     * Click the edit icon of the expression that is located on the provided 'path'.
+     * Click the specified icon (add, edit, close )of the expression that is located on the provided 'path'.
      */
-    public static clickQueryBuilderTreeExpressionChipEditIcon(fix: ComponentFixture<any>, path: number[]) {
-        const chipEditIcon = QueryBuilderFunctions.getQueryBuilderTreeExpressionEditIcon(fix, path);
-        chipEditIcon.click();
-    }
-
-    /**
-     * Click the add icon of the expression that is located on the provided 'path'.
-     */
-    public static clickQueryBuilderTreeExpressionChipAddIcon(fix: ComponentFixture<any>, path: number[]) {
-        const chipAddIcon = QueryBuilderFunctions.getQueryBuilderTreeExpressionAddIcon(fix, path);
-        chipAddIcon.click();
+    public static clickQueryBuilderTreeExpressionChipIcon(fix: ComponentFixture<any>, path: number[], iconType: string) {
+        const chipIcon = QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, path, iconType);
+        chipIcon.click();
     }
 
     /**

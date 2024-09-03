@@ -1424,30 +1424,46 @@ describe('IgxQueryBuilder', () => {
         it('', () => { });
         //Move to interaction
         {
-            it('Should close the condition that is currently in edit mode when the "close" button is clicked', fakeAsync(() => {
+            fit('Should be able to open edit mode when condition is selected, close the condition that is currently in edit mode when the "close" button is clicked and not commit currently edited condition', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
                 tick();
                 fixture.detectChanges();
 
                 //Select chip
-                const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[3];
-                QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
+                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
+                tick(200);
+                fixture.detectChanges();
 
                 //Open edit mode
-                const editBtn = chip.parent.queryAll(By.css('.igx-icon')).find(i => i.nativeElement.innerText === "edit");
-                editBtn.nativeElement.click();
+                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fixture, [1], 'edit');
                 tick();
                 fixture.detectChanges();
 
-                //Close edit mode
-                const closeBtn = fixture.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[2]
-                    .queryAll(By.css('.igx-icon'))
-                    .find(i => i.nativeElement.innerText === "close");
-                closeBtn.nativeElement.click();
-                tick();
+                const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fixture);
+
+                //verify edit is opened 
+                const fields = Array.prototype.map.call(
+                    closeBtn.parentNode.parentNode.querySelectorAll('.igx-input-group__input'),
+                    i => {return i.value}
+                );
+                expect(fields).toEqual(["OrderId","Greater Than","3"], "Incorrect condition values");
+                expect(closeBtn.parentNode.parentNode.innerText).toContain('Select column\nexpand_more\nSelect filter\nexpand_more\nValue\nclose', "Condition not in edit mode");
+
+                //edit condition fields
+                const value = QueryBuilderFunctions.getQueryBuilderValueInput(fixture).querySelector('input');
+                UIInteractions.clickAndSendInputElementValue(value, '5');
+                QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 1); // Select 'OrderName' column.
+                QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 0); // Select 'Contains' operator.
+                tick(200);
                 fixture.detectChanges();
 
-                expect(chip.nativeElement.innerText).toContain('OrderId  Greater Than  3');
+                //cancel edit
+                closeBtn.click();
+                tick();
+                fixture.detectChanges();               
+      
+                //Verify changes are reverted
+                QueryBuilderFunctions.verifyExpressionChipContent(fixture, [1], 'OrderId', 'Greater Than', '3');
             }));
         }
     });
