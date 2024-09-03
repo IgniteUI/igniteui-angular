@@ -571,9 +571,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             this.expressionTreeChange.emit(this._expressionTree);
 
-            this._editedExpression = null;
             this.addAndGroup();
         }
+
+        this._editedExpression = null;
+        this._selectedField = null;
+        this.selectedCondition = null;
+        this.searchValue = null;
 
         this.entityChangeDialog.close();
         this.entitySelect.close();
