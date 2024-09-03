@@ -167,10 +167,13 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it(`Should discard newly added group when clicking on the 'cancel' button of its initial condition.`, fakeAsync(() => {
+            spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
             tick(100);
             fix.detectChanges();
+
+            expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
 
             // Verify there is a new root group, which is empty.
             let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
@@ -192,6 +195,8 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
+
+            spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
 
             // Verify group's children count before adding a new child.
             let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
@@ -223,6 +228,7 @@ describe('IgxQueryBuilder', () => {
             group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
             expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(group, true).length).toBe(4);
             expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(group, false).length).toBe(7);
+            expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalled();
         }));
 
         it(`Should add a new 'And' group to existing group by using add buttons.`, fakeAsync(() => {
@@ -230,6 +236,8 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
+
+            spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
 
             // Verify group's children count before adding a new child.
             let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
@@ -264,6 +272,7 @@ describe('IgxQueryBuilder', () => {
             group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
             expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(group, true).length).toBe(4);
             expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(group, false).length).toBe(8);
+            expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalled();
         }));
 
         it(`Should add a new 'Or' group to existing group by using add buttons.`, fakeAsync(() => {
@@ -271,6 +280,8 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
+
+            spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
 
             // Verify group's children count before adding a new child.
             let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
@@ -305,6 +316,7 @@ describe('IgxQueryBuilder', () => {
             group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
             expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(group, true).length).toBe(4);
             expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(group, false).length).toBe(8);
+            expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalled();
         }));
 
         it(`Should remove a condition from an existing group by using the 'close' icon of the respective chip.`, fakeAsync(() => {
@@ -312,6 +324,8 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
+
+            spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
 
             // Verify tree layout before deleting chips.
             let rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
@@ -326,6 +340,7 @@ describe('IgxQueryBuilder', () => {
             rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
             expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length).toBe(2);
             expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, false).length).toBe(2);
+            expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalled();
 
             // Delete a chip and verify layout.
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipRemoveIcon(fix, [1]);
