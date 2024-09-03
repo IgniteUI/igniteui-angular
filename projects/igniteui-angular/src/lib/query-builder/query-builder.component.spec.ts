@@ -349,6 +349,25 @@ describe('IgxQueryBuilder', () => {
             expect(rootGroup).toBeNull();
         }));
 
+        it('Should discard the added group when clicking its operator line without having a single expression.', fakeAsync(() => {
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
+            expect(group).not.toBeNull('There is no root group.');
+
+            // Click root group's operator line and verify that the root group and all of its children become selected.
+            const rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
+            rootOperatorLine.click();
+            tick(200);
+            fix.detectChanges();
+
+            group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
+            expect(group).toBeNull();
+        }));
+
         it('Should be able to add and define a new group through initial adding button.', fakeAsync(() => {
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
@@ -943,12 +962,18 @@ describe('IgxQueryBuilder', () => {
             tick(200);
             fix.detectChanges();
             QueryBuilderFunctions.verifyExpressionChipSelection(fix, [0], true);
+            // Verify actions container is visible.
+            expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
+                .not.toBeNull('actions container is visible');
 
             // Click first chip again and verify it is not selected.
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
             tick(200);
             fix.detectChanges();
             QueryBuilderFunctions.verifyExpressionChipSelection(fix, [0], false);
+            // Verify actions container is not visible.
+            expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
+                .toBeNull('actions container is visible');
         }));
 
         it('Should display edit and add buttons when hovering a chip.', fakeAsync(() => {
@@ -973,6 +998,50 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
                 .toBeNull('actions container is visible');
+        }));
+
+        it('Double-clicking a condition should put it in edit mode.', fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+            // Verify inputs values
+            QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'OrderId', 'Greater Than', '3');
+            // Edit the operator
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
+            // Commit the change
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+            // Verify the chip
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderId', 'Equals', '3');
+
+            // Verify that the nested query is not expanded
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+
+            // Double-click the nested query chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+            tick(50);
+            fix.detectChanges();
+            // Verify the query is expanded
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
+            // Double-click a chip in the nested query three to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true, 1);
+            tick(50);
+            fix.detectChanges();
+            // Verify inputs values
+            QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'ProductName', 'Contains', 'a', 1);
+            // Edit the operator
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2, 1); // Select 'Starts With' operator.
+            // Commit the change
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, 1);
+            fix.detectChanges();
+            // Verify the chip
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'ProductName', 'Starts With', 'a', 1);
         }));
 
         it('Should select/deselect all child conditions and groups when clicking a group\'s operator line.', fakeAsync(() => {
@@ -1344,21 +1413,21 @@ describe('IgxQueryBuilder', () => {
                 const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
                 tick();
                 fixture.detectChanges();
-    
+
                 //Select chip
-                const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[3];    
+                const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[3];
                 QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
 
                 //Open edit mode
-                const editBtn = chip.parent.queryAll(By.css('.igx-icon')).find(i=> i.nativeElement.innerText === "edit");
+                const editBtn = chip.parent.queryAll(By.css('.igx-icon')).find(i => i.nativeElement.innerText === "edit");
                 editBtn.nativeElement.click();
                 tick();
                 fixture.detectChanges();
 
                 //Close edit mode
                 const closeBtn = fixture.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[2]
-                                                        .queryAll(By.css('.igx-icon'))
-                                                        .find(i=> i.nativeElement.innerText === "close");    
+                    .queryAll(By.css('.igx-icon'))
+                    .find(i => i.nativeElement.innerText === "close");
                 closeBtn.nativeElement.click();
                 tick();
                 fixture.detectChanges();

@@ -6,16 +6,16 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 export const QueryBuilderConstants = {
-    QUERY_BUILDER_CLASS : 'igx-query-builder',
-    QUERY_BUILDER_HEADER : 'igx-query-builder__header',
-    QUERY_BUILDER_TREE : 'igx-query-builder-tree',
-    QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS : 'igx-filter-tree__line--and',
-    QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS : 'igx-filter-tree__line--or',
-    QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS : 'igx-filter-tree__line--selected',
-    CSS_CLASS_DROPDOWN_LIST_SCROLL : 'igx-drop-down__list-scroll',
-    CHIP_SELECT_CLASS : '.igx-chip__select',
-    QUERY_CONTEXT_MENU : 'igx-filter-contextual-menu',
-    QUERY_BUILDER_BODY : 'igx-query-builder__main',
+    QUERY_BUILDER_CLASS: 'igx-query-builder',
+    QUERY_BUILDER_HEADER: 'igx-query-builder__header',
+    QUERY_BUILDER_TREE: 'igx-query-builder-tree',
+    QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS: 'igx-filter-tree__line--and',
+    QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS: 'igx-filter-tree__line--or',
+    QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS: 'igx-filter-tree__line--selected',
+    CSS_CLASS_DROPDOWN_LIST_SCROLL: 'igx-drop-down__list-scroll',
+    CHIP_SELECT_CLASS: '.igx-chip__select',
+    QUERY_CONTEXT_MENU: 'igx-filter-contextual-menu',
+    QUERY_BUILDER_BODY: 'igx-query-builder__main',
 }
 
 export class QueryBuilderFunctions {
@@ -105,8 +105,8 @@ export class QueryBuilderFunctions {
     /**
      * Get the root group.
      */
-    public static getQueryBuilderTreeRootGroup(fix: ComponentFixture<any>) {
-        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix);
+    public static getQueryBuilderTreeRootGroup(fix: ComponentFixture<any>, level = 0) {
+        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix, level);
         const rootGroup = exprContainer.querySelector(':scope > .igx-filter-tree');
         return rootGroup;
     }
@@ -152,8 +152,9 @@ export class QueryBuilderFunctions {
      * The returned element is the one that has been gotten last.
      */
     public static getQueryBuilderTreeItem(fix: ComponentFixture<any>,
-        path: number[]) {
-        let node = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
+        path: number[],
+        level = 0) {
+        let node = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix, level);
         for (const pos of path) {
             const directChildren = QueryBuilderFunctions.getQueryBuilderTreeChildItems(node as HTMLElement, true);
             node = directChildren[pos];
@@ -279,8 +280,8 @@ export class QueryBuilderFunctions {
     /**
      * Get the underlying chip of the expression that is located on the provided 'path'.
      */
-    public static getQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[]) {
-        const treeItem = QueryBuilderFunctions.getQueryBuilderTreeItem(fix, path);
+    public static getQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[], level = 0) {
+        const treeItem = QueryBuilderFunctions.getQueryBuilderTreeItem(fix, path, level);
         const chip = treeItem.querySelector('igx-chip');
         return chip;
     }
@@ -295,8 +296,8 @@ export class QueryBuilderFunctions {
     }
 
     /**
-    * Get the edit icon of the expression that is located on the provided 'path'.
-    */
+     * Get the edit icon of the expression that is located on the provided 'path'.
+     */
     public static getQueryBuilderTreeExpressionEditIcon(fix: ComponentFixture<any>, path: number[]) {
         const actionsContainer = QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, path);
         const icons = Array.from(actionsContainer.querySelectorAll('igx-icon'));
@@ -469,14 +470,14 @@ export class QueryBuilderFunctions {
         const allOperatorLines: any[] = Array.from(parent.querySelectorAll('.igx-filter-tree__line'));
         const allExpressionChips: any[] = Array.from(parent.querySelectorAll(`.igx-filter-tree__expression-item`));
         for (const operatorLine of allOperatorLines) {
-            if(operatorLine.checkVisibility()){
+            if (operatorLine.checkVisibility()) {
                 QueryBuilderFunctions.verifyOperatorLineSelection(operatorLine, shouldBeSelected);
             } else {
                 QueryBuilderFunctions.verifyOperatorLineSelection(operatorLine, false);
             }
         }
         for (const expressionChip of allExpressionChips) {
-            if(expressionChip.checkVisibility()) {
+            if (expressionChip.checkVisibility()) {
                 QueryBuilderFunctions.verifyChipSelectedState(expressionChip, shouldBeSelected);
             } else {
                 QueryBuilderFunctions.verifyChipSelectedState(expressionChip, false);
@@ -568,8 +569,9 @@ export class QueryBuilderFunctions {
             i++;
         });
     };
-    public static verifyExpressionChipContent(fix, path: number[], columnText: string, operatorText: string, valueText: string) {
-        const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path);
+
+    public static verifyExpressionChipContent(fix, path: number[], columnText: string, operatorText: string, valueText: string, level = 0) {
+        const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path, level);
         const chipSpans = Array.from(chip.querySelectorAll('span'));
         const columnSpan = chipSpans[0];
         const operatorSpan = chipSpans[1];
@@ -578,7 +580,6 @@ export class QueryBuilderFunctions {
         expect(operatorSpan.textContent.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
         expect(valueSpan.textContent.toLowerCase().trim()).toBe(valueText.toLowerCase(), 'incorrect chip filter value');
     };
-
 
     /**
      * Click the entity select for the expression that is currently in edit mode.
@@ -643,8 +644,8 @@ export class QueryBuilderFunctions {
     /**
      * (Double)Click the underlying chip of the expression that is located on the provided 'path'.
      */
-    public static clickQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[], dblClick = false) {
-        const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path) as HTMLElement;
+    public static clickQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[], dblClick = false, level = 0) {
+        const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path, level) as HTMLElement;
         if (dblClick) {
             chip.dispatchEvent(new MouseEvent('dblclick'));
         } else {
@@ -827,11 +828,11 @@ export class QueryBuilderFunctions {
         expect(contextMenus.length).toBe(2);
 
         //Click 'create OR group'
-        const kindButton = groupKind.toUpperCase() === "AND"? 0 :
-                           groupKind.toUpperCase() === "OR"? 1 : null;
+        const kindButton = groupKind.toUpperCase() === "AND" ? 0 :
+            groupKind.toUpperCase() === "OR" ? 1 : null;
         const orButton = contextMenus[1].queryAll(By.css('.igx-button'))[kindButton];
         orButton.nativeElement.click();
         tick();
         fix.detectChanges();
-     }
+    }
 }
