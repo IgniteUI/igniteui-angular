@@ -255,6 +255,17 @@ export abstract class DateTimeUtil {
         return formattedDate;
     }
 
+    /** Adjusts the given date to or from the specified timezone. */
+    public static adjustDate(timezone: string, value: Date, reverse: boolean = false): any {
+        const reverseValue = reverse ? -1 : 1;
+        const inputTimezoneOffset = value.getTimezoneOffset();
+        const columnTimezoneOffset = this.timezoneToOffset(timezone, inputTimezoneOffset);
+        const offsetDifference = reverseValue * (columnTimezoneOffset - inputTimezoneOffset);
+        const adjustedDate = this.addDateMinutes(value, offsetDifference);
+
+        return adjustedDate;
+    }
+
     /**
      * Returns the date format based on a provided locale.
      * Supports Angular's DatePipe format options such as `shortDate`, `longDate`.
@@ -691,5 +702,14 @@ export abstract class DateTimeUtil {
                 currentPos++;
             }
         }
+    }
+
+    private static timezoneToOffset(timezone: string, fallback: number): number {
+        const requestedTimezoneOffset = Date.parse('Jan 01, 1970 00:00:00 ' + timezone) / 60000;
+        return isNaN(requestedTimezoneOffset) ? fallback : requestedTimezoneOffset;
+    }
+  
+    private static addDateMinutes(date: Date, minutes: number): Date {
+        return new Date(date.getTime() + minutes * 60000);
     }
 }

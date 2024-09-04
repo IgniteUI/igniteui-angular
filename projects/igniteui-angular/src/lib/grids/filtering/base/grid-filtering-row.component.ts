@@ -15,6 +15,7 @@ import {
     OnDestroy
 } from '@angular/core';
 import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
+import { DateTimeUtil } from '../../../date-common/util/date-time.util';
 import { IgxDropDownComponent } from '../../../drop-down/drop-down.component';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
@@ -107,7 +108,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             }
 
             this._value = val;
-            this.expression.searchVal = DataUtil.parseValue(this.column.dataType, val);
+            const isDate = this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime;
+            this.expression.searchVal = isDate ? DateTimeUtil.adjustDate(this.column.pipeArgs.timezone, val) : DataUtil.parseValue(this.column.dataType, val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
                 this.addExpression(true);
             }
@@ -228,7 +230,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         const selectedItem = this.expressionsList.find(expr => expr.isSelected === true);
         if (selectedItem) {
             this.expression = selectedItem.expression;
-            this._value = this.expression.searchVal;
+            const isDate = this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime;
+            const adjustedSearchVal = isDate ? DateTimeUtil.adjustDate(this.column.pipeArgs.timezone, this.expression.searchVal, true) : this.expression.searchVal
+            this._value = adjustedSearchVal;
         }
 
         this.filteringService.grid.localeChange
@@ -626,7 +630,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         item.isSelected = !item.isSelected;
         if (item.isSelected) {
             this.expression = item.expression;
-            this._value = this.expression.searchVal;
+            const isDate = this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime;
+            const adjustedSearchVal = isDate ? DateTimeUtil.adjustDate(this.column.pipeArgs.timezone, this.expression.searchVal, true) : this.expression.searchVal
+            this._value = adjustedSearchVal;
             this.focusEditElement();
         }
     }
