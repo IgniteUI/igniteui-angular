@@ -171,7 +171,7 @@
         min-height: var-get($theme, 'size');
         padding-block: 0;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding-inline-start: pad-inline(map.get($grid-toolbar-padding-start-indigo, 'compact'), map.get($grid-toolbar-padding-start-indigo, 'cosy'), map.get($grid-toolbar-padding-start-indigo, 'comfortable'));
             padding-inline-end: pad-inline(map.get($grid-toolbar-padding-end-indigo, 'compact'), map.get($grid-toolbar-padding-end-indigo, 'cosy'), map.get($grid-toolbar-padding-end-indigo, 'comfortable'));
         } @else {
@@ -206,7 +206,7 @@
     }
 
     %igx-grid-toolbar__title {
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             /* stylelint-disable scss/at-extend-no-missing-placeholder */
             @extend .ig-typography__h6;
             /* stylelint-enable scss/at-extend-no-missing-placeholder */
@@ -217,7 +217,7 @@
         @include ellipsis();
         max-width: 40ch;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             margin-inline-end: map.get($grid-toolbar-spacer-indigo, 'comfortable')
         } @else {
             margin-inline-end: map.get($grid-toolbar-spacer, 'comfortable')
@@ -230,7 +230,7 @@
         flex-grow: 1;
         justify-content: flex-end;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             margin-inline-end: map.get($grid-toolbar-spacer-indigo, 'comfortable')
         } @else {
             margin-inline-end: map.get($grid-toolbar-spacer, 'comfortable')
@@ -243,7 +243,7 @@
         flex-flow: row wrap;
         margin-inline-start: auto;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             gap: map.get($grid-toolbar-spacer-indigo, 'comfortable')
         } @else {
             gap: map.get($grid-toolbar-spacer, 'comfortable')

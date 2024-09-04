@@ -108,7 +108,7 @@
     }
 
     %advanced-filter__header {
-        @if $variant != 'indigo-design' {
+        @if $variant != 'indigo' {
             @include type-style('h6');
         } @else {
             @include type-style('h5');
@@ -351,6 +351,10 @@
         align-items: center;
         font-size: rem(12px);
 
+        @if $variant == 'indigo' {
+            font-weight: 400;
+        }
+
         &::before {
             content: '';
             width: rem(24px);
@@ -453,7 +457,7 @@
     }
 
     %filter-empty__title {
-        color: color(null, 'gray', 500);
+        color: color(null, 'gray', if($variant == 'indigo', 600, 500));
     }
 
     %advanced-filter--inline {

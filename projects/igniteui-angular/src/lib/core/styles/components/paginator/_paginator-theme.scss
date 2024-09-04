@@ -80,7 +80,7 @@
         font-size: rem(12px);
         border-top: rem(1px) solid var-get($theme, 'border-color');
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             font-size: rem(11px);
             font-weight: 400;
             line-height: rem(15px);

@@ -31,7 +31,7 @@
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
 
-@mixin typography() {
+@mixin typography($type-scale) {
     @include badge-typography($categories: (
         text: 'button',
     ));
