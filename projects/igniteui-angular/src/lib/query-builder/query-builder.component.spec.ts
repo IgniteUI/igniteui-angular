@@ -1542,6 +1542,57 @@ describe('IgxQueryBuilder', () => {
 
                 QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
             }));
+
+            it('Should be able to group, change And/Or and un-group conditions', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+                tick();
+                fixture.detectChanges();
+
+                QueryBuilderFunctions.verifyGroupLineCount(fixture, 2, 0);
+
+                //Select condition 1 and 2
+                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [0]);
+                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
+                tick(200);
+                fixture.detectChanges();
+                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+                //Group them as AND group
+                const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
+                const andButton = contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText === 'Create "And" Group');
+                andButton.nativeElement.click();
+                tick(200);
+                fixture.detectChanges();
+
+                QueryBuilderFunctions.verifyGroupLineCount(fixture, 3, 0);
+
+                //Change group to OR
+                const andLine = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[1];
+                andLine.nativeElement.click();
+                tick(200);
+                fixture.detectChanges();
+                const orButton = contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText === 'Or');
+                orButton.nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+
+                QueryBuilderFunctions.verifyGroupLineCount(fixture, 2, 1);
+
+                //Un-group OR group
+                const orLine = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS}`))[0];
+                orLine.nativeElement.click();
+                tick(200);
+                fixture.detectChanges();
+                const unGroupButton = contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText === 'Ungroup');
+                unGroupButton.nativeElement.click();
+                tick(200);
+                fixture.detectChanges();
+
+                //const exprTree = JSON.stringify(fixture.componentInstance.queryBuilder.expressionTree, null, 2);
+                //expect(exprTree).toBe(``);
+            }));
         }
     });
 

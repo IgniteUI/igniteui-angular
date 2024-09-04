@@ -570,6 +570,14 @@ export class QueryBuilderFunctions {
         expect(valueSpan.textContent.toLowerCase().trim()).toBe(valueText.toLowerCase(), 'incorrect chip filter value');
     };
 
+    public static verifyGroupLineCount(fix: ComponentFixture<any>, andLineCount: number = null, orLineCount: number = null) {
+        const andLines = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`));
+        const orLines = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS}`));
+
+        if (andLineCount) expect(andLines.length).toBe(andLineCount, "AND groups not the right count");
+        if (orLineCount) expect(orLines.length).toBe(orLineCount, "OR groups not the right count");
+    };
+
     /**
      * Click the entity select for the expression that is currently in edit mode.
      */
