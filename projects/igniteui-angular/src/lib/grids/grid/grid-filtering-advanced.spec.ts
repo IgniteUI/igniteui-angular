@@ -3000,6 +3000,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             }));
 
         });
+
     });
 
     describe('Localization - ', () => {
