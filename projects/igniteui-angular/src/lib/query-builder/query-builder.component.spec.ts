@@ -1343,13 +1343,13 @@ describe('IgxQueryBuilder', () => {
 
             const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip.nativeElement, 200);
 
             const chipActions = fixture.debugElement.query(By.css('.igx-filter-tree__expression-actions'));
             QueryBuilderFunctions.verifyTabbableChipActions(chipActions);
 
             // Open Edit mode and check condition line elements
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chipActions.children[0], 200);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chipActions.children[0].nativeElement, 200);
 
             const editLine = fixture.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[1];
             QueryBuilderFunctions.verifyTabbableConditionEditLineElements(editLine);
@@ -1368,19 +1368,19 @@ describe('IgxQueryBuilder', () => {
 
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip.nativeElement, 200);
 
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, true);
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip, 200);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip.nativeElement, 200);
 
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip, 200);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip.nativeElement, 200);
 
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, true);
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip, 200);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip.nativeElement, 200);
 
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
         }));
@@ -1400,25 +1400,25 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line.nativeElement);
 
             QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, true);
             QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, true);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line.nativeElement);
 
             QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, false);
             QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line.nativeElement);
 
             QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, true);
             QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, true);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line.nativeElement);
 
             QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, false);
             QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
@@ -1426,29 +1426,30 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should remove a chip in when pressing \'Enter\' on its \'remove\' icon.', fakeAsync(() => {
-            //     const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
-            //     tick();
-            //     fixture.detectChanges();
+            //!Both Enter and Space should work
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
 
-            //     // Open Advanced Filtering dialog.
-            //     // grid.openAdvancedFilteringDialog();
-            //     // fix.detectChanges();
+            // Verify the there are three chip expressions.
+            const rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fixture) as HTMLElement;
+            expect(rootGroup).not.toBeNull('There is no root group.');
+            expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length).toBe(3);
+            expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, false).length).toBe(6);
 
-            //     // Verify the there are three chip expressions.
-            //     const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fixture);
-            //     expect(group).not.toBeNull('There is no root group.');
-            //     expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(group as HTMLElement).length).toBe(3);
+            // Press 'Enter' on the remove icon of the second chip.
+            const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fixture, [1]);
+            const removeIcon = ControlsFunction.getChipRemoveButton(chip as HTMLElement);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', removeIcon);
+            expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length).toBe(2);
+            expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, false).length).toBe(5);
 
-            //     // Press 'Enter' on the remove icon of the second chip.
-            //     const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, [1]);
-            //     const removeIcon = ControlsFunction.getChipRemoveButton(chip as HTMLElement);
-
-            //     QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', removeIcon);
-
-            //     // // Verify the there is only one chip expression.
-            //     // rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
-            //     // expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(1);
-            //     // expect(GridFunctions.getAdvancedFilteringTreeChildExpressions(rootGroup, true).length).toBe(1);
+            // Press 'Space' on the remove icon of the second chip.
+            const chip2 = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fixture, [0]);
+            const removeIcon2 = ControlsFunction.getChipRemoveButton(chip2 as HTMLElement);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', removeIcon2);
+            expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length).toBe(1);
+            expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, false).length).toBe(1);
         }));
 
         //Should not commit and close currently edited condition when the \'close\' button is clicked.

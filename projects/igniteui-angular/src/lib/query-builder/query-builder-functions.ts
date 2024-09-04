@@ -678,8 +678,8 @@ export class QueryBuilderFunctions {
     * Hit a keyboard button upon element, wait for the desired time and detect changes
     */
     //TODO maybe move to more commonly used class
-    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: DebugElement, wait: number = null) {
-        UIInteractions.triggerKeyDownEvtUponElem(key, elem.nativeElement, true);
+    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: HTMLElement, wait: number = null) {
+        UIInteractions.triggerKeyDownEvtUponElem(key, elem, true);
         tick(wait);
         fix.detectChanges();
     }
@@ -809,8 +809,8 @@ export class QueryBuilderFunctions {
     public static createGroupFromBottomTwoChips(fix: ComponentFixture<any>, groupKind: string) {
         //Select bottom two chips
         let chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[3], 200);
-        QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[4], 200);
+        QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[3].nativeElement, 200);
+        QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[4].nativeElement, 200);
 
         //context menu should have opened
         let contextMenus = QueryBuilderFunctions.getContextMenus(fix);
