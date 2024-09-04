@@ -1332,16 +1332,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return groupItem;
     }
 
-    private createExpressionTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
+    private createExpressionTreeFromGroupItem(groupItem: ExpressionGroupItem, entity?: string, returnFields?: string[]): FilteringExpressionsTree {
         if (!groupItem) {
             return null;
         }
 
-        const expressionTree = new FilteringExpressionsTree(groupItem.operator);
+        const expressionTree = new FilteringExpressionsTree(groupItem.operator, entity, returnFields);
 
         for (const item of groupItem.children) {
             if (item instanceof ExpressionGroupItem) {
-                const subTree = this.createExpressionTreeFromGroupItem((item as ExpressionGroupItem));
+                const subTree = this.createExpressionTreeFromGroupItem((item as ExpressionGroupItem), entity, returnFields);
                 expressionTree.filteringOperands.push(subTree);
             } else {
                 expressionTree.filteringOperands.push((item as ExpressionOperandItem).expression);
@@ -1415,9 +1415,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         children.splice(index, 1);
         const entity = this.expressionTree ? this.expressionTree.entity : null;
         const returnFields = this.expressionTree ? this.expressionTree.returnFields : null;
-        this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup); // TODO: don't recreate if not necessary
-        this._expressionTree.entity = entity;
-        this._expressionTree.returnFields = returnFields;
+        this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup, entity, returnFields); // TODO: don't recreate if not necessary
 
         if (!children.length) {
             this.deleteItem(expressionItem.parent);
