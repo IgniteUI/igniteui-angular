@@ -1282,7 +1282,9 @@ describe('IgxQueryBuilder', () => {
             expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
         }));
 
-        it('Should create an "and"/"or" group from multiple selected conditions when the respective context menu button is clicked and delete conditions when "delete filters" is clicked.', fakeAsync(() => {
+        //Should create an \'and\' group from multiple selected conditions when respective context menu button is clicked.
+        //Should delete all selected conditions when the "delete filters" option from the context menu is clicked.
+        it('Should create an "and"/"or" group from multiple selected conditions when the respective context menu button is clicked and delete conditions when "delete filters" is clicked.', fakeAsync(() => {            //! Should also  delete conditions when "delete filters" is clicked.
             const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
             tick();
             fixture.detectChanges();
@@ -1356,7 +1358,8 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyTabbableInConditionDialogElements(editDialog);
         }));
 
-        it('Should select/deselect a chip when pressing "Enter"/"space" on it.', fakeAsync(() => {
+        it('Should select/deselect a condition when pressing \'Enter\' on its respective chip.', fakeAsync(() => {
+            //!Both Enter and Space should work
             const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
             tick();
             fixture.detectChanges();
@@ -1382,7 +1385,10 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
         }));
 
+        //Should select/deselect all child conditions and groups when pressing \'Enter\' on  a group\'s operator line.
+        //Should open the group"s context menu when pressing "Enter"/"space"  on its operator line.
         it('Should select/deselect all child conditions/groups and open/close group context menu when pressing "Enter"/"space" on its operator line.', fakeAsync(() => {
+            //!Both Enter and Space should work
             const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
             tick();
             fixture.detectChanges();
@@ -1418,182 +1424,213 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
         }));
+
+        it('Should remove a chip in when pressing \'Enter\' on its \'remove\' icon.', fakeAsync(() => {
+            //     const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            //     tick();
+            //     fixture.detectChanges();
+
+            //     // Open Advanced Filtering dialog.
+            //     // grid.openAdvancedFilteringDialog();
+            //     // fix.detectChanges();
+
+            //     // Verify the there are three chip expressions.
+            //     const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fixture);
+            //     expect(group).not.toBeNull('There is no root group.');
+            //     expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(group as HTMLElement).length).toBe(3);
+
+            //     // Press 'Enter' on the remove icon of the second chip.
+            //     const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, [1]);
+            //     const removeIcon = ControlsFunction.getChipRemoveButton(chip as HTMLElement);
+
+            //     QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', removeIcon);
+
+            //     // // Verify the there is only one chip expression.
+            //     // rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+            //     // expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(1);
+            //     // expect(GridFunctions.getAdvancedFilteringTreeChildExpressions(rootGroup, true).length).toBe(1);
+        }));
+
+        //Should not commit and close currently edited condition when the \'close\' button is clicked.
+        //Should close the condition that is currently in edit mode when the "close" button is clicked.
+        it('Should be able to open edit mode when condition is selected, close the condition that is currently in edit mode when the "close" button is clicked and not commit currently edited condition', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            //Select chip
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
+            tick(200);
+            fixture.detectChanges();
+
+            //Open edit mode
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fixture, [1], 'edit');
+            tick();
+            fixture.detectChanges();
+
+            const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fixture);
+
+            //verify edit is opened
+            const fields = Array.prototype.map.call(
+                closeBtn.parentNode.parentNode.querySelectorAll('.igx-input-group__input'),
+                i => {
+                    return i.value
+                }
+            );
+            expect(fields).toEqual(["OrderId", "Greater Than", "3"], "Incorrect condition values");
+            expect(closeBtn.parentNode.parentNode.innerText).toContain('Select column\nexpand_more\nSelect filter\nexpand_more\nValue\nclose', "Condition not in edit mode");
+
+            //edit condition fields
+            const value = QueryBuilderFunctions.getQueryBuilderValueInput(fixture).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(value, '5');
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 1); // Select 'OrderName' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 0); // Select 'Contains' operator.
+            tick(200);
+            fixture.detectChanges();
+
+            //cancel edit
+            closeBtn.click();
+            tick();
+            fixture.detectChanges();
+
+            //Verify changes are reverted
+            QueryBuilderFunctions.verifyExpressionChipContent(fixture, [1], 'OrderId', 'Greater Than', '3');
+        }));
+
+        //Selecting multiple conditions should display the (create group)/(delete filters) context menu.
+        it('Selecting multiple conditions should display the (create group)/(delete filters) context menu. Unselecting conditions until one selected remains should hide the context menu', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+
+            //select 1
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [0]);
+            tick(200);
+            fixture.detectChanges();
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+
+            //select 2
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
+            tick(200);
+            fixture.detectChanges();
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+            //select 3
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [2]);
+            tick(200);
+            fixture.detectChanges();
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+            //deselect 3
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [2]);
+            tick(200);
+            fixture.detectChanges();
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+            //deselect 2
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
+            tick(200);
+            fixture.detectChanges();
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+        }));
+
+        //Should show/hide group\'s context menu when clicking its operator line.
+        //Should close the context menu when clicking its close button
+        it('Should show/hide the group"s context menu when clicking its operator line and should close the context menu when clicking its close button.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            const andLine = fixture.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`));
+
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+
+            //Click line to open menu
+            andLine.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+            //Click line to close menu
+            andLine.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+
+            //Click line to open menu
+            andLine.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+            //Click close button to close menu
+            const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
+            const closeButton = contextMenu.query(By.css('.igx-filter-contextual-menu__close-btn'));
+            closeButton.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+        }));
+
+        it('Should be able to group, change And/Or and un-group conditions', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            QueryBuilderFunctions.verifyGroupLineCount(fixture, 2, 0);
+
+            //Select condition 1 and 2
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [0]);
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
+            tick(200);
+            fixture.detectChanges();
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+            //Group them as AND group
+            const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
+            const andButton = contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText === 'Create "And" Group');
+            andButton.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+
+            QueryBuilderFunctions.verifyGroupLineCount(fixture, 3, 0);
+
+            //Change group to OR
+            const andLine = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[1];
+            andLine.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+            const orButton = contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText === 'Or');
+            orButton.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            QueryBuilderFunctions.verifyGroupLineCount(fixture, 2, 1);
+
+            //Un-group OR group
+            const orLine = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS}`))[0];
+            orLine.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+            const unGroupButton = contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText === 'Ungroup');
+            unGroupButton.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+
+            //const exprTree = JSON.stringify(fixture.componentInstance.queryBuilder.expressionTree, null, 2);
+            //expect(exprTree).toBe(``);
+        }));
+
     });
 
     describe('Localization', () => {
         it('', () => { });
-        //Move to interaction
-        {
-            it('Should be able to open edit mode when condition is selected, close the condition that is currently in edit mode when the "close" button is clicked and not commit currently edited condition', fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
-                tick();
-                fixture.detectChanges();
-
-                //Select chip
-                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
-                tick(200);
-                fixture.detectChanges();
-
-                //Open edit mode
-                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fixture, [1], 'edit');
-                tick();
-                fixture.detectChanges();
-
-                const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fixture);
-
-                //verify edit is opened
-                const fields = Array.prototype.map.call(
-                    closeBtn.parentNode.parentNode.querySelectorAll('.igx-input-group__input'),
-                    i => {
-                        return i.value
-                    }
-                );
-                expect(fields).toEqual(["OrderId", "Greater Than", "3"], "Incorrect condition values");
-                expect(closeBtn.parentNode.parentNode.innerText).toContain('Select column\nexpand_more\nSelect filter\nexpand_more\nValue\nclose', "Condition not in edit mode");
-
-                //edit condition fields
-                const value = QueryBuilderFunctions.getQueryBuilderValueInput(fixture).querySelector('input');
-                UIInteractions.clickAndSendInputElementValue(value, '5');
-                QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 1); // Select 'OrderName' column.
-                QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 0); // Select 'Contains' operator.
-                tick(200);
-                fixture.detectChanges();
-
-                //cancel edit
-                closeBtn.click();
-                tick();
-                fixture.detectChanges();
-
-                //Verify changes are reverted
-                QueryBuilderFunctions.verifyExpressionChipContent(fixture, [1], 'OrderId', 'Greater Than', '3');
-            }));
-
-            it('Selecting multiple conditions should display the (create group)/(delete filters) context menu. Unselecting conditions until one selected remains should hide the context menu', fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
-                tick();
-                fixture.detectChanges();
-
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
-
-                //select 1
-                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [0]);
-                tick(200);
-                fixture.detectChanges();
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
-
-                //select 2
-                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
-                tick(200);
-                fixture.detectChanges();
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
-
-                //select 3
-                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [2]);
-                tick(200);
-                fixture.detectChanges();
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
-
-                //deselect 3
-                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [2]);
-                tick(200);
-                fixture.detectChanges();
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
-
-                //deselect 2
-                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
-                tick(200);
-                fixture.detectChanges();
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
-            }));
-
-            it('Should show/hide the group"s context menu when clicking its operator line and should close the context menu when clicking its close button.', fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
-                tick();
-                fixture.detectChanges();
-
-                const andLine = fixture.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`));
-
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
-
-                //Click line to open menu
-                andLine.nativeElement.click();
-                tick(200);
-                fixture.detectChanges();
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
-
-                //Click line to close menu
-                andLine.nativeElement.click();
-                tick(200);
-                fixture.detectChanges();
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
-
-                //Click line to open menu
-                andLine.nativeElement.click();
-                tick(200);
-                fixture.detectChanges();
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
-
-                //Click close button to close menu
-                const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
-                const closeButton = contextMenu.query(By.css('.igx-filter-contextual-menu__close-btn'));
-                closeButton.nativeElement.click();
-                tick(200);
-                fixture.detectChanges();
-
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
-            }));
-
-            it('Should be able to group, change And/Or and un-group conditions', fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
-                tick();
-                fixture.detectChanges();
-
-                QueryBuilderFunctions.verifyGroupLineCount(fixture, 2, 0);
-
-                //Select condition 1 and 2
-                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [0]);
-                QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1]);
-                tick(200);
-                fixture.detectChanges();
-                QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
-
-                //Group them as AND group
-                const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
-                const andButton = contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText === 'Create "And" Group');
-                andButton.nativeElement.click();
-                tick(200);
-                fixture.detectChanges();
-
-                QueryBuilderFunctions.verifyGroupLineCount(fixture, 3, 0);
-
-                //Change group to OR
-                const andLine = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[1];
-                andLine.nativeElement.click();
-                tick(200);
-                fixture.detectChanges();
-                const orButton = contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText === 'Or');
-                orButton.nativeElement.click();
-                tick();
-                fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
-
-                QueryBuilderFunctions.verifyGroupLineCount(fixture, 2, 1);
-
-                //Un-group OR group
-                const orLine = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS}`))[0];
-                orLine.nativeElement.click();
-                tick(200);
-                fixture.detectChanges();
-                const unGroupButton = contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText === 'Ungroup');
-                unGroupButton.nativeElement.click();
-                tick(200);
-                fixture.detectChanges();
-
-                //const exprTree = JSON.stringify(fixture.componentInstance.queryBuilder.expressionTree, null, 2);
-                //expect(exprTree).toBe(``);
-            }));
-        }
+        //Move to interaction        
     });
 
     describe('Overlay settings', () => {
