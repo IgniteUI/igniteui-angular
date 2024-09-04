@@ -68,7 +68,7 @@
 /// @param {Map} $categories [(label: 'caption')] - The categories from the typographic scale used for type styles.
 @mixin label-typography(
     $categories: (
-        label: 'caption',
+        label: 'subtitle-1',
     )
 ) {
     $label: map.get($categories, 'label');
