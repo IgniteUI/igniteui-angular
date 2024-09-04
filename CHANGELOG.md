@@ -2,6 +2,33 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 18.2.0
+### New Features
+#### Scrollbar: New CSS variables
+
+We have introduced new CSS variables to allow for more customizable scrollbars. This enhancement utilizes the available WebKit pseudo-selectors such as `::-webkit-scrollbar-track`. However, please note that these pseudo-selectors are prefixed with `-webkit-` and are only supported in WebKit-based browsers (e.g., Chrome, Safari).
+
+###### List of Available CSS Variables for `-webkit-` browsers:
+- `--sb-size`: Adjusts the scrollbar size (width and height).
+- `--sb-track-bg-color`: Sets the background color of the scrollbar track.
+- `--sb-track-bg-color-hover`: Sets the background color of the scrollbar track on hover.
+- `--sb-thumb-min-height`: Sets the minimum height of the scrollbar thumb.
+- `--sb-thumb-border-radius`: Sets the border radius of the scrollbar thumb.
+- `--sb-thumb-border-size`: Sets the border size of the scrollbar thumb.
+- `--sb-thumb-border-color`: Sets the border color of the scrollbar thumb.
+- `--sb-thumb-bg-color`: Sets the background color of the scrollbar thumb.
+- `--sb-thumb-bg-color-hover`: Sets the background color of the scrollbar thumb on hover.
+
+For Firefox users, we provide limited scrollbar styling options through the following CSS variables:
+
+- `--sb-size`: Adjusts the scrollbar size.
+- `--sb-thumb-bg-color`: Sets the background color of the scrollbar thumb.
+- `--sb-track-bg-color`: Sets the background color of the scrollbar track.
+
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - **Breaking Change** The `shouldGenerate` property have been deprecated and will be removed in a future version. Use `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`.
+
 ## 18.1.0
 ### New Features
 - `IgxPivotGrid`
@@ -28,6 +55,7 @@ All notable changes for each version of this project will be documented in this 
     - The `isFirstPageDisabled` and `isLastPageDisabled` have been deprecated in favor of the identical `isFirstPage` and `isLastPage` getter.
 - `IgxOverlayService`
     - The `attach` method overload accepting `Type` and `OverlaySettings` now accepts `OverlayCreateSettings` as second parameter. This interface extends `OverlaySettings` with an additional `injector` property used as `ElementInjector` when creating the dynamic component.
+
 
 ## 18.0.0
 ### New Features

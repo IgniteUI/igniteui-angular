@@ -111,6 +111,7 @@ const GridResourceStringsES_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Desanclar todo',
     igx_grid_row_edit_btn_done: 'Listo',
     igx_grid_row_edit_btn_cancel: 'Cancelar',
+    igx_grid_row_edit_text: 'Tienes {0} cambios en esta fila y {1} columnas ocultas',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrar lista de columnas…',
     igx_grid_toolbar_pinning_button_tooltip: 'Abrir menú desplegable para anclar columnas',
     igx_grid_toolbar_hiding_button_tooltip: 'Abrir menú desplegable para ocultar columnas',

@@ -94,7 +94,38 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.nativeElement.offsetHeight).toBe(800);
             filteringCells = fixture.debugElement.queryAll(By.css(FILTERING_CELL_CLASS));
             expect(filteringCells.length).toBe(0);
+        }));
 
+        it('should recreate columns when data changes and autoGenerate is true', fakeAsync(() => {
+            hierarchicalGrid.width = '500px';
+            hierarchicalGrid.height = '500px';
+            hierarchicalGrid.autoGenerate = true;
+            fixture.detectChanges();
+
+            const initialData = [
+                { id: 1, name: 'John' },
+                { id: 2, name: 'Jane' }
+            ];
+            hierarchicalGrid.data = initialData;
+            tick();
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.columns.length).toBe(2);
+            expect(hierarchicalGrid.columns[0].field).toBe('id');
+            expect(hierarchicalGrid.columns[1].field).toBe('name');
+
+            const newData = [
+                { id: 1, firstName: 'John', lastName: 'Doe' },
+                { id: 2, firstName: 'Jane', lastName: 'Smith' }
+            ];
+            hierarchicalGrid.data = newData;
+            tick();
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.columns.length).toBe(3);
+            expect(hierarchicalGrid.columns[0].field).toBe('id');
+            expect(hierarchicalGrid.columns[1].field).toBe('firstName');
+            expect(hierarchicalGrid.columns[2].field).toBe('lastName');
         }));
     });
 

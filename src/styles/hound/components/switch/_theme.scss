@@ -1,0 +1,80 @@
+@use 'sass:map';
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+$_base-schema: $light-fluent-schema;
+$_switch-schema: extend(
+    map.get($_base-schema, 'switch'),
+    (
+        border-color: transparent,
+        border-hover-color: transparent,
+        border-on-hover-color: transparent,
+        track-off-color: (
+            color: (
+                'gray',
+                300,
+            ),
+        ),
+        thumb-off-color: (
+            color: (
+                'surface',
+                500,
+            ),
+        ),
+        track-on-color: (
+            color: (
+                'secondary',
+                500,
+            ),
+        ),
+        track-on-hover-color: (
+            color: (
+                'secondary',
+                400,
+            ),
+        ),
+        thumb-hover-color: (
+            color: (
+                'surface',
+                500,
+            ),
+        ),
+        thumb-disabled-color: (
+            color: (
+                'surface',
+                500,
+            ),
+        ),
+        border-disabled-color: (
+            color: (
+                'gray',
+                200
+            )
+        ),
+        track-disabled-color: (
+            color: (
+                'gray',
+                200
+            )
+        )
+    )
+);
+
+@mixin component() {
+    @include switch(
+        switch-theme(
+            extend(
+                $_base-schema,
+                (
+                    switch: $_switch-schema,
+                )
+            )
+        )
+    );
+
+    .ig-typography {
+        @include switch-typography(
+            $categories: (label: 'subtitle-2')
+        );
+    }
+}
+
