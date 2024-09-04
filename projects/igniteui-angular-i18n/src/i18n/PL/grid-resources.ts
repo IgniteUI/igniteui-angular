@@ -113,6 +113,7 @@ const GridResourceStringsPL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Odepnij wszystko',
     igx_grid_row_edit_btn_done: 'Gotowe',
     igx_grid_row_edit_btn_cancel: 'Anuluj',
+    igx_grid_row_edit_text: 'Masz {0} zmian w tym wierszu i {1} ukrytych kolumnach',
     igx_grid_toolbar_actions_filter_prompt: 'Filtruj listę kolumn...',
     igx_grid_toolbar_pinning_button_tooltip: 'Otwórz menu przypinania kolumn',
     igx_grid_toolbar_hiding_button_tooltip: 'Otwórz menu ukrywania kolumn',
