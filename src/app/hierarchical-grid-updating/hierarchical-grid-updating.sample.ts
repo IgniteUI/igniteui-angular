@@ -13,8 +13,8 @@ import { RemoteService } from '../shared/remote.service';
     selector: 'app-hierarchical-grid-updating-sample',
     styleUrls: ['hierarchical-grid-updating.sample.scss'],
     templateUrl: 'hierarchical-grid-updating.sample.html',
-    providers: [RemoteService],
     standalone: true,
+    providers: [RemoteService],
     imports: [IgxButtonDirective, IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
