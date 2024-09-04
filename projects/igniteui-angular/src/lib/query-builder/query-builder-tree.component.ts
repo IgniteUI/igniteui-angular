@@ -569,12 +569,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.expressionTree.returnFields = [];
             this.expressionTree.filteringOperands = [];
 
+            this._editedExpression = null;
             this.expressionTreeChange.emit(this._expressionTree);
 
             this.addAndGroup();
         }
 
-        this._editedExpression = null;
         this._selectedField = null;
         this.selectedCondition = null;
         this.searchValue = null;
@@ -737,11 +737,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._editedExpression = null;
         }
 
-        this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup);
-        if (this._expressionTree) {
-            this._expressionTree.entity = this.selectedEntity.name;
-            this._expressionTree.returnFields = this.selectedReturnFields;
-        }
+        this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup, this.selectedEntity?.name, this.selectedReturnFields);
         this.expressionTreeChange.emit(this._expressionTree);
     }
 
