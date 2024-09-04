@@ -110,5 +110,7 @@
     @include toast-typography();
     @include tooltip-typography();
     @include tree-typography();
-    @include label-typography();
+    @include label-typography($categories: (
+        label: 'caption'
+    ));
 }
