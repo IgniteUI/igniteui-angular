@@ -578,6 +578,18 @@ export class QueryBuilderFunctions {
         if (orLineCount) expect(orLines.length).toBe(orLineCount, "OR groups not the right count");
     };
 
+    public static verifyConditionCountInRootAndSubGroup(fix: ComponentFixture<any>, rootDirect: number, rootTotal: number = null, subGroupPath: number[] = null, subGroupDirect: number = null, subGroupTotal: number = null) {
+        const rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+        expect(rootGroup).not.toBeNull('There is no root group.');
+        expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length).toBe(rootDirect, 'Root direct condition count not correct');
+        expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, false).length).toBe(rootTotal, 'Root direct + child condition count not correct');
+        if (subGroupPath) {
+            const subGroup = QueryBuilderFunctions.getQueryBuilderTreeItem(fix, subGroupPath) as HTMLElement;
+            if (subGroupDirect) expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(subGroup, true).length).toBe(subGroupDirect, 'Child direct condition count not correct');
+            if (subGroupTotal) expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(subGroup, false).length).toBe(subGroupTotal, 'Child direct + child condition count not correct');
+        }
+    };
+
     /**
      * Click the entity select for the expression that is currently in edit mode.
      */
