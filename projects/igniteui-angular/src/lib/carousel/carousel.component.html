@@ -5,24 +5,34 @@
 </ng-template>
 
 <ng-template #defaultNextButton let-disabled>
-    <span class="igx-nav-arrow"
-          [class.igx-nav-arrow--disabled]="disabled">
-        <igx-icon aria-hidden="true" family="default" name="carousel_next"></igx-icon>
-    </span>
+    <igx-icon aria-hidden="true" family="default" name="carousel_next"
+        class="igx-nav-arrow" [class.igx-nav-arrow--disabled]="disabled">
+    </igx-icon>
 </ng-template>
 
 <ng-template #defaultPrevButton let-disabled>
-    <span class="igx-nav-arrow"
-          [class.igx-nav-arrow--disabled]="disabled">
-        <igx-icon aria-hidden="true" family="default" name="carousel_prev"></igx-icon>
-    </span>
+    <igx-icon aria-hidden="true" family="default" name="carousel_prev"
+        class="igx-nav-arrow" [class.igx-nav-arrow--disabled]="disabled">
+    </igx-icon>
 </ng-template>
 
-<button igxButton *ngIf="navigation && slides.length" class="igx-carousel__arrow--prev" [attr.aria-label]="resourceStrings.igx_carousel_previous_slide" (keydown)="handleKeydown($event, 'prev')" (click)="prev()">
+<button *ngIf="navigation && slides.length"
+    igxButton
+    class="igx-carousel__arrow--prev"
+    [attr.aria-label]="resourceStrings.igx_carousel_previous_slide"
+    [disabled]="prevButtonDisabled"
+    (click)="prev()"
+    (keydown)="handleKeydown($event, 'prev')">
     <ng-container *ngTemplateOutlet="getPrevButtonTemplate; context: {$implicit: prevButtonDisabled};"></ng-container>
 </button>
 
-<button igxButton *ngIf="navigation && slides.length" class="igx-carousel__arrow--next" [attr.aria-label]="resourceStrings.igx_carousel_next_slide" (keydown)="handleKeydown($event, 'next')" (click)="next()">
+<button *ngIf="navigation && slides.length"
+    igxButton
+    class="igx-carousel__arrow--next"
+    [attr.aria-label]="resourceStrings.igx_carousel_next_slide"
+    [disabled]="nextButtonDisabled"
+    (click)="next()"
+    (keydown)="handleKeydown($event, 'next')">
     <ng-container *ngTemplateOutlet="getNextButtonTemplate; context: {$implicit: nextButtonDisabled};"></ng-container>
 </button>
 
