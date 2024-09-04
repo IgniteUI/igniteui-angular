@@ -288,7 +288,7 @@ export class AppComponent implements OnInit {
             name: 'Grid Auto Size'
         },
         {
-            link: '/gridDocManager',
+            link: '/gridDockManager',
             icon: 'view_column',
             name: 'Grid in DockManager'
         },
