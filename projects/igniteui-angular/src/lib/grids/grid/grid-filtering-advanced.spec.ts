@@ -2134,12 +2134,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Open Advanced Filtering dialog.
             GridFunctions.clickAdvancedFilteringButton(fix);
+            tick(50);
             fix.detectChanges();
 
             // Hover over the first visible expression chip to show edit icon.
             const expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[0];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
-            tick(200);
+            tick(50);
             fix.detectChanges();
 
             // Click the edit icon on the hovered and focused edit icon.
