@@ -2123,6 +2123,33 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(consoleSpy).not.toHaveBeenCalled();
         }));
 
+        it('should not trigger accessibility errors when interacting with the edit icon in the advanced filtering expression chip', fakeAsync(() => {
+            // Apply advanced filter through API to generate chips.
+            const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+            tree.filteringOperands.push({
+                fieldName: 'Downloads', searchVal: 1, condition: IgxNumberFilteringOperand.instance().condition('equals')
+            });
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Hover over the first visible expression chip to show edit icon.
+            const expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[0];
+            expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            tick(200);
+            fix.detectChanges();
+
+            // Click the edit icon on the hovered and focused edit icon.
+            const editIcon = GridFunctions.getAdvancedFilteringTreeExpressionEditIcon(fix, [0]);
+            tick(50);
+            fix.detectChanges();
+            expect(editIcon.getAttribute('aria-hidden')).toBe('true');
+            expect(editIcon.getAttribute('tabIndex')).toBeFalsy();
+        }));
+
         describe('Context Menu - ', () => {
             it('Should discard added group when clicking its operator line without having a single expression.', fakeAsync(() => {
                 // Open Advanced Filtering dialog.
@@ -2972,7 +2999,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             }));
 
         });
-
     });
 
     describe('Localization - ', () => {
