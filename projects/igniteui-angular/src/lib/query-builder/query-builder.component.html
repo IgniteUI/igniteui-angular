@@ -147,28 +147,30 @@
                     expressionItem.hovered
                 "
             >
-                <igx-icon
-                    tabindex="0"
-                    (keydown)="invokeClick($event)"
-                    (click)="enterExpressionEdit(expressionItem)"
-                >
-                    edit
-                </igx-icon>
-                <igx-icon
-                    tabindex="0"
-                    (keydown)="invokeClick($event)"
-                    (click)="enterExpressionAdd(expressionItem)"
-                    *ngIf="
-                        !expressionItem.inAddMode &&
-                        (expressionItem.parent !== currentGroup ||
-                            expressionItem !==
-                                currentGroup.children[
-                                    currentGroup.children.length - 1
-                                ])
-                    "
-                >
-                    add
-                </igx-icon>
+                <span tabindex="0">
+                    <igx-icon
+                        (keydown)="invokeClick($event)"
+                        (click)="enterExpressionEdit(expressionItem)"
+                    >
+                        edit
+                    </igx-icon>
+                </span>
+                <span tabindex="0">
+                    <igx-icon
+                        (keydown)="invokeClick($event)"
+                        (click)="enterExpressionAdd(expressionItem)"
+                        *ngIf="
+                            !expressionItem.inAddMode &&
+                            (expressionItem.parent !== currentGroup ||
+                                expressionItem !==
+                                    currentGroup.children[
+                                        currentGroup.children.length - 1
+                                    ])
+                        "
+                    >
+                        add
+                    </igx-icon>
+                </span>
             </div>
         </div>
 
