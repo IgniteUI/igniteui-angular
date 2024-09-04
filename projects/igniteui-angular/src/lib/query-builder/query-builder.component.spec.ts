@@ -1441,12 +1441,14 @@ describe('IgxQueryBuilder', () => {
 
                 const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fixture);
 
-                //verify edit is opened 
+                //verify edit is opened
                 const fields = Array.prototype.map.call(
                     closeBtn.parentNode.parentNode.querySelectorAll('.igx-input-group__input'),
-                    i => {return i.value}
+                    i => {
+                        return i.value
+                    }
                 );
-                expect(fields).toEqual(["OrderId","Greater Than","3"], "Incorrect condition values");
+                expect(fields).toEqual(["OrderId", "Greater Than", "3"], "Incorrect condition values");
                 expect(closeBtn.parentNode.parentNode.innerText).toContain('Select column\nexpand_more\nSelect filter\nexpand_more\nValue\nclose', "Condition not in edit mode");
 
                 //edit condition fields
@@ -1460,8 +1462,8 @@ describe('IgxQueryBuilder', () => {
                 //cancel edit
                 closeBtn.click();
                 tick();
-                fixture.detectChanges();               
-      
+                fixture.detectChanges();
+
                 //Verify changes are reverted
                 QueryBuilderFunctions.verifyExpressionChipContent(fixture, [1], 'OrderId', 'Greater Than', '3');
             }));
@@ -1470,7 +1472,7 @@ describe('IgxQueryBuilder', () => {
                 const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
                 tick();
                 fixture.detectChanges();
-    
+
                 QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
 
                 //select 1
@@ -1508,7 +1510,7 @@ describe('IgxQueryBuilder', () => {
                 const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
                 tick();
                 fixture.detectChanges();
-                
+
                 const andLine = fixture.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`));
 
                 QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
