@@ -49,7 +49,7 @@
         box-shadow: elevation(if($variant == 'indigo', 3, 12));
 
         @if $variant == 'indigo' {
-            border: rem(1px) solid color(null, 'gray', 400);
+            box-shadow: elevation(if($variant == 'indigo', 3, 12)), 0 0 0 rem(1px) color(null, 'gray', 400);
 
             // TODO: The border-radius should not be hardcoded.
             border-radius: border-radius(rem(4px));
