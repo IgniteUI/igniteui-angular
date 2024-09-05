@@ -269,7 +269,8 @@
             "assets": [
               "projects/igniteui-angular-elements/src/favicon.ico",
               "projects/igniteui-angular-elements/src/assets",
-              "projects/igniteui-angular-elements/src/index.js"
+              "projects/igniteui-angular-elements/src/index.js",
+              "projects/igniteui-angular-elements/src/index.bundle.js"
             ],
             "styles": [
               "projects/igniteui-angular-elements/src/styles.scss"
