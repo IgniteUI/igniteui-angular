@@ -1,11 +1,14 @@
 import {
     AfterViewInit,
     ContentChild,
+    ContentChildren,
     EventEmitter,
+    forwardRef,
     LOCALE_ID,
     Output,
     Pipe,
-    PipeTransform
+    PipeTransform,
+    TemplateRef
 } from '@angular/core';
 import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
@@ -51,6 +54,7 @@ import { IgxDialogComponent } from "../dialog/dialog.component";
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
+import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -182,6 +186,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     * Returns the fields.
     */
     public get fields(): FieldType[] {
+        if (!this._fields && this.entities.length === 1 && !this.entities[0].name) {
+            this._fields = this.entities[0].fields;
+        }
+
         return this._fields;
     }
 
@@ -305,6 +313,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     @ContentChild(IgxQueryBuilderHeaderComponent)
     public headerContent: IgxQueryBuilderHeaderComponent;
+
+    @ContentChild(IgxQueryBuilderSearchValueTemplateDirective, { read: TemplateRef })
+    public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueTemplateDirective> = null;
+
+    // @ViewChildren(IgxQueryBuilderSearchValueTemplateDirective)
+    // public searchValueTemplateDirectives: QueryList<IgxQueryBuilderSearchValueTemplateDirective>;
 
     @ViewChild('editingInputsContainer', { read: ElementRef })
     protected set editingInputsContainer(value: ElementRef) {
@@ -735,7 +749,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup);
         if (this._expressionTree) {
-            this._expressionTree.entity = this.selectedEntity.name;
+            this._expressionTree.entity = this.selectedEntity?.name;
             this._expressionTree.returnFields = this.selectedReturnFields;
         }
         this.expressionTreeChange.emit(this._expressionTree);
@@ -781,7 +795,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         return this.selectedField && this.selectedCondition &&
             (
-                (!!this.searchValue && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
+                ((!!this.searchValue || !!this.searchValueTemplate) && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
                 (innerQuery && !!innerQuery.expressionTree) ||
                 this.selectedField.filters.condition(this.selectedCondition).isUnary
             );
@@ -896,7 +910,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.conditionSelect.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
-            input.focus();
+            input?.focus();
         }
     }
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import {
     FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic,
@@ -12,6 +12,7 @@ import {
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import { CommonModule } from '@angular/common';
+import { IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular/src/lib/query-builder/query-builder.directives';
 
 @Component({
     providers: [],
@@ -19,11 +20,14 @@ import { CommonModule } from '@angular/common';
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule]
+    imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule, IgxQueryBuilderSearchValueTemplateDirective]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })
     public queryBuilder: IgxQueryBuilderComponent;
+
+    @ViewChild('searchValueTemplate', { read: IgxQueryBuilderSearchValueTemplateDirective, static: true })
+    public searchValueTemplate: IgxQueryBuilderSearchValueTemplateDirective;
 
     public entities: Array<any>;
     public fields: Array<any>;
@@ -142,6 +146,10 @@ export class QueryBuilderComponent implements OnInit {
             changei18n(IgxResourceStringsFR);
         }
         this.queryBuilder.locale = locale;
+    }
+
+    public setSearchValue() {
+        this.searchValueTemplate.searchValue = 'value from template';
     }
 
     public printExpressionTree(tree: IExpressionTree) {
