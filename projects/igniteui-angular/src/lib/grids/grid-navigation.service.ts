@@ -69,7 +69,7 @@ export class IgxGridNavigationService {
     public dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
-            !this.grid.crudService.rowEditingBlocked && !this.grid.crudService.rowInEditMode) {
+            !this.grid.crudService.rowEditingBlocked && !!this.grid.crudService.rowInEditMode) {
             return;
         }
         const shift = event.shiftKey;
