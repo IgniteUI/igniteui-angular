@@ -294,7 +294,7 @@
         overflow-x: hidden;
         z-index: 0;
         border-radius: var-get($theme, 'border-radius');
-        
+
         &:focus-visible {
             outline-style: none;
         }
@@ -459,7 +459,7 @@
             margin-block: pad-block(map.get($list-icon-margin-block, 'compact'), map.get($list-icon-margin-block, 'cosy'), map.get($list-icon-margin-block, 'comfortable'));
         }
 
-        > igx-avatar {
+        %igx-avatar-display {
             --ig-size: 1;
 
             > igx-icon {
