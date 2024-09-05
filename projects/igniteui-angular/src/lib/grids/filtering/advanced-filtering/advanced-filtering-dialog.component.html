@@ -4,7 +4,8 @@
         'igx-advanced-filter': true,
         'igx-advanced-filter--inline': inline
     }">
-    <igx-query-builder #queryBuilder [locale]="grid.locale"
+    <igx-query-builder #queryBuilder
+        [locale]="grid.locale"
         [entities]="generateEntity()"
         [expressionTree]="this.grid.advancedFilteringExpressionsTree">
         <igx-query-builder-header
