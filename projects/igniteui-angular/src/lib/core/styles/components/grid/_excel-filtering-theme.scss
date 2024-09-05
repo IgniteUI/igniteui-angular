@@ -226,6 +226,16 @@
         color: var-get($theme, 'excel-filtering-header-foreground');
     }
 
+    @if $variant == 'indigo' {
+        .ig-typography %grid-excel-menu--compact {
+            %grid-excel-menu__header {
+                > h4 {
+                    @include type-style('h6')
+                }
+            }
+        }
+    }
+
     %grid-excel-menu__header-actions {
         display: flex;
         margin-inline-start: auto;
@@ -399,10 +409,18 @@
         padding: pad(if($variant == 'indigo', rem(16px), (rem(4px), rem(8px), rem(16px))));
         gap: sizable(if($variant == 'indigo', rem(16px), (rem(4px), rem(8px), rem(16px))));
 
-        igx-list {
+        %igx-list {
             flex-grow: 1;
             overflow: hidden;
-            margin-inline: calc(sizable(if($variant == 'indigo',rem(-16px) ,(rem(-4px), rem(-8px), rem(-16px)))) * -1);
+
+            @if $variant == 'indigo' {
+                --background: #{color($color: 'surface', $variant: 500)};
+
+                margin-inline: calc(sizable(rem(-16px)) * -1);
+            } @else  {
+                margin-inline: calc(sizable(rem(-4px), rem(-8px), rem(-16px)) * -1);
+            }
+
             border: 0;
 
             @if $bootstrap-theme {
