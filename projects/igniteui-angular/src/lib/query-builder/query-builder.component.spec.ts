@@ -1192,7 +1192,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Orders', 'OrderId, OrderName, OrderDate', '', '', '');
         }));
 
-        it('Should NOT reset all inputs when the entity is changed.', fakeAsync(() => {
+        it('Should NOT reset all inputs when the entity is not changed.', fakeAsync(() => {
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
@@ -1252,6 +1252,64 @@ describe('IgxQueryBuilder', () => {
                     expect(toggleButton).toBeNull();
                 }
             });
+        }));
+
+        it(`Clicking on parent "commit" button should apply all committed changes and discard all uncommitted changes n the child.`, fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Double-click the parent chip 'Products' to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Double-click the child chip 'Released' to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true, 1);
+            tick(50);
+            fix.detectChanges();
+
+            // Change the 'Released' operator
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2, 1); // Select 'False' operator.
+
+            // Verify both parent and child commit buttons are enabled
+            let parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            let childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
+
+            ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
+            ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement, false);
+
+            // Commit the change
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, 1);
+
+            // Double-click the child chip 'ProductName' to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true, 1);
+            tick(50);
+            fix.detectChanges();
+
+            // Change the 'ProductName' column to 'Id'
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+
+            // Verify input values
+            QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Id', '', '', 1);
+
+            // Verify paret commit button is enabled
+            parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
+
+            ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
+            // Verify child commit button is disabled
+            ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement);
+
+            // Commit the parent
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            tick(50);
+            fix.detectChanges();
+
+            // Verify expressions in the child query
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'ProductName', 'Contains', 'a', 1);
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'False', '', 1);
         }));
 
         it('Should collapse nested query when it is commited.', fakeAsync(() => {

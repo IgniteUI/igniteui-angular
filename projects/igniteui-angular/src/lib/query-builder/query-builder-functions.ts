@@ -559,7 +559,7 @@ export class QueryBuilderFunctions {
         });
     };
 
-    public static verifyExpressionChipContent(fix, path: number[], columnText: string, operatorText: string, valueText: string, level = 0) {
+    public static verifyExpressionChipContent(fix, path: number[], columnText: string, operatorText: string, valueText = '', level = 0) {
         const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path, level);
         const chipSpans = Array.from(chip.querySelectorAll('span'));
         const columnSpan = chipSpans[0];
@@ -567,7 +567,9 @@ export class QueryBuilderFunctions {
         const valueSpan = chipSpans[2];
         expect(columnSpan.textContent.toLowerCase().trim()).toBe(columnText.toLowerCase(), 'incorrect chip column');
         expect(operatorSpan.textContent.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
-        expect(valueSpan.textContent.toLowerCase().trim()).toBe(valueText.toLowerCase(), 'incorrect chip filter value');
+        if (valueSpan != undefined) {
+            expect(valueSpan.textContent.toLowerCase().trim()).toBe(valueText.toLowerCase(), 'incorrect chip filter value');
+        }
     };
 
     public static verifyGroupLineCount(fix: ComponentFixture<any>, andLineCount: number = null, orLineCount: number = null) {
