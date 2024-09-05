@@ -10,21 +10,21 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('IgxQueryBuilder', () => {
     configureTestSuite();
-    let fix: ComponentFixture<IgxQueryBuiderSampleTestComponent>;
+    let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
     let queryBuilder: IgxQueryBuilderComponent;
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxQueryBuilderComponent,
-                IgxQueryBuiderSampleTestComponent,
-                IgxQueryBuiderCustomHeaderSampleTestComponent,
+                IgxQueryBuilderSampleTestComponent,
+                IgxQueryBuilderCustomHeaderSampleTestComponent,
             ]
         }).compileComponents();
     }));
 
     beforeEach(fakeAsync(() => {
-        fix = TestBed.createComponent(IgxQueryBuiderSampleTestComponent);
+        fix = TestBed.createComponent(IgxQueryBuilderSampleTestComponent);
         fix.detectChanges();
         queryBuilder = fix.componentInstance.queryBuilder;
     }));
@@ -56,7 +56,7 @@ describe('IgxQueryBuilder', () => {
             expect(bodyElement.children[0].children[1]).toHaveClass('igx-filter-empty');
         });
 
-        it('Should render Query Builder with innitially set expression tree properly.', () => {
+        it('Should render Query Builder with initially set expression tree properly.', () => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
 
@@ -96,7 +96,7 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should render custom header properly.', () => {
-            const fixture = TestBed.createComponent(IgxQueryBuiderCustomHeaderSampleTestComponent);
+            const fixture = TestBed.createComponent(IgxQueryBuilderCustomHeaderSampleTestComponent);
             fixture.detectChanges();
 
             expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe(' Custom Title ');
@@ -1420,7 +1420,7 @@ describe('IgxQueryBuilder', () => {
             // Verify input values
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Id', '', '', 1);
 
-            // Verify paret commit button is enabled
+            // Verify parent commit button is enabled
             parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
             childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
 
@@ -1438,7 +1438,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'False', '', 1);
         }));
 
-        it('Should collapse nested query when it is commited.', fakeAsync(() => {
+        it('Should collapse nested query when it is committed.', fakeAsync(() => {
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
@@ -1992,7 +1992,7 @@ describe('IgxQueryBuilder', () => {
         IgxQueryBuilderComponent
     ]
 })
-export class IgxQueryBuiderSampleTestComponent implements OnInit {
+export class IgxQueryBuilderSampleTestComponent implements OnInit {
     @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
     public entities: Array<any>;
 
@@ -2029,7 +2029,7 @@ export class IgxQueryBuiderSampleTestComponent implements OnInit {
         IgxQueryBuilderHeaderComponent
     ]
 })
-export class IgxQueryBuiderCustomHeaderSampleTestComponent implements OnInit {
+export class IgxQueryBuilderCustomHeaderSampleTestComponent implements OnInit {
     @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
     public entities: Array<any>;
     public showLegend = false;
