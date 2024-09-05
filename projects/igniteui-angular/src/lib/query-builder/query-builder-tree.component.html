@@ -423,7 +423,7 @@
             ></div>
 
             <div class="igx-filter-tree__expression">
-                <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && this.entities.length === 1 && this.entities[0].name) ? 'flex' : 'none'">
+                <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && this.entities.length > 0 && this.entities[0].name) ? 'flex' : 'none'">
                     <ng-container *ngIf="!expressionItem.parent">
                         <igx-select #entitySelect
                             type="box"
