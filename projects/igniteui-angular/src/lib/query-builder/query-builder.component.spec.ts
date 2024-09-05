@@ -1,5 +1,5 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxBooleanFilteringOperand, IgxChipComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IgxChipComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1275,7 +1275,6 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should reset all inputs when the entity is changed.', fakeAsync(() => {
-            pending();
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
@@ -1311,6 +1310,7 @@ describe('IgxQueryBuilder', () => {
             const confirmButton = Array.from(dialogOutlet.querySelectorAll('button'))[1];
             expect(confirmButton.innerText).toEqual('Confirm');
             confirmButton.click();
+            fix.detectChanges();
             tick(100);
             fix.detectChanges();
 
@@ -1972,7 +1972,7 @@ describe('IgxQueryBuilder', () => {
             tick(100);
             fix.detectChanges();
 
-            const endGroupButton = QueryBuilderFunctions.getQueryBuilderTreeGroupButtons(fix, [2], 0)[3]  as HTMLElement;
+            const endGroupButton = QueryBuilderFunctions.getQueryBuilderTreeGroupButtons(fix, [2], 0)[3] as HTMLElement;
             expect(endGroupButton.querySelector('span').innerText).toBe('My end group');
         }));
     });
