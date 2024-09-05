@@ -322,6 +322,11 @@ export class QueryBuilderFunctions {
         return fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_CONTEXT_MENU}`));
     }
 
+    public static getGroupContextMenuButton(contextMenu: DebugElement, buttonContent: string){
+        return contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText.split("\n").pop().toLowerCase() === buttonContent.toLowerCase()) as DebugElement
+    }
+
+
     /**
      * Verifies the type of the operator line ('and' or 'or').
      * (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)

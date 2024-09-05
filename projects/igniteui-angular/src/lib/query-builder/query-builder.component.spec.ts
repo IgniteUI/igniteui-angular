@@ -1404,126 +1404,52 @@ describe('IgxQueryBuilder', () => {
             const chips = fixture.debugElement.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(3, "Chips ware not deleted");
         }));
-    });
 
-    describe('Keyboard navigation', () => {
-        it('Should navigate with Tab/Shift+Tab through entity and fields inputs, chips, their respective delete icons and the operator lines.', fakeAsync(() => {
+        it('Ungroup button of the root group\'s context menu should be disabled.', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
             tick();
             fixture.detectChanges();
 
-            QueryBuilderFunctions.verifyQueryBuilderTabbableElements(fixture);
-        }));
-
-        it('Should navigate with Tab/Shift+Tab through chips" "edit", "cancel" and "adding" buttons, fields of a condition in edit mode', fakeAsync(() => {
-            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
-            tick();
+            // Click root group's operator line.
+            const rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fixture) as HTMLElement;
+            rootOperatorLine.click();
+            tick(200);
             fixture.detectChanges();
 
-            const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[0];
-
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip.nativeElement, 200);
-
-            const chipActions = fixture.debugElement.query(By.css('.igx-filter-tree__expression-actions'));
-            QueryBuilderFunctions.verifyTabbableChipActions(chipActions);
-
-            // Open Edit mode and check condition line elements
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chipActions.children[0].nativeElement, 200);
-
-            const editLine = fixture.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[1];
-            QueryBuilderFunctions.verifyTabbableConditionEditLineElements(editLine);
-
-            const editDialog = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_BODY}`))[1];
-            QueryBuilderFunctions.verifyTabbableInConditionDialogElements(editDialog);
-        }));
-
-        it('Should select/deselect a condition when pressing \'Enter\' on its respective chip.', fakeAsync(() => {
-            //!Both Enter and Space should work
-            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
-            tick();
-            fixture.detectChanges();
-
-            const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[0];
-
-            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
-
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip.nativeElement, 200);
-
-            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, true);
-
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip.nativeElement, 200);
-
-            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
-
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip.nativeElement, 200);
-
-            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, true);
-
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip.nativeElement, 200);
-
-            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
-        }));
-
-        //Should select/deselect all child conditions and groups when pressing \'Enter\' on  a group\'s operator line.
-        //Should open the group"s context menu when pressing "Enter"/"space"  on its operator line.
-        it('Should select/deselect all child conditions/groups and open/close group context menu when pressing "Enter"/"space" on its operator line.', fakeAsync(() => {
-            //!Both Enter and Space should work
-            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
-            tick();
-            fixture.detectChanges();
-
-            const line = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[0];
-            const chips = fixture.debugElement.queryAll(By.directive(IgxChipComponent));
-
-            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, false);
-            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
-            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
-
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line.nativeElement);
-
-            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, true);
-            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, true);
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+            const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line.nativeElement);
-
-            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, false);
-            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
-            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
-
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line.nativeElement);
-
-            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, true);
-            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, true);
-            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
-
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line.nativeElement);
-
-            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, false);
-            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
-            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+            // Verify the unGroup button is disabled.
+            const unGroupButton = QueryBuilderFunctions.getGroupContextMenuButton(contextMenu, 'UnGroup');
+            ControlsFunction.verifyButtonIsDisabled(unGroupButton.nativeElement);
         }));
 
-        it('Should remove a chip in when pressing \'Enter\' on its \'remove\' icon.', fakeAsync(() => {
-            //!Both Enter and Space should work
+        it('Should remove a group from the expr tree when clicking "delete" from the context menu.', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
             tick();
             fixture.detectChanges();
 
-            // Verify the there are three chip expressions.
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 3, 6);
 
-            // Press 'Enter' on the remove icon of the second chip.
-            const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fixture, [1]);
-            const removeIcon = ControlsFunction.getChipRemoveButton(chip as HTMLElement);
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', removeIcon);
-            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 2, 5);
+            //create group
+            QueryBuilderFunctions.createGroupFromBottomTwoChips(fixture, "AND");
 
-            // Press 'Space' on the remove icon of the second chip.
-            const chip2 = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fixture, [0]);
-            const removeIcon2 = ControlsFunction.getChipRemoveButton(chip2 as HTMLElement);
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', removeIcon2);
-            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 1, 1);
+            //Click group line
+            QueryBuilderFunctions.clickQueryBuilderTreeGroupOperatorLine(fixture, [0]);
+            tick(200);
+            fixture.detectChanges();
+
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+            const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
+
+            //click delete group
+            const deleteButton = QueryBuilderFunctions.getGroupContextMenuButton(contextMenu, 'Delete');
+            deleteButton.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 1, 4);
+            QueryBuilderFunctions.verifyGroupLineCount(fixture, 2, 0);
         }));
 
         //Should not commit and close currently edited condition when the \'close\' button is clicked.
@@ -1702,7 +1628,127 @@ describe('IgxQueryBuilder', () => {
 
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 3, 6);
         }));
+    });
 
+    describe('Keyboard navigation', () => {
+        it('Should navigate with Tab/Shift+Tab through entity and fields inputs, chips, their respective delete icons and the operator lines.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            QueryBuilderFunctions.verifyQueryBuilderTabbableElements(fixture);
+        }));
+
+        it('Should navigate with Tab/Shift+Tab through chips" "edit", "cancel" and "adding" buttons, fields of a condition in edit mode', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[0];
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip.nativeElement, 200);
+
+            const chipActions = fixture.debugElement.query(By.css('.igx-filter-tree__expression-actions'));
+            QueryBuilderFunctions.verifyTabbableChipActions(chipActions);
+
+            // Open Edit mode and check condition line elements
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chipActions.children[0].nativeElement, 200);
+
+            const editLine = fixture.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[1];
+            QueryBuilderFunctions.verifyTabbableConditionEditLineElements(editLine);
+
+            const editDialog = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_BODY}`))[1];
+            QueryBuilderFunctions.verifyTabbableInConditionDialogElements(editDialog);
+        }));
+
+        it('Should select/deselect a condition when pressing \'Enter\' on its respective chip.', fakeAsync(() => {
+            //!Both Enter and Space should work
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            const chip = fixture.debugElement.queryAll(By.directive(IgxChipComponent))[0];
+
+            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip.nativeElement, 200);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, true);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', chip.nativeElement, 200);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip.nativeElement, 200);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, true);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', chip.nativeElement, 200);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
+        }));
+
+        //Should select/deselect all child conditions and groups when pressing \'Enter\' on  a group\'s operator line.
+        //Should open the group"s context menu when pressing "Enter"/"space"  on its operator line.
+        it('Should select/deselect all child conditions/groups and open/close group context menu when pressing "Enter"/"space" on its operator line.', fakeAsync(() => {
+            //!Both Enter and Space should work
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            const line = fixture.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[0];
+            const chips = fixture.debugElement.queryAll(By.directive(IgxChipComponent));
+
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line.nativeElement);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, true);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, true);
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', line.nativeElement);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line.nativeElement);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, true);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, true);
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
+
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', line.nativeElement);
+
+            QueryBuilderFunctions.verifyChipSelectedState(chips[0].nativeElement, false);
+            QueryBuilderFunctions.verifyChipSelectedState(chips[3].nativeElement, false);
+            QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, false);
+        }));
+
+        it('Should remove a chip in when pressing \'Enter\' on its \'remove\' icon.', fakeAsync(() => {
+            //!Both Enter and Space should work
+            const fixture = TestBed.createComponent(IgxQueryBuiderExprTreeSampleTestComponent);
+            tick();
+            fixture.detectChanges();
+
+            // Verify the there are three chip expressions.
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 3, 6);
+
+            // Press 'Enter' on the remove icon of the second chip.
+            const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fixture, [1]);
+            const removeIcon = ControlsFunction.getChipRemoveButton(chip as HTMLElement);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', removeIcon);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 2, 5);
+
+            // Press 'Space' on the remove icon of the second chip.
+            const chip2 = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fixture, [0]);
+            const removeIcon2 = ControlsFunction.getChipRemoveButton(chip2 as HTMLElement);
+            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', removeIcon2);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 1, 1);
+        }));
     });
 
     describe('Localization', () => {
