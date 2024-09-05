@@ -249,6 +249,13 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, false, false, false);
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, '', '', '');
 
+            // adding buttons and 'end' group button should be disabled
+            let addingButtons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
+            expect(addingButtons.length).toBe(4);
+            for (const button of addingButtons) {
+                ControlsFunction.verifyButtonIsDisabled(button as HTMLElement);
+            }
+
             // Populate edit inputs.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
@@ -263,8 +270,41 @@ describe('IgxQueryBuilder', () => {
             // Verify the operator line of the new group is an 'And' line.
             QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, [0]) as HTMLElement, 'and');
 
+            // adding buttons should be enabled, 'end group' button should be disabled
+            addingButtons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
+            expect(addingButtons.length).toBe(4);
+            for (let i = 0; i < addingButtons.length; i++) {
+                if (i === 3) {
+                    ControlsFunction.verifyButtonIsDisabled(addingButtons[i] as HTMLElement);
+                } else {
+                    ControlsFunction.verifyButtonIsDisabled(addingButtons[i] as HTMLElement, false);
+                }
+            }
+
+            // Start adding new condition to the currently added group
+            (addingButtons[0] as HTMLElement).click();
+            tick();
+            fix.detectChanges();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'OrderDate' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 4); // Select 'Today' operator.
+
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // expect all adding buttons and 'end group' button to be enabled
+            addingButtons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
+            expect(addingButtons.length).toBe(4);
+            for (let i = 0; i < addingButtons.length; i++) {
+                ControlsFunction.verifyButtonIsDisabled(addingButtons[i] as HTMLElement, false);
+            }
+
+            // Click 'End Group'
+            (addingButtons[3] as HTMLElement).click();
+            tick();
+            fix.detectChanges();
+
             group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
-            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 4, 8);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 4, 9);
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalled();
         }));
 
