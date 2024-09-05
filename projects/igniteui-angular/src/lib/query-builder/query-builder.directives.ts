@@ -1,4 +1,4 @@
-import { Directive, Input, TemplateRef } from '@angular/core';
+import { Directive, TemplateRef } from '@angular/core';
 
 /**
  * Defines the custom template that will be used for the search value input of condition in edit mode
@@ -9,8 +9,8 @@ import { Directive, Input, TemplateRef } from '@angular/core';
  *
  * @example
  * <igx-query-builder>
- *      <ng-template igxQueryBuilderSearchValue>
- *          <span>Custom Search Value</span>
+ *      <ng-template igxQueryBuilderSearchValue let-searchValue let-field="field" let-condition="condition">
+ *          <span>{{field.field}} {{condition}} {{searchValue}}</span>
  *      </ng-template>
  *  </igx-query-builder>
  */
@@ -19,8 +19,5 @@ import { Directive, Input, TemplateRef } from '@angular/core';
     standalone: true
 })
 export class IgxQueryBuilderSearchValueTemplateDirective {
-    @Input()
-    public searchValue: any;
-
     constructor(public template: TemplateRef<any>) { }
 }

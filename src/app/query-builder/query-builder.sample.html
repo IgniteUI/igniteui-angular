@@ -10,8 +10,8 @@
             <!-- Custom header -->
             <!-- <igx-query-builder-header [title]="'Builder'" [showLegend]="false"><span>Custom Title</span></igx-query-builder-header> -->
 
-            <!-- <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-searchValue="searchValue">
-                <button igxButton="contained" igxRipple (click)="setSearchValue()">Set Search Value</button>
+            <!-- <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-searchValue let-field="field" let-condition="condition">
+                <button igxButton="contained" igxRipple (click)="logParams(field, condition, searchValue)">LOG</button>
             </ng-template> -->
         </igx-query-builder>
 

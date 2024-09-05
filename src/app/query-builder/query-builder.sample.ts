@@ -148,8 +148,10 @@ export class QueryBuilderComponent implements OnInit {
         this.queryBuilder.locale = locale;
     }
 
-    public setSearchValue() {
-        this.searchValueTemplate.searchValue = 'value from template';
+    public logParams(field: any, condition: any, searchValue: any) {
+        console.log(field);
+        console.log(condition);
+        console.log(searchValue);
     }
 
     public printExpressionTree(tree: IExpressionTree) {

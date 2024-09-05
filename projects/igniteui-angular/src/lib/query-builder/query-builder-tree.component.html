@@ -246,7 +246,12 @@
                 </igx-select-item>
             </igx-select>
 
-            <ng-container *ngTemplateOutlet="searchValueTemplate ? searchValueTemplate : defaultSearchValueTemplate">
+            <ng-container 
+                *ngTemplateOutlet="
+                    searchValueTemplate ? searchValueTemplate : defaultSearchValueTemplate;
+                    context: { $implicit: _editedExpression.expression.searchVal, field: selectedField, condition: selectedCondition }
+                "
+            >
             </ng-container>
 
             <ng-template #defaultSearchValueTemplate>

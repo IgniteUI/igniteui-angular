@@ -12,11 +12,6 @@
     [locale]="this.locale"
     [resourceStrings]="this.resourceStrings"
     (expressionTreeChange)="onExpressionTreeChange($event)"
-    >
-    <ng-container *ngIf="searchValueTemplate">
-        <ng-template igxQueryBuilderSearchValue>
-            <ng-container *ngTemplateOutlet="searchValueTemplate"></ng-container>
-        </ng-template>
-    </ng-container>
+    [searchValueTemplate]="searchValueTemplate">
 </igx-query-builder-tree>
 

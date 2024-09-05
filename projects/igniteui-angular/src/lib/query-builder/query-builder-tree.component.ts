@@ -174,6 +174,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public entities: EntityType[];
 
     @Input()
+    public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueTemplateDirective> = null;
+
+    @Input()
     public get parentExpression(): ExpressionOperandItem {
         return this._parentExpression;
     }
@@ -313,12 +316,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     @ContentChild(IgxQueryBuilderHeaderComponent)
     public headerContent: IgxQueryBuilderHeaderComponent;
-
-    @ContentChild(IgxQueryBuilderSearchValueTemplateDirective, { read: TemplateRef })
-    public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueTemplateDirective> = null;
-
-    // @ViewChildren(IgxQueryBuilderSearchValueTemplateDirective)
-    // public searchValueTemplateDirectives: QueryList<IgxQueryBuilderSearchValueTemplateDirective>;
 
     @ViewChild('editingInputsContainer', { read: ElementRef })
     protected set editingInputsContainer(value: ElementRef) {
@@ -725,7 +722,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this._editedExpression) {
             this._editedExpression.expression.field = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
-            this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
+            this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue); //
             this._editedExpression.fieldLabel = this.selectedField.label
                 ? this.selectedField.label
                 : this.selectedField.header
