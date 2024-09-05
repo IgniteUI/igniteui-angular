@@ -226,12 +226,12 @@
 
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
-    $indigo-theme: $variant == 'indigo-design';
+    $indigo-theme: $variant == 'indigo';
     $group-item-min-width: map.get((
-        material: rem(42px),
-        fluent: rem(42px),
-        bootstrap: rem(42px),
-        indigo-design: rem(32px),
+        'material': rem(42px),
+        'fluent': rem(42px),
+        'bootstrap': rem(42px),
+        'indigo': rem(32px),
     ), $variant);
 
     %item-overlay {
@@ -316,7 +316,7 @@
             color: var-get($theme, 'item-hover-text-color');
             background: var-get($theme, 'item-hover-background');
             border-color: var-get($theme, 'item-hover-border-color');
-        
+
             igx-icon {
                 color: var-get($theme, 'item-hover-icon-color');
             }
@@ -369,7 +369,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
 
             igx-icon {
@@ -481,9 +481,9 @@
                 }
             }
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 color: var-get($theme, 'item-focused-text-color');
-                background: var-get($theme, 'item-focused-background'); 
+                background: var-get($theme, 'item-focused-background');
                 border-color: var-get($theme, 'item-focused-border-color');
                 z-index: 2;
 
@@ -618,7 +618,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             &:active {
                 background: var-get($theme, 'item-selected-hover-background');
                 color: var-get($theme, 'item-selected-hover-text-color');
@@ -720,7 +720,7 @@
                 }
             }
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'selected-shadow-color');
                 border-color: var-get($theme, 'item-selected-border-color');
                 background: var-get($theme, 'item-selected-background');
@@ -754,7 +754,7 @@
                 background: var-get($theme, 'disabled-selected-background');
             }
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 color: var-get($theme, 'disabled-selected-text-color');
                 background: var-get($theme, 'disabled-selected-background');
                 border: none;
