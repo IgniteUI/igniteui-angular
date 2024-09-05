@@ -578,7 +578,7 @@ export class QueryBuilderFunctions {
         if (orLineCount) expect(orLines.length).toBe(orLineCount, "OR groups not the right count");
     };
 
-    public static verifyConditionCountInRootAndSubGroup(fix: ComponentFixture<any>, rootDirect: number, rootTotal: number = null, subGroupPath: number[] = null, subGroupDirect: number = null, subGroupTotal: number = null) {
+    public static verifyRootAndSubGroupExpressionsCount(fix: ComponentFixture<any>, rootDirect: number, rootTotal: number = null, subGroupPath: number[] = null, subGroupDirect: number = null, subGroupTotal: number = null) {
         const rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
         expect(rootGroup).not.toBeNull('There is no root group.');
         expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup, true).length).toBe(rootDirect, 'Root direct condition count not correct');
@@ -679,8 +679,8 @@ export class QueryBuilderFunctions {
     }
 
     /**
- * Click the operator line of the group that is located on the provided 'path'.
- */
+     * Click the operator line of the group that is located on the provided 'path'.
+     */
     public static clickQueryBuilderTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
         const operatorLine = QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, path) as HTMLElement;
         operatorLine.click();

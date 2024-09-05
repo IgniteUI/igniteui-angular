@@ -90,9 +90,9 @@ describe('IgxQueryBuilder', () => {
                 expect(nestedQueryTrees[i].checkVisibility()).toBeFalse();
             }
             // adding buttons should be enabled
-            const buttons = queryTreeExpressionContainer.querySelector(':scope > .igx-filter-tree__buttons').querySelectorAll(':scope > button');
-            for (let i = 0; i++; i < buttons.length) {
-                ControlsFunction.verifyButtonIsDisabled(buttons[i] as HTMLElement, false);
+            const buttons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
+            for (const button of buttons) {
+                ControlsFunction.verifyButtonIsDisabled(button as HTMLElement, false);
             }
         });
 
@@ -119,7 +119,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Verify there is a new root group, which is empty.
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fix, 0, 0);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 0, 0);
 
             // Verify the operator line of the root group is an 'And' line.
             QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
@@ -144,7 +144,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Verify there is a new root group, which is empty.
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fix, 0, 0);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 0, 0);
 
             // Verify the operator line of the root group is an 'Or' line.
             QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'or');
@@ -196,7 +196,7 @@ describe('IgxQueryBuilder', () => {
 
             // Verify group's children count before adding a new child.
             let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fix, 3, 6);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
 
             // Add new 'expression'.
@@ -222,7 +222,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fix, 4, 7);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 4, 7);
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalled();
         }));
 
@@ -236,7 +236,7 @@ describe('IgxQueryBuilder', () => {
 
             // Verify group's children count before adding a new child.
             let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fix, 3, 6);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
             // Add new 'And' group.
             const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[0];
@@ -264,7 +264,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, [0]) as HTMLElement, 'and');
 
             group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fix, 4, 8);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 4, 8);
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalled();
         }));
 
@@ -278,7 +278,7 @@ describe('IgxQueryBuilder', () => {
 
             // Verify group's children count before adding a new child.
             let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fix, 3, 6);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
             // Add new 'Or' group.
             const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[0];
@@ -306,7 +306,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, [0]) as HTMLElement, 'or');
 
             group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fix, 4, 8);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 4, 8);
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalled();
         }));
 
@@ -319,14 +319,14 @@ describe('IgxQueryBuilder', () => {
             spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
 
             // Verify tree layout before deleting chips.
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fix, 3, 6);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
             // Delete a chip and verify layout.
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipRemoveIcon(fix, [0]);
             tick(100);
             fix.detectChanges();
 
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fix, 2, 2);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 2, 2);
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalled();
 
             // Delete a chip and verify layout.
@@ -334,7 +334,7 @@ describe('IgxQueryBuilder', () => {
             tick(100);
             flush();
             fix.detectChanges();
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fix, 1, 1);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 1, 1);
 
             // Verify remaining chip's content.
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'OrderId', 'Greater Than', '3');
@@ -1000,6 +1000,42 @@ describe('IgxQueryBuilder', () => {
                 .toBeNull('actions container is visible');
         }));
 
+        it('Should have disabled adding buttons when an expression is in edit mode.', fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify adding buttons are enabled
+            let buttons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
+            for (const button of buttons) {
+                ControlsFunction.verifyButtonIsDisabled(button as HTMLElement, false);
+            }
+
+            // Enter edit mode
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Verify adding buttons are disabled
+            buttons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
+            for (const button of buttons) {
+                ControlsFunction.verifyButtonIsDisabled(button as HTMLElement);
+            }
+
+            // Exit edit mode
+            const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
+            UIInteractions.simulateClickEvent(closeButton);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify adding buttons are enabled
+            buttons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
+            for (const button of buttons) {
+                ControlsFunction.verifyButtonIsDisabled(button as HTMLElement, false);
+            }
+        }));
+
         it('Double-clicking a condition should put it in edit mode.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
@@ -1417,19 +1453,19 @@ describe('IgxQueryBuilder', () => {
             fixture.detectChanges();
 
             // Verify the there are three chip expressions.
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fixture, 3, 6);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 3, 6);
 
             // Press 'Enter' on the remove icon of the second chip.
             const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fixture, [1]);
             const removeIcon = ControlsFunction.getChipRemoveButton(chip as HTMLElement);
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, 'Enter', removeIcon);
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fixture, 2, 5);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 2, 5);
 
             // Press 'Space' on the remove icon of the second chip.
             const chip2 = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fixture, [0]);
             const removeIcon2 = ControlsFunction.getChipRemoveButton(chip2 as HTMLElement);
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fixture, ' ', removeIcon2);
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fixture, 1, 1);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 1, 1);
         }));
 
         //Should not commit and close currently edited condition when the \'close\' button is clicked.
@@ -1561,7 +1597,7 @@ describe('IgxQueryBuilder', () => {
             tick();
             fixture.detectChanges();
 
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fixture, 3, 6);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 3, 6);
             QueryBuilderFunctions.verifyGroupLineCount(fixture, 2, 0);
 
             //Select condition 1 and 2
@@ -1578,7 +1614,7 @@ describe('IgxQueryBuilder', () => {
             tick(200);
             fixture.detectChanges();
 
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fixture, 2, 7, [0], 2, 5);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 2, 7, [0], 2, 5);
             QueryBuilderFunctions.verifyGroupLineCount(fixture, 3, 0);
 
             //Change group to OR
@@ -1593,7 +1629,7 @@ describe('IgxQueryBuilder', () => {
             tick();
             fixture.detectChanges();
 
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fixture, 2, 7, [0], 2, 5);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 2, 7, [0], 2, 5);
             QueryBuilderFunctions.verifyGroupLineCount(fixture, 2, 1);
 
             //Un-group OR group
@@ -1606,14 +1642,14 @@ describe('IgxQueryBuilder', () => {
             tick(200);
             fixture.detectChanges();
 
-            QueryBuilderFunctions.verifyConditionCountInRootAndSubGroup(fixture, 3, 6);
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fixture, 3, 6);
         }));
 
     });
 
     describe('Localization', () => {
         it('', () => { });
-        //Move to interaction        
+        //Move to interaction
     });
 
     describe('Overlay settings', () => {
