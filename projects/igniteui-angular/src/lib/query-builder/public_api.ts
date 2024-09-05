@@ -6,6 +6,7 @@ export {
     IgxQueryBuilderComponent
 } from './query-builder.component';
 export * from './query-builder-header.component';
+export * from './query-builder.directives';
 
 /* NOTE: Query builder directives collection for ease-of-use import in standalone components scenario */
 export const IGX_QUERY_BUILDER_DIRECTIVES = [

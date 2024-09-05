@@ -249,7 +249,7 @@
             <ng-container 
                 *ngTemplateOutlet="
                     searchValueTemplate ? searchValueTemplate : defaultSearchValueTemplate;
-                    context: { $implicit: _editedExpression.expression.searchVal, field: selectedField, condition: selectedCondition }
+                    context: { $implicit: searchValue, field: selectedField, condition: selectedCondition }
                 "
             >
             </ng-container>
