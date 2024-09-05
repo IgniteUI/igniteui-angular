@@ -524,7 +524,7 @@
             }
         }
 
-        > igx-avatar {
+        %igx-avatar-display {
             --ig-size: #{if($variant == 'indigo', 2, 1)};
         }
 
