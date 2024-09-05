@@ -925,6 +925,10 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
+            // Verify operator icon
+            const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement;
+            expect(operatorInputGroup.querySelector('igx-icon').attributes.getNamedItem('ng-reflect-name').nodeValue).toEqual('in');
+
             // Verify inputs states
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
 
@@ -948,6 +952,89 @@ describe('IgxQueryBuilder', () => {
         "name": "in",
         "isUnary": false,
         "iconName": "in"
+      },
+      "conditionName": null,
+      "ignoreCase": true,
+      "searchVal": null,
+      "searchTree": {
+        "filteringOperands": [
+          {
+            "field": "ProductName",
+            "condition": {
+              "name": "contains",
+              "isUnary": false,
+              "iconName": "filter_contains"
+            },
+            "conditionName": null,
+            "ignoreCase": true,
+            "searchVal": "a",
+            "searchTree": null
+          }
+        ],
+        "operator": 1,
+        "entity": "Products",
+        "returnFields": [
+          "Id",
+          "ProductName",
+          "OrderId",
+          "Released"
+        ]
+      }
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "OrderId",
+    "OrderName",
+    "OrderDate"
+  ]
+}`);
+        }));
+
+        it('Should correctly apply an \'not-in\' column condition through UI.', fakeAsync(() => {
+            // Verify there is no expression.
+            expect(queryBuilder.expressionTree).toBeUndefined();
+
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11); // Select 'Not-In' operator.
+
+            // Verify operator icon
+            const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement;
+            expect(operatorInputGroup.querySelector('igx-icon').attributes.getNamedItem('ng-reflect-name').nodeValue).toEqual('not-in');
+
+            // Verify inputs states
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
+
+            // Should render empty query builder tree
+            const nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
+            expect(nestedTree).toBeDefined();
+
+            QueryBuilderFunctions.addAndValidateChildGroup(fix, 1, 1);
+
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "field": "OrderId",
+      "condition": {
+        "name": "notIn",
+        "isUnary": false,
+        "iconName": "not-in"
       },
       "conditionName": null,
       "ignoreCase": true,
