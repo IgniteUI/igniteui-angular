@@ -108,8 +108,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             }
 
             this._value = val;
-            const isDate = this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime;
-            this.expression.searchVal = isDate ? DateTimeUtil.adjustDate(this.column.pipeArgs.timezone, val) : DataUtil.parseValue(this.column.dataType, val);
+            const isDateOnly = this.column.dataType === GridColumnDataType.Date;
+            const isDate = isDateOnly || this.column.dataType === GridColumnDataType.DateTime;
+            this.expression.searchVal = isDate ? DateTimeUtil.adjustDate(this.column.pipeArgs.timezone, val, isDateOnly) : DataUtil.parseValue(this.column.dataType, val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
                 this.addExpression(true);
             }
@@ -224,14 +225,16 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
+        console.log(this.column.pipeArgs.format)
         this._conditionsOverlaySettings.outlet = this.column.grid.outlet;
         this._operatorsOverlaySettings.outlet = this.column.grid.outlet;
 
         const selectedItem = this.expressionsList.find(expr => expr.isSelected === true);
         if (selectedItem) {
             this.expression = selectedItem.expression;
-            const isDate = this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime;
-            const adjustedSearchVal = isDate ? DateTimeUtil.adjustDate(this.column.pipeArgs.timezone, this.expression.searchVal, true) : this.expression.searchVal
+            const isDateOnly = this.column.dataType === GridColumnDataType.Date;
+            const isDate = isDateOnly || this.column.dataType === GridColumnDataType.DateTime;
+            const adjustedSearchVal = isDate ? DateTimeUtil.adjustDate(this.column.pipeArgs.timezone, this.expression.searchVal, isDateOnly, true) : this.expression.searchVal
             this._value = adjustedSearchVal;
         }
 
@@ -630,8 +633,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         item.isSelected = !item.isSelected;
         if (item.isSelected) {
             this.expression = item.expression;
-            const isDate = this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime;
-            const adjustedSearchVal = isDate ? DateTimeUtil.adjustDate(this.column.pipeArgs.timezone, this.expression.searchVal, true) : this.expression.searchVal
+            const isDateOnly = this.column.dataType === GridColumnDataType.Date;
+            const isDate = isDateOnly || this.column.dataType === GridColumnDataType.DateTime;
+            const adjustedSearchVal = isDate ? DateTimeUtil.adjustDate(this.column.pipeArgs.timezone, this.expression.searchVal, isDateOnly, true) : this.expression.searchVal
             this._value = adjustedSearchVal;
             this.focusEditElement();
         }

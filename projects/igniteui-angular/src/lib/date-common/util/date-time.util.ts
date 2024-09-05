@@ -256,12 +256,21 @@ export abstract class DateTimeUtil {
     }
 
     /** Adjusts the given date to or from the specified timezone. */
-    public static adjustDate(timezone: string, value: Date, reverse: boolean = false): any {
+    public static adjustDate(timezone: string, value: Date, isDateOnly: boolean, reverse: boolean = false): any {
         const reverseValue = reverse ? -1 : 1;
         const inputTimezoneOffset = value.getTimezoneOffset();
         const columnTimezoneOffset = this.timezoneToOffset(timezone, inputTimezoneOffset);
         const offsetDifference = reverseValue * (columnTimezoneOffset - inputTimezoneOffset);
         const adjustedDate = this.addDateMinutes(value, offsetDifference);
+
+        if (isDateOnly) {
+            let dayDifference = adjustedDate.getUTCDate() - value.getUTCDate();
+            dayDifference = dayDifference <= -1 ? -1 * dayDifference : dayDifference;
+
+            const shiftedDate = new Date(adjustedDate);
+            shiftedDate.setDate(adjustedDate.getDate() + dayDifference);
+            return new Date(shiftedDate.getFullYear(), shiftedDate.getMonth(), shiftedDate.getDate());
+        }
 
         return adjustedDate;
     }
