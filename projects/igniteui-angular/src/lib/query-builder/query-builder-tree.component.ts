@@ -1107,7 +1107,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public getConditionList(): string[] {
-        return this.selectedField ? this.selectedField.filters.conditionList() : [];
+        let conditionList = this.selectedField ? this.selectedField.filters.conditionList() : [];
+        if (this.entities.length === 1 && !this.entities[0].name) {
+            conditionList = conditionList.filter(c => c !== 'in' && c !== 'notIn')
+        }
+        return conditionList;
     }
 
     /**
