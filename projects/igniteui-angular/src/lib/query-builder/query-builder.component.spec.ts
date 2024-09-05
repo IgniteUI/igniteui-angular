@@ -1521,7 +1521,7 @@ describe('IgxQueryBuilder', () => {
             fixture.detectChanges();
 
             //Click Delete group
-            const contextMenus = QueryBuilderFunctions.getContextMenus(fixture);
+            const contextMenus = QueryBuilderFunctions.getQueryBuilderContextMenus(fixture);
             const deleteButton = contextMenus[1].query(By.css('.igx-filter-contextual-menu__delete-btn'));
             deleteButton.nativeElement.click();
             tick();
@@ -1544,10 +1544,10 @@ describe('IgxQueryBuilder', () => {
             fixture.detectChanges();
 
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
-            const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
+            const contextMenu = QueryBuilderFunctions.getQueryBuilderContextMenus(fixture)[1];
 
             // Verify the unGroup button is disabled.
-            const unGroupButton = QueryBuilderFunctions.getGroupContextMenuButton(contextMenu, 'UnGroup');
+            const unGroupButton = QueryBuilderFunctions.getQueryBuilderGroupContextMenuButton(contextMenu, 'UnGroup');
             ControlsFunction.verifyButtonIsDisabled(unGroupButton.nativeElement);
         }));
 
@@ -1567,10 +1567,10 @@ describe('IgxQueryBuilder', () => {
             fixture.detectChanges();
 
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
-            const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
+            const contextMenu = QueryBuilderFunctions.getQueryBuilderContextMenus(fixture)[1];
 
             //click delete group
-            const deleteButton = QueryBuilderFunctions.getGroupContextMenuButton(contextMenu, 'Delete');
+            const deleteButton = QueryBuilderFunctions.getQueryBuilderGroupContextMenuButton(contextMenu, 'Delete');
             deleteButton.nativeElement.click();
             tick(200);
             fixture.detectChanges();
@@ -1694,7 +1694,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
 
             //Click close button to close menu
-            const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
+            const contextMenu = QueryBuilderFunctions.getQueryBuilderContextMenus(fixture)[1];
             const closeButton = contextMenu.query(By.css('.igx-filter-contextual-menu__close-btn'));
             closeButton.nativeElement.click();
             tick(200);
@@ -1719,7 +1719,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fixture, true);
 
             //Group them as AND group
-            const contextMenu = QueryBuilderFunctions.getContextMenus(fixture)[1];
+            const contextMenu = QueryBuilderFunctions.getQueryBuilderContextMenus(fixture)[1];
             const andButton = contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText === 'Create "And" Group');
             andButton.nativeElement.click();
             tick(200);
@@ -1879,8 +1879,115 @@ describe('IgxQueryBuilder', () => {
     });
 
     describe('Localization', () => {
-        it('', () => { });
-        //Move to interaction
+        it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
+            queryBuilder.resourceStrings = Object.assign({}, queryBuilder.resourceStrings, {
+                igx_query_builder_title: 'My advanced filter',
+                igx_query_builder_and_group: 'My and group',
+                igx_query_builder_or_group: 'My or group',
+                igx_query_builder_end_group: 'My end group',
+                igx_query_builder_create_and_group: 'My create and group',
+                igx_query_builder_create_or_group: 'My create or group',
+                igx_query_builder_and_label: 'My and',
+                igx_query_builder_or_label: 'My or',
+                igx_query_builder_add_condition: 'My condition',
+                igx_query_builder_ungroup: 'My ungroup',
+                igx_query_builder_delete: 'My delete',
+                igx_query_builder_delete_filters: 'My delete filters',
+                igx_query_builder_initial_text: 'My initial text'
+            });
+            fix.detectChanges();
+
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' My advanced filter ');
+            expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fix) as HTMLElement).innerText).toBe('My and');
+            expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fix) as HTMLElement).innerText).toBe('My or');
+            expect(QueryBuilderFunctions.getQueryBuilderInitialAddGroupButtons(fix)[0].querySelector('span').innerText)
+                .toBe('My and group');
+            expect(QueryBuilderFunctions.getQueryBuilderInitialAddGroupButtons(fix)[1].querySelector('span').innerText)
+                .toBe('My or group');
+            expect((QueryBuilderFunctions.getQueryBuilderEmptyPrompt(fix) as HTMLElement).innerText).toBe('My initial text');
+
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement).querySelector('span').innerText)
+                .toBe('My condition');
+            expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[1] as HTMLElement).querySelector('span').innerText)
+                .toBe('My and group');
+            expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[2] as HTMLElement).querySelector('span').innerText)
+                .toBe('My or group');
+
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products'.
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+
+            let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+            // Commit the populated expression.
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            const rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
+            rootOperatorLine.click();
+            fix.detectChanges();
+
+            const buttonGroupItems = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenuButtonGroup(fix).querySelectorAll('.igx-button-group__item-content'));
+            expect((buttonGroupItems[0] as HTMLElement).textContent).toBe('My and');
+            expect((buttonGroupItems[1] as HTMLElement).textContent).toBe('My or');
+            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[3] as HTMLElement).querySelector('span').innerText)
+                .toBe('My ungroup');
+            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[4] as HTMLElement).querySelector('span').innerText)
+                .toBe('My delete');
+
+            // Close context menu.
+            QueryBuilderFunctions.clickQueryBuilderContextMenuCloseButton(fix);
+            fix.detectChanges();
+
+            // Add another expression to root group.
+            let btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
+            btn.click();
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+
+            input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+            // Commit the populated expression.
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Select two chips.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
+            tick(200);
+            fix.detectChanges();
+
+            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[1] as HTMLElement).innerText).toBe('My create and group');
+            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[2] as HTMLElement).innerText).toBe('My create or group');
+            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[3] as HTMLElement).innerText).toBe('My delete filters');
+
+            // Close context menu.
+            QueryBuilderFunctions.clickQueryBuilderContextMenuCloseButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Add an 'or' group to root group.
+            btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[2] as HTMLElement;
+            btn.click();
+            tick(100);
+            fix.detectChanges();
+
+            const endGroupButton = QueryBuilderFunctions.getQueryBuilderTreeGroupButtons(fix, [2], 0)[3]  as HTMLElement;
+            expect(endGroupButton.querySelector('span').innerText).toBe('My end group');
+        }));
     });
 
     describe('Overlay settings', () => {

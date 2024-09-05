@@ -80,6 +80,12 @@ export class QueryBuilderFunctions {
         return orLegendItem;
     }
 
+    public static getQueryBuilderEmptyPrompt(fix: ComponentFixture<any>) {
+        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
+        const emptyPrompt = queryBuilderElement.querySelector('.igx-filter-empty');
+        return emptyPrompt;
+    }
+
     /**
      * Get the expressions container that contains all groups and expressions.
      */
@@ -90,9 +96,18 @@ export class QueryBuilderFunctions {
         return exprContainer;
     }
 
-    public static clickQueryBuilderInitialAddGroupButton(fix: ComponentFixture<any>, buttonIndex: number, level = 0) {
+    /**
+     * Get the initial group adding buttons when the dialog does not contain any filters.
+     */
+    public static getQueryBuilderInitialAddGroupButtons(fix: ComponentFixture<any>, level = 0) {
         const exprContainer = this.getQueryBuilderExpressionsContainer(fix, level);
-        const andOrAddGroupButton = exprContainer.querySelectorAll('button')[buttonIndex] as HTMLElement;
+        const initialButtons = Array.from(exprContainer.querySelectorAll('button'));
+        return initialButtons;
+    }
+
+    public static clickQueryBuilderInitialAddGroupButton(fix: ComponentFixture<any>, buttonIndex: number, level = 0) {
+        const exprContainer = this.getQueryBuilderInitialAddGroupButtons(fix, level);
+        const andOrAddGroupButton = exprContainer[buttonIndex] as HTMLElement;
         andOrAddGroupButton.click();
     }
 
@@ -318,15 +333,32 @@ export class QueryBuilderFunctions {
         return buttons;
     }
 
-    public static getContextMenus(fix: ComponentFixture<any>) {
+    public static getQueryBuilderContextMenus(fix: ComponentFixture<any>) {
         return fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_CONTEXT_MENU}`));
     }
 
-    public static getGroupContextMenuButton(contextMenu: DebugElement, buttonContent: string) {
+    public static getQueryBuilderGroupContextMenuButton(contextMenu: DebugElement, buttonContent: string) {
         return contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText.split("\n").pop().toLowerCase() === buttonContent.toLowerCase()) as DebugElement
     }
 
+    public static getQueryBuilderContextMenuButtons(fix: ComponentFixture<any>) {
+        const contextMenu = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenus(fix))[0].nativeElement;
+        const buttons = Array.from(contextMenu.querySelectorAll('button'));
+        return buttons;
+    }
 
+    public static getQueryBuilderContextMenuButtonGroup(fix: ComponentFixture<any>) {
+        const contextMenu = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenus(fix))[0].nativeElement;
+        const buttonGroup = contextMenu.querySelector('igx-buttongroup');
+        return buttonGroup;
+    }
+
+    public static getQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>) {
+        const contextMenu = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenus(fix))[0].nativeElement;;
+        const buttons = Array.from(contextMenu.querySelectorAll('button'));
+        const closeButton: any = buttons.find((b: any) => b.innerText.toLowerCase() === 'close');
+        return closeButton;
+    }
     /**
      * Verifies the type of the operator line ('and' or 'or').
      * (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
@@ -693,6 +725,11 @@ export class QueryBuilderFunctions {
         operatorLine.click();
     }
 
+    public static clickQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>) {
+        const contextMenuCloseButton = QueryBuilderFunctions.getQueryBuilderContextMenuCloseButton(fix);
+        contextMenuCloseButton.click();
+    }
+
     /*
     * Hit a keyboard button upon element, wait for the desired time and detect changes
     */
@@ -827,12 +864,12 @@ export class QueryBuilderFunctions {
 
     public static createGroupFromBottomTwoChips(fix: ComponentFixture<any>, groupKind: string) {
         //Select bottom two chips
-        let chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[3].nativeElement, 200);
         QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[4].nativeElement, 200);
 
         //context menu should have opened
-        let contextMenus = QueryBuilderFunctions.getContextMenus(fix);
+        const contextMenus = QueryBuilderFunctions.getQueryBuilderContextMenus(fix);
         expect(contextMenus.length).toBe(2);
 
         //Click 'create OR group'
