@@ -128,17 +128,17 @@ export class QueryBuilderComponent implements OnInit {
     }
 
     public async onChange() {
-        const tree = JSON.stringify(this.expressionTree);
-        const resp = await fetch(this.backendUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: tree
-        })
-        if (resp.status == 200) {
-            this.queryResult = await resp.text();
-        }
+        // const tree = JSON.stringify(this.expressionTree);
+        // const resp = await fetch(this.backendUrl, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: tree
+        // })
+        // if (resp.status == 200) {
+        //     this.queryResult = await resp.text();
+        // }
     }
 
     public changeLocale(locale: string) {
