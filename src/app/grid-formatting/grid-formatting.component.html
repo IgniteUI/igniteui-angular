@@ -35,17 +35,17 @@
     [allowFiltering]="true" [moving]="true" [uniqueColumnValuesStrategy]="columnValuesStrategy"  width="900px"
     height="550px">
 
-    <igx-column field="OrderID" width="200px" [dataType]="'number'" [filterable]="true" [hasSummary]="true"
+    <igx-column field="orderId" width="200px" [dataType]="'number'" [filterable]="true" [hasSummary]="true"
         [summaries]="earliest" [sortable]="true">
     </igx-column>
 
-    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true"
+    <igx-column field="orderDate" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true"
         [summaries]="earliest" [sortable]="true">
     </igx-column>
-    <igx-column field="RequiredDate" width="200px" [pipeArgs]="formatOptions" [dataType]="'date'" [filterable]="true"
+    <igx-column field="requiredDate" width="200px" [pipeArgs]="formatOptions" [dataType]="'date'" [filterable]="true"
         [hasSummary]="true" [summaries]="earliest" [sortable]="true">
     </igx-column>
-    <igx-column field="Freight" width="200px" [sortable]="true" [filterable]="true" [dataType]="'string'"
+    <igx-column field="freight" width="200px" [sortable]="true" [filterable]="true" [dataType]="'string'"
         [hasSummary]="false">
     </igx-column>
 </igx-grid>

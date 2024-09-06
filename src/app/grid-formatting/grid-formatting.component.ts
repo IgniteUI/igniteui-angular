@@ -8,8 +8,6 @@ import { data } from '../shared/data';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 import { FilteringStrategy, IFilteringExpressionsTree, IgxColumnComponent, IgxDateSummaryOperand, IgxGridComponent, IgxPaginatorComponent, IgxSummaryOperand, IgxSummaryResult, IgxTreeGridComponent } from 'igniteui-angular';
 
-const ORDERS_URl = 'https://services.odata.org/V4/Northwind/Northwind.svc/Orders';
-
 @Component({
     selector: 'app-grid-formatting',
     templateUrl: 'grid-formatting.component.html',
@@ -47,6 +45,7 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
 
     constructor(private remoteService: RemoteService) {
         this.localData = data;
+        this.remoteService.entity = "Orders";
     }
 
     public ngOnInit() {
@@ -79,7 +78,7 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        this.remoteService.getOrdersData(ORDERS_URl);
+        this.remoteService.getData();
     }
 
     public changeFormatOptions() {

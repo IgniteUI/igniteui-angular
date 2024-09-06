@@ -33,52 +33,31 @@ export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
     ];
 
     constructor(private remoteService: RemoteService) {
-        remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/';
-
-        this.remoteService.urlBuilder = (dataState) => this.buildUrl(dataState);
         this.selectionMode = GridSelectionMode.none;
     }
 
-    public buildUrl(dataState) {
-        let qS = '';
-        if (dataState) {
-            qS += `${dataState.key}?`;
-
-            const level = dataState.level;
-            if (level > 0) {
-                const parentKey = this.primaryKeys.find((key) => key.level === level - 1);
-                const parentID = typeof dataState.parentID !== 'object' ? dataState.parentID : dataState.parentID[parentKey.name];
-
-                if (parentKey.type === 'string') {
-                    qS += `$filter=${parentKey.name} eq '${parentID}'`;
-                } else {
-                    qS += `$filter=${parentKey.name} eq ${parentID}`;
-                }
-            }
-        }
-        return `${this.remoteService.url}${qS}`;
-    }
-
     public ngAfterViewInit() {
-        this.remoteService.getData({ parentID: null, level: 0, key: 'Customers' }, (data) => {
-            this.remoteData = data['value'];
+        this.remoteService.entity = 'Customers';
+        this.remoteService.getData(null, null, null, (data) => {
+            this.remoteData = data['items'];
             this.hGrid.isLoading = false;
         });
     }
 
     public setterChange() {
         this.rowIsland1.rowSelection = this.rowIsland1.rowSelection === GridSelectionMode.multiple
-        ? GridSelectionMode.none : GridSelectionMode.multiple;
+            ? GridSelectionMode.none : GridSelectionMode.multiple;
     }
 
     public setterBindingChange() {
         this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
     }
 
-    public gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
+    public gridCreated(event: IGridCreatedEventArgs, _rowIsland: IgxRowIslandComponent) {
         event.grid.isLoading = true;
-        this.remoteService.getData({ parentID: event.parentID, level: rowIsland.level, key: rowIsland.key }, (data) => {
-            event.grid.data = data['value'];
+        this.remoteService.entity = { parentEntity: 'Customers', childEntity: 'Orders', key: event.parentID };
+        this.remoteService.getData(null, null, null, (data) => {
+            event.grid.data = data;
             event.grid.isLoading = false;
             event.grid.cdr.detectChanges();
         });

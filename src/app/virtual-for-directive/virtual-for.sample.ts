@@ -11,7 +11,7 @@ import { IgxForOfDirective, ButtonGroupAlignment, IgxListComponent, IgxButtonDir
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     providers: [RemoteService],
-    imports: [IgxAvatarComponent,IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, NgClass, AsyncPipe]
+    imports: [IgxAvatarComponent, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, NgClass, AsyncPipe]
 })
 export class VirtualForSampleComponent implements OnInit {
     @ViewChild('virtDirVertical', { read: IgxForOfDirective, static: true })
@@ -32,22 +32,9 @@ export class VirtualForSampleComponent implements OnInit {
     public prevRequest: any;
     public itemSize = '50px';
 
-    constructor(private remoteService: RemoteService) {
-        this.remoteService.urlBuilder = (dataState) => {
-            let qS = `?`;
-            let requiredChunkSize;
+    constructor(private remoteService: RemoteService) { }
 
-            if (dataState) {
-                const skip = dataState.startIndex;
-                requiredChunkSize = dataState.chunkSize === 0 ? 10 : dataState.chunkSize;
-                const top = requiredChunkSize;
-                qS += `$skip=${skip}&$top=${top}&$count=true`;
-            }
-            return `${this.remoteService.url}${qS}`;
-        };
-     }
-
-     public ngOnInit(): void {
+    public ngOnInit(): void {
         this.remoteData = this.remoteService.remoteData;
         this.totalCount = this.remoteService.totalCount;
         const data = [{
@@ -142,7 +129,8 @@ export class VirtualForSampleComponent implements OnInit {
         if (this.prevRequest) {
             this.prevRequest.unsubscribe();
         }
-        this.prevRequest = this.remoteService.getData(evt, () => {
+        const requiredChunkSize = evt.chunkSize === 0 ? 10 : evt.chunkSize;
+        this.prevRequest = this.remoteService.getData(evt.startIndex, requiredChunkSize, null, () => {
             this.virtDirRemote.cdr.detectChanges();
         });
     }
@@ -167,7 +155,7 @@ export class VirtualForSampleComponent implements OnInit {
     public scrPrevCol() {
         this.virtDirHorizontal.scrollPrev();
     }
-    public  scrNextHorizontalPage() {
+    public scrNextHorizontalPage() {
         this.virtDirHorizontal.scrollNextPage();
     }
     public scrPrevHorizontalPage() {

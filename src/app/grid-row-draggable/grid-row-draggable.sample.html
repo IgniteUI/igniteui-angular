@@ -3,11 +3,11 @@
 </div>
 <igx-switch [(ngModel)]="dragdrop">Toggle Row Drag/Drop</igx-switch>
 <div class="sample-container">
-    <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'" [width]="'500px'" [height]="'600px'"
+    <igx-grid #grid1 [data]="remote | async" [primaryKey]="'productID'" [width]="'500px'" [height]="'600px'"
         [rowDraggable]="dragdrop" (rowDragStart)="handleRowDrag()" (rowDragEnd)="handleRowDrop()">
-        <igx-column [field]="'ProductName'" [width]="'200px'"></igx-column>
-        <igx-column [field]="'UnitsInStock'"></igx-column>
-        <igx-column [field]="'ProductID'" [editable]="true"></igx-column>
+        <igx-column [field]="'productName'" [width]="'200px'"></igx-column>
+        <igx-column [field]="'unitsInStock'"></igx-column>
+        <igx-column [field]="'productID'" [editable]="true"></igx-column>
         <igx-column>
             <ng-template igxCell let-cell="cell" let-val>
                 <igx-icon [igxRowDrag]="cell.row">info</igx-icon>
@@ -23,9 +23,9 @@
     <igx-grid #grid2 igxDrop [data]="newData" [primaryKey]="'ProductID'"
          [width]="'500px'" [height]="'600px'" [emptyGridTemplate]="dragHereTemplate"
         (enter)="onEnterAllowed($event)" (leave)="onLeaveAllowed($event)" (dropped)="onDropAllowed($event)">
-        <igx-column [field]="'ProductName'" [width]="'200px'"></igx-column>
-        <igx-column [field]="'UnitsInStock'"></igx-column>
-        <igx-column [field]="'ProductID'" [editable]="true"></igx-column>
+        <igx-column [field]="'productName'" [width]="'200px'"></igx-column>
+        <igx-column [field]="'unitsInStock'"></igx-column>
+        <igx-column [field]="'productID'" [editable]="true"></igx-column>
         <ng-template igxDragIndicatorIcon>
             <igx-icon>info</igx-icon>
         </ng-template>

@@ -3,24 +3,28 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
+export interface IHierarchicalEntity {
+    parentEntity: string,
+    childEntity: string,
+    key: any
+}
+
 @Injectable()
 export class RemoteService {
-    public remotePagingData: BehaviorSubject<any[]>;
-    public urlPaging = 'https://www.igniteui.com/api/products';
     public totalCount: Observable<number>;
     public remoteData: Observable<any[]>;
-    public url = `https://services.odata.org/V4/Northwind/Northwind.svc/Products`;
-    public urlBuilder;
+    public url = `https://data-northwind.indigo.design`;
+    public entity: string | IHierarchicalEntity = 'Products';
 
     private _remoteData: BehaviorSubject<any[]>;
     private _totalCount: BehaviorSubject<number>;
+
 
     constructor(private http: HttpClient) {
         this._remoteData = new BehaviorSubject([]);
         this.remoteData = this._remoteData.asObservable();
         this._totalCount = new BehaviorSubject(null);
         this.totalCount = this._totalCount.asObservable();
-        this.remotePagingData = new BehaviorSubject([]);
     }
 
     public nullData() {
@@ -31,54 +35,30 @@ export class RemoteService {
         this._remoteData.next(undefined);
     }
 
-    public getData(data?: any, cb?: (any) => void) {
-        const dataState = data;
-        return this.http.get(this.buildUrl(dataState)).pipe(
-            map(response => response),
-        )
-        .subscribe(d => {
-            this._remoteData.next(d['value']);
-            this._totalCount.next(d['@odata.count']);
-            if (cb) {
-                cb(d);
-            }
-        });
+    public getData(start = 0, size: number = 0, orderBy: string = null, cb?: (any) => void) {
+        // data-northwind works differently from the northwind odata service in that
+        // it requires the page index instead of the item index (it also means it can't work without both parameters if either is provided)
+
+        return this.http
+            .get(this.buildUrl(~~(start / size), size, orderBy))
+            .pipe(map(response => response),)
+            .subscribe(d => {
+                this._remoteData.next(d['items']);
+                this._totalCount.next(d['totalRecordsCount']);
+                if (cb) {
+                    cb(d);
+                }
+            });
     }
 
-    public getOrdersData(url: string, data?: any, cb?: (any) => void) {
-        return this.http.get(url).pipe(
-            map(response => response),
-        )
-        .subscribe(d => {
-            this._remoteData.next(d['value']);
-            this._totalCount.next(d['@odata.count']);
-            if (cb) {
-                cb(d);
-            }
-        });
-    }
+    public buildUrl(start: number, size?: number, orderBy?: string) {
+        const e = typeof this.entity === "string" ?
+            `${this.entity}/GetPaged${this.entity}WithPage` :
+            `${this.entity.parentEntity}/${this.entity.key}/${this.entity.childEntity}`;
 
-    public buildUrl(dataState: any) {
-        return this.urlBuilder(dataState);
-    }
-
-    // Remote paging
-    public getPagingData(index?: number, perPage?: number): any {
-        let qS = '';
-
-        if (perPage) {
-            qS = `?$skip=${index}&$top=${perPage}&$count=true`;
-        }
-
-        this.http
-            .get(`${this.urlPaging + qS}`).pipe(
-                map((data: any) => data)
-            ).subscribe((data) => this.remotePagingData.next(data));
-    }
-
-    public getPagingDataLength(): any {
-        return this.http.get(this.urlPaging).pipe(
-            map((data: any) => data.length)
-        );
+        return `${this.url}/${e}?` +
+            `${size ? `size=${size}&` : ''}` +
+            `${start !== null ? `pageIndex=${start}` : ''}` +
+            `${orderBy ? `&orderBy='${orderBy}'` : ''}`;
     }
 }

@@ -35,8 +35,7 @@ export class GridSelectionComponent implements AfterViewInit {
     public selectionModes = ['none', 'single', 'multiple'];
     public data = [];
 
-    constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
-        this.remoteService.urlBuilder = () => this.remoteService.url;
+    constructor(private cdr: ChangeDetectorRef) {
      }
 
      public ngAfterViewInit() {

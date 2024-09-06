@@ -36,9 +36,6 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
     ];
 
     constructor(private remoteService: RemoteService) {
-        remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/';
-
-        this.remoteService.urlBuilder = (dataState) => this.buildUrl(dataState);
         this.selectionMode = GridSelectionMode.none;
     }
 
@@ -63,22 +60,24 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        this.remoteService.getData({ parentID: null, level: 0, key: 'Customers' }, (data) => {
+        this.remoteService.entity = 'Customers';
+        this.remoteService.getData(null, null, null, (data) => {
             this.remoteData = data['value'];
         });
     }
 
     public gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
-        this.remoteService.getData({ parentID: event.parentID, level: rowIsland.level, key: rowIsland.key }, (data) => {
+        this.remoteService.entity = { parentEntity: 'Customers', childEntity: 'Orders', key: rowIsland.key };
+        this.remoteService.getData(null, null, null, (data) => {
             if (rowIsland.key === 'Orders') {
                 let index = 0;
-                data['value'].forEach(item => {
-                    item.OrderDate = new Date(item.OrderDate);
+                data.forEach(item => {
+                    item.orderDate = new Date(item.orderDate);
                     item.MyID = index;
                     index++;
                 });
             }
-            event.grid.data = data['value'];
+            event.grid.data = data;
             event.grid.cdr.detectChanges();
         });
         this.lastChildGrid = event.grid;

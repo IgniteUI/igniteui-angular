@@ -1,12 +1,13 @@
 <div class="dark-grid">
     <igx-grid igxPreventDocumentScroll #grid1 [data]="data | async" width="100%" height="540px" [batchEditing]="true"
               [pagingMode]="mode" rowSelection="multiple">
-        <igx-column field="ID"></igx-column>
-        <igx-column field="ProductName"></igx-column>
-        <igx-column field="QuantityPerUnit"></igx-column>
-        <igx-column field="SupplierName"></igx-column>
-        <igx-column field="UnitsInStock"></igx-column>
-        <igx-column field="Rating"></igx-column>
+        <igx-column field="productId"></igx-column>
+        <!--<igx-column field="productName"></igx-column>-->
+        <igx-column field="quantityPerUnit"></igx-column>
+        <igx-column field="unitPrice"></igx-column>
+        <igx-column field="unitsInStock"></igx-column>
+        <igx-column field="unitsOnOrder"></igx-column>
+        <igx-column field="discontinued"></igx-column>
         <igx-paginator #paginator *ngIf="paging" [totalRecords]="totalCount" [selectOptions]="selectOptions" [(page)]="page"
             [(perPage)]="perPage" (pageChange)="paginate($event)" (perPageChange)="perPageChange($event)">
         </igx-paginator>

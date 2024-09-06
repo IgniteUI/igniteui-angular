@@ -61,32 +61,11 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     public perPage = 10;
 
     constructor(private localService: LocalService,
-                private remoteService: RemoteService,
-                private excelExporterService: IgxExcelExporterService,
-                private csvExporterService: IgxCsvExporterService) {
+        private remoteService: RemoteService,
+        private excelExporterService: IgxExcelExporterService,
+        private csvExporterService: IgxCsvExporterService) {
 
         this.localService.url = this.remoteService.url;
-
-        this.remoteService.urlBuilder = (dataState) => {
-            let qS = '';
-            if (dataState && dataState.paging) {
-                const skip = dataState.paging.index * dataState.paging.recordsPerPage;
-                const top = dataState.paging.recordsPerPage;
-                qS += `$skip=${skip}&$top=${top}&$count=true`;
-            }
-            if (dataState && dataState.sorting) {
-                const s = dataState.sorting;
-                if (s && s.expressions && s.expressions.length) {
-                    qS += (qS ? '&' : '') + '$orderby=';
-                    s.expressions.forEach((e, ind) => {
-                        qS += ind ? ',' : '';
-                        qS += `${e.fieldName} ${e.dir === SortingDirection.Asc ? 'asc' : 'desc'}`;
-                    });
-                }
-            }
-            qS = qS ? `?${qS}` : '';
-            return `${this.remoteService.url}${qS}`;
-        };
     }
 
     public ngOnInit(): void {
@@ -104,8 +83,10 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         ];
 
         this.grid2.sortingExpressions = [];
-        this.grid3.sortingExpressions = [{ fieldName: 'ProductID', dir: SortingDirection.Desc, ignoreCase: true,
-            strategy: DefaultSortingStrategy.instance() }];
+        this.grid3.sortingExpressions = [{
+            fieldName: 'ProductID', dir: SortingDirection.Desc, ignoreCase: true,
+            strategy: DefaultSortingStrategy.instance()
+        }];
 
         this.selectionMode = GridSelectionMode.multiple;
     }
@@ -127,7 +108,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     public process() {
         this.toast.positionSettings.verticalDirection = VerticalAlignment.Bottom;
         this.toast.open('Loading remote data');
-        this.remoteService.getData(this.grid3.data, () => {
+        this.remoteService.getData(null, null, null, () => {
             this.toast.close();
         });
     }
@@ -247,7 +228,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     }
 
     public onSearch(ev) {
-        if (ev.key === 'Enter' || ev.key === 'ArrowDown'  || ev.key === 'ArrowRight') {
+        if (ev.key === 'Enter' || ev.key === 'ArrowDown' || ev.key === 'ArrowRight') {
             this.grid3.findNext(ev.target.value);
         } else if (ev.key === 'ArrowUp' || ev.key === 'ArrowLeft') {
             this.grid3.findPrev(ev.target.value);

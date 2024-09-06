@@ -40,8 +40,6 @@ export class GridRowDraggableComponent implements AfterViewInit {
     public sizes;
 
     constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
-        this.remoteService.urlBuilder = () => this.remoteService.url;
-
         this.sizes = [
             { label: 'small', selected: this.size === 'small', togglable: true },
             { label: 'medium', selected: this.size === 'medium', togglable: true },
@@ -51,7 +49,7 @@ export class GridRowDraggableComponent implements AfterViewInit {
 
     public ngAfterViewInit() {
         this.remote = this.remoteService.remoteData;
-        this.remoteService.getData(this.grid1.data);
+        this.remoteService.getData();
         this.cdr.detectChanges();
     }
 

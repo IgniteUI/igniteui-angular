@@ -20,21 +20,7 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
     public columns: any;
     public loading = true;
 
-    constructor(private remoteService: RemoteService, public cdr: ChangeDetectorRef) {
-        this.remoteService.urlBuilder = (dataState) => {
-            let qS = '?'; let requiredChunkSize: number;
-            if (dataState) {
-                const skip = dataState.startIndex;
-
-                requiredChunkSize = dataState.chunkSize === 0 ?
-                    // Set initial chunk size, the best value is igxForContainerSize divided on igxForItemSize
-                    12 : dataState.chunkSize;
-                const top = requiredChunkSize;
-                qS += `$skip=${skip}&$top=${top}&$count=true`;
-            }
-            return `${this.remoteService.url}${qS}`;
-        };
-    }
+    constructor(private remoteService: RemoteService, public cdr: ChangeDetectorRef) { }
 
     public ngOnInit(): void {
         this.columns = [
@@ -49,8 +35,9 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
     }
 
     public loadData() {
+        const state = this.grid.virtualizationState;
         this.grid.shouldGenerate = true;
-        this.remoteService.getData(this.grid.virtualizationState, () => {
+        this.remoteService.getData(state.startIndex, state.chunkSize, null, () => {
             this.remoteData = this.remoteService.remoteData;
         });
     }
@@ -79,7 +66,7 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
         if (this.prevRequest) {
             this.prevRequest.unsubscribe();
         }
-        this.prevRequest = this.remoteService.getData(evt, () => {
+        this.prevRequest = this.remoteService.getData(evt.startIndex, evt.chunkSize, null, () => {
             this.cdr.detectChanges();
         });
     }

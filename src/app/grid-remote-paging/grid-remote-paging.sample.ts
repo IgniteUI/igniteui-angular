@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { RemoteService } from '../shared/remote.service';
 import { GridPagingMode, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxColumnComponent, IgxGridComponent, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-grid-remote-paging-sample',
@@ -41,9 +42,9 @@ export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, O
     }
 
     public ngOnInit() {
-        this.data = this.remoteService.remotePagingData.asObservable();
+        this.data = this.remoteService.remoteData;
 
-        this._dataLengthSubscriber = this.remoteService.getPagingDataLength().subscribe((data) => {
+        this.remoteService.totalCount.subscribe((data) => {
             this.totalCount = data;
             this.grid1.isLoading = false;
         });
@@ -70,7 +71,7 @@ export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, O
 
     public ngAfterViewInit() {
         this.grid1.isLoading = true;
-        this.remoteService.getPagingData(0, this.perPage);
+        this.remoteService.getData(0, this.perPage);
     }
 
     public paginate(page: number) {
@@ -78,13 +79,13 @@ export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, O
         const skip = this.page * this.perPage;
         const top = this.perPage;
 
-        this.remoteService.getPagingData(skip, top);
+        this.remoteService.getData(skip, top);
     }
 
     public perPageChange(perPage: number) {
         const skip = this.page * perPage;
         const top = perPage;
 
-        this.remoteService.getPagingData(skip, top);
+        this.remoteService.getData(skip, top);
     }
 }
