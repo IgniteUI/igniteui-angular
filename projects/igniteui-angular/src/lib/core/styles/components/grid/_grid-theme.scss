@@ -664,9 +664,9 @@
     $cbx-padding-compact: map.get($grid-cbx-padding, 'compact');
 
     $grid-header-height: (
-        comfortable: if($variant == 'indigo', rem(47px), rem(50px)),
-        cosy: if($variant == 'indigo', rem(39px), rem(40px)),
-        compact: if($variant == 'indigo', rem(31px), rem(32px))
+        comfortable: if($variant == 'indigo', rem(48px), rem(50px)),
+        cosy: if($variant == 'indigo', rem(40px), rem(40px)),
+        compact: if($variant == 'indigo', rem(32px), rem(32px))
     );
 
     $drop-area-height: (
@@ -1259,14 +1259,21 @@
         }
 
         %grid-cell-display {
-            border-inline-end: rem(1px) solid var-get($theme, 'row-border-color');
-            border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+            border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
+            border-bottom: rem(1px) solid var-get($theme, 'header-border-color');
         }
     }
 
     %grid-row--mrl {
         &%grid-row {
             border-bottom-color: transparent;
+
+            @if $variant == 'indigo' {
+                %grid-cell-display {
+                    border-inline-end: rem(1px) solid var-get($theme, 'row-border-color');
+                    border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+                }
+            }
         }
 
         %grid__cbx-selection,
@@ -1939,8 +1946,8 @@
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
         }
-        min-width: 0;
 
+        min-width: 0;
         padding-block: 0;
         border-inline-end: $grid-header-border;
         min-height: var(--header-size);
