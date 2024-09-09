@@ -349,6 +349,81 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(thirdRow);
         });
 
+        it('Should maintain selected rows through data change and new selection', async () => {
+            const firstRow = grid.gridAPI.get_row_by_index(0);
+            const secondRow = grid.gridAPI.get_row_by_index(1);
+            spyOn(grid.rowSelectionChanging, 'emit');
+
+            // second detection needed to enable scroll after first runs ngAfterViewInit...
+            fix.detectChanges();
+
+            GridFunctions.scrollTop(grid, 500);
+            await wait(SCROLL_DEBOUNCETIME);
+            fix.detectChanges();
+
+            let row15 = grid.gridAPI.get_row_by_index(14);
+            const row15Data = row15.data;
+            GridSelectionFunctions.clickRowCheckbox(row15);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
+            let args: IRowSelectionEventArgs = {
+                added: [gridData[14]],
+                cancel: false,
+                event: jasmine.anything() as any,
+                newSelection: [gridData[14]],
+                oldSelection: [],
+                removed: [],
+                allRowsSelected: false,
+                owner: grid
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+
+            // halve data:
+            grid.data = grid.data.slice(0, 10);
+            fix.detectChanges();
+
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
+            // row 15 no longer in data, expect partial:
+            args = {
+                ...args,
+                added: [gridData[0]],
+                newSelection: [{ [grid.primaryKey]: row15Data[grid.primaryKey]}, gridData[0]],
+                oldSelection: [{ [grid.primaryKey]: row15Data[grid.primaryKey]}],
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+
+            // restore data:
+            grid.data = SampleTestData.foodProductDataExtended();
+            fix.detectChanges();
+
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(3);
+            args = {
+                ...args,
+                added: [gridData[1]],
+                newSelection: [gridData[14], gridData[0], gridData[1]],
+                oldSelection: [gridData[14], gridData[0]],
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+
+            expect(grid.selectedRows.length).toEqual(3);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+
+            GridFunctions.scrollTop(grid, 500);
+            await wait(SCROLL_DEBOUNCETIME);
+            fix.detectChanges();
+
+            row15 = grid.gridAPI.get_row_by_index(14);
+            GridSelectionFunctions.verifyRowSelected(row15);
+        });
+
         it('Should select the row with mouse click ', () => {
             expect(grid.selectRowOnClick).toBe(true);
             spyOn(grid.rowSelectionChanging, 'emit').and.callThrough();
