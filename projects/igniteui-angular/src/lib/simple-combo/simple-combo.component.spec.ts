@@ -828,6 +828,16 @@ describe('IgxSimpleCombo', () => {
                 expect(clearButtonAfterEmptyObject).not.toBeNull();
             });
         }));
+        it('should properly assign the resource string to the aria-label of the clear button',() => {
+            combo.toggle();
+            fixture.detectChanges();
+
+            combo.select(['Illinois', 'Mississippi', 'Ohio']);
+            fixture.detectChanges();
+
+            const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearBtn.nativeElement.ariaLabel).toEqual('Clear Selection');
+        });
     });
 
     describe('Binding tests: ', () => {
