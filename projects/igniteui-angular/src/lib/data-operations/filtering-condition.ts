@@ -19,16 +19,6 @@ export class IgxFilteringOperand {
             isUnary: true,
             iconName: 'filter_not_null',
             logic: (target: any) => target !== null
-        }, {
-            name: 'in',
-            isUnary: false,
-            iconName: 'in',
-            logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
-        }, {
-            name: 'notIn',
-            isUnary: false,
-            iconName: 'not-in',
-            logic: (target: any, searchVal: Set<any>) => !this.findValueInSet(target, searchVal)
         }];
     }
 
@@ -64,7 +54,7 @@ export class IgxFilteringOperand {
     /**
      * @hidden
      */
-    protected findValueInSet(target: any, searchVal: Set<any>) {
+    public findValueInSet(target: any, searchVal: Set<any>) {
         return searchVal.has(target);
     }
 }
@@ -170,7 +160,10 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
         return res;
     }
 
-    protected override findValueInSet(target: any, searchVal: Set<any>) {
+    /**
+     * @hidden
+     */
+    public override findValueInSet(target: any, searchVal: Set<any>) {
         if (!target) {
             return false;
         }
@@ -708,7 +701,10 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }].concat(this.operations);
     }
 
-    protected override findValueInSet(target: any, searchVal: Set<any>) {
+    /**
+     * @hidden
+     */
+    public override findValueInSet(target: any, searchVal: Set<any>) {
         if (!target) {
             return false;
         }

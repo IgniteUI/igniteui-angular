@@ -1258,6 +1258,19 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     break;
             }
 
+            field.filters.append({
+                name: 'in',
+                isUnary: false,
+                iconName: 'in',
+                logic: (target: any, searchVal: Set<any>) => field.filters.findValueInSet(target, searchVal)
+            });
+
+            field.filters.append({
+                name: 'notIn',
+                isUnary: false,
+                iconName: 'not-in',
+                logic: (target: any, searchVal: Set<any>) => !field.filters.findValueInSet(target, searchVal)
+            });
         }
     }
 
