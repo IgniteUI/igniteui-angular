@@ -291,11 +291,21 @@
         display: block;
 
         padding-block: pad-block(rem(4px), rem(8px), rem(8px));
-        padding-inline: pad-inline(if($variant == 'indigo', rem(16px), (rem(4px), rem(8px), rem(16px))));
+
+        @if $variant == 'indigo' {
+            padding-inline: pad-inline(rem(16px));
+        } @else {
+            padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+
+        }
 
         header {
             color: var-get($theme, 'excel-filtering-subheader-foreground');
             margin-bottom: rem(4px);
+
+            @if $variant == 'indigo' {
+                text-transform: capitalize !important;
+            }
         }
 
         igx-icon {
@@ -369,9 +379,14 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-block: pad-block(if($variant = 'indigo', rem(8px), (rem(4px), rem(8px), rem(8px))));
-        padding-inline: pad-inline(if($variant = 'indigo', rem(20px), (rem(4px), rem(8px), rem(16px))));
 
+        @if $variant == 'indigo' {
+            padding-block: pad-block(rem(8px));
+            padding-inline: pad-inline(rem(20px));
+        } @else {
+            padding-block: pad-block(rem(4px), rem(8px), rem(8px));
+            padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+        }
 
         cursor: pointer;
         color: var-get($theme, 'excel-filtering-actions-foreground');
@@ -415,8 +430,14 @@
         flex-direction: column;
         flex-grow: 1;
         overflow: hidden;
-        padding: pad(if($variant == 'indigo', rem(16px), (rem(4px), rem(8px), rem(16px))));
-        gap: sizable(if($variant == 'indigo', rem(16px), (rem(4px), rem(8px), rem(16px))));
+
+        @if $variant == 'indigo' {
+            padding: pad(rem(16px));
+            gap: sizable(rem(16px));
+        } @else {
+            padding: pad(rem(4px), rem(8px), rem(16px));
+            gap: sizable(rem(4px), rem(8px), rem(16px));
+        }
 
         %igx-list {
             flex-grow: 1;
@@ -562,7 +583,13 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        padding-inline: pad-inline(if($variant == 'indigo', rem(16px), (rem(4px), rem(8px), rem(16px))));
+
+        @if $variant == 'indigo' {
+            padding-inline: pad-inline(rem(16px));
+        } @else {
+            padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+        }
+
         padding-block: 0;
 
         igx-select {
