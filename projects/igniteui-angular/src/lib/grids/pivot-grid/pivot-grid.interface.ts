@@ -59,7 +59,6 @@ export interface IPivotDimensionStrategy {
 export type PivotAggregation = (members: any[], data: any[]) => any;
 
 /* marshalByValue */
-/* jsonAPIComplexObject */
 /**
 * Interface describing a IPivotAggregator class.
 * Used for specifying custom aggregator lists.
@@ -85,7 +84,6 @@ export interface IPivotAggregator {
 }
 
 /* marshalByValue */
-/* jsonAPIComplexObject */
 /**
 * Configuration of the pivot grid.
 */
@@ -108,7 +106,6 @@ export interface IPivotConfiguration {
 
 /* blazorElement */
 /* marshalByValue */
-/* jsonAPIComplexObject */
 /**
 * Configuration of a pivot dimension.
 */
@@ -150,7 +147,6 @@ export interface IPivotDimension {
 }
 
 /* marshalByValue */
-/* jsonAPIComplexObject */
 /**
 * Configuration of a pivot value aggregation.
 */
