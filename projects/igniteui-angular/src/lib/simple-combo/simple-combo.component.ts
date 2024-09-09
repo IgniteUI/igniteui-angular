@@ -3,7 +3,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
     Optional, Output, ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
 import { IgxComboAddItemComponent } from '../combo/combo-add-item.component';
@@ -150,6 +150,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         @Optional() _injector: Injector,
         @Optional() @Inject(IgxIconService) _iconService?: IgxIconService,
+        @Optional() private formGroupDirective?: FormGroupDirective
     ) {
         super(
             elementRef,
@@ -607,8 +608,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private isValid(value: any): boolean {
-        return this.required
-        ? value !== null && value !== '' && value !== undefined
-        : value !== undefined;
+        if (this.formGroupDirective && value === null) {
+            return false;
+        }
+
+        if (this.required) {
+            return value !== null && value !== '' && value !== undefined
+        }
+
+        return value !== undefined;
     }
 }

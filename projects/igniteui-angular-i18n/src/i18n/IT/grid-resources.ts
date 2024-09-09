@@ -111,6 +111,7 @@ const GridResourceStringsIT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Sblocca tutto',
     igx_grid_row_edit_btn_done: 'Fatto',
     igx_grid_row_edit_btn_cancel: 'Annulla',
+    igx_grid_row_edit_text: 'Hai {0} modifiche in questa riga e {1} colonne nascoste',
     igx_grid_toolbar_actions_filter_prompt: 'Filtro elenco colonne...',
     igx_grid_toolbar_pinning_button_tooltip: 'Apri il menu a discesa Appuntamento colonna',
     igx_grid_toolbar_hiding_button_tooltip: 'Apri il menu a discesa per nascondere la colonna',
