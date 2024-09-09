@@ -4,7 +4,8 @@ import { IComboResourceStrings } from 'igniteui-angular';
 const ComboResourceStringsIT_: ExpandRequire<IComboResourceStrings> = {
     igx_combo_empty_message: 'L\'elenco è vuoto',
     igx_combo_enabledFilter_placeholder: 'Immettere il testo di ricerca',
-    igx_combo_addCustomValues_placeholder: 'Aggiungi elemento'
+    igx_combo_addCustomValues_placeholder: 'Aggiungi elemento',
+    igx_combo_clearItems_placeholder: 'Cancella selezione'
 };
 
 /**

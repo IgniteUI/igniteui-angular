@@ -4,7 +4,8 @@ import { IComboResourceStrings } from 'igniteui-angular';
 const ComboResourceStringsDA_: ExpandRequire<IComboResourceStrings> = {
     igx_combo_empty_message: 'Listen er tom',
     igx_combo_enabledFilter_placeholder: 'Indtast en søgeterm',
-    igx_combo_addCustomValues_placeholder: 'Tilføj emne'
+    igx_combo_addCustomValues_placeholder: 'Tilføj element',
+    igx_combo_clearItems_placeholder: 'Ryd markering'
 };
 
 /**

@@ -4,7 +4,8 @@ import { IComboResourceStrings } from 'igniteui-angular';
 const ComboResourceStringsCS_: ExpandRequire<IComboResourceStrings> = {
     igx_combo_empty_message: 'Seznam je prázdný',
     igx_combo_enabledFilter_placeholder: 'Zadejte hledaný výraz',
-    igx_combo_addCustomValues_placeholder: 'Přidat položku'
+    igx_combo_addCustomValues_placeholder: 'Přidat položku',
+    igx_combo_clearItems_placeholder: 'Vymazat výběr'
 };
 
 /**

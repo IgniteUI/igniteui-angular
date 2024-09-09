@@ -4,7 +4,8 @@ import { IComboResourceStrings } from 'igniteui-angular';
 const ComboResourceStringsBG_: ExpandRequire<IComboResourceStrings> = {
     igx_combo_empty_message: 'Списъкът е празен',
     igx_combo_enabledFilter_placeholder: 'Въведете термин за търсене',
-    igx_combo_addCustomValues_placeholder: 'Добавете елемент'
+    igx_combo_addCustomValues_placeholder: 'Добавяне на елемент',
+    igx_combo_clearItems_placeholder: 'Изчистване на избора'
 };
 
 /**

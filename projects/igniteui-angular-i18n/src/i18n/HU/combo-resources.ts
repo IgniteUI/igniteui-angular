@@ -4,7 +4,8 @@ import { IComboResourceStrings } from 'igniteui-angular';
 const ComboResourceStringsHU_: ExpandRequire<IComboResourceStrings> = {
     igx_combo_empty_message: 'Üres a lista',
     igx_combo_enabledFilter_placeholder: 'Írjon be egy keresési kifejezést',
-    igx_combo_addCustomValues_placeholder: 'Elem hozzáadása'
+    igx_combo_addCustomValues_placeholder: 'Elem hozzáadása',
+    igx_combo_clearItems_placeholder: 'Kiválasztás törlése'
 };
 
 /**

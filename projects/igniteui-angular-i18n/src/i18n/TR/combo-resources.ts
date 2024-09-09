@@ -4,7 +4,8 @@ import { IComboResourceStrings } from 'igniteui-angular';
 const ComboResourceStringsTR_: ExpandRequire<IComboResourceStrings> = {
     igx_combo_empty_message: 'Liste boş',
     igx_combo_enabledFilter_placeholder: 'Arama terimi girin',
-    igx_combo_addCustomValues_placeholder: 'Öğe ekle'
+    igx_combo_addCustomValues_placeholder: 'Öğe ekle',
+    igx_combo_clearItems_placeholder: 'Seçimi temizle'
 };
 
 /**

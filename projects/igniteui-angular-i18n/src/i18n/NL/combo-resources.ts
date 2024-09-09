@@ -4,7 +4,8 @@ import { IComboResourceStrings } from 'igniteui-angular';
 const ComboResourceStringsNL_: ExpandRequire<IComboResourceStrings> = {
     igx_combo_empty_message: 'De lijst is leeg',
     igx_combo_enabledFilter_placeholder: 'Typ een zoekterm',
-    igx_combo_addCustomValues_placeholder: 'Item toevoegen'
+    igx_combo_addCustomValues_placeholder: 'Item toevoegen',
+    igx_combo_clearItems_placeholder: 'Selectie wissen'
 };
 
 /**
