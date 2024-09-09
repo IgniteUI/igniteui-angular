@@ -261,18 +261,17 @@ export abstract class DateTimeUtil {
         const inputTimezoneOffset = value.getTimezoneOffset();
         const columnTimezoneOffset = this.timezoneToOffset(timezone, inputTimezoneOffset);
         const offsetDifference = reverseValue * (columnTimezoneOffset - inputTimezoneOffset);
-        const adjustedDate = this.addDateMinutes(value, offsetDifference);
-
+       
         if (isDateOnly) {
-            let dayDifference = adjustedDate.getUTCDate() - value.getUTCDate();
-            dayDifference = dayDifference <= -1 ? -1 * dayDifference : dayDifference;
+            // When column timezone is left of the locale timezone (date is shifted one day before), add 1 day
+            if (columnTimezoneOffset - inputTimezoneOffset > 0) {
+                return new Date(value.setDate(value.getDate() + 1))
+            }
 
-            const shiftedDate = new Date(adjustedDate);
-            shiftedDate.setDate(adjustedDate.getDate() + dayDifference);
-            return new Date(shiftedDate.getFullYear(), shiftedDate.getMonth(), shiftedDate.getDate());
+            return value;
         }
 
-        return adjustedDate;
+        return this.addDateMinutes(value, offsetDifference);
     }
 
     /**
