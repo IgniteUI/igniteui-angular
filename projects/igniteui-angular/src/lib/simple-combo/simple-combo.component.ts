@@ -361,6 +361,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.clearSelection(true);
         }
         if (!this.collapsed && event.key === this.platformUtil.KEYMAP.TAB) {
+            const filtered = this.filteredData.find(this.findAllMatches);
+            if (filtered === null || filtered === undefined) {
+                this.clearOnBlur();
+                this.close();
+                return;
+            }
             const focusedItem = this.dropdown.focusedItem;
             if (focusedItem && !focusedItem.isHeader) {
                 this.select(focusedItem.itemID);

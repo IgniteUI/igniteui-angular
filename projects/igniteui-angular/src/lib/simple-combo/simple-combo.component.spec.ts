@@ -1442,6 +1442,24 @@ describe('IgxSimpleCombo', () => {
             expect(combo.comboInput.value).toEqual('Connecticut');
         });
 
+        it('should not select any item if input does not match data on tab key pressed', () => {
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            const toggleButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLEBUTTON));
+            toggleButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('nonexistent', input);
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.displayValue).toEqual('');
+            expect(combo.comboInput.value).toEqual('');
+        });
+
         it('should not clear the input on blur with a partial match but it should select the match item', () => {
             spyOn(combo.dropdown.closing, 'emit').and.callThrough();
 
