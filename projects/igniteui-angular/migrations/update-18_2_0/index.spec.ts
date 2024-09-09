@@ -117,7 +117,7 @@ describe(`Update to ${version}`, () => {
         );
     });
 
-    it('should remove filterable from the IComboFilteringOptions', async () => {
+    it('should remove filterable from the IComboFilteringOptions when its value is true', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/combo-test.component.ts',
             `import { Component } from '@angular/core';
@@ -150,6 +150,49 @@ describe(`Update to ${version}`, () => {
                 public filteringOptions1: IComboFilteringOptions = { caseSensitive: false, filteringKey: undefined };
                 public filteringOptions2: IComboFilteringOptions = { caseSensitive: false };
                 public filteringOptions3: IComboFilteringOptions = { caseSensitive: false };
+                constructor(){}
+            }
+        `;
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/combo-test.component.ts'
+            )
+        ).toEqual(expectedContent);
+    });
+
+    it('should add comment after the use of filterable when its value is false', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/combo-test.component.ts',
+            `import { Component } from '@angular/core';
+            import { IComboFilteringOptions } from "igniteui-angular";
+            @Component({
+                selector: "app-combo-test",
+                styleUrls: ["./combo-test.component.scss"],
+                templateUrl: "./combo-test.component.html"
+            })
+            export class ComboComponent {
+                public filteringOptions1: IComboFilteringOptions = { caseSensitive: false, filterable: false, filteringKey: undefined };
+                public filteringOptions2: IComboFilteringOptions = { filterable: false, caseSensitive: false };
+                combo.filteringOptions.filterable = false;
+                constructor(){}
+            }
+        `);
+
+        const tree = await schematicRunner
+            .runSchematic(migrationName, {}, appTree);
+
+        const expectedContent =
+            `import { Component } from '@angular/core';
+            import { IComboFilteringOptions } from "igniteui-angular";
+            @Component({
+                selector: "app-combo-test",
+                styleUrls: ["./combo-test.component.scss"],
+                templateUrl: "./combo-test.component.html"
+            })
+            export class ComboComponent {
+                public filteringOptions1: IComboFilteringOptions = { caseSensitive: false, filterable: false, filteringKey: undefined }; // TODO: Replace with disableFiltering
+                public filteringOptions2: IComboFilteringOptions = { filterable: false, caseSensitive: false }; // TODO: Replace with disableFiltering
+                combo.filteringOptions.filterable = false; // TODO: Replace with disableFiltering
                 constructor(){}
             }
         `;

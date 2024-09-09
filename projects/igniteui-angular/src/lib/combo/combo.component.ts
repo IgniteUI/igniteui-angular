@@ -133,15 +133,20 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public autoFocusSearch = true;
 
     /**
-     * Enables/disables filtering in the list. The default is `true`.
+     * Enables/disables filtering in the list. The default is `false`.
      */
     @Input({ transform: booleanAttribute })
-    public disableFiltering = false;
+    public get disableFiltering(): boolean {
+        return this._disableFiltering || this.filteringOptions.filterable === false;
+    }
+    public set disableFiltering(value: boolean) {
+        this._disableFiltering = value;
+    }
 
     /**
      * Defines the placeholder value for the combo dropdown search field
      *
-     * * @deprecated in version 18.1.0.
+     * @deprecated in version 18.2.0.
      *
      * ```typescript
      * // get
@@ -190,6 +195,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     protected _prevInputValue = '';
 
     private _displayText: string;
+    private _disableFiltering = false;
 
     constructor(
         elementRef: ElementRef,

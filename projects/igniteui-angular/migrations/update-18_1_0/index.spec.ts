@@ -202,5 +202,4 @@ export class PaginatorTestComponent {
             tree.readContent('/testSrc/appPrefix/component/paginator-test.component.ts')
         ).toEqual(expectedContent);
     });
-
 });

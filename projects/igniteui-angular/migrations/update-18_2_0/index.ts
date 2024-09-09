@@ -68,10 +68,15 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         const pattern = /IComboFilteringOptions\s*=\s*{[^}]*}/g;
         let match;
         while(match = pattern.exec(content)){
-            let newMatch = match[0].replace(/(\{|\s*,)\s*filterable:\s*[^,\s*}]+(?=\s*,|\s*\})/g, (match, p1) => p1 === '{' ? '{' : '');
+            let newMatch = match[0].replace(/(\{|\s*,)\s*filterable:\s*true(?=\s*,|\s*\})/g, (match, p1) => p1 === '{' ? '{' : '');
             newMatch = newMatch.replace(/\{\s*,/, '{').replace(/,\s*\}/, '}');
             content = content.replace(match[0], newMatch);
         }
+
+        const filterableMatch = /(filterable\s*(?::|=)\s*false)[^\n]*/g;
+        content = content.replace(filterableMatch, match => {
+            return `${match} // TODO: Replace with disableFiltering`;
+        });
         host.overwrite(path, content);
     }
 
