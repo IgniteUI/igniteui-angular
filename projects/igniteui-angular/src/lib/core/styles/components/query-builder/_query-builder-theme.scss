@@ -80,6 +80,7 @@
     @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'variant');
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: not($bootstrap-theme);
 
@@ -457,7 +458,15 @@
     }
 
     %filter-empty__title {
-        color: color(null, 'gray', if($variant == 'indigo', 600, 500));
+        @if $variant == 'indigo' {
+            @if $theme-variant == 'light' {
+                color: color(null, 'gray', 600);
+            } @else {
+                color: contrast-color(null, 'gray', 50, .6);
+            }
+        } @else {
+            color: color(null, 'gray', 600);
+        }
     }
 
     %advanced-filter--inline {

@@ -453,7 +453,6 @@
                 --background: #{color($color: 'surface', $variant: 500)};
 
                 margin-inline: calc(sizable(rem(-16px)) * -1);
-                padding: rem(8px);
 
                 // This is the only way to take the gap from the list,
                 // otherwise we have to hardcoded here
@@ -465,6 +464,7 @@
                     display: flex;
                     flex-direction: column;
                     gap: inherit;
+                    padding: rem(8px);
                 }
             } @else  {
                 margin-inline: calc(sizable(rem(-4px), rem(-8px), rem(-16px)) * -1);
@@ -478,6 +478,11 @@
             } @else {
                 border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
                 border-bottom: rem(1px) dashed color($color: 'gray', $variant: 300);
+            }
+
+            @if $variant == 'indigo' and $theme-variant == 'dark' {
+                border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
+                border-bottom: rem(1px) dashed color($color: 'gray', $variant: 100);
             }
         }
 
@@ -494,6 +499,11 @@
             } @else {
                 border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
                 border-bottom: rem(1px) dashed color($color: 'gray', $variant: 300);
+            }
+
+            @if $variant == 'indigo' and $theme-variant == 'dark' {
+                border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
+                border-bottom: rem(1px) dashed color($color: 'gray', $variant: 100);
             }
 
             igx-icon {
@@ -665,10 +675,15 @@
 
     %grid-excel-menu__secondary-footer {
         padding: rem(8px) rem(16px);
+
         @if $bootstrap-theme {
             border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
         } @else {
             border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
+        }
+
+        @if $variant == 'indigo' and $theme-variant == 'dark' {
+            border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
         }
 
         @if $variant == 'indigo' {

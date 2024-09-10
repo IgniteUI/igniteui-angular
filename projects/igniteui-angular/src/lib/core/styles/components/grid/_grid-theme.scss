@@ -3152,7 +3152,7 @@
 
     %advanced-filtering-dialog {
         background: var-get($theme, 'filtering-row-background');
-        box-shadow: elevation(if($variant == 'indigo', 23, 12));
+        box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 12));
 
         @if $variant == 'indigo' {
             border-radius: rem(10px);
