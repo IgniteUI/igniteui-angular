@@ -124,7 +124,17 @@
             height: auto;
         }
 
+        .igx-input-group__bundle-main {
+            padding-inline-start: 0;
+        }
+
+        .igx-input-group__bundle-start,
+        .igx-input-group__bundle-end {
+            display: none;
+        }
+
         igx-input-group {
+            --theme: #{if($variant == 'indigo', 'indigo', 'material')};
             --ig-size: #{if($variant == 'indigo', 2, 1)};
         }
     }
