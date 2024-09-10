@@ -543,7 +543,7 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         if (condition) {
-            const newExpression: IFilteringExpression = { field: fieldName, searchVal, condition, conditionName: condition.name, ignoreCase };
+            const newExpression: IFilteringExpression = { field: fieldName, searchVal: searchVal, condition, conditionName: condition.name, ignoreCase };
             expressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
             expressionsTree.filteringOperands.push(newExpression);
         }

@@ -13,6 +13,7 @@ import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import { CommonModule } from '@angular/common';
 import { IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular/src/lib/query-builder/query-builder.directives';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     providers: [],
@@ -20,7 +21,7 @@ import { IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular/sr
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule, IgxQueryBuilderSearchValueTemplateDirective]
+    imports: [FormsModule, IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule, IgxQueryBuilderSearchValueTemplateDirective]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })
@@ -146,12 +147,6 @@ export class QueryBuilderComponent implements OnInit {
             changei18n(IgxResourceStringsFR);
         }
         this.queryBuilder.locale = locale;
-    }
-
-    public logParams(field: any, condition: any, searchValue: any) {
-        console.log(field);
-        console.log(condition);
-        console.log(searchValue);
     }
 
     public printExpressionTree(tree: IExpressionTree) {

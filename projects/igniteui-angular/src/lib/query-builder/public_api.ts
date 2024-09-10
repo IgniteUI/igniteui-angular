@@ -12,5 +12,5 @@ export * from './query-builder.directives';
 export const IGX_QUERY_BUILDER_DIRECTIVES = [
     IgxQueryBuilderComponent,
     IgxQueryBuilderHeaderComponent,
-    IgxQueryBuilderSearchValueTemplateDirective
+    IgxQueryBuilderSearchValueTemplateDirective,
 ] as const;
