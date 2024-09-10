@@ -424,7 +424,7 @@ export abstract class IgxBaseExporter {
             });
         }
 
-        const targetCol = mapRecord.columns.filter(c => column.columnGroupParent !== null && c.columnGroup === column.columnGroupParent)[0];
+        const targetCol = mapRecord.columns.filter(c => column.columnGroupParent !== null && column.columnGroupParent !== undefined && c.columnGroup === column.columnGroupParent)[0];
         if (targetCol !== undefined) {
             targetCol.columnSpan -= span;
 
