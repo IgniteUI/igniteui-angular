@@ -3152,7 +3152,7 @@
 
     %advanced-filtering-dialog {
         background: var-get($theme, 'filtering-row-background');
-        box-shadow: elevation(if($variant == 'indigo', 24, 12));
+        box-shadow: elevation(if($variant == 'indigo', 23, 12));
 
         @if $variant == 'indigo' {
             border-radius: rem(10px);
@@ -3207,7 +3207,7 @@
         --ig-size: 1 !important;
         %grid-cell-display,
         %grid-cell-header {
-            padding: 0 rem(4px) !important;
+            padding: 0 if($variant != 'indigo', rem(4px), rem(6px)) !important;
             min-height: rem(24px) !important;
             height: rem(24px);
         }
@@ -3220,7 +3220,6 @@
             }
         }
     }
-
 
     %grid-thead--pivot {
         display: flex;
@@ -3297,8 +3296,13 @@
     }
 
     %igx-grid__pivot-empty-chip-area {
-        line-height: normal;
-        font-size: rem(14px);
+        @if $variant != 'indigo' {
+            line-height: normal;
+            font-size: rem(14px);
+        } @else {
+            @include type-style('body-2');
+        }
+
         margin-inline-end: 0 !important;
     }
 

@@ -175,6 +175,8 @@
 
         @if $variant != 'indigo' {
             font-size: rem(12px);
+        } @else {
+            min-height: sizable(rem(24px), rem(30px), rem(36px));
         }
 
         position: relative;
