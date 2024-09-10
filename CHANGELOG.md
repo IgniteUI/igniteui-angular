@@ -4,6 +4,9 @@ All notable changes for each version of this project will be documented in this 
 
 ## 18.2.0
 ### New Features
+- `IgxSimpleCombo`
+    - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
+
 #### Scrollbar: New CSS variables
 
 We have introduced new CSS variables to allow for more customizable scrollbars. This enhancement utilizes the available WebKit pseudo-selectors such as `::-webkit-scrollbar-track`. However, please note that these pseudo-selectors are prefixed with `-webkit-` and are only supported in WebKit-based browsers (e.g., Chrome, Safari).
