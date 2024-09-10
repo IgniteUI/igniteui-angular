@@ -125,8 +125,10 @@
         max-width: rem(114px);
         min-width: rem(100px);
 
-        igx-select {
-            --ig-size: 1;
+        @if $variant != 'indigo' {
+            igx-select {
+                --ig-size: 1;
+            }
         }
     }
 

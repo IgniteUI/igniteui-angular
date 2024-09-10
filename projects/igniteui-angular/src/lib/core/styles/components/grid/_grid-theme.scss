@@ -2462,9 +2462,15 @@
     }
 
     %igx-group-label__column-name {
+        @if $variant != 'indigo' {
+            font-weight: 600;
+            font-size: rem(12px);
+        } @else {
+            @include type-style('detail-2', false);
+        }
+
         color: var-get($theme, 'group-label-column-name-text');
-        font-weight: 600;
-        font-size: rem(12px);
+
     }
 
 
@@ -2483,7 +2489,11 @@
 
 
     %igx-group-label__text {
-        font-size: rem(13px);
+        @if $variant != 'indigo' {
+            font-size: rem(13px);
+        } @else {
+            @include type-style('detail-1', false);
+        }
         color: var-get($theme, 'group-label-text')
     }
 
@@ -2897,6 +2907,10 @@
         }
 
         @extend %filtering-row-input-overrides !optional;
+
+        igx-input-group {
+            --ig-size: var(--grid-size) !important;
+        }
 
         [igxIconButton] {
             --ig-size: 1;
