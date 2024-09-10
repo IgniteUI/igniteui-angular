@@ -125,7 +125,7 @@
         }
 
         igx-input-group {
-            --ig-size: var(--ig-size-small);
+            --ig-size: #{if($variant == 'indigo', 2, 1)};
         }
     }
 
