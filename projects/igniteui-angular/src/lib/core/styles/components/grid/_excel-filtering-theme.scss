@@ -454,6 +454,18 @@
 
                 margin-inline: calc(sizable(rem(-16px)) * -1);
                 padding: rem(8px);
+
+                // This is the only way to take the gap from the list,
+                // otherwise we have to hardcoded here
+                > div {
+                    gap: inherit;
+                }
+
+                igx-display-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: inherit;
+                }
             } @else  {
                 margin-inline: calc(sizable(rem(-4px), rem(-8px), rem(-16px)) * -1);
             }
