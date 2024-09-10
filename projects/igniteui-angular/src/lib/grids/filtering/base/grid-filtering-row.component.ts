@@ -225,7 +225,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
-        console.log(this.column.pipeArgs.format)
         this._conditionsOverlaySettings.outlet = this.column.grid.outlet;
         this._operatorsOverlaySettings.outlet = this.column.grid.outlet;
 
