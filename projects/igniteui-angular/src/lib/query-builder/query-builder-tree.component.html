@@ -249,7 +249,7 @@
             <ng-container 
                 *ngTemplateOutlet="
                     searchValueTemplate ? searchValueTemplate : defaultSearchValueTemplate;
-                    context: { $implicit: searchValue, field: selectedField, condition: selectedCondition }
+                    context: getSearchValueTemplateContext()
                 "
             >
             </ng-container>

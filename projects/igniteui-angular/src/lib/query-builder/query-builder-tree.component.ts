@@ -719,10 +719,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public commitOperandEdit() {
+        const actualSearchValue = this.searchValueTemplate ? this._editedExpression.expression.searchVal : this.searchValue;
         if (this._editedExpression) {
             this._editedExpression.expression.field = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
-            this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue); //
+            this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, actualSearchValue);
             this._editedExpression.fieldLabel = this.selectedField.label
                 ? this.selectedField.label
                 : this.selectedField.header
@@ -789,10 +790,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public operandCanBeCommitted(): boolean {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
-
         return this.selectedField && this.selectedCondition &&
             (
-                ((!!this.searchValue || !!this.searchValueTemplate) && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
+                ((!!this.searchValue || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
                 (innerQuery && !!innerQuery.expressionTree) ||
                 this.selectedField.filters.condition(this.selectedCondition).isUnary
             );
@@ -1212,6 +1212,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         } else {
             this.selectedReturnFieldsCombo.selectAllItems();
         }
+    }
+
+    public getSearchValueTemplateContext(): any {
+        const ctx = {
+            $implicit: this.searchValue,
+            expression: this._editedExpression.expression
+        };
+        return ctx;
     }
 
     private setFormat(field: FieldType) {
