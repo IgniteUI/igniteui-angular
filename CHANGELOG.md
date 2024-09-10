@@ -4,9 +4,11 @@ All notable changes for each version of this project will be documented in this 
 
 ## 18.2.0
 ### New Features
+- `IgxSimpleCombo`
+    - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - To streamline the sorting of columns with custom formats, a new `FormattedValuesSortingStrategy` has been introduced. This strategy simplifies the sorting process by allowing direct sorting based on formatted values, eliminating the need to extend the `DefaultSortingStrategy` or implement a custom `ISortingStrategy`. This enhancement improves the ease of handling sorting with custom column formatters.
-    
+
 #### Scrollbar: New CSS variables
 
 We have introduced new CSS variables to allow for more customizable scrollbars. This enhancement utilizes the available WebKit pseudo-selectors such as `::-webkit-scrollbar-track`. However, please note that these pseudo-selectors are prefixed with `-webkit-` and are only supported in WebKit-based browsers (e.g., Chrome, Safari).
