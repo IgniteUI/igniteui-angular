@@ -1104,11 +1104,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public getConditionList(): string[] {
-        let conditionList = this.selectedField ? this.selectedField.filters.conditionList() : [];
+        if (!this.selectedField) return [];
+
         if (this.entities.length === 1 && !this.entities[0].name) {
-            conditionList = conditionList.filter(c => c !== 'in' && c !== 'notIn')
+            return this.selectedField.filters.conditionList();
         }
-        return conditionList;
+
+        return this.selectedField.filters.extendedConditionList();
     }
 
     /**
@@ -1257,20 +1259,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     field.filters = IgxStringFilteringOperand.instance();
                     break;
             }
-
-            field.filters.append({
-                name: 'in',
-                isUnary: false,
-                iconName: 'in',
-                logic: (target: any, searchVal: Set<any>) => field.filters.findValueInSet(target, searchVal)
-            });
-
-            field.filters.append({
-                name: 'notIn',
-                isUnary: false,
-                iconName: 'not-in',
-                logic: (target: any, searchVal: Set<any>) => !field.filters.findValueInSet(target, searchVal)
-            });
         }
     }
 
