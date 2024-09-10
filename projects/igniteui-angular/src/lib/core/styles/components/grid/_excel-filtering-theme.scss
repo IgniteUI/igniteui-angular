@@ -188,8 +188,6 @@
                 --item-disabled-border: transparent;
                 --disabled-selected-border-color: transparent;
                 --shadow: none;
-                --item-background: transparent;
-                --disabled-background-color: transparent;
             }
 
             %igx-group-item {
@@ -225,11 +223,11 @@
     %grid-excel-menu__header {
         display: flex;
         align-items: center;
-        padding: pad(rem(4px), rem(8px), rem(16px));
 
         @if $variant == 'indigo' {
-            padding: pad(rem(16px));
-            padding-block-end: pad(rem(4px), rem(8px), rem(8px));
+            padding: rem(16px) rem(16px) rem(8px);
+        } @else {
+            padding: pad(rem(4px), rem(8px), rem(16px));
         }
 
         color: var-get($theme, 'excel-filtering-header-foreground');
@@ -290,21 +288,21 @@
     %grid-excel-move {
         display: block;
 
-        padding-block: pad-block(rem(4px), rem(8px), rem(8px));
-
         @if $variant == 'indigo' {
             padding-inline: pad-inline(rem(16px));
         } @else {
+            padding-block: pad-block(rem(4px), rem(8px), rem(8px));
             padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
-
         }
 
         header {
             color: var-get($theme, 'excel-filtering-subheader-foreground');
-            margin-bottom: rem(4px);
 
             @if $variant == 'indigo' {
+                margin-block-end: sizable(rem(0), rem(4px), rem(4px)) !important;
                 text-transform: capitalize !important;
+            } @else {
+                margin-block-end: rem(4px);
             }
         }
 
@@ -317,6 +315,11 @@
     }
 
     @if $variant == 'indigo' {
+        %grid-excel-sort,
+        %grid-excel-move {
+            margin-block-end: rem(8px);
+        }
+
         %grid-excel-sort {
             padding-block-end: 0;
         }
@@ -381,8 +384,10 @@
         justify-content: space-between;
 
         @if $variant == 'indigo' {
-            padding-block: pad-block(rem(8px));
-            padding-inline: pad-inline(rem(20px));
+            padding-block: pad-block(rem(6px));
+            padding-inline: pad-inline(rem(12px));
+            margin-inline: rem(8px);
+            margin-block-end: rem(4px);
         } @else {
             padding-block: pad-block(rem(4px), rem(8px), rem(8px));
             padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
@@ -433,6 +438,7 @@
 
         @if $variant == 'indigo' {
             padding: pad(rem(16px));
+            padding-block-start: pad(rem(4px), rem(12px), rem(12px));
             gap: sizable(rem(16px));
         } @else {
             padding: pad(rem(4px), rem(8px), rem(16px));
@@ -447,6 +453,7 @@
                 --background: #{color($color: 'surface', $variant: 500)};
 
                 margin-inline: calc(sizable(rem(-16px)) * -1);
+                padding: rem(8px);
             } @else  {
                 margin-inline: calc(sizable(rem(-4px), rem(-8px), rem(-16px)) * -1);
             }
@@ -566,8 +573,10 @@
             }
         }
 
-        %grid-excel-move {
-            margin-bottom: 0;
+        @if $variant != 'indigo' {
+            %grid-excel-move {
+                margin-bottom: 0;
+            }
         }
     }
 

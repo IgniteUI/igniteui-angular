@@ -2359,7 +2359,7 @@
         min-width: rem(168px);
         max-width: rem(320px);
         height: var(--header-size);
-        min-height: if($variant == 'indigo', calc(var(--header-size) + rem(1px)), var(--header-size));
+        min-height: var(--header-size);
         top: rem(-99999px);
         inset-inline-start: rem(-99999px);
         border: none;
