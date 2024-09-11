@@ -518,17 +518,18 @@ export class IgxGridSelectionService {
             return;
         }
 
-        const allData = this.allData;
-        const allDataMap = new Map(allData.map(row => [this.getRecordKey(row), row]));
-        const rowsToSelect = keys.filter(key => !this.isRowDeleted(key) && !this.rowSelection.has(key));
+        let rowsToSelect = keys.filter(x => !this.isRowDeleted(x) && !this.rowSelection.has(x));
+        if (!rowsToSelect.length && !clearPrevSelection) {
+            // no valid/additional rows to select and no clear
+            return;
+        }
+
         const selectedRows = this.getSelectedRowsData();
-
-        const newSelection = clearPrevSelection ?
-            rowsToSelect.map(key => allDataMap.get(key)).filter(Boolean) :
-            [...selectedRows, ...rowsToSelect.map(key => allDataMap.get(key)).filter(Boolean)];
-
-        const removed = clearPrevSelection ? selectedRows.filter(row => !keys.includes(this.getRecordKey(row))) : [];
-        this.emitRowSelectionEvent(newSelection, rowsToSelect.map(key => allDataMap.get(key)).filter(Boolean), removed, event, selectedRows, allData);
+        rowsToSelect = this.grid.primaryKey ? rowsToSelect.map(r => this.getRowDataById(r)) : rowsToSelect;
+        const newSelection = clearPrevSelection ? rowsToSelect : [...selectedRows, ...rowsToSelect];
+        const keysAsSet = new Set(rowsToSelect);
+        const removed = clearPrevSelection ? selectedRows.filter(x => !keysAsSet.has(x)) : [];
+        this.emitRowSelectionEvent(newSelection, rowsToSelect, removed, event, selectedRows);
     }
 
     public deselectRows(keys: any[], event?): void {
