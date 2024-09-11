@@ -378,7 +378,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const column = grid.getColumnByName('ReleaseDate');
 
             column.pipeArgs = {
-                timezone: "GMT-7"
+                timezone: "GMT-12"
             };
 
             GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
