@@ -12,6 +12,8 @@ import {
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import { CommonModule } from '@angular/common';
+import { IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular/src/lib/query-builder/query-builder.directives';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     providers: [],
@@ -19,11 +21,14 @@ import { CommonModule } from '@angular/common';
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule]
+    imports: [FormsModule, IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule, IgxQueryBuilderSearchValueTemplateDirective]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })
     public queryBuilder: IgxQueryBuilderComponent;
+
+    @ViewChild('searchValueTemplate', { read: IgxQueryBuilderSearchValueTemplateDirective, static: true })
+    public searchValueTemplate: IgxQueryBuilderSearchValueTemplateDirective;
 
     public entities: Array<any>;
     public fields: Array<any>;

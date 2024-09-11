@@ -5,7 +5,8 @@ import {
     LOCALE_ID,
     Output,
     Pipe,
-    PipeTransform
+    PipeTransform,
+    TemplateRef
 } from '@angular/core';
 import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
@@ -51,6 +52,7 @@ import { IgxDialogComponent } from "../dialog/dialog.component";
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
+import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -170,6 +172,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public entities: EntityType[];
 
     @Input()
+    public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueTemplateDirective> = null;
+
+    @Input()
     public get parentExpression(): ExpressionOperandItem {
         return this._parentExpression;
     }
@@ -182,6 +187,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     * Returns the fields.
     */
     public get fields(): FieldType[] {
+        if (!this._fields && this.entities.length === 1 && !this.entities[0].name) {
+            this._fields = this.entities[0].fields;
+        }
+
         return this._fields;
     }
 
@@ -708,10 +717,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public commitOperandEdit() {
+        const actualSearchValue = this.searchValueTemplate ? this._editedExpression.expression.searchVal : this.searchValue;
         if (this._editedExpression) {
             this._editedExpression.expression.field = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
-            this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
+            this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, actualSearchValue);
             this._editedExpression.fieldLabel = this.selectedField.label
                 ? this.selectedField.label
                 : this.selectedField.header
@@ -778,10 +788,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public operandCanBeCommitted(): boolean {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
-
         return this.selectedField && this.selectedCondition &&
             (
-                (!!this.searchValue && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
+                ((!!this.searchValue || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
                 (innerQuery && !!innerQuery.expressionTree) ||
                 this.selectedField.filters.condition(this.selectedCondition).isUnary
             );
@@ -896,7 +905,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.conditionSelect.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
-            input.focus();
+            input?.focus();
         }
     }
 
@@ -1093,7 +1102,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public getConditionList(): string[] {
-        return this.selectedField ? this.selectedField.filters.conditionList() : [];
+        if (!this.selectedField) return [];
+
+        if (this.entities.length === 1 && !this.entities[0].name) {
+            return this.selectedField.filters.conditionList();
+        }
+
+        return this.selectedField.filters.extendedConditionList();
     }
 
     /**
@@ -1197,6 +1212,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    public getSearchValueTemplateContext(): any {
+        const ctx = {
+            $implicit: this.searchValue,
+            expression: this._editedExpression.expression
+        };
+        return ctx;
+    }
+
     private setFormat(field: FieldType) {
         if (!field.pipeArgs) {
             field.pipeArgs = { digitsInfo: DEFAULT_PIPE_DIGITS_INFO };
@@ -1242,7 +1265,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     field.filters = IgxStringFilteringOperand.instance();
                     break;
             }
-
         }
     }
 

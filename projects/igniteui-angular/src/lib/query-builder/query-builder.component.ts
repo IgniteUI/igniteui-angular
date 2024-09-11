@@ -1,5 +1,5 @@
-import { ContentChild, EventEmitter, Output } from '@angular/core';
-import { NgIf} from '@angular/common';
+import { ContentChild, EventEmitter, Output, TemplateRef } from '@angular/core';
+import { NgIf, NgTemplateOutlet} from '@angular/common';
 import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
@@ -13,6 +13,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from '../icon/icon.service';
 import { editor } from '@igniteui/material-icons-extended';
+import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 
 /**
  * A component used for operating with complex filters by creating or editing conditions
@@ -29,7 +30,7 @@ import { editor } from '@igniteui/material-icons-extended';
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
     standalone: true,
-    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxQueryBuilderTreeComponent]
+    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxQueryBuilderTreeComponent, NgTemplateOutlet, IgxQueryBuilderSearchValueTemplateDirective]
 })
 export class IgxQueryBuilderComponent implements OnDestroy {
     /**
@@ -113,6 +114,9 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     @ContentChild(IgxQueryBuilderHeaderComponent)
     public headerContent: IgxQueryBuilderHeaderComponent;
+
+    @ContentChild(IgxQueryBuilderSearchValueTemplateDirective, { read: TemplateRef })
+    public searchValueTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal

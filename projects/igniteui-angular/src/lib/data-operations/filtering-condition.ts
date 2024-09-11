@@ -24,7 +24,8 @@ export class IgxFilteringOperand {
             isUnary: false,
             iconName: 'in',
             logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
-        }, {
+        },
+        {
             name: 'notIn',
             isUnary: false,
             iconName: 'not-in',
@@ -37,9 +38,16 @@ export class IgxFilteringOperand {
     }
 
     /**
-     * Returns an array of names of the conditions which are visible in the UI
+     * Returns an array of names of the conditions which are visible in the filtering UI
      */
     public conditionList(): string[] {
+        return this.extendedConditionList().filter(c => c !== 'in' && c !== 'notIn');
+    }
+
+    /**
+     * Returns an array of names of the conditions which are visible in the UI, including "In" and "Not In", allowing the creation of sub-queries.
+     */
+    public extendedConditionList(): string[] {
         return this.operations.filter(f => !f.hidden).map((element) => element.name);
     }
 
@@ -64,7 +72,7 @@ export class IgxFilteringOperand {
     /**
      * @hidden
      */
-    protected findValueInSet(target: any, searchVal: Set<any>) {
+    public findValueInSet(target: any, searchVal: Set<any>) {
         return searchVal.has(target);
     }
 }
@@ -170,7 +178,10 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
         return res;
     }
 
-    protected override findValueInSet(target: any, searchVal: Set<any>) {
+    /**
+     * @hidden
+     */
+    public override findValueInSet(target: any, searchVal: Set<any>) {
         if (!target) {
             return false;
         }
@@ -708,7 +719,10 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }].concat(this.operations);
     }
 
-    protected override findValueInSet(target: any, searchVal: Set<any>) {
+    /**
+     * @hidden
+     */
+    public override findValueInSet(target: any, searchVal: Set<any>) {
         if (!target) {
             return false;
         }
