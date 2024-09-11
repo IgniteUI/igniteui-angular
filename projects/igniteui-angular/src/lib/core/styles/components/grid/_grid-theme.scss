@@ -1180,6 +1180,15 @@
             );
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+
+            %igx-icon-display {
+                opacity: if($theme-variant == 'light', .75, .85);
+
+                &:hover {
+                    opacity: 1;
+                    cursor: pointer;
+                }
+            }
         }
 
         padding-block: 0;
@@ -3382,6 +3391,18 @@
         igx-pivot-row-dimension-header-group {
             igx-pivot-row-dimension-header {
                 align-items: center;
+            }
+
+            @if $variant == 'indigo' {
+                %igx-icon-display {
+                    opacity: if($theme-variant == 'light', .75, .85);
+
+
+                    &:hover {
+                        opacity: 1;
+                        cursor: pointer;
+                    }
+                }
             }
         }
 
