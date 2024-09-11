@@ -432,12 +432,11 @@ export class IgxGridSelectionService {
 
     /** Select all rows, if filtering is applied select only from filtered data. */
     public selectAllRows(event?) {
-        const allDataKeys = this.allData.map(row => this.getRecordKey(row));
-        const addedRows = this.allData.filter((row, index) => !this.isRowSelected(allDataKeys[index]));
+        const addedRows = this.allData.filter((row) => !this.rowSelection.has(this.getRecordKey(row)));
         const selectedRows = this.getSelectedRowsData();
         const newSelection = this.rowSelection.size ? selectedRows.concat(addedRows) : addedRows;
         this.indeterminateRows.clear();
-        this.emitRowSelectionEvent(newSelection, addedRows, [], event, selectedRows);
+        this.emitRowSelectionEvent(newSelection, addedRows, [], event, selectedRows, this.allData);
     }
 
     /** Select the specified row and emit event. */
@@ -519,18 +518,17 @@ export class IgxGridSelectionService {
             return;
         }
 
-        let rowsToSelect = keys.filter(x => !this.isRowDeleted(x) && !this.rowSelection.has(x));
-        if (!rowsToSelect.length && !clearPrevSelection) {
-            // no valid/additional rows to select and no clear
-            return;
-        }
-
+        const allData = this.allData;
+        const allDataMap = new Map(allData.map(row => [this.getRecordKey(row), row]));
+        const rowsToSelect = keys.filter(key => !this.isRowDeleted(key) && !this.rowSelection.has(key));
         const selectedRows = this.getSelectedRowsData();
-        rowsToSelect = this.grid.primaryKey ? rowsToSelect.map(r => this.getRowDataById(r)) : rowsToSelect;
-        const newSelection = clearPrevSelection ? rowsToSelect : [...selectedRows, ...rowsToSelect];
-        const keysAsSet = new Set(rowsToSelect);
-        const removed = clearPrevSelection ? selectedRows.filter(x => !keysAsSet.has(x)) : [];
-        this.emitRowSelectionEvent(newSelection, rowsToSelect, removed, event, selectedRows);
+
+        const newSelection = clearPrevSelection ?
+            rowsToSelect.map(key => allDataMap.get(key)).filter(Boolean) :
+            [...selectedRows, ...rowsToSelect.map(key => allDataMap.get(key)).filter(Boolean)];
+
+        const removed = clearPrevSelection ? selectedRows.filter(row => !keys.includes(this.getRecordKey(row))) : [];
+        this.emitRowSelectionEvent(newSelection, rowsToSelect.map(key => allDataMap.get(key)).filter(Boolean), removed, event, selectedRows, allData);
     }
 
     public deselectRows(keys: any[], event?): void {
@@ -603,16 +601,16 @@ export class IgxGridSelectionService {
         this.emitRowSelectionEvent(newSelection, added, [], event, currSelection);
     }
 
-    public areAllRowSelected(newSelection?): boolean {
+    public areAllRowSelected(newSelection?, allData?): boolean {
         if (!this.grid.data && !newSelection) {
             return false;
         }
         if (this.allRowsSelected !== undefined && !newSelection) {
             return this.allRowsSelected;
         }
+        allData = allData || this.allData;
         const selectedData = new Set(newSelection ? newSelection.map(r => this.getRecordKey(r)) : [...this.rowSelection]);
-        const unSelectedRows = this.allData.filter(row => !selectedData.has(this.getRecordKey(row)) && !this.isRowDeleted(this.getRecordKey(row)));
-        return this.allRowsSelected = this.allData.length > 0 && unSelectedRows.length === 0;
+        return this.allRowsSelected = allData.length > 0 && allData.every(row => selectedData.has(this.getRecordKey(row)));
     }
 
     public hasSomeRowSelected(): boolean {
@@ -627,20 +625,19 @@ export class IgxGridSelectionService {
             this.getSelectedRows().filter(rowID => !this.isRowDeleted(rowID));
     }
 
-    public emitRowSelectionEvent(newSelection, added, removed, event?, currSelection?): boolean {
+    public emitRowSelectionEvent(newSelection, added, removed, event?, currSelection?, allData?): boolean {
         currSelection = currSelection ?? this.getSelectedRowsData();
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
         }
+        allData = allData || this.allData;
         const args: IRowSelectionEventArgs = {
             owner: this.grid,
             oldSelection: currSelection,
             newSelection,
-            added,
-            removed,
-            event,
-            cancel: false,
-            allRowsSelected: this.areAllRowSelected(newSelection)
+            added, removed,
+            event, cancel: false,
+            allRowsSelected: this.areAllRowSelected(newSelection, allData)
         };
 
         this.grid.rowSelectionChanging.emit(args);
