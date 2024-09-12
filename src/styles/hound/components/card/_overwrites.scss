@@ -1,0 +1,19 @@
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+.igx-card {
+    .igx-card-header,
+    .igx-card-content,
+    .igx-card-header + .igx-card-content {
+        padding-block: pad-block(rem(16px));
+        padding-inline: pad-inline(rem(24px));
+    }
+
+    .igx-card-actions,
+    .igx-card-content + .igx-card-actions {
+        padding-block: pad-block(rem(12px));
+    }
+
+    &.igx-card--elevated {
+        border: none;
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "shouldGenerate",
+            "replaceWith": "autoGenerate",
+            "definedIn": [
+                "IgxGrid",
+                "IgxTreeGrid",
+                "IgxHierarchicalGrid",
+                "IgxPivotGrid"
+            ]
+        }
+    ]
+}

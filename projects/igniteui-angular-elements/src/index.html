@@ -49,7 +49,7 @@
         <igc-grid-state id="state"></igc-grid-state>
 
 
-        <igc-column field="ProductID" header="Product ID" data-type="number" filterable="false"></igc-column>
+        <igc-column field="ProductID" header="Product ID" data-type="number" filterable="false" sortable="true"></igc-column>
         <igc-column field="ProductName" header="Product Name" sortable="true" width="auto"></igc-column>
 
         <igc-column field="CategoryName" header="Category Name" sortable="true" groupable="true"></igc-column>
@@ -234,18 +234,17 @@
     function toggleIcon() {
         if (icon !== thumbUpIcon) {
             icon = thumbUpIcon;
-            registerIconFromText("filter_list", thumbUpIcon, "customSet");
-            setIconRef('filter_list', 'default', {
-                name: 'filter_list',
-                collection: 'customSet',
+            registerIconFromText("arrow_upward", thumbUpIcon, "customSet");
+            setIconRef('sort_asc', 'default', {
+            name: 'arrow_upward',
+            collection: 'customSet',
             });
 
         } else {
             icon = buildIcon;
-            registerIconFromText("filter_list", buildIcon, "customSet2");
-            setIconRef('filter_list', 'default', {
-                name: 'filter_list',
-                collection: 'customSet2',
+            setIconRef('sort_asc', 'default', {
+            name: 'arrow_upward',
+            collection: 'material',
             });
         }
     }
