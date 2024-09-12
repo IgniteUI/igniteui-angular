@@ -20,6 +20,11 @@
             @extend %igx-carousel-indicators !optional;
             @extend %igx-carousel-indicators--bottom !optional;
         }
+
+        @include m(focused) {
+            @extend %igx-carousel-indicators !optional;
+            @extend %igx-carousel-indicators--focused !optional;
+        }
     }
 
     @include b(igx-carousel-label-indicator) {
