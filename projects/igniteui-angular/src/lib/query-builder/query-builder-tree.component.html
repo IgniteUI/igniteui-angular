@@ -136,7 +136,7 @@
                         expressionItem.expression.searchTree.returnFields :
                         expressionItem.expression.searchVal ?
                             expressionItem.expression.searchVal :
-                            null
+                            getConditionFriendlyName(expressionItem.expression.condition.name)
                 }}
             </div>
             <div
