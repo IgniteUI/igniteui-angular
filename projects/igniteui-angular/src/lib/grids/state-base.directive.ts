@@ -229,7 +229,9 @@ export class IgxGridStateBaseDirective {
                     if (hasColumnGroup) {
                         let ref1: IgxColumnGroupComponent = context.currGrid.columns.find(x => x.columnGroup && colState.key ? this.getColumnGroupKey(x) === colState.key : x.header === colState.header) as IgxColumnGroupComponent;
                         if (!ref1) {
-                            ref1 = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector }).instance;
+                            const component = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
+                            ref1 = component.instance;
+                            component.changeDetectorRef.detectChanges();
                         } else {
                             ref1.children.reset([]);
                         }
@@ -245,7 +247,9 @@ export class IgxGridStateBaseDirective {
                     } else {
                         let ref: IgxColumnComponent = context.currGrid.columns.find(x => !x.columnGroup && x.field === colState.field) as IgxColumnComponent;
                         if (!ref) {
-                            ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector}).instance;
+                            const component = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector});
+                            ref = component.instance;
+                            component.changeDetectorRef.detectChanges();
                         }
 
                         Object.assign(ref, colState);
