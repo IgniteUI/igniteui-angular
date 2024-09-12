@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import {
     FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic,

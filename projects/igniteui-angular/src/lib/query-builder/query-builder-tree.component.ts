@@ -1,9 +1,7 @@
 import {
     AfterViewInit,
     ContentChild,
-    ContentChildren,
     EventEmitter,
-    forwardRef,
     LOCALE_ID,
     Output,
     Pipe,
