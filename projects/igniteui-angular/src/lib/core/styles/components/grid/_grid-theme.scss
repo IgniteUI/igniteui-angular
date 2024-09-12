@@ -1929,7 +1929,7 @@
             igx-icon {
                 @if $variant == 'indigo' {
                     --component-size: 1;
-                } else {
+                } @else {
                     width: var(--igx-icon-size, #{rem(15px)});
                     height: var(--igx-icon-size, #{rem(15px)});
                     font-size: var(--igx-icon-size, #{rem(15px)});
