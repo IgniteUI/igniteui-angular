@@ -226,8 +226,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._selectedEntity = null;
             this._selectedReturnFields = [];
         }
-
-        this.init();
     }
 
     /**
@@ -515,6 +513,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public ngAfterViewInit(): void {
+        this.clearSelection();
+        this.cancelOperandAdd();
+        this.cancelOperandEdit();
+        this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
+        this.currentGroup = this.rootGroup;
+
         this._overlaySettings.outlet = this.overlayOutlet;
         this.entitySelectOverlaySettings.outlet = this.overlayOutlet;
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
@@ -573,10 +577,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._selectedReturnFields = this._entityNewValue.fields?.map(f => f.field);
 
-        if (this.expressionTree) {
-            this.expressionTree.entity = this._selectedEntity.name;
-            this.expressionTree.returnFields = [];
-            this.expressionTree.filteringOperands = [];
+        if (this._expressionTree) {
+            this._expressionTree.entity = this._selectedEntity.name;
+            this._expressionTree.returnFields = [];
+            this._expressionTree.filteringOperands = [];
 
             this._editedExpression = null;
             this.expressionTreeChange.emit(this._expressionTree);
@@ -1533,14 +1537,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         } else if (container.scrollTop + container.clientHeight < targetOffset + target.offsetHeight + delta) {
             container.scrollTop = targetOffset + target.offsetHeight + delta - container.clientHeight;
         }
-    }
-
-    private init() {
-        this.clearSelection();
-        this.cancelOperandAdd();
-        this.cancelOperandEdit();
-        this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
-        this.currentGroup = this.rootGroup;
     }
 }
 
