@@ -125,7 +125,11 @@ export class QueryBuilderComponent implements OnInit {
         // });
 
         this.expressionTree = tree;
-        this.onChange();
+        // this.onChange();
+    }
+
+    public handleExpressionTreeChange(event: any) {
+        console.log(this.queryBuilder.expressionTree);
     }
 
     public async onChange() {
@@ -151,8 +155,8 @@ export class QueryBuilderComponent implements OnInit {
 
     public printExpressionTree(tree: IExpressionTree) {
         if (JSON.stringify(tree) !== JSON.stringify(this.expressionTree)) {
-            this.expressionTree = tree;
-            this.onChange();
+            // this.expressionTree = tree;
+            // this.onChange();
         }
         return tree ? JSON.stringify(tree, null, 2) : 'Please add an expression!';
     }
