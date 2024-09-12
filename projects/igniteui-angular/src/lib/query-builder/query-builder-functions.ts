@@ -18,6 +18,24 @@ export const QueryBuilderConstants = {
     QUERY_BUILDER_BODY: 'igx-query-builder__main',
 }
 
+export const SampleEntities = [
+    {
+        name: 'Products', fields: [
+            { field: 'Id', dataType: 'number' },
+            { field: 'ProductName', dataType: 'string' },
+            { field: 'OrderId', dataType: 'number' },
+            { field: 'Released', dataType: 'boolean' }
+        ]
+    },
+    {
+        name: 'Orders', fields: [
+            { field: 'OrderId', dataType: 'number' },
+            { field: 'OrderName', dataType: 'string' },
+            { field: 'OrderDate', dataType: 'date' }
+        ]
+    }
+];
+
 export class QueryBuilderFunctions {
     public static generateExpressionTree(): FilteringExpressionsTree {
         const innerTree = new FilteringExpressionsTree(FilteringLogic.And, 'Products', ['Id']);

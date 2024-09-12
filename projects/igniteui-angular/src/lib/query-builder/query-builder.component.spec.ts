@@ -1,12 +1,13 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IgxChipComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective, IgxStringFilteringOperand } from 'igniteui-angular';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
-import { QueryBuilderFunctions, QueryBuilderConstants } from './query-builder-functions';
+import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './query-builder-functions';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { FormsModule } from '@angular/forms';
 
 describe('IgxQueryBuilder', () => {
     configureTestSuite();
@@ -108,6 +109,63 @@ describe('IgxQueryBuilder', () => {
             expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fixture).textContent).toBe('and');
             expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fixture).textContent).toBe('or');
         });
+
+        it('Should render custom input template properly.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxQueryBuilderCustomInputSampleTestComponent);
+            fixture.detectChanges();
+
+            //Select chip
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [0]);
+            tick(200);
+            fixture.detectChanges();
+
+            //Open edit mode
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fixture, [0], 'edit');
+            tick(200);
+            fixture.detectChanges();           
+
+            const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fixture, false, 0);
+            const input = editModeContainer.querySelector('input.custom-class') as HTMLInputElement;
+
+            expect(input).toBeDefined();
+            expect(input.value).toBe('3');
+
+            //Edit input value
+            UIInteractions.clickAndSendInputElementValue(input, '5');
+            tick(100);
+            fixture.detectChanges();
+
+            // Commit the populated expression.
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fixture);
+            tick(100);
+            fixture.detectChanges();
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fixture.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "field": "OrderId",
+      "condition": {
+        "name": "greaterThan",
+        "isUnary": false,
+        "iconName": "filter_greater_than"
+      },
+      "conditionName": "greaterThan",
+      "searchVal": 5,
+      "searchTree": null,
+      "ignoreCase": true
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "OrderId",
+    "OrderName",
+    "OrderDate"
+  ]
+}`);
+        }));
     });
 
     describe('Interactions', () => {
@@ -1997,23 +2055,7 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
     public entities: Array<any>;
 
     public ngOnInit(): void {
-        this.entities = [
-            {
-                name: 'Products', fields: [
-                    { field: 'Id', dataType: 'number' },
-                    { field: 'ProductName', dataType: 'string' },
-                    { field: 'OrderId', dataType: 'number' },
-                    { field: 'Released', dataType: 'boolean' }
-                ]
-            },
-            {
-                name: 'Orders', fields: [
-                    { field: 'OrderId', dataType: 'number' },
-                    { field: 'OrderName', dataType: 'string' },
-                    { field: 'OrderDate', dataType: 'date' }
-                ]
-            }
-        ];
+        this.entities = SampleEntities.map(a => ({ ...a }));
     }
 }
 
@@ -2035,22 +2077,46 @@ export class IgxQueryBuilderCustomHeaderSampleTestComponent implements OnInit {
     public showLegend = false;
 
     public ngOnInit(): void {
-        this.entities = [
-            {
-                name: 'Products', fields: [
-                    { field: 'Id', dataType: 'number' },
-                    { field: 'ProductName', dataType: 'string' },
-                    { field: 'OrderId', dataType: 'number' },
-                    { field: 'Released', dataType: 'boolean' }
-                ]
-            },
-            {
-                name: 'Orders', fields: [
-                    { field: 'OrderId', dataType: 'number' },
-                    { field: 'OrderName', dataType: 'string' },
-                    { field: 'OrderDate', dataType: 'date' }
-                ]
-            }
-        ];
+        this.entities = SampleEntities.map(a => ({ ...a }));
+    }
+}
+
+@Component({
+    template: `
+     <igx-query-builder #queryBuilder [entities]="this.entities"  [expressionTree]="this.expressionTree">
+        <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-expression="expression">
+            <input type="text" class="custom-class" required [(ngModel)]="expression.searchVal"/>
+        </ng-template>
+     </igx-query-builder>
+    `,
+    standalone: true,
+    imports: [
+        IgxQueryBuilderComponent,
+        IgxQueryBuilderSearchValueTemplateDirective,
+        FormsModule      
+    ]
+})
+export class IgxQueryBuilderCustomInputSampleTestComponent implements OnInit {
+    @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
+    public entities: Array<any>;
+    public showLegend = false;
+    public expressionTree: IExpressionTree;
+
+    @ViewChild('searchValueTemplate', { read: IgxQueryBuilderSearchValueTemplateDirective, static: true })
+    public searchValueTemplate: IgxQueryBuilderSearchValueTemplateDirective;
+
+    public ngOnInit(): void {
+        this.entities = SampleEntities.map(a => ({ ...a }));
+
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Orders', ['*']);
+        tree.filteringOperands.push({
+            field: 'OrderId',
+            condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            conditionName: 'greaterThan',
+            searchVal: 3,
+            ignoreCase: true
+        });
+
+        this.expressionTree = tree;
     }
 }
