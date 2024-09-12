@@ -72,9 +72,22 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     //     }
     // }
 
+    /**
+    * Returns the expression tree.
+    */
+    public get expressionTree(): IExpressionTree {
+        return this._expressionTree;
+    }
 
+    /**
+     * Sets the expression tree.
+     */
     @Input()
-    public expressionTree: IExpressionTree;
+    public set expressionTree(expressionTree: IExpressionTree) {
+        if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
+            this._expressionTree = expressionTree;
+        }
+    }
 
     /**
      * Gets the `locale` of the query builder.
@@ -115,6 +128,9 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     @ContentChild(IgxQueryBuilderHeaderComponent)
     public headerContent: IgxQueryBuilderHeaderComponent;
 
+    /**
+     * @hidden @internal
+     */
     @ContentChild(IgxQueryBuilderSearchValueTemplateDirective, { read: TemplateRef })
     public searchValueTemplate: TemplateRef<any>;
 
@@ -126,6 +142,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
 
     private destroy$ = new Subject<any>();
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _expressionTree: IExpressionTree;
 
     constructor(protected iconService: IgxIconService) {
         this.registerSVGIcons();
@@ -183,7 +200,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     }
 
     public onExpressionTreeChange(tree: IExpressionTree) {
-        this.expressionTree = tree;
+        this._expressionTree = tree;
         this.expressionTreeChange.emit();
     }
 

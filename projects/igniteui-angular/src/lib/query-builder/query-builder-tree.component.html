@@ -134,9 +134,9 @@
                 {{
                     expressionItem.expression.searchTree ?
                         expressionItem.expression.searchTree.returnFields :
-                        expressionItem.expression.searchVal ?
-                            expressionItem.expression.searchVal :
-                            null
+                        expressionItem.expression.condition.isUnary ?
+                            getConditionFriendlyName(expressionItem.expression.condition.name) :
+                            expressionItem.expression.searchVal
                 }}
             </div>
             <div
