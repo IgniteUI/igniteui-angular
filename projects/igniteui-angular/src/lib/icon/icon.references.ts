@@ -149,6 +149,10 @@ const loadIconRefs = () => [
             name: 'done',
             family: 'material',
         },
+        indigo: {
+            name: 'check',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('remove', {
         default: {
@@ -229,11 +233,19 @@ const loadIconRefs = () => [
             name: 'navigate_before',
             family: 'material',
         },
+        indigo: {
+            name: 'chevron_left',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('next', {
         default: {
             name: 'navigate_next',
             family: 'material',
+        },
+        indigo: {
+            name: 'chevron_right',
+            family: 'internal_indigo',
         },
     }),
     addIcon('first_page', {
@@ -258,6 +270,10 @@ const loadIconRefs = () => [
         default: {
             name: 'close',
             family: 'material',
+        },
+        indigo: {
+            name: 'clear',
+            family: 'internal_indigo',
         },
     }),
     addIcon('error', {
