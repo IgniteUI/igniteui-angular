@@ -187,7 +187,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     * Returns the fields.
     */
     public get fields(): FieldType[] {
-        if (!this._fields && this.entities.length === 1 && !this.entities[0].name) {
+        if (!this._fields && this.entities?.length === 1 && !this.entities[0]?.name) {
             this._fields = this.entities[0].fields;
         }
 
@@ -201,7 +201,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public set fields(fields: FieldType[]) {
         this._fields = fields;
 
-        if (!this._fields && this.entities.length === 1 && !this.entities[0].name) {
+        if (!this._fields && this.entities?.length === 1 && !this.entities[0]?.name) {
             this._fields = this.entities[0].fields;
         }
 
@@ -1112,7 +1112,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public getConditionList(): string[] {
         if (!this.selectedField) return [];
 
-        if (this.entities.length === 1 && !this.entities[0].name) {
+        if (this.entities?.length === 1 && !this.entities[0].name) {
             return this.selectedField.filters.conditionList();
         }
 
@@ -1189,7 +1189,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public formatReturnFields(innerTree: IFilteringExpressionsTree) {
         const returnFields = innerTree.returnFields;
         let text = returnFields.join(', ');
-        const innerTreeEntity = this.entities.find(el => el.name === innerTree.entity);
+        const innerTreeEntity = this.entities?.find(el => el.name === innerTree.entity);
         if (returnFields.length === innerTreeEntity.fields.length) {
             text = this.resourceStrings.igx_query_builder_all_fields;
         } else {
@@ -1337,7 +1337,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     if (expressionTree.entity) {
                         entityName = expressionTree.entity;
                     }
-                    const entity = this.entities.find(el => el.name === entityName);
+                    const entity = this.entities?.find(el => el.name === entityName);
                     if (entity) {
                         this.fields = entity.fields;
                     }
@@ -1347,7 +1347,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                         operandItem.expanded = true;
                     }
                     groupItem.children.push(operandItem);
-                    this._selectedEntity = this.entities.find(el => el.name === entityName);
+                    this._selectedEntity = this.entities?.find(el => el.name === entityName);
                     this._selectedReturnFields =
                         !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All')
                             ? this.fields?.map(f => f.field)
