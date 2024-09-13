@@ -201,6 +201,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public set fields(fields: FieldType[]) {
         this._fields = fields;
 
+        if (!this._fields && this.entities.length === 1 && !this.entities[0].name) {
+            this._fields = this.entities[0].fields;
+        }
+
         if (this._fields) {
             this._fields.forEach(field => {
                 this.setFilters(field);

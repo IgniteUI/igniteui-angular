@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { IExpressionTree } from '../data-operations/filtering-expressions-tree';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
-import { EntityType } from '../grids/common/grid.interface';
+import { EntityType, FieldType } from '../grids/common/grid.interface';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
@@ -48,29 +48,27 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     @Input()
     public entities: EntityType[];
 
-    // /**
-    // * Returns the fields.
-    // */
-    // public get fields(): FieldType[] {
-    //     return this._fields;
-    // }
+    /**
+    * Returns the fields.
+    */
+    public get fields(): FieldType[] {
+        return this._fields;
+    }
 
-    // /**
-    //  * Sets the fields.
-    //  */
-    // @Input()
-    // public set fields(fields: FieldType[]) {
-    //     this._fields = fields;
-
-    //     if (this._fields) {
-    //         this.registerSVGIcons();
-
-    //         this._fields.forEach(field => {
-    //             this.setFilters(field);
-    //             this.setFormat(field);
-    //         });
-    //     }
-    // }
+    /**
+     * Sets the fields.
+     */
+    @Input()
+    public set fields(fields: FieldType[]) {
+        if (fields) {
+            this.entities = [
+                {
+                    name: null, 
+                    fields: fields
+                }
+            ];
+        }
+    }
 
     /**
     * Returns the expression tree.
@@ -143,6 +141,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     private destroy$ = new Subject<any>();
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
     private _expressionTree: IExpressionTree;
+    private _fields: FieldType[];
 
     constructor(protected iconService: IgxIconService) {
         this.registerSVGIcons();

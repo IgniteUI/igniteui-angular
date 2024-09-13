@@ -31,30 +31,35 @@ export class QueryBuilderComponent implements OnInit {
     public searchValueTemplate: IgxQueryBuilderSearchValueTemplateDirective;
 
     public entities: Array<any>;
-    public fields: Array<any>;
+    public assaysFields: Array<any>;
+    public compoundsFields: Array<any>;
     public displayDensities;
     public expressionTree: IExpressionTree;
     public queryResult: string;
     private backendUrl = "http://localhost:3333/";
 
     public ngOnInit(): void {
+        this.assaysFields = [
+            { field: 'Id', dataType: 'number' },
+            { field: 'CompoundId', dataType: 'number' },
+            { field: 'Name', dataType: 'string' },
+            { field: 'EndpointName', dataType: 'string' },
+            { field: 'EndpointValue', dataType: 'string' },
+            { field: 'Date', dataType: 'date' }
+        ];
+        this.compoundsFields = [
+            { field: 'Id', dataType: 'number' },
+            { field: 'Structure', dataType: 'string' },
+            { field: 'Date', dataType: 'date' }
+        ];
         this.entities = [
             {
-                name: 'Assays', fields: [
-                    { field: 'Id', dataType: 'number' },
-                    { field: 'CompoundId', dataType: 'number' },
-                    { field: 'Name', dataType: 'string' },
-                    { field: 'EndpointName', dataType: 'string' },
-                    { field: 'EndpointValue', dataType: 'string' },
-                    { field: 'Date', dataType: 'date' }
-                ]
+                name: 'Assays',
+                fields: this.assaysFields
             },
             {
-                name: 'Compounds', fields: [
-                    { field: 'Id', dataType: 'number' },
-                    { field: 'Structure', dataType: 'string' },
-                    { field: 'Date', dataType: 'date' }
-                ]
+                name: 'Compounds',
+                fields: this.compoundsFields
             }
         ];
 
@@ -128,7 +133,7 @@ export class QueryBuilderComponent implements OnInit {
         // this.onChange();
     }
 
-    public handleExpressionTreeChange(event: any) {
+    public handleExpressionTreeChange() {
         console.log(this.queryBuilder.expressionTree);
     }
 
