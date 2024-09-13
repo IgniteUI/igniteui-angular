@@ -1457,9 +1457,7 @@
 
     %igx-grid__td--bool {
         igx-icon {
-            width: var(--igx-icon-size, #{rem(18px)});
-            height: var(--igx-icon-size, #{rem(18px)});
-            font-size: var(--igx-icon-size, #{rem(18px)});
+            --component-size: #{if($variant == 'indigo', 2, 1)};
         }
 
         %igx-icon--error {
