@@ -361,8 +361,21 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.clearSelection(true);
         }
         if (!this.collapsed && event.key === this.platformUtil.KEYMAP.TAB) {
-            this.clearOnBlur();
-            this.close();
+            const filtered = this.filteredData.find(this.findAllMatches);
+            if (filtered === null || filtered === undefined) {
+                this.clearOnBlur();
+                this.close();
+                return;
+            }
+            const focusedItem = this.dropdown.focusedItem;
+            if (focusedItem && !focusedItem.isHeader) {
+                this.select(focusedItem.itemID);
+                this.close();
+                this.textSelection.trigger();
+            } else {
+                this.clearOnBlur();
+                this.close();
+            }
         }
         this.composing = false;
         super.handleKeyDown(event);
@@ -574,7 +587,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.filteredData.length !== this.data.length && !ignoreFilter) {
             newSelection = this.selectionService.delete_items(this.id, this.selectionService.get_all_ids(this.filteredData, this.valueKey));
         }
-        this.setSelection(newSelection);
+        if (this.selectionService.get(this.id).size > 0 || this.comboInput.value.trim()) {
+            this.setSelection(newSelection);
+        }
     }
 
     private clearOnBlur(): void {
