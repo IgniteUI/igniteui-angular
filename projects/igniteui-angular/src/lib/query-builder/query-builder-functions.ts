@@ -123,6 +123,12 @@ export class QueryBuilderFunctions {
         return initialButtons;
     }
 
+    public static clickQueryBuilderInitialAddGroupButton(fix: ComponentFixture<any>, buttonIndex: number, level = 0) {
+        const exprContainer = this.getQueryBuilderInitialAddGroupButtons(fix, level);
+        const andOrAddGroupButton = exprContainer[buttonIndex] as HTMLElement;
+        andOrAddGroupButton.click();
+    }
+
     public static getQueryBuilderAllGroups(fix: ComponentFixture<any>): any[] {
         const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
         const allGroups = Array.from(QueryBuilderFunctions.getQueryBuilderTreeChildGroups(queryBuilderElement, false));
@@ -365,145 +371,12 @@ export class QueryBuilderFunctions {
         return buttonGroup;
     }
 
-    public static getQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>, path = 0) {
-        const contextMenu = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenus(fix))[path].nativeElement;;
+    public static getQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>) {
+        const contextMenu = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenus(fix))[0].nativeElement;;
         const buttons = Array.from(contextMenu.querySelectorAll('button'));
         const closeButton: any = buttons.find((b: any) => b.innerText.toLowerCase() === 'close');
         return closeButton;
     }
-
-    /*
-    * Get tabbable elements in a container element. Result is returned as node elements ordered they way they will be tabbed
-    */
-    public static getTabbableElements(inElement: HTMLElement) {
-        const focusableElements =
-            'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
-
-        return Array.prototype.filter.call(
-            inElement.querySelectorAll(focusableElements),
-            element => {
-                return (element.offsetWidth > 0 || element.offsetHeight > 0);
-            }
-        );
-    }
-
-    public static clickQueryBuilderInitialAddGroupButton(fix: ComponentFixture<any>, buttonIndex: number, level = 0) {
-        const exprContainer = this.getQueryBuilderInitialAddGroupButtons(fix, level);
-        const andOrAddGroupButton = exprContainer[buttonIndex] as HTMLElement;
-        andOrAddGroupButton.click();
-    }
-
-    /**
-     * Click the entity select for the expression that is currently in edit mode.
-     */
-    public static clickQueryBuilderEntitySelect(fix: ComponentFixture<any>, level = 0) {
-        const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('igx-input-group') as HTMLElement;
-        entityInputGroup.click();
-    }
-
-    /**
-     * Click the fields combo for the expression that is currently in edit mode.
-     */
-    public static clickQueryBuilderFieldsCombo(fix: ComponentFixture<any>, level = 0) {
-        const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, level).querySelector('igx-input-group') as HTMLElement;
-        fieldInputGroup.click();
-    }
-
-    /**
-     * Click the column select for the expression that is currently in edit mode.
-     */
-    public static clickQueryBuilderColumnSelect(fix: ComponentFixture<any>, level = 0) {
-        const columnInputGroup = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix, level).querySelector('igx-input-group') as HTMLElement;
-        columnInputGroup.click();
-    }
-
-    /**
-     * Click the operator select for the expression that is currently in edit mode.
-     */
-    public static clickQueryBuilderOperatorSelect(fix: ComponentFixture<any>, level = 0) {
-        const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix, level).querySelector('igx-input-group') as HTMLElement
-        operatorInputGroup.click();
-    }
-
-    /**
-     * Click the value input for the expression that is currently in edit mode.
-     * (NOTE: The value input could be either an input group or a date picker.)
-     */
-    public static clickQueryBuilderValueInput(fix: ComponentFixture<any>, dateType = false) {
-        // Could be either an input group or a date picker.
-        const valueInput = QueryBuilderFunctions.getQueryBuilderValueInput(fix, dateType) as HTMLElement;
-        valueInput.click();
-    }
-
-    /**
-     * Click the the select dropdown's element that is positioned at the specified 'index'.
-     * (NOTE: This method presumes that the select dropdown is already opened.)
-     */
-    public static clickQueryBuilderSelectDropdownItem(queryBuilderElement: HTMLElement, index: number) {
-        const selectDropdownItems = Array.from(QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement));
-        const item = selectDropdownItems[index] as HTMLElement;
-        item.click();
-    }
-
-    /**
-     * Click the commit button of the expression that is currently in edit mode.
-     */
-    public static clickQueryBuilderExpressionCommitButton(fix: ComponentFixture<any>, level = 0) {
-        const commitButton = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, level);
-        commitButton.click();
-    }
-
-    /**
-     * (Double)Click the underlying chip of the expression that is located on the provided 'path'.
-     */
-    public static clickQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[], dblClick = false, level = 0) {
-        const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path, level) as HTMLElement;
-        if (dblClick) {
-            chip.dispatchEvent(new MouseEvent('dblclick'));
-        } else {
-            chip.click();
-        }
-    }
-
-    /**
-     * Click the remove icon of the expression that is located on the provided 'path'.
-     */
-    public static clickQueryBuilderTreeExpressionChipRemoveIcon(fix: ComponentFixture<any>, path: number[]) {
-        const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path) as HTMLElement;
-        ControlsFunction.clickChipRemoveButton(chip);
-    }
-
-    /**
-     * Click the specified icon (add, edit, close )of the expression that is located on the provided 'path'.
-     */
-    public static clickQueryBuilderTreeExpressionChipIcon(fix: ComponentFixture<any>, path: number[], iconType: string) {
-        const chipIcon = QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, path, iconType);
-        chipIcon.click();
-    }
-
-    /**
-     * Click the operator line of the group that is located on the provided 'path'.
-     */
-    public static clickQueryBuilderTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
-        const operatorLine = QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, path) as HTMLElement;
-        operatorLine.click();
-    }
-
-    public static clickQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>, path = 0) {
-        const contextMenuCloseButton = QueryBuilderFunctions.getQueryBuilderContextMenuCloseButton(fix, path);
-        contextMenuCloseButton.click();
-    }
-
-    /*
-    * Hit a keyboard button upon element, wait for the desired time and detect changes
-    */
-    //TODO maybe move to more commonly used class
-    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: HTMLElement, wait: number = null) {
-        UIInteractions.triggerKeyDownEvtUponElem(key, elem, true);
-        tick(wait);
-        fix.detectChanges();
-    }
-
     /**
      * Verifies the type of the operator line ('and' or 'or').
      * (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
@@ -741,7 +614,7 @@ export class QueryBuilderFunctions {
         });
     };
 
-    public static verifyExpressionChipContent(fix, path: number[], columnText: string, operatorText: string, valueText = undefined, level = 0) {
+    public static verifyExpressionChipContent(fix, path: number[], columnText: string, operatorText: string, valueText = '', level = 0) {
         const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path, level);
         const chipSpans = Array.from(chip.querySelectorAll('span'));
         const columnSpan = chipSpans[0];
@@ -749,7 +622,7 @@ export class QueryBuilderFunctions {
         const valueSpan = chipSpans[2];
         expect(columnSpan.textContent.toLowerCase().trim()).toBe(columnText.toLowerCase(), 'incorrect chip column');
         expect(operatorSpan.textContent.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
-        if (valueSpan != undefined && valueText != undefined) {
+        if (valueSpan != undefined) {
             expect(valueSpan.textContent.toLowerCase().trim()).toBe(valueText.toLowerCase(), 'incorrect chip filter value');
         }
     };
@@ -773,6 +646,132 @@ export class QueryBuilderFunctions {
             if (subGroupTotal) expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(subGroup, false).length).toBe(subGroupTotal, 'Child direct + child condition count not correct');
         }
     };
+
+    /**
+     * Click the entity select for the expression that is currently in edit mode.
+     */
+    public static clickQueryBuilderEntitySelect(fix: ComponentFixture<any>, level = 0) {
+        const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('igx-input-group') as HTMLElement;
+        entityInputGroup.click();
+    }
+
+    /**
+     * Click the fields combo for the expression that is currently in edit mode.
+     */
+    public static clickQueryBuilderFieldsCombo(fix: ComponentFixture<any>, level = 0) {
+        const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, level).querySelector('igx-input-group') as HTMLElement;
+        fieldInputGroup.click();
+    }
+
+    /**
+     * Click the column select for the expression that is currently in edit mode.
+     */
+    public static clickQueryBuilderColumnSelect(fix: ComponentFixture<any>, level = 0) {
+        const columnInputGroup = QueryBuilderFunctions.getQueryBuilderColumnSelect(fix, level).querySelector('igx-input-group') as HTMLElement;
+        columnInputGroup.click();
+    }
+
+    /**
+     * Click the operator select for the expression that is currently in edit mode.
+     */
+    public static clickQueryBuilderOperatorSelect(fix: ComponentFixture<any>, level = 0) {
+        const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix, level).querySelector('igx-input-group') as HTMLElement
+        operatorInputGroup.click();
+    }
+
+    /**
+     * Click the value input for the expression that is currently in edit mode.
+     * (NOTE: The value input could be either an input group or a date picker.)
+     */
+    public static clickQueryBuilderValueInput(fix: ComponentFixture<any>, dateType = false) {
+        // Could be either an input group or a date picker.
+        const valueInput = QueryBuilderFunctions.getQueryBuilderValueInput(fix, dateType) as HTMLElement;
+        valueInput.click();
+    }
+
+    /**
+     * Click the the select dropdown's element that is positioned at the specified 'index'.
+     * (NOTE: This method presumes that the select dropdown is already opened.)
+     */
+    public static clickQueryBuilderSelectDropdownItem(queryBuilderElement: HTMLElement, index: number) {
+        const selectDropdownItems = Array.from(QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement));
+        const item = selectDropdownItems[index] as HTMLElement;
+        item.click();
+    }
+
+    /**
+     * Click the commit button of the expression that is currently in edit mode.
+     */
+    public static clickQueryBuilderExpressionCommitButton(fix: ComponentFixture<any>, level = 0) {
+        const commitButton = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, level);
+        commitButton.click();
+    }
+
+    /**
+     * (Double)Click the underlying chip of the expression that is located on the provided 'path'.
+     */
+    public static clickQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[], dblClick = false, level = 0) {
+        const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path, level) as HTMLElement;
+        if (dblClick) {
+            chip.dispatchEvent(new MouseEvent('dblclick'));
+        } else {
+            chip.click();
+        }
+    }
+
+    /**
+     * Click the remove icon of the expression that is located on the provided 'path'.
+     */
+    public static clickQueryBuilderTreeExpressionChipRemoveIcon(fix: ComponentFixture<any>, path: number[]) {
+        const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path) as HTMLElement;
+        ControlsFunction.clickChipRemoveButton(chip);
+    }
+
+    /**
+     * Click the specified icon (add, edit, close )of the expression that is located on the provided 'path'.
+     */
+    public static clickQueryBuilderTreeExpressionChipIcon(fix: ComponentFixture<any>, path: number[], iconType: string) {
+        const chipIcon = QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, path, iconType);
+        chipIcon.click();
+    }
+
+    /**
+     * Click the operator line of the group that is located on the provided 'path'.
+     */
+    public static clickQueryBuilderTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
+        const operatorLine = QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, path) as HTMLElement;
+        operatorLine.click();
+    }
+
+    public static clickQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>) {
+        const contextMenuCloseButton = QueryBuilderFunctions.getQueryBuilderContextMenuCloseButton(fix);
+        contextMenuCloseButton.click();
+    }
+
+    /*
+    * Hit a keyboard button upon element, wait for the desired time and detect changes
+    */
+    //TODO maybe move to more commonly used class
+    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: HTMLElement, wait: number = null) {
+        UIInteractions.triggerKeyDownEvtUponElem(key, elem, true);
+        tick(wait);
+        fix.detectChanges();
+    }
+
+    /*
+    * Get tabbable elements in a container element. Result is returned as node elements ordered they way they will be tabbed
+    */
+    public static getTabbableElements(inElement: HTMLElement) {
+        const focusableElements =
+            'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+
+        return Array.prototype.filter.call(
+            inElement.querySelectorAll(focusableElements),
+            element => {
+                return (element.offsetWidth > 0 || element.offsetHeight > 0);
+            }
+        );
+    }
 
     public static selectEntityInEditModeExpression(fix: ComponentFixture<any>, dropdownItemIndex: number, level = 0) {
         QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix, level);
@@ -881,7 +880,7 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static createGroupFromBottomTwoChips(fix: ComponentFixture<any>, operator: string) {
+    public static createGroupFromBottomTwoChips(fix: ComponentFixture<any>, groupKind: string) {
         //Select bottom two chips
         const chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[3].nativeElement, 200);
@@ -892,9 +891,9 @@ export class QueryBuilderFunctions {
         expect(contextMenus.length).toBe(2);
 
         //Click 'create OR group'
-        const operatorButton = operator.toUpperCase() === "AND" ? 0 :
-            operator.toUpperCase() === "OR" ? 1 : null;
-        const orButton = contextMenus[1].queryAll(By.css('.igx-button'))[operatorButton];
+        const kindButton = groupKind.toUpperCase() === "AND" ? 0 :
+            groupKind.toUpperCase() === "OR" ? 1 : null;
+        const orButton = contextMenus[1].queryAll(By.css('.igx-button'))[kindButton];
         orButton.nativeElement.click();
         tick();
         fix.detectChanges();

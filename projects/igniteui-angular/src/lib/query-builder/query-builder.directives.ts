@@ -9,8 +9,8 @@ import { Directive, TemplateRef } from '@angular/core';
  *
  * @example
  * <igx-query-builder>
- *      <ng-template igxQueryBuilderSearchValue let-expression="expression">
- *          <input type="text" required [(ngModel)]="expression.searchVal"/>
+ *      <ng-template igxQueryBuilderSearchValue let-searchValue let-field="field" let-condition="condition">
+ *          <span>{{field.field}} {{condition}} {{searchValue}}</span>
  *      </ng-template>
  *  </igx-query-builder>
  */
