@@ -227,7 +227,7 @@ export class IgxGridStateBaseDirective {
                     const hasColumnGroup = colState.columnGroup;
                     delete colState.columnGroup;
                     if (hasColumnGroup) {
-                        let ref1: IgxColumnGroupComponent = context.currGrid.columns.find(x => x.columnGroup && colState.key ? this.getColumnGroupKey(x) === colState.key : x.header === colState.header) as IgxColumnGroupComponent;
+                        let ref1: IgxColumnGroupComponent = context.currGrid.columns.find(x => x.columnGroup && (colState.key ? this.getColumnGroupKey(x) === colState.key : x.header === colState.header)) as IgxColumnGroupComponent;
                         if (!ref1) {
                             const component = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
                             ref1 = component.instance;
@@ -238,7 +238,7 @@ export class IgxGridStateBaseDirective {
                         Object.assign(ref1, colState);
                         ref1.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
-                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.columnGroup && e.key ? e.key === colState.parentKey : e.header === ref1.parent);
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref1.parent));
                             columnGroup.children.reset([...columnGroup.children.toArray(), ref1]);
                             ref1.parent = columnGroup;
                         }
@@ -255,7 +255,7 @@ export class IgxGridStateBaseDirective {
                         Object.assign(ref, colState);
                         ref.grid = context.currGrid;
                         if (colState.parent || colState.parentKey) {
-                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e =>  e.columnGroup && e.key ? e.key === colState.parentKey : e.header === ref.parent);
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e =>  e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref.parent));
                             if (columnGroup) {
                                 ref.parent = columnGroup;
                                 columnGroup.children.reset([...columnGroup.children.toArray(), ref]);
