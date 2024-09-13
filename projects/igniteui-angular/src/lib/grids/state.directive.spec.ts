@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from './grid/public_api';
-import { Component, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -445,6 +445,59 @@ describe('IgxGridState - input properties #grid', () => {
         HelperFunctions.verifyColumns(columnsStateObject.columns, gridState);
     });
 
+    it('setState should reuse columns with matching keys and create new ones for the rest.', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const state = fix.componentInstance.state;
+        const grid = fix.componentInstance.grid;
+        const originalColumns = [...grid.columns];
+        originalColumns.forEach(x => x.bodyTemplate = fix.componentInstance.template);
+        expect(originalColumns.length).toEqual(fix.componentInstance.columns.length);
+
+        const gridState = state.getState(false, 'columns') as IGridState;
+
+        gridState.columns.push({
+            field: "AnotherColumn",
+            columnGroup: false,
+            dataType: 'boolean',
+            editable: true,
+            header: "CustomHeader",
+            key: "AnotherColumn",
+            disableHiding: false,
+            disablePinning: false,
+            filterable: true,
+            sortable: true,
+            groupable: true,
+            width: "100px",
+            hidden: false,
+            hasSummary: false,
+            filteringIgnoreCase: true,
+            expanded: false,
+            collapsible: false,
+            sortingIgnoreCase: true,
+            searchable: true,
+            resizable: true,
+            visibleWhenCollapsed: undefined,
+            pinned: false,
+            parentKey: undefined,
+            maxWidth: undefined,
+            headerClasses: undefined,
+            headerGroupClasses: undefined
+        });
+
+        state.setState(gridState);
+        fix.detectChanges();
+
+        expect(grid.columns.length).toEqual(gridState.columns.length);
+
+        // all original columns are the same object refs and retain their template
+        originalColumns.forEach(x => {
+            expect(grid.columns.indexOf(x)).not.toBe(-1);
+            expect(x.bodyTemplate).toBe(fix.componentInstance.template);
+        });
+        expect(grid.columns[grid.columns.length - 1 ].field).toBe("AnotherColumn");
+    });
+
     it('setState should correctly restore grid paging state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
@@ -824,6 +877,9 @@ class HelperFunctions {
             </igx-column>
             <igx-paginator></igx-paginator>
         </igx-grid>
+        <ng-template #bodyTemplate let-cell>
+            <span>Custom Content: {{cell.value}}</span>
+        </ng-template>
     `,
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective, NgFor]
@@ -831,6 +887,9 @@ class HelperFunctions {
 export class IgxGridStateComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
+
+    @ViewChild('bodyTemplate', { read: TemplateRef, static: true })
+    public template: TemplateRef<any>;
 
     @ViewChild(IgxGridStateDirective, { static: true })
     public state: IgxGridStateDirective;
