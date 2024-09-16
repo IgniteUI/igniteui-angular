@@ -105,6 +105,7 @@ describe('igxCombo', () => {
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             expect(mockInjector.get).toHaveBeenCalledWith(NgControl, null);
+            combo.data = [{ id: 'test', name: 'test' }];
             combo.registerOnChange(mockNgControl.registerOnChangeCb);
             combo.registerOnTouched(mockNgControl.registerOnTouchedCb);
 
@@ -113,8 +114,8 @@ describe('igxCombo', () => {
             mockSelection.get.and.returnValue(new Set(['test']));
             spyOnProperty(combo, 'isRemote').and.returnValue(false);
             combo.writeValue(['test']);
-            expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
-            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['test'], true);
+            expect(mockNgControl.registerOnChangeCb).toHaveBeenCalled();
+            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, [], true);
             expect(combo.displayValue).toEqual('test');
             expect(combo.value).toEqual(['test']);
 
@@ -125,10 +126,11 @@ describe('igxCombo', () => {
             expect(combo.disabled).toBe(false);
 
             // OnChange callback
+            combo.data = [{ id: 'simpleValue', name: 'simpleValue' }];
             mockSelection.add_items.and.returnValue(new Set(['simpleValue']));
             combo.select(['simpleValue']);
-            expect(mockSelection.add_items).toHaveBeenCalledWith(combo.id, ['simpleValue'], undefined);
-            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['simpleValue'], true);
+            expect(mockSelection.add_items).toHaveBeenCalledWith(combo.id, [], undefined);
+            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, [], true);
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(['simpleValue']);
 
             // OnTouched callback
@@ -258,7 +260,8 @@ describe('igxCombo', () => {
             );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
-            combo.data = data;
+            combo.data = [{ id: 'EXAMPLE', name: 'Example' }];
+            combo.valueKey = 'id';
             mockSelection.select_items.calls.reset();
             spyOnProperty(combo, 'isRemote').and.returnValue(false);
             combo.writeValue(['EXAMPLE']);
@@ -2604,6 +2607,38 @@ describe('igxCombo', () => {
                 expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
                 expect(input.nativeElement.value).toEqual(expectedDisplayText);
             });
+            it('should only select and display valid values when programmatically selecting invalid items with ngModel', fakeAsync(() => {
+                fixture = TestBed.createComponent(ComboInvalidValuesComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+                const component = fixture.componentInstance;
+                tick(100);
+
+                component.selectedItems = ['SF', 'LA', 'NY']; // 'SF' is invalid, 'LA' and 'NY' are valid
+                fixture.detectChanges();
+                tick(100);
+
+                expect(combo.selection).toEqual([{ name: 'Los Angeles', id: 'LA' }, { name: 'New York', id: 'NY' }]);
+                expect(combo.value).toEqual(['LA', 'NY']);
+                expect(combo.displayValue).toEqual('Los Angeles, New York');
+                expect(component.selectedItems).toEqual(['LA', 'NY']);
+            }));
+            it('should only select and display valid values when selecting invalid items programmatically using select', fakeAsync(() => {
+                fixture = TestBed.createComponent(ComboInvalidValuesComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+                const component = fixture.componentInstance;
+                tick(100);
+
+                combo.select(['SF', 'LA', 'NY']); // 'SF' is invalid, 'LA' and 'NY' are valid
+                fixture.detectChanges();
+                tick(100);
+
+                expect(combo.selection).toEqual([{ name: 'Los Angeles', id: 'LA' }, { name: 'New York', id: 'NY' }]);
+                expect(combo.value).toEqual(['LA', 'NY']);
+                expect(combo.displayValue).toEqual('Los Angeles, New York');
+                expect(component.selectedItems).toEqual(['LA', 'NY']);
+            }));
         });
         describe('Grouping tests: ', () => {
             beforeEach(() => {
@@ -4085,5 +4120,35 @@ export class ComboWithIdComponent {
                 value: "Option3",
             }
         ];
+    }
+}
+
+@Component({
+    template: `
+        <igx-combo
+            [(ngModel)]="selectedItems"
+            [data]="cities"
+            [valueKey]="'id'"
+            [displayKey]="'name'">
+        </igx-combo>`,
+    standalone: true,
+    imports: [IgxComboComponent, FormsModule]
+})
+export class ComboInvalidValuesComponent implements OnInit {
+    @ViewChild(IgxComboComponent, { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+
+    public cities: any[] = [];
+    public selectedItems: any[] = [];
+
+    constructor(private cdr: ChangeDetectorRef) { }
+
+    public ngOnInit() {
+        this.cities = [
+            { name: 'New York', id: 'NY' },
+            { name: 'Los Angeles', id: 'LA' },
+            { name: 'Chicago', id: 'CHI' }
+        ];
+        this.cdr.detectChanges();
     }
 }

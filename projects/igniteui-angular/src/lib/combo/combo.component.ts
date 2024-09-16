@@ -1,6 +1,6 @@
 import { DOCUMENT, NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
+    AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, OnChanges, SimpleChanges,
     Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute
 } from '@angular/core';
 
@@ -124,7 +124,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
-    OnDestroy, DoCheck, EditorProvider {
+    OnDestroy, DoCheck, EditorProvider, OnChanges {
     /**
      * Whether the combo's search box should be focused after the dropdown is opened.
      * When `false`, the combo's list item container will be focused instead
@@ -251,12 +251,12 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * @hidden @internal
      */
     public writeValue(value: any[]): void {
-        const selection = Array.isArray(value) ? value.filter(x => x !== undefined) : [];
+        this._value = Array.isArray(value) ? value.filter(x => x !== undefined) : [];
         const oldSelection = this.selection;
-        this.selectionService.select_items(this.id, selection, true);
-        this.cdr.markForCheck();
-        this._displayValue = this.createDisplayText(this.selection, oldSelection);
-        this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+    
+        if (this.data && this.data.length > 0) {
+            this.applySelection(oldSelection);
+        }
     }
 
     /** @hidden @internal */
@@ -264,6 +264,14 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         if (this.data?.length && this.selection.length) {
             this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
             this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        }
+    }
+
+    /** @hidden @internal */
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes['data'] && this.data && this.data.length > 0 && this._value && this._value.length) {
+            const oldSelection = this.selection;
+            this.applySelection(oldSelection);
         }
     }
 
@@ -309,8 +317,16 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     public select(newItems: Array<any>, clearCurrentSelection?: boolean, event?: Event) {
-        if (newItems) {
-            const newSelection = this.selectionService.add_items(this.id, newItems, clearCurrentSelection);
+        if (!newItems) {
+            return;
+        }
+    
+        if (this.isRemote || (this.data && this.data.length)) {
+            const validItems = !this.isRemote
+                ? newItems.filter(item => this.isItemInData(item))
+                : newItems;
+    
+            const newSelection = this.selectionService.add_items(this.id, validItems, clearCurrentSelection);
             this.setSelection(newSelection, event);
         }
     }
@@ -468,5 +484,33 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             selection.map(entry => entry[this.displayKey]).join(', ') :
             selection.join(', ');
         return value;
+    }
+
+    private applySelection(oldSelection: any[]): void {
+        const selection = this._value || [];
+        const filteredSelection = this.isRemote ? selection : selection.filter(item => this.isItemInData(item));
+    
+        this.selectionService.select_items(this.id, filteredSelection, true);
+        this.cdr.markForCheck();
+    
+        this._displayValue = this.createDisplayText(this.selection, oldSelection);
+        this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+    
+        if (this._onChangeCallback) {
+            this._onChangeCallback(this._value);
+        }
+    }
+
+    private isItemInData(item: any): boolean {
+        return this.data.some(dataItem => {
+            const dataValue = this.valueKey ? dataItem[this.valueKey] : dataItem;
+            const itemValue = this.valueKey ? item : item;
+
+            if (Number.isNaN(dataValue) && Number.isNaN(itemValue)) {
+                return true;
+            }
+
+            return dataValue === itemValue;
+        });
     }
 }
