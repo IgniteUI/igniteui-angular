@@ -1,0 +1,43 @@
+@use 'sass:map';
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+$_base-schema: $light-fluent-schema;
+$_input-schema: extend(map.get($_base-schema, 'input-group'), (
+    border-background: contrast-color($color: 'gray', $variant: 900),
+    border-color: color($color: 'gray', $variant: 300),
+    border-border-radius: rem(6px),
+    search-border-radius: rem(6px),
+    size: sizable(rem(24px), rem(32px), rem(40px)),
+    input-prefix-color: color($color: 'gray', $variant: 500),
+    input-prefix-color--focused: color($color: 'gray', $variant: 500),
+    input-prefix-color--filled: color($color: 'gray', $variant: 500),
+    input-prefix-background: transparent,
+    input-prefix-background--filled: transparent,
+    input-prefix-background--focused: transparent,
+    input-suffix-color: color($color: 'gray', $variant: 500),
+    input-suffix-color--focused: color($color: 'gray', $variant: 500),
+    input-suffix-color--filled: color($color: 'gray', $variant: 500),
+    input-suffix-background: transparent,
+    input-suffix-background--filled: transparent,
+    input-suffix-background--focused: transparent,
+    hover-border-color: color($color: 'primary', $variant: 500),
+    focused-border-color: color($color: 'primary', $variant: 500),
+    border-disabled-background: color($color: 'gray', $variant: 200),
+    disabled-border-color: color($color: 'gray', $variant: 300),
+    disabled-placeholder-color: color($color: 'gray', $variant: 400),
+    disabled-text-color: color($color: 'gray', $variant: 400),
+    default-size: 2,
+));
+
+@mixin component() {
+    @include input-group(
+        input-group-theme(
+            extend(
+                $_base-schema,
+                (
+                    input-group: $_input-schema,
+                )
+            )
+        )
+    );
+}

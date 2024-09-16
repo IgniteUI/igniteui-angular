@@ -435,6 +435,26 @@ export class FileContentData {
         return this.createData();
     }
 
+    public get contactsDataSkippedColumnContent() {
+        this._sharedStringsData = `count="6" uniqueCount="6"><si><t>name</t></si><si><t>Terrance Orta</t></si>` +
+            `<si><t>Richard Mahoney LongerName</t></si><si><t>Donna Price</t></si><si><t></t></si>` +
+            `<si><t>Dorothy H. Spencer</t></si>`;
+
+        this._tableData = `ref="A1:A6" totalsRowShown="0">
+        <autoFilter ref="A1:A6"/><tableColumns count="1"><tableColumn id="1" name="name"/></tableColumns>`;
+
+        this._worksheetData =
+            `<dimension ref="A1:A6"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
+            `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth` +
+            `="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v>` +
+            `</c></row><row r="2"><c r="A2" t="s"><v>1</v></c></row><row r="3">` +
+            `<c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v></c>` +
+            `</row><row r="5"><c r="A5" t="s"><v>4</v></c></row><row r="6"><c r="A6" t="s"><v>5</v></c>` +
+            `</row></sheetData>`;
+
+        return this.createData();
+    }
+
     public get noHeadersStringDataContent() {
         this._sharedStringsData = `count="6" uniqueCount="6"><si><t>Column1</t></si><si><t>Terrance Orta</t></si>` +
             `<si><t>Richard Mahoney LongerName</t></si><si><t>Donna Price</t></si><si><t>Lisa Landers</t></si><si><t>` +
@@ -1020,7 +1040,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    public get gridWithEmptyColums() {
+    public get gridWithEmptyColumns() {
         this._sharedStringsData =
             `count="25" uniqueCount="23"><si><t>Column1</t></si><si><t>ID</t></si><si><t>Column2</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Erika Wells</t></si><si><t>Software Development Team Lead</t></si><si><t>Leslie Hansen</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>`;
 
