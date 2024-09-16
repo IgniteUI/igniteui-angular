@@ -16,6 +16,7 @@ export const QueryBuilderConstants = {
     CHIP_SELECT_CLASS: '.igx-chip__select',
     QUERY_CONTEXT_MENU: 'igx-filter-contextual-menu',
     QUERY_BUILDER_BODY: 'igx-query-builder__main',
+    QUERY_BUILDER_EXPRESSION_ITEM_CLASS: 'igx-filter-tree__expression-item'
 }
 
 export const SampleEntities = [
