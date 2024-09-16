@@ -155,66 +155,114 @@
         flex-flow: column nowrap;
     }
 
-    %igx-nav-arrow {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: rem(46px);
-        height: rem(46px);
-        cursor: pointer;
-        outline-style: none;
-        transition: all .15s ease-in-out;
-        color: var-get($theme, 'button-arrow-color');
-        background: var-get($theme, 'button-background');
-        box-shadow: var-get($theme, 'button-shadow');
-        border-radius: var-get($theme, 'border-radius');
-        border: rem(1px) solid var-get($theme, 'button-border-color');
-
-        igx-icon {
-            --component-size: 1;
-        }
-
-        @if $variant == 'indigo' {
-            width: rem(28px);
-            height: rem(28px);
-            border-width: rem(2px);
-
-            igx-icon {
-                --component-size: 2;
-            }
-        }
-    }
-
-    %igx-nav-arrow--disabled {
-        background: var-get($theme, 'button-disabled-background');
-        color: var-get($theme, 'button-disabled-arrow-color');
-        border-color: var-get($theme, 'button-disabled-border-color');
-        pointer-events: none;
-        box-shadow: none;
-
-        igx-icon {
-            color: currentColor;
-        }
-    }
-
-    %igx-nav-arrow--hover {
-        color: var-get($theme, 'button-hover-arrow-color');
-        background: var-get($theme, 'button-hover-background');
-        border-color: var-get($theme, 'button-hover-border-color');
-    }
-
     %igx-carousel-arrow {
-        margin: 0 rem(16px);
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         z-index: 3;
         outline: none;
         user-select: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: unset;
+        width: rem(46px);
+        height: rem(46px);
+        cursor: pointer;
+        outline-style: none;
+        transition: all .15s ease-in-out;
+        background: var-get($theme, 'button-background');
+        box-shadow: var-get($theme, 'button-shadow');
+        border: rem(1px) solid var-get($theme, 'button-border-color');
+
+        border-radius: var-get($theme, 'border-radius'); // To be fixed
+
+        igx-icon {
+            --component-size: 1;
+            color: var-get($theme, 'button-arrow-color');
+        }
+
+        @if $variant == 'indigo' {
+            width: rem(28px);
+            height: rem(28px);
+            border-width: rem(2px);
+            padding: initial;
+
+            igx-icon {
+                --component-size: 2;
+            }
+        }
+
+        &:hover {
+            background: var-get($theme, 'button-hover-background');
+            border-color: var-get($theme, 'button-hover-border-color');
+
+            igx-icon {
+                color: var-get($theme, 'button-hover-arrow-color');
+            }
+        }
+
+        &[igxButton].igx-button--focused {
+            background: var-get($theme, 'button-background');
+            border: rem(2px) solid var-get($theme, 'button-focus-border-color');
+
+            igx-icon {
+                color: var-get($theme, 'button-focus-border-color');
+            }
+
+            @if $variant == 'bootstrap' {
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'button-focus-border-color');
+                border-color: var-get($theme, 'button-border-color');
+
+                igx-icon {
+                    color: var-get($theme, 'button-arrow-color');
+                }
+            }
+
+            @if $variant == 'fluent' {
+                border: none;
+
+                igx-icon {
+                    color: var-get($theme, 'indicator-focus-color');
+                }
+
+                &::after {
+                    position: absolute;
+                    content: '';
+                    pointer-events: none;
+                    inset-block-start: $btn-indent;
+                    inset-inline-start: $btn-indent;
+                    width: calc(100% - (#{$btn-indent} * 2));
+                    height: calc(100% - (#{$btn-indent} * 2));
+                    box-shadow: 0 0 0 rem(1px) var-get($theme, 'button-focus-border-color');
+                }
+            }
+
+            @if $variant == 'indigo' {
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'indicator-focus-color');
+
+                igx-icon {
+                    color: var-get($theme, 'button-arrow-color');
+                }
+            }
+        }
+
+        &[igxButton].igx-button--disabled {
+            background: var-get($theme, 'button-disabled-background');
+            color: var-get($theme, 'button-disabled-arrow-color');
+            border-color: var-get($theme, 'button-disabled-border-color');
+            pointer-events: none;
+            box-shadow: none;
+
+            igx-icon {
+                color: currentColor;
+            }
+        }
     }
 
     %igx-carousel-arrow--next {
         inset-inline-end: 0;
+        margin-inline-end: rem(16px);
 
         @if $variant == 'indigo' {
             %igx-nav-arrow {
@@ -227,6 +275,7 @@
 
     %igx-carousel-arrow--prev {
         inset-inline-start: 0;
+        margin-inline-start: rem(16px);
 
         @if $variant == 'indigo' {
             %igx-nav-arrow {
@@ -291,6 +340,15 @@
         border-radius: rem(4px);
         color: var-get($theme, 'indicator-color');
         background: var-get($theme, 'label-indicator-background');
+
+        @if $variant == 'fluent' or $variant == 'indigo' {
+            border-radius: rem(2px);
+        }
+
+        @if $variant == 'indigo' {
+            padding: rem(4px) rem(6px);
+            min-width: rem(28px);
+        }
     }
 
     %igx-carousel-indicator {

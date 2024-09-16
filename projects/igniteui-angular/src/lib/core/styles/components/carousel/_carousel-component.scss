@@ -40,18 +40,6 @@
             @extend %igx-nav-dot--active !optional;
         }
     }
-
-    @include b(igx-nav-arrow) {
-        @extend %igx-nav-arrow !optional;
-
-        @include m(disabled) {
-            @extend %igx-nav-arrow--disabled !optional;
-        }
-
-        &:hover {
-            @extend %igx-nav-arrow--hover !optional;
-        }
-    }
 }
 
 @mixin _igx-carousel-slide-partial {
@@ -86,10 +74,6 @@
 
         @include e(label) {
             @extend %igx-carousel-indicators-label !optional;
-        }
-
-        @include e(arrow) {
-            @extend %igx-carousel-arrow !optional;
         }
 
         @include e(arrow, $m: prev) {
