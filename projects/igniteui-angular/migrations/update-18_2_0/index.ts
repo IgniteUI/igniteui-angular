@@ -17,6 +17,41 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     const oldProp = 'shouldGenerate';
     const newProp = 'autoGenerate';
 
+    const IG_COLORS = [
+        'primary-',
+        'primary-A',
+        'secondary-',
+        'secondary-A',
+        'gray-',
+        'surface-',
+        'surface-A',
+        'info-',
+        'info-A',
+        'success-',
+        'success-A',
+        'warn-',
+        'warn-A',
+        'error-',
+        'error-A'
+    ];
+
+    const hslaColor = 'hsla?\\(var\\(--ig-attr(\\d)00\\)\\)';
+
+    for (const entryPath of update.sassFiles) {
+        let content = host.read(entryPath).toString();
+        IG_COLORS.forEach(color => {
+            let prop = hslaColor.replace('attr', color);
+            const regex = new RegExp(prop, 'g');
+            if (regex.test(content)) {
+                let newColor = prop.replace(/hsla\?\\\(var\\\(--ig-/g, 'var\(--ig-');
+                newColor = newColor.replace('(\\d)', '$1');
+                newColor = newColor.replace('\\)\\)', ')');
+                content = content.replace(regex, newColor);
+                host.overwrite(entryPath, content);
+            }
+        });
+    }
+
     const addChange = (path: string, change: FileChange) => {
         if (changes.has(path)) {
             changes.get(path).push(change);
