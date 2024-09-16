@@ -219,6 +219,7 @@ export abstract class IgxBaseExporter {
     private pivotGridColumns: IColumnInfo[] = []
     private pivotGridRowDimensionsMap: Map<string, string>;
     private pivotGridKeyValueMap = new Map<string, string>();
+    private ownerGrid: any;
 
     /**
      * Method for exporting IgxGrid component's data.
@@ -235,6 +236,7 @@ export abstract class IgxBaseExporter {
 
         this.options = options;
         this.locale = grid.locale;
+        this.ownerGrid = grid;
         let columns = grid.columns;
 
         if (this.options.ignoreMultiColumnHeaders) {
@@ -488,7 +490,7 @@ export abstract class IgxBaseExporter {
             rowData: record.data,
             rowIndex: index,
             cancel: false,
-            owner: record.owner
+            owner: record.owner ?? this.ownerGrid
         };
 
         this.rowExporting.emit(rowArgs);
