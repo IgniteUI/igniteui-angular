@@ -3,7 +3,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
     Optional, Output, ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
 import { IgxComboAddItemComponent } from '../combo/combo-add-item.component';
@@ -150,6 +150,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         @Optional() _injector: Injector,
         @Optional() @Inject(IgxIconService) _iconService?: IgxIconService,
+        @Optional() private formGroupDirective?: FormGroupDirective
     ) {
         super(
             elementRef,
@@ -360,8 +361,21 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.clearSelection(true);
         }
         if (!this.collapsed && event.key === this.platformUtil.KEYMAP.TAB) {
-            this.clearOnBlur();
-            this.close();
+            const filtered = this.filteredData.find(this.findAllMatches);
+            if (filtered === null || filtered === undefined) {
+                this.clearOnBlur();
+                this.close();
+                return;
+            }
+            const focusedItem = this.dropdown.focusedItem;
+            if (focusedItem && !focusedItem.isHeader) {
+                this.select(focusedItem.itemID);
+                this.close();
+                this.textSelection.trigger();
+            } else {
+                this.clearOnBlur();
+                this.close();
+            }
         }
         this.composing = false;
         super.handleKeyDown(event);
@@ -573,7 +587,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.filteredData.length !== this.data.length && !ignoreFilter) {
             newSelection = this.selectionService.delete_items(this.id, this.selectionService.get_all_ids(this.filteredData, this.valueKey));
         }
-        this.setSelection(newSelection);
+        if (this.selectionService.get(this.id).size > 0 || this.comboInput.value.trim()) {
+            this.setSelection(newSelection);
+        }
     }
 
     private clearOnBlur(): void {
@@ -607,8 +623,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private isValid(value: any): boolean {
-        return this.required
-        ? value !== null && value !== '' && value !== undefined
-        : value !== undefined;
+        if (this.formGroupDirective && value === null) {
+            return false;
+        }
+
+        if (this.required) {
+            return value !== null && value !== '' && value !== undefined
+        }
+
+        return value !== undefined;
     }
 }

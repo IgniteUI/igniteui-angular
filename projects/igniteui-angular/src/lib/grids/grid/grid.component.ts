@@ -36,7 +36,7 @@ import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
 import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe } from './grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
-import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
 import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
@@ -153,8 +153,9 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridSortingPipe,
         IgxGridFilteringPipe,
         IgxGridSummaryPipe,
-        IgxGridDetailsPipe
-    ],
+        IgxGridDetailsPipe,
+        IgxStringReplacePipe
+],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
@@ -397,15 +398,17 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public set data(value: any[] | null) {
         const dataLoaded = (!this._data || this._data.length === 0) && value && value.length > 0;
+        const oldData = this._data;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (!this._init) {
             this.validation.updateAll(this._data);
         }
 
-        if (this.shouldGenerate) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
             this.setupColumns();
         }
+
         this.cdr.markForCheck();
         if (this.isPercentHeight) {
             this.notifyChanges(true);
