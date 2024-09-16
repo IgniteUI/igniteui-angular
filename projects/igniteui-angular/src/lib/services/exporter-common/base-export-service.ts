@@ -487,7 +487,8 @@ export abstract class IgxBaseExporter {
         const rowArgs = {
             rowData: record.data,
             rowIndex: index,
-            cancel: false
+            cancel: false,
+            owner: record.owner
         };
 
         this.rowExporting.emit(rowArgs);
