@@ -19,7 +19,7 @@ describe('IgxQueryBuilder', () => {
                 NoopAnimationsModule,
                 IgxQueryBuilderComponent,
                 IgxQueryBuilderSampleTestComponent,
-                IgxQueryBuilderCustomHeaderSampleTestComponent,
+                IgxQueryBuilderCustomTemplateSampleTestComponent,
             ]
         }).compileComponents();
     }));
@@ -97,7 +97,7 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should render custom header properly.', () => {
-            const fixture = TestBed.createComponent(IgxQueryBuilderCustomHeaderSampleTestComponent);
+            const fixture = TestBed.createComponent(IgxQueryBuilderCustomTemplateSampleTestComponent);
             fixture.detectChanges();
 
             expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe(' Custom Title ');
@@ -111,7 +111,7 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should render custom input template properly.', fakeAsync(() => {
-            const fixture = TestBed.createComponent(IgxQueryBuilderCustomInputSampleTestComponent);
+            const fixture = TestBed.createComponent(IgxQueryBuilderCustomTemplateSampleTestComponent);
             fixture.detectChanges();
 
             //Select chip
@@ -2054,30 +2054,9 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
 
 @Component({
     template: `
-     <igx-query-builder #queryBuilder [entities]="this.entities">
+     <igx-query-builder #queryBuilder [entities]="this.entities" [expressionTree]="this.expressionTree">
          <igx-query-builder-header [title]="'Custom Title'" [showLegend]="showLegend"></igx-query-builder-header>
-     </igx-query-builder>
-    `,
-    standalone: true,
-    imports: [
-        IgxQueryBuilderComponent,
-        IgxQueryBuilderHeaderComponent
-    ]
-})
-export class IgxQueryBuilderCustomHeaderSampleTestComponent implements OnInit {
-    @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
-    public entities: Array<any>;
-    public showLegend = false;
-
-    public ngOnInit(): void {
-        this.entities = SampleEntities.map(a => ({ ...a }));
-    }
-}
-
-@Component({
-    template: `
-     <igx-query-builder #queryBuilder [entities]="this.entities"  [expressionTree]="this.expressionTree">
-        <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-expression="expression">
+         <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-expression="expression">
             <input type="text" class="custom-class" required [(ngModel)]="expression.searchVal"/>
         </ng-template>
      </igx-query-builder>
@@ -2085,11 +2064,12 @@ export class IgxQueryBuilderCustomHeaderSampleTestComponent implements OnInit {
     standalone: true,
     imports: [
         IgxQueryBuilderComponent,
+        IgxQueryBuilderHeaderComponent,
         IgxQueryBuilderSearchValueTemplateDirective,
-        FormsModule      
+        FormsModule 
     ]
 })
-export class IgxQueryBuilderCustomInputSampleTestComponent implements OnInit {
+export class IgxQueryBuilderCustomTemplateSampleTestComponent implements OnInit {
     @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
     public entities: Array<any>;
     public showLegend = false;
