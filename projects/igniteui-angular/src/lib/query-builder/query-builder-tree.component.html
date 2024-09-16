@@ -246,7 +246,7 @@
                 </igx-select-item>
             </igx-select>
 
-            <ng-container 
+            <ng-container
                 *ngTemplateOutlet="
                     searchValueTemplate ? searchValueTemplate : defaultSearchValueTemplate;
                     context: getSearchValueTemplateContext()
@@ -285,7 +285,7 @@
                         [(ngModel)]="searchValue"
                     />
                 </igx-input-group>
-    
+
                 <igx-date-picker
                     #picker
                     *ngIf="selectedField && selectedField.dataType === 'date'"
@@ -314,7 +314,7 @@
                     <igx-picker-toggle></igx-picker-toggle>
                     <igx-picker-clear></igx-picker-clear>
                 </igx-date-picker>
-    
+
                 <igx-time-picker
                     #picker
                     *ngIf="selectedField && selectedField.dataType === 'time'"
@@ -340,7 +340,7 @@
                     <igx-picker-toggle></igx-picker-toggle>
                     <igx-picker-clear></igx-picker-clear>
                 </igx-time-picker>
-    
+
                 <igx-input-group
                     #inputGroup
                     type="box"
@@ -456,17 +456,22 @@
                             [style.display]="isInEditMode() ? 'block' : 'none'"
                         >
                             <ng-template igxComboHeader>
-                                <div class="igx-drop-down__item">
+                                <div
+                                    class="igx-drop-down__item igx-drop-down__item--query-builder"
+                                    (click)="onSelectAllClicked($event)"
+                                    [ngClass]="{'igx-drop-down__item--selected': this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length}"
+                                >
                                     <igx-checkbox
                                             [checked]="this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length"
                                             [indeterminate]="this.selectedEntity && this.selectedReturnFields && this.selectedReturnFields.length > 0 && this.selectedReturnFields.length < this.selectedEntity.fields?.length"
                                             [readonly]="true"
                                             [disableRipple]="true"
                                             [tabindex]="-1"
-                                            (click)="onSelectAllClicked($event)"
                                             class="igx-combo__checkbox">
-                                        {{ this.resourceStrings.igx_query_builder_select_all }}
                                     </igx-checkbox>
+                                    <div class="igx-drop-down__inner">
+                                        {{ this.resourceStrings.igx_query_builder_select_all }}
+                                    </div>
                                 </div>
                             </ng-template>
                             <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_return_fields }}</label>
