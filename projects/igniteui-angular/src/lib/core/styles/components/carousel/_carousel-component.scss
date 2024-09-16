@@ -86,6 +86,10 @@
             @extend %igx-carousel-arrow--next !optional;
         }
 
+        @include m(vertical) {
+            @extend %igx-carousel--vertical !optional;
+        }
+
         @include _igx-carousel-indicators-partial();
         @include _igx-carousel-navigation-partial();
         @include _igx-carousel-slide-partial();

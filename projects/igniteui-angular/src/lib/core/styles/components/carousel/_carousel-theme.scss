@@ -175,7 +175,8 @@
         box-shadow: var-get($theme, 'button-shadow');
         border: rem(1px) solid var-get($theme, 'button-border-color');
 
-        border-radius: var-get($theme, 'border-radius'); // To be fixed
+        // To be fixed
+        border-radius: var-get($theme, 'border-radius');
 
         igx-icon {
             --component-size: 1;
@@ -541,5 +542,68 @@
         object-fit: cover;
         touch-action: none;
         pointer-events: none;
+    }
+
+    %igx-carousel--vertical {
+        %igx-carousel-arrow {
+            inset-inline-start: unset;
+            inset-block-start: unset;
+            inset-inline-end: 0;
+            margin-inline-end: rem(16px);
+            transform: rotate(90deg);
+        }
+    
+        %igx-carousel-arrow--prev {
+            inset-block-start: 0;
+            margin-block-start: rem(16px);
+        }
+    
+        %igx-carousel-arrow--next {
+            inset-block-end: 0;
+            margin-block-end: rem(16px);
+        }
+    
+        %igx-carousel-indicators {
+            inset-inline-end: 0;
+            inset-inline-start: unset;
+            flex-direction: column;
+            inset-block-start: 50%;
+            transform: translateY(-50%);
+            margin-block: 0;
+            margin-inline-end: rem(29px);
+            padding: rem(6px) rem(4px);
+            bottom: unset;
+        }
+
+        %igx-carousel-label-indicator {
+            margin-inline-end: rem(16px);
+        }
+
+        %igx-carousel-indicators--top {
+            inset-inline-end: unset;
+            inset-inline-start: 0;
+            margin-inline-start: rem(16px);
+            margin-inline-end: unset;
+        }
+
+        %igx-carousel-label-indicator {
+            padding: rem(4px) rem(6px);
+        }
+
+        @if $variant == 'indigo' {
+            %igx-carousel-indicators {
+                margin-inline-end: rem(16px);
+                padding: rem(6px);
+            }
+        
+            %igx-carousel-label-indicator {
+                padding: rem(4px) rem(6px);
+                margin-inline-end: rem(16px);
+            }
+        
+            %igx-carousel-indicators--top {
+                margin-inline-start: rem(16px);
+            }
+        }
     }
 }
