@@ -12,12 +12,12 @@
     flex-direction: column;
     gap: 16px;
     padding: 16px;
-    border: 1px solid hsla(var(--ig-gray-50));
+    border: 1px solid hsla(var(--ig-gray-200));
     margin-block-end: 8px;
 }
 
 .column-actions {
-    max-width: 250px;
+    max-width: 230px;
 }
 
 .column-actions,
@@ -28,9 +28,7 @@
 }
 
 .column-actions__header {
-    gap: 8px;
     padding: 16px;
-    top: 0;
 }
 
 .column-actions__columns {
@@ -50,7 +48,6 @@
     display: flex;
     gap: 16px;
     padding: 8px 16px;
-    bottom: 0;
 }
 
 .density-chooser {
