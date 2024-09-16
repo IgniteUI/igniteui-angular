@@ -145,6 +145,7 @@
 
     %igx-carousel-display {
         --theme: #{$variant};
+        --nav-btn-border-radius: #{var-get($theme, 'border-radius')};
 
         display: flex;
         position: relative;
@@ -174,9 +175,7 @@
         background: var-get($theme, 'button-background');
         box-shadow: var-get($theme, 'button-shadow');
         border: rem(1px) solid var-get($theme, 'button-border-color');
-
-        // To be fixed
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: var(--nav-btn-border-radius);
 
         igx-icon {
             --component-size: 1;
