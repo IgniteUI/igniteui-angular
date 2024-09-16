@@ -1282,32 +1282,32 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should allow hosting Advanced Filtering dialog outside of the grid.', fakeAsync(() => {
             // Add a root 'and' group.
-            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
             // Populate edit inputs.
-            selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
-            selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator.
-            let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator.
+            let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, '100', fix); // Type filter value.
             // Commit the populated expression.
-            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Add new expression to the root group.
-            const addExpressionBtn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
+            const addExpressionBtn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
             addExpressionBtn.click();
             tick(100);
             fix.detectChanges();
 
             // Populate edit inputs.
-            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
-            input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'ignite', fix); // Type filter value.
             // Commit the populated expression.
-            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Apply the filters.
