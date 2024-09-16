@@ -48,7 +48,7 @@
         flex-grow: 1;
 
         @if $variant == 'indigo' {
-            box-shadow: elevation(3), 0 0 0 rem(1px) color(null, 'gray', if($theme-variant == 'light', 400, 100));
+            box-shadow: elevation(if($theme-variant == 'light', 3, 2)), 0 0 0 rem(1px) color(null, 'gray', if($theme-variant == 'light', 400, 100));
 
             // TODO: The border-radius should not be hardcoded.
             border-radius: border-radius(rem(4px));
@@ -179,6 +179,7 @@
             }
 
             %igx-group-display {
+                --item-background: transparent;
                 --border-color: transparent;
                 --item-border-color: transparent;
                 --item-focused-border-color: transparent;
@@ -225,7 +226,7 @@
         align-items: center;
 
         @if $variant == 'indigo' {
-            padding: rem(16px) rem(16px) rem(8px);
+            padding: rem(16px);
         } @else {
             padding: pad(rem(4px), rem(8px), rem(16px));
         }
@@ -315,9 +316,12 @@
     }
 
     @if $variant == 'indigo' {
-        %grid-excel-sort,
-        %grid-excel-move {
+        %grid-excel-sort {
             margin-block-end: rem(8px);
+        }
+
+        %grid-excel-move {
+            margin-block-end: sizable(rem(12px), rem(16px), rem(16px));
         }
 
         %grid-excel-sort {
@@ -388,6 +392,7 @@
             padding-inline: pad-inline(rem(12px));
             margin-inline: rem(8px);
             margin-block-end: rem(4px);
+            border-radius: rem(4px);
         } @else {
             padding-block: pad-block(rem(4px), rem(8px), rem(8px));
             padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
@@ -399,18 +404,51 @@
 
         &:hover,
         &:focus {
-            background: color($color: 'gray', $variant: 100);
             color: var-get($theme, 'excel-filtering-actions-hover-foreground');
+
+            @if $variant == 'indigo' {
+                @if $theme-variant == 'light' {
+                    background: color($color: 'gray', $variant: 200);
+                } @else {
+                    background: contrast-color($color: 'gray', $variant: 50, $opacity: .1);
+                }
+
+                igx-icon {
+                    /* stylelint-disable max-nesting-depth */
+                    @if $theme-variant == 'light' {
+                        color: color($color: 'gray', $variant: 700);
+                    } @else {
+                        color: contrast-color($color: 'gray', $variant: 50, $opacity: .8);
+                    }
+                    /* stylelint-enable max-nesting-depth */
+                }
+            } @else {
+                background: color($color: 'gray', $variant: 100);
+            }
         }
 
         igx-icon {
             --component-size: 3;
+
+            @if $variant == 'indigo' {
+                @if $theme-variant == 'light' {
+                    color: color($color: 'gray', $variant: 600);
+                } @else {
+                    color: contrast-color($color: 'gray', $variant: 50, $opacity: .6);
+                }
+            }
         }
 
         [dir='rtl'] & {
             igx-icon {
                 transform: scaleX(-1);
             }
+        }
+    }
+
+    @if $variant == 'indigo' {
+        %grid-excel-actions__action-filter {
+            margin-block-end: 0;
         }
     }
 
@@ -422,6 +460,12 @@
     %grid-excel-actions__action--disabled {
         color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
         pointer-events: none;
+
+        @if $variant == 'indigo' {
+            igx-icon {
+                color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
+            }
+        }
     }
 
     %igx-excel-filter__empty {
@@ -438,7 +482,7 @@
 
         @if $variant == 'indigo' {
             padding: pad(rem(16px));
-            padding-block-start: pad(rem(4px), rem(12px), rem(12px));
+            padding-block-start: pad(rem(8px), rem(16px), rem(16px));
             gap: sizable(rem(16px));
         } @else {
             padding: pad(rem(4px), rem(8px), rem(16px));

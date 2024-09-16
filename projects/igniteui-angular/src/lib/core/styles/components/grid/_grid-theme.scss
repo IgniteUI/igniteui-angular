@@ -2163,7 +2163,9 @@
 
     %igx-grid-th--filtrable {
         %grid-cell-header-title {
-            opacity: if($variant == 'indigo', if($theme-variant == 'light', .75, .85), .7);
+            @if $variant != 'indigo' {
+                opacity: .7;
+            }
         }
     }
 
@@ -3310,6 +3312,12 @@
             font-size: rem(14px);
         } @else {
             @include type-style('body-2');
+
+            @if $theme-variant == 'light' {
+                color: color($color: 'gray', $variant: 600);
+            } @else {
+                color: contrast-color($color: 'gray', $variant: 50, $opacity: .6);
+            }
         }
 
         margin-inline-end: 0 !important;
