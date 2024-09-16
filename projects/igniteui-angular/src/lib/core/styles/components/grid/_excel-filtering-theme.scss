@@ -316,10 +316,6 @@
     }
 
     @if $variant == 'indigo' {
-        %grid-excel-sort {
-            margin-block-end: rem(8px);
-        }
-
         %grid-excel-move {
             margin-block-end: sizable(rem(12px), rem(16px), rem(16px));
         }
