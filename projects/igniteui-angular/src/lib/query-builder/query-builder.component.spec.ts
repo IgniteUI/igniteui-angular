@@ -122,7 +122,7 @@ describe('IgxQueryBuilder', () => {
             //Open edit mode
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fixture, [0], 'edit');
             tick(200);
-            fixture.detectChanges();           
+            fixture.detectChanges();
 
             const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fixture, false, 0);
             const input = editModeContainer.querySelector('input.custom-class') as HTMLInputElement;
@@ -1132,6 +1132,35 @@ describe('IgxQueryBuilder', () => {
 }`);
         }));
 
+        it('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
+            //Create dateTime filtering expression
+            const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Products', ['Id']);
+            tree.filteringOperands.push({
+                field: 'Released',
+                searchVal: '11/11/2000 10:11:11 AM',
+                conditionName: 'equals',
+                condition: IgxStringFilteringOperand.instance().condition('equals')
+            });
+
+            queryBuilder.expressionTree = tree;
+            fix.detectChanges();
+
+            // Hover the last visible expression chip
+            const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderConstants.QUERY_BUILDER_EXPRESSION_ITEM_CLASS}`)[0];
+            expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            tick();
+            fix.detectChanges();
+
+            // Click the edit icon to enter edit mode of the expression.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fix, [0], 'edit');
+            tick();
+            fix.detectChanges();
+
+            //Check for the active element
+            const searchValueInput = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            expect(document.activeElement).toBe(searchValueInput, 'The input should be the active element.');
+        }));
+
         it('Should select/deselect a condition when its respective chip is clicked.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
@@ -2066,17 +2095,17 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
         IgxQueryBuilderComponent,
         IgxQueryBuilderHeaderComponent,
         IgxQueryBuilderSearchValueTemplateDirective,
-        FormsModule 
+        FormsModule
     ]
 })
 export class IgxQueryBuilderCustomTemplateSampleTestComponent implements OnInit {
     @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
+    @ViewChild('searchValueTemplate', { read: IgxQueryBuilderSearchValueTemplateDirective, static: true })
+    public searchValueTemplate: IgxQueryBuilderSearchValueTemplateDirective;
     public entities: Array<any>;
     public showLegend = false;
     public expressionTree: IExpressionTree;
 
-    @ViewChild('searchValueTemplate', { read: IgxQueryBuilderSearchValueTemplateDirective, static: true })
-    public searchValueTemplate: IgxQueryBuilderSearchValueTemplateDirective;
 
     public ngOnInit(): void {
         this.entities = SampleEntities.map(a => ({ ...a }));
