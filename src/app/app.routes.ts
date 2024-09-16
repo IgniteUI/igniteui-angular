@@ -138,6 +138,7 @@ import { GridValidationSampleComponent } from './grid-validation/grid-validation
 import { GridExportComponent } from './grid-export/grid-export.sample';
 import { DividerComponent } from './divider/divider.component';
 import { MonthPickerSampleComponent } from './month-picker/month-picker.sample';
+import { LabelSampleComponent } from "./label/label.sample";
 
 export const appRoutes: Routes = [
     {
@@ -664,5 +665,9 @@ export const appRoutes: Routes = [
     {
         path: 'stepper',
         component: StepperSampleComponent
+    },
+    {
+        path: 'labelDirective',
+        component: LabelSampleComponent
     }
 ];
