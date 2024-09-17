@@ -374,6 +374,93 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.rowList.length).toEqual(1);
         }));
 
+        it('should correctly filter dateTime column by \'equals\' filtering condition, with applied timezone', fakeAsync(() => {
+            const column = grid.getColumnByName('ReleaseDate');
+
+            column.pipeArgs = {
+                timezone: "GMT-12"
+            };
+
+            GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
+            fix.detectChanges();
+
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const reset = filteringRow.queryAll(By.css('button'))[0];
+            const inputDebugElement = filteringRow.query(By.directive(IgxInputDirective));
+            const input = inputDebugElement.nativeElement;
+            input.click();
+            tick(100);
+            fix.detectChanges();
+
+            let outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+            let calendar = outlet.getElementsByClassName('igx-calendar')[0];
+            let todayDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date--current');
+            todayDayItem.firstChild.dispatchEvent(new Event('mousedown'));
+            grid.filteringRow.onInputGroupFocusout();
+            tick(100);
+            fix.detectChanges();
+
+            // Clicking today's date should not return any results because GMT-7 would shift today's date in the previous one
+            expect(grid.rowList.length).toEqual(0);
+
+            // Reset filtering and open the datePicker again
+            reset.nativeElement.click();
+            flush();
+            fix.detectChanges();
+
+            input.click();
+            tick(100);
+            fix.detectChanges();
+
+            outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+            calendar = outlet.getElementsByClassName('igx-calendar')[0];
+            todayDayItem = calendar.querySelector('.igx-days-view__date--current');
+
+            // From today's date, try to select the previous date
+            const dateRow: HTMLElement = todayDayItem.closest('.igx-days-view__row');
+            const daysInRow = Array.from(dateRow.getElementsByClassName('igx-days-view__date'));
+            const currentIndex = daysInRow.indexOf(todayDayItem);
+            let previousDay: Element; 
+
+            // If previous day in the same week, select it
+            if (currentIndex > 0) {
+                previousDay = daysInRow[currentIndex - 1];
+            } else {
+                // If previous day is in last week, select the previous week row and the last date
+                const previousRow = dateRow.previousElementSibling;
+                if (previousRow) {
+                    const daysInPreviousRow = Array.from(previousRow.getElementsByClassName('igx-days-view__date'));
+                    previousDay = daysInPreviousRow[daysInPreviousRow.length - 1];
+                } else {
+                    // If previous day is in last month, switch the month and select the last active date
+                    const previousMonth = fix.debugElement.query(By.css('.igx-calendar-picker__prev'));
+                    UIInteractions.simulateMouseDownEvent(previousMonth.nativeElement);
+                    tick(100);
+                    fix.detectChanges();
+
+                    const weekRows = Array.from(calendar.querySelectorAll('.igx-days-view__row'));
+
+                    // If all days are inactive (from next month), select the previous week and check it instead.
+                    for (let i = weekRows.length - 1; i >= 0; i--) {
+                        const daysInWeek = Array.from(weekRows[i].getElementsByClassName('igx-days-view__date'));
+                        const activeDays = daysInWeek.filter(day => !day.classList.contains('igx-days-view__date--inactive'));
+
+                        if (activeDays.length > 0) {
+                            previousDay = activeDays[activeDays.length - 1];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            previousDay.firstChild.dispatchEvent(new Event('mousedown'));
+            grid.filteringRow.onInputGroupFocusout();
+            tick(100);
+            fix.detectChanges();
+
+            expect(grid.rowList.length).toEqual(1);
+        }));
+
         it('Should correctly select month from month view datepicker/calendar component', fakeAsync(() => {
             pending('This should be tested in the e2e test');
             const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
