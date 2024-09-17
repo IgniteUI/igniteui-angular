@@ -226,7 +226,7 @@
         align-items: center;
 
         @if $variant == 'indigo' {
-            padding: rem(16px);
+            padding: rem(16px) rem(16px) sizable(rem(8px), rem(12px), rem(16px));
         } @else {
             padding: pad(rem(4px), rem(8px), rem(16px));
         }
@@ -318,6 +318,10 @@
     @if $variant == 'indigo' {
         %grid-excel-move {
             margin-block-end: sizable(rem(12px), rem(16px), rem(16px));
+        }
+
+        %grid-excel-sort + %grid-excel-move {
+            margin-block-start: sizable(rem(4px), rem(8px), rem(8px));
         }
 
         %grid-excel-sort {
@@ -478,7 +482,6 @@
 
         @if $variant == 'indigo' {
             padding: pad(rem(16px));
-            padding-block-start: pad(rem(8px), rem(16px), rem(16px));
             gap: sizable(rem(16px));
         } @else {
             padding: pad(rem(4px), rem(8px), rem(16px));
