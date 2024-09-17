@@ -11,8 +11,7 @@
 | 16.1.x   | :white_check_mark: |
 | 16.0.x   | :x:                |
 | 15.1.x   | :white_check_mark: |
-| 15.0.x   | :x:                |
-| < 15.1.x | :white_check_mark: |
+| < 15.1.x | :x:                |
 
 ## Reporting a Vulnerability
 
