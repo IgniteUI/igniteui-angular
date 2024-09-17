@@ -52,7 +52,7 @@
     "build:i18n": "tsc --project projects/igniteui-angular-i18n/tsconfig.build.json && cp projects/igniteui-angular-i18n/package.json dist/igniteui-angular-i18n/package.json",
     "build:bundletest": "ng build bundle-test --configuration production",
     "lint:i18n": "eslint projects/igniteui-angular-i18n/src/**/*.ts",
-    "test:i18n:dist": "eslint -c projects/igniteui-angular-i18n/.eslintrc.dist.i18n.json dist/igniteui-angular-i18n/**/*.d.ts --no-eslintrc",
+    "test:i18n:dist": "eslint -c projects/igniteui-angular-i18n/.eslintrc.dist.i18n.json dist/igniteui-angular-i18n/**/*.d.ts --no-eslintrc --no-ignore",
     "build:elements": "ng build igniteui-angular-elements && npm run pack:elements && gulp copyPackageForElements",
     "pack:elements": "node projects/igniteui-angular-elements/esbuild.mjs && node scripts/build-elements-styles.mjs",
     "elements:configure": "ts-node -T -H --skip-project --compilerOptions {\\\"moduleResolution\\\":\\\"NodeNext\\\"} ./projects/igniteui-angular-elements/src/analyzer/analyzer.ts",
