@@ -2530,7 +2530,6 @@ class CustomSummaryWithNullAndZero {
         label: 0,
         summaryResult: null,
         });
-        
         return result;
     }
 }
@@ -2550,7 +2549,6 @@ class CustomSummaryWithUndefinedZeroAndValidNumber {
         label: 23,
         summaryResult: undefined,
         });
-        
         return result;
     }
 }
@@ -2570,7 +2568,6 @@ class CustomSummaryWithUndefinedAndNull {
         label: null,
         summaryResult: undefined,
         });
-        
         return result;
     }
 }
@@ -2592,7 +2589,6 @@ class DiscontinuedSummary {
             ).toString(),
             summaryResult: '',
         });
-        
         return result;
     }
 }
@@ -2612,7 +2608,6 @@ class CustomSummaryWithDate {
             label: null,
             summaryResult: new Date(2020, 4, 12),
         });
-        
         return result;
     }
 }
