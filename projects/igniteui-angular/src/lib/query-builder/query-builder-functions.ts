@@ -277,7 +277,7 @@ export class QueryBuilderFunctions {
     public static getQueryBuilderTreeRootGroupButtons(fix: ComponentFixture<any>, buttonsIndex: number) {
         const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
         const childrenContainer = group.querySelector('.igx-filter-tree__expression');
-        const buttonsContainers = Array.from(childrenContainer.querySelectorAll(':scope > .igx-filter-tree__buttons'));
+        const buttonsContainers = Array.from(childrenContainer.querySelectorAll('.igx-filter-tree__buttons'));
         const buttonsContainer: any = buttonsContainers[buttonsIndex];
         const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
         return buttons;

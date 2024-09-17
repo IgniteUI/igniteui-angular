@@ -1,5 +1,5 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective, IgxStringFilteringOperand } from 'igniteui-angular';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1134,12 +1134,12 @@ describe('IgxQueryBuilder', () => {
 
         it('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
             //Create dateTime filtering expression
-            const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Products', ['Id']);
+            const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Orders', ['OrderId']);
             tree.filteringOperands.push({
-                field: 'Released',
-                searchVal: '11/11/2000 10:11:11 AM',
-                conditionName: 'equals',
-                condition: IgxStringFilteringOperand.instance().condition('equals')
+                field: 'OrderDate',
+                searchVal: new Date('2024-09-17T21:00:00.000Z'),
+                conditionName: 'equals',              
+                condition: IgxDateFilteringOperand.instance().condition('equals')
             });
 
             queryBuilder.expressionTree = tree;
@@ -1148,12 +1148,12 @@ describe('IgxQueryBuilder', () => {
             // Hover the last visible expression chip
             const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderConstants.QUERY_BUILDER_EXPRESSION_ITEM_CLASS}`)[0];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
-            tick();
+            tick(200);
             fix.detectChanges();
 
             // Click the edit icon to enter edit mode of the expression.
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fix, [0], 'edit');
-            tick();
+            tick(200);
             fix.detectChanges();
 
             //Check for the active element
@@ -1817,9 +1817,6 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 1);
 
             //Un-group OR group
-            QueryBuilderFunctions.clickQueryBuilderTreeGroupOperatorLine(fix, [0]);
-            tick(200);
-            fix.detectChanges();
             const unGroupButton = QueryBuilderFunctions.getQueryBuilderGroupContextMenuButton(contextMenu, 'UnGroup');
             unGroupButton.nativeElement.click();
             tick(200);
