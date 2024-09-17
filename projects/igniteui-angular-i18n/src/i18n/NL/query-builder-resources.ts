@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsNL_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Dutch resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsNL = {
     igx_query_builder_date_placeholder: 'Ophaaldatum',
     igx_query_builder_time_placeholder: 'Ophaaltijd',
     igx_query_builder_filter_operator_and: 'En',
@@ -35,7 +38,7 @@ const QueryBuilderResourceStringsNL_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Kleiner dan of gelijk aan',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'Alles',    
+    igx_query_builder_filter_all: 'Alles',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: 'En-groep',
     igx_query_builder_or_group: 'Of-groep',
@@ -52,9 +55,4 @@ const QueryBuilderResourceStringsNL_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Selecteer kolom',
     igx_query_builder_condition_placeholder: 'Selecteer filter',
     igx_query_builder_value_placeholder: 'Waarde',
-};
-
-/**
- * Dutch resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsNL = QueryBuilderResourceStringsNL_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies ExpandRequire<IQueryBuilderResourceStrings>;

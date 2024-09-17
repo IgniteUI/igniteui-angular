@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsKO_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Korean resource strings for IgxGrid
+ */
+export const GridResourceStringsKO = {
     igx_grid_groupByArea_message: '열 머리글을 끌어서 여기에 놓아 해당 열을 기준으로 그룹화합니다.',
     igx_grid_emptyFilteredGrid_message: '기록이 없습니다.',
     igx_grid_emptyGrid_message: '그리드에 데이터가 없습니다.',
@@ -167,10 +170,4 @@ const GridResourceStringsKO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: '항목은 {0} 자 이상이어야합니다',
     igx_grid_email_validation_error: '유효한 이메일 주소를 입력해야합니다',
     igx_grid_pattern_validation_error: '항목이 필요한 패턴과 일치하지 않습니다'
-};
-
-
-/**
- * Korean resource strings for IgxGrid
- */
-export const GridResourceStringsKO = GridResourceStringsKO_ as ExpandRequire<IGridResourceStrings>;
+} satisfies ExpandRequire<IGridResourceStrings>;

@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsJA_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Japanese resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsJA = {
     igx_query_builder_date_placeholder: '日付の選択',
     igx_query_builder_time_placeholder: 'ピックアップ時間',
     igx_query_builder_filter_operator_and: 'And',
@@ -35,7 +38,7 @@ const QueryBuilderResourceStringsJA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: '以下',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'すべて',    
+    igx_query_builder_filter_all: 'すべて',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"And" グループ',
     igx_query_builder_or_group: '"Or" グループ',
@@ -52,9 +55,4 @@ const QueryBuilderResourceStringsJA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: '列の選択',
     igx_query_builder_condition_placeholder: 'フィルターの選択',
     igx_query_builder_value_placeholder: '値',
-};
-
-/**
- * Japanese resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsJA = QueryBuilderResourceStringsJA_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies ExpandRequire<IQueryBuilderResourceStrings>;

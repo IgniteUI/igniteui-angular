@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsDA_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Danish resource strings for IgxGrid
+ */
+export const GridResourceStringsDA = {
     igx_grid_groupByArea_message: 'Træk et kolonnesidehoved og slip den her for at gruppere efter den kolonne.',
     igx_grid_groupByArea_select_message: 'Vælg alle rækker i gruppen med navnet {0} og værdi {1}.',
     igx_grid_groupByArea_deselect_message: 'Fravælg alle rækker i gruppen med navnet {0} og værdi {1}.',
@@ -167,9 +170,4 @@ const GridResourceStringsDA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Indtastningen må højst være {0} tegn',
     igx_grid_email_validation_error: 'Der skal indtastes en gyldig e-mailadresse',
     igx_grid_pattern_validation_error: 'Indtastning stemmer ikke overens med det krævede mønster'
-};
-
-/**
- * Danish resource strings for IgxGrid
- */
-export const GridResourceStringsDA = GridResourceStringsDA_ as ExpandRequire<IGridResourceStrings>;
+} satisfies ExpandRequire<IGridResourceStrings>;

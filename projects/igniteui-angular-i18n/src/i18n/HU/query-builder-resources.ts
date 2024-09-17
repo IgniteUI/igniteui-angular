@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsHU_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Hungarian resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsHU = {
     igx_query_builder_date_placeholder: 'Felvétel dátuma',
     igx_query_builder_time_placeholder: 'Felvétel időpontja',
     igx_query_builder_filter_operator_and: 'És',
@@ -35,7 +38,7 @@ const QueryBuilderResourceStringsHU_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Kisebb vagy egyenlő',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'Összes',    
+    igx_query_builder_filter_all: 'Összes',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"És" csoport',
     igx_query_builder_or_group: '"Vagy" Csoport',
@@ -52,9 +55,4 @@ const QueryBuilderResourceStringsHU_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Oszlop kiválasztása',
     igx_query_builder_condition_placeholder: 'Szűrő kiválasztása',
     igx_query_builder_value_placeholder: 'Érték',
-};
-
-/**
- * Hungarian resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsHU = QueryBuilderResourceStringsHU_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies ExpandRequire<IQueryBuilderResourceStrings>;

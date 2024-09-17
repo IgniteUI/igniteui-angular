@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsES_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Spanish resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsES = {
     igx_query_builder_date_placeholder: 'Elegir Fecha',
     igx_query_builder_time_placeholder: 'Hora de recogida',
     igx_query_builder_filter_operator_and: 'Y',
@@ -35,7 +38,7 @@ const QueryBuilderResourceStringsES_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Menor o Igual Que',
     igx_query_builder_filter_true: 'Verdadero',
     igx_query_builder_filter_false: 'Falso',
-    igx_query_builder_filter_all: 'Todo',    
+    igx_query_builder_filter_all: 'Todo',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: 'Grupo "Y"',
     igx_query_builder_or_group: '"Grupo "O"',
@@ -52,9 +55,4 @@ const QueryBuilderResourceStringsES_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Seleccionar columna',
     igx_query_builder_condition_placeholder: 'Seleccionar filtro',
     igx_query_builder_value_placeholder: 'Valor',
-};
-
-/**
- * Spanish resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsES = QueryBuilderResourceStringsES_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies ExpandRequire<IQueryBuilderResourceStrings>;

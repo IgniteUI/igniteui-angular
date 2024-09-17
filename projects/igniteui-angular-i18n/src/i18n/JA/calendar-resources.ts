@@ -1,7 +1,10 @@
 import { ICalendarResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const CalendarResourceStringsJA_: ExpandRequire<ICalendarResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Japanese resource strings for IgxCalendar
+ */
+export const CalendarResourceStringsJA = {
     igx_calendar_previous_month: '前月',
     igx_calendar_next_month: '翌月',
     igx_calendar_previous_year: 'Previous Year',
@@ -24,9 +27,4 @@ const CalendarResourceStringsJA_: ExpandRequire<ICalendarResourceStrings> = {
     igx_calendar_singular_multi_selection: '複数選択カレンダー',
     igx_calendar_singular_range_selection: '範囲選択カレンダー',
     igx_calendar_singular_single_selection: 'カレンダー'
-};
-
-/**
- * Japanese resource strings for IgxCalendar
- */
-export const CalendarResourceStringsJA = CalendarResourceStringsJA_ as ExpandRequire<ICalendarResourceStrings>;
+} satisfies ExpandRequire<ICalendarResourceStrings>;

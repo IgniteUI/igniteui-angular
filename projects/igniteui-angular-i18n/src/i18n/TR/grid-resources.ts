@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Turkish resource strings for IgxGrid
+ */
+export const GridResourceStringsTR = {
     igx_grid_groupByArea_message: 'Bir sütun başlığını sürükleyin ve o sütuna göre gruplandırmak için buraya bırakın.',
     igx_grid_groupByArea_select_message: 'Alan adı {0} ve değeri {1} olan gruptaki tüm satırları seçin.',
     igx_grid_groupByArea_deselect_message: 'Gruptaki {0} alan adına ve {1} değerine sahip tüm satırların seçimini kaldırın.',
@@ -167,9 +170,4 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Giriş, {0} karakterden uzun olmamalıdır',
     igx_grid_email_validation_error: 'Geçerli bir e-posta adresi girilmelidir',
     igx_grid_pattern_validation_error: 'Giriş, gerekli modelle eşleşmiyor'
-};
-
-/**
- * Turkish resource strings for IgxGrid
- */
-export const GridResourceStringsTR = GridResourceStringsTR_ as ExpandRequire<IGridResourceStrings>;
+} satisfies ExpandRequire<IGridResourceStrings>;

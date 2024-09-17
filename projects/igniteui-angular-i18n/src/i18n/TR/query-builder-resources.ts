@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsTR_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Turkish resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsTR = {
     igx_query_builder_date_placeholder: 'Alma tarihi',
     igx_query_builder_time_placeholder: 'Alma saati',
     igx_query_builder_filter_operator_and: 'Ve',
@@ -35,7 +38,7 @@ const QueryBuilderResourceStringsTR_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Küçüktür veya Eşittir',
     igx_query_builder_filter_true: 'Doğru',
     igx_query_builder_filter_false: 'Yanlış',
-    igx_query_builder_filter_all: 'Tümü',    
+    igx_query_builder_filter_all: 'Tümü',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"Ve" Grubu',
     igx_query_builder_or_group: '"Veya" Grubu',
@@ -52,9 +55,4 @@ const QueryBuilderResourceStringsTR_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Sütun seç',
     igx_query_builder_condition_placeholder: 'Filtre seç',
     igx_query_builder_value_placeholder: 'Değer',
-};
-
-/**
- * Turkish resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsTR = QueryBuilderResourceStringsTR_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies ExpandRequire<IQueryBuilderResourceStrings>;

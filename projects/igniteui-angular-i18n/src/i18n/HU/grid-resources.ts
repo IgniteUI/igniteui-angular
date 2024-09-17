@@ -1,8 +1,11 @@
 /* eslint-disable max-len */
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsHU_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Hungarian resource strings for IgxGrid
+ */
+export const GridResourceStringsHU = {
     igx_grid_groupByArea_message: 'Húzza és ejtse ide az oszlopfejlécet az adott oszlop szerinti csoportosításhoz.',
     igx_grid_groupByArea_select_message: 'Az összes sorok a csoportban mezőnévvel {0} és értékkel {1} kijelölése.',
     igx_grid_groupByArea_deselect_message: 'Az összes sorok a csoportban mezőnévvel {0} és értékkel {1} kijelölésének törlése.',
@@ -168,9 +171,4 @@ const GridResourceStringsHU_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'A bejegyzés legfeljebb {0} karakter hosszúságú lehet',
     igx_grid_email_validation_error: 'Érvényes e-mail címet kell megadni',
     igx_grid_pattern_validation_error: 'A bejegyzés nem felel meg a szükséges sémának'
-};
-
-/**
- * Hungarian resource strings for IgxGrid
- */
-export const GridResourceStringsHU = GridResourceStringsHU_ as ExpandRequire<IGridResourceStrings>;
+} satisfies ExpandRequire<IGridResourceStrings>;

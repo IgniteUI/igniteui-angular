@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsNL_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Dutch resource strings for IgxGrid
+ */
+export const GridResourceStringsNL = {
     igx_grid_groupByArea_message: 'Sleep een kolomkop en zet deze hier neer om op die kolom te groeperen.',
     igx_grid_groupByArea_select_message: 'Selecteer alle rijen in de groep met veldnaam {0} en waarde {1}.',
     igx_grid_groupByArea_deselect_message: 'Deselecteer alle rijen in de groep met veldnaam {0} en waarde {1}.',
@@ -167,9 +170,4 @@ const GridResourceStringsNL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Invoer mag niet meer dan {0} teken(s) lang zijn',
     igx_grid_email_validation_error: 'Er moet een geldig e-mailadres worden ingevoerd',
     igx_grid_pattern_validation_error: 'Invoer komt niet overeen met het vereiste patroon'
-};
-
-/**
- * Dutch resource strings for IgxGrid
- */
-export const GridResourceStringsNL = GridResourceStringsNL_ as ExpandRequire<IGridResourceStrings>;
+} satisfies ExpandRequire<IGridResourceStrings>;

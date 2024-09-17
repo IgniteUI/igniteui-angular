@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsBG_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Bulgarian resource strings for IgxGrid
+ */
+export const GridResourceStringsBG = {
     igx_grid_groupByArea_message: 'Плъзнете заглавката на колоната и я пуснете тук, за да извършите групиране по тази колона.',
     igx_grid_groupByArea_select_message: 'Избери всички редове в групата с име на поле {0} и стойност {1}.',
     igx_grid_groupByArea_deselect_message: 'Отмаркирай всички редове в групата с име на поле {0} и стойност {1}.',
@@ -167,9 +170,4 @@ const GridResourceStringsBG_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Входните данни не трябва да са дълги повече от {0} знака.',
     igx_grid_email_validation_error: 'Трябва да бъде въведен валиден имейл адрес.',
     igx_grid_pattern_validation_error: 'Въведените данни не спазват зададения образец.'
-};
-
-/**
- * Bulgarian resource strings for IgxGrid
- */
-export const GridResourceStringsBG = GridResourceStringsBG_ as ExpandRequire<IGridResourceStrings>;
+} satisfies ExpandRequire<IGridResourceStrings>;

@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsDE_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * German resource strings for IgxGrid
+ */
+export const GridResourceStringsDE = {
     igx_grid_groupByArea_message: 'Lege eine Spaltenüberschrift hier ab, um danach zu gruppieren.',
     igx_grid_emptyFilteredGrid_message: 'Keine Einträge gefunden.',
     igx_grid_emptyGrid_message: 'Grid hat keine Daten.',
@@ -167,9 +170,4 @@ const GridResourceStringsDE_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Bitte geben Sie nicht mehr als {0} Zeichen ein',
     igx_grid_email_validation_error: 'Eine gültige E-Mail-Adresse sollte eingegeben werden',
     igx_grid_pattern_validation_error: 'Eintrag entspricht nicht dem erforderlichen Muster'
-};
-
-/**
- * German resource strings for IgxGrid
- */
-export const GridResourceStringsDE = GridResourceStringsDE_ as ExpandRequire<IGridResourceStrings>;
+} satisfies ExpandRequire<IGridResourceStrings>;

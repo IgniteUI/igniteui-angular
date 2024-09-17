@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsRO_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Romanian resource strings for IgxGrid
+ */
+export const GridResourceStringsRO = {
     igx_grid_groupByArea_message: 'Trageți un antet de coloană și plasați-l aici pentru a grupa după coloana respectivă.',
     igx_grid_groupByArea_select_message: 'Selectați toate rândurile din grup cu numele câmpului {0} și valoarea {1}.',
     igx_grid_groupByArea_deselect_message: 'Deselectați toate rândurile din grup cu numele câmpului {0} și valoarea {1}.',
@@ -167,9 +170,4 @@ const GridResourceStringsRO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Intrarea nu trebuie să aibă mai mult de {0} caractere',
     igx_grid_email_validation_error: 'Ar trebui introdusă o adresă de e-mail validă',
     igx_grid_pattern_validation_error: 'Intrarea nu se potrivește cu modelul cerut'
-};
-
-/**
- * Romanian resource strings for IgxGrid
- */
-export const GridResourceStringsRO = GridResourceStringsRO_ as ExpandRequire<IGridResourceStrings>;
+} satisfies ExpandRequire<IGridResourceStrings>;

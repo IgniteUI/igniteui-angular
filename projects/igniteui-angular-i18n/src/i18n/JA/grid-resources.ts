@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsJA_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Japanese resource strings for IgxGrid
+ */
+export const GridResourceStringsJA = {
     igx_grid_groupByArea_message: '列ヘッダーをここへドラッグして列をグループ化します。',
     igx_grid_emptyFilteredGrid_message: 'レコードは見つかりませんでした。',
     igx_grid_emptyGrid_message: 'グリッドにデータがありません。',
@@ -167,9 +170,4 @@ const GridResourceStringsJA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: '入力の長さは {0} 文字以下である必要があります',
     igx_grid_email_validation_error: '有効なメール アドレスを入力してください',
     igx_grid_pattern_validation_error: '入力が所定のパターンに一致しません'
-};
-
-/**
- * Japanese resource strings for IgxGrid
- */
-export const GridResourceStringsJA = GridResourceStringsJA_ as ExpandRequire<IGridResourceStrings>;
+} satisfies ExpandRequire<IGridResourceStrings>;

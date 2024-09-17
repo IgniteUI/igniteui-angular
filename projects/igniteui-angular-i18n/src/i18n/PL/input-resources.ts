@@ -1,12 +1,10 @@
 import { IInputResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const InputResourceStringsPL_: ExpandRequire<IInputResourceStrings> = {
-    igx_input_upload_button: 'Przekaż plik',
-    igx_input_file_placeholder: 'Nie wybrano pliku'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Polish resource strings for IgxInput
  */
-export const InputResourceStringsPL = InputResourceStringsPL_ as ExpandRequire<IInputResourceStrings>;
+export const InputResourceStringsPL = {
+    igx_input_upload_button: 'Przekaż plik',
+    igx_input_file_placeholder: 'Nie wybrano pliku'
+} satisfies ExpandRequire<IInputResourceStrings>;

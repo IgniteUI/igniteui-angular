@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsCS_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Czech resource strings for IgxGrid
+ */
+export const GridResourceStringsCS = {
     igx_grid_groupByArea_message: 'Přetáhněte záhlaví sloupce a přetáhněte jej sem a seskupte podle tohoto sloupce.',
     igx_grid_groupByArea_select_message: 'Vyberte všechny řádky ve skupině s názvem pole {0} a hodnotou {1}.',
     igx_grid_groupByArea_deselect_message: 'Zrušit výběr všech řádky ve skupině s názvem pole {0} a hodnotou {1}.',
@@ -167,9 +170,4 @@ const GridResourceStringsCS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Záznam by neměl mít více než {0} znaků',
     igx_grid_email_validation_error: 'Je třeba zadat platnou e-mailovou adresu',
     igx_grid_pattern_validation_error: 'Položka neodpovídá požadovanému vzoru'
-};
-
-/**
- * Czech resource strings for IgxGrid
- */
-export const GridResourceStringsCS = GridResourceStringsCS_ as ExpandRequire<IGridResourceStrings>;
+} satisfies ExpandRequire<IGridResourceStrings>;

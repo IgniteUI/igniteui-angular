@@ -1,11 +1,9 @@
 import { IBannerResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const BannerResourceStringsZHHANT_: ExpandRequire<IBannerResourceStrings> = {
-    igx_banner_button_dismiss: '關閉'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxBanner
  */
-export const BannerResourceStringsZHHANT = BannerResourceStringsZHHANT_ as ExpandRequire<IBannerResourceStrings>;
+export const BannerResourceStringsZHHANT = {
+    igx_banner_button_dismiss: '關閉'
+} satisfies ExpandRequire<IBannerResourceStrings>;

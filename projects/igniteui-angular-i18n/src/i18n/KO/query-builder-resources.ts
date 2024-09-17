@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsKO_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Korean resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsKO = {
     igx_query_builder_date_placeholder: '픽업 날짜',
     igx_query_builder_time_placeholder: '인도 시간',
     igx_query_builder_filter_operator_and: '그리고',
@@ -35,7 +38,7 @@ const QueryBuilderResourceStringsKO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: '작거나 같음',
     igx_query_builder_filter_true: '참',
     igx_query_builder_filter_false: '거짓',
-    igx_query_builder_filter_all: '모두',    
+    igx_query_builder_filter_all: '모두',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '그룹 "그리고"',
     igx_query_builder_or_group: '그룹 "또는"',
@@ -52,9 +55,4 @@ const QueryBuilderResourceStringsKO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: '열 선택',
     igx_query_builder_condition_placeholder: '필터 선택',
     igx_query_builder_value_placeholder: '값',
-};
-
-/**
- * Korean resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsKO = QueryBuilderResourceStringsKO_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies ExpandRequire<IQueryBuilderResourceStrings>;

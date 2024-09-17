@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsCS_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Czech resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsCS = {
     igx_query_builder_date_placeholder: 'Datum výdeje',
     igx_query_builder_time_placeholder: 'Čas vyzvednutí',
     igx_query_builder_filter_operator_and: 'A',
@@ -35,7 +38,7 @@ const QueryBuilderResourceStringsCS_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Méně než nebo rovno',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'Všechno',    
+    igx_query_builder_filter_all: 'Všechno',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"A" skupina',
     igx_query_builder_or_group: '"Nebo" skupina',
@@ -52,9 +55,4 @@ const QueryBuilderResourceStringsCS_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Vyberte sloupec',
     igx_query_builder_condition_placeholder: 'Vyberte filtr',
     igx_query_builder_value_placeholder: 'Hodnota',
-};
-
-/**
- * Czech resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsCS = QueryBuilderResourceStringsCS_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
