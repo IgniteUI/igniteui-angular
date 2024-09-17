@@ -466,7 +466,7 @@ export class IgxFilteringService implements OnDestroy {
                 return formatter(expression.searchVal, undefined);
             }
             const pipeArgs = column.pipeArgs;
-            return formatDate(expression.searchVal, pipeArgs.format, this.grid.locale);
+            return formatDate(expression.searchVal, pipeArgs.format, this.grid.locale, pipeArgs.timezone);
         } else {
             return expression.searchVal;
         }
