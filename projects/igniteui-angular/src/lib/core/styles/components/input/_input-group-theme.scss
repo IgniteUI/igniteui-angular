@@ -340,17 +340,17 @@
     );
 
     $hint-spacing-block: map.get((
-        material: rem(5px),
-        fluent: rem(5px),
-        bootstrap: rem(4px),
-        indigo: rem(4px),
+        'material': rem(5px),
+        'fluent': rem(5px),
+        'bootstrap': rem(4px),
+        'indigo': rem(4px),
     ), $variant);
 
     $hint-spacing-inline: map.get((
-        material: rem(16px),
-        fluent: 0,
-        bootstrap: 0,
-        indigo: 0,
+        'material': rem(16px),
+        'fluent': 0,
+        'bootstrap': 0,
+        'indigo': 0,
     ), $variant);
 
     // Base Start
@@ -378,9 +378,9 @@
         align-items: center;
 
         @if $indigo-theme {
-            height: calc(100% - #{rem(1px)}) !important;
+            min-height: calc(100% - #{rem(1px)}) !important;
         } @else {
-            height: 100% !important;
+            min-height: 100% !important;
         }
         transition: color $transition-timing, background $transition-timing;
 
@@ -905,10 +905,14 @@
         }
     }
 
-    %form-group-label--float {
-        --floating-label-position: -73%;
-        transform: translateY(var(--floating-label-position));
-        font-size: rem(12px);
+    @if $variant == 'material' {
+        %form-group-label--float {
+            --floating-label-position: -73%;
+
+            @include type-style('caption');
+
+            transform: translateY(var(--floating-label-position));
+        }
     }
 
     %form-group-label--focused-border,
@@ -967,8 +971,8 @@
 
     %form-group-label--float-border {
         --label-position: #{sizable(18px, 22px, 26px)};
+
         transform: translateY(calc(var(--label-position) * -1));
-        font-size: rem(12px);
         margin-top: 0;
         overflow: hidden;
         will-change: font-size, color, transform;
@@ -1713,8 +1717,6 @@
     // Label
     %fluent-label {
         display: block;
-        font-size: rem(14px);
-        font-weight: 600;
         position: static;
         transform: translateY(0);
         transform-origin: top left;
@@ -1725,12 +1727,6 @@
 
         [dir='rtl'] & {
             transform-origin: top right;
-        }
-
-        @if $variant == 'indigo' {
-            font-size: rem(11px);
-            line-height: rem(15px);
-            font-weight: 400;
         }
     }
 
@@ -1934,13 +1930,11 @@
         display: block;
         color: var-get($theme, 'idle-secondary-color');
         padding: 0;
-        line-height: rem(24px);
         transform: translateY(0);
         transform-origin: top left;
         margin-block-start: 0 !important;
         margin-block-end: rem(4px);
         height: auto;
-        font-size: rem(16px);
 
         [dir='rtl'] & {
             transform-origin: top right;
