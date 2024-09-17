@@ -1124,7 +1124,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 
     describe('Localization - ', () => {
-        fit('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
+        it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
             const grid: IgxGridComponent = fix.componentInstance.grid;
             grid.resourceStrings = Object.assign({}, grid.resourceStrings, {
