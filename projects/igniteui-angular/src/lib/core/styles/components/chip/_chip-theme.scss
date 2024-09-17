@@ -258,11 +258,12 @@
     $chip-max-width: 32ch;
 
     $variant: map.get($theme, '_meta', 'variant');
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
     $chip-padding: (
-        comfortable: rem(12px),
+        comfortable: rem(if($variant != 'indigo', 12px, 8px)),
         cosy: rem(6px),
-        compact: rem(2px)
+        compact: rem(if($variant != 'indigo', 2px, 4px))
     );
 
     $box-shadow-focus: map.get((
@@ -287,6 +288,11 @@
         justify-content: flex-start;
         flex-wrap: wrap;
         width: 100%;
+
+        @if $variant == 'indigo' {
+            padding: rem(4px);
+            gap: rem(8px)
+        }
 
         &:empty {
             display: none;
@@ -378,6 +384,7 @@
             map.get($chip-padding, 'cosy'),
             map.get($chip-padding, 'comfortable')
         );
+
         gap: sizable(rem(3px), rem(6px), rem(8px));
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
@@ -402,6 +409,12 @@
         igx-circular-bar,
         igx-icon {
             --component-size: var(--chip-size);
+        }
+
+        @if $variant == 'indigo' {
+            %igx-icon-display {
+                --size: #{sizable(rem(14px), rem(14px), rem(16px))}
+            }
         }
 
         igx-avatar,
@@ -444,7 +457,7 @@
         &:hover {
             %igx-chip__item {
                 @if $variant == 'indigo' {
-                    color: contrast-color($color: 'primary', $variant: 400);
+                    color: contrast-color($color: 'primary', $variant: 900);
                     background: color($color: 'primary', $variant: 400);
                     border-color: color($color: 'primary', $variant: 400);
                 } @else {
@@ -462,10 +475,10 @@
                 border-color: color($color: 'primary', $variant: 800);
 
                 @if $variant == 'indigo' {
-                    color: contrast-color($color: 'primary', $variant: 500);
+                    color: contrast-color($color: 'primary', $variant: 900);
                     background: color($color: 'primary', $variant: 500);
                     border-color: color($color: 'primary', $variant: 500);
-                    box-shadow: 0 0 0 rem(3px) color($color: 'primary', $variant: 200);
+                    box-shadow: 0 0 0 rem(3px) color($color: 'primary', $variant: 400, $opacity: .5);
                 }
 
                 @if $variant == 'bootstrap' {
@@ -651,7 +664,11 @@
         > igx-avatar,
         > igx-circular-bar {
             &:first-child {
-                margin-inline-start: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                @if $variant != 'indigo' {
+                    margin-inline-start: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                } @else {
+                    margin-inline-start: calc(#{sizable(rem(2px), rem(4px), rem(7px))} * -1);
+                }
             }
         }
 
@@ -670,7 +687,11 @@
         > igx-avatar,
         > igx-circular-bar {
             &:last-child {
-                margin-inline-end: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                @if $variant != 'indigo' {
+                    margin-inline-end: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                } @else {
+                    margin-inline-end: calc(#{sizable(rem(2px), rem(4px), rem(7px))} * -1);
+                }
             }
         }
 
@@ -777,17 +798,38 @@
         }
     }
 
+    %igx-chip__item--disabled {
+        color: var-get($theme, 'disabled-text-color');
+        background: var-get($theme, 'disabled-background');
+        border-color: var-get($theme, 'disabled-border-color');
+    }
+
     %igx-chip--disabled {
         cursor: default;
         pointer-events: none;
 
-
         @if $variant == 'indigo' {
+            %igx-chip__item--selected {
+                background: color($color: 'primary', $variant: 400, $opacity: .5);
+                border-color: transparent;
+
+                @if $theme-variant == 'light' {
+                    color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
+                } @else {
+                    color: contrast-color($color: 'primary', $variant: 900, $opacity: .2);
+                }
+            }
+
             &%igx-chip--primary {
                 %igx-chip__item {
-                    color: contrast-color($color: 'primary', $variant: 400);
-                    background: color($color: 'primary', $variant: 200);
-                    border-color: color($color: 'primary', $variant: 200);
+                    @if $theme-variant == 'light' {
+                        color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
+                    } @else {
+                        color: contrast-color($color: 'primary', $variant: 900, $opacity: .2);
+                    }
+
+                    background: color($color: 'primary', $variant: 400, $opacity: .5);
+                    border-color: transparent;
                 }
             }
 
@@ -795,7 +837,7 @@
                 %igx-chip__item {
                     color: contrast-color($color: 'info', $variant: 400);
                     background: color($color: 'info', $variant: 200);
-                    border-color: color($color: 'info', $variant: 200);
+                    border-color: transparent;
                 }
             }
 
@@ -803,7 +845,7 @@
                 %igx-chip__item {
                     color: contrast-color($color: 'success', $variant: 800);
                     background: color($color: 'success', $variant: 200);
-                    border-color: color($color: 'success', $variant: 200);
+                    border-color: transparent;
                 }
             }
 
@@ -811,24 +853,18 @@
                 %igx-chip__item {
                     color: contrast-color($color: 'warn', $variant: 900);
                     background: color($color: 'warn', $variant: 200);
-                    border-color: color($color: 'warn', $variant: 200);
+                    border-color: transparent;
                 }
             }
 
             &%igx-chip--danger {
                 %igx-chip__item {
-                    color: contrast-color($color: 'error', $variant: 400);
+                    color: contrast-color($color: 'error', $variant: 900);
                     background: color($color: 'error', $variant: 200);
-                    border-color: color($color: 'error', $variant: 200);
+                    border-color: transparent;
                 }
             }
         }
-    }
-
-    %igx-chip__item--disabled {
-        color: var-get($theme, 'disabled-text-color');
-        background: var-get($theme, 'disabled-background');
-        border-color: var-get($theme, 'disabled-border-color');
     }
 }
 
