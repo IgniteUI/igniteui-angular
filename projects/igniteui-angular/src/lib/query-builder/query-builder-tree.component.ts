@@ -225,10 +225,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
-        this._expressionTree = expressionTree;
-        if (!expressionTree) {
-            this._selectedEntity = null;
-            this._selectedReturnFields = [];
+        if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
+            this._expressionTree = expressionTree;
+            if (!expressionTree) {
+                this._selectedEntity = null;
+                this._selectedReturnFields = [];
+            }
+
+            this.init();
         }
     }
 
@@ -517,12 +521,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public ngAfterViewInit(): void {
-        this.clearSelection();
-        this.cancelOperandAdd();
-        this.cancelOperandEdit();
-        this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
-        this.currentGroup = this.rootGroup;
-
         this._overlaySettings.outlet = this.overlayOutlet;
         this.entitySelectOverlaySettings.outlet = this.overlayOutlet;
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
@@ -1541,6 +1539,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         } else if (container.scrollTop + container.clientHeight < targetOffset + target.offsetHeight + delta) {
             container.scrollTop = targetOffset + target.offsetHeight + delta - container.clientHeight;
         }
+    }
+
+    
+    private init() {
+        this.clearSelection();
+        this.cancelOperandAdd();
+        this.cancelOperandEdit();
+        this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
+        this.currentGroup = this.rootGroup;
     }
 }
 
