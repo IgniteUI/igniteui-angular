@@ -2052,7 +2052,7 @@ describe('IgxQueryBuilder', () => {
             tick(100);
             fix.detectChanges();
 
-            const endGroupButton = QueryBuilderFunctions.getQueryBuilderTreeGroupButtons(fix, [2], 0)[3] as HTMLElement;
+            const endGroupButton = QueryBuilderFunctions.getQueryBuilderTreeGroupButtons(fix, [0], 0)[3] as HTMLElement;
             expect(endGroupButton.querySelector('span').innerText).toBe('My end group');
         }));
     });

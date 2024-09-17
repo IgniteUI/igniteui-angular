@@ -25,10 +25,6 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { QueryBuilderConstants, QueryBuilderFunctions } from '../../query-builder/query-builder-functions';
 import { By } from '@angular/platform-browser';
 
-const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
-const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
-const ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS = 'igx-filter-tree__expression-item';
-
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
@@ -1128,7 +1124,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 
     describe('Localization - ', () => {
-        it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
+        fit('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
             const grid: IgxGridComponent = fix.componentInstance.grid;
             grid.resourceStrings = Object.assign({}, grid.resourceStrings, {
@@ -1154,91 +1150,91 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            expect(GridFunctions.getAdvancedFilteringHeaderText(fix)).toBe('My advanced filter');
-            expect(GridFunctions.getAdvancedFilteringHeaderLegendItemAnd(fix).innerText).toBe('My and');
-            expect(GridFunctions.getAdvancedFilteringHeaderLegendItemOr(fix).innerText).toBe('My or');
-            expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0].querySelector('span').innerText)
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix).trim()).toBe('My advanced filter');
+            expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fix) as HTMLElement).innerText).toBe('My and');
+            expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fix) as HTMLElement).innerText).toBe('My or');
+            expect(QueryBuilderFunctions.getQueryBuilderInitialAddGroupButtons(fix)[0].querySelector('span').innerText)
                 .toBe('My and group');
-            expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[1].querySelector('span').innerText)
+            expect(QueryBuilderFunctions.getQueryBuilderInitialAddGroupButtons(fix)[1].querySelector('span').innerText)
                 .toBe('My or group');
-            expect(GridFunctions.getAdvancedFilteringEmptyPrompt(fix).innerText).toBe('My initial text');
+            expect((QueryBuilderFunctions.getQueryBuilderEmptyPrompt(fix) as HTMLElement).innerText).toBe('My initial text');
 
-            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
-            expect(GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0].querySelector('span').innerText)
+            expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement).querySelector('span').innerText)
                 .toBe('My condition');
-            expect(GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[1].querySelector('span').innerText)
+            expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[1] as HTMLElement).querySelector('span').innerText)
                 .toBe('My and group');
-            expect(GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[2].querySelector('span').innerText)
+            expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[2] as HTMLElement).querySelector('span').innerText)
                 .toBe('My or group');
 
             // Populate edit inputs.
-            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
 
-            let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
             // Commit the populated expression.
-            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
-            const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+            const rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
             rootOperatorLine.click();
             fix.detectChanges();
 
             const buttonGroupItems = GridFunctions.sortNativeElementsHorizontally(
-                Array.from(GridFunctions.getAdvancedFilteringContextMenuButtonGroup(fix)
+                Array.from(QueryBuilderFunctions.getQueryBuilderContextMenuButtonGroup(fix)
                     .querySelectorAll('.igx-button-group__item-content')));
             expect(buttonGroupItems[0].textContent).toBe('My and');
             expect(buttonGroupItems[1].textContent).toBe('My or');
-            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[3].querySelector('span').innerText)
+            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[3] as HTMLElement).querySelector('span').innerText)
                 .toBe('My ungroup');
-            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[4].querySelector('span').innerText)
+            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[4] as HTMLElement).querySelector('span').innerText)
                 .toBe('My delete');
 
             // Close context menu.
-            GridFunctions.clickAdvancedFilteringContextMenuCloseButton(fix);
+            QueryBuilderFunctions.clickQueryBuilderContextMenuCloseButton(fix);
             fix.detectChanges();
 
             // Add another expression to root group.
-            let btn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
+            let btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
             btn.click();
             fix.detectChanges();
 
             // Populate edit inputs.
-            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
 
-            input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'script', fix); // Type filter value.
             // Commit the populated expression.
-            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Select two chips.
-            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
-            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1]);
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
             tick(200);
             fix.detectChanges();
 
-            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1].innerText).toBe('My create and group');
-            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[2].innerText).toBe('My create or group');
-            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[3].innerText).toBe('My delete filters');
+            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[1] as HTMLElement).innerText).toBe('My create and group');
+            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[2] as HTMLElement).innerText).toBe('My create or group');
+            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[3] as HTMLElement).innerText).toBe('My delete filters');
 
             // Close context menu.
-            GridFunctions.clickAdvancedFilteringContextMenuCloseButton(fix);
+            QueryBuilderFunctions.clickQueryBuilderContextMenuCloseButton(fix);
             tick(100);
             fix.detectChanges();
 
             // Add an 'or' group to root group.
-            btn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[2];
+            btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[2] as HTMLElement;
             btn.click();
             tick(100);
             fix.detectChanges();
 
-            const endGroupButton = GridFunctions.getAdvancedFilteringTreeGroupButtons(fix, [2], 0)[3];
+            const endGroupButton = QueryBuilderFunctions.getQueryBuilderTreeGroupButtons(fix, [0], 0)[3] as HTMLElement;
             expect(endGroupButton.querySelector('span').innerText).toBe('My end group');
         }));
     });
@@ -1393,25 +1389,10 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 });
 
-const selectColumnInEditModeExpression = (fix, dropdownItemIndex: number) => {
-    GridFunctions.clickAdvancedFilteringColumnSelect(fix);
-    fix.detectChanges();
-    GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
-    tick();
-    fix.detectChanges();
-};
-
-const selectOperatorInEditModeExpression = (fix, dropdownItemIndex: number) => {
-    GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
-    fix.detectChanges();
-    GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
-    tick();
-    fix.detectChanges();
-};
 
 const verifyElementIsInExpressionsContainerView = (fix, element: HTMLElement) => {
     const elementRect = element.getBoundingClientRect();
-    const exprContainer: HTMLElement = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+    const exprContainer: HTMLElement = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix) as HTMLElement;
     const exprContainerRect = exprContainer.getBoundingClientRect();
     expect(elementRect.top >= exprContainerRect.top).toBe(true, 'top is not in view');
     expect(elementRect.bottom <= exprContainerRect.bottom).toBe(true, 'bottom is not in view');
