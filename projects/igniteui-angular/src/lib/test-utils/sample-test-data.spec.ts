@@ -1902,7 +1902,7 @@ export class SampleTestData {
             Downloads: 254,
             ID: 1,
             ProductName: 'Ignite UI for JavaScript',
-            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 1),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 2),
             ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
             ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
             Released: false,
