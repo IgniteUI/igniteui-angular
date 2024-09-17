@@ -6,4 +6,4 @@ import { IActionStripResourceStrings } from 'igniteui-angular';
  */
 export const ActionStripResourceStringsES = {
     igx_action_strip_button_more_title: 'Más'
-} satisfies ExpandRequire<IActionStripResourceStrings>;
+} satisfies MakeRequired<IActionStripResourceStrings>;

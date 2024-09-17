@@ -170,4 +170,4 @@ export const GridResourceStringsTR = {
     igx_grid_max_length_validation_error: 'Giriş, {0} karakterden uzun olmamalıdır',
     igx_grid_email_validation_error: 'Geçerli bir e-posta adresi girilmelidir',
     igx_grid_pattern_validation_error: 'Giriş, gerekli modelle eşleşmiyor'
-} satisfies ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

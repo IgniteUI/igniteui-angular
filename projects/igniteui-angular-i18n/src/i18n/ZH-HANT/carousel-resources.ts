@@ -9,4 +9,4 @@ export const CarouselResourceStringsZHHANT = {
     igx_carousel_slide: '投影片',
     igx_carousel_previous_slide: '上一張投影片',
     igx_carousel_next_slide: '下一張投影片'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

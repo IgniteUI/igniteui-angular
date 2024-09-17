@@ -8,4 +8,4 @@ export const ComboResourceStringsNB = {
     igx_combo_empty_message: 'Listen er tom',
     igx_combo_addCustomValues_placeholder: 'Legg til element',
     igx_combo_clearItems_placeholder: 'Fjern valg'
-} satisfies ExpandRequire<IComboResourceStrings>;
+} satisfies MakeRequired<IComboResourceStrings>;

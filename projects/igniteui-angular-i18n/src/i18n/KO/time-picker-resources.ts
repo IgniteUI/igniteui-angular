@@ -9,4 +9,4 @@ export const TimePickerResourceStringsKO = {
     igx_time_picker_cancel: '취소',
     igx_time_picker_change_time: '시간 변경',
     igx_time_picker_choose_time: '시간 선택'
-} satisfies ExpandRequire<ITimePickerResourceStrings>;
+} satisfies MakeRequired<ITimePickerResourceStrings>;

@@ -9,4 +9,4 @@ export const CarouselResourceStringsNB = {
     igx_carousel_slide: 'lysbilde',
     igx_carousel_previous_slide: 'forrige lysbilde',
     igx_carousel_next_slide: 'neste lysbilde'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

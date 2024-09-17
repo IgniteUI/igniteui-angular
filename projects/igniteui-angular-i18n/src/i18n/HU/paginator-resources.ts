@@ -11,4 +11,4 @@ export const PaginatorResourceStringsHU = {
     igx_paginator_previous_page_button_text: 'Előző oldal',
     igx_paginator_last_page_button_text: 'Ugrás az utolsó oldalra',
     igx_paginator_next_page_button_text: 'Következő oldal',
-} satisfies ExpandRequire<IPaginatorResourceStrings>;
+} satisfies MakeRequired<IPaginatorResourceStrings>;

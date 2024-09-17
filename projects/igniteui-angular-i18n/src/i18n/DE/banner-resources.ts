@@ -6,4 +6,4 @@ import { IBannerResourceStrings } from 'igniteui-angular';
  */
 export const BannerResourceStringsDE = {
     igx_banner_button_dismiss: 'Schließen'
-} satisfies ExpandRequire<IBannerResourceStrings>;
+} satisfies MakeRequired<IBannerResourceStrings>;

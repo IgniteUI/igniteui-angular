@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsPL = {
     igx_query_builder_column_placeholder: 'Zaznacz kolumnę',
     igx_query_builder_condition_placeholder: 'Wybierz filtr',
     igx_query_builder_value_placeholder: 'Wartość',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

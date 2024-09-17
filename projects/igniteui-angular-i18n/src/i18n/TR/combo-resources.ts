@@ -8,4 +8,4 @@ export const ComboResourceStringsTR = {
     igx_combo_empty_message: 'Liste boş',
     igx_combo_addCustomValues_placeholder: 'Öğe ekle',
     igx_combo_clearItems_placeholder: 'Seçimi temizle'
-} satisfies ExpandRequire<IComboResourceStrings>;
+} satisfies MakeRequired<IComboResourceStrings>;

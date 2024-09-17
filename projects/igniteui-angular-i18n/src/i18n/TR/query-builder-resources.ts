@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsTR = {
     igx_query_builder_column_placeholder: 'Sütun seç',
     igx_query_builder_condition_placeholder: 'Filtre seç',
     igx_query_builder_value_placeholder: 'Değer',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

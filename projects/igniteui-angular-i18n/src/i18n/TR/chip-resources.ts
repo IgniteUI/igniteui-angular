@@ -7,4 +7,4 @@ import { IChipResourceStrings } from 'igniteui-angular';
 export const ChipResourceStringsTR = {
     igx_chip_remove: 'Çip kaldır',
     igx_chip_select: 'Çip seçin'
-} satisfies ExpandRequire<IChipResourceStrings>;
+} satisfies MakeRequired<IChipResourceStrings>;

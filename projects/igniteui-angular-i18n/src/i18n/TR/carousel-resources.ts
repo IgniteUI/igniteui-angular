@@ -9,4 +9,4 @@ export const CarouselResourceStringsTR = {
     igx_carousel_slide: 'slayt',
     igx_carousel_previous_slide: 'önceki slayt',
     igx_carousel_next_slide: 'sonraki slayt'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsNB = {
     igx_query_builder_column_placeholder: 'Velg kolonne',
     igx_query_builder_condition_placeholder: 'Velg filter',
     igx_query_builder_value_placeholder: 'Verdi',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

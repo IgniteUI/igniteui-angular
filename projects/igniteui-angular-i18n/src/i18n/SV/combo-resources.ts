@@ -8,4 +8,4 @@ export const ComboResourceStringsSV = {
     igx_combo_empty_message: 'Listan är tom',
     igx_combo_addCustomValues_placeholder: 'Lägg till objekt',
     igx_combo_clearItems_placeholder: 'Rensa urval'
-} satisfies ExpandRequire<IComboResourceStrings>;
+} satisfies MakeRequired<IComboResourceStrings>;

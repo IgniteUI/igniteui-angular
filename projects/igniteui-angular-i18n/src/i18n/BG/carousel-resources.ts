@@ -9,4 +9,4 @@ export const CarouselResourceStringsBG = {
     igx_carousel_slide: 'слайд',
     igx_carousel_previous_slide: 'предишен слайд',
     igx_carousel_next_slide: 'следващ слайд'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

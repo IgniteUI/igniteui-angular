@@ -9,4 +9,4 @@ export const CarouselResourceStringsSV = {
     igx_carousel_slide: 'bild',
     igx_carousel_previous_slide: 'föregående bild',
     igx_carousel_next_slide: 'nästa bild'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

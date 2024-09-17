@@ -9,4 +9,4 @@ export const TimePickerResourceStringsZHHANT = {
     igx_time_picker_cancel: '取消',
     igx_time_picker_change_time: '變更時間',
     igx_time_picker_choose_time: '選擇時間'
-} satisfies ExpandRequire<ITimePickerResourceStrings>;
+} satisfies MakeRequired<ITimePickerResourceStrings>;

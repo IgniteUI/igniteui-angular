@@ -6,4 +6,4 @@ import { IBannerResourceStrings } from 'igniteui-angular';
  */
 export const BannerResourceStringsKO = {
     igx_banner_button_dismiss: '해제'
-} satisfies ExpandRequire<IBannerResourceStrings>;
+} satisfies MakeRequired<IBannerResourceStrings>;

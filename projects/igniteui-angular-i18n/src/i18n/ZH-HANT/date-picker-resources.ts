@@ -7,4 +7,4 @@ import { IDatePickerResourceStrings } from 'igniteui-angular';
 export const DatePickerResourceStringsZHHANT = {
     igx_date_picker_change_date: '變更日期',
     igx_date_picker_choose_date: '選擇日期'
-} satisfies ExpandRequire<IDatePickerResourceStrings>;
+} satisfies MakeRequired<IDatePickerResourceStrings>;

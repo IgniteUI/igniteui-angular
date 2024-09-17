@@ -7,4 +7,4 @@ import { IListResourceStrings } from 'igniteui-angular';
 export const ListResourceStringsDA = {
     igx_list_no_items: 'Der er ingen elementer på listen.',
     igx_list_loading: 'Indlæser data fra serveren...'
-} satisfies ExpandRequire<IListResourceStrings>;
+} satisfies MakeRequired<IListResourceStrings>;

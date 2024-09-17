@@ -8,4 +8,4 @@ export const ComboResourceStringsZHHANT = {
     igx_combo_empty_message: '清單是空的',
     igx_combo_addCustomValues_placeholder: '新增項目',
     igx_combo_clearItems_placeholder: '清除選擇'
-} satisfies ExpandRequire<IComboResourceStrings>;
+} satisfies MakeRequired<IComboResourceStrings>;

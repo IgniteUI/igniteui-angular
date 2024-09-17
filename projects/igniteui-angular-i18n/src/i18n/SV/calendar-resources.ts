@@ -27,4 +27,4 @@ export const CalendarResourceStringsSV = {
     igx_calendar_singular_multi_selection: 'Flervalskalender',
     igx_calendar_singular_range_selection: 'Områdesvalskalender',
     igx_calendar_singular_single_selection: 'Kalender'
-} satisfies ExpandRequire<ICalendarResourceStrings>;
+} satisfies MakeRequired<ICalendarResourceStrings>;

@@ -27,4 +27,4 @@ export const CalendarResourceStringsNL = {
     igx_calendar_singular_multi_selection: 'Multi-selectie kalender',
     igx_calendar_singular_range_selection: 'Bereikselectie kalender',
     igx_calendar_singular_single_selection: 'Kalender'
-} satisfies ExpandRequire<ICalendarResourceStrings>;
+} satisfies MakeRequired<ICalendarResourceStrings>;

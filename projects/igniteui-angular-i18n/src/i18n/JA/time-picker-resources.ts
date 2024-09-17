@@ -9,4 +9,4 @@ export const TimePickerResourceStringsJA = {
     igx_time_picker_cancel: 'キャンセル',
     igx_time_picker_change_time: '時間の変更',
     igx_time_picker_choose_time: '時間の選択'
-} satisfies ExpandRequire<ITimePickerResourceStrings>;
+} satisfies MakeRequired<ITimePickerResourceStrings>;

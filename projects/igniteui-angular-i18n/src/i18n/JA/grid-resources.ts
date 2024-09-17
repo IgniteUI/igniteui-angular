@@ -170,4 +170,4 @@ export const GridResourceStringsJA = {
     igx_grid_max_length_validation_error: '入力の長さは {0} 文字以下である必要があります',
     igx_grid_email_validation_error: '有効なメール アドレスを入力してください',
     igx_grid_pattern_validation_error: '入力が所定のパターンに一致しません'
-} satisfies ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

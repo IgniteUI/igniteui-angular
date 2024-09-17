@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsRO = {
     igx_query_builder_column_placeholder: 'Selectați coloana',
     igx_query_builder_condition_placeholder: 'Selectați filtrul',
     igx_query_builder_value_placeholder: 'Valoare',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

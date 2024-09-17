@@ -170,4 +170,4 @@ export const GridResourceStringsSV = {
     igx_grid_max_length_validation_error: 'Inmatningen får inte vara längre än {0} tecken',
     igx_grid_email_validation_error: 'En giltig e-postadress borde anges',
     igx_grid_pattern_validation_error: 'Inmatningen matchar inte det önskade mönstret'
-} satisfies ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

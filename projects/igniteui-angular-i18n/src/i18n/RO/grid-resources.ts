@@ -170,4 +170,4 @@ export const GridResourceStringsRO = {
     igx_grid_max_length_validation_error: 'Intrarea nu trebuie să aibă mai mult de {0} caractere',
     igx_grid_email_validation_error: 'Ar trebui introdusă o adresă de e-mail validă',
     igx_grid_pattern_validation_error: 'Intrarea nu se potrivește cu modelul cerut'
-} satisfies ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

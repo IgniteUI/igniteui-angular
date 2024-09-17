@@ -9,4 +9,4 @@ export const CarouselResourceStringsNL = {
     igx_carousel_slide: 'dia',
     igx_carousel_previous_slide: 'vorige dia',
     igx_carousel_next_slide: 'volgende dia'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

@@ -9,4 +9,4 @@ export const CarouselResourceStringsCS = {
     igx_carousel_slide: 'skluzavka',
     igx_carousel_previous_slide: 'předchozí snímek',
     igx_carousel_next_slide: 'další snímek'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

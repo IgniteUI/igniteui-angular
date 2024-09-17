@@ -7,4 +7,4 @@ import { IDatePickerResourceStrings } from 'igniteui-angular';
 export const DatePickerResourceStringsNB = {
     igx_date_picker_change_date: 'Endre dato',
     igx_date_picker_choose_date: 'Velg dato'
-} satisfies ExpandRequire<IDatePickerResourceStrings>;
+} satisfies MakeRequired<IDatePickerResourceStrings>;

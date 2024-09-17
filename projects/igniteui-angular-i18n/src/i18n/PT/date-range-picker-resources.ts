@@ -7,4 +7,4 @@ import { IDateRangePickerResourceStrings } from 'igniteui-angular';
 export const DateRangePickerResourceStringsPT = {
     igx_date_range_picker_date_separator: 'para',
     igx_date_range_picker_done_button: 'Concluído'
-} satisfies ExpandRequire<IDateRangePickerResourceStrings>;
+} satisfies MakeRequired<IDateRangePickerResourceStrings>;

@@ -12,4 +12,4 @@ export const PaginatorResourceStringsCS = {
     igx_paginator_previous_page_button_text: 'Předchozí stránka',
     igx_paginator_last_page_button_text: 'Přejít na poslední stránku',
     igx_paginator_next_page_button_text: 'Další strana',
-} satisfies ExpandRequire<IPaginatorResourceStrings>;
+} satisfies MakeRequired<IPaginatorResourceStrings>;

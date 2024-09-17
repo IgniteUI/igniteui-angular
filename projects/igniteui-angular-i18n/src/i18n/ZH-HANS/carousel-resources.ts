@@ -9,4 +9,4 @@ export const CarouselResourceStringsZHHANS = {
     igx_carousel_slide: '幻灯片',
     igx_carousel_previous_slide: '上一张幻灯片',
     igx_carousel_next_slide: '下一张幻灯片'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

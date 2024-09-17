@@ -8,4 +8,4 @@ export const ComboResourceStringsIT = {
     igx_combo_empty_message: 'L\'elenco è vuoto',
     igx_combo_addCustomValues_placeholder: 'Aggiungi elemento',
     igx_combo_clearItems_placeholder: 'Cancella selezione'
-} satisfies ExpandRequire<IComboResourceStrings>;
+} satisfies MakeRequired<IComboResourceStrings>;

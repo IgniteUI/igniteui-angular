@@ -7,4 +7,4 @@ import { IListResourceStrings } from 'igniteui-angular';
 export const ListResourceStringsZHHANT = {
     igx_list_no_items: '清單中沒有任何項目。',
     igx_list_loading: '正在從伺服器載入資料...'
-} satisfies ExpandRequire<IListResourceStrings>;
+} satisfies MakeRequired<IListResourceStrings>;

@@ -170,4 +170,4 @@ export const GridResourceStringsBG = {
     igx_grid_max_length_validation_error: 'Входните данни не трябва да са дълги повече от {0} знака.',
     igx_grid_email_validation_error: 'Трябва да бъде въведен валиден имейл адрес.',
     igx_grid_pattern_validation_error: 'Въведените данни не спазват зададения образец.'
-} satisfies ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

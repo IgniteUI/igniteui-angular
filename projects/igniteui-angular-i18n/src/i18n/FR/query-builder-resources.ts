@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsFR = {
     igx_query_builder_column_placeholder: 'Sélectionner la colonne',
     igx_query_builder_condition_placeholder: 'Sélectionner le filtre',
     igx_query_builder_value_placeholder: 'Valeur',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

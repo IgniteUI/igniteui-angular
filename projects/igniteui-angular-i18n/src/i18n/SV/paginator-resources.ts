@@ -11,4 +11,4 @@ export const PaginatorResourceStringsSV = {
     igx_paginator_previous_page_button_text: 'Föregående sida',
     igx_paginator_last_page_button_text: 'Gå till sista sidan',
     igx_paginator_next_page_button_text: 'Nästa sida',
-} satisfies ExpandRequire<IPaginatorResourceStrings>;
+} satisfies MakeRequired<IPaginatorResourceStrings>;

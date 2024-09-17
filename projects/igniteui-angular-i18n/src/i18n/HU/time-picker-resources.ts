@@ -9,4 +9,4 @@ export const TimePickerResourceStringsHU = {
     igx_time_picker_cancel: 'Mégse',
     igx_time_picker_change_time: 'Idő módosítása',
     igx_time_picker_choose_time: 'Idő beállítása'
-} satisfies ExpandRequire<ITimePickerResourceStrings>;
+} satisfies MakeRequired<ITimePickerResourceStrings>;

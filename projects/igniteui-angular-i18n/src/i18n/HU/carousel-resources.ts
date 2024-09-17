@@ -9,4 +9,4 @@ export const CarouselResourceStringsHU = {
     igx_carousel_slide: 'dia',
     igx_carousel_previous_slide: 'előző dia',
     igx_carousel_next_slide: 'következő dia'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

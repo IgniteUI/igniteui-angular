@@ -7,4 +7,4 @@ import { ITreeResourceStrings } from 'igniteui-angular';
 export const TreeResourceStringsPL = {
     igx_expand: 'Rozwiń',
     igx_collapse: 'Zwiń'
-} satisfies ExpandRequire<ITreeResourceStrings>;
+} satisfies MakeRequired<ITreeResourceStrings>;

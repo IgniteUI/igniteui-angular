@@ -170,4 +170,4 @@ export const GridResourceStringsNL = {
     igx_grid_max_length_validation_error: 'Invoer mag niet meer dan {0} teken(s) lang zijn',
     igx_grid_email_validation_error: 'Er moet een geldig e-mailadres worden ingevoerd',
     igx_grid_pattern_validation_error: 'Invoer komt niet overeen met het vereiste patroon'
-} satisfies ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

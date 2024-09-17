@@ -9,4 +9,4 @@ export const CarouselResourceStringsPT = {
     igx_carousel_slide: 'deslizar',
     igx_carousel_previous_slide: 'diapositivo anterior',
     igx_carousel_next_slide: 'próximo diapositivo'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

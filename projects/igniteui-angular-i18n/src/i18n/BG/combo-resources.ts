@@ -8,4 +8,4 @@ export const ComboResourceStringsBG = {
     igx_combo_empty_message: 'Списъкът е празен',
     igx_combo_addCustomValues_placeholder: 'Добавяне на елемент',
     igx_combo_clearItems_placeholder: 'Изчистване на избора'
-} satisfies ExpandRequire<IComboResourceStrings>;
+} satisfies MakeRequired<IComboResourceStrings>;

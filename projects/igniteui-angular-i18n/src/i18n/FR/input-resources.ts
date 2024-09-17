@@ -7,4 +7,4 @@ import { IInputResourceStrings } from 'igniteui-angular';
 export const InputResourceStringsFR = {
     igx_input_upload_button: 'Charger un fichier',
     igx_input_file_placeholder: 'Aucun fichier sélectionné'
-} satisfies ExpandRequire<IInputResourceStrings>;
+} satisfies MakeRequired<IInputResourceStrings>;

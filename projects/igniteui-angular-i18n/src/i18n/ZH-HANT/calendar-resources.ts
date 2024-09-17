@@ -27,4 +27,4 @@ export const CalendarResourceStringsZHHANT = {
     igx_calendar_singular_multi_selection: '多重選擇日曆',
     igx_calendar_singular_range_selection: '範圍選擇日曆',
     igx_calendar_singular_single_selection: '日曆'
-} satisfies ExpandRequire<ICalendarResourceStrings>;
+} satisfies MakeRequired<ICalendarResourceStrings>;

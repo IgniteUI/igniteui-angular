@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsKO = {
     igx_query_builder_column_placeholder: '열 선택',
     igx_query_builder_condition_placeholder: '필터 선택',
     igx_query_builder_value_placeholder: '값',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

@@ -9,4 +9,4 @@ export const TimePickerResourceStringsDE = {
     igx_time_picker_cancel: 'Abbrechen',
     igx_time_picker_change_time: 'Uhrzeit ändern',
     igx_time_picker_choose_time: 'Uhrzeit wählen'
-} satisfies ExpandRequire<ITimePickerResourceStrings>;
+} satisfies MakeRequired<ITimePickerResourceStrings>;

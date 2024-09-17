@@ -170,4 +170,4 @@ export const GridResourceStringsKO = {
     igx_grid_max_length_validation_error: '항목은 {0} 자 이상이어야합니다',
     igx_grid_email_validation_error: '유효한 이메일 주소를 입력해야합니다',
     igx_grid_pattern_validation_error: '항목이 필요한 패턴과 일치하지 않습니다'
-} satisfies ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

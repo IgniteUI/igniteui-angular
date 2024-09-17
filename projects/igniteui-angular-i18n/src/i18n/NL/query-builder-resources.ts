@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsNL = {
     igx_query_builder_column_placeholder: 'Selecteer kolom',
     igx_query_builder_condition_placeholder: 'Selecteer filter',
     igx_query_builder_value_placeholder: 'Waarde',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

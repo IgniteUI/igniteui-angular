@@ -9,4 +9,4 @@ export const CarouselResourceStringsRO = {
     igx_carousel_slide: 'alunecare',
     igx_carousel_previous_slide: 'diapozitivul anterior',
     igx_carousel_next_slide: 'următorul diapozitiv'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

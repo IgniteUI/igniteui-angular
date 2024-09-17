@@ -170,4 +170,4 @@ export const GridResourceStringsPL = {
     igx_grid_max_length_validation_error: 'Długość wpisu nie może przekraczać {0} znaków',
     igx_grid_email_validation_error: 'Należy podać prawidłowy adres e-mail',
     igx_grid_pattern_validation_error: 'Wpis nie pasuje do wymaganego wzorca'
-} satisfies ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

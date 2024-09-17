@@ -170,4 +170,4 @@ export const GridResourceStringsZHHANS = {
     igx_grid_max_length_validation_error: '输入项的字符不得超过 {0} 个字符',
     igx_grid_email_validation_error: '必须输入有效的电子邮件地址',
     igx_grid_pattern_validation_error: '输入项与要求的模式不匹配'
-} satisfies ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

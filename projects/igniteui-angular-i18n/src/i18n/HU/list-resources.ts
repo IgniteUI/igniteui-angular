@@ -7,4 +7,4 @@ import { IListResourceStrings } from 'igniteui-angular';
 export const ListResourceStringsHU = {
     igx_list_no_items: 'Nincsenek elemek a listában.',
     igx_list_loading: 'Adatok betöltése a szerverről...'
-} satisfies ExpandRequire<IListResourceStrings>;
+} satisfies MakeRequired<IListResourceStrings>;

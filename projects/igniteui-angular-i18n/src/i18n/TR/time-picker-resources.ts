@@ -9,4 +9,4 @@ export const TimePickerResourceStringsTR = {
     igx_time_picker_cancel: 'Iptal',
     igx_time_picker_change_time: 'Saati değiştir',
     igx_time_picker_choose_time: 'Saat seçin'
-} satisfies ExpandRequire<ITimePickerResourceStrings>;
+} satisfies MakeRequired<ITimePickerResourceStrings>;

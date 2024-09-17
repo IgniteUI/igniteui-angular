@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsHU = {
     igx_query_builder_column_placeholder: 'Oszlop kiválasztása',
     igx_query_builder_condition_placeholder: 'Szűrő kiválasztása',
     igx_query_builder_value_placeholder: 'Érték',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsJA = {
     igx_query_builder_column_placeholder: '列の選択',
     igx_query_builder_condition_placeholder: 'フィルターの選択',
     igx_query_builder_value_placeholder: '値',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

@@ -9,4 +9,4 @@ export const CarouselResourceStringsPL = {
     igx_carousel_slide: 'slajd',
     igx_carousel_previous_slide: 'poprzedni slajd',
     igx_carousel_next_slide: 'następny slajd'
-} satisfies ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

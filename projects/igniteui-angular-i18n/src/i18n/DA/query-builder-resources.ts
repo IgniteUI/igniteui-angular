@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsDA = {
     igx_query_builder_column_placeholder: 'Vælg kolonne',
     igx_query_builder_condition_placeholder: 'Vælg filter',
     igx_query_builder_value_placeholder: 'Værdi',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

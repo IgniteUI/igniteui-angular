@@ -27,4 +27,4 @@ export const CalendarResourceStringsKO = {
     igx_calendar_singular_multi_selection: '다중 선택 달력',
     igx_calendar_singular_range_selection: '범위 선택 달력',
     igx_calendar_singular_single_selection: '달력'
-} satisfies ExpandRequire<ICalendarResourceStrings>;
+} satisfies MakeRequired<ICalendarResourceStrings>;

@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsBG = {
     igx_query_builder_column_placeholder: 'Избери колона',
     igx_query_builder_condition_placeholder: 'Изберете филтър',
     igx_query_builder_value_placeholder: 'Стойност',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

@@ -8,4 +8,4 @@ export const ComboResourceStringsPT = {
     igx_combo_empty_message: 'A lista está vazia',
     igx_combo_addCustomValues_placeholder: 'Adicionar item',
     igx_combo_clearItems_placeholder: 'Limpar seleção'
-} satisfies ExpandRequire<IComboResourceStrings>;
+} satisfies MakeRequired<IComboResourceStrings>;

@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsCS = {
     igx_query_builder_column_placeholder: 'Vyberte sloupec',
     igx_query_builder_condition_placeholder: 'Vyberte filtr',
     igx_query_builder_value_placeholder: 'Hodnota',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

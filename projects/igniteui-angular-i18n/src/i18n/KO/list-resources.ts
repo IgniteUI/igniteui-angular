@@ -7,4 +7,4 @@ import { IListResourceStrings } from 'igniteui-angular';
 export const ListResourceStringsKO = {
     igx_list_no_items: '목록에 항목이 없습니다.',
     igx_list_loading: '서버에서 데이터를로드하는 중...'
-} satisfies ExpandRequire<IListResourceStrings>;
+} satisfies MakeRequired<IListResourceStrings>;

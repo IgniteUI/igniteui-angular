@@ -7,4 +7,4 @@ import { IDatePickerResourceStrings } from 'igniteui-angular';
 export const DatePickerResourceStringsES = {
     igx_date_picker_change_date: 'Cambiar fecha',
     igx_date_picker_choose_date: 'Elige fecha'
-} satisfies ExpandRequire<IDatePickerResourceStrings>;
+} satisfies MakeRequired<IDatePickerResourceStrings>;

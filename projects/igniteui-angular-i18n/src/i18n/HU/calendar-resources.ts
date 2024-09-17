@@ -27,4 +27,4 @@ export const CalendarResourceStringsHU = {
     igx_calendar_singular_multi_selection: 'Többszörös időpontválasztó naptár',
     igx_calendar_singular_range_selection: 'Időtartamválasztó naptár',
     igx_calendar_singular_single_selection: 'Naptár'
-} satisfies ExpandRequire<ICalendarResourceStrings>;
+} satisfies MakeRequired<ICalendarResourceStrings>;

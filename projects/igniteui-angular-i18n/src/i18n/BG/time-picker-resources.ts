@@ -9,4 +9,4 @@ export const TimePickerResourceStringsBG = {
     igx_time_picker_cancel: 'Отмяна',
     igx_time_picker_change_time: 'Промяна на времето',
     igx_time_picker_choose_time: 'Избор на време'
-} satisfies ExpandRequire<ITimePickerResourceStrings>;
+} satisfies MakeRequired<ITimePickerResourceStrings>;

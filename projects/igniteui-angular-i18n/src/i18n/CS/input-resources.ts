@@ -7,4 +7,4 @@ import { IInputResourceStrings } from 'igniteui-angular';
 export const InputResourceStringsCS = {
     igx_input_upload_button: 'Nahrát soubor',
     igx_input_file_placeholder: 'Není zvolený žádný soubor'
-} satisfies ExpandRequire<IInputResourceStrings>;
+} satisfies MakeRequired<IInputResourceStrings>;

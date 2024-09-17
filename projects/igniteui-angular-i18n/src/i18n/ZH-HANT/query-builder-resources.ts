@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsZHHANT = {
     igx_query_builder_column_placeholder: '選擇列',
     igx_query_builder_condition_placeholder: '選擇篩選條件',
     igx_query_builder_value_placeholder: '數值',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

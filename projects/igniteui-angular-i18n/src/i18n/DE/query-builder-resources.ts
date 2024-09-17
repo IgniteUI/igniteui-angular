@@ -55,4 +55,4 @@ export const QueryBuilderResourceStringsDE = {
     igx_query_builder_column_placeholder: 'Wähle Spalte',
     igx_query_builder_condition_placeholder: 'Wähle Filter',
     igx_query_builder_value_placeholder: 'Wert',
-} satisfies ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;
