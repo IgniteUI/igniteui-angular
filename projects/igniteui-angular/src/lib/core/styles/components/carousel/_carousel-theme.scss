@@ -501,6 +501,12 @@
                 &::after {
                     background: var-get($theme, 'indicator-active-dot-color');
                 }
+
+                &:hover {
+                    &::after {
+                        background: var-get($theme, 'indicator-active-hover-dot-color');
+                    }
+                }
             }
         }
     }
