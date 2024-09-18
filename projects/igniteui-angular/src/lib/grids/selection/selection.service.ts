@@ -426,7 +426,14 @@ export class IgxGridSelectionService {
         const selectedRows = this.getSelectedRowsData();
         const removedRec = this.isFilteringApplied() ?
             this.allData.filter(row => this.isRowSelected(this.getRecordKey(row))) : selectedRows;
-        const newSelection = this.isFilteringApplied() ? selectedRows.filter(x => !removedRec.includes(x)) : [];
+        let newSelection;
+        if (this.grid.primaryKey) {
+            newSelection = this.isFilteringApplied() ? selectedRows.filter(x => {
+                removedRec.findIndex(item => item[this.grid.primaryKey] === x[this.grid.primaryKey]) === -1
+            }) : [];
+        } else {
+            newSelection = this.isFilteringApplied() ? selectedRows.filter(x => !removedRec.includes(x)) : [];
+        }
         this.emitRowSelectionEvent(newSelection, [], removedRec, event, selectedRows);
     }
 
