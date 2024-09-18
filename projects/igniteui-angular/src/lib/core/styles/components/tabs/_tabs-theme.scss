@@ -228,6 +228,7 @@
     %tabs-header-item-inner,
     %tabs-header-content {
         display: flex;
+        align-items: center;
     }
 
     %tabs-display {
@@ -240,8 +241,12 @@
         overflow: hidden;
         flex: 0 0 auto;
         background: var-get($theme, 'item-background');
-        min-height: rem(42px);
+        min-height: #{if($variant == 'indigo', rem(40px), rem(42px))};
         z-index: 1;
+
+        @if $indigo-theme {
+            border-bottom: rem(1px) solid var-get($theme, 'border-color');
+        }
     }
 
     %tabs-header-content {
@@ -287,6 +292,12 @@
         color: var-get($theme, 'button-color');
         outline: 0;
 
+        @if $indigo-theme {
+            min-width: rem(40px);
+            width: rem(40px);
+            min-height: rem(40px);
+        }
+
         &:hover {
             background: var-get($theme, 'button-hover-background');
             color: var-get($theme, 'button-hover-color');
@@ -304,6 +315,7 @@
 
         &:disabled {
             color: var-get($theme, 'button-disabled-color');
+            cursor: default;
         }
 
         &--none {
@@ -349,16 +361,6 @@
             color: var-get($theme, 'item-icon-color');
         }
 
-        @if $bootstrap-theme {
-            border: rem(1px) solid transparent;
-            border-start-start-radius: var-get($theme, 'border-radius');
-            border-start-end-radius: var-get($theme, 'border-radius');
-        }
-
-        @if $indigo-theme {
-            border-bottom: rem(1px) solid var-get($theme, 'border-color');
-        }
-
         &::-moz-focus-inner {
             border: 0;
         }
@@ -386,6 +388,7 @@
         }
 
         @if $bootstrap-theme {
+            border: rem(1px) solid transparent;
             border-start-start-radius: var-get($theme, 'border-radius');
             border-start-end-radius: var-get($theme, 'border-radius');
         }
@@ -401,13 +404,18 @@
         }
 
         @if $indigo-theme {
-            border-top: transparent;
-            border-inline: transparent;
+            padding-block: rem(12px);
+            border: none;
+            // border-top: transparent;
+            // border-inline: transparent;
 
             &:hover,
             &:focus {
-                border-top: transparent;
-                border-inline: transparent;
+                border: none;
+            }
+
+            igx-icon {
+                --ig-size: 2;
             }
         }
 
@@ -451,6 +459,12 @@
 
             &:hover {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+            }
+        }
+
+        @if $indigo-theme {
+            &:hover {
+                background: var-get($theme, 'item-hover-background');
             }
         }
     }
@@ -510,8 +524,13 @@
         min-width: $item-min-width;
         background: var-get($theme, 'indicator-color');
         transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
+
         @if $bootstrap-theme {
             display: none;
+        }
+
+        @if $indigo-theme {
+            height: rem(3px);
         }
     }
 
