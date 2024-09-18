@@ -73,10 +73,20 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public hoverChange = new EventEmitter<boolean>();
 
     @HostBinding('attr.tabindex')
-    public tabindex = 0;
+    public tabindex = 1;
 
     @HostBinding('attr.z-index')
     public zIndex = 0;
+
+    @HostBinding('attr.aria-valuenow')
+    public get ariaValueNow() {
+        return this.value;
+    }
+
+    @HostBinding('attr.aria-labelledby')
+    public get ariaLabelledbyAttr() {
+        return this.type === SliderHandle.FROM ? 'slider-label-from' : 'slider-label-to';
+    }
 
     @HostBinding('class.igx-slider-thumb-to--focused')
     public focused = false;
