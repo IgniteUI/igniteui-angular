@@ -1688,6 +1688,10 @@
     %grid-cell--fixed-width {
         flex-grow: 0;
         outline-style: none;
+
+        igx-icon {
+            --component-size: #{if($variant == 'indigo', 2, 3)};
+        }
     }
 
     %grid-cell--active {
@@ -1926,7 +1930,7 @@
 
             igx-icon {
                 @if $variant == 'indigo' {
-                    --component-size: 1;
+                    --component-size: 2;
                 } @else {
                     width: var(--igx-icon-size, #{rem(15px)});
                     height: var(--igx-icon-size, #{rem(15px)});

@@ -253,11 +253,19 @@ const loadIconRefs = () => [
             name: 'first_page',
             family: 'material',
         },
+        indigo: {
+            name: 'first_page',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('last_page', {
         default: {
             name: 'last_page',
             family: 'material',
+        },
+        indigo: {
+            name: 'last_page',
+            family: 'internal_indigo',
         },
     }),
     addIcon('add', {
