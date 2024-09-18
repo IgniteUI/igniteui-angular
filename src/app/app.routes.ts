@@ -140,6 +140,7 @@ import { DividerComponent } from './divider/divider.component';
 import { MonthPickerSampleComponent } from './month-picker/month-picker.sample';
 import { GridDocManagerSampleComponent } from './docmanager-grid/docmanager-grid.sample';
 import { HoundComponent } from './hound/hound.component';
+import { LabelSampleComponent } from "./label/label.sample";
 
 export const appRoutes: Routes = [
     {
@@ -674,5 +675,9 @@ export const appRoutes: Routes = [
     {
         path: 'stepper',
         component: StepperSampleComponent
+    },
+    {
+        path: 'labelDirective',
+        component: LabelSampleComponent
     }
 ];
