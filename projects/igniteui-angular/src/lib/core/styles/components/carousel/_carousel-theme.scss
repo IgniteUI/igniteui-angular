@@ -555,7 +555,11 @@
             inset-block-start: unset;
             inset-inline-end: 0;
             margin-inline-end: rem(16px);
-            transform: rotate(90deg);
+            transform: none;
+
+            igx-icon {
+                transform: rotate(90deg);
+            }
         }
     
         %igx-carousel-arrow--prev {
