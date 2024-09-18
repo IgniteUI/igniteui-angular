@@ -1,0 +1,45 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "shouldGenerate",
+            "replaceWith": "autoGenerate",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "shouldGenerate",
+            "replaceWith": "autoGenerate",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "shouldGenerate",
+            "replaceWith": "autoGenerate",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "shouldGenerate",
+            "replaceWith": "autoGenerate",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "shouldGenerate",
+            "replaceWith": "autoGenerate",
+            "owner": {
+                "selector": "igx-pivot-grid",
+                "type": "component"
+            }
+        }
+    ]
+}
