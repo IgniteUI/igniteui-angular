@@ -3,7 +3,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
     Optional, Output, ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
 import { IgxComboAddItemComponent } from '../combo/combo-add-item.component';
@@ -150,7 +150,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         private platformUtil: PlatformUtil,
         @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
-        @Optional() _injector: Injector) {
+        @Optional() _injector: Injector,
+        @Optional() private formGroupDirective?: FormGroupDirective) {
         super(elementRef, cdr, selectionService, comboAPI,
             _iconService, _displayDensityOptions, _inputGroupType, _injector);
         this.comboAPI.register(this);
@@ -566,7 +567,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.filteredData.length !== this.data.length && !ignoreFilter) {
             newSelection = this.selectionService.delete_items(this.id, this.selectionService.get_all_ids(this.filteredData, this.valueKey));
         }
-        this.setSelection(newSelection);
+        if (this.selectionService.get(this.id).size > 0 || this.comboInput.value.trim()) {
+            this.setSelection(newSelection);
+        }
     }
 
     private clearOnBlur(): void {
@@ -600,8 +603,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private isValid(value: any): boolean {
-        return this.required
-        ? value !== null && value !== '' && value !== undefined
-        : value !== undefined;
+        if (this.formGroupDirective && value === null) {
+            return false;
+        }
+
+        if (this.required) {
+            return value !== null && value !== '' && value !== undefined
+        }
+
+        return value !== undefined;
     }
 }

@@ -113,6 +113,7 @@ const GridResourceStringsDA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Frigør alle',
     igx_grid_row_edit_btn_done: 'Færdig',
     igx_grid_row_edit_btn_cancel: 'Annuller',
+    igx_grid_row_edit_text: 'Du har {0} ændringer i denne række og {1} skjulte kolonner',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrer kolonneliste ...',
     igx_grid_toolbar_pinning_button_tooltip: 'Åbn rulleliste til fastgørelse af kolonner',
     igx_grid_toolbar_hiding_button_tooltip: 'Åbn rulleliste til skjulning af kolonner',
