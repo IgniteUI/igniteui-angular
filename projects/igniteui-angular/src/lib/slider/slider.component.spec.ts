@@ -1818,7 +1818,6 @@ describe('IgxSlider', () => {
         }));
     });
 
-
     describe('Accessibility: ARIA Attributes', () => {
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
