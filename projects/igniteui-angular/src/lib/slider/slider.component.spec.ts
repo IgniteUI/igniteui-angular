@@ -43,6 +43,7 @@ describe('IgxSlider', () => {
                 SliderMinMaxComponent,
                 SliderTestComponent,
                 SliderWithLabelsComponent,
+                RangeSliderTestComponent,
                 RangeSliderWithLabelsComponent,
                 RangeSliderWithCustomTemplateComponent,
                 SliderTicksComponent,
@@ -897,22 +898,6 @@ describe('IgxSlider', () => {
             expect(slider.upperBound).toBe(100);
             expect(slider.lowerBound).toBe(0);
         });
-
-        it('aria properties should be successfully applied', () => {
-            const sliderElement = fixture.nativeElement.querySelector('igx-slider');
-            const sliderRole = fixture.nativeElement.querySelector('igx-slider[role="slider"]');
-
-            expect(sliderElement).toBeDefined();
-            expect(sliderRole).toBeDefined();
-
-            const minValue = parseInt(sliderElement.getAttribute('aria-valuemin'), 10);
-            const maxValue = parseInt(sliderElement.getAttribute('aria-valuemax'), 10);
-            const readOnly = sliderElement.getAttribute('aria-readonly');
-
-            expect(minValue).toBe(slider.minValue);
-            expect(maxValue).toBe(slider.maxValue);
-            expect(readOnly).toBe('false');
-        });
     });
 
     describe('Slider  type: Range - List View', () => {
@@ -1195,22 +1180,6 @@ describe('IgxSlider', () => {
             expect(fromThumb).toBeFalsy();
             expect(slider.upperBound).toBe(slider.maxValue);
             expect(slider.lowerBound).toBe(slider.minValue);
-        });
-
-        it('aria properties should be successfully applied', () => {
-            const sliderElement = fixture.nativeElement.querySelector('igx-slider');
-            const sliderRole = fixture.nativeElement.querySelector('igx-slider[role="slider"]');
-
-            expect(sliderElement).toBeDefined();
-            expect(sliderRole).toBeDefined();
-
-            const minValue = parseInt(sliderElement.getAttribute('aria-valuemin'), 10);
-            const maxValue = parseInt(sliderElement.getAttribute('aria-valuemax'), 10);
-            const readOnly = sliderElement.getAttribute('aria-readonly');
-
-            expect(minValue).toBe(slider.minValue);
-            expect(maxValue).toBe(slider.maxValue);
-            expect(readOnly).toBe('false');
         });
     });
 
@@ -1849,6 +1818,105 @@ describe('IgxSlider', () => {
         }));
     });
 
+    describe('Accessibility: ARIA Attributes', () => {
+        let fixture: ComponentFixture<SliderInitializeTestComponent>;
+        let slider: IgxSliderComponent;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SliderInitializeTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+        });
+
+        it('aria properties should be successfully applied', () => {
+            const sliderElement = fixture.nativeElement.querySelector('igx-slider');
+            const sliderRole = fixture.nativeElement.querySelector('igx-slider[role="slider"]');
+
+            expect(sliderElement).toBeDefined();
+            expect(sliderRole).toBeDefined();
+
+            const minValue = parseInt(sliderElement.getAttribute('aria-valuemin'), 10);
+            const maxValue = parseInt(sliderElement.getAttribute('aria-valuemax'), 10);
+            const readOnly = sliderElement.getAttribute('aria-readonly');
+
+            expect(minValue).toBe(slider.minValue);
+            expect(maxValue).toBe(slider.maxValue);
+            expect(readOnly).toBe('false');
+        });
+
+        it('should maintain accessibility attributes when slider is disabled', () => {
+            const sliderElement = fixture.nativeElement.querySelector('igx-slider');
+            const sliderRole = fixture.nativeElement.querySelector('igx-slider[role="slider"]');
+
+            expect(sliderElement).toBeDefined();
+            expect(sliderRole).toBeDefined();
+
+            slider.disabled = true;
+            fixture.detectChanges();
+
+            const disabled = sliderElement.getAttribute('aria-readonly');
+
+            expect(disabled).toBe('true');
+        });
+
+        it('should apply aria-valuenow to the thumbs', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('aria-valuenow')).toBe(String(slider.lowerLabel));
+            expect(thumbTo.getAttribute('aria-valuenow')).toBe(String(slider.upperLabel));
+        }));
+
+        it('should update aria-valuenow when the slider value changes', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('aria-valuenow')).toBe(String(slider.lowerLabel));
+            expect(thumbTo.getAttribute('aria-valuenow')).toBe(String(slider.upperLabel));
+
+            slider.value = {
+                lower: 30,
+                upper: 70
+            };
+            fixture.detectChanges();
+            tick();
+
+            expect(thumbFrom.getAttribute('aria-valuenow')).toBe('30');
+            expect(thumbTo.getAttribute('aria-valuenow')).toBe('70');
+        }));
+
+        it('should have correct aria-labelledby references for each thumb', () => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            fixture.detectChanges();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('aria-labelledby')).toBe('slider-label-from');
+            expect(thumbTo.getAttribute('aria-labelledby')).toBe('slider-label-to');
+        });
+
+        it('should set correct tabindex on thumbs', () => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            fixture.detectChanges();
+
+            const thumbFrom = fixture.debugElement.query(By.css('.igx-slider-thumb-from')).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css('.igx-slider-thumb-to')).nativeElement;
+
+            expect(thumbFrom.getAttribute('tabindex')).toBe('1');
+            expect(thumbTo.getAttribute('tabindex')).toBe('1');
+        });
+    });
 
     const verifySecondaryTicsLabelsAreHidden = (ticks, hidden) => {
         const allTicks = Array.from(ticks.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}`));
@@ -1981,6 +2049,17 @@ class SliderTestComponent {
 })
 class SliderWithLabelsComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
+}
+
+@Component({
+    template: `<igx-slider #slider [type]="type">
+    </igx-slider>`,
+    standalone: true,
+    imports: [IgxSliderComponent]
+})
+class RangeSliderTestComponent {
+    @ViewChild(IgxSliderComponent, { static: true }) public slider: IgxSliderComponent;
+    public type = IgxSliderType.RANGE;
 }
 
 @Component({
