@@ -745,9 +745,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /**
      * @hidden @internal
-     * @deprecated in version 18.2.0. Use the `autoGenerate` property instead.
+     * @deprecated in version 18.2.0. Column re-creation now relies on `autoGenerate` instead.
      */
-    public override shouldGenerate: boolean;
+    public override get shouldGenerate(): boolean {
+        return this.autoGenerate;
+    }
+
+    public override set shouldGenerate(value: boolean) {
+        this.autoGenerate = value;
+    }
 
     /**
      * @hidden @internal
