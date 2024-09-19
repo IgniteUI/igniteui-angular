@@ -20,6 +20,7 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
+    ViewChildren,
     booleanAttribute
 } from '@angular/core';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
@@ -185,12 +186,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * Controls whether the carousel should render the indicators.
      * Default value is `true`.
      * ```html
-     * <igx-carousel [indicator]="false"></igx-carousel>
+     * <igx-carousel [indicators]="false"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input({ transform: booleanAttribute }) public indicator = true;
+    @Input({ transform: booleanAttribute }) public indicators = true;
 
 
     /**
@@ -405,6 +406,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     @ViewChild('defaultPrevButton', { read: TemplateRef, static: true })
     private defaultPrevButton: TemplateRef<any>;
 
+    @ViewChildren('indicators', { read: ElementRef })
+    private _indicators: QueryList<ElementRef<HTMLDivElement>>;
+
     /**
      * @hidden
      * @internal
@@ -474,12 +478,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /** @hidden */
     public get showIndicators(): boolean {
-        return this.indicator && this.total <= this.maximumIndicatorsCount && this.total > 0;
+        return this.indicators && this.total <= this.maximumIndicatorsCount && this.total > 0;
     }
 
     /** @hidden */
     public get showIndicatorsLabel(): boolean {
-        return this.indicator && this.total > this.maximumIndicatorsCount;
+        return this.indicators && this.total > this.maximumIndicatorsCount;
     }
 
     /** @hidden */
@@ -591,7 +595,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport) {
             event.preventDefault();
             this.next();
-            this.focusSlideElement();
+            this.focusElement();
         }
     }
 
@@ -601,7 +605,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport) {
             event.preventDefault();
             this.prev();
-            this.focusSlideElement();
+            this.focusElement();
         }
     }
 
@@ -627,7 +631,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.first.active = true;
-            this.focusSlideElement();
+            this.focusElement();
         }
     }
 
@@ -637,7 +641,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.last.active = true;
-            this.focusSlideElement();
+            this.focusElement();
         }
     }
 
@@ -756,10 +760,18 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /** @hidden */
-    public handleKeydown(event: KeyboardEvent, dir: 'next' | 'prev'): void {
+    public handleKeydownPrev(event: KeyboardEvent): void {
         if (this.platformUtil.isActivationKey(event)) {
             event.preventDefault();
-            dir === 'next' ? this.next() : this.prev();
+            this.prev();
+        }
+    }
+
+    /** @hidden */
+    public handleKeydownNext(event: KeyboardEvent): void {
+        if (this.platformUtil.isActivationKey(event)) {
+            event.preventDefault();
+            this.next();
         }
     }
 
@@ -771,8 +783,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /** @hidden */
-    public handleFocusOut(): void {
-        this._hasKeyboardFocusOnIndicators = false;
+    public handleFocusOut(event: FocusEvent): void {
+        const target = event.relatedTarget as HTMLElement;
+
+        if (!target || !target.classList.contains('igx-carousel-indicators__indicator')) {
+            this._hasKeyboardFocusOnIndicators = false;
+        }
     }
 
     /** @hidden */
@@ -917,7 +933,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     protected getCurrentElement(): HTMLElement {
-
         return this.currentItem.nativeElement;
     }
 
@@ -951,6 +966,20 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /** @hidden */
     public get prevButtonDisabled() {
         return !this.loop && this.current === 0;
+    }
+
+    private get indicatorsElements() {
+        return this._indicators.toArray();
+    }
+
+    private focusElement() {
+        const focusedElement = document.activeElement;
+
+        if (focusedElement.classList.contains('igx-carousel-indicators__indicator')) {
+            this.indicatorsElements[this.current].nativeElement.focus();
+        } else {
+            this.focusSlideElement();
+        }
     }
 
     private getNextIndex(): number {

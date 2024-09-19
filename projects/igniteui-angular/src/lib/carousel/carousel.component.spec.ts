@@ -367,17 +367,17 @@ describe('Carousel', () => {
             expect(HelperTestFunctions.getIndicatorsLabel(fixture)).toBeNull();
         });
 
-        it('`indicator` changes visibility of indicators', () => {
+        it('`indicators` changes visibility of indicators', () => {
             expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeDefined();
 
-            carousel.indicator = false;
+            carousel.indicators = false;
             fixture.detectChanges();
-            expect(carousel.indicator).toBe(false);
+            expect(carousel.indicators).toBe(false);
             expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeNull();
 
-            carousel.indicator = true;
+            carousel.indicators = true;
             fixture.detectChanges();
-            expect(carousel.indicator).toBe(true);
+            expect(carousel.indicators).toBe(true);
             expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeDefined();
         });
 
@@ -533,7 +533,7 @@ describe('Carousel', () => {
         });
 
         it('should set focused class on indicators container on keyboard tab focus', () => {
-            const indicators = carousel.nativeElement.querySelector(HelperTestFunctions.INDICATORS_BOTTOM_CLASS);
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
 
             expect(indicators.classList).not.toContain('igx-carousel-indicators--focused');
 
@@ -544,19 +544,26 @@ describe('Carousel', () => {
         });
 
         it('should remove focused class from indicators container on focusout', () => {
-            const indicators = carousel.nativeElement.querySelector(HelperTestFunctions.INDICATORS_BOTTOM_CLASS);
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
+            const indicator = HelperTestFunctions.getIndicators(fixture)[1] as HTMLElement;
 
             indicators.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
             fixture.detectChanges();
             expect(indicators.classList).toContain('igx-carousel-indicators--focused');
 
+            // if element gaining focus is an indicator the focused class remains
+            indicators.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: indicator }));
+            fixture.detectChanges();
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            // if element gaining focus is not an indicator the focused class is removed
             indicators.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
             fixture.detectChanges();
             expect(indicators.classList).not.toContain('igx-carousel-indicators--focused');
         });
 
         it('should remove focused class from indicators container on click', () => {
-            const indicators = carousel.nativeElement.querySelector(HelperTestFunctions.INDICATORS_BOTTOM_CLASS);
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
 
             indicators.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
             fixture.detectChanges();
@@ -565,6 +572,36 @@ describe('Carousel', () => {
             indicators.dispatchEvent(new MouseEvent('click', { bubbles: true }));
             fixture.detectChanges();
             expect(indicators.classList).not.toContain('igx-carousel-indicators--focused');
+        });
+
+        it('should keep focused class on indicators container on keyboard nav with supported keys', () => {
+            carousel.keyboardSupport = true;
+            fixture.detectChanges();
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
+
+            indicators.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
+            fixture.detectChanges();
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(1);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(0);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('End', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(3);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('Home', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(0);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
         });
     });
 

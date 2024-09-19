@@ -9,7 +9,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxCarousel`
     - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
-    - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicator` property. Defaults to `true`.
+    - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
 
 #### Scrollbar: New CSS variables
 
@@ -40,7 +40,7 @@ For Firefox users, we provide limited scrollbar styling options through the foll
     - `animationType` input property is now of type `CarouselAnimationType`. `HorizontalAnimationType` can also be used, however, to accommodate the new vertical mode, which supports vertical slide animations, it is recommended to use `CarouselAnimationType`.
 
     - **Behavioral Changes** - the `keyboardSupport` input property now defaults to `false`.
-    - **Breaking Changes** - the `keyboardSupport` input property has been deprecated and will be removed in a future version.
+    - **Breaking Changes** - the `keyboardSupport` input property has been deprecated and will be removed in a future version. Keyboard navigation with `ArrowLeft`, `ArrowRight`, `Home`, and `End` keys will be supported when focusing the indicators' container via ` Tab`/`Shift+Tab`. 
 
 ## 18.1.0
 ### New Features
