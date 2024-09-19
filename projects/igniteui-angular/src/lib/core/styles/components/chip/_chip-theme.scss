@@ -489,7 +489,7 @@
                     color: contrast-color($color: 'info', $variant: 500);
                     background: color($color: 'info', $variant: 500);
                     border-color: color($color: 'info', $variant: 500);
-                    box-shadow: 0 0 0 rem(3px) color($color: 'info', $variant: 100);
+                    box-shadow: 0 0 0 rem(3px) color($color: 'info', $variant: if($theme-variant == 'light', 100, 800));
                 }
 
                 @if $variant == 'bootstrap' {
@@ -534,7 +534,7 @@
                     color: contrast-color($color: 'success', $variant: 900);
                     background: color($color: 'success', $variant: 500);
                     border-color: color($color: 'success', $variant: 500);
-                    box-shadow: 0 0 0 rem(3px) color($color: 'success', $variant: 200);
+                    box-shadow: 0 0 0 rem(3px) color($color: 'success', $variant: if($theme-variant == 'light', 200, 800));
                 }
 
                 @if $variant == 'bootstrap' {
@@ -575,7 +575,7 @@
                     color: contrast-color($color: 'warn', $variant: 900);
                     background: color($color: 'warn', $variant: 500);
                     border-color: color($color: 'warn', $variant: 500);
-                    box-shadow: 0 0 0 rem(3px) color($color: 'warn', $variant: 100);
+                    box-shadow: 0 0 0 rem(3px) color($color: 'warn', $variant: if($theme-variant == 'light', 100, 900));
                 }
 
                 @if $variant == 'bootstrap' {
@@ -620,7 +620,7 @@
                     color: contrast-color($color: 'error', $variant: 900);
                     background: color($color: 'error', $variant: 500);
                     border-color: color($color: 'error', $variant: 500);
-                    box-shadow: 0 0 0 rem(3px) color($color: 'error', $variant: 100);
+                    box-shadow: 0 0 0 rem(3px) color($color: 'error', $variant: if($theme-variant == 'light', 100, 900));
                 }
 
                 @if $variant == 'bootstrap' {
@@ -816,33 +816,42 @@
 
             &%igx-chip--info {
                 %igx-chip__item {
-                    color: contrast-color($color: 'info', $variant: 400 , $opacity: if($theme-variant == 'light', .4, .2));
-                    background: color($color: 'info', $variant: 500, $opacity: .4);
-                    border-color: transparent;
+                    color: contrast-color($color: 'info', $variant: 900);
+                    background: color($color: 'info', $variant: 500);
+                    border-color: color($color: 'info', $variant: 500);
                 }
             }
 
             &%igx-chip--success {
                 %igx-chip__item {
-                    color: contrast-color($color: 'success', $variant: 900, $opacity: if($theme-variant == 'light', .4, .2));
-                    background: color($color: 'success', $variant: 500, $opacity: .4);
-                    border-color: transparent;
+                    color: contrast-color($color: 'success', $variant: 900);
+                    background: color($color: 'success', $variant: 500);
+                    border-color: color($color: 'success', $variant: 500);
                 }
             }
 
             &%igx-chip--warning {
                 %igx-chip__item {
-                    color: contrast-color($color: 'warn', $variant: 900, $opacity: if($theme-variant == 'light', .4, .2));
-                    background: color($color: 'warn', $variant: 500, $opacity: .4);
-                    border-color: transparent;
+                    color: contrast-color($color: 'warn', $variant: 900);
+                    background: color($color: 'warn', $variant: 500);
+                    border-color: color($color: 'warn', $variant: 500);
                 }
             }
 
             &%igx-chip--danger {
                 %igx-chip__item {
-                    color: contrast-color($color: 'error', $variant: 900, $opacity: if($theme-variant == 'light', .4, .2));
-                    background: color($color: 'error', $variant: 500, $opacity: .4);
-                    border-color: transparent;
+                    color: contrast-color($color: 'error', $variant: 900);
+                    background: color($color: 'error', $variant: 500);
+                    border-color: color($color: 'error', $variant: 500);
+                }
+            }
+
+            &%igx-chip--info,
+            &%igx-chip--success,
+            &%igx-chip--warning,
+            &%igx-chip--danger {
+                %igx-chip__item {
+                    opacity: .4;
                 }
             }
         }
