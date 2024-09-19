@@ -107,7 +107,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression = {
-            field: 'ProductName',
+            fieldName: 'ProductName',
             searchVal: 'Product: A0',
             condition: IgxStringFilteringOperand.instance().condition('startsWith'),
             conditionName: 'startsWith'

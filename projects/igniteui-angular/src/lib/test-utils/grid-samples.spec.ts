@@ -2113,7 +2113,7 @@ export class IgxGridFilteringBindingComponent extends BasicGridComponent impleme
             {
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                 conditionName: 'greaterThan',
-                field: 'Downloads',
+                fieldName: 'Downloads',
                 searchVal: 200
             }
         ];
@@ -2145,7 +2145,7 @@ export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent
             {
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                 conditionName: 'greaterThan',
-                field: 'Downloads',
+                fieldName: 'Downloads',
                 searchVal: 200
             }
         ];

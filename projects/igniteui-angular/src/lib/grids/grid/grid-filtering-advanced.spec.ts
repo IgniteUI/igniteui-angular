@@ -357,17 +357,17 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                field: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                 conditionName: 'greaterThan'
             });
             const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
             orTree.filteringOperands.push({
-                field: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
                 conditionName: 'contains',
                 ignoreCase: true
             });
             orTree.filteringOperands.push({
-                field: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
                 conditionName: 'contains',
                 ignoreCase: true
             });
@@ -405,17 +405,17 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                field: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                 conditionName: 'greaterThan'
             });
             const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
             orTree.filteringOperands.push({
-                field: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
                 conditionName: 'contains',
                 ignoreCase: true
             });
             orTree.filteringOperands.push({
-                field: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
                 conditionName: 'contains',
                 ignoreCase: true
             });
@@ -644,7 +644,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const tree = new FilteringExpressionsTree(FilteringLogic.Or);
             for (let index = 0; index < 30; index++) {
                 tree.filteringOperands.push({
-                    field: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals'
+                    fieldName: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals'
                 });
             }
             grid.advancedFilteringExpressionsTree = tree;
@@ -682,7 +682,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const tree = new FilteringExpressionsTree(FilteringLogic.Or);
             for (let index = 0; index < 30; index++) {
                 tree.filteringOperands.push({
-                    field: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals'
+                    fieldName: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals'
                 });
             }
             grid.advancedFilteringExpressionsTree = tree;
@@ -722,7 +722,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const tree = new FilteringExpressionsTree(FilteringLogic.Or);
             for (let index = 0; index < 30; index++) {
                 tree.filteringOperands.push({
-                    field: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals'
+                    fieldName: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals'
                 });
             }
             grid.advancedFilteringExpressionsTree = tree;
@@ -757,7 +757,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const tree = new FilteringExpressionsTree(FilteringLogic.Or);
             for (let index = 0; index < 20; index++) {
                 tree.filteringOperands.push({
-                    field: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals'
+                    fieldName: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals'
                 });
             }
             grid.advancedFilteringExpressionsTree = tree;
@@ -792,17 +792,17 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                field: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                 conditionName: 'greaterThan'
             });
             const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
             orTree.filteringOperands.push({
-                field: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
                 conditionName: 'contains',
                 ignoreCase: true
             });
             orTree.filteringOperands.push({
-                field: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
                 conditionName: 'contains',
                 ignoreCase: true
             });
@@ -832,17 +832,17 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                field: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                 conditionName: 'greaterThan'
             });
             const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
             orTree.filteringOperands.push({
-                field: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
                 conditionName: 'contains',
                 ignoreCase: true
             });
             orTree.filteringOperands.push({
-                field: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
                 conditionName: 'contains',
                 ignoreCase: true
             });
@@ -897,17 +897,17 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                field: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                 conditionName: 'greaterThan'
             });
             const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
             orTree.filteringOperands.push({
-                field: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
                 conditionName: 'contains',
                 ignoreCase: true
             });
             orTree.filteringOperands.push({
-                field: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
                 conditionName: 'contains',
                 ignoreCase: true
             });
@@ -1091,12 +1091,12 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Change the grid's columns collection
             fixture.componentInstance.columns = [
-                { field: 'ID', header: 'ID', width: '200px', type: 'string' },
-                { field: 'CompanyName', header: 'Company Name', width: '200px', type: 'string' },
-                { field: 'ContactName', header: 'Contact Name', width: '200px', type: 'string' },
-                { field: 'ContactTitle', header: 'Contact Title', width: '200px', type: 'string' },
-                { field: 'City', header: 'City', width: '200px', type: 'string' },
-                { field: 'Country', header: 'Country', width: '200px', type: 'string' },
+                { fieldName: 'ID', header: 'ID', width: '200px', type: 'string' },
+                { fieldName: 'CompanyName', header: 'Company Name', width: '200px', type: 'string' },
+                { fieldName: 'ContactName', header: 'Contact Name', width: '200px', type: 'string' },
+                { fieldName: 'ContactTitle', header: 'Contact Title', width: '200px', type: 'string' },
+                { fieldName: 'City', header: 'City', width: '200px', type: 'string' },
+                { fieldName: 'Country', header: 'Country', width: '200px', type: 'string' },
             ];
             fixture.detectChanges();
             flush();

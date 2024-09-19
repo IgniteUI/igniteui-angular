@@ -165,7 +165,7 @@ export class IgxGridSummaryService {
     private deleteSummaryCache(id, columnName) {
         if (this.summaryCacheMap.get(id)) {
             const filteringApplied = columnName && this.grid.filteringExpressionsTree &&
-                this.grid.filteringExpressionsTree.filteringOperands.map((expr) => expr.field).indexOf(columnName) !== -1;
+                this.grid.filteringExpressionsTree.filteringOperands.map((expr) => expr.fieldName).indexOf(columnName) !== -1;
             if (columnName && this.summaryCacheMap.get(id).get(columnName) && !filteringApplied) {
                 this.summaryCacheMap.get(id).delete(columnName);
             } else {
