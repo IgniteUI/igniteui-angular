@@ -232,6 +232,8 @@
     }
 
     %tabs-display {
+        --nav-btn-border-color: #{var-get($theme, 'border-color')};
+
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -243,10 +245,6 @@
         background: var-get($theme, 'item-background');
         min-height: #{if($variant == 'indigo', rem(40px), rem(42px))};
         z-index: 1;
-
-        @if $indigo-theme {
-            border-bottom: rem(1px) solid var-get($theme, 'border-color');
-        }
     }
 
     %tabs-header-content {
@@ -292,12 +290,6 @@
         color: var-get($theme, 'button-color');
         outline: 0;
 
-        @if $indigo-theme {
-            min-width: rem(40px);
-            width: rem(40px);
-            min-height: rem(40px);
-        }
-
         &:hover {
             background: var-get($theme, 'button-hover-background');
             color: var-get($theme, 'button-hover-color');
@@ -316,12 +308,28 @@
         &:disabled {
             color: var-get($theme, 'button-disabled-color');
             cursor: default;
+            pointer-events: none;
         }
 
         &--none {
             display: none;
         }
 
+        @if $indigo-theme {
+            min-width: rem(40px);
+            width: rem(40px);
+            border-radius: border-radius(0);
+            align-self: stretch;
+            height: auto;
+            transition: none;
+            border-bottom: rem(1px) solid var(--nav-btn-border-color);
+
+            &:focus-visible {
+                border: rem(3px) solid var(--nav-btn-border-color);
+                background: var-get($theme, 'button-background');
+                box-shadow: none;
+            }
+        }
 
         @include ripple($button-ripple-theme);
         @include css-vars($button-ripple-theme);
@@ -404,14 +412,14 @@
         }
 
         @if $indigo-theme {
-            padding-block: rem(12px);
-            border: none;
-            // border-top: transparent;
-            // border-inline: transparent;
+            border-top: rem(1px) solid transparent;
+            border-inline: rem(1px) solid transparent;
 
             &:hover,
             &:focus {
-                border: none;
+                border-top: rem(1px) solid transparent;
+                border-inline: rem(1px) solid transparent;
+                border-bottom: rem(1px) solid var-get($theme, 'border-color');
             }
 
             igx-icon {
@@ -463,8 +471,14 @@
         }
 
         @if $indigo-theme {
-            &:hover {
+            &:hover,
+            &:focus-visible {
                 background: var-get($theme, 'item-hover-background');
+                color: var-get($theme, 'item-hover-color');
+
+                igx-icon {
+                    color: var-get($theme, 'item-hover-icon-color');
+                }
             }
         }
     }
