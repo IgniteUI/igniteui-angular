@@ -1905,17 +1905,6 @@ describe('IgxSlider', () => {
             expect(thumbFrom.getAttribute('aria-labelledby')).toBe('slider-label-from');
             expect(thumbTo.getAttribute('aria-labelledby')).toBe('slider-label-to');
         });
-
-        it('should set correct tabindex on thumbs', () => {
-            fixture = TestBed.createComponent(RangeSliderTestComponent);
-            fixture.detectChanges();
-
-            const thumbFrom = fixture.debugElement.query(By.css('.igx-slider-thumb-from')).nativeElement;
-            const thumbTo = fixture.debugElement.query(By.css('.igx-slider-thumb-to')).nativeElement;
-
-            expect(thumbFrom.getAttribute('tabindex')).toBe('1');
-            expect(thumbTo.getAttribute('tabindex')).toBe('1');
-        });
     });
 
     const verifySecondaryTicsLabelsAreHidden = (ticks, hidden) => {

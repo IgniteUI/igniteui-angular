@@ -73,7 +73,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public hoverChange = new EventEmitter<boolean>();
 
     @HostBinding('attr.tabindex')
-    public tabindex = 1;
+    public tabindex = 0;
 
     @HostBinding('attr.z-index')
     public zIndex = 0;
