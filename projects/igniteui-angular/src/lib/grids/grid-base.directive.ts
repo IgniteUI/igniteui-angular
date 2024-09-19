@@ -2452,6 +2452,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* blazorByValueArray */
     /* blazorAlwaysWriteback */
     /* @tsTwoWayProperty (true, "RowSelectionChanging", "Detail.NewSelection", false) */
+    /* blazorPrimitiveValue */
     /**
      * Gets/Sets the current selection state.
      *
