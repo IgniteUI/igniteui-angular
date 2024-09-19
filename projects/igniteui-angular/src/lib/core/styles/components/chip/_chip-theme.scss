@@ -243,7 +243,8 @@
         focus-selected-outline-color: $focus-selected-outline-color,
         focus-outline-color: $focus-outline-color,
         _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
+            variant: map.get($schema, '_meta', 'theme'),
+            theme-variant: map.get($schema, '_meta', 'variant')
         )),
         size: $size,
     ));
