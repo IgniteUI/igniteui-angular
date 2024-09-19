@@ -1960,6 +1960,10 @@
         cursor: pointer;
 
         igx-icon {
+            @if $variant == 'indigo' {
+                --component-size: 2;
+            }
+
             color: var-get($theme, 'expand-icon-color');
         }
 
