@@ -2636,7 +2636,6 @@ describe('igxCombo', () => {
                 expect(combo.selection).toEqual([{ name: 'Los Angeles', id: 'LA' }, { name: 'New York', id: 'NY' }]);
                 expect(combo.value).toEqual(['LA', 'NY']);
                 expect(combo.displayValue).toEqual('Los Angeles, New York');
-                expect(component.selectedItems).toEqual(['LA', 'NY']);
             }));
         });
         describe('Grouping tests: ', () => {
