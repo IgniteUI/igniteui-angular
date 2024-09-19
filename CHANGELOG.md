@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxSimpleCombo`
     - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - To streamline the sorting of columns with custom formats, a new `FormattedValuesSortingStrategy` has been introduced. This strategy simplifies the sorting process by allowing direct sorting based on formatted values, eliminating the need to extend the `DefaultSortingStrategy` or implement a custom `ISortingStrategy`. This enhancement improves the ease of handling sorting with custom column formatters.
 
 #### Scrollbar: New CSS variables
 
@@ -30,7 +32,7 @@ For Firefox users, we provide limited scrollbar styling options through the foll
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
-    - **Breaking Change** The `shouldGenerate` property have been deprecated and will be removed in a future version. Use `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`.
+    - **Deprecation** The `shouldGenerate` property has been deprecated and will be removed in a future version. Column re-creation now relies on `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`. Note that if `autoGenerate` is already set initially, there is no need to explicitly set it elsewhere in your code.
 
 ## 18.1.0
 ### New Features
