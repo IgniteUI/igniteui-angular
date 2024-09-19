@@ -429,7 +429,7 @@ export class IgxGridSelectionService {
         let newSelection;
         if (this.grid.primaryKey) {
             newSelection = this.isFilteringApplied() ? selectedRows.filter(x => {
-                removedRec.findIndex(item => item[this.grid.primaryKey] === x[this.grid.primaryKey]) === -1
+                return !removedRec.some(item => item[this.grid.primaryKey] === x[this.grid.primaryKey]);
             }) : [];
         } else {
             newSelection = this.isFilteringApplied() ? selectedRows.filter(x => !removedRec.includes(x)) : [];
