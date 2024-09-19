@@ -109,6 +109,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const productExpression = {
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             fieldName: 'ProductName',
             ignoreCase: true,
             searchVal: 'A0'
@@ -516,7 +517,7 @@ class HelperFunctions {
     }
 
     public static verifyFilteringExpressions(expressions: IFilteringExpressionsTree, gridState: IGridState) {
-        expect(expressions.field).toBe(gridState.filtering.field, 'Filtering expression field name is not correct');
+        expect(expressions.fieldName).toBe(gridState.filtering.fieldName, 'Filtering expression field name is not correct');
         expect(expressions.operator).toBe(gridState.filtering.operator, 'Filtering expression operator value is not correct');
         expressions.filteringOperands.forEach((expr, i) => {
             expect(expr).toEqual(jasmine.objectContaining(gridState.filtering.filteringOperands[i]));
@@ -525,7 +526,7 @@ class HelperFunctions {
 
     public static verifyAdvancedFilteringExpressions(expressions: IFilteringExpressionsTree, gridState: IGridState) {
         if (gridState.advancedFiltering) {
-            expect(expressions.field).toBe(gridState.advancedFiltering.field, 'Filtering expression field name is not correct');
+            expect(expressions.fieldName).toBe(gridState.advancedFiltering.fieldName, 'Filtering expression field name is not correct');
             expect(expressions.operator).toBe(gridState.advancedFiltering.operator, 'Filtering expression operator value is not correct');
             expressions.filteringOperands.forEach((expr, i) => {
                 expect(expr).toEqual(jasmine.objectContaining(gridState.advancedFiltering.filteringOperands[i]));

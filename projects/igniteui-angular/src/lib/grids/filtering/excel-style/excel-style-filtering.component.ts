@@ -619,12 +619,12 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private getColumnFilterExpressionsTree() {
         const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
-        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.field);
+        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
 
         for (const operand of gridExpressionsTree.filteringOperands) {
             if (operand instanceof FilteringExpressionsTree) {
                 const columnExprTree = operand as FilteringExpressionsTree;
-                if (columnExprTree.field === this.column.field) {
+                if (columnExprTree.fieldName === this.column.field) {
                     continue;
                 }
             }

@@ -589,21 +589,24 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                field: 'Name',
+                fieldName: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
-                field: 'Name',
+                fieldName: 'Name',
                 searchVal: 'r',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
-                field: 'ID',
+                fieldName: 'ID',
                 searchVal: 5,
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                conditionName: 'greaterThan'
             });
 
             grid.advancedFilteringExpressionsTree = tree;
@@ -1144,15 +1147,17 @@ describe('Excel Exporter', () => {
         it('Should honor Advanced filters when exporting', async () => {
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
-                field: 'Age',
+                fieldName: 'Age',
                 searchVal: 40,
                 condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
+                conditionName: 'lessThan',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
-                field: 'Name',
+                fieldName: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
 

@@ -19,7 +19,8 @@ describe('Unit testing FilteringStrategy', () => {
         expressionTree.filteringOperands = [
             {
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-                field: 'number',
+                conditionName: 'greaterThan',
+                fieldName: 'number',
                 searchVal: 1
             }
         ];
@@ -33,13 +34,15 @@ describe('Unit testing FilteringStrategy', () => {
         expressionTree.filteringOperands = [
             {
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
-                field: 'string',
+                conditionName: 'contains',
+                fieldName: 'string',
                 ignoreCase: false,
                 searchVal: 'ROW'
             },
             {
                 condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
-                field: 'number',
+                conditionName: 'lessThan',
+                fieldName: 'number',
                 searchVal: 1
             }
         ];
@@ -50,7 +53,8 @@ describe('Unit testing FilteringStrategy', () => {
         const rec = data[0];
         const res = fs.findMatchByExpression(rec, {
             condition: IgxBooleanFilteringOperand.instance().condition('false'),
-            field: 'boolean'
+            conditionName: 'false',
+            fieldName: 'boolean'
         });
         expect(res).toBeTruthy();
     });
@@ -61,7 +65,8 @@ describe('Unit testing FilteringStrategy', () => {
         expressionTree.filteringOperands = [
             {
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
-                field: 'string',
+                conditionName: 'contains',
+                fieldName: 'string',
                 searchVal: 'ROW'
             }
         ];

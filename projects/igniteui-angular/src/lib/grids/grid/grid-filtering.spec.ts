@@ -770,8 +770,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
         gridExpressionsTree.filteringOperands = [
-            { field: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
-            { field: 'ID', searchVal: 4, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') }
+            { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'), conditionName: 'greaterThanOrEqualTo' },
+            { fieldName: 'ID', searchVal: 4, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'), conditionName: 'greaterThan' }
         ];
 
         grid.filteringExpressionsTree = gridExpressionsTree;
@@ -839,14 +839,14 @@ describe('IgxGrid - Filtering actions #grid', () => {
     it('Should correctly apply two conditions to two columns at once.', fakeAsync(() => {
         const colDownloadsExprTree = new FilteringExpressionsTree(FilteringLogic.And, 'Downloads');
         colDownloadsExprTree.filteringOperands = [
-            { field: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
-            { field: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo') }
+            { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'), conditionName: 'greaterThanOrEqualTo' },
+            { fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'), conditionName: 'lessThanOrEqualTo' }
         ];
 
         const colIdExprTree = new FilteringExpressionsTree(FilteringLogic.And, 'ID');
         colIdExprTree.filteringOperands = [
-            { field: 'ID', searchVal: 1, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') },
-            { field: 'ID', searchVal: 5, condition: IgxNumberFilteringOperand.instance().condition('lessThan') }
+            { fieldName: 'ID', searchVal: 1, condition: IgxNumberFilteringOperand.instance().condition('greaterThan'), conditionName: 'greaterThan' },
+            { fieldName: 'ID', searchVal: 5, condition: IgxNumberFilteringOperand.instance().condition('lessThan'), conditionName: 'lessThan' }
         ];
 
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
@@ -870,12 +870,14 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const expression = {
             fieldName: 'Downloads',
             searchVal: 50,
-            condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+            condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            conditionName: 'greaterThan'
         };
         const expression1 = {
             fieldName: 'Downloads',
             searchVal: 500,
-            condition: IgxNumberFilteringOperand.instance().condition('lessThan')
+            condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
+            conditionName: 'lessThan'
         };
         filteringExpressionsTree.filteringOperands.push(expression);
         filteringExpressionsTree.filteringOperands.push(expression1);
@@ -892,12 +894,14 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const expression = {
             fieldName: 'ProductName',
             searchVal: 'Ignite',
-            condition: IgxStringFilteringOperand.instance().condition('startsWith')
+            condition: IgxStringFilteringOperand.instance().condition('startsWith'),
+            conditionName: 'startsWith'
         };
         const expression1 = {
             fieldName: 'ProductName',
             searchVal: 'Angular',
-            condition: IgxStringFilteringOperand.instance().condition('contains')
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains'
         };
         filteringExpressionsTree.filteringOperands.push(expression);
         filteringExpressionsTree.filteringOperands.push(expression1);
@@ -916,12 +920,14 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const expression = {
             fieldName: 'ReleaseDate',
             searchVal: null,
-            condition: IgxDateFilteringOperand.instance().condition('yesterday')
+            condition: IgxDateFilteringOperand.instance().condition('yesterday'),
+            conditionName: 'yesterday'
         };
         const expression1 = {
             fieldName: 'ReleaseDate',
             searchVal: today,
-            condition: IgxDateFilteringOperand.instance().condition('after')
+            condition: IgxDateFilteringOperand.instance().condition('after'),
+            conditionName: 'after'
         };
         filteringExpressionsTree.filteringOperands.push(expression);
         filteringExpressionsTree.filteringOperands.push(expression1);
@@ -939,7 +945,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const expression = {
             fieldName: 'ReleaseDate',
             searchVal: null,
-            condition: IgxDateFilteringOperand.instance().condition('yesterday')
+            condition: IgxDateFilteringOperand.instance().condition('yesterday'),
+            conditionName: 'yesterday'
         };
         filteringExpressionsTree.filteringOperands.push(expression);
         gridExpressionsTree.filteringOperands.push(filteringExpressionsTree);
@@ -974,29 +981,34 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const expression = {
             fieldName: 'ProductName',
             searchVal: 'Ignite',
-            condition: IgxStringFilteringOperand.instance().condition('startsWith')
+            condition: IgxStringFilteringOperand.instance().condition('startsWith'),
+            conditionName: 'startsWith'
         };
         const expression1 = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression11 = {
             fieldName: 'ProductName',
             searchVal: 'Angular',
-            condition: IgxStringFilteringOperand.instance().condition('contains')
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains'
         };
         const expression12 = {
             fieldName: 'ProductName',
             searchVal: 'jQuery',
-            condition: IgxStringFilteringOperand.instance().condition('contains')
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains'
         };
         const expression2 = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression21 = {
             fieldName: 'ProductName',
             searchVal: 'Angular',
-            condition: IgxStringFilteringOperand.instance().condition('contains')
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains'
         };
         const expression22 = {
             fieldName: 'ProductName',
             searchVal: 'jQuery',
-            condition: IgxStringFilteringOperand.instance().condition('contains')
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains'
         };
         expression1.filteringOperands.push(expression11);
         expression1.filteringOperands.push(expression12);
@@ -1063,7 +1075,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const expression11 = {
             fieldName: 'ProductName',
             searchVal: 'Angular',
-            condition: IgxStringFilteringOperand.instance().condition('contains')
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains'
         };
 
         // Verify results after filtering.

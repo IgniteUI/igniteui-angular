@@ -350,8 +350,9 @@ const testFilter = () => {
             };
             state.expressionsTree.filteringOperands = [
                 {
-                    field: 'number',
+                    fieldName: 'number',
                     condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                    conditionName: 'greaterThan',
                     searchVal: 3
                 }
             ];
@@ -367,7 +368,8 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxStringFilteringOperand.instance().condition('contains'),
-                    field: 'string',
+                    conditionName: 'contains',
+                    fieldName: 'string',
                     searchVal: 'row'
                 }
             ];
@@ -378,7 +380,8 @@ const testFilter = () => {
             stateIgnoreCase.expressionsTree.filteringOperands = [
                 {
                     condition: IgxStringFilteringOperand.instance().condition('contains'),
-                    field: 'string',
+                    conditionName: 'contains',
+                    fieldName: 'string',
                     ignoreCase: false,
                     searchVal: 'ROW'
                 }
@@ -401,7 +404,8 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxDateFilteringOperand.instance().condition('after'),
-                    field: 'date',
+                    conditionName: 'after',
+                    fieldName: 'date',
                     searchVal: new Date()
                 }
             ];
@@ -416,7 +420,8 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxBooleanFilteringOperand.instance().condition('false'),
-                    field: 'boolean'
+                    conditionName: 'false',
+                    fieldName: 'boolean'
                 }
             ];
             const res = FilterUtil.filter(data, state);
@@ -431,7 +436,8 @@ const testFilter = () => {
             state.expressionsTree.filteringOperands = [
                 {
                     condition: IgxBooleanFilteringOperand.instance().condition('false'),
-                    field: 'boolean'
+                    conditionName: 'false',
+                    fieldName: 'boolean'
                 }
             ];
             const res = FilterUtil.filter(data, state);

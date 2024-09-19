@@ -1841,7 +1841,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             const val = (value as FilteringExpressionsTree);
             for (let index = 0; index < val.filteringOperands.length; index++) {
                 if (!(val.filteringOperands[index] instanceof FilteringExpressionsTree)) {
-                    const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, val.filteringOperands[index].field);
+                    const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, val.filteringOperands[index].fieldName);
                     newExpressionsTree.filteringOperands.push(val.filteringOperands[index] as IFilteringExpression);
                     val.filteringOperands[index] = newExpressionsTree;
                 }

@@ -46,39 +46,39 @@ export class QueryBuilderComponent implements OnInit {
             }
         ];
 
-        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, 'Assays', ['Id']);
+        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Assays', ['Id']);
         innerTree.filteringOperands.push({
-            field: 'Name',
+            fieldName: 'Name',
             condition: IgxStringFilteringOperand.instance().condition('equals'),
             conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
             searchVal: 'Hepacity',
             // ignoreCase: true
         });
         innerTree.filteringOperands.push({
-            field: 'EndpointName',
+            fieldName: 'EndpointName',
             condition: IgxStringFilteringOperand.instance().condition('equals'),
             conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
             searchVal: 'IC60',
             // ignoreCase: true
         });
 
-        const innerTree2 = new FilteringExpressionsTree(FilteringLogic.And, 'Assays', ['Name']);
+        const innerTree2 = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Assays', ['Name']);
         innerTree2.filteringOperands.push({
-            field: 'Name',
+            fieldName: 'Name',
             condition: IgxStringFilteringOperand.instance().condition('null'),
             conditionName: IgxStringFilteringOperand.instance().condition('null').name,
             // ignoreCase: true
         });
 
-        const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Compounds', ['*']);
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Compounds', ['*']);
         tree.filteringOperands.push({
-                field: 'Id',
+                fieldName: 'Id',
                 condition: IgxStringFilteringOperand.instance().condition('in'),
                 conditionName: IgxStringFilteringOperand.instance().condition('in').name,
                 searchTree: innerTree
             });
         tree.filteringOperands.push({
-            field: 'Id',
+            fieldName: 'Id',
             condition: IgxStringFilteringOperand.instance().condition('equals'),
             conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
             searchVal: '123',

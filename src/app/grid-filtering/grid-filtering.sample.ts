@@ -75,7 +75,7 @@ export class GridFilteringComponent implements OnInit {
 
         const tree = new FilteringExpressionsTree(FilteringLogic.And);
         tree.filteringOperands.push({
-            field: 'ID',
+            fieldName: 'ID',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
             conditionName: 'contains',
             searchVal: 'a',
@@ -83,14 +83,14 @@ export class GridFilteringComponent implements OnInit {
         });
         const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
         orTree.filteringOperands.push({
-            field: 'ID',
+            fieldName: 'ID',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
             conditionName: 'contains',
             searchVal: 'b',
             ignoreCase: true
         });
         orTree.filteringOperands.push({
-            field: 'CompanyName',
+            fieldName: 'CompanyName',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
             conditionName: 'contains',
             searchVal: 'c',
@@ -98,7 +98,7 @@ export class GridFilteringComponent implements OnInit {
         });
         tree.filteringOperands.push(orTree);
         tree.filteringOperands.push({
-            field: 'CompanyName',
+            fieldName: 'CompanyName',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
             conditionName: 'contains',
             searchVal: 'd',
