@@ -114,7 +114,7 @@ describe('igxCombo', () => {
             mockSelection.get.and.returnValue(new Set(['test']));
             spyOnProperty(combo, 'isRemote').and.returnValue(false);
             combo.writeValue(['test']);
-            expect(mockNgControl.registerOnChangeCb).toHaveBeenCalled();
+            expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
             expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, [], true);
             expect(combo.displayValue).toEqual('test');
             expect(combo.value).toEqual(['test']);
@@ -2621,7 +2621,6 @@ describe('igxCombo', () => {
                 expect(combo.selection).toEqual([{ name: 'Los Angeles', id: 'LA' }, { name: 'New York', id: 'NY' }]);
                 expect(combo.value).toEqual(['LA', 'NY']);
                 expect(combo.displayValue).toEqual('Los Angeles, New York');
-                expect(component.selectedItems).toEqual(['LA', 'NY']);
             }));
             it('should only select and display valid values when selecting invalid items programmatically using select', fakeAsync(() => {
                 fixture = TestBed.createComponent(ComboInvalidValuesComponent);
@@ -3370,7 +3369,7 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
-                    combo.select([combo.dropdown.items[0], combo.dropdown.items[1]]);
+                    combo.select([combo.dropdown.items[0].value, combo.dropdown.items[1].value]);
                     expect(combo.valid).toEqual(IgxInputState.VALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
