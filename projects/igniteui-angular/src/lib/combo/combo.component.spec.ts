@@ -2626,7 +2626,6 @@ describe('igxCombo', () => {
                 fixture = TestBed.createComponent(ComboInvalidValuesComponent);
                 fixture.detectChanges();
                 combo = fixture.componentInstance.combo;
-                const component = fixture.componentInstance;
                 tick(100);
 
                 combo.select(['SF', 'LA', 'NY']); // 'SF' is invalid, 'LA' and 'NY' are valid
