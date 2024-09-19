@@ -91,7 +91,7 @@
                 (selectedChanged)="onChipSelectionEnd()"
             >
                 <span igxPrefix class="igx-filter-tree__expression-column">
-                    {{expressionItem.fieldLabel || expressionItem.expression.field}}
+                    {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
                 </span>
                 <span class="igx-filter-tree__expression-condition">
                     {{
@@ -111,17 +111,17 @@
                     <ng-container *ngIf="!expressionItem.expression.searchTree">
                     {{
                         isDate(expressionItem.expression.searchVal)
-                            ? getFormatter(expressionItem.expression.field)
+                            ? getFormatter(expressionItem.expression.fieldName)
                                 ? (expressionItem.expression.searchVal
                                 | fieldFormatter
                                     : getFormatter(
-                                            expressionItem.expression.field
+                                            expressionItem.expression.fieldName
                                         )
                                     : undefined)
                                 : (expressionItem.expression.searchVal
                                 | date
                                     : getFormat(
-                                            expressionItem.expression.field
+                                            expressionItem.expression.fieldName
                                         )
                                     : undefined
                                     : this.locale)
