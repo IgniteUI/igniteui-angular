@@ -124,13 +124,6 @@
         background-color: var-get($theme, 'background');
         border-radius: $border-radius;
         border: rem(1px) solid var-get($theme, 'border-color');
-	    
-	    .igx-drop-down__item--query-builder {
-		    --component-size: var(--ig-size);
-		    
-			// This values are taken form the schema of the dropdown
-		    height: sizable(rem(28px), rem(32px), rem(40px));
-	    }
     }
 
     %query-builder-tree {
