@@ -816,7 +816,7 @@
             &%igx-chip--info {
                 %igx-chip__item {
                     color: contrast-color($color: 'info', $variant: 400 , $opacity: if($theme-variant == 'light', .4, .2));
-                    background: color($color: 'info', $variant: 800);
+                    background: color($color: 'info', $variant: 500, $opacity: .4);
                     border-color: transparent;
                 }
             }
@@ -824,7 +824,7 @@
             &%igx-chip--success {
                 %igx-chip__item {
                     color: contrast-color($color: 'success', $variant: 900, $opacity: if($theme-variant == 'light', .4, .2));
-                    background: color($color: 'success', $variant: 900);
+                    background: color($color: 'success', $variant: 500, $opacity: .4);
                     border-color: transparent;
                 }
             }
@@ -832,7 +832,7 @@
             &%igx-chip--warning {
                 %igx-chip__item {
                     color: contrast-color($color: 'warn', $variant: 900, $opacity: if($theme-variant == 'light', .4, .2));
-                    background: color($color: 'warn', $variant: 900);
+                    background: color($color: 'warn', $variant: 500, $opacity: .4);
                     border-color: transparent;
                 }
             }
@@ -840,7 +840,7 @@
             &%igx-chip--danger {
                 %igx-chip__item {
                     color: contrast-color($color: 'error', $variant: 900, $opacity: if($theme-variant == 'light', .4, .2));
-                    background: color($color: 'error', $variant: 900);
+                    background: color($color: 'error', $variant: 500, $opacity: .4);
                     border-color: transparent;
                 }
             }
