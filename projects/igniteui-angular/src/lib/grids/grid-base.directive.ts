@@ -180,8 +180,6 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
-/*@__PURE__*/IgcTrialWatermark.register();
-
 interface IMatchInfoCache {
     row: any;
     index: number;
@@ -2199,7 +2197,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```typescript
      *  this.grid.shouldGenerate = true;
      * ```
-     * @deprecated in version 18.1.0. Use the `autoGenerate` property instead.
+     * @deprecated in version 18.2.0. Use the `autoGenerate` property instead.
      */
     public shouldGenerate: boolean;
 
@@ -3230,6 +3228,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         return MINIMUM_COLUMN_WIDTH;
     }
 
+    protected get isCustomSetRowHeight(): boolean {
+        return !isNaN(this._rowHeight);
+    }
+
     /**
      * @hidden @internal
      */
@@ -3403,6 +3405,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
+        IgcTrialWatermark.register();
     }
 
     /**

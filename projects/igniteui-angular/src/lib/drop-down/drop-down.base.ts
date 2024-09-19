@@ -9,7 +9,6 @@ import { IDropDownList } from './drop-down.common';
 import { DropDownActionKey } from './drop-down.common';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { DOCUMENT } from '@angular/common';
-import { Size } from '../grids/common/enums';
 
 let NEXT_ID = 0;
 
@@ -161,14 +160,6 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      */
     public get scrollContainer(): HTMLElement {
         return this.element;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public get dropDownSize() {
-        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Medium;
     }
 
     /**
