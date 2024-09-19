@@ -34,7 +34,7 @@ For Firefox users, we provide limited scrollbar styling options through the foll
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
-    - **Breaking Change** The `shouldGenerate` property have been deprecated and will be removed in a future version. Use `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`.
+    - **Deprecation** The `shouldGenerate` property has been deprecated and will be removed in a future version. Column re-creation now relies on `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`. Note that if `autoGenerate` is already set initially, there is no need to explicitly set it elsewhere in your code.
 
 - `IgxCarousel`
     - `animationType` input property is now of type `CarouselAnimationType`. `HorizontalAnimationType` can also be used, however, to accommodate the new vertical mode, which supports vertical slide animations, it is recommended to use `CarouselAnimationType`.
