@@ -39,35 +39,35 @@ export const SampleEntities = [
 
 export class QueryBuilderFunctions {
     public static generateExpressionTree(): FilteringExpressionsTree {
-        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, 'Products', ['Id']);
+        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, null, 'Products', ['Id']);
         innerTree.filteringOperands.push({
-            field: 'ProductName',
+            fieldName: 'ProductName',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
             conditionName: 'contains',
             searchVal: 'a'
         });
         innerTree.filteringOperands.push({
-            field: 'Released',
+            fieldName: 'Released',
             condition: IgxBooleanFilteringOperand.instance().condition('true'),
             conditionName: 'true',
         });
 
-        const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Orders', ['*']);
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, null, 'Orders', ['*']);
         tree.filteringOperands.push({
-            field: 'OrderId',
+            fieldName: 'OrderId',
             condition: IgxStringFilteringOperand.instance().condition('in'),
             conditionName: 'in',
             searchTree: innerTree
         });
         tree.filteringOperands.push({
-            field: 'OrderId',
+            fieldName: 'OrderId',
             condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
             conditionName: 'greaterThan',
             searchVal: 3,
             ignoreCase: true
         });
         tree.filteringOperands.push({
-            field: 'OrderDate',
+            fieldName: 'OrderDate',
             condition: IgxDateFilteringOperand.instance().condition('after'),
             conditionName: 'after',
             searchVal: new Date()

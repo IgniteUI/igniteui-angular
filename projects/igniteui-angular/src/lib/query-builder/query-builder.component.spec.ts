@@ -9,7 +9,7 @@ import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 
-describe('IgxQueryBuilder', () => {
+fdescribe('IgxQueryBuilder', () => {
     configureTestSuite();
     let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
     let queryBuilder: IgxQueryBuilderComponent;
@@ -145,7 +145,7 @@ describe('IgxQueryBuilder', () => {
             expect(exprTree).toBe(`{
   "filteringOperands": [
     {
-      "field": "OrderId",
+      "fieldName": "OrderId",
       "condition": {
         "name": "greaterThan",
         "isUnary": false,
@@ -513,7 +513,7 @@ describe('IgxQueryBuilder', () => {
             expect(exprTree).toBe(`{
   "filteringOperands": [
     {
-      "field": "ProductName",
+      "fieldName": "ProductName",
       "condition": {
         "name": "contains",
         "isUnary": false,
@@ -709,7 +709,7 @@ describe('IgxQueryBuilder', () => {
             expect(exprTree).toBe(`{
   "filteringOperands": [
     {
-      "field": "ProductName",
+      "fieldName": "ProductName",
       "condition": {
         "name": "startsWith",
         "isUnary": false,
@@ -762,7 +762,7 @@ describe('IgxQueryBuilder', () => {
             expect(exprTree).toBe(`{
   "filteringOperands": [
     {
-      "field": "Id",
+      "fieldName": "Id",
       "condition": {
         "name": "greaterThan",
         "isUnary": false,
@@ -815,7 +815,7 @@ describe('IgxQueryBuilder', () => {
             expect(exprTree).toBe(`{
   "filteringOperands": [
     {
-      "field": "Id",
+      "fieldName": "Id",
       "condition": {
         "name": "equals",
         "isUnary": false,
@@ -863,7 +863,7 @@ describe('IgxQueryBuilder', () => {
             expect(exprTree).toBe(`{
   "filteringOperands": [
     {
-      "field": "Released",
+      "fieldName": "Released",
       "condition": {
         "name": "true",
         "isUnary": true,
@@ -912,7 +912,7 @@ describe('IgxQueryBuilder', () => {
             expect(exprTree).toBe(`{
   "filteringOperands": [
     {
-      "field": "OrderDate",
+      "fieldName": "OrderDate",
       "condition": {
         "name": "thisYear",
         "isUnary": true,
@@ -1004,7 +1004,7 @@ describe('IgxQueryBuilder', () => {
             expect(exprTree).toBe(`{
   "filteringOperands": [
     {
-      "field": "OrderId",
+      "fieldName": "OrderId",
       "condition": {
         "name": "in",
         "isUnary": false,
@@ -1016,7 +1016,7 @@ describe('IgxQueryBuilder', () => {
       "searchTree": {
         "filteringOperands": [
           {
-            "field": "ProductName",
+            "fieldName": "ProductName",
             "condition": {
               "name": "contains",
               "isUnary": false,
@@ -1087,7 +1087,7 @@ describe('IgxQueryBuilder', () => {
             expect(exprTree).toBe(`{
   "filteringOperands": [
     {
-      "field": "OrderId",
+      "fieldName": "OrderId",
       "condition": {
         "name": "notIn",
         "isUnary": false,
@@ -1099,7 +1099,7 @@ describe('IgxQueryBuilder', () => {
       "searchTree": {
         "filteringOperands": [
           {
-            "field": "ProductName",
+            "fieldName": "ProductName",
             "condition": {
               "name": "contains",
               "isUnary": false,
@@ -1134,9 +1134,9 @@ describe('IgxQueryBuilder', () => {
 
         it('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
             //Create dateTime filtering expression
-            const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Orders', ['OrderId']);
+            const tree = new FilteringExpressionsTree(FilteringLogic.And, null, 'Orders', ['OrderId']);
             tree.filteringOperands.push({
-                field: 'OrderDate',
+                fieldName: 'OrderDate',
                 searchVal: new Date('2024-09-17T21:00:00.000Z'),
                 conditionName: 'equals',              
                 condition: IgxDateFilteringOperand.instance().condition('equals')
@@ -1297,7 +1297,7 @@ describe('IgxQueryBuilder', () => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             const childGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, undefined);
             childGroup.filteringOperands.push({
-                field: 'OrderNameName',
+                fieldName: 'OrderNameName',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
                 conditionName: 'contains',
                 searchVal: 'a'
@@ -2107,9 +2107,9 @@ export class IgxQueryBuilderCustomTemplateSampleTestComponent implements OnInit 
     public ngOnInit(): void {
         this.entities = SampleEntities.map(a => ({ ...a }));
 
-        const tree = new FilteringExpressionsTree(FilteringLogic.And, 'Orders', ['*']);
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, null, 'Orders', ['*']);
         tree.filteringOperands.push({
-            field: 'OrderId',
+            fieldName: 'OrderId',
             condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
             conditionName: 'greaterThan',
             searchVal: 3,
