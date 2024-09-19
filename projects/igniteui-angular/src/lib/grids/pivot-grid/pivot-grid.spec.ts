@@ -2016,8 +2016,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
             it('should allow creating  IgxPivotDateDimension with no base dimension and setting it later.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const dateDimension = new IgxPivotDateDimension();
-                dateDimension.memberName = 'Date';
-                dateDimension.enabled = true;
                 dateDimension.baseDimension = {
                     memberName: 'Date',
                     enabled: true,
@@ -2029,6 +2027,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     years: true,
                     quarters: false
                 }
+
+                expect(dateDimension.enabled).toBe(true);
+
                 pivotGrid.pivotConfiguration.rows = [dateDimension];
                 pivotGrid.pipeTrigger++;
                 fixture.detectChanges();

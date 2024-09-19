@@ -172,6 +172,7 @@ export interface OverlayInfo {
     transformY?: number;
     event?: Event;
     wrapperElement?: HTMLElement;
+    size?: string
 }
 
 /** @hidden */
