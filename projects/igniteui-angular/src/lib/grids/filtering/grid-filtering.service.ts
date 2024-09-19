@@ -293,7 +293,7 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         const filteringTree = this.grid.filteringExpressionsTree;
-        const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.field);
+        const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
 
         for (const column of this.grid.columns) {
             this.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
@@ -460,7 +460,7 @@ export class IgxFilteringService implements OnDestroy {
         if (expression.condition.isUnary) {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            const column = this.grid.getColumnByName(expression.field);
+            const column = this.grid.getColumnByName(expression.fieldName);
             const formatter = column.formatter;
             if (formatter) {
                 return formatter(expression.searchVal, undefined);
@@ -538,12 +538,12 @@ export class IgxFilteringService implements OnDestroy {
         let newExpressionsTree = filteringState as FilteringExpressionsTree;
 
         if (createNewTree) {
-            newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, filteringState.field);
+            newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName);
             newExpressionsTree.filteringOperands = [...filteringState.filteringOperands];
         }
 
         if (condition) {
-            const newExpression: IFilteringExpression = { field: fieldName, searchVal: searchVal, condition, conditionName: condition.name, ignoreCase };
+            const newExpression: IFilteringExpression = { fieldName: fieldName, searchVal, condition, conditionName: condition.name, ignoreCase };
             expressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
             expressionsTree.filteringOperands.push(newExpression);
         }

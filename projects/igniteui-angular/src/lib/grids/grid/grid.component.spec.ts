@@ -563,7 +563,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('equals'),
                     conditionName: 'equals',
-                    field: 'index',
+                    fieldName: 'index',
                     searchVal: 0
                 }
             ];

@@ -36,7 +36,7 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
     public ngAfterViewInit(): void {
         const tree = new FilteringExpressionsTree(FilteringLogic.And);
         tree.filteringOperands.push({
-            field: 'ID',
+            fieldName: 'ID',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
             conditionName: 'contains',
             searchVal: 'a',
@@ -44,14 +44,14 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
         });
         const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
         orTree.filteringOperands.push({
-            field: 'ID',
+            fieldName: 'ID',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
             conditionName: 'contains',
             searchVal: 'b',
             ignoreCase: true
         });
         orTree.filteringOperands.push({
-            field: 'CompanyName',
+            fieldName: 'CompanyName',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
             conditionName: 'contains',
             searchVal: 'c',
@@ -59,7 +59,7 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
         });
         tree.filteringOperands.push(orTree);
         tree.filteringOperands.push({
-            field: 'CompanyName',
+            fieldName: 'CompanyName',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
             conditionName: 'contains',
             searchVal: 'd',

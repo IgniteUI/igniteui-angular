@@ -228,7 +228,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 {
                     condition: IgxStringFilteringOperand.instance().condition('equals'),
                     conditionName: 'equals',
-                    field: 'SellerName',
+                    fieldName: 'SellerName',
                     searchVal: 'Stanley'
                 }
             ];
@@ -2757,7 +2757,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 {
                     condition: IgxStringFilteringOperand.instance().condition('in'),
                     conditionName: 'in',
-                    field: 'City',
+                    fieldName: 'City',
                     searchVal: new Set(['Ciudad de la Costa'])
                 }
             ];
@@ -2766,7 +2766,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 {
                     condition: IgxStringFilteringOperand.instance().condition('in'),
                     conditionName: 'in',
-                    field: 'ProductCategory',
+                    fieldName: 'ProductCategory',
                     searchVal: new Set(['Bikes'])
                 }
             ];

@@ -350,7 +350,7 @@ const testFilter = () => {
             };
             state.expressionsTree.filteringOperands = [
                 {
-                    field: 'number',
+                    fieldName: 'number',
                     condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                     conditionName: 'greaterThan',
                     searchVal: 3
@@ -369,7 +369,7 @@ const testFilter = () => {
                 {
                     condition: IgxStringFilteringOperand.instance().condition('contains'),
                     conditionName: 'contains',
-                    field: 'string',
+                    fieldName: 'string',
                     searchVal: 'row'
                 }
             ];
@@ -381,7 +381,7 @@ const testFilter = () => {
                 {
                     condition: IgxStringFilteringOperand.instance().condition('contains'),
                     conditionName: 'contains',
-                    field: 'string',
+                    fieldName: 'string',
                     ignoreCase: false,
                     searchVal: 'ROW'
                 }
@@ -405,7 +405,7 @@ const testFilter = () => {
                 {
                     condition: IgxDateFilteringOperand.instance().condition('after'),
                     conditionName: 'after',
-                    field: 'date',
+                    fieldName: 'date',
                     searchVal: new Date()
                 }
             ];
@@ -421,7 +421,7 @@ const testFilter = () => {
                 {
                     condition: IgxBooleanFilteringOperand.instance().condition('false'),
                     conditionName: 'false',
-                    field: 'boolean'
+                    fieldName: 'boolean'
                 }
             ];
             const res = FilterUtil.filter(data, state);
@@ -437,7 +437,7 @@ const testFilter = () => {
                 {
                     condition: IgxBooleanFilteringOperand.instance().condition('false'),
                     conditionName: 'false',
-                    field: 'boolean'
+                    fieldName: 'boolean'
                 }
             ];
             const res = FilterUtil.filter(data, state);

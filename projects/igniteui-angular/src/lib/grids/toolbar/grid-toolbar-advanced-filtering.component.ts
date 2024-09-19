@@ -66,7 +66,7 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
             if (expr instanceof FilteringExpressionsTree) {
                 columnNames.push(...this.extractUniqueFieldNamesFromFilterTree(expr));
             } else {
-                columnNames.push((expr as IFilteringExpression).field);
+                columnNames.push((expr as IFilteringExpression).fieldName);
             }
         });
         return [...new Set(columnNames)];

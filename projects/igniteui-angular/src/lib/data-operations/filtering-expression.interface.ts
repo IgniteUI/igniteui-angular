@@ -14,7 +14,7 @@ export enum FilteringLogic {
  * Represents filtering expressions.
  */
 export declare interface IFilteringExpression {
-    field: string;
+    fieldName: string;
     condition?: IFilteringOperation;
     conditionName: string;
     searchVal?: Serializable;

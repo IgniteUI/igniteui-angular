@@ -788,7 +788,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     private resetExpression(condition?: string) {
         this.expression = {
-            field: this.column.field,
+            fieldName: this.column.field,
             condition: null,
             conditionName: null,
             searchVal: null,

@@ -681,7 +681,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.cancelOperandAdd();
 
         const operandItem = new ExpressionOperandItem({
-            field: null,
+            fieldName: null,
             condition: null,
             conditionName: null,
             ignoreCase: true,
@@ -725,7 +725,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public commitOperandEdit() {
         const actualSearchValue = this.searchValueTemplate ? this._editedExpression.expression.searchVal : this.searchValue;
         if (this._editedExpression) {
-            this._editedExpression.expression.field = this.selectedField.field;
+            this._editedExpression.expression.fieldName = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
             this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, actualSearchValue);
             this._editedExpression.fieldLabel = this.selectedField.label
@@ -781,7 +781,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this._editedExpression) {
             this._editedExpression.inEditMode = false;
 
-            if (!this._editedExpression.expression.field) {
+            if (!this._editedExpression.expression.fieldName) {
                 this.deleteItem(this._editedExpression);
             }
 
@@ -873,8 +873,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         expressionItem.hovered = false;
         this.fields = this.selectedEntity ? this.selectedEntity.fields : null;
         this.selectedField =
-            expressionItem.expression.field ?
-                this.fields.find(field => field.field === expressionItem.expression.field)
+            expressionItem.expression.fieldName ?
+                this.fields.find(field => field.field === expressionItem.expression.fieldName)
                 : null;
         this.selectedCondition =
             expressionItem.expression.condition ?
@@ -1324,7 +1324,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 } else {
                     const filteringExpr = expr as IFilteringExpression;
                     const exprCopy: IFilteringExpression = {
-                        field: filteringExpr.field,
+                        fieldName: filteringExpr.fieldName,
                         condition: filteringExpr.condition,
                         conditionName: filteringExpr.condition.name,
                         searchVal: filteringExpr.searchVal,
@@ -1339,7 +1339,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     if (entity) {
                         this.fields = entity.fields;
                     }
-                    const field = this.fields?.find(el => el.field === filteringExpr.field);
+                    const field = this.fields?.find(el => el.field === filteringExpr.fieldName);
                     operandItem.fieldLabel = field?.label || field?.header || field?.field;
                     if (this._expandedExpressions.filter(e => e.searchTree == operandItem.expression.searchTree).length > 0) {
                         operandItem.expanded = true;
@@ -1361,7 +1361,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             return null;
         }
 
-        const expressionTree = new FilteringExpressionsTree(groupItem.operator, entity, returnFields);
+        const expressionTree = new FilteringExpressionsTree(groupItem.operator, undefined, entity, returnFields);
 
         for (const item of groupItem.children) {
             if (item instanceof ExpressionGroupItem) {

@@ -73,7 +73,7 @@ export class PivotGridSampleComponent {
             {
                 condition: IgxStringFilteringOperand.instance().condition('equals'),
                 conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
-                field: 'SellerName',
+                fieldName: 'SellerName',
                 searchVal: 'Stanley'
             }
         ];
