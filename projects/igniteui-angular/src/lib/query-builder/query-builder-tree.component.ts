@@ -744,7 +744,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this._editedExpression.expression.searchTree.returnFields = innerQuery.selectedReturnFields;
                 this._editedExpression.expression.searchTree.filteringOperands = innerQuery.expressionTree.filteringOperands;
                 this._editedExpression.expression.searchTree.operator = innerQuery.expressionTree.operator;
-                this._editedExpression.expression.searchTree.field = innerQuery.expressionTree.field;
+                this._editedExpression.expression.searchTree.fieldName = innerQuery.expressionTree.fieldName;
             } else {
                 this._editedExpression.expression.searchTree = null;
             }
@@ -1541,7 +1541,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    
+
     private init() {
         this.clearSelection();
         this.cancelOperandAdd();
