@@ -581,7 +581,7 @@ describe('Excel Exporter', () => {
 
             const grid = fix.componentInstance.grid;
             // Verify the data without formatting
-            await exportAndVerify(grid, options, actualData.gridWithEmptyColums);
+            await exportAndVerify(grid, options, actualData.gridWithEmptyColumns);
 
             exporter.columnExporting.subscribe((value: IColumnExportingEventArgs) => {
                 if (value.columnIndex === 0 || value.columnIndex === 2) {
@@ -912,6 +912,21 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithSkippedColumns);
+        });
+
+        it('should export hierarchical grid with all child rows canceled.', async () => {
+            exporter.rowExporting.subscribe((args: IRowExportingEventArgs) => {
+                if (args.owner?.key === "Albums" ||
+                    args.owner?.key === "Songs" ||
+                    args.owner?.key === "Tours" ||
+                    args.owner?.key === "TourData") {
+                        args.cancel = true;
+                    }
+            });
+
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithSkippedRows);
         });
     });
 
@@ -1380,7 +1395,6 @@ describe('Excel Exporter', () => {
             fix = TestBed.createComponent(GridCustomSummaryWithNullAndZeroComponent);
             fix.detectChanges();
             await wait(300);
-            
             grid = fix.componentInstance.grid;
 
             await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithNullAndZero);
@@ -1415,8 +1429,6 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithDate);
         });
-
-
     });
 
     describe('', () => {
