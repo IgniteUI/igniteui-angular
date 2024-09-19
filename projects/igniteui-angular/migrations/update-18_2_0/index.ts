@@ -4,8 +4,6 @@ import type {
     Tree
 } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
-import { FileChange } from '../common/util';
-import * as ts from 'typescript';
 
 const version = '18.2.0';
 

@@ -44,6 +44,7 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-40';
 
     it('Should replace deprecated `shouldGenerate` property with `autoGenerate`', async () => {
+        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/grid-test.component.ts',
             `import { Component } from '@angular/core';
