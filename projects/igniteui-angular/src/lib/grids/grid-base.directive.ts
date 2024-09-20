@@ -2452,6 +2452,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* blazorByValueArray */
     /* blazorAlwaysWriteback */
     /* @tsTwoWayProperty (true, "RowSelectionChanging", "Detail.NewSelection", false) */
+    /* blazorPrimitiveValue */
     /**
      * Gets/Sets the current selection state.
      *
@@ -3225,6 +3226,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected get minColumnWidth() {
         return MINIMUM_COLUMN_WIDTH;
+    }
+
+    protected get isCustomSetRowHeight(): boolean {
+        return !isNaN(this._rowHeight);
     }
 
     /**
