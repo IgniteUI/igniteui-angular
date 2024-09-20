@@ -458,7 +458,6 @@ export class WorksheetFile implements IExcelFile {
 
                 if (!summaryFunc) {
                     let summaryValue;
-                    
                     const label = cellValue.label?.toString();
                     const value = cellValue.value?.toString();
 
