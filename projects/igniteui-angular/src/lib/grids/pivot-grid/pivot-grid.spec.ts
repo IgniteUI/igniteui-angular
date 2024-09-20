@@ -1955,8 +1955,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(200);
                 pivotGrid.autoSizeRowDimension(rowDimension);
                 fixture.detectChanges();
-                expect(rowDimension.width).toBe('158px');
-                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
+                expect(rowDimension.width).toBe('162px');
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(162);
             });
 
             it('should auto-size row dimension when width is set to auto.', fakeAsync(() => {
@@ -1999,9 +1999,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
                 tick(200);
                 rowDimension = pivotGrid.pivotConfiguration.rows[0];
-                expect(rowDimension.autoWidth).toBe(158);
+                expect(rowDimension.autoWidth).toBe(162);
                 expect(rowDimension.width).toBe('auto');
-                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(162);
             }));
 
             it('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
@@ -2037,8 +2037,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
             it('should allow creating  IgxPivotDateDimension with no base dimension and setting it later.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const dateDimension = new IgxPivotDateDimension();
-                dateDimension.memberName = 'Date';
-                dateDimension.enabled = true;
                 dateDimension.baseDimension = {
                     memberName: 'Date',
                     enabled: true,
@@ -2050,6 +2048,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     years: true,
                     quarters: false
                 }
+
+                expect(dateDimension.enabled).toBe(true);
+
                 pivotGrid.pivotConfiguration.rows = [dateDimension];
                 pivotGrid.pipeTrigger++;
                 fixture.detectChanges();

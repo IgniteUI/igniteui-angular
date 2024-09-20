@@ -80,9 +80,13 @@
         cursor: pointer;
 
         igx-icon {
-            width: var(--igx-icon-size, #{rem(15px)});
-            height: var(--igx-icon-size, #{rem(15px)});
-            font-size: var(--igx-icon-size, #{rem(15px)});
+            @if $variant == 'indigo' {
+                --component-size: 2;
+            } @else {
+                width: var(--igx-icon-size, #{rem(15px)});
+                height: var(--igx-icon-size, #{rem(15px)});
+                font-size: var(--igx-icon-size, #{rem(15px)});
+            }
         }
     }
 
@@ -227,10 +231,12 @@
         }
 
         igx-icon {
+            --component-size: #{if($variant == 'indigo', 2, var(--grid-size))};
+
             display: initial;
-            width: var(--igx-icon-size, #{rem(18px)});
-            height: var(--igx-icon-size, #{rem(18px)});
-            font-size: var(--igx-icon-size, #{rem(18px)});
+            width: var(--size) !important;
+            height: var(--size) !important;
+            font-size: var(--size) !important;
         }
     }
 
@@ -297,8 +303,10 @@
             color: var-get($theme, 'excel-filtering-actions-hover-foreground');
         }
 
-        igx-icon {
-            --component-size: 3;
+        @if $variant == 'indigo' {
+            igx-icon {
+                --component-size: 2;
+            }
         }
 
         [dir='rtl'] & {
