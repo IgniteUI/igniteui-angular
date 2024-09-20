@@ -1422,14 +1422,10 @@ igx-bottom-nav-header {
     });
 
     it('should rename InteractionMode to PickerInteractionMode', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
-            `import { Component, ViewChild } from '@angular/core';
-import { InteractionMode, IgxIconComponent } from 'igniteui-angular';
+            `import { Component } from '@angular/core';
 import { InteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, InteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, InteractionMode, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'pickers-mode',
@@ -1444,11 +1440,8 @@ export class PickerModeComponent {
         const tree = await schematicRunner
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        const expectedContent = `import { Component, ViewChild } from '@angular/core';
-import { PickerInteractionMode, IgxIconComponent } from 'igniteui-angular';
+        const expectedContent = `import { Component } from '@angular/core';
 import { PickerInteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, PickerInteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, PickerInteractionMode, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'pickers-mode',
@@ -1535,7 +1528,6 @@ export class HGridMultiRowDragComponent {
     });
 
     it('Should update toast output subscriptions', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/toast.component.ts', `
 import { IgxToastComponent } from 'igniteui-angular';
@@ -1553,7 +1545,7 @@ export class SimpleComponent {
         this.toast.hide();
     }
 }`);
-        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: true }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/toast.component.ts'))
             .toEqual(`

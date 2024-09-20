@@ -494,11 +494,10 @@ describe(`Update to ${version}`, () => {
     });
 
     it('Should remove references to deprecated `banner` property of `BannerEventArgs`', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/expansion-test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
-import { IgxBanner } from 'igniteui-angular';
+import { BannerEventArgs, BannerCancelEventArgs } from 'igniteui-angular';
 
 @Component({
 selector: 'app-banner-test',
@@ -507,8 +506,9 @@ styleUrls: ['./banner-test.component.scss']
 })
 export class BannerTestComponent {
 
-@ViewChild(IgxBannerComponent, { static: true })
-public panel: IgxBannerComponent;
+public onBannerOpened(event: BannerCancelEventArgs) {
+    console.log(event.banner);
+}
 
 public onBannerOpened(event: BannerEventArgs) {
     console.log(event.banner);
@@ -517,7 +517,7 @@ public onBannerOpened(event: BannerEventArgs) {
         );
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
         const expectedContent =  `import { Component, ViewChild } from '@angular/core';
-import { IgxBanner } from 'igniteui-angular';
+import { BannerEventArgs, BannerCancelEventArgs } from 'igniteui-angular';
 
 @Component({
 selector: 'app-banner-test',
@@ -526,8 +526,9 @@ styleUrls: ['./banner-test.component.scss']
 })
 export class BannerTestComponent {
 
-@ViewChild(IgxBannerComponent, { static: true })
-public panel: IgxBannerComponent;
+public onBannerOpened(event: BannerCancelEventArgs) {
+    console.log(event.owner);
+}
 
 public onBannerOpened(event: BannerEventArgs) {
     console.log(event.owner);

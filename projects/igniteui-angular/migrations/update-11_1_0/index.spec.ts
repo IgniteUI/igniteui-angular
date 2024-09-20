@@ -56,7 +56,6 @@ describe('Update to 11.1.0', () => {
     });
 
     it('should migrate updated getter names', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/icon-test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
@@ -111,9 +110,6 @@ export class IconTestComponent {
     imports: [IgxIconModule]
 });
 `;
-        console.log(tree.readContent(
-            '/testSrc/appPrefix/component/icon-test.component.ts'
-        ));
 
         expect(
             tree.readContent(
@@ -123,11 +119,10 @@ export class IconTestComponent {
     });
 
     it('should migrate updated members names', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/icon-test.component.ts',
             `import { Component } from '@angular/core';
-            import { IgxIconService } from 'igniteui-angular';
+import { IgxIconService } from 'igniteui-angular';
 
 @Component({
     selector: 'app-icon-test',
@@ -152,7 +147,7 @@ export class IconTestComponent {
             .runSchematic('migration-19', {}, appTree);
 
         const expectedContent = `import { Component } from '@angular/core';
-        import { IgxIconService } from 'igniteui-angular';
+import { IgxIconService } from 'igniteui-angular';
 
 @Component({
     selector: 'app-icon-test',
@@ -321,7 +316,6 @@ export class IconTestComponent {
     });
 
     it('should update Excel exporter onExportEnded event name to exportEnded', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/excel-export.component.ts',
 `import { Component } from '@angular/core';
@@ -378,7 +372,6 @@ export class ExcelExportComponent {
     });
 
     it('should update CSV exporter onExportEnded event name to exportEnded', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/csv-export.component.ts',
 `import { Component } from '@angular/core';
@@ -617,7 +610,6 @@ export class CsvExportComponent {
     });
 
     it('should update Excel exporter onColumnExport and onRowExport event names to columnmExporting and rowExporting', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/excel-export.component.ts',
 `import { Component } from '@angular/core';
@@ -676,7 +668,6 @@ export class ExcelExportComponent {
     });
 
     it('should update CSV exporter onColumnExport and onRowExport event names to columnmExporting and rowExporting', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/csv-export.component.ts',
 `import { Component } from '@angular/core';
@@ -734,7 +725,6 @@ export class CsvExportComponent {
     });
 
     it('should update GridPagingMode enum from lowerCase to TitleCase', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/paging-test.component.ts',
 `import { Component } from '@angular/core';
@@ -746,8 +736,8 @@ import { GridPagingMode } from "igniteui-angular";
     templateUrl: "./paging-test.component.html"
 })
 export class PagingComponent {
-    public pagingLocal: GridPagingMode = GridPagingMode.Local;
-    public pagingRemote: GridPagingMode = GridPagingMode.Remote;
+    public pagingLocal: GridPagingMode = GridPagingMode.local;
+    public pagingRemote: GridPagingMode = GridPagingMode.remote;
     constructor(){}
 }
 `);
@@ -765,8 +755,8 @@ import { GridPagingMode } from "igniteui-angular";
     templateUrl: "./paging-test.component.html"
 })
 export class PagingComponent {
-    public pagingLocal: GridPagingMode = GridPagingMode.local;
-    public pagingRemote: GridPagingMode = GridPagingMode.remote;
+    public pagingLocal: GridPagingMode = GridPagingMode.Local;
+    public pagingRemote: GridPagingMode = GridPagingMode.Remote;
     constructor(){}
 }
 `;

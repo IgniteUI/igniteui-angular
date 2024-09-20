@@ -2,7 +2,7 @@ import { EmptyTree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsChanges, ElementType, ThemeType } from './schema';
+import { ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsChanges, ElementType, ThemeType, MemberChanges } from './schema';
 import { UpdateChanges, InputPropertyType, BoundPropertyObject } from './UpdateChanges';
 import * as tsUtils from './tsUtils';
 
@@ -35,7 +35,13 @@ describe('UpdateChanges', () => {
         appTree.create('/angular.json', JSON.stringify({
             projects: {
                 testProj: {
+                    root: '',
                     sourceRoot: '/'
+                }
+            },
+            schematics: {
+                '@schematics/angular:component': {
+                    prefix: 'app'
                 }
             }
         }));
@@ -915,31 +921,45 @@ export class AppModule { }`);
     describe('Language Service migrations', () => {
 
         it('Should be able to replace property of an event', () => {
-            pending('set up tests for migrations through lang service');
+            const selectorsJson: MemberChanges = {
+                changes: [
+                    { member: 'onGridKeydown', replaceWith: 'gridKeydown', definedIn: ['IgxGridComponent'] }
+                ]
+            };
+            const jsonPath = path.join(__dirname, 'changes', 'members.json');
+
+            // leave callThrough on spies for other files the LS test might want to load:
+            spyOn(fs, 'existsSync').and.callThrough()
+                .withArgs(jsonPath).and.returnValue(true);
+            spyOn(fs, 'readFileSync').and.callThrough()
+                .withArgs(jsonPath, jasmine.any(String)).and.returnValue(JSON.stringify(selectorsJson));
+
             const fileContent =
 `import { Component } from '@angular/core';
-import { IGridCreatedEventArgs } from 'igniteui-angular';
+import { IgxGridComponent, IGridKeydownEventArgs } from 'igniteui-angular';
 @Component({
   selector: 'app-custom-grid',
   template: ''
 })
 export class CustomGridComponent {
-  public childGridCreated(event: IGridCreatedEventArgs) {
-      event.grid.onGridKeydown.subscribe(() => {});
+  public childGridCreated(event: IGridKeydownEventArgs) {
+      const grid = event.owner as IgxGridComponent;
+      grid.onGridKeydown.subscribe(() => {});
   }
 }
 `;
             appTree.create('test.component.ts', fileContent);
             const expectedFileContent =
 `import { Component } from '@angular/core';
-import { IGridCreatedEventArgs } from 'igniteui-angular';
+import { IgxGridComponent, IGridKeydownEventArgs } from 'igniteui-angular';
 @Component({
   selector: 'app-custom-grid',
   template: ''
 })
 export class CustomGridComponent {
-  public childGridCreated(event: IGridCreatedEventArgs) {
-      event.grid.gridKeydown.subscribe(() => {});
+  public childGridCreated(event: IGridKeydownEventArgs) {
+      const grid = event.owner as IgxGridComponent;
+      grid.gridKeydown.subscribe(() => {});
   }
 }
 `;

@@ -121,7 +121,6 @@ describe(`Update to ${version}`, () => {
     });
 
     it('Should replace deprecated `children` property of Columns', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/column-test.component.ts',
             `import { Component } from '@angular/core';
@@ -165,7 +164,6 @@ export class ColumnsTestComponent {
 
 
     it('Should replace deprecated `isFirstPageDisabled`/`isLastPageDisabled` on paginator', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/paginator-test.component.ts',
             `import { Component } from '@angular/core';

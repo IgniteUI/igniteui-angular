@@ -32,7 +32,6 @@ describe(`Update to ${version}`, () => {
 
     // IgxOverlayService
     it('should update overlay events subscriptions', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/service/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
@@ -70,7 +69,6 @@ export class SimpleComponent implements OnInit {
     });
 
     it('should update banner event subscriptions in .ts file', async () => {
-        pending('ts language service tests do not pass');
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
@@ -131,7 +129,6 @@ export class TestComponent implements OnInit {
     });
 
     it('should update expansion panel event subscriptions in .ts file', async () => {
-        pending('ts language service tests do not pass');
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
@@ -182,7 +179,6 @@ export class TestComponent implements OnInit {
     });
 
     it('should update mask event subscriptions .ts file', async () => {
-        pending('ts language service tests do not pass');
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
@@ -206,7 +202,7 @@ export class TestComponent implements OnInit {
     public mask: IgxMaskDirective
 
     public ngOnInit() {
-        this.mask.valueChanged;
+        this.mask.valueChanged.subscribe();
     }
 }`);
     });

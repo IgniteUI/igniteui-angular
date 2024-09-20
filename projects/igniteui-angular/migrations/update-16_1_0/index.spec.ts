@@ -90,20 +90,19 @@ describe(`Update to ${version}`, () => {
     });
 
     it('Should properly rename value property to displayValue and selection to value', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
-        import { IgxComboComponent } from 'igniteui-angular';
+        import { IgxComboComponent, IgxSimpleComboComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxComboComponent, { read: IgxComboComponent })
             public combo: IgxComboComponent;
             @ViewChild(IgxSimpleComboComponent, { read: IgxSimpleComboComponent })
             public simpleCombo: IgxSimpleComboComponent;
             public ngAfterViewInit() {
-                const comboDisplayValue = combo.value;
-                const comboSelectionValue = combo.selection;
-                const simpleComboDisplayValue = simpleCombo.value;
-                const simpleComboSelectionValue = simpleCombo.selection;
+                const comboDisplayValue = this.combo.value;
+                const comboSelectionValue = this.combo.selection;
+                const simpleComboDisplayValue = this.simpleCombo.value;
+                const simpleComboSelectionValue = this.simpleCombo.selection;
             }
         }
         `);
@@ -114,17 +113,17 @@ describe(`Update to ${version}`, () => {
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
         `
-        import { IgxComboComponent } from 'igniteui-angular';
+        import { IgxComboComponent, IgxSimpleComboComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxComboComponent, { read: IgxComboComponent })
             public combo: IgxComboComponent;
             @ViewChild(IgxSimpleComboComponent, { read: IgxSimpleComboComponent })
             public simpleCombo: IgxSimpleComboComponent;
             public ngAfterViewInit() {
-                const comboDisplayValue = combo.displayValue;
-                const comboSelectionValue = combo.value;
-                const simpleComboDisplayValue = simpleCombo.displayValue;
-                const simpleComboSelectionValue = simpleCombo.value;
+                const comboDisplayValue = this.combo.displayValue;
+                const comboSelectionValue = this.combo.value;
+                const simpleComboDisplayValue = this.simpleCombo.displayValue;
+                const simpleComboSelectionValue = this.simpleCombo.value;
             }
         }
         `

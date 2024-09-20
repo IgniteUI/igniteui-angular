@@ -51,7 +51,6 @@ describe('Update 10.2.0', () => {
     });
 
     it('Should remove references to deprecated `pane` property of `IExpansionPanelEventArgs`', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/expansion-test.component.ts',
             `import { Component, ViewChild } from '@angular/core';

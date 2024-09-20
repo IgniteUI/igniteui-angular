@@ -70,7 +70,6 @@ describe(`Update to ${version}`, () => {
     });
 
     it('should replace on-prefixed typescript outputs in carousel', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
@@ -100,8 +99,7 @@ describe(`Update to ${version}`, () => {
 
         @Component({
             selector: 'appPrefix-component',
-            templateUrl: './test.component.html',
-            styleUrls: ['./test.component.scss']
+            template: '<ng-content></ng-content>'
         })
         export class TestComponent {
             @ViewChild(IgxCarouselComponent)
