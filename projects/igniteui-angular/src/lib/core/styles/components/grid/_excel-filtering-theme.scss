@@ -17,6 +17,7 @@
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin excel-filtering($theme) {
     $variant: map.get($theme, '_meta', 'variant');
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
     $tree-node-indent: (
@@ -45,13 +46,24 @@
         width: rem(320px);
         height: 100%;
         flex-grow: 1;
-        box-shadow: elevation(12);
+
+        @if $variant == 'indigo' {
+            box-shadow: elevation(if($theme-variant == 'light', 3, 2)), 0 0 0 rem(1px) color(null, 'gray', if($theme-variant == 'light', 400, 100));
+
+            // TODO: The border-radius should not be hardcoded.
+            border-radius: border-radius(rem(4px));
+        } @else {
+            box-shadow: elevation(12);
+        }
+
         overflow: auto;
         min-width: rem(320px);
+
     }
 
     %igx-excel-filter__sizing {
         @include sizable();
+
         min-height: sizable(
             rem(330px),
             rem(465px),
@@ -79,6 +91,14 @@
         display: flex;
         cursor: pointer;
 
+        @if $variant == 'indigo' {
+            opacity: if($theme-variant == 'light', .75, .85);
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
         igx-icon {
             @if $variant == 'indigo' {
                 --component-size: 2;
@@ -91,12 +111,18 @@
     }
 
     %grid-excel-icon--filtered {
+        opacity: 1;
+
         igx-icon {
-            color: if(
-                $variant == 'indigo',
-                color($color: 'warn', $variant: 500),
-                color($color: 'secondary')
-            );
+            color: if($variant == 'indigo', color($color: 'primary', $variant: 500), color($color: 'secondary'));
+        }
+
+        @if $variant == 'indigo' {
+            &:hover {
+                igx-icon {
+                    color: color($color: 'primary', $variant: 400);
+                }
+            }
         }
     }
 
@@ -106,45 +132,74 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        background: var-get($theme, 'filtering-row-background');
+
         // TODO: The border-radius should not be hardcoded.
         border-radius: border-radius(rem(4px));
 
-        igx-buttongroup {
-            --shadow: none;
-            --item-background: #{var-get($theme, 'filtering-row-background')};
-            --item-hover-background: #{color($color: 'gray', $variant: 100)};
-            --item-selected-background: #{color($color: 'gray', $variant: 100)};
-            --item-text-color: #{color($color: 'gray', $variant: 700)};
-            --item-icon-color: #{color($color: 'gray', $variant: 700)};
-            --item-hover-text-color: #{color($color: 'gray', $variant: 800)};
-            --item-hover-icon-color: #{color($color: 'gray', $variant: 800)};
-            --item-selected-text-color: #{if(
+        @if $variant != 'indigo' {
+            background: var-get($theme, 'filtering-row-background');
+
+            %igx-group-display {
+                --shadow: none;
+                --item-background: #{var-get($theme, 'filtering-row-background')};
+                --item-hover-background: #{color($color: 'gray', $variant: 100)};
+                --item-selected-background: #{color($color: 'gray', $variant: 100)};
+                --item-text-color: #{color($color: 'gray', $variant: 700)};
+                --item-icon-color: #{color($color: 'gray', $variant: 700)};
+                --item-hover-text-color: #{color($color: 'gray', $variant: 800)};
+                --item-hover-icon-color: #{color($color: 'gray', $variant: 800)};
+                --item-selected-text-color: #{if(
                 $variant == 'indigo',
                 contrast-color($color: 'surface'),
                 color($color: 'secondary', $variant: 500)
             )};
-            --item-selected-icon-color: #{if(
+                --item-selected-icon-color: #{if(
                 $variant == 'indigo',
                 contrast-color($color: 'surface'),
                 color($color: 'secondary', $variant: 500)
             )};
-            --item-selected-hover-icon-color: #{if(
+                --item-selected-hover-icon-color: #{if(
                 $variant == 'fluent',
                 color($color: 'secondary', $variant: 500),
                 contrast-color($color: 'gray', $variant: 50)
             )};
-            --item-border-color: transparent;
-            --item-hover-border-color: transparent;
-            --item-focused-border-color: #{if(
+                --item-border-color: transparent;
+                --item-hover-border-color: transparent;
+                --item-focused-border-color: #{if(
                 $variant == 'fluent',
                 color($color: 'gray', $variant: 700),
                 transparent
             )};
-            --item-selected-border-color: transparent;
-            --item-selected-hover-border-color: transparent;
-            --item-disabled-border: transparent;
-            --disabled-selected-border-color: transparent;
+                --item-selected-border-color: transparent;
+                --item-selected-hover-border-color: transparent;
+                --item-disabled-border: transparent;
+                --disabled-selected-border-color: transparent;
+            }
+        } @else {
+            @if $theme-variant == 'light' {
+                background: contrast-color($color: 'gray', $variant: 900);
+            } @else {
+                background: color($color: 'gray', $variant: 50);
+            }
+
+            %igx-group-display {
+                --item-background: transparent;
+                --border-color: transparent;
+                --item-border-color: transparent;
+                --item-focused-border-color: transparent;
+                --item-hover-border-color: transparent;
+                --item-selected-border-color: transparent;
+                --item-selected-hover-border-color: transparent;
+                --item-disabled-border: transparent;
+                --disabled-selected-border-color: transparent;
+                --shadow: none;
+            }
+
+            %igx-group-item {
+                &:not(:nth-child(1)) {
+                    margin: 0;
+                }
+            }
         }
 
         @include tree(tree-theme(
@@ -163,8 +218,7 @@
         }
 
         igx-chips-area  {
-            padding-inline-start: pad-block(rem(4px), rem(8px), rem(16px));
-            padding-inline-end: pad-block(rem(4px), rem(8px), rem(16px));
+            padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
             padding-block-start: pad-block(rem(4px), rem(8px), rem(16px));
             padding-block-end: 0;
             gap: sizable(rem(4px), rem(4px), rem(8px));
@@ -174,8 +228,24 @@
     %grid-excel-menu__header {
         display: flex;
         align-items: center;
-        padding: pad(rem(4px), rem(8px), rem(16px));
+
+        @if $variant == 'indigo' {
+            padding: rem(16px) rem(16px) sizable(rem(8px), rem(12px), rem(16px));
+        } @else {
+            padding: pad(rem(4px), rem(8px), rem(16px));
+        }
+
         color: var-get($theme, 'excel-filtering-header-foreground');
+    }
+
+    @if $variant == 'indigo' {
+        .ig-typography %grid-excel-menu--compact {
+            %grid-excel-menu__header {
+                > h4 {
+                    @include type-style('h6')
+                }
+            }
+        }
     }
 
     %grid-excel-menu__header-actions {
@@ -222,12 +292,23 @@
     %grid-excel-sort,
     %grid-excel-move {
         display: block;
-        padding-block: pad-block(rem(4px), rem(8px), rem(8px));
-        padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+
+        @if $variant == 'indigo' {
+            padding-inline: pad-inline(rem(16px));
+        } @else {
+            padding-block: pad-block(rem(4px), rem(8px), rem(8px));
+            padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+        }
 
         header {
             color: var-get($theme, 'excel-filtering-subheader-foreground');
-            margin-bottom: rem(4px);
+
+            @if $variant == 'indigo' {
+                margin-block-end: sizable(rem(0), rem(4px), rem(4px)) !important;
+                text-transform: capitalize !important;
+            } @else {
+                margin-block-end: rem(4px);
+            }
         }
 
         igx-icon {
@@ -237,6 +318,26 @@
             width: var(--size) !important;
             height: var(--size) !important;
             font-size: var(--size) !important;
+        }
+    }
+
+    @if $variant == 'indigo' {
+        %grid-excel-move {
+            margin-block-end: sizable(rem(12px), rem(16px), rem(16px));
+        }
+
+        %grid-excel-sort + %grid-excel-move {
+            margin-block-start: sizable(rem(4px), rem(8px), rem(8px));
+        }
+
+        %grid-excel-sort {
+            padding-block-end: 0;
+        }
+
+        %grid-excel-actions__action {
+            span {
+                @include type-style('body-2');
+            }
         }
     }
 
@@ -291,21 +392,56 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-block: pad-block(rem(4px), rem(8px), rem(8px));
-        padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+
+        @if $variant == 'indigo' {
+            padding-block: pad-block(rem(6px));
+            padding-inline: pad-inline(rem(12px));
+            margin-inline: rem(8px);
+            margin-block-end: rem(4px);
+            border-radius: rem(4px);
+        } @else {
+            padding-block: pad-block(rem(4px), rem(8px), rem(8px));
+            padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+        }
+
         cursor: pointer;
         color: var-get($theme, 'excel-filtering-actions-foreground');
         outline-style: none;
 
         &:hover,
         &:focus {
-            background: color($color: 'gray', $variant: 100);
             color: var-get($theme, 'excel-filtering-actions-hover-foreground');
+
+            @if $variant == 'indigo' {
+                @if $theme-variant == 'light' {
+                    background: color($color: 'gray', $variant: 200);
+                } @else {
+                    background: contrast-color($color: 'gray', $variant: 50, $opacity: .1);
+                }
+
+                igx-icon {
+                    /* stylelint-disable max-nesting-depth */
+                    @if $theme-variant == 'light' {
+                        color: color($color: 'gray', $variant: 700);
+                    } @else {
+                        color: contrast-color($color: 'gray', $variant: 50, $opacity: .8);
+                    }
+                    /* stylelint-enable max-nesting-depth */
+                }
+            } @else {
+                background: color($color: 'gray', $variant: 100);
+            }
         }
 
         @if $variant == 'indigo' {
             igx-icon {
                 --component-size: 2;
+
+                @if $theme-variant == 'light' {
+                    color: color($color: 'gray', $variant: 600);
+                } @else {
+                    color: contrast-color($color: 'gray', $variant: 50, $opacity: .6);
+                }
             }
         }
 
@@ -313,6 +449,12 @@
             igx-icon {
                 transform: scaleX(-1);
             }
+        }
+    }
+
+    @if $variant == 'indigo' {
+        %grid-excel-actions__action-filter {
+            margin-block-end: 0;
         }
     }
 
@@ -324,6 +466,12 @@
     %grid-excel-actions__action--disabled {
         color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
         pointer-events: none;
+
+        @if $variant == 'indigo' {
+            igx-icon {
+                color: var-get($theme, 'excel-filtering-actions-disabled-foreground');
+            }
+        }
     }
 
     %igx-excel-filter__empty {
@@ -337,13 +485,40 @@
         flex-direction: column;
         flex-grow: 1;
         overflow: hidden;
-        padding: pad(rem(4px), rem(8px), rem(16px));
-        gap: pad(rem(4px), rem(8px), rem(16px));
 
-        igx-list {
+        @if $variant == 'indigo' {
+            padding: pad(rem(16px));
+            gap: sizable(rem(16px));
+        } @else {
+            padding: pad(rem(4px), rem(8px), rem(16px));
+            gap: sizable(rem(4px), rem(8px), rem(16px));
+        }
+
+        %igx-list {
             flex-grow: 1;
             overflow: hidden;
-            margin-inline: calc(sizable(rem(-4px), rem(-8px), rem(-16px)) * -1);
+
+            @if $variant == 'indigo' {
+                --background: #{color($color: 'surface', $variant: 500)};
+
+                margin-inline: calc(sizable(rem(-16px)) * -1);
+
+                // This is the only way to take the gap from the list,
+                // otherwise we have to hardcoded here
+                > div {
+                    gap: inherit;
+                }
+
+                igx-display-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: inherit;
+                    padding: rem(8px);
+                }
+            } @else  {
+                margin-inline: calc(sizable(rem(-4px), rem(-8px), rem(-16px)) * -1);
+            }
+
             border: 0;
 
             @if $bootstrap-theme {
@@ -352,6 +527,11 @@
             } @else {
                 border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
                 border-bottom: rem(1px) dashed color($color: 'gray', $variant: 300);
+            }
+
+            @if $variant == 'indigo' and $theme-variant == 'dark' {
+                border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
+                border-bottom: rem(1px) dashed color($color: 'gray', $variant: 100);
             }
         }
 
@@ -368,6 +548,11 @@
             } @else {
                 border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
                 border-bottom: rem(1px) dashed color($color: 'gray', $variant: 300);
+            }
+
+            @if $variant == 'indigo' and $theme-variant == 'dark' {
+                border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
+                border-bottom: rem(1px) dashed color($color: 'gray', $variant: 100);
             }
 
             igx-icon {
@@ -459,8 +644,10 @@
             }
         }
 
-        %grid-excel-move {
-            margin-bottom: 0;
+        @if $variant != 'indigo' {
+            %grid-excel-move {
+                margin-bottom: 0;
+            }
         }
     }
 
@@ -476,7 +663,13 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+
+        @if $variant == 'indigo' {
+            padding-inline: pad-inline(rem(16px));
+        } @else {
+            padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+        }
+
         padding-block: 0;
 
         igx-select {
@@ -531,10 +724,19 @@
 
     %grid-excel-menu__secondary-footer {
         padding: rem(8px) rem(16px);
+
         @if $bootstrap-theme {
             border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
         } @else {
             border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
+        }
+
+        @if $variant == 'indigo' and $theme-variant == 'dark' {
+            border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
+        }
+
+        @if $variant == 'indigo' {
+            padding: rem(16px);
         }
 
         %grid-excel-filter__apply,
