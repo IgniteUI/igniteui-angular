@@ -12,7 +12,7 @@ export class ServerHost implements ts.server.ServerHost {
     public readonly newLine: string;
     public readonly useCaseSensitiveFileNames: boolean;
 
-    constructor(private host: Tree) {
+    constructor(public host: Tree) {
         this.args = ts.sys.args;
         this.newLine = ts.sys.newLine;
         this.useCaseSensitiveFileNames = ts.sys.useCaseSensitiveFileNames;
