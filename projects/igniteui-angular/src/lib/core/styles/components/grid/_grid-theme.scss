@@ -691,7 +691,7 @@
         compact: rem(12px)
     );
 
-    $hierarchical-action-icon: rem(24px);
+    $hierarchical-action-icon: if($variant == 'indigo', rem(16px), rem(24px));
 
     $hierarchical-indent: (
         comfortable: calc(2 * #{map.get($hierarchical-grid-indent, 'comfortable')} + #{$hierarchical-action-icon}),
@@ -723,7 +723,13 @@
         compact: rem(12px)
     );
 
-    $indicator-icon-width: rem(24px);
+    $indicator-icon-width: map.get((
+        'material': rem(24px),
+        'fluent': rem(24px),
+        'bootstrap': rem(24px),
+        'indigo': rem(16px),
+    ), $variant);
+
     $drag-icon-size: rem(24px);
 
     $grid-header-weight: map.get((
@@ -1130,10 +1136,7 @@
 
         %igx-grid__header-indentation {
             igx-icon {
-                --component-size: var(--ig-size, var(--ig-size-large));
-                font-size: rem(24px);
-                width: rem(24px);
-                height: rem(24px);
+                --component-size: #{if($variant == 'indigo', 2, 3)};
             }
 
             @if $variant == 'indigo' {
@@ -1448,18 +1451,14 @@
 
         padding-block: 0;
         flex: 1 0 auto;
-        // Fix for IE 11
-        min-width: calc(#{$drag-icon-size} + #{$cell-padding-comfortable});
         background: inherit;
         z-index: 4;
         cursor: move;
         border-inline-end: rem(1px) solid transparent;
         background-clip: border-box;
 
-        %igx-icon-display {
-            width: var(--igx-icon-size, #{$drag-icon-size});
-            height: var(--igx-icon-size, #{$drag-icon-size});
-            font-size: var(--igx-icon-size, #{$drag-icon-size});
+        igx-icon {
+            --component-size: #{if($variant == 'indigo', 2, 3)};
         }
     }
 
@@ -1514,16 +1513,8 @@
     }
 
     %igx-grid__td--bool {
-        @if $variant != 'indigo' {
-            igx-icon {
-                width: var(--igx-icon-size, #{rem(18px)});
-                height: var(--igx-icon-size, #{rem(18px)});
-                font-size: var(--igx-icon-size, #{rem(18px)});
-            }
-        } @else {
-            igx-icon {
-                --ig-size: 2;
-            }
+        igx-icon {
+            --component-size: #{if($variant == 'indigo', 2, 1)};
         }
 
         %igx-icon--error {
@@ -1584,6 +1575,10 @@
     %igx-grid__tr--header {
         display: flex;
         align-items: center;
+
+        igx-icon {
+            --component-size: #{if($variant == 'indigo', 2, 3)};
+        }
     }
 
     %igx-grid__tr--add-animate {
@@ -1689,7 +1684,7 @@
         }
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, 3)};
+            --component-size: #{if($variant == 'indigo', 2, 3)};;
         }
     }
 
@@ -1767,6 +1762,10 @@
     %grid-cell--fixed-width {
         flex-grow: 0;
         outline-style: none;
+
+        igx-icon {
+            --component-size: #{if($variant == 'indigo', 2, 3)};
+        }
     }
 
     %grid-cell--active {
@@ -2017,9 +2016,13 @@
             display: flex;
 
             igx-icon {
-                width: var(--igx-icon-size, #{rem(15px)});
-                height: var(--igx-icon-size, #{rem(15px)});
-                font-size: var(--igx-icon-size, #{rem(15px)});
+                @if $variant == 'indigo' {
+                    --component-size: 2;
+                } @else {
+                    width: var(--igx-icon-size, #{rem(15px)});
+                    height: var(--igx-icon-size, #{rem(15px)});
+                    font-size: var(--igx-icon-size, #{rem(15px)});
+                }
             }
 
             &::after {
@@ -2044,6 +2047,10 @@
         cursor: pointer;
 
         igx-icon {
+            @if $variant == 'indigo' {
+                --component-size: 2;
+            }
+
             color: var-get($theme, 'expand-icon-color');
         }
 
@@ -2472,13 +2479,11 @@
     }
 
     %igx-group-label__icon {
-        user-select: none;
-        color: var-get($theme, 'group-label-icon') !important;
+        &.igx-icon {
+            --component-size: #{if($variant == 'indigo', 2, 1)};
 
-        igx-icon {
-            width: var(--igx-icon-size, #{rem(16px)});
-            height: var(--igx-icon-size, #{rem(16px)});
-            font-size: var(--igx-icon-size, #{rem(16px)});
+            color: var-get($theme, 'group-label-icon');
+            user-select: none;
         }
     }
 
@@ -2708,10 +2713,9 @@
         min-height: var(--header-size);
 
         igx-icon {
+            --component-size: #{if($variant == 'indigo', 2, 3)};
+
             color: var-get($theme, 'expand-icon-color');
-            width: var(--igx-icon-size, #{$indicator-icon-width});
-            height: var(--igx-icon-size, #{$indicator-icon-width});
-            font-size: var(--igx-icon-size, #{$indicator-icon-width});
         }
 
         &:hover,
@@ -2740,7 +2744,7 @@
         z-index: 4;
 
         igx-icon {
-            --component-size: var(--grid-size);
+            --component-size: #{if($variant == 'indigo', 2, 3)};
         }
     }
 
@@ -2748,12 +2752,8 @@
         position: absolute;
         cursor: pointer;
         user-select: none;
-        inset-block-start: calc(50% - 12px);
-        inset-inline-start: sizable(
-            map.get($grid-grouping-indicator-padding, 'compact'),
-            map.get($grid-grouping-indicator-padding, 'cosy'),
-            map.get($grid-grouping-indicator-padding, 'comfortable')
-        );
+        inset-block-start: calc(50% - #{$indicator-icon-width} / 2);
+        inset-inline-start: var(--indicator-inline-inset);
 
         &:hover {
             color: var-get($theme, 'expand-icon-hover-color');
@@ -2761,9 +2761,9 @@
 
         &%igx-grid__group-expand-btn--push {
             inset-block-start: sizable(
-                math.div(map.get($grid-header-height, 'compact') - rem(24px), 2),
-                math.div(map.get($grid-header-height, 'cosy') - rem(24px), 2),
-                math.div(map.get($grid-header-height, 'comfortable') - rem(24px), 2)
+                math.div(map.get($grid-header-height, 'compact') - $indicator-icon-width, 2),
+                math.div(map.get($grid-header-height, 'cosy') - $indicator-icon-width, 2),
+                math.div(map.get($grid-header-height, 'comfortable') - $indicator-icon-width, 2)
             );
         }
     }
@@ -2780,6 +2780,11 @@
         $level--compact: map-get($row-indentation-level, 'compact');
 
         %igx-grid__row-indentation--level-#{$i} {
+            --indicator-inline-inset: #{sizable(
+                map.get($grid-grouping-indicator-padding, 'compact'),
+                map.get($grid-grouping-indicator-padding, 'cosy'),
+                map.get($grid-grouping-indicator-padding, 'comfortable')
+            )};
             padding-inline-start: pad-inline($level--compact, $level--cosy, $level--comfortable);
         }
 
@@ -2881,9 +2886,7 @@
         visibility: visible;
 
         igx-icon {
-            width: var(--igx-icon-size, #{rem(18px)});
-            height: var(--igx-icon-size, #{rem(18px)});
-            font-size: var(--igx-icon-size, #{rem(18px)});
+            --component-size: #{if($variant == 'indigo', 2, 1)};
         }
 
         %igx-badge-display {
@@ -3100,11 +3103,11 @@
         }
 
         igx-icon {
-            --component-size: 3;
+            --component-size: #{if($variant == 'indigo', 2, 3)};;
 
             color: var-get($theme, 'expand-icon-color');
             max-width: $hierarchical-action-icon;
-            min-width: $hierarchical-action-icon;
+            min-width: min-content;
         }
 
         [dir='rtl'] & {
