@@ -60,10 +60,10 @@ export class UpdateChanges {
             // otherwise if the first compilation occurs on an HTML file the project won't have proper refs
             // and no actual angular metadata will be resolved for the rest of the migration
 
-            // TODO: this patter/issue might be obsolete; if so, should be safe to return _projectService directly
+            // TODO: this pattern/issue might be obsolete
             const mainRelPath = this.getWorkspaceProjectEntryPath();
             if (!mainRelPath) {
-                return null;
+                return this._projectService;
             }
 
             // patch TSConfig so it includes angularOptions.strictTemplates
