@@ -400,10 +400,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxDropDown
-    it('should update IgxDropDown event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update dropdown event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -431,10 +427,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxToggleDirective
-    it('should update IgxToggleDirective event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update dropdown event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -463,10 +455,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxCombo
-    it('should update IgxCombo event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update combo event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -499,10 +487,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxSelect
-    it('should update IgxSelect event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update select event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -529,10 +513,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxAutocomplete
-    it('should update IgxAutocomplete event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update autocomplete event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -553,10 +533,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxDialog
-    it('should update IgxDialog event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update dialog event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `

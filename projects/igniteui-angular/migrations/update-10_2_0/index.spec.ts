@@ -46,10 +46,6 @@ describe('Update 10.2.0', () => {
         ).toEqual(`<igx-input-group type="line"></igx-input-group><igx-input-group type="box"></igx-input-group><igx-input-group type="border"></igx-input-group><igx-input-group type="search"></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group>`);
     });
 
-    it('should replace selectedRows() with selectedRows in ts files', async () => {
-        pending('set up tests for migrations through lang service');
-    });
-
     it('Should remove references to deprecated `pane` property of `IExpansionPanelEventArgs`', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/expansion-test.component.ts',

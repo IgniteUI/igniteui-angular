@@ -68,14 +68,6 @@ describe(`Update to ${version}`, () => {
         ).toEqual(expectedContent);
     });
 
-    it('should rename IgxComboComponent selectItems to select', () => {
-        pending('LS must be setup for tests.');
-    });
-
-    it('should rename IgxComboComponent deselectItems to deselect', () => {
-        pending('LS must be setup for tests.');
-    });
-
     it('should rename IgxComboComponent selectedItems() to selection', async () => {
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `import { IgxComboComponent } from 'igniteui-angular';
