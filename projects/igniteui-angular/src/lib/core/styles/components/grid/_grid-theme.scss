@@ -1434,6 +1434,16 @@
             );
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+
+            %igx-icon-display {
+                opacity: if($theme-variant == 'light', .75, .85);
+            }
+
+            &:hover {
+                %igx-icon-display {
+                    opacity: 1;
+                }
+            }
         }
 
         padding-block: 0;
@@ -1446,7 +1456,7 @@
         border-inline-end: rem(1px) solid transparent;
         background-clip: border-box;
 
-        igx-icon {
+        %igx-icon-display {
             width: var(--igx-icon-size, #{$drag-icon-size});
             height: var(--igx-icon-size, #{$drag-icon-size});
             font-size: var(--igx-icon-size, #{$drag-icon-size});
