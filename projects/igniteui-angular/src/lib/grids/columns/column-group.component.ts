@@ -285,6 +285,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             if (this.pinned) {
                 child.pinned = this.pinned;
             }
+            if (this._hidden) {
+                child.hidden = this._hidden;
+            }
         });
         if (this.collapsible) {
             this.setExpandCollapseState();
