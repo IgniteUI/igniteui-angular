@@ -1,4 +1,5 @@
-import { FilteringExpressionsTree, IFilteringExpression, IFilteringExpressionsTree } from 'igniteui-angular';
+import { IFilteringExpression } from './filtering-expression.interface';
+import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 
 export class FilteringUtil {
     /**
