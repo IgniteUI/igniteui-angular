@@ -1138,7 +1138,7 @@ describe('IgxQueryBuilder', () => {
             tree.filteringOperands.push({
                 fieldName: 'OrderDate',
                 searchVal: new Date('2024-09-17T21:00:00.000Z'),
-                conditionName: 'equals',              
+                conditionName: 'equals',
                 condition: IgxDateFilteringOperand.instance().condition('equals')
             });
 
@@ -1467,7 +1467,7 @@ describe('IgxQueryBuilder', () => {
             });
         }));
 
-        it(`Clicking on parent "commit" button should apply all committed changes and discard all uncommitted changes in the child.`, fakeAsync(() => {
+        it(`Parent "commit" button should be disabled if a child condition is edited.`, fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
             tick(100);
@@ -1490,7 +1490,7 @@ describe('IgxQueryBuilder', () => {
             let parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
             let childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
 
-            ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
+            ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement);
             ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement, false);
 
             // Commit the change
@@ -1507,22 +1507,28 @@ describe('IgxQueryBuilder', () => {
             // Verify input values
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Id', '', '', 1);
 
-            // Verify parent commit button is enabled
+            // Verify parent and child commit buttons are disabled
             parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
             childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
 
-            ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
-            // Verify child commit button is disabled
+            ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement);
             ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement);
 
-            // Commit the parent
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1);
+            //Type Value
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '1');
+            tick(100);
+            fix.detectChanges();
+
+            // Commit the child
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, 1);
             tick(50);
             fix.detectChanges();
 
-            // Verify expressions in the child query
-            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'ProductName', 'Contains', 'a', 1);
-            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'False', '', 1);
+            // Verify parent is enabled
+            parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
         }));
 
         it('Should collapse nested query when it is committed.', fakeAsync(() => {
