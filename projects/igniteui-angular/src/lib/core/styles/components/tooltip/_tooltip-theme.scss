@@ -86,7 +86,7 @@
         padding: 0 rem(8px);
         min-height: rem(24px);
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding: rem(4px) rem(8px);
         }
     }

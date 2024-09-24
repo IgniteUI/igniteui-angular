@@ -1,9 +1,13 @@
 import { TestBed, fakeAsync } from "@angular/core/testing";
-import { IconFamily, IconMeta, IgxIconService } from "./icon.service";
+import { IconFamily, IconMeta } from "./types";
+import { IgxIconService } from './icon.service';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { Component } from "@angular/core";
+import { IgxIconComponent } from "./icon.component";
+import { By } from "@angular/platform-browser";
 
 describe("Icon Service", () => {
     configureTestSuite();
@@ -13,8 +17,8 @@ describe("Icon Service", () => {
     };
 
     const svgText = `<svg id="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-    <path d="M74 74h54v54H74" />
-    <path d="M10 10h181v181H10V10zm38.2 38.2v104.6h104.6V48.2H48.2z"/>
+    <path d="M74 74h54v54H74"></path>
+    <path d="M10 10h181v181H10V10zm38.2 38.2v104.6h104.6V48.2H48.2z"></path>
 </svg>`;
 
     let iconRef: { name: string; family: string; icon: IconMeta };
@@ -151,6 +155,45 @@ describe("Icon Service", () => {
         expect(iconService.isSvgIconCached(iconName, familyName)).toBeTruthy();
     });
 
+    it("should be able to extend family of type font/liga with svg icons", () => {
+        const fixture = TestBed.createComponent(IconTestComponent);
+        const iconName = "test";
+        const familyName = "material";
+
+        iconService.addSvgIconFromText(iconName, svgText, familyName);
+        fixture.detectChanges();
+
+        const extendedIcon = fixture.debugElement.query(By.css("igx-icon[extended] svg")).nativeElement;
+        const builtinIcon = fixture.debugElement.query(By.css("igx-icon[builtin]")).nativeElement;
+
+        expect(extendedIcon).toBeTruthy();
+        expect(builtinIcon).toBeTruthy();
+        expect(svgText).toContain(extendedIcon.innerHTML);
+        expect(builtinIcon.textContent).toContain("home");
+        expect(iconService.defaultFamily.name).toBe(familyName);
+        expect(iconService.defaultFamily.meta.type).toBe("liga");
+    });
+
+    it("should be able to reference icons in extended font/liga families", () => {
+        const fixture = TestBed.createComponent(IconRefComponent);
+        const iconName = "test";
+        const familyName = "material";
+
+        iconService.addSvgIconFromText(iconName, svgText, familyName);
+        iconService.addIconRef("reference", "default", {
+            name: iconName,
+            family: familyName,
+            type: "svg",
+        });
+
+        fixture.detectChanges();
+
+        const svg = fixture.debugElement.query(By.css("svg")).nativeElement;
+
+        expect(svg).toBeTruthy();
+        expect(svgText).toContain(svg.innerHTML);
+    });
+
     it("should emit loading event for a custom svg icon from url", (done) => {
         iconService.iconLoaded.pipe(first()).subscribe((event) => {
             expect(event.name).toMatch("test");
@@ -173,3 +216,20 @@ describe("Icon Service", () => {
         iconService.addSvgIcon(iconName, "test.svg", familyName);
     });
 });
+
+@Component({
+    template: `
+        <igx-icon builtin name="home" family="material"></igx-icon>
+        <igx-icon extended name="test" family="material"></igx-icon>
+     `,
+    standalone: true,
+    imports: [IgxIconComponent]
+})
+class IconTestComponent { }
+
+@Component({
+    template: `<igx-icon name="reference" family="default"></igx-icon>`,
+    standalone: true,
+    imports: [IgxIconComponent]
+})
+class IconRefComponent { }

@@ -45,7 +45,7 @@ export abstract class IgxCarouselComponentBase {
 
     constructor(
         @Inject(IgxAngularAnimationService) private animationService: AnimationService,
-        private cdr: ChangeDetectorRef) {
+        protected cdr: ChangeDetectorRef) {
     }
 
     /** @hidden */

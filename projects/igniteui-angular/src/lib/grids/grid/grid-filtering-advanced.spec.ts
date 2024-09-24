@@ -2123,6 +2123,34 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(consoleSpy).not.toHaveBeenCalled();
         }));
 
+        it('should not trigger accessibility errors when interacting with the edit icon in the advanced filtering expression chip', fakeAsync(() => {
+            // Apply advanced filter through API to generate chips.
+            const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+            tree.filteringOperands.push({
+                fieldName: 'Downloads', searchVal: 1, condition: IgxNumberFilteringOperand.instance().condition('equals')
+            });
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            tick(50);
+            fix.detectChanges();
+
+            // Hover over the first visible expression chip to show edit icon.
+            const expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[0];
+            expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            tick(50);
+            fix.detectChanges();
+
+            // Click the edit icon on the hovered and focused edit icon.
+            const editIcon = GridFunctions.getAdvancedFilteringTreeExpressionEditIcon(fix, [0]);
+            tick(50);
+            fix.detectChanges();
+            expect(editIcon.getAttribute('aria-hidden')).toBe('true');
+            expect(editIcon.getAttribute('tabIndex')).toBeFalsy();
+        }));
+
         describe('Context Menu - ', () => {
             it('Should discard added group when clicking its operator line without having a single expression.', fakeAsync(() => {
                 // Open Advanced Filtering dialog.
@@ -3113,8 +3141,38 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             GridFunctions.clickAdvancedFilteringColumnSelect(fix);
             fix.detectChanges();
             const dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
-            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field'];
+            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field', 'DateTimeCreated'];
             expect(expectedValues).toEqual(dropdownValues);
+        }));
+
+        it('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
+            // Open dialog through API.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            //Create dateTime filtering expression
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'DateTimeCreated', searchVal: '11/11/2000 10:11:11 AM', condition: IgxStringFilteringOperand.instance().condition('equals')
+            });
+
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Hover the last visible expression chip
+            const expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[0];
+            expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            tick();
+            fix.detectChanges();
+
+            // Click the edit icon to enter edit mode of the expression.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChipEditIcon(fix, [0]);
+            tick();
+            fix.detectChanges();
+
+            //Check for the active element
+            let searchValueInput = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            expect(document.activeElement).toBe(searchValueInput, 'The input should be the active element.');
         }));
     });
 

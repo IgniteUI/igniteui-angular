@@ -111,6 +111,7 @@ const GridResourceStringsKO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: '모두 고정 해제',
     igx_grid_row_edit_btn_done: '완료',
     igx_grid_row_edit_btn_cancel: '취소',
+    igx_grid_row_edit_text: '이 행에는 {0}개의 변경 사항과 {1}개의 숨겨진 열이 있습니다.',
     igx_grid_toolbar_actions_filter_prompt: '필터 열 목록 ...',
     igx_grid_toolbar_pinning_button_tooltip: '열 고정 드롭 다운 열기',
     igx_grid_toolbar_hiding_button_tooltip: '열 숨기기 드롭 다운 열기',
