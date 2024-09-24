@@ -188,7 +188,8 @@
         border-color: $border-color,
         border-radius: $border-radius,
         _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
+            variant: map.get($schema, '_meta', 'theme'),
+            theme-variant: map.get($schema, '_meta', 'variant')
         )),
     ));
 }
@@ -205,6 +206,7 @@
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo';
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
     $item-min-width: rem(90px);
     $item-max-width: rem(360px);
@@ -328,6 +330,10 @@
                 border: rem(3px) solid var(--nav-btn-border-color);
                 background: var-get($theme, 'button-background');
                 box-shadow: none;
+
+                @if $theme-variant == 'dark' {
+                    border: rem(3px) solid contrast-color($color: 'gray', $variant: 50, $opacity: .2);
+                }
             }
         }
 
