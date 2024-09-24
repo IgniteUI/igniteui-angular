@@ -972,64 +972,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
     private _filteringOptions: IComboFilteringOptions;
     private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false, filterable: true };
-    private _icons = [
-        {
-            name: 'input_expand',
-            family: 'default',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'expand_more',
-                    family: 'material',
-                },
-                'all': {
-                    name: 'arrow_drop_down',
-                    family: 'material'
-                }
-            }))
-        },
-        {
-            name: 'input_collapse',
-            family: 'default',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'expand_less',
-                    family: 'material',
-                },
-                'all': {
-                    name: 'arrow_drop_up',
-                    family: 'material'
-                }
-            }))
-        },
-        {
-            name: 'input_clear',
-            family: 'default',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'cancel',
-                    family: 'material',
-                },
-                'all': {
-                    name: 'clear',
-                    family: 'material'
-                }
-            }))
-        },
-        {
-            name: 'case_sensitive',
-            family: 'default',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'case-sensitive',
-                    family: 'imx-icons'
-                },
-                'all': {
-                    name: 'case-sensitive',
-                    family: 'imx-icons'
-                }
-            }))
-        }
-    ];
 
     public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
@@ -1076,24 +1018,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.selectionService.set(this.id, new Set());
         this._iconService?.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
         this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
-
-        for (const icon of this._icons) {
-            switch (this.inputGroup?.theme) {
-                case "material":
-                    this._iconService?.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get("material"),
-                    );
-                    break;
-                default:
-                    this._iconService?.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get("all"),
-                    );
-            }
-        }
     }
 
     /** @hidden @internal */
@@ -1392,14 +1316,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     protected manageRequiredAsterisk(): void {
         if (this.ngControl) {
-            if (this.ngControl.control.validator) {
-                // Run the validation with empty object to check if required is enabled.
-                const error = this.ngControl.control.validator({} as AbstractControl);
-                this.inputGroup.isRequired = error && error.required;
-            } else {
-                // P.M. 18 May 2022: IgxCombo's asterisk not removed when removing required validator dynamically in reactive form #11543
-                this.inputGroup.isRequired = false;
-            }
+            this.inputGroup.isRequired = this.required;
         }
     }
 

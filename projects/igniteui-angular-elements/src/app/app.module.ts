@@ -31,6 +31,7 @@ import { registerConfig } from "../analyzer/elements.config";
 import { createIgxCustomElement } from './create-custom-element';
 import { IgxGridStateComponent } from '../lib/state.component';
 import { ELEMENTS_TOKEN } from 'igniteui-angular/src/lib/core/utils';
+import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
 
 @NgModule({
   imports: [
@@ -38,13 +39,14 @@ import { ELEMENTS_TOKEN } from 'igniteui-angular/src/lib/core/utils';
     BrowserAnimationsModule
   ],
   providers: [
-    { provide: ELEMENTS_TOKEN, useValue: true }
+    { provide: ELEMENTS_TOKEN, useValue: true },
+    IgxIconBroadcastService
   ],
 //   bootstrap: []
 })
 export class AppModule {
 
-  constructor(private injector: Injector) {}
+  constructor(private injector: Injector, private _iconBroadcast: IgxIconBroadcastService) {}
 
   ngDoBootstrap() {
 

@@ -25,7 +25,7 @@
 /// @param {Color} $focused-item-border-color [null] - The drop-down item focused border color.
 /// @param {Color} $selected-item-background [null] - The drop-down selected item background color.
 /// @param {Color} $selected-item-text-color [null] - The drop-down selected item text color.
-/// @param {Color} $selected-item-icon-color [null] - The drop-down selected item icon color. 
+/// @param {Color} $selected-item-icon-color [null] - The drop-down selected item icon color.
 /// @param {Color} $selected-hover-item-background [null] - The drop-down selected item hover background color.
 /// @param {Color} $selected-hover-item-text-color [null] - The drop-down selected item hover text color.
 /// @param {Color} $selected-hover-item-icon-color [null] - The drop-down selected item hover icon color.
@@ -220,7 +220,7 @@
         min-width: rem(128px);
         border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding: rem(3px);
 
             %igx-drop-down__item {
@@ -284,7 +284,7 @@
             justify-content: center;
             --component-size: var(--dropdown-size);
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 $icon-size: sizable(rem(14px), rem(16px), rem(16px));
 
                 width: var(--ig-icon-size, $icon-size);
@@ -307,7 +307,7 @@
             color: var-get($theme, 'item-icon-color');
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(12px));
         }
 
@@ -333,7 +333,7 @@
         pointer-events: none;
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(12px));
             padding-block: pad-inline(rem(4px), rem(6px), rem(8px));
         }
@@ -356,7 +356,7 @@
             outline-offset: rem(-1px);
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             outline: rem(2px) solid var-get($theme, 'focused-item-border-color');
             outline-offset: rem(-2px);
         }
