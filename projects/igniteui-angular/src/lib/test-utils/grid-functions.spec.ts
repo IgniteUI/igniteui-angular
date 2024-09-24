@@ -1445,7 +1445,7 @@ export class GridFunctions {
 
     public static getAdvancedFilteringHeaderText(fix: ComponentFixture<any>) {
         const header = GridFunctions.getAdvancedFilteringHeader(fix);
-        const title = header.querySelector('.ig-typography__h6');
+        const title = header.querySelector('.igx-query-builder__header > div');
         return title.innerText;
     }
 
