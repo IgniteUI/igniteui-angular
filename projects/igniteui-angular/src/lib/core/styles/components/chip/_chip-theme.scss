@@ -262,9 +262,9 @@
     $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
     $chip-padding: (
-        comfortable: rem(if($variant != 'indigo', 12px, 8px)),
-        cosy: rem(6px),
-        compact: rem(if($variant != 'indigo', 2px, 4px))
+        comfortable: rem(if($variant != 'indigo', 12px, 7px)),
+        cosy: rem(if($variant != 'indigo', 6px, 5px)),
+        compact: rem(if($variant != 'indigo', 2px, 3px))
     );
 
     $box-shadow-focus: map.get((
@@ -651,7 +651,7 @@
                 @if $variant != 'indigo' {
                     margin-inline-start: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
                 } @else {
-                    margin-inline-start: calc(#{sizable(rem(2px), rem(4px), rem(7px))} * -1);
+                    margin-inline-start: calc(#{sizable(rem(1px), rem(3px), rem(4px))} * -1);
                 }
             }
         }
@@ -661,7 +661,11 @@
             &:first-of-type {
                 igx-avatar,
                 igx-circular-bar {
-                    margin-inline-start: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                    @if $variant != 'indigo' {
+                        margin-inline-start: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                    } @else {
+                        margin-inline-start: calc(#{sizable(rem(1px), rem(3px), rem(4px))} * -1);
+                    }
                 }
             }
         }
@@ -674,7 +678,7 @@
                 @if $variant != 'indigo' {
                     margin-inline-end: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
                 } @else {
-                    margin-inline-end: calc(#{sizable(rem(2px), rem(4px), rem(7px))} * -1);
+                    margin-inline-end: calc(#{sizable(rem(1px), rem(3px), rem(4px))} * -1);
                 }
             }
         }
@@ -684,7 +688,11 @@
             &:first-of-type {
                 igx-avatar,
                 igx-circular-bar {
-                    margin-inline-end: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                    @if $variant != 'indigo' {
+                        margin-inline-end: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+                    } @else {
+                        margin-inline-end: calc(#{sizable(rem(1px), rem(3px), rem(4px))} * -1);
+                    }
                 }
             }
         }
