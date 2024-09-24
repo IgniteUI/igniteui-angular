@@ -179,9 +179,6 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { IgxIconService } from '../icon/icon.service';
-
-/*@__PURE__*/IgcTrialWatermark.register();
 
 interface IMatchInfoCache {
     row: any;
@@ -1131,7 +1128,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @ViewChild('igxLoadingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     public loadingOutlet: IgxOverlayOutletDirective;
 
-    /* contentChildren */
+    /* reactContentChildren */
     /* blazorInclude */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: ColumnCollection */
@@ -2200,6 +2197,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```typescript
      *  this.grid.shouldGenerate = true;
      * ```
+     * @deprecated in version 18.2.0. Use the `autoGenerate` property instead.
      */
     public shouldGenerate: boolean;
 
@@ -2455,6 +2453,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* blazorByValueArray */
     /* blazorAlwaysWriteback */
     /* @tsTwoWayProperty (true, "RowSelectionChanging", "Detail.NewSelection", false) */
+    /* blazorPrimitiveValue */
     /**
      * Gets/Sets the current selection state.
      *
@@ -3220,185 +3219,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
-    private _icons = [
-        {
-            family: 'default',
-            name: 'check',
-            ref: {
-                name: 'check',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'close',
-            ref: {
-                name: 'close',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'navigate_before',
-            ref: {
-                name: 'navigate_before',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'navigate_next',
-            ref: {
-                name: 'navigate_next',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'expand',
-            ref: {
-                name: 'expand_more',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'chevron_right',
-            ref: {
-                name: 'chevron_right',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'unfold_more',
-            ref: {
-                name: 'unfold_more',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'unfold_less',
-            ref: {
-                name: 'unfold_less',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'drag_indicator',
-            ref: {
-                name: 'drag_indicator',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'group_work',
-            ref: {
-                name: 'group_work',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'arrow_upward',
-            ref: {
-                name: 'arrow_upward',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'arrow_downward',
-            ref: {
-                name: 'arrow_downward',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'arrow_forward',
-            ref: {
-                name: 'arrow_forward',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'arrow_back',
-            ref: {
-                name: 'arrow_back',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'filter_list',
-            ref: {
-                name: 'filter_list',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'error',
-            ref: {
-                name: 'error',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'drag_indicator',
-            ref: {
-                name: 'drag_indicator',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'visibility',
-            ref: {
-                name: 'visibility',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'visibility_off',
-            ref: {
-                name: 'visibility_off',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'import_export',
-            ref: {
-                name: 'import_export',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'arrow_drop_down',
-            ref: {
-                name: 'arrow_drop_down',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'more_vert',
-            ref: {
-                name: 'more_vert',
-                family: 'material',
-            }
-        },
-    ];
-
     private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
 
@@ -3407,6 +3227,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected get minColumnWidth() {
         return MINIMUM_COLUMN_WIDTH;
+    }
+
+    protected get isCustomSetRowHeight(): boolean {
+        return !isNaN(this._rowHeight);
     }
 
     /**
@@ -3577,19 +3401,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         @Inject(LOCALE_ID) private localeId: string,
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>,
-        @Optional() @Inject(IgxIconService) protected iconService?: IgxIconService
     ) {
         this.locale = this.locale || this.localeId;
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
-
-        for (const icon of this._icons) {
-            this.iconService?.addIconRef(icon.name, icon.family, {
-                name: icon.ref.name,
-                family: icon.ref.family
-            });
-        }
+        IgcTrialWatermark.register();
     }
 
     /**
@@ -3919,7 +3736,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         // compare based on field, not on object ref.
         this.columnListDiffer = this.differs.find([]).create((index, col: ColumnType) => col.field);
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
-        this.shouldGenerate = this.autoGenerate;
         this.gridComputedStyles = this.document.defaultView.getComputedStyle(this.nativeElement);
     }
 
@@ -7240,9 +7056,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._autoGeneratedCols = columns;
 
         this.updateColumns(columns);
-        if (data && data.length > 0) {
-            this.shouldGenerate = false;
-        }
         this.columnsAutogenerated.emit({ columns: this._autoGeneratedCols });
     }
 
@@ -8004,5 +7817,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         // Assign the applicable collections.
         this._pinnedColumns = pinnedColumns;
         this._unpinnedColumns = unpinnedColumns;
+    }
+
+    protected shouldRecreateColumns(oldData: any[] | null | undefined, newData: any[] | null | undefined): boolean {
+        if (!oldData || !oldData.length) return true;
+        if (!newData || !newData.length) return false;
+        return Object.keys(oldData[0]).join() !== Object.keys(newData[0]).join();
     }
 }

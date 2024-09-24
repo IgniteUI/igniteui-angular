@@ -42,7 +42,8 @@ import {
     IgxGridExternalESFComponent,
     IgxGridExternalESFTemplateComponent,
     IgxGridDatesFilteringComponent,
-    LoadOnDemandFilterStrategy
+    LoadOnDemandFilterStrategy,
+    IgxGridFilteringNumericComponent
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
@@ -71,7 +72,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridFilteringScrollComponent,
                 IgxGridFilteringMCHComponent,
                 IgxGridFilteringTemplateComponent,
-                IgxGridDatesFilteringComponent
+                IgxGridDatesFilteringComponent,
+                IgxGridFilteringNumericComponent
             ]
         });
     }));
@@ -902,6 +904,38 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chips[0].componentInstance.selected).toBeTruthy();
             expect(GridFunctions.getChipText(chips[0])).toEqual('Empty');
             expect(input.properties.readOnly).toBeTruthy();
+        }));
+
+        it('should correctly filter negative values', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridFilteringNumericComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+
+            GridFunctions.clickFilterCellChip(fix, 'Number');
+
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const input = filteringRow.query(By.directive(IgxInputDirective));
+
+            // Set input and confirm
+            GridFunctions.typeValueInFilterRowInput('-1', fix);
+
+            expect(input.componentInstance.value).toEqual('-1');
+            expect(grid.rowList.length).toEqual(1);
+
+            GridFunctions.typeValueInFilterRowInput('0', fix);
+
+            expect(input.componentInstance.value).toEqual('0');
+            expect(grid.rowList.length).toEqual(0);
+
+            GridFunctions.typeValueInFilterRowInput('-0.5', fix);
+
+            expect(input.componentInstance.value).toEqual('-0.5');
+            expect(grid.rowList.length).toEqual(1);
+
+            GridFunctions.typeValueInFilterRowInput('', fix);
+
+            expect(input.componentInstance.value).toEqual(null);
+            expect(grid.rowList.length).toEqual(3);
         }));
 
         it('Should focus input .', fakeAsync(() => {
@@ -2755,12 +2789,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('Should not prevent mousedown event when target is within the filter cell template', fakeAsync(() => {
             const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
             const input = filterCell.query(By.css('input')).nativeElement;
- 
+
             const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
             const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
             input.dispatchEvent(mousedownEvent, { bubbles: true });
             fix.detectChanges();
- 
+
             expect(preventDefaultSpy).not.toHaveBeenCalled();
         }));
 
@@ -2772,7 +2806,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
             firstCell.dispatchEvent(mousedownEvent);
             fix.detectChanges();
-           
+
             expect(preventDefaultSpy).toHaveBeenCalled();
         }));
     });
@@ -4259,15 +4293,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
-            expect(scrollbar.scrollTop >= 670 && scrollbar.scrollTop <= 700).toBe(true,
+            expect(scrollbar.scrollTop >= 660 && scrollbar.scrollTop <= 700).toBe(true,
                 'search scrollbar has incorrect scrollTop: ' + scrollbar.scrollTop);
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
-            expect(displayContainerRect.height).toBe(216, 'incorrect search display container height');
+            expect(displayContainerRect.height).toBe(240, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(10, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -5339,6 +5373,63 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
                 expect(excelMenu).toBeNull();
             }));
+
+        it('Should filter ISO 8601 dates for date column ignoring the time portion - issue #14643', fakeAsync(() => {
+            // Add hours part to the ReleaseDate so some records differ only by the time portion
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+
+                if (rec.ReleaseDate) {
+                    const date = new Date(rec.ReleaseDate);
+                    date.setHours(date.getHours() + Math.floor(Math.random() * 24));
+                    newRec.ReleaseDate = date.toISOString();
+                } else {
+                    newRec.ReleaseDate = null;
+                }
+
+                return newRec;
+            });
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu)[1];
+
+            checkbox.click();
+            tick();
+            fix.detectChanges();
+
+            const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix);
+            applyButton.focus();
+            fix.detectChanges();
+
+            expect(document.activeElement).toBe(applyButton);
+
+            UIInteractions.simulateClickEvent(applyButton);
+            fix.detectChanges();
+
+            const rows = GridFunctions.getRows(fix);
+            const cell1 = GridFunctions.getRowCells(fix, 0)[4].nativeElement;
+            const cell2 = GridFunctions.getRowCells(fix, 3)[4].nativeElement;
+            expect(cell1.textContent.toString()).toEqual(cell2.textContent.toString());
+            expect(rows.length).toBe(6, 'incorrect number of rows');
+
+            //Check if checkboxes have correct state on ESF menu reopening
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix));
+            expect(checkboxes[0].indeterminate).toBeTrue();
+            expect(checkboxes[1].checked).toBeFalse();
+            const listItemsCheckboxes = checkboxes.slice(2, checkboxes.length-1);
+            for (const checkboxItem of listItemsCheckboxes) {
+                ControlsFunction.verifyCheckboxState(checkboxItem.parentElement);
+            }
+        }));
 
         it('Should filter date by input string', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
@@ -6885,9 +6976,9 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: Size)
     const headerTitle = excelMenu.querySelector('h4');
     const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix, excelMenu);
     const headerAreaPinIcon: HTMLElement =
-        headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin-left"') !== -1) as HTMLElement;
+        headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1) as HTMLElement;
     const headerAreaUnpinIcon: HTMLElement
-        = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin-left"') !== -1) as HTMLElement;
+        = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1) as HTMLElement;
     const headerAreaColumnHidingIcon: HTMLElement =
         headerIcons.find((buttonIcon: any) => buttonIcon.innerText === 'visibility_off') as HTMLElement;
 

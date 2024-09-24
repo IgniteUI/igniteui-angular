@@ -1028,6 +1028,7 @@ export interface GridType extends IGridDataBindable {
     /** @hidden @internal */
     paginatorOutlet?: ViewContainerRef;
     flatData?: any[] | null;
+    /** @hidden @internal */
     childRow?: any;
     expansionDepth?: number;
     childDataKey?: any;

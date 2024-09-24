@@ -30,6 +30,7 @@
 @use '../components/toast/toast-theme' as *;
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
+@use '../components/label/label-theme' as *;
 
 @mixin typography() {
     @include badge-typography();
@@ -57,9 +58,6 @@
     ));
     @include chip-typography($categories: (
         text: 'subtitle-2'
-    ));
-    @include circular-bar-typography($categories: (
-        text: null
     ));
     @include column-actions-typography();
     @include date-range-typography();
@@ -109,4 +107,7 @@
     ));
     @include tooltip-typography();
     @include tree-typography();
+    @include label-typography($categories: (
+        label: 'subtitle-2'
+    ));
 }

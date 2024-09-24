@@ -30,6 +30,7 @@
 @use '../components/toast/toast-theme' as *;
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
+@use '../components/label/label-theme' as *;
 
 @mixin typography() {
     @include badge-typography();
@@ -41,7 +42,6 @@
     @include card-typography();
     @include checkbox-typography();
     @include chip-typography();
-    @include circular-bar-typography();
     @include column-actions-typography();
     @include date-range-typography();
     @include dialog-typography();
@@ -65,4 +65,5 @@
     @include toast-typography();
     @include tooltip-typography();
     @include tree-typography();
+    @include label-typography();
 }

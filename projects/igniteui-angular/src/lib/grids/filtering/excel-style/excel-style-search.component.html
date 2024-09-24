@@ -9,14 +9,15 @@
         (keydown)="onInputKeyDown($event)"
         [placeholder]="esf.column?.grid.resourceStrings.igx_grid_excel_search_placeholder"
         autocomplete="off"/>
-    <igx-icon
-        family="default"
-        name="clear"
-        igxSuffix
-        *ngIf="searchValue || searchValue === 0"
-        (click)="clearInput()"
-        tabindex="0">
-    </igx-icon>
+    <igx-suffix>
+        <igx-icon
+            family="default"
+            name="input_clear"
+            *ngIf="searchValue || searchValue === 0"
+            (click)="clearInput()"
+            tabindex="0">
+        </igx-icon>
+    </igx-suffix>
 </igx-input-group>
 
 <igx-list #list role="listbox" [isLoading]="isLoading" *ngIf="!isHierarchical()" (keydown)="handleKeyDown($event)" tabindex="0"

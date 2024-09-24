@@ -113,6 +113,7 @@ const GridResourceStringsPT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Desafixar tudo',
     igx_grid_row_edit_btn_done: 'Concluído',
     igx_grid_row_edit_btn_cancel: 'Cancelar',
+    igx_grid_row_edit_text: 'Tem {0} alterações nesta linha e {1} colunas ocultas',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrar lista de colunas...',
     igx_grid_toolbar_pinning_button_tooltip: 'Abrir lista pendente de fixação de coluna',
     igx_grid_toolbar_hiding_button_tooltip: 'Abrir lista pendente de ocultação de coluna',

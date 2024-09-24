@@ -204,7 +204,7 @@
     $variant: map.get($theme, '_meta', 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
-    $indigo-theme: $variant == 'indigo-design';
+    $indigo-theme: $variant == 'indigo';
 
     $item-min-width: rem(90px);
     $item-max-width: rem(360px);
@@ -313,6 +313,12 @@
 
         @include ripple($button-ripple-theme);
         @include css-vars($button-ripple-theme);
+
+        @if $variant == 'indigo' {
+            igx-icon {
+                --component-size: 2;
+            }
+        }
 
         [dir='rtl'] & {
             transform: scaleX(-1);

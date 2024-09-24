@@ -827,8 +827,8 @@ export class GridFunctions {
         let pinUnpinIcon: any;
         if (isIconInHeader) {
             const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
-            const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin-left"') !== -1);
-            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin-left"') !== -1);
+            const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1);
+            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1);
             pinUnpinIcon = headerAreaPinIcon ? headerAreaPinIcon : headerAreaUnpinIcon;
         } else {
             const pinContainer = GridFunctions.getExcelFilteringPinContainer(fix);
@@ -864,7 +864,7 @@ export class GridFunctions {
      * Click the sort ascending button in the ESF.
      */
     public static clickSortAscInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortAscIcon: DebugElement = this.getIconFromButton('arrow_upward', fix);
+        const sortAscIcon: DebugElement = this.getIconFromButton('sort_asc', fix);
         sortAscIcon?.nativeElement.click();
     }
 
@@ -880,7 +880,7 @@ export class GridFunctions {
      * Click the sort descending button in the ESF.
      */
     public static clickSortDescInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortDescIcon: any = this.getIconFromButton('arrow_downward', fix);
+        const sortDescIcon: any = this.getIconFromButton('sort_desc', fix);
         sortDescIcon?.nativeElement.click();
     }
 
@@ -1270,7 +1270,7 @@ export class GridFunctions {
     public static getFilterRowInputCommitIcon(fix) {
         const suffix = GridFunctions.getFilterRowSuffix(fix);
         const commitIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
-            .find((icon: any) => icon.nativeElement.innerText === 'done');
+            .find((icon: any) => icon.nativeElement.innerText === 'check');
         return commitIcon;
     }
 
@@ -1445,7 +1445,7 @@ export class GridFunctions {
 
     public static getAdvancedFilteringHeaderText(fix: ComponentFixture<any>) {
         const header = GridFunctions.getAdvancedFilteringHeader(fix);
-        const title = header.querySelector('.ig-typography__h6');
+        const title = header.querySelector('.igx-query-builder__header > div');
         return title.innerText;
     }
 
@@ -1720,7 +1720,7 @@ export class GridFunctions {
         const actionButtons = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs-actions > button'));
         const commitButton = actionButtons.find((el: DebugElement) => {
             const icon = el.query(By.directive(IgxIconComponent)).componentInstance;
-            return icon.name === 'check';
+            return icon.name === 'confirm';
         }).nativeElement;
 
         return commitButton;

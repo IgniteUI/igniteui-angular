@@ -117,31 +117,31 @@
     $ripple-radius: math.div($ripple-size, 2);
 
     $thumb-label-width: map.get((
-        material: rem(40px),
-        fluent: rem(40px),
-        bootstrap: rem(40px),
-        indigo-design: rem(36px)
+        'material': rem(40px),
+        'fluent': rem(40px),
+        'bootstrap': rem(40px),
+        'indigo': rem(36px)
     ), $variant);
 
     $thumb-label-height: map.get((
-        material: rem(30px),
-        fluent: rem(30px),
-        bootstrap: rem(30px),
-        indigo-design: rem(22px)
+        'material': rem(30px),
+        'fluent': rem(30px),
+        'bootstrap': rem(30px),
+        'indigo': rem(22px)
     ), $variant);
 
     $slider-track-height: map.get((
-        material: 6px,
-        fluent: 4px,
-        bootstrap: 8px,
-        indigo-design: 2px
+        'material': 6px,
+        'fluent': 4px,
+        'bootstrap': 8px,
+        'indigo': 2px
     ), $variant);
 
     $slider-outline-width: map.get((
-        material: 0,
-        fluent: 0,
-        bootstrap: 3px,
-        indigo-design: 3px
+        'material': 0,
+        'fluent': 0,
+        'bootstrap': 3px,
+        'indigo': 3px
     ), $variant);
 
     // Slider ticks
@@ -152,10 +152,10 @@
 
     // Slider Thumb
     $thumb-size: map.get((
-        material: 20px,
-        fluent: 16px,
-        bootstrap: 16px,
-        indigo-design: 12px
+        'material': 20px,
+        'fluent': 16px,
+        'bootstrap': 16px,
+        'indigo': 12px
     ), $variant);
     $thumb-radius: math.div($thumb-size, 2);
 
@@ -163,18 +163,18 @@
     $thumb-indigo-hover: calc(16 / $thumb-indigo-idle);
 
     $thumb-border-width: map.get((
-        material: 0,
-        fluent: 2px,
-        bootstrap: 1px,
-        indigo-design: 2px
+        'material': 0,
+        'fluent': 2px,
+        'bootstrap': 1px,
+        'indigo': 2px
     ), $variant);
 
     // Slider Steps
     $steps-top-position: map.get((
-        material: 2px,
-        fluent: 1px,
-        bootstrap: 3px,
-        indigo-design: 0
+        'material': 2px,
+        'fluent': 1px,
+        'bootstrap': 3px,
+        'indigo': 0
     ), $variant);
 
     // Slider Label
@@ -236,7 +236,7 @@
         overflow: hidden;
         border-radius: border-radius(rem(32px));
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             border-radius: border-radius(rem(4px));
         }
     }
@@ -291,7 +291,7 @@
             align-items: flex-end;
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             bottom: rem(3px);
 
             &%igx-slider__ticks--top {
@@ -339,7 +339,7 @@
         %igx-slider__ticks-label {
             top: calc(#{$tick-height--tall} + #{$tick-height});
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 top: calc(#{$tick-height--tall} + (#{$tick-height} / 2));
             }
         }
@@ -361,7 +361,7 @@
         %igx-slider__ticks-label {
             top: calc(#{$tick-height--tall} + #{$tick-height});
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 top: calc(#{$tick-height--tall} + (#{$tick-height} / 2));
             }
         }
@@ -408,7 +408,7 @@
     }
 
     %igx-slider-track-steps--disabled {
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             color: transparent;
         }
     }
@@ -491,7 +491,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             transition: transform .2s $out-quad;
 
             &:hover,
@@ -535,7 +535,7 @@
         &:focus div::before {
             box-shadow: none;
 
-            @if $variant == 'fluent' or $variant == 'indigo-design' {
+            @if $variant == 'fluent' or $variant == 'indigo' {
                 border-color: var-get($theme, 'thumb-disabled-border-color') !important;
             }
         }
@@ -552,7 +552,7 @@
         top: calc(((#{$thumb-label-height}) + rem(20px)) * -1);
         height: $thumb-label-height;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             top: calc(((#{$thumb-label-height}) + rem(18px)) * -1);
         }
     }
@@ -570,7 +570,7 @@
         min-width: $thumb-label-width;
         opacity: 0;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             border-radius: rem(3px);
         }
 
@@ -582,7 +582,7 @@
             border-inline-end: rem(10px) solid transparent;
             border-top: rem(10px) solid var-get($theme, 'label-background-color');
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 top: rem(16px);
                 border-top: rem(12px) solid var-get($theme, 'label-background-color');
             }
