@@ -48,23 +48,6 @@ export class InputsShowcaseSampleComponent {
         subscribed: false,
         dateOfBirth: new Date('01 July, 1954')
     };
-    public settings = [{
-        name: 'WiFi',
-        icon: 'wifi',
-        active: true,
-        disabled: false
-    },
-    {
-        name: 'Bluetooth',
-        icon: 'bluetooth',
-        active: true,
-        disabled: false
-    }, {
-        name: 'Device Visibility',
-        icon: 'visibility',
-        active: false,
-        disabled: true
-    }];
 
     constructor(private fb: UntypedFormBuilder) {}
 
@@ -78,16 +61,5 @@ export class InputsShowcaseSampleComponent {
 
     public onRadioChanged(event: IChangeCheckboxEventArgs) {
         console.log(event);
-    }
-
-    public selectSecond() {
-        this.selected = 'option2';
-    }
-
-    public toggleAirplaneMode() {
-        this.settings.forEach(setting => {
-            setting.active = !this.airplaneMode;
-            setting.disabled = this.airplaneMode;
-        });
     }
 }

@@ -327,20 +327,3 @@ export class TreeShowcaseSampleComponent implements AfterViewInit {
         return this.tree.findNodes(key, (_term: string, n: IgxTreeNodeComponent<any>) => n.data?.ID === _term)[0];
     }
 }
-
-
-const generateHierarchicalData = (childKey: string, level = 7, children = 6, iter = 0): any[] => {
-    const returnArray = [];
-    if (level === 0) {
-        return returnArray;
-    }
-    for (let i = 0; i < children; i++) {
-        // create Root member
-        iter++;
-        returnArray.push({
-            ID: `Dummy${iter}`, CompanyName: `Dummy-${iter}`,
-            [childKey]: generateHierarchicalData(childKey, children, level - 1)
-        });
-    }
-    return returnArray;
-};

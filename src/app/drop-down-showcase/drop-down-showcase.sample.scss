@@ -7,3 +7,9 @@
         margin-bottom: 16px;
     }
 }
+
+igc-dropdown::part(base) {
+    height: 400px;
+    width: 180px;
+    overflow: auto;
+}

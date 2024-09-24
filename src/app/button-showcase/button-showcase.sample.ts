@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconButtonDirective, IgxIconComponent, IgxIconService, IgxRippleDirective } from 'igniteui-angular';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective } from 'igniteui-angular';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import { defineComponents, IgcButtonComponent, IgcIconButtonComponent} from "igniteui-webcomponents";
 

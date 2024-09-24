@@ -4,8 +4,6 @@
         <igx-tabs
             #tabsNew
             [selectedIndex]="3"
-            (selectedIndexChanging)="tabsSelectedIndexChanging($event)"
-            (selectedItemChange)="tabsSelectedItemChange($event)"
         >
             <igx-tab-item>
                 <igx-tab-header igxRipple>
@@ -21,7 +19,7 @@
             <igx-tab-item>
                 <igx-tab-header igxRipple>
                     <igx-icon igxTabHeaderIcon>folder</igx-icon>
-                    <span igxTabHeaderLabel>{{tab2Label}}</span>
+                    <span igxTabHeaderLabel>Tab 2</span>
                 </igx-tab-header>
                 <igx-tab-content>
                     <div class="sample-scrollable">

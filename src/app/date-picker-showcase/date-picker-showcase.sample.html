@@ -15,24 +15,10 @@
             <h6>WC Date Picker</h6>
             <igc-date-picker label="Select a Date" mode="dialog" #dpWC [value]="date5" display-format="full" show-week-numbers="true" header-orientation="vertical">
                 <span (click)="dpWC.show()" slot="suffix"><igx-icon>alarm</igx-icon></span>
-                    <div slot="actions">
-                        <igc-button variant="flat">Today</igc-button>
-                        <igc-button variant="flat">Next Year</igc-button>
-                        <igc-button variant="flat">Select Today</igc-button>
-                    </div>
+                <div slot="actions">
+                    <igc-button variant="flat">Today</igc-button>
+                    <igc-button variant="flat">Next Year</igc-button>
+                    <igc-button variant="flat">Select Today</igc-button>
+                </div>
             </igc-date-picker>
-
-            <!-- <igc-date-picker
-                .activeDate=${args.activeDate}
-                ?disabled=${args.disabled}
-                ?invalid=${args.invalid}
-                ?readonly=${args.readOnly}
-                ?required=${args.required}
-                ?open=${args.open}
-                ?show-week-numbers=${args.showWeekNumbers}
-                ?hide-outside-days=${args.hideOutsideDays}
-                ?keep-open-on-outside-click=${args.keepOpenOnOutsideClick}
-                ?keep-open-on-select=${args.keepOpenOnSelect}
-                >
-                </igc-date-picker> -->
         </div>

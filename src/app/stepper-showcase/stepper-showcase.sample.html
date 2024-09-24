@@ -1,7 +1,7 @@
 <div class="sample-stepper-wrapper">
     <strong>Angular Stepper</strong>
     <igx-stepper #stepper>
-        <igx-step completed #step (activeChange)="activeStepChange($event)" [isValid]="form1.form.valid">
+        <igx-step completed #step [isValid]="form1.form.valid">
             <span igxStepTitle>Step 1</span>
             <span igxStepSubtitle>(completed)</span>
             <div igxStepContent class="sample-body" [tabIndex]="-1">
@@ -19,7 +19,7 @@
                 </form>
             </div>
         </igx-step>
-        <igx-step [active]="true" #step (activeChange)="activeStepChange($event)" [isValid]="form1.form.valid"
+        <igx-step [active]="true" #step [isValid]="form1.form.valid"
             [completed]="form1.form.valid && stepper.linear">
             <span igxStepTitle>Step 2</span>
             <span igxStepSubtitle>(default)</span>
@@ -41,7 +41,7 @@
                 </form>
             </div>
         </igx-step>
-        <igx-step optional #step (activeChange)="activeStepChange($event)" [isValid]="form1.form.valid"
+        <igx-step optional #step [isValid]="form1.form.valid"
             [completed]="form1.form.valid && stepper.linear">
             <span igxStepTitle>Step 3</span>
             <span igxStepSubtitle>(optional)</span>
@@ -62,7 +62,7 @@
             </div>
         </igx-step>
 
-        <igx-step disabled #step (activeChange)="activeStepChange($event)" [isValid]="form1.form.valid"
+        <igx-step disabled #step [isValid]="form1.form.valid"
             [completed]="form1.form.valid && stepper.linear">
             <span igxStepTitle>Step 4</span>
             <span igxStepSubtitle>(disabled)</span>

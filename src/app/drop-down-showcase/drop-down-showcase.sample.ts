@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-
-import { foods } from './foods';
 import {
 	ConnectedPositioningStrategy,
 	IgxButtonDirective,
@@ -52,7 +50,6 @@ defineComponents(IgcDropdownComponent, IgcButtonComponent);
 export class DropDownShowcaseSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })
     private igxDropDown: IgxDropDownComponent;
-    @ViewChild('dropdown3', { static: true })
     private igxDropDownSelection: IgxDropDownComponent;
     @ViewChild('button', { static: true })
     private button: ElementRef;
@@ -60,7 +57,6 @@ export class DropDownShowcaseSampleComponent implements OnInit {
     private igxOverlayOutlet: IgxOverlayOutletDirective;
 
     public items: any[] = [];
-    public foods = foods;
 
     public ngOnInit() {
         this.igxDropDown.height = '400px';

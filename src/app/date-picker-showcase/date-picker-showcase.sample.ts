@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { DateRangeDescriptor, DateRangeType, IgxButtonDirective, IgxDatePickerComponent, IgxIconComponent, IgxLabelDirective, IgxPickerActionsDirective, IgxRippleDirective, IgxSuffixDirective } from 'igniteui-angular';
 import { defineComponents, IgcDatePickerComponent, IgcButtonComponent} from "igniteui-webcomponents";
 
