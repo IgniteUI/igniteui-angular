@@ -334,6 +334,12 @@
         @include ripple($button-ripple-theme);
         @include css-vars($button-ripple-theme);
 
+        @if $variant == 'indigo' {
+            igx-icon {
+                --component-size: 2;
+            }
+        }
+
         [dir='rtl'] & {
             transform: scaleX(-1);
         }
