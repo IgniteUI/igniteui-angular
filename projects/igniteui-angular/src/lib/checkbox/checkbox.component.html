@@ -25,9 +25,16 @@
     class="igx-checkbox__composite-wrapper"
 >
     <span #label class="igx-checkbox__composite">
-        <svg class="igx-checkbox__composite-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M4.1,12.7 9,17.6 20.3,6.3" />
-        </svg>
+        @if (theme === 'indigo') {
+            <svg class="igx-checkbox__composite-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <rect width="18" height="4" x="2" y="9" rx="1.85"/>
+                <path d="M19.033 5a1.966 1.966 0 0 0-1.418.586l-8.479 8.577-2.753-2.77a1.971 1.971 0 0 0-2.8 0 1.998 1.998 0 0 0 0 2.822l4.155 4.196a1.955 1.955 0 0 0 2.8 0l9.879-9.99a1.998 1.998 0 0 0 0-2.821 1.966 1.966 0 0 0-1.384-.6Z"/>
+            </svg>
+        } @else {
+            <svg class="igx-checkbox__composite-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M4.1,12.7 9,17.6 20.3,6.3"/>
+            </svg>
+        }
     </span>
 
     <div class="igx-checkbox__ripple"></div>
