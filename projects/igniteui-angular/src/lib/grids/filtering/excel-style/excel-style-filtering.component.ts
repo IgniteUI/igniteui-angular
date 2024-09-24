@@ -225,7 +225,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      * 
      * Setting value in template: 
      * ```ts
-     * [minHeight]="'<number><unit (px|%|rem|etc..)>'" 
+     * [minHeight]="'<number><unit (px|rem|etc..)>'" 
      * ```
      * 
      * Example for setting a value: 
@@ -262,7 +262,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      * 
      * Setting value in template: 
      * ```ts
-     * [maxHeight]="'<number><unit (px|%|rem|etc..)>'" 
+     * [maxHeight]="'<number><unit (px|rem|etc..)>'" 
      * ```
      * 
      * Example for setting a value: 
