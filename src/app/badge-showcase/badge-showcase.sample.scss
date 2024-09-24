@@ -1,0 +1,14 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.badges {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    > * {
+        margin-bottom: 8px;
+    }
+}

@@ -36,6 +36,14 @@
                     <igx-icon>{{item.icon}}</igx-icon>
                     <span class="navdrawer-ellipsis">{{item.name}}</span>
                 </span>
+
+                <!--WC Comparisons-->
+                <span igxDrawerItem [isHeader]="true">Compared to WC</span>
+
+                <span *ngFor="let item of WcCompareLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
+                    <igx-icon>{{item.icon}}</igx-icon>
+                    <span class="navdrawer-ellipsis">{{item.name}}</span>
+                </span>
             </nav>
         </ng-template>
 

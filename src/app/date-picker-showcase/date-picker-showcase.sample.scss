@@ -1,0 +1,30 @@
+.datepicker-column {
+    display: flex;
+    flex-flow: column nowrap;
+    flex: 1 0 20%;
+    align-content: flex-start;
+    margin: 16px 32px;
+    width: 270px;
+
+    button {
+        margin-top: 10px;
+    }
+}
+
+igx-date-picker {
+    margin-bottom: 10px;
+}
+
+.date-picker-sample-buttons {
+    margin-bottom: 16px;
+
+    button {
+        margin-right: 8px;
+        margin-bottom: 8px;
+    }
+}
+
+h6 {
+    margin-top: 32px;
+    margin-bottom: 12px;
+}

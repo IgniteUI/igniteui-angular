@@ -1,0 +1,22 @@
+<div class="sample-container">
+<article class="sample-item">
+    <strong>Angular Slider</strong>
+    <igx-slider
+        [showTicks]="true"
+        [primaryTickLabels]="primaryTickLabels"
+        [secondaryTickLabels]="secondaryTickLabels"
+        [ticksOrientation]="ticksOrientation"
+        [labels]="labels"
+        [secondaryTicks]="4">
+    </igx-slider>
+</article>
+
+<article class="sample-item">
+    <strong>WC Slider</strong>
+    <igc-slider primary-ticks="7" secondary-ticks="4">
+    <ng-container *ngFor="let label of labels">
+        <igc-slider-label>{{ label }}</igc-slider-label>
+    </ng-container>
+    </igc-slider>
+</article>
+</div>

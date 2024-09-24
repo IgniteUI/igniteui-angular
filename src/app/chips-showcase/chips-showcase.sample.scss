@@ -1,0 +1,143 @@
+@use '../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities' as *;
+@use '../../../projects/igniteui-angular/src/lib/core/styles/components/chip/chip-component' as *;
+@use '../../../projects/igniteui-angular/src/lib/core/styles/components/chip/chip-theme' as *;
+
+igx-chip {
+    margin: rem(4px);
+}
+
+h6 {
+    margin-top: 24px;
+}
+
+.sample-title {
+    font-size: 16px;
+    font-weight: 900;
+}
+
+$padding: 16px;
+
+.sample-min-width {
+    min-width: 650px !important;
+}
+
+.preview {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid hsla(var(--ig-gray-300));
+    gap: $padding;
+    margin: 0 auto;
+
+    &__sample {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: $padding;
+        gap: $padding;
+        flex: 1;
+    }
+
+    &__settings {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: hsla(var(--ig-gray-50));
+        border-left: 1px solid hsla(var(--ig-gray-300));
+        padding: $padding;
+    }
+
+    &__comp-size {
+        margin-block-end: 16px;
+    }
+
+    &__variant-select {
+        margin-block-end: 16px;
+    }
+
+    &__info {
+        text-align: center;
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        text-decoration: none;
+        color: hsla(var(--ig-secondary-600));
+        outline: none;
+
+        &:focus,
+        &:hover {
+            color: hsla(var(--ig-secondary-300));
+        }
+    }
+}
+
+.sidebar-sample {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.chip-column {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.sample-sub-title {
+    font-size: 18px;
+    font-weight: 900;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.chip-avatar {
+    width: rem(24px);
+    height: rem(24px);
+    min-width: rem(24px);
+}
+
+.chip-storyboard {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    igx-chip {
+        margin: rem(4px);
+    }
+}
+
+.chip-area-connector {
+    color: currentColor;
+    opacity: .54;
+}
+
+.wrapperAreaCc,
+.wrapperAreaTo {
+    display: flex;
+    align-items: center;
+    max-width: 640px;
+    border-bottom: 1px solid color($default-palette, 'gray', 400);
+    min-height: 48px;
+    flex-wrap: wrap;
+}
+
+.dropAreaCc,
+.dropAreaTo {
+    padding: 0 1rem;
+    margin: .25rem;
+    border-radius: 1rem;
+    visibility: hidden;
+
+    &.dragOver {
+        color: color($default-palette, 'gray', 700);
+        background-color: color($default-palette, 'gray', 200);
+    }
+}

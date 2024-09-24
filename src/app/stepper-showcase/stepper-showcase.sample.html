@@ -1,0 +1,139 @@
+<div class="sample-stepper-wrapper">
+    <strong>Angular Stepper</strong>
+    <igx-stepper #stepper>
+        <igx-step completed #step (activeChange)="activeStepChange($event)" [isValid]="form1.form.valid">
+            <span igxStepTitle>Step 1</span>
+            <span igxStepSubtitle>(completed)</span>
+            <div igxStepContent class="sample-body" [tabIndex]="-1">
+                <form #form1="ngForm">
+                    <igx-input-group type="box">
+                        <input igxInput name="firstName" type="text" required />
+                        <label igxLabel for="firstName">First Name</label>
+                    </igx-input-group>
+
+                    <div class="nav-buttons">
+                        <button igxButton="contained" (click)="stepper.next()"
+                            [disabled]="!form1.form.valid && stepper.linear">NEXT
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </igx-step>
+        <igx-step [active]="true" #step (activeChange)="activeStepChange($event)" [isValid]="form1.form.valid"
+            [completed]="form1.form.valid && stepper.linear">
+            <span igxStepTitle>Step 2</span>
+            <span igxStepSubtitle>(default)</span>
+            <div igxStepContent class="sample-body" [tabIndex]="-1">
+                <form #form1="ngForm">
+                    <igx-input-group type="box">
+                        <input igxInput name="lastName" type="text" required />
+                        <label igxLabel for="lastName">Last Name</label>
+                    </igx-input-group>
+
+                    <div class="nav-buttons">
+                        <button igxButton="contained" (click)="stepper.prev()"
+                            [disabled]="!form1.form.valid && stepper.linear">PREV
+                        </button>
+                        <button igxButton="contained" (click)="stepper.next()"
+                            [disabled]="!form1.form.valid && stepper.linear">NEXT
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </igx-step>
+        <igx-step optional #step (activeChange)="activeStepChange($event)" [isValid]="form1.form.valid"
+            [completed]="form1.form.valid && stepper.linear">
+            <span igxStepTitle>Step 3</span>
+            <span igxStepSubtitle>(optional)</span>
+            <div igxStepContent class="sample-body" [tabIndex]="-1">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur
+                soluta nulla asperiores, officia ullam recusandae voluptatem omnis
+                perferendis vitae non magni magnam praesentium placeat nemo quas
+                repudiandae. Nisi, quo ex!
+
+                <div class="nav-buttons">
+                    <button igxButton="contained" (click)="stepper.prev()"
+                        [disabled]="!form1.form.valid && stepper.linear">PREV
+                    </button>
+                    <button igxButton="contained" (click)="stepper.next()"
+                        [disabled]="!form1.form.valid && stepper.linear">NEXT
+                    </button>
+                </div>
+            </div>
+        </igx-step>
+
+        <igx-step disabled #step (activeChange)="activeStepChange($event)" [isValid]="form1.form.valid"
+            [completed]="form1.form.valid && stepper.linear">
+            <span igxStepTitle>Step 4</span>
+            <span igxStepSubtitle>(disabled)</span>
+            <div igxStepContent class="sample-body" [tabIndex]="-1">
+                Tabbable content
+                <br />
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur
+                soluta nulla asperiores, officia ullam recusandae voluptatem omnis
+                perferendis vitae non magni magnam praesentium placeat nemo quas
+                repudiandae. Nisi, quo ex!
+            </div>
+        </igx-step>
+    </igx-stepper>
+</div>
+
+<div class="sample-stepper-wrapper">
+    <strong>WC Stepper</strong>
+    <igc-stepper #stepper2>
+      <igc-step complete>
+        <span slot="title">Step1</span>
+        <span slot="subtitle">(completed)</span>
+        <igc-input
+          label="First Name"
+          id="first-name"
+          name="first-name"
+          required
+        ></igc-input>
+        <div class="nav-buttons">
+            <igc-button (click)="stepper2.next()">Next</igc-button>
+        </div>
+      </igc-step>
+
+      <igc-step active>
+        <span slot="title">Step 2</span>
+        <span slot="subtitle">(default)</span>
+        <igc-input
+          label="Last Name"
+          id="last-name"
+          name="last-name"
+          required
+        ></igc-input>
+        <div class="nav-buttons">
+            <igc-button (click)="stepper2.prev()">Prev</igc-button>
+            <igc-button (click)="stepper2.next()">Next</igc-button>
+        </div>
+      </igc-step>
+
+      <igc-step optional>
+        <span slot="title">Step 3</span>
+        <span slot="subtitle">(Optional)</span>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur
+        soluta nulla asperiores, officia ullam recusandae voluptatem omnis
+        perferendis vitae non magni magnam praesentium placeat nemo quas
+        repudiandae. Nisi, quo ex!
+        <div class="nav-buttons">
+            <igc-button (click)="stepper2.prev()">Prev</igc-button>
+            <igc-button (click)="stepper2.next()">Next</igc-button>
+        </div>
+      </igc-step>
+
+      <igc-step disabled>
+        <span slot="title">Step 4</span>
+        <span slot="subtitle">(disabled)</span>
+        <div tabindex="0">
+          Tabbable content
+          <br />
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur
+          soluta nulla asperiores, officia ullam recusandae voluptatem omnis
+          perferendis vitae non magni magnam praesentium placeat nemo quas
+          repudiandae. Nisi, quo ex!
+        </div>
+      </igc-step>
+    </igc-stepper>
+</div>

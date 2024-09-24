@@ -1,0 +1,112 @@
+<div class="sidebar-sample">
+    <div class="preview sample-min-width">
+        <div class="preview__sample">
+            <h6>Angular Chip</h6>
+            <igx-chip #me
+                [variant]="selected"
+                [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
+                [disabled]="isDisabled"
+                [selectable]="isSelectable"
+                [removable]="isRemovable"
+                [selected]="isSelected"
+                [draggable]="isDraggable"
+                [removeIcon]="customIcons ? myRemoveIcon : null"
+                [selectIcon]="customIcons ? mySelectIcon : null"
+                (remove)="removeChip(me)">
+                <igx-avatar igxPrefix *ngIf="hasAvatar" class="chip-area-avatar" [shape]="'circle'" initials="MP"></igx-avatar>
+                <igx-icon *ngIf="hasPrefix" igxPrefix>face</igx-icon>
+                Chip component
+                <igx-icon *ngIf="hasSuffix" igxSuffix>face</igx-icon>
+                <igx-circular-bar *ngIf="hasProgressbar" igxSuffix class="circular-sample" [indeterminate]="true"></igx-circular-bar>
+            </igx-chip>
+
+            <h6>WC Chip</h6>
+            <igc-chip #wc
+                [variant]="selected"
+                [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
+                [disabled]="isDisabled"
+                [selectable]="isSelectable"
+                [removable]="isRemovable"
+                [selected]="isSelected">
+                <span slot="prefix" *ngIf="hasAvatar" class="chip-area-avatar"><igx-avatar [shape]="'circle'" initials="MP"></igx-avatar></span>
+                <span slot="prefix" *ngIf="hasPrefix"><igx-icon>face</igx-icon></span>
+                <span slot="select" *ngIf="customIcons"><igx-icon family="fa-solid" name="fa-check-circle"></igx-icon></span>
+                Chip component
+                <span slot="suffix" *ngIf="hasSuffix"><igx-icon>face</igx-icon></span>
+                <span slot="suffix" *ngIf="hasProgressbar" class="circular-sample"><igx-circular-bar [indeterminate]="true"></igx-circular-bar></span>
+                <span slot="remove" *ngIf="customIcons"><igx-icon family="fa-solid" name="fa-trash-alt"></igx-icon></span>
+            </igc-chip>
+
+            <div class="preview__info">
+                <a href="https://github.com/IgniteUI/igniteui-angular/wiki/Chip-Component#selection" target="_blank">
+                    <igx-icon>link</igx-icon> Open wiki page.
+                </a>
+            </div>
+
+            <ng-template #mySelectIcon >
+                <igx-icon family="fa-solid" name="fa-check-circle"></igx-icon>
+            </ng-template>
+
+            <ng-template #myRemoveIcon>
+                <igx-icon family="fa-solid" name="fa-trash-alt"></igx-icon>
+            </ng-template>
+        </div>
+
+        <div class="preview__settings">
+            <igx-select
+                #model="ngModel"
+                [(ngModel)]="selected"
+                [ngModelOptions]="{standalone: true}"
+                [placeholder]="'Select chip variant'"
+                [style.--ig-size]="'var(--ig-size-small)'"
+                type="border" class="preview__variant-select">
+
+                <igx-select-item *ngFor="let type of chipTypes" [value]="type">
+                    {{type}}
+                </igx-select-item>
+            </igx-select>
+
+            <size-selector #sizeSelector></size-selector>
+
+            <igx-switch id="selectable" [(ngModel)]="isSelectable">
+                <label for="selectable">Selectable</label>
+            </igx-switch>
+
+            <igx-switch id="selected" [(ngModel)]="isSelected">
+                <label for="removable">Selected</label>
+            </igx-switch>
+
+            <igx-switch id="removable"  [(ngModel)]="isRemovable">
+                <label for="removable">Removable</label>
+            </igx-switch>
+
+            <igx-switch *ngIf="isRemovable" id="customIcons" [(ngModel)]="customIcons">
+                <label for="customIcons">Custom Icons</label>
+            </igx-switch>
+
+            <igx-switch id="addPrefix"  [(ngModel)]="hasPrefix">
+                <label for="addPrefix">Add prefix</label>
+            </igx-switch>
+
+            <igx-switch id="addSuffix"  [(ngModel)]="hasSuffix">
+                <label for="addSuffix">Add suffix</label>
+            </igx-switch>
+
+            <igx-switch id="hasAvatar" [(ngModel)]="hasAvatar">
+                <label for="hasAvatar">Add avatar</label>
+            </igx-switch>
+
+            <igx-switch id="hasProgressbar" [(ngModel)]="hasProgressbar">
+                <label for="hasProgressbar">Add progressbar</label>
+            </igx-switch>
+
+            <igx-switch id="draggable" [(ngModel)]="isDraggable">
+                <label for="draggable">Draggable</label>
+            </igx-switch>
+
+            <igx-switch id="disableChips"  [(ngModel)]="isDisabled">
+                <label for="disableChips">Disable chips</label>
+            </igx-switch>
+        </div>
+    </div>
+</div>

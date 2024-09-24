@@ -1,0 +1,19 @@
+::ng-deep .igx-dialog {
+    max-width: 60vw;
+}
+
+[igxButton] {
+    max-width: 200px;
+}
+
+.sample-column {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 350px;
+    margin-right: 16px;
+    border: 1px solid #999;
+    text-align: center;
+}

@@ -1,0 +1,101 @@
+<div class="items-wrapper">
+    <div class="sample-wrapper">
+        <strong>Angular Tabs</strong>
+        <igx-tabs
+            #tabsNew
+            [selectedIndex]="3"
+            (selectedIndexChanging)="tabsSelectedIndexChanging($event)"
+            (selectedItemChange)="tabsSelectedItemChange($event)"
+        >
+            <igx-tab-item>
+                <igx-tab-header igxRipple>
+                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                    <span igxTabHeaderLabel>Tab 1</span>
+                </igx-tab-header>
+                <igx-tab-content>
+                    Content 1
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                </igx-tab-content>
+            </igx-tab-item>
+
+            <igx-tab-item>
+                <igx-tab-header igxRipple>
+                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                    <span igxTabHeaderLabel>{{tab2Label}}</span>
+                </igx-tab-header>
+                <igx-tab-content>
+                    <div class="sample-scrollable">
+                        <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
+                            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
+                                            *ngFor="let contact of contacts">
+                                <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
+                                <p igxListLineTitle>{{contact.text}}</p>
+                                <span igxListLineSubTitle>{{contact.phone}}</span>
+                                <igx-icon igxListAction>phone</igx-icon>
+                            </igx-list-item>
+                        </igx-list>
+                    </div>
+                </igx-tab-content>
+            </igx-tab-item>
+
+            <igx-tab-item>
+                <igx-tab-header igxRipple>
+                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                    <span igxTabHeaderLabel>Tab 3 Lorem ipsum dolor</span>
+                </igx-tab-header>
+                <igx-tab-content>
+                    Content 3
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                </igx-tab-content>
+            </igx-tab-item>
+
+            <igx-tab-item [disabled]="true">
+                <igx-tab-header>
+                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                    <span igxTabHeaderLabel>Tab 4 Disabled</span>
+                </igx-tab-header>
+                <igx-tab-content>
+                    Content 4
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                </igx-tab-content>
+            </igx-tab-item>
+        </igx-tabs>
+    </div>
+
+    <div class="sample-wrapper">
+        <strong>WC Tabs</strong>
+        <igc-tabs>
+            <igc-tab panel="first">
+                <igx-icon>folder</igx-icon>
+                Tab 1
+                </igc-tab>
+                <igc-tab panel="second">
+                <igx-icon >folder</igx-icon>
+                Tab 2
+                </igc-tab>
+                <igc-tab panel="third">
+                <igx-icon >folder</igx-icon>
+                Tab 3 Lorem ipsum dolor
+                </igc-tab>
+                <igc-tab panel="fourth" disabled>
+                <igx-icon >folder</igx-icon>
+                Tab 4 disabled
+                </igc-tab>
+                <igc-tab-panel id="first">Content 1 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat, eos?</igc-tab-panel>
+                <igc-tab-panel id="second">
+                <div class="sample-scrollable">
+                    <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
+                        <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
+                                        *ngFor="let contact of contacts">
+                            <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
+                            <p igxListLineTitle>{{contact.text}}</p>
+                            <span igxListLineSubTitle>{{contact.phone}}</span>
+                            <igx-icon igxListAction>phone</igx-icon>
+                        </igx-list-item>
+                    </igx-list>
+                </div>
+                </igc-tab-panel>
+                <igc-tab-panel id="third">Content 3 Lorem ipsum dolor sit amet consectetur adipisicing elit. At, doloremque?</igc-tab-panel>
+        </igc-tabs>
+    </div>
+</div>

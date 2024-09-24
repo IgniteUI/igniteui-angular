@@ -698,6 +698,119 @@ export class AppComponent implements OnInit {
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
+    public WcCompareLinks = [
+        {
+            link: '/avatar-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Avatar'
+        },
+        {
+            link: '/badge-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Badge'
+        },
+        {
+            link: '/banner-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Banner'
+        },
+        {
+            link: '/button-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Buttons'
+        },
+        {
+            link: '/buttonGroup-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Button Group'
+        },
+        {
+            link: '/card-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Card'
+        },
+        {
+            link: '/chip-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Chips'
+        },
+        {
+            link: '/combo-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Combo'
+        },
+        {
+            link: '/datePicker-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Date Picker'
+        },
+        {
+            link: '/dialog-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Dialog'
+        },
+        {
+            link: '/dropDown-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'DropDown'
+        },
+        {
+            link: '/expansionPanel-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Expansion Panel'
+        },
+        {
+            link: '/input-group-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Input Group'
+        },
+        {
+            link: '/inputs-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Inputs'
+        },
+        {
+            link: '/list-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'List'
+        },
+        {
+            link: '/select-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Select'
+        },
+        {
+            link: '/slider-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Slider'
+        },
+        {
+            link: '/snackbar-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Snackbar'
+        },
+        {
+            link: '/stepper-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Stepper'
+        },
+        {
+            link: '/tabs-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Tabs'
+        },
+        {
+            link: '/toast-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Toast'
+        },
+        {
+            link: '/tree-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Tree'
+        }
+    ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
+
     constructor(private router: Router, private iconService: IgxIconService) {
         iconService.setFamily('fa-solid', { className: 'fa', type: 'font', prefix: 'fa-'});
         iconService.setFamily('fa-brands', { className: 'fab', type: 'font' });

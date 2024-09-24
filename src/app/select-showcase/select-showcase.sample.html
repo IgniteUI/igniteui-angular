@@ -1,0 +1,37 @@
+<size-selector #sizeSelector></size-selector>
+
+<div class="select-sample">
+    <strong>Angular Select</strong>
+    <igx-select
+                [placeholder]="'Pick One'"
+                (opening)="testOnOpening($event)"
+                (opened)="testOnOpened()"
+                (closing)="testOnClosing($event)"
+                (closed)="testOnClosed()"
+                (selectionChanging)="testOnSelection($event)"
+                [disabled]="false"
+                [type]="'border'"
+                [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
+        <label igxLabel>Sample Label</label>
+        <igx-icon igxPrefix>favorite</igx-icon>
+        <igx-hint>I am a Hint</igx-hint>
+        <igx-select-item [value] = "'Apple'" [disabled]="true">Apple</igx-select-item>
+        <igx-select-item [value] = "'Orange'">Orange</igx-select-item>
+        <igx-select-item [value] = "'Grapes'">Grapes</igx-select-item>
+        <igx-select-item [value] = "'Banana'">Banana</igx-select-item>
+    </igx-select>
+
+    <strong>WC Select</strong>
+    <igc-select
+        placeholder="Pick One"
+        label = "Sample label"
+        outlined="true"
+        [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
+        <igx-icon slot="prefix">favorite</igx-icon>
+        <span slot="helper-text">I am a Hint</span>
+        <igc-select-item [value] = "'Apple'" [disabled]="true">Apple</igc-select-item>
+        <igc-select-item [value] = "'Orange'">Orange</igc-select-item>
+        <igc-select-item [value] = "'Grapes'">Grapes</igc-select-item>
+        <igc-select-item [value] = "'Banana'">Banana</igc-select-item>
+    </igc-select>
+</div>

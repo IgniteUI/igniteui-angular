@@ -1,0 +1,32 @@
+<section class="sample-content">
+    <div class="sample-wrapper">
+        <strong>Angular DropDown</strong>
+        <button igxButton="contained" #button (click)="toggleDropDown()" [igxDropDownItemNavigation]="dropdown1">Toggle</button>
+        <igx-drop-down #dropdown1 (selectionChanging)="onSelection($event)" (opening)="onOpening()">
+            <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header"
+                                [selected]="item.selected">
+                    {{ item.field }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+    </div>
+
+    <div class="sample-wrapper">
+        <strong>WC DropDown</strong>
+        <igc-dropdown id="dropdown2">
+            <igc-button slot="target">Toggle</igc-button>
+            <ng-container *ngFor="let item of items">
+                <ng-container *ngIf="item.header">
+                    <igc-dropdown-header>{{ item.field }}</igc-dropdown-header>
+                </ng-container>
+                <igc-dropdown-item 
+                    [disabled]="item.disabled" 
+                    [selected]="item.selected" 
+                    (click)="onSelection(item)">
+                    {{ item.field }}
+                </igc-dropdown-item>
+            </ng-container>
+        </igc-dropdown>
+    </div>
+</section>
+
+<div igxOverlayOutlet #outlet="overlay-outlet"></div>

@@ -1,0 +1,40 @@
+<div class="sample-wrapper list-sample-component">
+    <size-selector #sizeSelector></size-selector>
+
+    <section class="sample-content" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
+
+        <article class="sample-column">
+            <strong>Angular List</strong>
+            <div class="list-sample">
+                <igx-list>
+                    <igx-list-item [isHeader]="true">Job positions</igx-list-item>
+                    <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
+                        <igx-list-item>
+                            <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
+                            <h4 igxListLineTitle>{{employee.name}}</h4>
+                            <p igxListLineSubTitle>{{employee.position}}</p>
+                            <igx-icon igxListAction>more_horiz</igx-icon>
+                        </igx-list-item>
+                    </ng-template>
+                </igx-list>
+            </div>
+        </article>
+
+        <article class="sample-column">
+            <strong>WC List</strong>
+            <div class="list-sample">
+                <igc-list>
+                    <igc-list-header>
+                      <span>Job Positions</span>
+                    </igc-list-header>
+                    <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
+                        <igc-list-item>
+                            <igc-avatar slot="start" [src]="employee.imageURL"></igc-avatar>
+                            <span slot="title">{{employee.name}}</span>
+                            <span slot="subtitle">{{employee.position}}</span>
+                            <igx-icon slot="end">more_horiz</igx-icon>
+                        </igc-list-item>
+                    </ng-template>
+                </igc-list>
+            </div>
+        </article>

@@ -1,22 +1,33 @@
 import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
 import { Routes } from '@angular/router';
 import { AvatarSampleComponent } from './avatar/avatar.sample';
+import { AvatarShowcaseSampleComponent } from './avatar-showcase/avatar-showcase.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
+import { BadgeShowcaseSampleComponent } from './badge-showcase/badge-showcase.sample';
 import { ButtonSampleComponent } from './button/button.sample';
+import { ButtonShowcaseSampleComponent } from './button-showcase/button-showcase.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
+import { CardShowcaseSampleComponent } from './card-showcase/card-showcase.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
+import { ChipsShowcaseSampleComponent } from './chips-showcase/chips-showcase.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
+import { ExpansionPanelShowcaseSampleComponent } from './expansion-panel-showcase/expansion-panel-showcase-sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
+import { DatePickerShowcaseSampleComponent } from './date-picker-showcase/date-picker-showcase.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
+import { DialogShowcaseSampleComponent } from './dialog-showcase/dialog-showcase.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
+import { InputsShowcaseSampleComponent } from './inputs-showcase/inputs-showcase.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
+import { InputGroupShowcaseSampleComponent } from './input-group-showcase/input-group-showcase.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
+import { ListShowcaseSampleComponent } from './list-showcase/list-showcase.sample';
 import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
 import { ListPerformanceSampleComponent } from './list-performance/list-performance.sample';
 import { NavbarSampleComponent } from './navbar/navbar.sample';
@@ -24,8 +35,10 @@ import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
 import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
+import { SliderShowcaseSampleComponent } from './slider-showcase/slider-showcase.sample';
 import { SplitterSampleComponent } from './splitter/splitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
+import { SnackbarShowcaseSampleComponent } from './snackbar-showcase/snackbar-showcase.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
 import { TypographySampleComponent } from './styleguide/typography/typography.sample';
@@ -37,6 +50,7 @@ import {
     BottomNavRoutingView3Component
 } from './bottomnav-routing/bottomnav-routing-views.sample';
 import { TabsSampleComponent } from './tabs/tabs.sample';
+import { TabsShowcaseSampleComponent } from './tabs-showcase/tabs-showcase.sample';
 import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
 import {
     TabsRoutingView1Component,
@@ -45,6 +59,7 @@ import {
 } from './tabs-routing/tabs-routing-views.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
+import { ToastShowcaseSampleComponent } from './toast-showcase/toast-showcase.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridSampleComponent } from './grid/grid.sample';
@@ -62,11 +77,14 @@ import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
+import { ButtonGroupShowcaseSampleComponent } from './buttonGroup-showcase/buttonGroup-showcase.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { DropDownShowcaseSampleComponent } from './drop-down-showcase/drop-down-showcase.sample';
 import { DropDownSizeSampleComponent } from './drop-down/drop-down-size/drop-down-size.sample';
 import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
+import { ComboShowcaseSampleComponent } from './combo-showcase/combo-showcase.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { OverlayPresetsSampleComponent } from './overlay/overlay-presets.sample';
@@ -81,8 +99,10 @@ import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remot
 import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
+import { BannerShowcaseSampleComponent } from './banner-showcase/banner-showcase.sample';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
 import { SelectSampleComponent } from './select/select.sample';
+import { SelectShowcaseSampleComponent } from './select-showcase/select-showcase.sample';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample';
@@ -120,6 +140,7 @@ import { GridEventsComponent } from './grid-events/grid-events.component';
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TreeSampleComponent } from './tree/tree.sample';
+import { TreeShowcaseSampleComponent } from './tree-showcase/tree-showcase.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 import { AccordionSampleComponent } from './accordion/accordion.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
@@ -130,6 +151,7 @@ import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-grid-hierarchy.sample';
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent as StepperSampleComponent } from './stepper/stepper.sample';
+import { IgxStepperShowcaseSampleComponent } from './stepper-showcase/stepper-showcase.sample';
 import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 import { QueryBuilderComponent } from './query-builder/query-builder.sample';
@@ -165,20 +187,40 @@ export const appRoutes: Routes = [
         component: AvatarSampleComponent
     },
     {
+        path: 'avatar-showcase',
+        component: AvatarShowcaseSampleComponent
+    },
+    {
         path: 'badge',
         component: BadgeSampleComponent
+    },
+    {
+        path: 'badge-showcase',
+        component: BadgeShowcaseSampleComponent
     },
     {
         path: 'banner',
         component: BannerSampleComponent
     },
     {
+        path: 'banner-showcase',
+        component: BannerShowcaseSampleComponent
+    },
+    {
         path: 'select',
         component: SelectSampleComponent
     },
     {
+        path: 'select-showcase',
+        component: SelectShowcaseSampleComponent
+    },
+    {
         path: 'buttons',
         component: ButtonSampleComponent
+    },
+    {
+        path: 'button-showcase',
+        component: ButtonShowcaseSampleComponent
     },
     {
         path: 'calendar',
@@ -193,6 +235,10 @@ export const appRoutes: Routes = [
         component: CardSampleComponent
     },
     {
+        path: 'card-showcase',
+        component: CardShowcaseSampleComponent
+    },
+    {
         path: 'carousel',
         component: CarouselSampleComponent
     },
@@ -201,12 +247,24 @@ export const appRoutes: Routes = [
         component: ComboSampleComponent
     },
     {
+        path: 'combo-showcase',
+        component: ComboShowcaseSampleComponent
+    },
+    {
         path: 'expansionPanel',
         component: ExpansionPanelSampleComponent
     },
     {
+        path: 'expansionPanel-showcase',
+        component: ExpansionPanelShowcaseSampleComponent
+    },
+    {
         path: 'chip',
         component: ChipsSampleComponent
+    },
+    {
+        path: 'chip-showcase',
+        component: ChipsShowcaseSampleComponent
     },
 	{
         path: 'divider',
@@ -217,12 +275,24 @@ export const appRoutes: Routes = [
         component: DatePickerSampleComponent
     },
     {
+        path: 'datePicker-showcase',
+        component: DatePickerShowcaseSampleComponent
+    },
+    {
         path: 'dialog',
         component: DialogSampleComponent
     },
     {
+        path: 'dialog-showcase',
+        component: DialogShowcaseSampleComponent
+    },
+    {
         path: 'dropDown',
         component: DropDownSampleComponent
+    },
+    {
+        path: 'dropDown-showcase',
+        component: DropDownShowcaseSampleComponent
     },
     {
         path: 'dropDown-density',
@@ -253,8 +323,16 @@ export const appRoutes: Routes = [
         component: InputSampleComponent
     },
     {
+        path: 'inputs-showcase',
+        component: InputsShowcaseSampleComponent
+    },
+    {
         path: 'input-group',
         component: InputGroupSampleComponent
+    },
+    {
+        path: 'input-group-showcase',
+        component: InputGroupShowcaseSampleComponent
     },
     {
         path: 'layout',
@@ -263,6 +341,10 @@ export const appRoutes: Routes = [
     {
         path: 'list',
         component: ListSampleComponent
+    },
+    {
+        path: 'list-showcase',
+        component: ListShowcaseSampleComponent
     },
     {
         path: 'listPanning',
@@ -329,6 +411,10 @@ export const appRoutes: Routes = [
         component: SliderSampleComponent
     },
     {
+        path: 'slider-showcase',
+        component: SliderShowcaseSampleComponent
+    },
+    {
         path: 'range-slider',
         component: RangeSliderComponent
     },
@@ -339,6 +425,10 @@ export const appRoutes: Routes = [
     {
         path: 'snackbar',
         component: SnackbarSampleComponent
+    },
+    {
+        path: 'snackbar-showcase',
+        component: SnackbarShowcaseSampleComponent
     },
     {
         path: 'colors',
@@ -377,6 +467,10 @@ export const appRoutes: Routes = [
         component: TabsSampleComponent
     },
     {
+        path: 'tabs-showcase',
+        component: TabsShowcaseSampleComponent
+    },
+    {
         path: 'tabs-routing',
         component: TabsRoutingSampleComponent,
         children: [
@@ -392,6 +486,10 @@ export const appRoutes: Routes = [
     {
         path: 'toast',
         component: ToastSampleComponent
+    },
+    {
+        path: 'toast-showcase',
+        component: ToastShowcaseSampleComponent
     },
     {
         path: 'virtualForDirective',
@@ -510,6 +608,10 @@ export const appRoutes: Routes = [
         component: ButtonGroupSampleComponent
     },
     {
+        path: 'buttonGroup-showcase',
+        component: ButtonGroupShowcaseSampleComponent
+    },
+    {
         path: 'gridColumnGroups',
         component: GridColumnGroupsSampleComponent
     },
@@ -560,9 +662,14 @@ export const appRoutes: Routes = [
     {
         path: 'gridFinJS',
         component: MainComponent
-    }, {
+    },
+    {
         path: 'tree',
         component: TreeSampleComponent
+    },
+    {
+        path: 'tree-showcase',
+        component: TreeShowcaseSampleComponent
     },
     {
         path: 'gridUpdates',
@@ -675,6 +782,10 @@ export const appRoutes: Routes = [
     {
         path: 'stepper',
         component: StepperSampleComponent
+    },
+    {
+        path: 'stepper-showcase',
+        component: IgxStepperShowcaseSampleComponent
     },
     {
         path: 'labelDirective',

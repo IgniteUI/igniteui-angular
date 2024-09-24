@@ -1,0 +1,37 @@
+<div class="inputs-wrapper">
+    <strong>Angular Input</strong>
+    <igx-input-group [type]="inputType">
+        <label igxLabel>Web address</label>
+        <igx-icon igxPrefix>face</igx-icon>
+    
+        <input
+                name="inputValidityTest"
+                [required]="isRequired"
+                [disabled]="isDisabled"
+                pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+                [(ngModel)]="inputValue"
+                igxInput
+                type="text"
+        />
+        <igx-hint>Type your web address</igx-hint>
+        <igx-suffix>
+            <igx-icon>face</igx-icon>
+        </igx-suffix>
+    </igx-input-group>
+    
+    <strong>WC Input</strong>
+    <igc-input #igcInput
+       label="Web component"
+       [required]="isRequired"
+       [disabled]="isDisabled"
+       [outlined]="isOutlined()">
+        <span slot="prefix"><igx-icon>face</igx-icon></span>
+        <span slot="suffix"><igx-icon>face</igx-icon></span>
+        <span slot="helper-text">
+            Web component
+            <strong *ngIf="inputType === 'line'" style="color: hsla(var(--ig-error-500))">
+                don't have {{inputType}} type!
+            </strong>
+        </span>
+    </igc-input>
+</div>

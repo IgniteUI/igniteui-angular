@@ -1,0 +1,69 @@
+<div class="grid-container grid-container--fit">
+    <!--New York City Card Begins-->
+    <article class="card">
+        <h4 class="sample-title">Angular Card</h4>
+        <igx-card class="my-cool-card">
+            <igx-card-media>
+                <img [src]="cards[0].imageUrl">
+            </igx-card-media>
+
+            <igx-card-header [vertical]="false">
+                <igx-avatar [src]="cards[0].avatarUrl"></igx-avatar>
+                <h1 igxCardHeaderTitle>{{ cards[0].title }}</h1>
+                <h2 igxCardHeaderSubtitle>{{ cards[0].subtitle }}</h2>
+            </igx-card-header>
+
+            <igx-card-content>
+                <p>{{ cards[0].content }}</p>
+            </igx-card-content>
+
+            <igx-card-actions>
+                <button igxButton igxRipple>Read More</button>
+                <span igxIconButton="flat" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[0].icons">
+                    <igx-icon>{{icon}}</igx-icon>
+                </span>
+            </igx-card-actions>
+
+        </igx-card>
+    </article>
+    <!--New York City Card End-->
+
+    <!--New York City Card Begins-->
+    <article class="card">
+        <h4 class="sample-title">WC Card</h4>
+        <igc-card>
+            <igc-card-media>
+              <img
+                src="assets/images/card/media/ny.jpg"
+              />
+            </igc-card-media>
+            <igc-card-header>
+              <igc-avatar slot="thumbnail" src="assets/images/card/avatars/statue_of_liberty.jpg">
+              </igc-avatar>
+              <span slot="title">New York City</span>
+              <span slot="subtitle">City in New York</span>
+            </igc-card-header>
+            <igc-card-content>
+                <span>
+                    New York City comspanrises 5 boroughs sitting where the Hudson River
+                    meets the Atlantic Ocean. At its core is Manhattan, a densely
+                    populated borough that’s among the world’s major commercial,
+                    financial and cultural centers.
+                </span>
+            </igc-card-content>
+            <igc-card-actions>
+              <igc-button slot="start" variant="flat">Read More</igc-button>
+              <igc-icon-button slot="end" variant="flat"><igx-icon>favorite</igx-icon></igc-icon-button>
+              <igc-icon-button
+                slot="end"
+                variant="flat"
+              ><igx-icon>bookmark</igx-icon></igc-icon-button>
+              <igc-icon-button
+                slot="end"
+                variant="flat"
+              ><igx-icon>share</igx-icon></igc-icon-button>
+            </igc-card-actions>
+          </igc-card>
+    </article>
+    <!--New York City Card End-->
+</div>

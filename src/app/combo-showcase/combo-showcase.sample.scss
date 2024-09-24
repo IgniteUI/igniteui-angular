@@ -1,0 +1,56 @@
+.combo-sample {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 32px 16px;
+
+    &__section,
+    &__row {
+        display: flex;
+        gap: 16px
+    }
+
+    &__row {
+        &--stretch {
+            > * {
+                flex: 1;
+            }
+        }
+    }
+
+    &__section {
+        flex-direction: column;
+        padding: 16px;
+        border: 1px dashed hsla(var(--ig-gray-300));
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__title {
+        font-weight: 600;
+        font-size: 20px;
+        letter-spacing: .4px;
+        margin: 0;
+        line-height: normal;
+    }
+
+    igx-simple-combo,
+    igx-combo {
+        max-width: 100%;
+        min-width: 30%;
+    }
+}
+
+.custom-combo-footer,
+.custom-combo-header {
+    text-align: center;
+    padding: 8px 16px;
+    background: hsla(var(--ig-gray-100));
+}
+

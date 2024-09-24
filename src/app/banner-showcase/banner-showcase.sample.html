@@ -1,0 +1,33 @@
+<h4 class="sample-title">Angular vs WebComponents Banner</h4>
+<div>
+    <igx-navbar actionButtonIcon="menu">
+        <button igxIconButton="flat">
+            <igx-icon>more_vert</igx-icon>
+        </button>
+    </igx-navbar>
+    <igx-banner #bannerNoSafeConnection [animationSettings]="animationSettings" (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
+        Your connections is not private!
+        <igx-icon>lock</igx-icon>
+    </igx-banner>
+</div>
+
+<div>
+    <igx-navbar actionButtonIcon="menu">
+        <button igxIconButton="flat">
+            <igx-icon>more_vert</igx-icon>
+        </button>
+    </igx-navbar>
+    <igc-banner #bannerWC [animationSettings]="animationSettings" (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
+        Your connections is not private!
+        <igx-icon slot="prefix">lock</igx-icon>
+        <div slot="actions">
+          <igc-button variant="flat">Dismiss</igc-button>
+        </div>
+      </igc-banner>
+</div>
+
+<div class="sample-actions">
+    <button igxButton="flat" igxRipple (click)="toggle()">Toggle Angular</button>
+    <button igxButton="flat" igxRipple (click)="bannerWC.toggle()">Toggle WC</button>
+</div>
+

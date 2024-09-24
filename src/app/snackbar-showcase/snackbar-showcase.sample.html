@@ -1,0 +1,35 @@
+<div class="snackbars-wrapper">
+<div class="sample-wrapper">
+    <article class="sample-column">
+        <h4 class="sample-title">Snackbar</h4>
+        <div class="snackbar-sample">
+            <div class="snackbar-container">
+                <igx-snackbar
+                    #snackbar
+                    [outlet]="outlet"
+                    (animationStarted)="onAnimationStarted()"
+                    (animationDone)="onAnimationDone()"
+                    [actionText]="'Undo'"
+                >Snackbar Message
+                </igx-snackbar>
+            </div>
+            <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+        </div>
+        <button igxButton (click)="toggleSnackbar()">Toggle Angular Snackbar</button>
+    </article>
+</div>
+
+<div class="sample-wrapper">
+    <article class="sample-column">
+        <button igxButton (click)="snackbar2.toggle()">Toggle WC Snackbar</button>
+        <div class="snackbar-sample">
+            <igc-snackbar #snackbar2 position="positionSettings">
+                Snackbar Message
+                <button slot="action" igxButton="flat">
+                    Undo
+                </button>
+            </igc-snackbar>
+        </div>
+    </article>
+</div>
+
