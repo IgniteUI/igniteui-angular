@@ -610,6 +610,10 @@ describe('Carousel', () => {
             carousel = fixture.componentInstance.carousel;
             fixture.detectChanges();
         });
+        afterEach(() => {
+            document.body.dir = 'ltr';
+        });
+
         it('should support keyboard navigation when the indicators container is focused', () => {
             const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
 
