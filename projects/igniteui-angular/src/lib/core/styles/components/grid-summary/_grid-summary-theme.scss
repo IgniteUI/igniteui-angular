@@ -52,6 +52,7 @@
     }
 
     $theme: digest-schema($grid-summary-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($result-color) and $background-color {
         $result-color: text-contrast($background-color);
@@ -80,7 +81,10 @@
         pinned-border-width: $pinned-border-width,
         pinned-border-style: $pinned-border-style,
         pinned-border-color: $pinned-border-color,
-        label-hover-color: $label-hover-color
+        label-hover-color: $label-hover-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
     ));
 }
 
@@ -89,6 +93,8 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin grid-summary($theme) {
     @include css-vars($theme);
+
+    $variant: map.get($theme, '_meta', 'variant');
 
     $cell-pin: (
         style: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style'),
@@ -113,7 +119,13 @@
         flex-direction: column;
         flex: 1 1 0%;
         padding-block: 0;
-        padding-inline: pad-inline(map.get($summary-padding-inline, 'compact'), map.get($summary-padding-inline, 'cosy'), map.get($summary-padding-inline, 'comfortable'));
+
+        @if $variant != 'indigo' {
+            padding-inline: pad-inline(map.get($summary-padding-inline, 'compact'), map.get($summary-padding-inline, 'cosy'), map.get($summary-padding-inline, 'comfortable'));
+        } @else {
+            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        }
+
         background: var-get($theme, 'background-color', inherit);
         overflow: hidden;
         outline-style: none;
@@ -125,6 +137,10 @@
 
         &:focus::after {
             background: var-get($theme, 'focus-background-color');
+        }
+
+        @if $variant == 'indigo' {
+            border-top: rem(1px) solid var-get($theme, 'border-color');
         }
     }
 
@@ -156,7 +172,13 @@
         align-items: center;
         padding-block: pad(map.get($item-padding-block, 'compact'), map.get($item-padding-block, 'cosy'), map.get($item-padding-block, 'comfortable'));
         padding-inline: 0;
-        font-size: rem(12px);
+
+        @if $variant != 'indigo' {
+            font-size: rem(12px);
+        } @else {
+            min-height: sizable(rem(24px), rem(30px), rem(36px));
+        }
+
         position: relative;
     }
 
@@ -165,14 +187,28 @@
         min-width: rem(30px);
         margin-inline-end: rem(3px);
 
+        @if $variant == 'indigo' {
+            @include type-style('caption');
+
+            margin-inline-end: initial;
+        }
+
         &:hover {
             color: var-get($theme, 'label-hover-color');
         }
     }
 
     %igx-grid-summary__result {
+        @if $variant == 'indigo' {
+            @include type-style('detail-2', false);
+        }
+
         color: var-get($theme, 'result-color');
-        font-weight: 600;
+
+        @if $variant != 'indigo' {
+            font-weight: 600;
+        }
+
         flex: 1 1 auto;
         text-align: end;
     }
