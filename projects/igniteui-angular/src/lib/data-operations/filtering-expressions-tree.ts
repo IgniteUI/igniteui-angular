@@ -21,12 +21,12 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
     type?: FilteringExpressionsTreeType;
 
     /**
-     * @deprecated in version 19.1. Use `FilteringUtil.find` instead.
+     * @deprecated in version 19.1.0. Use `FilteringUtil.find` instead.
      */
     find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
 
     /**
-     * @deprecated in version 19.1. Use `FilteringUtil.findIndex` instead.
+     * @deprecated in version 19.1.0. Use `FilteringUtil.findIndex` instead.
      */
     findIndex(fieldName: string): number;
 }
@@ -119,7 +119,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```
      *
      * @memberof FilteringExpressionsTree
-     * @deprecated in version 19.1. Use `FilteringUtil.find` instead.
+     * @deprecated in version 19.1.0. Use `FilteringUtil.find` instead.
      */
     public find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression {
         return FilteringUtil.find(this, fieldName);
@@ -132,7 +132,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```
      *
      * @memberof FilteringExpressionsTree
-     * @deprecated in version 19.1. Use `FilteringUtil.findIndex` instead.
+     * @deprecated in version 19.1.0. Use `FilteringUtil.findIndex` instead.
      */
     public findIndex(fieldName: string): number {
         return FilteringUtil.findIndex(this, fieldName);
