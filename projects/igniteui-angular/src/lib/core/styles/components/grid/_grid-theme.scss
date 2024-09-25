@@ -3340,9 +3340,9 @@
         height: auto !important;
         align-items: flex-end;
         padding-bottom: pad-block(
-            map.get($pivot-row-aria-padding, 'compact'),
-            map.get($pivot-row-aria-padding, 'cosy'),
-            map.get($pivot-row-aria-padding, 'comfortable')
+            map.get($pivot-row-aria-padding, 'compact',0),
+            map.get($pivot-row-aria-padding, 'cosy',0),
+            map.get($pivot-row-aria-padding, 'comfortable',0)
         );
         border-inline-start: 0;
         border-bottom: 0;
