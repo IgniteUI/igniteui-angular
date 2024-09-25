@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IChangeCheckboxEventArgs, IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxAvatarComponent, IgxButtonDirective, IgxCheckboxComponent, IgxIconComponent, IgxRadioComponent, IgxSwitchComponent } from 'igniteui-angular';
@@ -6,12 +6,12 @@ import { defineComponents, IgcRadioComponent, IgcRadioGroupComponent, IgcSwitchC
 
 defineComponents(IgcRadioComponent, IgcRadioGroupComponent, IgcSwitchComponent, IgcCheckboxComponent);
 
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-input-showcase-sample',
     styleUrls: ['inputs-showcase.sample.scss'],
     templateUrl: 'inputs-showcase.sample.html',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
     imports: [FormsModule, NgFor, ReactiveFormsModule, IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxSwitchComponent, IgxIconComponent, IgxCheckboxComponent, IgxAvatarComponent, IgxRadioComponent, IgxButtonDirective]
 })

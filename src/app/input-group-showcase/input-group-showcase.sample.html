@@ -1,17 +1,18 @@
+<size-selector #sizeSelector></size-selector>
 <div class="inputs-wrapper">
     <strong>Angular Input</strong>
-    <igx-input-group [type]="inputType">
+    <igx-input-group [type]="inputType" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
         <label igxLabel>Web address</label>
         <igx-icon igxPrefix>face</igx-icon>
     
         <input
-                name="inputValidityTest"
-                [required]="isRequired"
-                [disabled]="isDisabled"
-                pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
-                [(ngModel)]="inputValue"
-                igxInput
-                type="text"
+            name="inputValidityTest"
+            [required]="isRequired"
+            [disabled]="isDisabled"
+            pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+            [(ngModel)]="inputValue"
+            igxInput
+            type="text"
         />
         <igx-hint>Type your web address</igx-hint>
         <igx-suffix>
@@ -21,12 +22,13 @@
     
     <strong>WC Input</strong>
     <igc-input #igcInput
-       label="Web component"
-       [required]="isRequired"
-       [disabled]="isDisabled"
-       [outlined]="isOutlined()">
-        <span slot="prefix"><igx-icon>face</igx-icon></span>
-        <span slot="suffix"><igx-icon>face</igx-icon></span>
+        [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
+        label="Web component"
+        [required]="isRequired"
+        [disabled]="isDisabled"
+        [outlined]="isOutlined()">
+        <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+        <span slot="suffix"><igc-icon name="face"></igc-icon></span>
         <span slot="helper-text">
             Web component
             <strong *ngIf="inputType === 'line'" style="color: hsla(var(--ig-error-500))">

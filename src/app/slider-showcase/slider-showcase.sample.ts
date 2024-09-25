@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { IgxSliderType, TickLabelsOrientation, TicksOrientation, IgxButtonDirective, IgxSliderComponent, IgxTickLabelTemplateDirective } from 'igniteui-angular';
@@ -10,6 +10,7 @@ defineComponents(IgcSliderComponent, IgcSliderLabelComponent);
     selector: 'app-slider-showcase-sample',
     styleUrls: ['slider-showcase.sample.scss'],
     templateUrl: 'slider-showcase.sample.html',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
     imports: [IgxSliderComponent, FormsModule, IgxTickLabelTemplateDirective, IgxButtonDirective, NgFor]
 })

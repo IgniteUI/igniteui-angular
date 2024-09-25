@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation} from '@angular/core';
 import { NgFor } from '@angular/common';
 import { IgxAvatarComponent, IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxPrefixDirective, IgxRippleDirective, IgxSuffixDirective, IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular';
 import { defineComponents, IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent } from 'igniteui-webcomponents';
@@ -9,6 +9,7 @@ defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
     selector: 'app-tabs-showcase-sample',
     styleUrls: ['tabs-showcase.sample.scss'],
     templateUrl: 'tabs-showcase.sample.html',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [IgxButtonDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxRippleDirective, IgxIconComponent, IgxTabHeaderIconDirective, IgxIconButtonDirective, IgxTabHeaderLabelDirective, IgxTabContentComponent, IgxListComponent, NgFor, IgxListItemComponent, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective, IgxPrefixDirective, IgxSuffixDirective]

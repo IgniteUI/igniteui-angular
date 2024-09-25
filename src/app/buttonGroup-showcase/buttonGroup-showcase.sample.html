@@ -4,27 +4,9 @@
         <igx-buttongroup
             [values]="alignOptions"
         ></igx-buttongroup>
-    </article>
 
-    <article class="sample-column">
-        <h4 class="sample-title">WC ButtonGroup</h4>
-        <igc-button-group>
-            <igc-toggle-button>
-                <igx-icon name="format_align_left"></igx-icon>
-            </igc-toggle-button>
-            <igc-toggle-button>
-                <igx-icon name="format_align_center"></igx-icon>
-            </igc-toggle-button>
-            <igc-toggle-button>
-                <igx-icon name="format_align_right"></igx-icon>
-            </igc-toggle-button>
-            <igc-toggle-button>
-                <igx-icon name="format_align_justify"></igx-icon>
-            </igc-toggle-button>
-        </igc-button-group>
-    </article>
+        <br/>
 
-    <article class="sample-column">
         <igx-buttongroup
             [selectionMode]="'multi'"
             [values]="cities"
@@ -34,6 +16,24 @@
     </article>
 
     <article class="sample-column">
+        <h4 class="sample-title">WC ButtonGroup</h4>
+        <igc-button-group>
+            <igc-toggle-button value="align_left">
+                <igx-icon name="format_align_left"></igx-icon>
+            </igc-toggle-button>
+            <igc-toggle-button value="align_center">
+                <igx-icon name="format_align_center"></igx-icon>
+            </igc-toggle-button>
+            <igc-toggle-button value="align_right">
+                <igx-icon name="format_align_right"></igx-icon>
+            </igc-toggle-button>
+            <igc-toggle-button value="align_justify" selected>
+                <igx-icon name="format_align_justify"></igx-icon>
+            </igc-toggle-button>
+        </igc-button-group>
+
+        <br/>
+
         <igc-button-group alignment="vertical" selection="multiple">
             <igc-toggle-button>Sofia</igc-toggle-button>
             <igc-toggle-button>London</igc-toggle-button>

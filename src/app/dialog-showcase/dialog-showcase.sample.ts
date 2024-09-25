@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxButtonDirective, IgxDialogActionsDirective, IgxDialogComponent, IgxDialogTitleDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSwitchComponent } from 'igniteui-angular';
 import { defineComponents, IgcDialogComponent, IgcButtonComponent} from "igniteui-webcomponents";
 
@@ -8,6 +8,7 @@ defineComponents(IgcDialogComponent, IgcButtonComponent);
     selector: 'app-dialog-showcase-sample',
     styleUrls: ['dialog-showcase.sample.scss'],
     templateUrl: 'dialog-showcase.sample.html',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxSwitchComponent, IgxDialogComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })

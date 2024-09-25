@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import {
 	ConnectedPositioningStrategy,
@@ -28,6 +28,7 @@ defineComponents(IgcDropdownComponent, IgcButtonComponent);
     selector: 'drop-down-showcase-sample',
     templateUrl: './drop-down-showcase.sample.html',
     styleUrls: ['drop-down-showcase.sample.scss'],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
 	imports: [
 		NgFor,

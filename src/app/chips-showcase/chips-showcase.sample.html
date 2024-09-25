@@ -28,12 +28,12 @@
                 [selectable]="isSelectable"
                 [removable]="isRemovable"
                 [selected]="isSelected">
-                <span slot="prefix" *ngIf="hasAvatar" class="chip-area-avatar"><igx-avatar [shape]="'circle'" initials="MP"></igx-avatar></span>
+                <span slot="prefix" *ngIf="hasAvatar" class="chip-area-avatar"><igc-avatar initials="MP" shape="circle"></igc-avatar></span>
                 <span slot="prefix" *ngIf="hasPrefix"><igx-icon>face</igx-icon></span>
                 <span slot="select" *ngIf="customIcons"><igx-icon family="fa-solid" name="fa-check-circle"></igx-icon></span>
                 Chip component
                 <span slot="suffix" *ngIf="hasSuffix"><igx-icon>face</igx-icon></span>
-                <span slot="suffix" *ngIf="hasProgressbar" class="circular-sample"><igx-circular-bar [indeterminate]="true"></igx-circular-bar></span>
+                <span slot="suffix" *ngIf="hasProgressbar" class="circular-sample"><igc-circular-progress [indeterminate]="true"></igc-circular-progress></span>
                 <span slot="remove" *ngIf="customIcons"><igx-icon family="fa-solid" name="fa-trash-alt"></igx-icon></span>
             </igc-chip>
 

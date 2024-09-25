@@ -1,6 +1,6 @@
 import { useAnimation } from '@angular/animations';
 import { NgFor, NgTemplateOutlet, NgIf, AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxTreeNodeComponent,
@@ -53,6 +53,7 @@ interface CompanyData {
     selector: 'app-tree-showcase-sample',
     templateUrl: 'tree-showcase.sample.html',
     styleUrls: ['tree-showcase.sample.scss'],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
     imports: [
         IgxLayoutDirective,

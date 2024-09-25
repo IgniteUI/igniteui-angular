@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxButtonGroupComponent,
@@ -20,12 +20,12 @@ import { defineComponents, IgcComboComponent} from "igniteui-webcomponents";
 
 defineComponents(IgcComboComponent);
 
-
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'combo-showcase-sample',
     templateUrl: './combo-showcase.sample.html',
     styleUrls: ['combo-showcase.sample.scss'],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
     imports: [
         IgxInputGroupComponent,

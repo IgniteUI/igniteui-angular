@@ -1,6 +1,6 @@
         <div class="preview">
             <h6>Angular Date Picker</h6>
-            <igx-date-picker mode="dialog" #dp1 [value]="date5" displayFormat="fullDate" showWeekNumbers="true" headerOrientation="vertical">
+            <igx-date-picker mode="dialog" type="box" #dp1 [value]="date5" displayFormat="fullDate" showWeekNumbers="true" headerOrientation="vertical">
                 <label igxLabel>Select a Date</label>
                 <igx-suffix (click)="dp1.open()">
                     <igx-icon>alarm</igx-icon>
@@ -14,7 +14,7 @@
 
             <h6>WC Date Picker</h6>
             <igc-date-picker label="Select a Date" mode="dialog" #dpWC [value]="date5" display-format="full" show-week-numbers="true" header-orientation="vertical">
-                <span (click)="dpWC.show()" slot="suffix"><igx-icon>alarm</igx-icon></span>
+                <span (click)="dpWC.show()" slot="suffix"><igc-icon name="alarm"></igc-icon></span>
                 <div slot="actions">
                     <igc-button variant="flat">Today</igc-button>
                     <igc-button variant="flat">Next Year</igc-button>

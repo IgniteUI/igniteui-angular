@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { ButtonGroupAlignment, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxLayoutDirective } from 'igniteui-angular';
 import { defineComponents, IgcButtonGroupComponent, IgcToggleButtonComponent} from "igniteui-webcomponents";
@@ -40,6 +40,7 @@ class Button {
 @Component({
     selector: 'app-buttongroup-showcase-sample',
     templateUrl: 'buttonGroup-showcase.sample.html',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent, NgFor, IgxLayoutDirective]
 })

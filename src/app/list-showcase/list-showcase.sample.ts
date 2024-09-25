@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation} from '@angular/core';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -18,9 +18,12 @@ import {
     IgxSwitchComponent
 } from 'igniteui-angular';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
-import { defineComponents, IgcListComponent, IgcAvatarComponent, IgcListHeaderComponent, IgcListItemComponent } from 'igniteui-webcomponents';
+import { defineComponents, IgcListComponent, IgcAvatarComponent, IgcListHeaderComponent, IgcListItemComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
 
-defineComponents(IgcListComponent, IgcListHeaderComponent, IgcListItemComponent, IgcAvatarComponent);
+defineComponents(IgcListComponent, IgcListHeaderComponent, IgcListItemComponent, IgcAvatarComponent, IgcIconComponent);
+
+const more_horiz = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>'
+registerIconFromText('more_horiz', more_horiz)
 
 interface Employee {
     imageURL: string;
@@ -33,6 +36,7 @@ interface Employee {
     selector: 'app-list-showcase-sample',
     styleUrls: ['list-showcase.sample.scss'],
     templateUrl: 'list-showcase.sample.html',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
