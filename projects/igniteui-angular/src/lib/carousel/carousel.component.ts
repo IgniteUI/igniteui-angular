@@ -27,7 +27,7 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-br
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { IBaseEventArgs, PlatformUtil } from '../core/utils';
+import { first, IBaseEventArgs, last, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
 import { Direction, IgxCarouselComponentBase } from './carousel-base';
@@ -38,6 +38,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
+import { IgxDirectionality } from '../services/direction/directionality';
 
 let NEXT_ID = 0;
 
@@ -583,6 +584,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private platformUtil: PlatformUtil,
+        private dir: IgxDirectionality
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
@@ -794,6 +796,34 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /** @hidden */
     public handleClick(): void {
         this._hasKeyboardFocusOnIndicators = false;
+    }
+
+    /** @hidden */
+    public handleKeydown(event: KeyboardEvent): void {
+        if (this.keyboardSupport) {
+            return;
+        }
+        const { key } = event;
+        const slides = this.slides.toArray();
+
+        switch (key) {
+            case this.platformUtil.KEYMAP.ARROW_LEFT:
+                this.dir.rtl ? this.next() : this.prev();
+                break;
+            case this.platformUtil.KEYMAP.ARROW_RIGHT:
+                this.dir.rtl ? this.prev() : this.next();
+                break;
+            case this.platformUtil.KEYMAP.HOME:
+                event.preventDefault();
+                this.select(this.dir.rtl ? last(slides) : first(slides));
+                break;
+            case this.platformUtil.KEYMAP.END:
+                event.preventDefault();
+                this.select(this.dir.rtl ? first(slides) : last(slides));
+                break;
+        }
+
+        this.indicatorsElements[this.current].nativeElement.focus();
     }
 
     /**

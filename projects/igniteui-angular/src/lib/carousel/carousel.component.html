@@ -36,7 +36,7 @@
     <ng-container *ngTemplateOutlet="getNextButtonTemplate; context: {$implicit: nextButtonDisabled};"></ng-container>
 </button>
 
-<div *ngIf="showIndicators" [ngClass]="indicatorsClass" [attr.role]="'tablist'" (keyup)="handleKeyUp($event)" (focusout)="handleFocusOut($event)" (click)="handleClick()">
+<div *ngIf="showIndicators" [ngClass]="indicatorsClass" [attr.role]="'tablist'" (keyup)="handleKeyUp($event)" (focusout)="handleFocusOut($event)" (click)="handleClick()" (keydown)="handleKeydown($event)">
     <div #indicators *ngFor="let slide of slides"
         class="igx-carousel-indicators__indicator"
         (click)="select(slide)"

@@ -575,8 +575,6 @@ describe('Carousel', () => {
         });
 
         it('should keep focused class on indicators container on keyboard nav with supported keys', () => {
-            carousel.keyboardSupport = true;
-            fixture.detectChanges();
             const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
 
             indicators.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
@@ -601,6 +599,42 @@ describe('Carousel', () => {
             UIInteractions.triggerKeyDownEvtUponElem('Home', indicators, true);
             fixture.detectChanges();
             expect(carousel.current).toEqual(0);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+        });
+    });
+
+    describe('RTL Tests: ', () => {
+        beforeEach(() => {
+            document.body.dir = 'rtl';
+            fixture = TestBed.createComponent(CarouselTestComponent);
+            carousel = fixture.componentInstance.carousel;
+            fixture.detectChanges();
+        });
+        it('should support keyboard navigation when the indicators container is focused', () => {
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
+
+            indicators.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
+            fixture.detectChanges();
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(3);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(0);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('End', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(0);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('Home', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(3);
             expect(indicators.classList).toContain('igx-carousel-indicators--focused');
         });
     });
