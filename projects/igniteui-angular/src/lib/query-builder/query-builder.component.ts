@@ -1,4 +1,4 @@
-import { ContentChild, EventEmitter, Output, TemplateRef } from '@angular/core';
+import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef } from '@angular/core';
 import { NgIf, NgTemplateOutlet} from '@angular/common';
 import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
@@ -45,22 +45,37 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     @HostBinding('style.display')
     public display = 'block';
 
+    /**
+     * Gets/sets whether the confirmation dialog should be shown when changing entity.
+     * Default value is `true`.
+     */
+    @Input({ transform: booleanAttribute })
+    public showEntityChangeDialog = true;
+
+    /**
+     * Gets/sets the entities.
+     */
     @Input()
     public entities: EntityType[];
 
     /**
-    * Returns the fields.
-    */
+     * Returns the fields.
+     * @hidden
+     * @deprecated in version 18.2.0. Use the `entities` property instead.
+     */
     public get fields(): FieldType[] {
         return this._fields;
     }
 
     /**
      * Sets the fields.
+     * @hidden
+     * @deprecated in version 18.2.0. Use the `entities` property instead.
      */
     @Input()
     public set fields(fields: FieldType[]) {
         if (fields) {
+            this._fields = fields;
             this.entities = [
                 {
                     name: null, 

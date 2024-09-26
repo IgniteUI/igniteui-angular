@@ -386,6 +386,7 @@
             <igx-query-builder-tree
                 [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
                 [entities]="entities"
+                [queryBuilder]="this.queryBuilder"
                 [parentExpression]="expressionItem"
                 [expressionTree]="expressionItem.expression.searchTree"
                 (inEditModeChange)="onInEditModeChanged($event)">
@@ -603,10 +604,17 @@
 
 <igx-dialog
     #entityChangeDialog
-    title="Confirmation"
-    message="By changing the entity, you will lose your current settings. Are you sure you want to do that?"
-    leftButtonLabel="Cancel"
-    rightButtonLabel="Confirm"
+    title="{{ this.resourceStrings.igx_query_builder_dialog_title }}"
+    leftButtonLabel="{{ this.resourceStrings.igx_query_builder_dialog_cancel }}"
+    rightButtonLabel="{{ this.resourceStrings.igx_query_builder_dialog_confirm }}"
     (leftButtonSelect)="onEntityChangeCancel()"
     (rightButtonSelect)="onEntityChangeConfirm()">
+    <div>{{ this.resourceStrings.igx_query_builder_dialog_message }}</div>
+    <igx-checkbox
+        (change)="onShowEntityChangeDialogChange($event)"
+        [disableRipple]="true"
+        [tabindex]="-1"
+        class="igx-combo__checkbox">
+        {{ this.resourceStrings.igx_query_builder_dialog_checkbox_text }}
+    </igx-checkbox>
 </igx-dialog>
