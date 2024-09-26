@@ -195,6 +195,10 @@ const loadIconRefs = () => [
             name: 'keyboard_arrow_down',
             family: 'material',
         },
+        indigo: {
+            name: 'chevron_down',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('case_sensitive', {
         default: {
