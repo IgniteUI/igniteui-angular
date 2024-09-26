@@ -188,7 +188,8 @@
         border-color: $border-color,
         border-radius: $border-radius,
         _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
+            variant: map.get($schema, '_meta', 'theme'),
+            theme-variant: map.get($schema, '_meta', 'variant')
         )),
     ));
 }
@@ -205,6 +206,7 @@
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo';
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
     $item-min-width: rem(90px);
     $item-max-width: rem(360px);
@@ -228,9 +230,12 @@
     %tabs-header-item-inner,
     %tabs-header-content {
         display: flex;
+        align-items: center;
     }
 
     %tabs-display {
+        --nav-btn-border-color: #{var-get($theme, 'border-color')};
+
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -240,7 +245,7 @@
         overflow: hidden;
         flex: 0 0 auto;
         background: var-get($theme, 'item-background');
-        min-height: rem(42px);
+        min-height: #{if($variant == 'indigo', rem(40px), rem(42px))};
         z-index: 1;
     }
 
@@ -304,12 +309,33 @@
 
         &:disabled {
             color: var-get($theme, 'button-disabled-color');
+            cursor: default;
+            pointer-events: none;
         }
 
         &--none {
             display: none;
         }
 
+        @if $indigo-theme {
+            min-width: rem(40px);
+            width: rem(40px);
+            border-radius: border-radius(0);
+            align-self: stretch;
+            height: auto;
+            transition: none;
+            border-bottom: rem(1px) solid var(--nav-btn-border-color);
+
+            &:focus-visible {
+                border: rem(3px) solid var(--nav-btn-border-color);
+                background: var-get($theme, 'button-background');
+                box-shadow: none;
+
+                @if $theme-variant == 'dark' {
+                    border: rem(3px) solid contrast-color($color: 'gray', $variant: 50, $opacity: .2);
+                }
+            }
+        }
 
         @include ripple($button-ripple-theme);
         @include css-vars($button-ripple-theme);
@@ -355,16 +381,6 @@
             color: var-get($theme, 'item-icon-color');
         }
 
-        @if $bootstrap-theme {
-            padding-block: rem(12px);
-            border-start-start-radius: var-get($theme, 'border-radius');
-            border-start-end-radius: var-get($theme, 'border-radius');
-        }
-
-        @if $indigo-theme {
-            border-bottom: rem(1px) solid var-get($theme, 'border-color');
-        }
-
         &::-moz-focus-inner {
             border: 0;
         }
@@ -392,6 +408,7 @@
         }
 
         @if $bootstrap-theme {
+            padding-block: rem(12px);
             border-start-start-radius: var-get($theme, 'border-radius');
             border-start-end-radius: var-get($theme, 'border-radius');
         }
@@ -407,13 +424,18 @@
         }
 
         @if $indigo-theme {
-            border-top: transparent;
-            border-inline: transparent;
+            border-top: rem(1px) solid transparent;
+            border-inline: rem(1px) solid transparent;
 
             &:hover,
             &:focus {
-                border-top: transparent;
-                border-inline: transparent;
+                border-top: rem(1px) solid transparent;
+                border-inline: rem(1px) solid transparent;
+                border-bottom: rem(1px) solid var-get($theme, 'border-color');
+            }
+
+            igx-icon {
+                --ig-size: 2;
             }
         }
 
@@ -457,6 +479,18 @@
 
             &:hover {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+            }
+        }
+
+        @if $indigo-theme {
+            &:hover,
+            &:focus-visible {
+                background: var-get($theme, 'item-hover-background');
+                color: var-get($theme, 'item-hover-color');
+
+                igx-icon {
+                    color: var-get($theme, 'item-hover-icon-color');
+                }
             }
         }
     }
@@ -516,8 +550,13 @@
         min-width: $item-min-width;
         background: var-get($theme, 'indicator-color');
         transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
+
         @if $bootstrap-theme {
             display: none;
+        }
+
+        @if $indigo-theme {
+            height: rem(3px);
         }
     }
 
