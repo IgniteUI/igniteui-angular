@@ -4,9 +4,8 @@ import type {
     Tree
 } from '@angular-devkit/schematics';
 import { BoundPropertyObject, InputPropertyType, UpdateChanges } from '../common/UpdateChanges';
-import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
-import * as ts from 'typescript';
 import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
+import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
 import { Element } from '@angular/compiler';
 
 const version = '18.2.0';
@@ -14,15 +13,23 @@ const version = '18.2.0';
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
     const update = new UpdateChanges(__dirname, host, context);
-    const changes = new Map<string, FileChange[]>();
+
     const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
-
-    const oldProp = 'shouldGenerate';
-    const newProp = 'autoGenerate';
-
+    const changes = new Map<string, FileChange[]>();
     const prop = ['[filteringOptions]'];
     const tags = ['igx-combo', 'igx-simple-combo'];
     const combosToMigrate = new Map<any, string>();
+
+    const applyChanges = () => {
+        for (const [path, change] of changes.entries()) {
+            let buffer = host.read(path).toString();
+            change.sort((c, c1) => c.position - c1.position)
+                .reverse()
+                .forEach(c => buffer = c.apply(buffer));
+
+            host.overwrite(path, buffer);
+        }
+    };
 
     const addChange = (path: string, change: FileChange) => {
         if (changes.has(path)) {
@@ -31,54 +38,6 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
             changes.set(path, [change]);
         }
     };
-
-    const applyChanges = () => {
-        for (const [path, fileChanges] of changes.entries()) {
-            let content = host.read(path).toString();
-            fileChanges.sort((a, b) => b.position - a.position).forEach(change => {
-                content = change.apply(content);
-            });
-            host.overwrite(path, content);
-        }
-    };
-
-    const visitNode = (node: ts.Node, sourceFile: ts.SourceFile) => {
-        if (ts.isPropertyAccessExpression(node) &&
-            ts.isIdentifier(node.name) &&
-            node.name.text === oldProp) {
-            const start = node.name.getStart(sourceFile);
-            const end = node.name.getEnd();
-            addChange(sourceFile.fileName, new FileChange(start, newProp, oldProp, 'replace'));
-        }
-
-        ts.forEachChild(node, child => visitNode(child, sourceFile));
-    };
-
-    for (const path of update.tsFiles) {
-        let content = host.read(path).toString();
-        const sourceFile = ts.createSourceFile(
-            path,
-            content,
-            ts.ScriptTarget.Latest,
-            true
-        );
-
-        visitNode(sourceFile, sourceFile);
-
-        const pattern = /IComboFilteringOptions\s*=\s*{[^}]*}/g;
-        let match;
-        while(match = pattern.exec(content)){
-            let newMatch = match[0].replace(/(\{|\s*,)\s*filterable:\s*true(?=\s*,|\s*\})/g, (match, p1) => p1 === '{' ? '{' : '');
-            newMatch = newMatch.replace(/\{\s*,/, '{').replace(/,\s*\}/, '}');
-            content = content.replace(match[0], newMatch);
-        }
-
-        const filterableMatch = /(filterable\s*(?::|=)\s*false)[^\n]*/g;
-        content = content.replace(filterableMatch, match => {
-            return `${match} // TODO: Replace with disableFiltering`;
-        });
-        host.overwrite(path, content);
-    }
 
     update.addValueTransform('filterable_to_disableFiltering', (args: BoundPropertyObject): void => {
         args.bindingType = InputPropertyType.STRING;
@@ -95,7 +54,22 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         }
     });
 
-    update.applyChanges();
+    for (const path of update.tsFiles) {
+        let content = host.read(path).toString();
+        const pattern = /IComboFilteringOptions\s*=\s*{[^}]*}/g;
+        let match;
+        while (match = pattern.exec(content)) {
+            let newMatch = match[0].replace(/(\{|\s*,)\s*filterable:\s*true(?=\s*,|\s*\})/g, (match, p1) => p1 === '{' ? '{' : '');
+            newMatch = newMatch.replace(/\{\s*,/, '{').replace(/,\s*\}/, '}');
+            content = content.replace(match[0], newMatch);
+        }
+
+        const filterableMatch = /(filterable\s*(?::|=)\s*false)[^\n]*/g;
+        content = content.replace(filterableMatch, match => {
+            return `${match} // TODO: Replace with disableFiltering`;
+        });
+        host.overwrite(path, content);
+    }
 
     for (const path of update.templateFiles) {
         const components = findElementNodes(parseFile(new HtmlParser(), host, path), tags);
@@ -125,7 +99,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
                     disableFiltering = `[disableFiltering]="${filterableValue}"`;
                 }
                 delete filteringOptions.filterable;
-                let newValue = JSON.stringify(filteringOptions).replace(/"/g,'') ;
+                let newValue = JSON.stringify(filteringOptions).replace(/"/g, '');
                 let newProperties = `${disableFiltering}`;
                 if (newValue !== '{}') {
                     newProperties = `${name}="${newValue}" ${disableFiltering}`;
@@ -136,4 +110,6 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     }
 
     applyChanges();
+    update.applyChanges();
 };
+

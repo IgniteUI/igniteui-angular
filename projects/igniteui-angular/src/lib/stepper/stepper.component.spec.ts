@@ -12,6 +12,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import {
+    HorizontalAnimationType,
     IgxStepperOrientation,
     IgxStepperTitlePosition,
     IgxStepType,
@@ -22,7 +23,6 @@ import {
 import { IgxStepperComponent } from './stepper.component';
 import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
-import { HorizontalAnimationType } from '../carousel/enums';
 
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';

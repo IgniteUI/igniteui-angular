@@ -36,7 +36,7 @@
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
     (opened)="handleOpened()" (closed)="handleClosed()">
     <div class="igx-combo__search">
-        <igx-input-group *ngIf="displaySearchInput" theme="material" >
+        <igx-input-group *ngIf="displaySearchInput">
             <input igxInput #searchInput name="searchInput" autocomplete="off" type="text"
                    [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
                    (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="getSearchPlaceholderText()"

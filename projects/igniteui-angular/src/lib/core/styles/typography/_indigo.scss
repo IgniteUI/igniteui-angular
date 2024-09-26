@@ -32,7 +32,7 @@
 @use '../components/tree/tree-theme' as *;
 @use '../components/label/label-theme' as *;
 
-@mixin typography() {
+@mixin typography($type-scale) {
     @include badge-typography($categories: (
         text: 'button',
     ));
