@@ -1,11 +1,11 @@
 import { mkenum } from '../core/utils';
 
-export const HorizontalAnimationType = /*@__PURE__*/mkenum({
+export const CarouselAnimationType = /*@__PURE__*/mkenum({
     none: 'none',
     slide: 'slide',
     fade: 'fade'
 });
-export type HorizontalAnimationType = (typeof HorizontalAnimationType)[keyof typeof HorizontalAnimationType];
+export type CarouselAnimationType = (typeof CarouselAnimationType)[keyof typeof CarouselAnimationType];
 
 export const CarouselIndicatorsOrientation = /*@__PURE__*/mkenum({
     bottom: 'bottom',
