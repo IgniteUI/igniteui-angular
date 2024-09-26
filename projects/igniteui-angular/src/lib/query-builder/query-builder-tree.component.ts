@@ -786,6 +786,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
             if (innerQuery) {
                 innerQuery.expressionTree = this._initialExpressionTree;
+
+                if (innerQuery._editedExpression) {
+                    innerQuery.cancelOperandEdit();
+                }
             }
         }
 
@@ -808,7 +812,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return this.selectedField && this.selectedCondition &&
             (
                 ((!!this.searchValue || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
-                (innerQuery && !!innerQuery.expressionTree) ||
+                (innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined) ||
                 this.selectedField.filters.condition(this.selectedCondition).isUnary
             );
     }
