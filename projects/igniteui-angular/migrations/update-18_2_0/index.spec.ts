@@ -110,9 +110,9 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
         `
-        <igx-combo [filteringOptions]="{caseSensitive:true}" [disableFiltering]="true"></igx-combo>
-        <igx-combo [filteringOptions]="{caseSensitive:false}" [disableFiltering]="false"></igx-combo>
-        <igx-combo [disableFiltering]="myProp ? 'false' : 'true'"></igx-combo>
+        <igx-combo [filteringOptions]="{caseSensitive:true}" [disableFiltering]="!false"></igx-combo>
+        <igx-combo [filteringOptions]="{caseSensitive:false}" ></igx-combo>
+        <igx-combo [disableFiltering]="!myProp"></igx-combo>
         <igx-simple-combo [filteringOptions]="{caseSensitive:false}" ></igx-simple-combo>
         `
         );

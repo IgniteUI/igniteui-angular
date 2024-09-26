@@ -146,7 +146,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     /**
      * Defines the placeholder value for the combo dropdown search field
      *
-     * @deprecated in version 18.2.0.
+     * @deprecated in version 18.2.0. Replaced with values in the localization resource strings.
      *
      * ```typescript
      * // get
@@ -465,7 +465,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     protected getSearchPlaceholderText(): string {
         return this.searchPlaceholder ||
-            (this.disableFiltering ? this.resourceStrings.igx_combo_addCustomValues_placeholder : this.resourceStrings.igx_combo_enabledFilter_placeholder);
+            (this.disableFiltering ? this.resourceStrings.igx_combo_addCustomValues_placeholder : this.resourceStrings.igx_combo_filter_search_placeholder);
     }
 
     /** Returns a string that should be populated in the combo's text box */

@@ -18,7 +18,6 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     const changes = new Map<string, FileChange[]>();
     const prop = ['[filteringOptions]'];
     const tags = ['igx-combo', 'igx-simple-combo'];
-    const combosToMigrate = new Map<any, string>();
 
     const applyChanges = () => {
         for (const [path, change] of changes.entries()) {
@@ -83,20 +82,8 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
                 const property = `${name}="${value}"`;
                 const filteringOptions = JSON.parse(value.replace(/(\w+)\s*:/g, '"$1":').replace(/:\s*(\w+)/g, ': "$1"'));
                 let disableFiltering = '';
-                if (filteringOptions.hasOwnProperty("filterable") && node.name === 'igx-combo') {
-                    let filterableValue = filteringOptions.filterable;
-                    combosToMigrate.set(node, filterableValue);
-                    switch (filterableValue) {
-                        case 'true':
-                            filterableValue = 'false';
-                            break;
-                        case 'false':
-                            filterableValue = 'true';
-                            break;
-                        default:
-                            filterableValue += ` ? 'false' : 'true'`;
-                    }
-                    disableFiltering = `[disableFiltering]="${filterableValue}"`;
+                if (filteringOptions.hasOwnProperty("filterable") && node.name === 'igx-combo' && filteringOptions.filterable !== 'true') {
+                    disableFiltering = `[disableFiltering]="!${filteringOptions.filterable}"`;
                 }
                 delete filteringOptions.filterable;
                 let newValue = JSON.stringify(filteringOptions).replace(/"/g, '');

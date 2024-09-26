@@ -45,9 +45,9 @@ For Firefox users, we provide limited scrollbar styling options through the foll
     - **Deprecation** - the `keyboardSupport` input property has been deprecated and will be removed in a future version. Keyboard navigation with `ArrowLeft`, `ArrowRight`, `Home`, and `End` keys will be supported when focusing the indicators' container via ` Tab`/`Shift+Tab`. 
 
 - `IgxCombo`:
-    - **Breaking Change** `filterable` from the `filteringOptions` is removed.
-    - **Breaking Change** The `filterable` property is renamed to `disableFiltering`.
-    - The placeholder of the searchInput is changed depending on the `disableFiltering` option - 'Enter a Search Term' when `disableFiltering` is false and 'Add Item' when `disableFiltering` is true.
+    - **Breaking Change** The deprecated `filterable` property is replaced with `disableFiltering`.
+    - The dropdown search field placeholder is now part of the Combo's localization resources. It now also uses two resource values depending on whether filtering is active, e.g. in the default `en` locale it remains `'Enter a Search Term'`, but changes to `'Add Item'` when `disableFiltering` and `allowCustomValues` are set to true. For that reason, the existing `searchPlaceholder` input is also **deprecated** in favor of the resources.
+    - **Deprecation** - `filterable` from the `filteringOptions` has been deprecated in favor of `disableFiltering`.
 
 ## 18.1.0
 ### New Features

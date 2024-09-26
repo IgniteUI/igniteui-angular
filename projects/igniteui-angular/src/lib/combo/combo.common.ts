@@ -110,7 +110,7 @@ export interface IComboFilteringOptions {
     caseSensitive?: boolean;
     /**
      * Defines whether filtering is allowed
-     * @deprecated in version 18.2.0, use disableFiltering instead.
+     * @deprecated in version 18.2.0. Use the `disableFiltering` property instead.
     */
     filterable?: boolean;
     /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
