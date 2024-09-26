@@ -106,7 +106,7 @@ const loadIconRefs = () => [
     }),
     addIcon('carousel_prev', {
           default: {
-            name: 'arrow_back',
+            name: 'keyboard_arrow_left',
             family: 'material',
           },
           indigo: {
@@ -116,7 +116,7 @@ const loadIconRefs = () => [
     }),
     addIcon('carousel_next', {
           default: {
-            name: 'arrow_forward',
+            name: 'keyboard_arrow_right',
             family: 'material',
           },
           indigo: {
