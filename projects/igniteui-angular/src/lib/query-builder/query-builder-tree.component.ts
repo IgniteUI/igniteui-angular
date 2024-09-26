@@ -47,12 +47,13 @@ import { IgxIconButtonDirective } from '../directives/button/icon-button.directi
 import { IgxComboComponent } from "../combo/combo.component";
 import { IgxLabelDirective } from '../input-group/public_api';
 import { IgxComboHeaderDirective } from '../combo/public_api';
-import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
+import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from "../checkbox/checkbox.component";
 import { IgxDialogComponent } from "../dialog/dialog.component";
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
+import { IgxQueryBuilderComponent } from 'igniteui-angular';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -170,6 +171,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     public entities: EntityType[];
+
+    @Input()
+    public queryBuilder: IgxQueryBuilderComponent;
 
     @Input()
     public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueTemplateDirective> = null;
@@ -551,11 +555,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public onEntitySelectChanging(event: ISelectionEventArgs) {
         event.cancel = true;
         this._entityNewValue = event.newSelection.value;
-        if (event.oldSelection.value) {
+        if (event.oldSelection.value && this.queryBuilder.showEntityChangeDialog) {
             this.entityChangeDialog.open();
         } else {
             this.onEntityChangeConfirm();
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public onShowEntityChangeDialogChange(eventArgs: IChangeCheckboxEventArgs) {
+        this.queryBuilder.showEntityChangeDialog = !eventArgs.checked;
     }
 
     /**
@@ -775,6 +786,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
             if (innerQuery) {
                 innerQuery.expressionTree = this._initialExpressionTree;
+
+                if (innerQuery._editedExpression) {
+                    innerQuery.cancelOperandEdit();
+                }
             }
         }
 
@@ -797,7 +812,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return this.selectedField && this.selectedCondition &&
             (
                 ((!!this.searchValue || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
-                (innerQuery && !!innerQuery.expressionTree) ||
+                (innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined) ||
                 this.selectedField.filters.condition(this.selectedCondition).isUnary
             );
     }
