@@ -3,6 +3,10 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 18.2.0
+- `IFilteringExpression`
+    - **Breaking Change** There is a new `conditionName` property which is required. This would generally be equal to the old `condition.name`.
+
+## 18.2.0
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
     - **Breaking Change** The `shouldGenerate` property have been deprecated and will be removed in a future version. Use `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`.
