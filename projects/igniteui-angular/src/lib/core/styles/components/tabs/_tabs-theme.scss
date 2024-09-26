@@ -425,12 +425,12 @@
 
         @if $indigo-theme {
             border-top: rem(1px) solid transparent;
-            border-inline: rem(1px) solid transparent;
+            border-inline: none;
 
             &:hover,
             &:focus {
                 border-top: rem(1px) solid transparent;
-                border-inline: rem(1px) solid transparent;
+                border-inline: none;
                 border-bottom: rem(1px) solid var-get($theme, 'border-color');
             }
 
