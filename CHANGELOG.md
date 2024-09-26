@@ -2,12 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 19.1.0
+## 18.2.0
 ### General
 - `IFilteringExpressionsTree`, `FilteringExpressionsTree`
     - **Deprecation** The `find` and `findIndex` methods have been deprecated and will be removed in a future version. A `FilteringUtil` class has been added which provides the same functionality.
-
-## 18.2.0
 ### New Features
 - `IgxSimpleCombo`
     - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
