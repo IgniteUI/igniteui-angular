@@ -180,8 +180,6 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
-/*@__PURE__*/IgcTrialWatermark.register();
-
 interface IMatchInfoCache {
     row: any;
     index: number;
@@ -2454,6 +2452,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* blazorByValueArray */
     /* blazorAlwaysWriteback */
     /* @tsTwoWayProperty (true, "RowSelectionChanging", "Detail.NewSelection", false) */
+    /* blazorPrimitiveValue */
     /**
      * Gets/Sets the current selection state.
      *
@@ -3229,6 +3228,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         return MINIMUM_COLUMN_WIDTH;
     }
 
+    protected get isCustomSetRowHeight(): boolean {
+        return !isNaN(this._rowHeight);
+    }
+
     /**
      * @hidden @internal
      */
@@ -3402,6 +3405,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
+        IgcTrialWatermark.register();
     }
 
     /**
