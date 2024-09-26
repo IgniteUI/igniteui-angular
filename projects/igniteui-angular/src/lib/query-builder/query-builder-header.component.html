@@ -1,6 +1,6 @@
 <div class="igx-query-builder__header">
-    <div style="pointer-events: none;">
-        {{ title }}
+    <div class="ig-typography__h6" style="pointer-events: none;">
+        {{ title || this.resourceStrings.igx_query_builder_title }}
         <ng-content></ng-content>
     </div>
     <div *ngIf="showLegend" class="igx-builder-legend" >
