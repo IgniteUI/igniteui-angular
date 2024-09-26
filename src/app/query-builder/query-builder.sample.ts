@@ -8,7 +8,8 @@ import {
     IgxButtonDirective,
     IgxButtonGroupComponent,
     IgxRippleDirective,
-    IgxQueryBuilderHeaderComponent} from 'igniteui-angular';
+    IgxQueryBuilderHeaderComponent
+} from 'igniteui-angular';
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import { CommonModule } from '@angular/common';
@@ -36,7 +37,6 @@ export class QueryBuilderComponent implements OnInit {
     public displayDensities;
     public expressionTree: IExpressionTree;
     public queryResult: string;
-    private backendUrl = "http://localhost:3333/";
 
     public ngOnInit(): void {
         this.assaysFields = [
@@ -89,11 +89,11 @@ export class QueryBuilderComponent implements OnInit {
 
         const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Compounds', ['*']);
         tree.filteringOperands.push({
-                fieldName: 'Id',
-                condition: IgxStringFilteringOperand.instance().condition('in'),
-                conditionName: IgxStringFilteringOperand.instance().condition('in').name,
-                searchTree: innerTree
-            });
+            fieldName: 'Id',
+            condition: IgxStringFilteringOperand.instance().condition('in'),
+            conditionName: IgxStringFilteringOperand.instance().condition('in').name,
+            searchTree: innerTree
+        });
         tree.filteringOperands.push({
             fieldName: 'Id',
             condition: IgxStringFilteringOperand.instance().condition('equals'),

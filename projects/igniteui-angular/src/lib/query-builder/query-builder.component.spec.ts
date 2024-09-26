@@ -1333,7 +1333,110 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyChildrenSelection(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement, false);
         }));
 
-        it('Should display an alert dialog when the entity is changed.', fakeAsync(() => {
+        it('Should display an alert dialog when the entity is changed and showEntityChangeDialog is true.', fakeAsync(() => {
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
+            const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`);
+            const dialog = queryTreeElement.querySelector('igx-dialog');
+            const dialogOutlet = document.querySelector('.igx-dialog__window');
+            expect(dialog).toBeDefined();
+
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Select entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Alert dialog should not be opened if there is no previous selection
+            expect(dialog.checkVisibility()).toBeFalse();
+
+            // Select entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Alert dialog should be opened
+            expect(dialog.checkVisibility()).toBeTrue();
+
+            // Show again checkbox should be unchecked
+            const checkbox = dialogOutlet.querySelector('igx-checkbox');
+            expect(checkbox).toBeDefined();
+            expect(checkbox).not.toHaveClass('igx-checkbox--checked');
+            expect(queryBuilder.showEntityChangeDialog).toBeTrue();
+
+            // Close dialog
+            const cancelButton = Array.from(dialogOutlet.querySelectorAll('button'))[0];
+            cancelButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Select entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Alert dialog should NOT be opened
+            expect(dialog.checkVisibility()).toBeTrue();
+        }));
+
+        it('Should not display an alert dialog when the entity changed once showEntityChangeDialog is disabled.', fakeAsync(() => {
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
+            const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`);
+            const dialog = queryTreeElement.querySelector('igx-dialog');
+            const dialogOutlet = document.querySelector('.igx-dialog__window');
+            expect(dialog).toBeDefined();
+
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Select entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Alert dialog should not be opened if there is no previous selection
+            expect(dialog.checkVisibility()).toBeFalse();
+
+            // Select entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Alert dialog should be opened
+            expect(dialog.checkVisibility()).toBeTrue();
+
+            // Check show again checkbox
+            const checkbox = dialogOutlet.querySelector('igx-checkbox') as HTMLElement;
+            expect(checkbox).toBeDefined();
+
+            checkbox.click();
+            tick(100);
+            fix.detectChanges();
+            expect(checkbox).toHaveClass('igx-checkbox--checked');
+            expect(queryBuilder.showEntityChangeDialog).toBeFalse();
+
+            // Close dialog
+            const cancelButton = Array.from(dialogOutlet.querySelectorAll('button'))[0];
+            cancelButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Select entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Alert dialog should NOT be opened
+            expect(dialog.checkVisibility()).toBeFalse();
+        }));
+
+        it('Initially should not display an alert dialog when the entity is changed if hideEntityChangeDialog is disabled through API.', fakeAsync(() => {
+            queryBuilder.showEntityChangeDialog = false;
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
             const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`);
             const dialog = queryTreeElement.querySelector('igx-dialog');
@@ -1357,8 +1460,8 @@ describe('IgxQueryBuilder', () => {
             tick(100);
             fix.detectChanges();
 
-            // Alert dialog should be opened
-            expect(dialog.checkVisibility()).toBeTrue();
+            // Alert dialog should NOT be opened
+            expect(dialog.checkVisibility()).toBeFalse();
         }));
 
         it('Should reset all inputs when the entity is changed.', fakeAsync(() => {
@@ -1963,7 +2066,12 @@ describe('IgxQueryBuilder', () => {
                 igx_query_builder_ungroup: 'My ungroup',
                 igx_query_builder_delete: 'My delete',
                 igx_query_builder_delete_filters: 'My delete filters',
-                igx_query_builder_initial_text: 'My initial text'
+                igx_query_builder_initial_text: 'My initial text',
+                igx_query_builder_dialog_title: 'My Confirmation',
+                igx_query_builder_dialog_message: 'My changing entity message',
+                igx_query_builder_dialog_checkbox_text: 'My do not show this dialog again',
+                igx_query_builder_dialog_cancel: 'My Cancel',
+                igx_query_builder_dialog_confirm: 'My Confirm'
             });
             fix.detectChanges();
 
@@ -1989,6 +2097,19 @@ describe('IgxQueryBuilder', () => {
 
             // Populate edit inputs.
             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products'.
+
+            // Show changing entity alert dialog
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+            const dialogOutlet = document.querySelector('.igx-dialog__window');
+            expect(dialogOutlet).toBeDefined();
+
+            expect(dialogOutlet.querySelector('.igx-dialog__window-title').textContent.trim()).toBe('My Confirmation');
+            expect(dialogOutlet.querySelector('.igx-dialog__window-content').children[0].textContent.trim()).toBe('My changing entity message');
+            expect(dialogOutlet.querySelector('.igx-dialog__window-content').children[1].textContent.trim()).toBe('My do not show this dialog again');
+            expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[0].textContent.trim()).toBe('My Cancel');
+            expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[1].textContent.trim()).toBe('My Confirm');
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
