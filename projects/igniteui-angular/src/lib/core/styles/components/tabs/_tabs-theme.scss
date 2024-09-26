@@ -381,6 +381,16 @@
             color: var-get($theme, 'item-icon-color');
         }
 
+        @if $bootstrap-theme {
+            padding-block: rem(12px);
+            border-start-start-radius: var-get($theme, 'border-radius');
+            border-start-end-radius: var-get($theme, 'border-radius');
+        }
+
+        @if $indigo-theme {
+            border-bottom: rem(1px) solid var-get($theme, 'border-color');
+        }
+
         &::-moz-focus-inner {
             border: 0;
         }
