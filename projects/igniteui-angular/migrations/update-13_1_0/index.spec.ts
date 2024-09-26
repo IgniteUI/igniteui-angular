@@ -1,4 +1,5 @@
 import * as path from 'path';
+import { readFileSync } from 'fs';
 
 import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
@@ -9,10 +10,19 @@ describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
     const configJson = {
+        version: 1,
         projects: {
             testProj: {
-                root: '/',
-                sourceRoot: '/testSrc'
+                projectType: 'application',
+                root: '',
+                sourceRoot: 'testSrc',
+                architect: {
+                    build: {
+                        builder: '@angular-devkit/build-angular:application',
+                        options: {
+                        }
+                    }
+                }
             }
         },
         schematics: {
@@ -190,7 +200,14 @@ describe(`Update to ${version}`, () => {
     });
 
     it('should rename hgridAPI to gridAPI for hierarchical grids', async () => {
-        pending('set up tests for migrations through lang service');
+        pending("Fix, will not succeed if another test configures the LS first");
+        const config = structuredClone(configJson);
+        config.projects.testProj.architect.build.options['browser'] = 'testSrc/appPrefix/component/test.component.ts';
+        // TODO: remove after patch for browser field:
+        config.projects.testProj.architect.build.options['main'] = 'testSrc/appPrefix/component/test.component.ts';
+        appTree.overwrite('/angular.json', JSON.stringify(config));
+        // mirror tsconfig in test tree, otherwise LS server host handling may be off:
+        appTree.create('tsconfig.json', readFileSync('tsconfig.json'));
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
@@ -201,16 +218,20 @@ describe(`Update to ${version}`, () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.ts`,
             `
+import { Component } from '@angular/core';
 import {
     IgxHierarchicalGridComponent
 } from 'igniteui-angular';
 @Component({
     selector: 'test.component',
-    templateUrl: 'test.component.html'
+    templateUrl: 'test.component.html',
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent]
 })
 export class TestComponent {
+    public childGrid: IgxHierarchicalGridComponent;
     public get hasChildTransactions(): boolean {
-        return this.childGrid.gridAPI.getChildGrids().length > 0;
+        return this.childGrid.hgridAPI.getChildGrids().length > 0;
     }
 }
 `
@@ -231,17 +252,22 @@ export class TestComponent {
                 tree.readContent('/testSrc/appPrefix/component/test.component.ts')
             ).toEqual(
                 `
+import { Component } from '@angular/core';
 import {
     IgxHierarchicalGridComponent
 } from 'igniteui-angular';
 @Component({
     selector: 'test.component',
-    templateUrl: 'test.component.html'
+    templateUrl: 'test.component.html',
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent]
 })
 export class TestComponent {
+    public childGrid: IgxHierarchicalGridComponent;
     public get hasChildTransactions(): boolean {
         return this.childGrid.gridAPI.getChildGrids().length > 0;
     }
+}
 `
             );
     });
