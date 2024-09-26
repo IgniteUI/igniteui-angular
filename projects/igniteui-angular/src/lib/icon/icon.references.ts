@@ -172,10 +172,6 @@ const loadIconRefs = () => [
     }),
     addIcon('input_expand', {
         default: {
-            name: 'arrow_drop_down',
-            family: 'material',
-        },
-        material: {
             name: 'expand_more',
             family: 'material',
         },
@@ -186,10 +182,6 @@ const loadIconRefs = () => [
     }),
     addIcon('input_collapse', {
         default: {
-            name: 'arrow_drop_up',
-            family: 'material',
-        },
-        material: {
             name: 'expand_less',
             family: 'material',
         },
@@ -200,7 +192,7 @@ const loadIconRefs = () => [
     }),
     addIcon('arrow_drop_down', {
         default: {
-            name: 'arrow_drop_down',
+            name: 'keyboard_arrow_down',
             family: 'material',
         },
     }),
