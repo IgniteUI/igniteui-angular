@@ -389,7 +389,8 @@
                 [queryBuilder]="this.queryBuilder"
                 [parentExpression]="expressionItem"
                 [expressionTree]="expressionItem.expression.searchTree"
-                (inEditModeChange)="onInEditModeChanged($event)">
+                (inEditModeChange)="onInEditModeChanged($event)"
+                [searchValueTemplate]="searchValueTemplate">
             </igx-query-builder-tree>
         </ng-container>
 
