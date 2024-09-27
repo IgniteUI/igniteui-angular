@@ -7,7 +7,8 @@ import { FilteringExpressionsTree, IgxStringFilteringOperand,
     IExpressionTree,
     IgxButtonDirective,
     IgxButtonGroupComponent,
-    IgxRippleDirective} from 'igniteui-angular';
+    IgxRippleDirective,
+    IgxQueryBuilderHeaderComponent} from 'igniteui-angular';
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 
 @Component({
@@ -16,7 +17,7 @@ import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxButtonDirective, IgxRippleDirective]
+    imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })
