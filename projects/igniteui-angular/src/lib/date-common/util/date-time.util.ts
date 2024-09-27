@@ -569,10 +569,10 @@ export abstract class DateTimeUtil {
     public static getLocaleInputFormatFromParts(locale: string, dateParts: DateParts[]): string {
         const options = {};
         dateParts.forEach(p => {
-            if (p !== DateParts.Year && p !== DateParts.AmPm) {
-                options[p] = FormatDesc.TwoDigits;
-            } else {
+            if (p === DateParts.Year) {
                 options[p] = FormatDesc.Numeric;
+            } else if (p !== DateParts.AmPm) {
+                options[p] = FormatDesc.TwoDigits;
             }
         });
         const formatter = new Intl.DateTimeFormat(locale, options);
