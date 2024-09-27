@@ -2060,6 +2060,8 @@ describe('IgxQueryBuilder', () => {
                 igx_query_builder_end_group: 'My end group',
                 igx_query_builder_create_and_group: 'My create and group',
                 igx_query_builder_create_or_group: 'My create or group',
+                igx_query_builder_filter_operator_and: 'My and',
+                igx_query_builder_filter_operator_or: 'My or',
                 igx_query_builder_and_label: 'My and',
                 igx_query_builder_or_label: 'My or',
                 igx_query_builder_add_condition: 'My condition',
