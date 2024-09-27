@@ -1,5 +1,5 @@
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
-import { DatePipe, formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
+import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
 import { isDate } from '../../core/utils';
 import { DataType } from '../../data-operations/data-util';
@@ -538,7 +538,7 @@ export abstract class DateTimeUtil {
             if (dateParts[i].type === DatePart.AmPm || dateParts[i].type === DatePart.Literal) {
                 continue;
             }
-            const transformedValue = new DatePipe(locale).transform(new Date(), dateParts[i].format);
+            const transformedValue = formatDate(new Date(), dateParts[i].format, locale);
             // check if the transformed date/time part contains any kind of letter from any language
             if (/\p{L}+/gu.test(transformedValue)) {
                 return false;
