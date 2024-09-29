@@ -249,7 +249,7 @@
         z-index: 1;
 
         @if $indigo-theme {
-            [igxIconButton=flat].igx-button--focused {
+            [igxIconButton='flat'].igx-button--focused {
                 box-shadow: none;
 
                 &::after {
