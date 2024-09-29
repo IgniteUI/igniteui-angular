@@ -247,6 +247,20 @@
         background: var-get($theme, 'item-background');
         min-height: #{if($variant == 'indigo', rem(40px), rem(42px))};
         z-index: 1;
+
+        @if $indigo-theme {
+            [igxIconButton=flat].igx-button--focused {
+                box-shadow: none;
+
+                &::after {
+                    border: rem(3px) solid var(--nav-btn-border-color);
+
+                    @if $theme-variant == 'dark' {
+                        border-color: contrast-color($color: 'gray', $variant: 50, $opacity: .2);
+                    }
+                }
+            }
+        }
     }
 
     %tabs-header-content {
@@ -299,7 +313,10 @@
 
         &:focus {
             outline: 0;
-            background: var-get($theme, 'button-hover-background');
+
+            @if $variant != 'indigo' {
+                background: var-get($theme, 'button-hover-background');
+            }
         }
 
         &::-moz-focus-inner {
@@ -324,16 +341,14 @@
             align-self: stretch;
             height: auto;
             transition: none;
-            border-bottom: rem(1px) solid var(--nav-btn-border-color);
 
-            &:focus-visible {
-                border: rem(3px) solid var(--nav-btn-border-color);
-                background: var-get($theme, 'button-background');
-                box-shadow: none;
-
-                @if $theme-variant == 'dark' {
-                    border: rem(3px) solid contrast-color($color: 'gray', $variant: 50, $opacity: .2);
-                }
+            &::after {
+                content: '';
+                position: absolute;
+                pointer-events: none;
+                width: 100%;
+                height: 100%;
+                border-bottom: rem(1px) solid var(--nav-btn-border-color);
             }
         }
 
@@ -353,7 +368,7 @@
 
     %tabs-header-item {
         > * {
-            margin-inline-start: rem(12px);
+            margin-inline-start: rem(if($variant != 'indigo', 12px, 8px));
 
             &:first-child {
                 margin-inline-start: 0;
