@@ -23,6 +23,7 @@ describe('IgxDateTimeEditor', () => {
         let locale = 'en';
         let elementRef = { nativeElement: null };
         let inputFormat: string;
+        let displayFormat: string;
         let inputDate: string;
         const initializeDateTimeEditor = (_control?: NgControl) => {
             // const injector = { get: () => control };
@@ -92,72 +93,48 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditor.inputFormat).toEqual('yyyy/MM/dd HH:mm:ss');
             });
 
-            it('should resolve to the default locale-based inputFormat in case the one set contains non-numeric date/time parts', () => {
+            it('should resolve inputFormat, if not set, to the value of displayFormat if it contains only numeric date/time parts', () => {
+                inputFormat = undefined;
+                displayFormat = 'shortDate';
+                elementRef = { nativeElement: { value: inputDate } };
+                initializeDateTimeEditor();
+
+                dateTimeEditor.displayFormat = displayFormat;
+                const change: SimpleChange = new SimpleChange(undefined, displayFormat, false);
+                const changes: SimpleChanges = { displayFormat: change };
+                dateTimeEditor.ngOnChanges(changes);
+
+                expect(dateTimeEditor.inputFormat).toEqual('MM/dd/yyyy');
+            });
+
+            it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', () => {
                 registerLocaleData(localeBg);
                 locale = 'en-US';
-                inputFormat = undefined;
+                displayFormat = undefined;
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
 
                 expect(dateTimeEditor.locale).toEqual('en-US');
 
-                let oldInputFormat = inputFormat;
-                inputFormat = 'MMM d, y, h:mm:ss a';
-                dateTimeEditor.inputFormat = inputFormat;
-                let change: SimpleChange = new SimpleChange(oldInputFormat, inputFormat, false);
-                let changes: SimpleChanges = { inputFormat: change };
+                let oldDisplayFormat = inputFormat;
+                displayFormat = 'MMM d, y, h:mm:ss a';
+                dateTimeEditor.displayFormat = displayFormat;
+                let change: SimpleChange = new SimpleChange(oldDisplayFormat, displayFormat, false);
+                let changes: SimpleChanges = { displayFormat: change };
                 dateTimeEditor.ngOnChanges(changes);
 
                 expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
 
-                oldInputFormat = inputFormat;
-                inputFormat = 'full';
+                oldDisplayFormat = displayFormat;
+                displayFormat = 'full';
                 dateTimeEditor.locale = 'bg-BG';
                 change = new SimpleChange('en-US', 'bg-BG', false);
-                const changeInputFormat = new SimpleChange(oldInputFormat, inputFormat, false);
-                changes = { locale: change, inputFormat: changeInputFormat };
+                const changeInputFormat = new SimpleChange(oldDisplayFormat, displayFormat, false);
+                changes = { locale: change, displayFormat: changeInputFormat };
                 dateTimeEditor.ngOnChanges(changes);
 
+                expect(dateTimeEditor.displayFormat.normalize('NFKC')).toEqual('MMM d, y, h:mm:ss a');
                 expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г., HH:mm:ss');
-            });
-
-            it('should update the displayed value as well as the inputFormat according to the locale when there are both inputFormat and displayFormat set', () => {
-                registerLocaleData(localeBg);
-                locale = 'en-US';
-                inputFormat = undefined;
-                let displayFormat = undefined;
-                inputDate = '07/19/2024';
-                elementRef = { nativeElement: { value: inputDate } };
-                initializeDateTimeEditor();
-
-                expect(dateTimeEditor.locale).toEqual('en-US');
-
-                const date = new Date(2024, 6, 19);
-                dateTimeEditor.value = date;
-                spyOn(dateTimeEditor.valueChange, 'emit');
-                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
-
-                inputFormat = 'shortDate';
-                displayFormat = 'shortDate';
-                dateTimeEditor.inputFormat =  inputFormat;
-                dateTimeEditor.displayFormat =  displayFormat;
-                const changeInputFormat: SimpleChange = new SimpleChange(undefined, inputFormat, false);
-                const changeDisplayFormat: SimpleChange = new SimpleChange(undefined, displayFormat, false);
-                let changes: SimpleChanges = { inputFormat: changeInputFormat, displayFormat: changeDisplayFormat };
-                dateTimeEditor.ngOnChanges(changes);
-
-                expect(dateTimeEditor.inputFormat).toEqual('MM/dd/yyyy');
-                expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('7/19/24');
-
-                dateTimeEditor.locale = 'bg-BG';
-                const change: SimpleChange = new SimpleChange('en-US', 'bg-BG', false);
-                changes = { locale: change };
-                dateTimeEditor.ngOnChanges(changes);
-                // since the inputFormat ('shortDate') is among the predefined numeric ones,
-                // check if it is updated according to the new locale
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
-                expect(dateTimeEditor.displayFormat.normalize('NFKC')).toEqual('shortDate');
-                expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('19.07.24 г.');
             });
         });
 

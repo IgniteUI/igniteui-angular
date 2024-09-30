@@ -941,9 +941,9 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.displayFormat = displayFormat;
                     fixture.detectChanges();
 
-                    expect(startInputEditor.inputFormat).toEqual('MM/dd/yyyy');
+                    expect(startInputEditor.inputFormat).toEqual('MMM, yy');
                     expect(startInputEditor.displayFormat).toEqual(displayFormat);
-                    expect(endInputEditor.inputFormat).toEqual('MM/dd/yyyy');
+                    expect(endInputEditor.inputFormat).toEqual('MMM, yy');
                     expect(endInputEditor.displayFormat).toEqual(displayFormat);
                 });
 
@@ -975,8 +975,27 @@ describe('IgxDateRangePicker', () => {
                     expect(startInputEditor.nativeElement.placeholder.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
                     expect(endInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
                 }));
+                it('should resolve inputFormat, if not set, to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
+                    const startInputEditor = startInput.injector.get(IgxDateTimeEditorDirective);
+                    const endInputEditor = endInput.injector.get(IgxDateTimeEditorDirective);
 
-                it('should resolve to the default locale-based inputFormat for the start/end editors in case the one set contains non-numeric time parts', fakeAsync(() => {
+                    fixture.componentInstance.displayFormat = 'MM-dd-yyyy';
+                    fixture.detectChanges();
+                    tick();
+
+                    expect(startInputEditor.displayFormat.normalize('NFKC')).toEqual('MM-dd-yyyy');
+                    expect(startInputEditor.nativeElement.placeholder.normalize('NFKC')).toEqual('MM-dd-yyyy');
+                    expect(endInputEditor.inputFormat.normalize('NFKC')).toEqual('MM-dd-yyyy');
+
+                    fixture.componentInstance.displayFormat = 'shortDate';
+                    fixture.detectChanges();
+                    tick();
+
+                    expect(startInputEditor.displayFormat.normalize('NFKC')).toEqual('shortDate');
+                    expect(startInputEditor.nativeElement.placeholder.normalize('NFKC')).toEqual('MM/dd/yyyy');
+                    expect(endInputEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy');
+                }));
+                it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
                     registerLocaleData(localeBg);
                     const startInputEditor = startInput.injector.get(IgxDateTimeEditorDirective);
                     const endInputEditor = endInput.injector.get(IgxDateTimeEditorDirective);
@@ -985,19 +1004,19 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     tick();
 
-                    dateRange.inputFormat = 'full';
+                    fixture.componentInstance.displayFormat = 'full';
                     fixture.detectChanges();
                     tick();
 
-                    expect(startInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                    expect(startInputEditor.displayFormat.normalize('NFKC')).toEqual('full');
                     expect(startInputEditor.nativeElement.placeholder.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
                     expect(endInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
 
-                    dateRange.inputFormat = 'MMM-dd-yyyy';
+                    fixture.componentInstance.displayFormat = 'MMM-dd-yyyy';
                     fixture.detectChanges();
                     tick();
 
-                    expect(startInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                    expect(startInputEditor.displayFormat.normalize('NFKC')).toEqual('MMM-dd-yyyy');
                     expect(startInputEditor.nativeElement.placeholder.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
                     expect(endInputEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
                 }));

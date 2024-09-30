@@ -1333,19 +1333,30 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
             });
 
-            it('should resolve to the default locale-based inputFormat in case the one set contains non-numeric date parts', fakeAsync(() => {
+            it('should resolve inputFormat, if not set, to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
+                datePicker.ngAfterViewInit();
+                datePicker.locale = 'en-US';
+
+                datePicker.displayFormat = 'dd/MM/yyyy';
+                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
+
+                datePicker.displayFormat = 'shortDate';
+                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
+            }));
+
+            it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
                 datePicker.ngAfterViewInit();
 
                 datePicker.locale = 'en-US';
-                datePicker.inputFormat = 'MMM d, y, h:mm:ss a';
+                datePicker.displayFormat = 'MMM d, y, h:mm:ss a';
                 expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
 
                 datePicker.locale = 'bg-BG';
-                datePicker.inputFormat = 'full';
+                datePicker.displayFormat = 'full';
                 expect(datePicker.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
 
                 datePicker.locale = 'es-ES';
-                datePicker.inputFormat = 'MMM d, y';
+                datePicker.displayFormat = 'MMM d, y';
                 expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
             }));
             //#endregion

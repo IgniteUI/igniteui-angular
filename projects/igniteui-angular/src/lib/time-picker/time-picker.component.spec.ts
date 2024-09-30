@@ -1143,9 +1143,9 @@ describe('IgxTimePicker', () => {
                 expect(dateTimeEditor.spinDelta).toEqual(timePicker.itemsDelta);
                 expect(dateTimeEditor.spinLoop).toEqual(true);
 
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual(DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT);
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm');
                 expect(dateTimeEditor.displayFormat).toEqual('hh:mm');
-                expect(dateTimeEditor.mask.normalize('NFKC')).toEqual('00:00 LL');
+                expect(dateTimeEditor.mask.normalize('NFKC')).toEqual('00:00');
             });
 
             it('should be able to change the mode at runtime', fakeAsync(() => {
@@ -1253,16 +1253,45 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.inputFormat).toEqual('HH:mm');
             }));
 
-            it('should resolve to the default locale-based inputFormat in case the one set contains non-numeric time parts', fakeAsync(() => {
+            it('should resolve inputFormat, if not set, to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
+                timePicker.displayFormat = 'h:mm:ss aa';
+                fixture.detectChanges();
+
+                expect(timePicker.displayFormat.normalize('NFKC')).toEqual('h:mm:ss aa');
+                expect(timePicker.inputFormat.normalize('NFKC')).toEqual('h:mm:ss aa');
+
+                timePicker.displayFormat = 'shortTime';
+                fixture.detectChanges();
+
+                expect(timePicker.displayFormat.normalize('NFKC')).toEqual('shortTime');
+                expect(timePicker.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
+            }));
+
+            it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
                 registerLocaleData(localeBg);
                 timePicker.locale = 'en-US';
-                timePicker.inputFormat = 'longTime';
+                timePicker.displayFormat = 'longTime';
                 fixture.detectChanges();
 
                 expect(timePicker.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
 
                 timePicker.locale = 'bg-BG';
-                timePicker.inputFormat = 'fullTime';
+                timePicker.displayFormat = 'fullTime';
+                fixture.detectChanges();
+
+                expect(timePicker.inputFormat).toEqual('HH:mm');
+            }));
+
+            it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
+                registerLocaleData(localeBg);
+                timePicker.locale = 'en-US';
+                timePicker.displayFormat = 'longTime';
+                fixture.detectChanges();
+
+                expect(timePicker.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
+
+                timePicker.locale = 'bg-BG';
+                timePicker.displayFormat = 'fullTime';
                 fixture.detectChanges();
 
                 expect(timePicker.inputFormat).toEqual('HH:mm');
