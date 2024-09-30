@@ -245,7 +245,6 @@
         overflow: hidden;
         flex: 0 0 auto;
         background: var-get($theme, 'item-background');
-        min-height: #{if($variant == 'indigo', rem(40px), rem(42px))};
         z-index: 1;
 
         @if $indigo-theme {
@@ -305,6 +304,10 @@
         background: var-get($theme, 'button-background');
         color: var-get($theme, 'button-color');
         outline: 0;
+        align-self: stretch;
+        height: auto;
+        transition: none;
+        border-radius: border-radius(0);
 
         &:hover {
             background: var-get($theme, 'button-hover-background');
@@ -337,10 +340,6 @@
         @if $indigo-theme {
             min-width: rem(40px);
             width: rem(40px);
-            border-radius: border-radius(0);
-            align-self: stretch;
-            height: auto;
-            transition: none;
 
             &::after {
                 content: '';
@@ -379,6 +378,7 @@
         align-items: center;
         min-width: $item-min-width;
         max-width: $item-max-width;
+        min-height: #{if($variant == 'indigo', rem(40px), rem(42px))};
         word-wrap: break-word;
         // Flex basis & shrink are Needed for IE11
         flex-basis: auto;
