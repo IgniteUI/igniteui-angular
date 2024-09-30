@@ -169,6 +169,10 @@
             display: block;
             padding: 0;
         }
+
+        @if $variant == 'fluent' {
+            padding: rem(16px) rem(8px);
+        }
     }
 
     %igx-card-header--vertical {
@@ -275,6 +279,19 @@
 
         &:last-child {
             margin-block-start: auto;
+        }
+    }
+
+    @if $variant == 'bootstrap' {
+        %igx-card-content {
+            @if $variant == 'bootstrap' {
+                padding-block: rem(16px) rem(24px);
+                padding-inline: rem(24px);
+            }
+        }
+
+        %igx-card-actions {
+            padding: rem(16px);
         }
     }
 
