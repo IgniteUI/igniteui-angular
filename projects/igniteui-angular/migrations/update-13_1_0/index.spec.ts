@@ -1,8 +1,8 @@
 import * as path from 'path';
 import { readFileSync } from 'fs';
 
-import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { setupTestTree } from '../common/setup.spec';
 
 const version = '13.1.0';
 
@@ -33,8 +33,7 @@ describe(`Update to ${version}`, () => {
     };
 
     beforeEach(() => {
-        appTree = new UnitTestTree(new EmptyTree());
-        appTree.create('/angular.json', JSON.stringify(configJson));
+        appTree = setupTestTree();
     });
 
     const migrationName = 'migration-23';

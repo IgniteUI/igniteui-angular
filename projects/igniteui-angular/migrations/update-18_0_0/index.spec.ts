@@ -1,7 +1,7 @@
 import * as path from 'path';
 
-import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { setupTestTree } from '../common/setup.spec';
 
 const version = '18.0.0';
 
@@ -33,8 +33,7 @@ describe(`Update to ${version}`, () => {
     };
 
     beforeEach(() => {
-        appTree = new UnitTestTree(new EmptyTree());
-        appTree.create('/angular.json', JSON.stringify(configJson));
+        appTree = setupTestTree(configJson);
         appTree.create('/testSrc/styles.scss', `
 @use "mockStyles.scss";
 @forward something;

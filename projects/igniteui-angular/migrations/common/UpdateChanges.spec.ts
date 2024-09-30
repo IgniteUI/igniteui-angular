@@ -1,10 +1,10 @@
-import { EmptyTree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsChanges, ElementType, ThemeType, MemberChanges } from './schema';
 import { UpdateChanges, InputPropertyType, BoundPropertyObject } from './UpdateChanges';
 import * as tsUtils from './tsUtils';
+import { setupTestTree } from './setup.spec';
 
 describe('UpdateChanges', () => {
     let appTree: UnitTestTree;
@@ -31,8 +31,7 @@ describe('UpdateChanges', () => {
     }
 
     beforeEach(() => {
-        appTree = new UnitTestTree(new EmptyTree());
-        appTree.create('/angular.json', JSON.stringify({
+        appTree = setupTestTree({
             projects: {
                 testProj: {
                     root: '',
@@ -44,7 +43,7 @@ describe('UpdateChanges', () => {
                     prefix: 'app'
                 }
             }
-        }));
+        });
     });
 
     it('should replace/remove components', done => {
