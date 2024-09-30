@@ -111,6 +111,7 @@ const GridResourceStringsDE_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Löse alle',
     igx_grid_row_edit_btn_done: 'Fertig',
     igx_grid_row_edit_btn_cancel: 'Abbrechen',
+    igx_grid_row_edit_text: 'Sie haben {0} Änderungen in dieser Zeile und {1} ausgeblendete Spalten',
     igx_grid_toolbar_actions_filter_prompt: 'Filter Spalten-Liste...',
     igx_grid_toolbar_pinning_button_tooltip: 'Öffne Menü, um Spalten zu fixieren',
     igx_grid_toolbar_hiding_button_tooltip: 'Öffne Menü, um Spalten zu verstecken',

@@ -3,9 +3,46 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 18.2.0
+### New Features
+- `IgxSimpleCombo`
+    - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - To streamline the sorting of columns with custom formats, a new `FormattedValuesSortingStrategy` has been introduced. This strategy simplifies the sorting process by allowing direct sorting based on formatted values, eliminating the need to extend the `DefaultSortingStrategy` or implement a custom `ISortingStrategy`. This enhancement improves the ease of handling sorting with custom column formatters.
+
+- `IgxCarousel`
+    - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
+    - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
+
+#### Scrollbar: New CSS variables
+
+We have introduced new CSS variables to allow for more customizable scrollbars. This enhancement utilizes the available WebKit pseudo-selectors such as `::-webkit-scrollbar-track`. However, please note that these pseudo-selectors are prefixed with `-webkit-` and are only supported in WebKit-based browsers (e.g., Chrome, Safari).
+
+###### List of Available CSS Variables for `-webkit-` browsers:
+- `--sb-size`: Adjusts the scrollbar size (width and height).
+- `--sb-track-bg-color`: Sets the background color of the scrollbar track.
+- `--sb-track-bg-color-hover`: Sets the background color of the scrollbar track on hover.
+- `--sb-thumb-min-height`: Sets the minimum height of the scrollbar thumb.
+- `--sb-thumb-border-radius`: Sets the border radius of the scrollbar thumb.
+- `--sb-thumb-border-size`: Sets the border size of the scrollbar thumb.
+- `--sb-thumb-border-color`: Sets the border color of the scrollbar thumb.
+- `--sb-thumb-bg-color`: Sets the background color of the scrollbar thumb.
+- `--sb-thumb-bg-color-hover`: Sets the background color of the scrollbar thumb on hover.
+
+For Firefox users, we provide limited scrollbar styling options through the following CSS variables:
+
+- `--sb-size`: Adjusts the scrollbar size.
+- `--sb-thumb-bg-color`: Sets the background color of the scrollbar thumb.
+- `--sb-track-bg-color`: Sets the background color of the scrollbar track.
+
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
-    - **Breaking Change** The `shouldGenerate` property have been deprecated and will be removed in a future version. Use `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`.
+    - **Deprecation** The `shouldGenerate` property has been deprecated and will be removed in a future version. Column re-creation now relies on `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`. Note that if `autoGenerate` is already set initially, there is no need to explicitly set it elsewhere in your code.
+
+- `IgxCarousel`
+    - `animationType` input property is now of type `CarouselAnimationType`. `HorizontalAnimationType` can also be used, however, to accommodate the new vertical mode, which supports vertical slide animations, it is recommended to use `CarouselAnimationType`.
+
+    - **Behavioral Changes** - the `keyboardSupport` input property now defaults to `false`.
+    - **Deprecation** - the `keyboardSupport` input property has been deprecated and will be removed in a future version. Keyboard navigation with `ArrowLeft`, `ArrowRight`, `Home`, and `End` keys will be supported when focusing the indicators' container via ` Tab`/`Shift+Tab`. 
 
 ## 18.1.0
 ### New Features
@@ -4593,4 +4630,3 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
-

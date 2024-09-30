@@ -221,6 +221,16 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     /**
      * Gets the minimum height.
+     * 
+     * Setting value in template: 
+     * ```ts
+     * [minHeight]="'<number><unit (px|rem|etc..)>'" 
+     * ```
+     * 
+     * Example for setting a value: 
+     * ```ts
+     * [minHeight]="'700px'"
+     * ```
      */
     @Input()
     public get minHeight(): string {
@@ -248,6 +258,16 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     /**
      * Gets the maximum height.
+     * 
+     * Setting value in template: 
+     * ```ts
+     * [maxHeight]="'<number><unit (px|rem|etc..)>'" 
+     * ```
+     * 
+     * Example for setting a value: 
+     * ```ts
+     * [maxHeight]="'700px'"
+     * ```
      */
     @Input()
     @HostBinding('style.max-height')
@@ -487,37 +507,34 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private renderValues() {
-        this.filterValues = this.generateFilterValues(this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime);
+        this.filterValues = this.generateFilterValues();
         this.generateListData();
     }
 
-    private generateFilterValues(isDateColumn = false) {
-        let filterValues;
+    private generateFilterValues() {
+        const formatValue = (value: any): any => {
+            if (!value) return value;
 
-        if (isDateColumn) {
-            filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
-                if (e.expression.condition.name === 'in') {
-                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
-                        new Date(v).toISOString())];
-                }
-                return [...arr, ...[e.expression.searchVal ? e.expression.searchVal.toISOString() : e.expression.searchVal]];
-            }, []));
-        } else if (this.column.dataType === GridColumnDataType.Time) {
-            filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
-                if (e.expression.condition.name === 'in') {
-                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
-                        typeof v === 'string' ? v : new Date(v).toLocaleTimeString())];
-                }
-                return [...arr, ...[e.expression.searchVal ? e.expression.searchVal.toLocaleTimeString() : e.expression.searchVal]];
-            }, []));
-        } else {
-            filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
-                if (e.expression.condition.name === 'in') {
-                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values())];
-                }
-                return [...arr, ...[e.expression.searchVal]];
-            }, []));
-        }
+            switch (this.column.dataType) {
+                case GridColumnDataType.Date:
+                    return new Date(value).toDateString();
+                case GridColumnDataType.DateTime:
+                    return new Date(value).toISOString();
+                case GridColumnDataType.Time:
+                    return typeof value === 'string' ? value : new Date(value).toLocaleTimeString();
+                default:
+                    return value;
+            }
+        };
+
+        const processExpression = (arr: any[], e: any): any[] => {
+            if (e.expression.condition.name === 'in') {
+                return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v => formatValue(v))];
+            }
+            return [...arr, formatValue(e.expression.searchVal)];
+        };
+
+        const filterValues = new Set<any>(this.expressionsList.reduce(processExpression, []));
 
         return filterValues;
     }
@@ -715,7 +732,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private getExpressionValue(value: any): string {
         if (this.column.dataType === GridColumnDataType.Date) {
-            value = value ? new Date(value).toISOString() : value;
+            value = value ? new Date(value).toDateString() : value;
         } else if (this.column.dataType === GridColumnDataType.DateTime) {
             value = value ? new Date(value).toISOString() : value;
         } else if (this.column.dataType === GridColumnDataType.Time) {
