@@ -40,8 +40,8 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     @Input()
     public set inputFormat(value: string) {
         if (value) {
+            this._inputFormat = value;
             this.updateDefaultFormat();
-            this._inputFormat = DateTimeUtil.getNumericInputFormat(this.locale, value);
         }
     }
 

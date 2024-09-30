@@ -189,7 +189,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @Input()
     public override set inputFormat(value: string) {
         if (value) {
-            this._inputFormat = DateTimeUtil.getNumericInputFormat(this.locale, value);
+            this._inputFormat = value;
             if (this.hasProjectedInputs) {
                 this.updateInputFormat();
             }
