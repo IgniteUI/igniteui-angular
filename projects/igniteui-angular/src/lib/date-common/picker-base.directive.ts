@@ -40,7 +40,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     @Input()
     public set inputFormat(value: string) {
         if (value) {
-            this._userSetFormat = value;
+            this.updateDefaultFormat();
             this._inputFormat = DateTimeUtil.getNumericInputFormat(this.locale, value);
         }
     }
@@ -138,8 +138,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
         } catch (e) {
             this._locale = this._localeId;
         }
-        // reassign the inputFormat in case the original one needs to be localized
-        this.inputFormat = this._userSetFormat;
         this.updateDefaultFormat();
     }
 
@@ -269,7 +267,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     protected _type: IgxInputGroupType;
     protected _minValue: Date | string;
     protected _maxValue: Date | string;
-    protected _userSetFormat: string;
     protected _weekStart: WEEKDAYS | number;
 
     /**
