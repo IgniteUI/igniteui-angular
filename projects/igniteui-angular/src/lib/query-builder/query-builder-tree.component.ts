@@ -424,7 +424,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public searchValue: any;
+    public searchValue: { value: any } = { value: null };
 
     /**
      * @hidden @internal
@@ -603,7 +603,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._selectedField = null;
         this.selectedCondition = null;
-        this.searchValue = null;
+        this.searchValue.value = null;
 
         this.entityChangeDialog.close();
         this.entitySelect.close();
@@ -647,7 +647,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._selectedField = value;
             if (oldValue && this._selectedField && this._selectedField.dataType !== oldValue.dataType) {
                 this.selectedCondition = null;
-                this.searchValue = null;
+                this.searchValue.value = null;
                 this.cdr.detectChanges();
             }
         }
@@ -734,7 +734,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public commitOperandEdit() {
-        const actualSearchValue = this.searchValueTemplate ? this._editedExpression.expression.searchVal : this.searchValue;
+        const actualSearchValue = this.searchValue.value;
         if (this._editedExpression) {
             this._editedExpression.expression.fieldName = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
@@ -758,6 +758,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this._editedExpression.expression.searchTree.fieldName = innerQuery.expressionTree.fieldName;
             } else {
                 this._editedExpression.expression.searchTree = null;
+            }
+
+            if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
+                this._editedExpression.expression.searchVal = null;
             }
 
             this._editedExpression.inEditMode = false;
@@ -811,7 +815,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
         return this.selectedField && this.selectedCondition &&
             (
-                ((!!this.searchValue || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
+                ((!!this.searchValue.value || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
                 (innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined) ||
                 this.selectedField.filters.condition(this.selectedCondition).isUnary
             );
@@ -895,7 +899,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             expressionItem.expression.condition ?
                 expressionItem.expression.condition.name :
                 null;
-        this.searchValue = expressionItem.expression.searchVal;
+        this.searchValue.value = expressionItem.expression.searchVal;
 
         expressionItem.inEditMode = true;
         this._editedExpression = expressionItem;
@@ -1233,10 +1237,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public getSearchValueTemplateContext(): any {
+    public getSearchValueTemplateContext(defaultSearchValueTemplate): any {
         const ctx = {
             $implicit: this.searchValue,
-            expression: this._editedExpression.expression
+            selectedField: this.selectedField,
+            selectedCondition: this.selectedCondition,
+            defaultSearchValueTemplate: defaultSearchValueTemplate
         };
         return ctx;
     }
