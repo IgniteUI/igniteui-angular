@@ -90,10 +90,6 @@
 
     $variant: map.get($theme, '_meta', 'variant');
 
-    $badge-font-weight: normal;
-    $badge-value-padding: rem(4px);
-    $border-type: solid;
-
     %igx-badge-display {
         --size: #{rem(22px)};
         --_badge-size: var(--size);
@@ -107,9 +103,6 @@
         background: var-get($theme, 'background-color');
         border-radius: calc(var(--size) / 2);
         box-shadow: var-get($theme, 'shadow');
-        border-width: var-get($theme, 'border-width');
-        border-color: var-get($theme, 'border-color');
-        border-style: $border-type;
         overflow: hidden;
 
         igx-icon {
@@ -118,7 +111,7 @@
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            font-weight: $badge-font-weight;
+            font-weight: normal;
             color: var-get($theme, 'icon-color');
         }
 
@@ -132,13 +125,17 @@
         }
     }
 
+    %igx-badge--outlined {
+        box-shadow: inset 0 0 0 rem(if($variant != 'bootstrap', 2px, 1px)) var-get($theme, 'border-color');
+    }
+
     %igx-badge--square {
         border-radius: var-get($theme, 'border-radius');
     }
 
     %igx-badge-value {
         white-space: nowrap;
-        padding-inline: $badge-value-padding;
+        padding-inline: rem(4px);
     }
 
     %igx-badge--success {
