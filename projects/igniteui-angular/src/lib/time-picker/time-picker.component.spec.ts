@@ -641,7 +641,7 @@ describe('IgxTimePicker', () => {
                 selectedHour = selectedHour > 12 ? selectedHour - 12 : selectedHour;
                 const selectedMinutes = fixture.componentInstance.date.getMinutes();
                 const dateTimeEditor = fixture.debugElement.query(By.directive(IgxDateTimeEditorDirective)).nativeElement;
-                expect((dateTimeEditor.value)).toEqual(`0${selectedHour}:${selectedMinutes} ${selectedAmpm}`);
+                expect((dateTimeEditor.value).normalize('NFKC')).toEqual(`0${selectedHour}:${selectedMinutes} ${selectedAmpm}`);
 
                 UIInteractions.triggerEventHandlerKeyDown('Escape', timePickerDebElement);
                 tick();
@@ -1120,7 +1120,7 @@ describe('IgxTimePicker', () => {
 
             it('should initialize all input properties with their default values', () => {
                 expect(timePicker.mode).toEqual(PickerInteractionMode.DropDown);
-                expect(timePicker.inputFormat).toEqual(DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT);
+                expect(timePicker.inputFormat.normalize('NFKC')).toEqual(DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT);
                 expect(timePicker.itemsDelta.hours).toEqual(1);
                 expect(timePicker.itemsDelta.minutes).toEqual(1);
                 expect(timePicker.itemsDelta.seconds).toEqual(1);
@@ -1143,9 +1143,9 @@ describe('IgxTimePicker', () => {
                 expect(dateTimeEditor.spinDelta).toEqual(timePicker.itemsDelta);
                 expect(dateTimeEditor.spinLoop).toEqual(true);
 
-                expect(dateTimeEditor.inputFormat).toEqual(DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT);
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual(DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT);
                 expect(dateTimeEditor.displayFormat).toEqual('hh:mm');
-                expect(dateTimeEditor.mask).toEqual('00:00 LL');
+                expect(dateTimeEditor.mask.normalize('NFKC')).toEqual('00:00 LL');
             });
 
             it('should be able to change the mode at runtime', fakeAsync(() => {
@@ -1238,7 +1238,7 @@ describe('IgxTimePicker', () => {
                 timePicker.locale = 'en-US';
                 fixture.detectChanges();
 
-                expect(timePicker.inputFormat).toEqual('hh:mm tt');
+                expect(timePicker.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
 
                 timePicker.locale = 'bg-BG';
                 fixture.detectChanges();
@@ -1259,7 +1259,7 @@ describe('IgxTimePicker', () => {
                 timePicker.inputFormat = 'longTime';
                 fixture.detectChanges();
 
-                expect(timePicker.inputFormat).toEqual('hh:mm tt');
+                expect(timePicker.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
 
                 timePicker.locale = 'bg-BG';
                 timePicker.inputFormat = 'fullTime';
@@ -1284,7 +1284,7 @@ describe('IgxTimePicker', () => {
                 const minutes = fixture.componentInstance.date.getMinutes().toString();
                 const ampm = hours >= 12 ? 'PM' : 'AM';
 
-                expect(selectedTime).toEqual(`${hours}:${minutes} ${ampm}`);
+                expect(selectedTime.normalize('NFKC')).toEqual(`${hours}:${minutes} ${ampm}`);
             }));
 
             it('should apply all aria attributes correctly', fakeAsync(() => {
@@ -1496,7 +1496,7 @@ describe('IgxTimePicker', () => {
             it('should set placeholder correctly', fakeAsync(() => {
                 // no inputFormat set - placeholder equals the default date time input format
                 let inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
-                expect(inputEl.placeholder).toEqual('hh:mm tt');
+                expect(inputEl.placeholder.normalize('NFKC')).toEqual('hh:mm tt');
 
                 // no placeholder - set to inputFormat, if it is set
                 // test with the different a,aa,.. ampm formats

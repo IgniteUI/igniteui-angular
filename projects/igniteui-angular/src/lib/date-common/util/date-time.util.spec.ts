@@ -239,7 +239,7 @@ describe(`DateTimeUtil Unit tests`, () => {
     it('should properly build input formats based on locale for dateTime data type ', () => {
         spyOn(DateTimeUtil, 'getDefaultInputFormat').and.callThrough();
         let result = DateTimeUtil.getDefaultInputFormat('en-US', DataType.DateTime);
-        expect(result).toEqual('MM/dd/yyyy, hh:mm:ss tt');
+        expect(result.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
 
         result = DateTimeUtil.getDefaultInputFormat('bg-BG', DataType.DateTime);
         expect(result.normalize('NFKC')).toEqual('dd.MM.yyyy г., HH:mm:ss');
@@ -251,7 +251,7 @@ describe(`DateTimeUtil Unit tests`, () => {
     it('should properly build input formats based on locale for time data type ', () => {
         spyOn(DateTimeUtil, 'getDefaultInputFormat').and.callThrough();
         let result = DateTimeUtil.getDefaultInputFormat('en-US', DataType.Time);
-        expect(result).toEqual('hh:mm tt');
+        expect(result.normalize('NFKC')).toEqual('hh:mm tt');
 
         result = DateTimeUtil.getDefaultInputFormat('bg-BG', DataType.Time);
         expect(result.normalize('NFKC')).toEqual('HH:mm');

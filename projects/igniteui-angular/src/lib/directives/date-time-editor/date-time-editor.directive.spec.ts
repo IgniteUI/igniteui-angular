@@ -77,7 +77,7 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 expect(dateTimeEditor.locale).toEqual('en-US');
-                expect(dateTimeEditor.inputFormat).toEqual('MM/dd/yyyy, hh:mm:ss tt');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
 
                 dateTimeEditor.locale = 'bg-BG';
                 let change: SimpleChange = new SimpleChange('en-US', 'bg-BG', false);
@@ -108,7 +108,7 @@ describe('IgxDateTimeEditor', () => {
                 let changes: SimpleChanges = { inputFormat: change };
                 dateTimeEditor.ngOnChanges(changes);
 
-                expect(dateTimeEditor.inputFormat).toEqual('MM/dd/yyyy, hh:mm:ss tt');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
 
                 oldInputFormat = inputFormat;
                 inputFormat = 'full';
