@@ -264,12 +264,13 @@
             "polyfills": [
               "projects/igniteui-angular-elements/src/polyfills.ts"
             ],
-            "tsConfig": "projects/igniteui-angular-elements/tsconfig.app.json",
+            "tsConfig": "projects/igniteui-angular-elements/tsconfig.main.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               "projects/igniteui-angular-elements/src/favicon.ico",
               "projects/igniteui-angular-elements/src/assets",
-              "projects/igniteui-angular-elements/src/index.js"
+              "projects/igniteui-angular-elements/src/index.js",
+              "projects/igniteui-angular-elements/src/index.bundle.js"
             ],
             "styles": [
               "projects/igniteui-angular-elements/src/styles.scss"
@@ -318,6 +319,10 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "dev-app": {
+                "browser": "projects/igniteui-angular-elements/src/main.app.ts",
+                "tsConfig": "projects/igniteui-angular-elements/tsconfig.app.json"
             }
           },
           "defaultConfiguration": "production"
@@ -326,10 +331,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "igniteui-angular-elements:build:production"
+              "buildTarget": "igniteui-angular-elements:build:production,dev-app"
             },
             "development": {
-              "buildTarget": "igniteui-angular-elements:build:development"
+              "buildTarget": "igniteui-angular-elements:build:development,dev-app"
             }
           },
           "defaultConfiguration": "development"
