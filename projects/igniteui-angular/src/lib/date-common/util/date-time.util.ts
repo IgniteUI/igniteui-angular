@@ -732,8 +732,7 @@ export abstract class DateTimeUtil {
         };
         const timeOptions = {
             hour: FormatDesc.TwoDigits,
-            minute: FormatDesc.TwoDigits,
-            dayPeriod: 'narrow'
+            minute: FormatDesc.TwoDigits
         };
         switch (dataType) {
             case DataType.Date:
