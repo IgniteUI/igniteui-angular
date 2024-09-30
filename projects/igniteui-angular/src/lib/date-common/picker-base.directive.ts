@@ -41,7 +41,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     public set inputFormat(value: string) {
         if (value) {
             this._inputFormat = value;
-            this.updateDefaultFormat();
         }
     }
 
@@ -62,7 +61,16 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      *
      */
     @Input()
-    public displayFormat: string;
+    public set displayFormat(value: string) {
+        if (value) {
+            this._displayFormat = value;
+        }
+        this.updateDefaultFormat();
+    }
+
+    public get displayFormat(): string {
+        return this._displayFormat;
+    }
 
     /**
      * Sets the `placeholder` of the picker's input.
@@ -263,6 +271,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     protected _locale: string;
     protected _collapsed = true;
     protected _defaultInputFormat: string;
+    protected _displayFormat: string;
     protected _inputFormat: string;
     protected _type: IgxInputGroupType;
     protected _minValue: Date | string;
@@ -332,7 +341,8 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     }
 
     protected updateDefaultFormat(): void {
-        this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale, DataType.Date);
+        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
+                                || DateTimeUtil.getDefaultInputFormat(this.locale, DataType.Date);
     }
 
     public abstract select(value: Date | DateRange | string): void;

@@ -163,20 +163,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @Input()
     public override overlaySettings: OverlaySettings;
 
-    /**
-     * The format used when editable inputs are not focused.
-     *
-     * @remarks
-     * Uses Angular's DatePipe.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker displayFormat="EE/M/yy"></igx-date-range-picker>
-     * ```
-     *
-     */
-    @Input()
-    public override displayFormat: string;
 
     /**
      * The expected user input format and placeholder.
@@ -1065,7 +1051,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     protected override updateDefaultFormat(): void {
-        this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale, DataType.Date);
+        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
+                                || DateTimeUtil.getDefaultInputFormat(this.locale, DataType.Date);
         if (this.hasProjectedInputs) {
             this.updateInputLocale();
             this.updateInputFormat();

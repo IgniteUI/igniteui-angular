@@ -113,21 +113,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @Input()
     public id = `igx-time-picker-${NEXT_ID++}`;
 
-    /**
-     * The format used when editable input is not focused. Defaults to the `inputFormat` if not set.
-     *
-     * @remarks
-     * Uses Angular's `DatePipe`.
-     *
-     * @example
-     * ```html
-     * <igx-time-picker displayFormat="mm:ss"></igx-time-picker>
-     * ```
-     *
-     */
-    @Input()
-    public override displayFormat: string;
-
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
@@ -1075,7 +1060,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     protected override updateDefaultFormat(): void {
-        this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale, DataType.Time);
+        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
+                                || DateTimeUtil.getDefaultInputFormat(this.locale, DataType.Time);
     }
 
     private get isTouchedOrDirty(): boolean {

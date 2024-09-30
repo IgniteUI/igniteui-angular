@@ -136,7 +136,16 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      * ```
      */
     @Input()
-    public displayFormat: string;
+    public set displayFormat(value: string) {
+        if (value) {
+            this._displayFormat = value;
+        }
+        this.updateDefaultFormat();
+    }
+
+    public get displayFormat(): string {
+        return this._displayFormat;
+    }
 
     /**
      * Expected user input format (and placeholder).
@@ -214,6 +223,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     public validationFailed = new EventEmitter<IgxDateTimeEditorEventArgs>();
 
     private _inputFormat: string;
+    private _displayFormat: string;
     private _oldValue: Date;
     private _dateValue: Date;
     private _onClear: boolean;
@@ -503,7 +513,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     protected override setPlaceholder(_value: string): void { }
 
     private updateDefaultFormat(dataType: DataType = DataType.DateTime): void {
-        this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale, dataType);
+        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
+                                || DateTimeUtil.getDefaultInputFormat(this.locale, dataType);
     }
 
     private updateMask(): void {
