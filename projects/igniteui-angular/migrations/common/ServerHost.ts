@@ -2,6 +2,7 @@ import type { Tree } from '@angular-devkit/schematics';
 import * as pathFs from 'path';
 import * as ts from 'typescript/lib/tsserverlibrary';
 import { CUSTOM_TS_PLUGIN_NAME, CUSTOM_TS_PLUGIN_PATH } from './tsUtils';
+import { createRequire } from 'module';
 
 /**
  * Language server host is responsible for **most** of the FS operations / checks
@@ -11,6 +12,8 @@ export class ServerHost implements ts.server.ServerHost {
     public readonly args: string[];
     public readonly newLine: string;
     public readonly useCaseSensitiveFileNames: boolean;
+    /** Cached because Angular schematics encapsulation's customRequire doesn't provide `resolve` */
+    private nativeRequire = createRequire(__filename);
 
     constructor(public host: Tree) {
         this.args = ts.sys.args;
@@ -126,7 +129,7 @@ export class ServerHost implements ts.server.ServerHost {
                 moduleName = CUSTOM_TS_PLUGIN_PATH;
                 paths.push(__dirname);
             }
-            const modulePath = require.resolve(moduleName, { paths });
+            const modulePath = this.nativeRequire.resolve(moduleName, { paths });
             return {
                 module: require(modulePath),
                 error: undefined,

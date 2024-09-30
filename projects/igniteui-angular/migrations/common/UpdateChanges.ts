@@ -687,7 +687,7 @@ export class UpdateChanges {
         }
 
         // attempt to find a main tsconfig from workspace:
-        const wsProject = this.workspace.projects[0];
+        const wsProject = Object.values(this.workspace.projects)[0];
         // technically could be per-project, but assuming there's at least one main tsconfig for IDE support
         const projectConfig = wsProject.architect?.build?.options['tsConfig'];
 
@@ -852,8 +852,8 @@ export class UpdateChanges {
         for (const key of projectKeys) {
             const wsProject = this.workspace.projects[key];
             // intentionally compare against string values of the enum to avoid hard import
-            if (wsProject.projectType == "application" && wsProject.architect?.build?.options['main']) {
-                return wsProject.architect.build.options['main'];
+            if (wsProject.projectType == "application" && wsProject.architect?.build?.options) {
+                return wsProject.architect.build.options['browser'] || wsProject.architect.build.options['main'];
             } else if (wsProject.projectType == "library") {
                 // TODO: attempt to resolve from project ng-package.json or tsConfig
             }
