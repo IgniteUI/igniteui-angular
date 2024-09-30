@@ -2,6 +2,154 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 18.2.0
+### New Features
+- `IgxSimpleCombo`
+    - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - To streamline the sorting of columns with custom formats, a new `FormattedValuesSortingStrategy` has been introduced. This strategy simplifies the sorting process by allowing direct sorting based on formatted values, eliminating the need to extend the `DefaultSortingStrategy` or implement a custom `ISortingStrategy`. This enhancement improves the ease of handling sorting with custom column formatters.
+
+- `IgxCarousel`
+    - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
+    - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
+
+#### Scrollbar: New CSS variables
+
+We have introduced new CSS variables to allow for more customizable scrollbars. This enhancement utilizes the available WebKit pseudo-selectors such as `::-webkit-scrollbar-track`. However, please note that these pseudo-selectors are prefixed with `-webkit-` and are only supported in WebKit-based browsers (e.g., Chrome, Safari).
+
+###### List of Available CSS Variables for `-webkit-` browsers:
+- `--sb-size`: Adjusts the scrollbar size (width and height).
+- `--sb-track-bg-color`: Sets the background color of the scrollbar track.
+- `--sb-track-bg-color-hover`: Sets the background color of the scrollbar track on hover.
+- `--sb-thumb-min-height`: Sets the minimum height of the scrollbar thumb.
+- `--sb-thumb-border-radius`: Sets the border radius of the scrollbar thumb.
+- `--sb-thumb-border-size`: Sets the border size of the scrollbar thumb.
+- `--sb-thumb-border-color`: Sets the border color of the scrollbar thumb.
+- `--sb-thumb-bg-color`: Sets the background color of the scrollbar thumb.
+- `--sb-thumb-bg-color-hover`: Sets the background color of the scrollbar thumb on hover.
+
+For Firefox users, we provide limited scrollbar styling options through the following CSS variables:
+
+- `--sb-size`: Adjusts the scrollbar size.
+- `--sb-thumb-bg-color`: Sets the background color of the scrollbar thumb.
+- `--sb-track-bg-color`: Sets the background color of the scrollbar track.
+
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - **Deprecation** The `shouldGenerate` property has been deprecated and will be removed in a future version. Column re-creation now relies on `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`. Note that if `autoGenerate` is already set initially, there is no need to explicitly set it elsewhere in your code.
+
+- `IgxCarousel`
+    - `animationType` input property is now of type `CarouselAnimationType`. `HorizontalAnimationType` can also be used, however, to accommodate the new vertical mode, which supports vertical slide animations, it is recommended to use `CarouselAnimationType`.
+
+    - **Behavioral Changes** - the `keyboardSupport` input property now defaults to `false`.
+    - **Deprecation** - the `keyboardSupport` input property has been deprecated and will be removed in a future version. Keyboard navigation with `ArrowLeft`, `ArrowRight`, `Home`, and `End` keys will be supported when focusing the indicators' container via ` Tab`/`Shift+Tab`. 
+
+## 18.1.0
+### New Features
+- `IgxPivotGrid`
+    - Added horizontal layout for row dimensions. Can be configured through the `pivotUI` `rowLayout` property.
+    - Added `horizontalSummary` property for each IPivotDimension, enabling summary row when using horizontal layout.
+    - Added `horizontalSummariesPosition` property to the `pivotUI`, configuring horizontal summaries position.
+    - Keyboard navigation now can move in to row headers back and forth from any row dimension headers or column headers.
+    - Added keyboard interactions for row dimension collapse using `Alt + Arrows` and row headers sorting using `Ctrl + Arrow Up/Down`.
+- `IgxIcon`, `IgxIconService`
+    - You can now register icons by reference via the `IgxIconService`. To learn more check out the [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon-service).
+    - All components now use icons by reference internally so that it's easy to replace them without explicitly providing custom templates.
+    - `registerFamilyAlias` has been deprecated in favor of `setFamily` to allow adding metadata for `type` and `prefix` when registering custom icon families. To migrate from `registerFamilyAlias`, do the following:
+        ```ts
+            this.iconService.registerFamilyAlias('my-family', 'my-family-class');
+            this.iconService.setFamily('my-family', { className: 'my-family-class' });
+        ```
+
+### General
+- `ColumnType`, `IgxColumn`, `IgxColumnGroup`, `IgxColumnLayout`
+    - The `children` query property has been deprecated and replaced by `childColumns` getter directly returning columns array.
+    - Several properties have been hidden from the public API, considered internal and not recommended for use. Those include:
+    `filterCell`, `headerCell`, `headerGroup`, `defaultMinWidth`, `gridRowSpan`, `gridColumnSpan` and `cells`.
+- `IgxPaginator`
+    - The `isFirstPageDisabled` and `isLastPageDisabled` have been deprecated in favor of the identical `isFirstPage` and `isLastPage` getter.
+- `IgxOverlayService`
+    - The `attach` method overload accepting `Type` and `OverlaySettings` now accepts `OverlayCreateSettings` as second parameter. This interface extends `OverlaySettings` with an additional `injector` property used as `ElementInjector` when creating the dynamic component.
+
+
+## 18.0.0
+### New Features
+- `IgxCombo`, `IgxSimpleCombo`:
+    - Introduced ability for hiding the clear icon button when the custom clear icon template is empty.
+- `IgxDateTimeEditor`, `IgxTimePicker`:
+  - Now accept the following  custom `inputFormat` options, as Angular's DatePipe:
+      - Fractional seconds: S, SS, SSS.
+      - Period (Am/Pm): a, aa, aaa, aaaa, aaaaa
+- `IgxPivotGrid`
+    - Added templatable row dimension headers displayed on the top, above all row headers.
+    - Replace the `showPivotConfigurationUI` property with `pivotUI` property, adding ability now to enable/disable the configuration UI and/or the new row dimension headers.
+    - Added `sortable` property for each IPivotDimension.
+- `IgxOverlayService`, `IgxToggleDirective`:
+    - Added an optional `offsetMode` parameter to the `setOffset` method that determines whether to add (by default) or set the offset values using `OffsetMode.Add` and `OffsetMode.Set`.
+
+### Changes
+- With the removal of the Display Density token, components now get their default sizes from the theme. Default sizes have changed for most components, with it now being medium (previously large). Here's an exhaustive list of all sizable components and their default sizes by theme:
+    - `Avatar` - Small (All Themes)
+    - `Button` - Large (Material), Medium (Bootstrap, Fluent, Indigo)
+    - `Button Group` - Large (Material), Medium (Bootstrap, Fluent, Indigo)
+    - `Card` - Medium (All Themes)
+    - `Combo` - Medium (All Themes)
+    - `Chip` - Medium (All Themes)
+    - `Date/Time Picker` - Medium (All Themes)
+    - `Dropdown` - Medium (All Themes)
+    - `Dialog` - Medium (All Themes)
+    - `Icon` - Large (All Themes)
+    - `Icon Button` - Large (Material), Medium (Bootstrap, Fluent, Indigo)
+    - `Input Group` - Medium (All Themes)
+    - `List` - Medium (All Themes)
+    - `Tree` - Medium (All Themes)
+    - `Rating` - Medium (All Themes)
+    - `Select` - Medium (All Themes)
+
+### General
+- Removed deprecated property `displayDensity`. Size is now controlled only through the custom CSS property `--ig-size`. Refer to the [Update Guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide) and components documentation for usage details.
+- `IgxBanner`
+    - Removed the deprecated `banner` property of `BannerEventArgs` and `BannerCancelEventArgs`. Automatic migration to `owner` is applied.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Removed the deprecated `movable` property of `IgxColumnComponent`.
+- `IgxOverlayService`
+    - Removed the deprecated `PositionSettings.target` (in favor of general `OverlaySettings.target`).
+    - Replaced deprecated `attach` method overload accepting `ComponentFactoryResolver` (trough `NgModuleRef`-like object) with shortcut overload that uses just the root scope and `createComponent`. The overload accepting `ViewComponentRef` is still recommended for local injection context.
+ - `IgxPivotGrid`
+    - The `IgxPivotDateDimension` deprecated getters `inBaseDimension` and `inOption` have been removed.
+- `IgxSimpleCombo`
+    - **Behavioral Change** When bound to `ngModel` and `formControlName` directives, the model would not be updated when the user types into the input and will only be updated on selection.
+
+## 17.2.0
+### New Features
+- `IgxAvatar`
+    - Removed deprecated property `roundShape`; Deprecated `color` and `bgColor` properties.
+- `IgxButton`
+    - Removed deprecated properties `color` and `background`;
+- `IgxCalendar`
+    - Completely revamped calendar themes.
+    - New years view.
+    - Updated months view.
+    - Updated keyboard navigation and accessibility.
+    - Added selection preview in range selection mode.
+    - Added the ability to change the orientation of the calendar when multiple day views are present.
+    - Replaced the `vertical` property with `orientation` that can be set to either `horizontal`(default) or `vertical`.
+    - Standalone views support full-blown keyboard navigation, accessibility improvements and the ability to change pages automatically on keyboard navigation.
+    - Standalone views now emit `pageChanged` event whenever the active view page changes.
+- `IgxCard`
+    - Removed deprecated properties `type` and `reverse`;
+- `IgxDialog`
+    - Removed `leftButtonColor`, `leftButtonBackgroundColor` `rightButtonColor`, and `rightButtonBackgroundColor`  properties.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Enhanced the advanced filtering to emit the `filtering` event when filters are applied.
+
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The `contextMenu` event now fires when the end-user clicks to the right of the right-most cell in the grid in case the grid's columns don't span its full width. For this reason the event argument of the event is now of type `IGridContextMenuEventArgs` which contains the row object as well as the cell one. The latter will be `null` if the event didn't originate from a cell. **This is not a breaking change** as the new type extends the old.
+- `IgxSimpleCombo`
+    - **Behavioral Change** The `selectionChanging` event will now trigger when typing the first character in the input if there is a previously selected value in the `IgxSimpleCombo`.
+    - **Behavioral Change** Updated behavior to maintain the entered text in the input field upon pressing Enter while the combo input is focused, ensuring uninterrupted focus for continuous filtering. Additionally, the dropdown menu now remains open to display filtered results.
+
 ## 17.1.0
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -88,7 +236,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`,`IgxSimpleCombo`
     - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
 
-=======
+
 ## 16.1.5
 ### General
 - `IgxButtonGroup`:
@@ -4482,4 +4630,3 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
-

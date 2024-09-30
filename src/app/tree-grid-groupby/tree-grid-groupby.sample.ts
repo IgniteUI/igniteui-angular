@@ -1,9 +1,9 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { IgxButtonGroupComponent, IgxSwitchComponent, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, IgxTreeGridGroupingPipe, DisplayDensity, IGroupingExpression, DefaultSortingStrategy, IgxGroupedTreeGridSorting, TreeGridFilteringStrategy, ITreeGridAggregation, ITreeGridRecord, GridSelectionMode } from 'igniteui-angular';
+import { IgxButtonGroupComponent, IgxSwitchComponent, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, IgxTreeGridGroupingPipe, IGroupingExpression, DefaultSortingStrategy, IgxGroupedTreeGridSorting, TreeGridFilteringStrategy, ITreeGridAggregation, ITreeGridRecord, GridSelectionMode } from 'igniteui-angular';
 
 
 @Component({
@@ -16,13 +16,17 @@ import { IgxButtonGroupComponent, IgxSwitchComponent, IgxTreeGridComponent, IgxT
 })
 
 export class TreeGridGroupBySampleComponent implements OnInit {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public data: Array<any>;
     public columns: Array<any>;
     public selectionMode;
-    public density: DisplayDensity = 'comfortable';
-    public displayDensities;
+    public size = 'large';
+    public sizes;
     public groupingExpressions: IGroupingExpression[] = [
         { fieldName: 'ContactTitle', dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
         { fieldName: 'Country', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
@@ -39,10 +43,10 @@ export class TreeGridGroupBySampleComponent implements OnInit {
 
     public ngOnInit(): void {
         this.selectionMode = GridSelectionMode.multiple;
-        this.displayDensities = [
-            { label: 'compact', selected: this.density === 'compact', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        this.sizes = [
+            { label: 'small', selected: this.size === 'small', togglable: true },
+            { label: 'medium', selected: this.size === 'medium', togglable: true },
+            { label: 'large', selected: this.size === 'large', togglable: true }
         ];
 
         this.columns = [
@@ -65,7 +69,7 @@ export class TreeGridGroupBySampleComponent implements OnInit {
         console.log('Grouping: ', this.grid1.treeGroupArea, this.groupingExpressions);
     }
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 
     public cellEditDone() {

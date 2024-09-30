@@ -84,6 +84,11 @@ this.overlay.show(component, overlaySettings);
 |closeAnimation      | AnimationMetadata | AnimationMetadata[] | Animation applied while overlay closes              |
 |minSize             | Size        | The size up to which element may shrink when shown in elastic position strategy |
 
+###### OverlayCreateSettings extends OverlaySettings
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+|injector | Injector | An `Injector` instance to add in the created component ref's injectors tree |
 
 ##### Methods
 
@@ -91,15 +96,16 @@ this.overlay.show(component, overlaySettings);
 
 | Name            | Description                                                                     | Parameters      |
 |-----------------|---------------------------------------------------------------------------------|-----------------|
-|attach           | Generates Id. Provide this Id when call `show(id, settings?)` method   |element, overlaySettings? |
-|attach           | Generates Id. Provide this Id when call `show(id, settings?)` method |component, overlaySettings?, moduleRef? |
-|show             | Shows the provided component on the overlay                                  |id, overlaySettings?|
+|attach           | Generates Id. Provide this Id when call `show(id, settings?)` method            |element, overlaySettings? |
+|attach           | Generates Id. Provide this Id when call `show(id, settings?)` method            |component, overlayCreateSettings?, |
+|attach           | Generates Id. Provide this Id when call `show(id, settings?)` method            |component, viewContainerRef, overlaySettings? |
+|show             | Shows the provided component on the overlay                                     |id, overlaySettings?|
 |hide             | Hides the component with the ID provided as a parameter                         |id               |
 |hideAll          | Hides all the components and the overlay                                        |-                |
 |detach           | Remove overlay with the provided id                                             |id               |
 |detachAll        | Remove all the overlays                                                         |-                |
 |reposition       | Repositions the native element of the component with provided id                |id               |
-|setOffset        | Offsets the content along the corresponding axis by the provided amount       |id, deltaX, deltaY |
+|setOffset        | Offsets the content along the corresponding axis by the provided amount with optional offsetMode that determines whether to add (by default) or set the offset values with OffsetMode.Add and OffsetMode.Set | id, deltaX, deltaY, offsetMode? |
 
 ###### IPositionStrategy
 
@@ -134,6 +140,6 @@ this.overlay.show(component, overlaySettings);
 | opened            | Emitted after overlay shows                   | false      |            |
 | closing           | Emitted before overlay hides                  | true       |            |
 | closed            | Emitted after overlay hides                   | false      |            |
-| contentAppending   | Emitted before overlay's content is appended   | false      |            |
+| contentAppending  | Emitted before overlay's content is appended  | false      |            |
 | contentAppended   | Emitted after overlay's content is appended   | false      |            |
 | animationStarting | Emitted before animation is started           | false      |            |

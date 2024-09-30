@@ -12,7 +12,7 @@
 [![npm version](https://badge.fury.io/js/igniteui-angular.svg)](https://badge.fury.io/js/igniteui-angular)
 [![Discord](https://img.shields.io/discord/836634487483269200?logo=discord&logoColor=ffffff)](https://discord.gg/39MjrTRqds)
 
-[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch, Adobe XD and Figma [UI kits](https://www.infragistics.com/products/appbuilder/ui-toolkit) by Infragistics. Ignite UI for Angular is designed to enable developers to build enterprise-ready, high-performance HTML5 & JavaScript apps for modern desktop browsers. With the use of all features, the world’s fastest Angular grid, 60+ real-time Angular charts, and more, you are empowered to engineer excellent mobile experiences and deliver progressive web apps (PWA’s) using Google's [Angular](https://angular.io/) framework.
+[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete library of Angular-native, Material-based Angular UI components designed to enable developers to build enterprise-ready HTML5 & JavaScript apps for modern desktop browsers. It packs full-featured components, including Pivot Grids, Dock Manager, Hierarchical Grid, Bottom Navigation, etc., 60+ high-performance Angular Charts for all business needs and any app scenario, and more.
 
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 Or visit [Ignite UI for Angular Discord](https://discord.com/channels/836634487483269200/836636712292581456) and join the dev community there.
@@ -64,11 +64,6 @@ Ignite UI for Angular arrives with an extensive library of data visualizations t
 
 Some of the Angular chart types included are: [Polar chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/polar-chart), [Pie chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart), [Donut chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart), [Bubble chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bubble-chart), [Area chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/area-chart), [Treemap chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/treemap-chart), and many others. And if you look for [Angular financial charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart), with Ignite UI you can get the same features as the ones you come across with Google Finance and Yahoo Finance Charts.
 
-### Build Apps with Ignite UI for Angular faster using our [App Builder](https://www.infragistics.com/products/appbuilder)
-![Health Vault AB Angular Create](https://github.com/IgniteUI/igniteui-angular/assets/52001020/8f40a0a6-44f8-43fa-8407-c8800a7eae89)
-### Generate your Angular code projects using the [App Builder](https://www.infragistics.com/products/appbuilder)
-![Health Vault AB Angular Generate](https://github.com/IgniteUI/igniteui-angular/assets/52001020/78628738-6752-4ff3-b201-8a6b8cf279cf)
-
 ### Current List of Components Include:
 
 |Components|Status|||Added in|Directives|Status|||Added in|
@@ -94,7 +89,8 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |expansion panel|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/expansion-panel/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion-panel)|6.2.0                               |toggle|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle)|6.2.0|
 |grid|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)|5.1.0                                                          |tooltip|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)|6.2.0
 |hierarchical grid|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/hierarchical-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid)|7.2.0  |**Others**|**Status**|||
-|icon|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/icon/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon)|2.0.0                                                                |Animations|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/animations/README.md)||2.0.0|
+|icon|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/icon/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon)|2.0.0 
+|icon button|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/icon/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon-button)|17.1.0 |Animations|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/animations/README.md)||2.0.0|
 |input group|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/input-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|5.3.0                                           |dataUtil|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/data-operations/README-DATAUTIL.md)||5.1.0|
 |linear progress|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/progressbar)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/linear-progress)|5.1.0                                             |dataContainer|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/data-operations/README-DATACONTAINER.md)||5.1.0|||
 |list|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/list/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list)|2.0.0                                                                |IgxGridState|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/state-persistence)|9.0.0||
@@ -119,47 +115,51 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 
 ### Release History
 
-|Ignite UI for Angular|Release date|
-|:----|:----|
-| | |
-|4.0.0|18-April-17|
-|4.1.0|12-May-17|
-|4.2.0|20-Jul-17|
-|5.0.0|03-Nov-17|
-|5.1.0|17-Jan-18|
-|5.2.0|23-Feb-18|
-|5.3.0|24-Apr-18|
-|6.0.0|21-May-18|
-|6.1.0|05-Jul-18|
-|6.2.0|05-Nov-18|
-|7.0.0|26-Nov-18|
-|7.1.0|13-Dec-18|
-|7.2.0|08-Mar-19|
-|7.3.0|13-May-19|
-|8.0.0|19-Jun-19|
-|8.1.0|22-Jul-19|
-|8.2.0|26-Sep-19|
-|9.0.0|11-Feb-20|
-|9.1.0|01-Jun-20|
-|10.0.0|25-Jun-20|
-|10.1.0|12-Aug-20|
-|10.2.0|20-Oct-20|
-|11.0.0|13-Nov-20|
-|11.1.0|17-Feb-21|
-|12.0.0|14-May-21|
-|12.1.0|02-Aug-21|
-|12.2.0|04-Oct-21|
-|13.0.0|23-Nov-21|
-|13.1.0|02-Mar-22|
-|13.2.0|25-May-22|
-|14.0.0|09-Jun-22|
-|14.1.0|13-Sep-22|
-|14.2.0|06-Oct-22|
-|15.0.0|23-Nov-22|
-|15.1.0|27-Mar-23|
-|16.0.0|15-May-23|
-|16.1.0|02-Oct-23|
-|17.0.0|09-Nov-23|
+|Ignite UI for Angular|Release date|Milestone|
+|:----|:----|:----|
+| | ||
+|4.0.0|18-April-17||
+|4.1.0|12-May-17||
+|4.2.0|20-Jul-17||
+|5.0.0|03-Nov-17||
+|5.1.0|17-Jan-18|[Milestone #1](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-1-by-january-15th-2018)|
+|5.2.0|23-Feb-18||
+|5.3.0|24-Apr-18|[Milestone #2](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-2-due-april-25th-2018)|
+|6.0.0|21-May-18||
+|6.1.0|05-Jul-18|[Milestone #3](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-3-by-july-6th-2018)|
+|6.2.0|05-Nov-18||
+|7.0.0|26-Nov-18|[Milestone #4](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-4-november-30th-2018)|
+|7.1.0|13-Dec-18|[Milestone #5](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-5-14122018)|
+|7.2.0|08-Mar-19|[Milestone #6](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-6-due-march-8th-2019)|
+|7.3.0|13-May-19|[Milestone #7](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-7-13052019)|
+|8.0.0|19-Jun-19||
+|8.1.0|22-Jul-19|[Milestone #8](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-8-released-july-22nd-2019)|
+|8.2.0|26-Sep-19|[Milestone #9](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-9-version-820-released-september-26th-2019-release-blog-82)|
+|9.0.0|11-Feb-20|[Milestone #10](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-10-version-900-released-february-11th-2020-release-blog-90)|
+|9.1.0|01-Jun-20|[Milestone #11](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-11-version-910-released-june-1st-2020-release-blog-91)|
+|10.0.0|25-Jun-20|[Milestone #12](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-12-version-1000--1010-released-august-12th-2020-release-blog-100)|
+|10.1.0|12-Aug-20|[Milestone #12](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-12-version-1000--1010-released-august-12th-2020-release-blog-100)|
+|10.2.0|20-Oct-20|[Milestone #13](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-13-version-1020-released-october-20th-2020-release-blog-102)|
+|11.0.0|13-Nov-20|[Milestone #14](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-14-version-1100-released-november-11th-2020-release-blog-110)|
+|11.1.0|17-Feb-21|[Milestone #15](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-15-version-1110-released-february-17th-2021-release-blog-111)|
+|12.0.0|14-May-21|[Milestone #16](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-16-version-1200-released-may-14th-2021-release-blog-1200)|
+|12.1.0|02-Aug-21|[Milestone #17](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-17--version-1210-released-august-2nd-2021-releae-blog-121)|
+|12.2.0|04-Oct-21|[Milestone #18](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-18-version-1220-released-october-4th-2021-release-blog-122)|
+|13.0.0|23-Nov-21|[Milestone #19](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-19-version-130-released-november-23rd-2021-release-blog-130)|
+|13.1.0|02-Mar-22|[Milestone #20](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-20-version-131-released-march-2nd-2022-release-blog-131)|
+|13.2.0|25-May-22|[Milestone #21](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-21-version-132-released-may-25th-2022-release-blog-221)|
+|14.0.0|09-Jun-22|[Milestone #22](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-22-version-140-released-june-09th-2022-release-blog-221)|
+|14.1.0|13-Sep-22|[Milestone #23](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-23-version-141-released-september-13th-2022-release-blog-141)|
+|14.2.0|06-Oct-22|[Milestone #24](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-24-version-142-released-october-06th-2022-release-blog-222)|
+|15.0.0|23-Nov-22|[Milestone #25](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-25-version-150-released-november-23rd-2022-release-blog-150)|
+|15.1.0|27-Mar-23|[Milestone #26](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-26-version-151-releasd-march-28th-2023)|
+|16.0.0|15-May-23|[Milestone #27](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-27-version-160-released-may-15th-2023-release-blog-160)|
+|16.1.0|02-Oct-23|[Milestone #28](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-28-version-161-released-oct-5th-2023-release-blog-161)|
+|17.0.0|09-Nov-23|[Milestone #29](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-29-version-170-released-nov-9th-2023-release-blog-170)|
+|17.1.0|26-Feb-24|[Milestone #30](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-30-version-171-released-feb-26th-2024)|
+|17.2.0|29-Apr-24|[Milestone #31](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-31-version-172-released-apr-29th-2024)|
+|18.0.0|07-Jun-24|[Milestone #32](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-32-version-180-released-jun-07th-2024)|
+|18.1.0|22-Jul-24|[Milestone #33](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-33-due-by-jul-2024)|
 
 
 ### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)

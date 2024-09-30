@@ -1,12 +1,14 @@
 import {
-    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Optional, Inject, Directive
+    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Directive,
+    OnInit,
+    Inject
 } from '@angular/core';
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownList } from './drop-down.common';
 import { DropDownActionKey } from './drop-down.common';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+import { DOCUMENT } from '@angular/common';
 
 let NEXT_ID = 0;
 
@@ -18,7 +20,7 @@ let NEXT_ID = 0;
  * Properties and methods for selecting items from the collection
  */
 @Directive()
-export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implements IDropDownList {
+export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit {
     /**
      * Emitted when item selection is changing, before the selection completes
      *
@@ -71,6 +73,7 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
      * <igx-drop-down [id]='newDropDownId'></igx-drop-down>
      * ```
      */
+    @HostBinding('attr.id')
     @Input()
     public get id(): string {
         return this._id;
@@ -169,6 +172,7 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
     protected _height;
     protected _focusedItem: any = null;
     protected _id = `igx-drop-down-${NEXT_ID++}`;
+    protected computedStyles;
 
     /**
      * Gets if the dropdown is collapsed
@@ -178,9 +182,11 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(_displayDensityOptions, elementRef);
-        }
+        @Inject(DOCUMENT) public document: any) {}
+
+    public ngOnInit(): void {
+        this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
+    }
 
     /** Keydown Handler */
     public onItemActionKey(key: DropDownActionKey, event?: Event) {
@@ -200,7 +206,7 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
      * @param newSelection the item selected
      * @param event the event that triggered the call
      */
-    public selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event) {  // eslint-disable-line
+    public selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event, emit = true) {  // eslint-disable-line
         this.selectionChanging.emit({
             newSelection,
             oldSelection: null,

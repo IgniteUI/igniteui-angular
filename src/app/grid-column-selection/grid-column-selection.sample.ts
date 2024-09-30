@@ -1,9 +1,38 @@
-import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef, HostBinding } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DisplayDensity, FilterMode, HorizontalAlignment, IgxButtonDirective, IgxButtonGroupComponent, IgxCheckboxComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxInputDirective, IgxInputGroupComponent, IgxPaginatorComponent, IgxRippleDirective, IgxSwitchComponent, IgxToggleActionDirective, OverlaySettings, PositionSettings, VerticalAlignment } from 'igniteui-angular';
+import {
+    AbsoluteScrollStrategy,
+    ConnectedPositioningStrategy,
+    FilterMode,
+    HorizontalAlignment,
+    IgxButtonDirective,
+    IgxButtonGroupComponent,
+    IgxCheckboxComponent,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxDropDownComponent,
+    IgxDropDownItemComponent,
+    IgxDropDownItemNavigationDirective,
+    IgxGridComponent,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarHidingComponent,
+    IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent,
+    IgxIconComponent,
+    IgxInputDirective,
+    IgxInputGroupComponent,
+    IgxLabelDirective,
+    IgxPaginatorComponent,
+    IgxRippleDirective, IgxSuffixDirective,
+    IgxSwitchComponent,
+    IgxToggleActionDirective,
+    OverlaySettings,
+    PositionSettings,
+    VerticalAlignment
+} from 'igniteui-angular';
 
 
 @Pipe({
@@ -34,11 +63,15 @@ export class GridColumnSelectionFilterPipe implements PipeTransform {
     styleUrls: ['grid-column-selection.sample.scss'],
     templateUrl: 'grid-column-selection.sample.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, NgIf, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe]
+    imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, NgIf, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe, IgxLabelDirective, IgxIconComponent, IgxSuffixDirective, IgxGridToolbarTitleComponent]
 })
 export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
-    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
+    @ViewChild('grid2', { static: true }) public grid2: IgxGridComponent;
 
     @ViewChild('columnSelectionDropdown', { read: IgxDropDownComponent })
     public columnSelectionDropdown: IgxDropDownComponent;
@@ -63,8 +96,8 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
             togglable: true
         }
     ];
-    public density: DisplayDensity = 'comfortable';
-    public displayDensities;
+    public size = 'large';
+    public sizes;
     public paging = false;
 
     private _positionSettings: PositionSettings = {
@@ -91,10 +124,10 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
     }
 
     public ngOnInit(): void {
-        this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        this.sizes = [
+            { label: 'large', selected: this.size === 'large', togglable: true },
+            { label: 'medium', selected: this.size === 'medium', togglable: true },
+            { label: 'small', selected: this.size === 'small', togglable: true }
         ];
          this.data = SAMPLE_DATA.slice(0);
 
@@ -116,26 +149,28 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
     }
 
     public getGenInfoState() {
-        console.log('general info', this.grid.getColumnByName('CompanyName').parent.selected);
-        console.log('company name', this.grid.getColumnByName('CompanyName').selected);
+        console.log('general info', this.grid2.getColumnByName('CompanyName').parent.selected);
+        console.log('company name', this.grid2.getColumnByName('CompanyName').selected);
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 
     public selected(event) {
-        const selection = event.newSelection.element.nativeElement.textContent.trim();
-        this.grid.columnSelection = selection;
-        this.grid1.columnSelection = selection;
+        const selectedItem = event.newSelection.element.nativeElement.textContent.trim();
+
+        this.grid1.columnSelection = selectedItem;
+        this.grid2.columnSelection = selectedItem;
     }
 
     public getGridSelectedColunsData() {
         const data = this.grid1.getSelectedColumnsData();
         console.log(data);
     }
+
     public deselectCol() {
-        this.grid1.getColumnByName('ID').selected = true;
+        this.grid1.getColumnByName('ID').selected = false;
     }
 
     public toggleColumnSelection() {
@@ -154,7 +189,7 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
     }
 
     public selectedColumns() {
-        this.grid1.selectColumns(['ID', 'Name', 'aaaa']);
+        this.grid1.selectColumns(['ID', 'CompanyName', 'aaaa']);
     }
 
     public selectFilterMode(event) {

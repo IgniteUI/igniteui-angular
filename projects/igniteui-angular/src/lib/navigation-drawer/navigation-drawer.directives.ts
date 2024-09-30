@@ -8,12 +8,35 @@ import { Directive, HostBinding, Input, TemplateRef, booleanAttribute } from '@a
 export class IgxNavDrawerItemDirective {
 
     /**
-     * @hidden
+     * Styles a navigation drawer item as selected.
+     * If not set, `active` will have default value `false`.
+     *
+     * @example
+     * ```html
+     * <span igxDrawerItem [active]="true">Active Item</span>
+     * ```
      */
     @Input({ alias: 'active', transform: booleanAttribute }) public active = false;
 
     /**
-     * @hidden
+     * Disables a navigation drawer item.
+     * If not set, `disabled` will have default value `false`.
+     *
+     * @example
+     * ```html
+     * <span igxDrawerItem [disabled]="true">Disabled Item</span>
+     * ```
+     */
+    @Input({ alias: 'disabled', transform: booleanAttribute }) public disabled = false;
+
+    /**
+     * Styles a navigation drawer item as a group header.
+     * If not set, `isHeader` will have default value `false`.
+     *
+     * @example
+     * ```html
+     * <span igxDrawerItem [isHeader]="true">Header</span>
+     * ```
      */
     @Input({ alias: 'isHeader', transform: booleanAttribute }) public isHeader = false;
 
@@ -21,6 +44,11 @@ export class IgxNavDrawerItemDirective {
      * @hidden
      */
     public readonly activeClass = 'igx-nav-drawer__item--active';
+
+     /**
+     * @hidden
+     */
+     public readonly disabledClass = 'igx-nav-drawer__item--disabled';
 
     /**
      * @hidden
@@ -35,7 +63,7 @@ export class IgxNavDrawerItemDirective {
      */
     @HostBinding('class.igx-nav-drawer__item--active')
     public get currentCSS(): boolean {
-        return this.active && !this.isHeader;
+        return this.active && !this.isHeader && !this.disabled;
     }
 
     /**
@@ -44,6 +72,14 @@ export class IgxNavDrawerItemDirective {
     @HostBinding('class.igx-nav-drawer__item--header')
     public get headerCSS(): boolean {
         return this.isHeader;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-nav-drawer__item--disabled')
+    public get disabledCSS(): boolean {
+        return this.disabled;
     }
 }
 

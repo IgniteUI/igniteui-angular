@@ -1,4 +1,4 @@
-import { ColumnPinningPosition, FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition } from './enums';
+import { ColumnPinningPosition, FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition, Size } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -7,9 +7,9 @@ import {
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
     ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs,
-    IGridRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs
+    IGridRowEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IGridEditDoneEventArgs,
+    IGridContextMenuEventArgs
 } from '../common/events';
-import { DisplayDensity, IDensityChangedEventArgs } from '../../core/density';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';
@@ -34,7 +34,7 @@ import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../da
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
-import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
+import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
@@ -46,8 +46,7 @@ export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridService
 export interface IPathSegment {
     /**
      * The unique identifier of the row within the segment.
-     * @deprecated since version 17.1.0
-     * Use `rowKey` instead
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     rowID: any;
     rowKey: any;
@@ -60,6 +59,8 @@ export interface IGridDataBindable {
     get filteredData(): any[];
 }
 
+/* marshalByValue */
+/* jsonAPIComplexObject */
 /**
  * Interface representing a cell in the grid. It is essentially the blueprint to a cell object.
  * Contains definitions of properties and methods, relevant to a cell
@@ -77,10 +78,12 @@ export interface CellType {
     editable: boolean;
     /** Indicates whether the cell is currently in edit mode. */
     editMode: boolean;
+    /* blazorSuppress */
     /** Represents the native HTML element of the cell itself */
     nativeElement?: HTMLElement;
     /** Represents the column that the cell belongs to. */
     column: ColumnType;
+    /* blazorCSSuppress */
     /** Represents the row that the cell belongs to */
     row: RowType;
     /** Represents the grid instance containing the cell */
@@ -111,18 +114,21 @@ export interface CellType {
      * The method can be used to calculate the size of the cell with the longest content and resize all cells to that size
      */
     calculateSizeToFit?(range: any): number;
+    /* blazorSuppress */
     /**
      * Optional
      * A method to activate the cell.
      * It takes a focus or keyboard event as an argument
      */
     activate?(event: FocusEvent | KeyboardEvent): void;
+    /* blazorSuppress */
     /**
      * Optional
      * A method to handle double-click events on the cell
      * It takes a mouse event as an argument
      */
     onDoubleClick?(event: MouseEvent): void;
+    /* blazorSuppress */
     /**
      * Optional
      * A method to handle click events on the cell
@@ -136,11 +142,11 @@ export interface CellType {
  * Contains definitions of properties, relevant to the header
  */
 export interface HeaderType {
+    /* blazorSuppress */
     /** Represents the native HTML element of the cell itself */
     nativeElement: HTMLElement;
     /** The column that the header cell represents. */
     column: ColumnType;
-    density: DisplayDensity;
     /** Indicates whether the column is currently sorted. */
     sorted: boolean;
     /** Indicates whether the cell can be selected */
@@ -153,11 +159,14 @@ export interface HeaderType {
     sortDirection: SortingDirection;
 }
 
+/* jsonAPIComplexObject */
+/* marshalByValue */
 /**
  * Interface representing a row in the grid. It is essentially the blueprint to a row object.
  * Contains definitions of properties and methods, relevant to a row
  */
 export interface RowType {
+    /* blazorSuppress */
     /** Represents the native HTML element of the row itself */
     nativeElement?: HTMLElement;
     /** The index of the row within the grid */
@@ -166,6 +175,7 @@ export interface RowType {
     /** Indicates whether the row is grouped. */
     isGroupByRow?: boolean;
     isSummaryRow?: boolean;
+    /* blazorSuppress */
     /**
      * Optional
      * A map of column field names to the summary results for the row.
@@ -185,6 +195,7 @@ export interface RowType {
      * Indicates whether the current row is disabled
      */
     disabled?: boolean;
+    /* blazorSuppress */
     /**
      * Optional
      * Virtualization state of data record added from cache
@@ -208,12 +219,12 @@ export interface RowType {
     expanded?: boolean;
     /**
      * Optional
-     * Indicades whether the row is marked for deletion.
+     * Indicates whether the row is marked for deletion.
      */
     deleted?: boolean;
      /**
      * Optional
-     * Indicades whether the row is currently being edited.
+     * Indicates whether the row is currently being edited.
      */
     inEditMode?: boolean;
     /**
@@ -221,6 +232,7 @@ export interface RowType {
      * Contains the child rows of the current row, if there are any.
      */
     children?: RowType[];
+    /* blazorAlternateName: RowParent */
     /**
      * Optional
      * Contains the parent row of the current row, if it has one.
@@ -229,7 +241,7 @@ export interface RowType {
     parent?: RowType;
     /**
      * Optional
-     * Indicades whether the current row has any child rows
+     * Indicates whether the current row has any child rows
      */
     hasChildren?: boolean;
     /**
@@ -241,18 +253,21 @@ export interface RowType {
     addRowUI?: boolean;
     /**
      * Optional
-     * Indicades whether the row is currently focused.
+     * Indicates whether the row is currently focused.
      */
     focused?: boolean;
     /** Represent the grid instance, the row belongs to */
     grid: GridType;
+    /* blazorSuppress */
     onRowSelectorClick?: (event: MouseEvent) => void;
+    /* blazorSuppress */
     /**
      * Optional
      * A method to handle click event on the row
      * It takes a `MouseEvent` as an argument
      */
     onClick?: (event: MouseEvent) => void;
+    /* blazorSuppress */
     /**
      * Optional
      * A method to handle adding a new row
@@ -285,6 +300,7 @@ export interface FieldType {
     label?: string;
     field: string;
     header?: string;
+    /* alternateType: GridColumnDataType */
     dataType: DataType;
     filters: IgxFilteringOperand;
     pipeArgs: IFieldPipeArgs;
@@ -299,34 +315,34 @@ export interface FieldType {
  * Contains definitions of properties and methods, relevant to a column
  */
 export interface ColumnType extends FieldType {
-    /** Represents the inctance of the parent `GridType` that contains this column. */
+    /** Represents the instance of the parent `GridType` that contains this column. */
     grid: GridType;
-    /** A list, containing all the child columns under this column (if any). */
-    children: QueryList<ColumnType>;
-    /** An array, containing all the child columns, including nested children. */
-    allChildren: ColumnType[];
     /**
-     * The header group component associated with this column.
-     * Could be of any type
-    */
-    // TYPE
-    headerGroup: any;
-    /**
-     * The header cell component associated with this column.
-     * Could be of any type
+     * A list containing all the child columns under this column (if any).
+     * @deprecated in version 18.1.0. Use the `childColumns` property instead.
      */
-    // TYPE
+    children: QueryList<ColumnType>;
+    /**
+     * A list containing all the child columns under this column (if any).
+     * Empty without children or if this column is not Group or Layout.
+     */
+    get childColumns(): ColumnType[];
+    /** @hidden @internal */
+    allChildren: ColumnType[];
+    /** @hidden @internal */
+    headerGroup: any;
+    /** @hidden @internal */
     headerCell: any;
     validators: any[];
 
     /**
      * The template reference for the custom header of the column
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     headerTemplate: TemplateRef<any>;
     /**
      * The template reference for the collapsible indicator of the column.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     collapsibleIndicatorTemplate?: TemplateRef<any>;
     /** Represents custom CSS classes applied to the header element. When added, they take different styling */
@@ -339,7 +355,7 @@ export interface ColumnType extends FieldType {
     headerGroupStyles: any;
 
     /**
-     * Custom CSS styling, appplied to every column
+     * Custom CSS styling, applied to every column
      * calcWidth, minWidthPx, maxWidthPx, minWidth, maxWidth, minWidthPercent, maxWidthPercent, resolvedWidth
      */
     calcWidth: any;
@@ -363,12 +379,12 @@ export interface ColumnType extends FieldType {
     index: number;
     /**
      * Represents the type of data for the column:
-     * string, number, buulean, currency, date, time, etc.
+     * string, number, boolean, currency, date, time, etc.
      */
     dataType: GridColumnDataType;
     /**
      * The template reference for the custom inline editor of the column
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     inlineEditorTemplate: TemplateRef<any>;
     /**
@@ -389,19 +405,17 @@ export interface ColumnType extends FieldType {
     searchable: boolean;
     /** Specifies whether the column belongs to a group of columns. */
     columnGroup: boolean;
-    /** @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.*/
-    movable: boolean;
-    /** Indicades whether a column can be put in a group. If the value is true, the column can be put in a group */
+    /** Indicates whether a column can be put in a group. If the value is true, the column can be put in a group */
     groupable: boolean;
-    /** Indicades whether a column can be sorted. If the value is true, the column can be sorted. */
+    /** Indicates whether a column can be sorted. If the value is true, the column can be sorted. */
     sortable: boolean;
-    /** Indicades whether a column can be filtered. If the value is true, the column can be filtered */
+    /** Indicates whether a column can be filtered. If the value is true, the column can be filtered */
     filterable: boolean;
-    /** Indicades whether a column is currently hidden (not visible). If the value is true, the column is not visible */
+    /** Indicates whether a column is currently hidden (not visible). If the value is true, the column is not visible */
     hidden: boolean;
-    /** Indicades whether a column can be pinned. If the value is true, the column cannot be pinned */
+    /** Indicates whether a column can be pinned. If the value is true, the column cannot be pinned */
     disablePinning: boolean;
-    /** Indicades whether a column can be hidden. If the value is true, the column cannot be hidden */
+    /** Indicates whether a column can be hidden. If the value is true, the column cannot be hidden */
     disableHiding: boolean;
     /**
      * The sorting strategy used for sorting this column.
@@ -414,6 +428,7 @@ export interface ColumnType extends FieldType {
      * If the value is true, the result will not depend on the case (example: `E` will match `e`)
      */
     sortingIgnoreCase: boolean;
+    /** @hidden @internal */
     filterCell: any;
     filteringIgnoreCase: boolean;
     /**
@@ -425,7 +440,7 @@ export interface ColumnType extends FieldType {
     summaries: any;
     /**
      * The template reference for a summary of the column
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     summaryTemplate: TemplateRef<any>;
     /** Indicates if the column is currently pinned. If the value is true, the column is pinned */
@@ -443,20 +458,23 @@ export interface ColumnType extends FieldType {
     rowEnd: number;
     colStart: number;
     colEnd: number;
+    /** @hidden @internal */
     gridRowSpan: number;
+    /** @hidden @internal */
     gridColumnSpan: number;
     columnLayoutChild: boolean;
     width: string;
     /**
      * Optional
      * The root parent of this column (if any).
-     * If there is no root parent, that means the current solunm is the root parent
+     * If there is no root parent, that means the current column is the root parent
      */
     topLevelParent?: ColumnType;
+    /* alternateName: parentColumn */
     /**
      * Optional
      * The immediate parent (right above) column of this column (if any).
-     * If there is no parent, that means the current solunm is the root parent
+     * If there is no parent, that means the current column is the root parent
      */
     parent?: ColumnType;
     pipeArgs: IColumnPipeArgs;
@@ -471,12 +489,13 @@ export interface ColumnType extends FieldType {
     applySelectableClass: boolean;
     /** The title of the column, used for accessibility purposes */
     title: string;
+    /* blazorSuppress */
     /** Represents a method with custom grouping comparator to determine the members of the group. */
     groupingComparer: (a: any, b: any) => number;
 
     /**
      * Represents a custom template for filtering
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     filterCellTemplate: TemplateRef<any>;
 
@@ -491,7 +510,7 @@ export interface ColumnType extends FieldType {
     /** A method definition to retrieve the set CSS width of the cells under the column */
     getCellWidth(): string;
     getGridTemplate(isRow: boolean): string;
-    /** A method definition to toggle column vibisility (hidden or visible) */
+    /** A method definition to toggle column visibility (hidden or visible) */
     toggleVisibility(value?: boolean): void;
     populateVisibleIndexes?(): void;
     /** Pins the column at the specified index (if not already pinned). */
@@ -506,6 +525,7 @@ export interface ColumnType extends FieldType {
  * - owner: The grid instance that owns the form group.
  */
 export interface IGridFormGroupCreatedEventArgs {
+    /* blazorSuppress */
     formGroup: FormGroup,
     owner: GridType
 }
@@ -602,7 +622,7 @@ export interface GridServiceType {
      */
     get_cell_by_visible_index(rowIndex: number, columnIndex: number);
     /** Represents a method declaration that sets the expansion state of a group row (used for tree grids)
-     * It takes the value for the expantion as a parameter (expanded or collapsed)
+     * It takes the value for the expansion as a parameter (expanded or collapsed)
      */
     set_grouprow_expansion_state?(groupRow: IGroupByRecord, value: boolean): void;
     row_deleted_transaction(id: any): boolean;
@@ -611,11 +631,11 @@ export interface GridServiceType {
      * It takes the row's data and the identifier of the parent row if applicable (used for tree grids)
      */
     addRowToData(rowData: any, parentID?: any): void;
-    /** Represents a method declaration for deleting a row, specified by it's identidier (taken as a parameter) */
+    /** Represents a method declaration for deleting a row, specified by it's identifier (taken as a parameter) */
     deleteRowById(id: any): any;
-    /** Represents a method declaration for retrieving the row's current state of expantion (used for tree grids)*/
+    /** Represents a method declaration for retrieving the row's current state of expansion (used for tree grids)*/
     get_row_expansion_state(id: any): boolean;
-    /** Represents a method declaration for setting a new expantion state. It can be triggered by an event */
+    /** Represents a method declaration for setting a new expansion state. It can be triggered by an event */
     set_row_expansion_state(id: any, expanded: boolean, event?: Event): void;
     get_summary_data(): any[];
 
@@ -630,7 +650,7 @@ export interface GridServiceType {
      * The expressions contains fieldName, sorting directory, whether case should be ignored and optional sorting strategy
      */
     sort_multiple(expressions: ISortingExpression[]): void;
-    /** Represents a method declaration for reseting the sorting */
+    /** Represents a method declaration for resetting the sorting */
     clear_sort(fieldName: string): void;
 
     /** Represents an event, triggered when the pin state is changed */
@@ -662,11 +682,10 @@ export interface GridServiceType {
  * Extends `IGridDataBindable`
  */
 export interface GridType extends IGridDataBindable {
-    /** @deprecated since version 16.1.x. Please use the `--ig-size` CSS custom property. */
-    displayDensity: DisplayDensity;
-    /** Represents the locale of the drig: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
+    /** Represents the locale of the grid: `USD`, `EUR`, `GBP`, `CNY`, `JPY`, etc. */
     locale: string;
     resourceStrings: IGridResourceStrings;
+    /* blazorSuppress */
     /** Represents the native HTML element itself */
     nativeElement: HTMLElement;
     /** Indicates whether rows in the grid are editable. If te value is true, the rows can be edited */
@@ -677,7 +696,7 @@ export interface GridType extends IGridDataBindable {
      /** Indicates whether rows in the grid can be dragged. If te value is true, the rows can be dragged */
     rowDraggable: boolean;
     /** Represents the unique primary key used for identifying rows in the grid */
-    primaryKey: any;
+    primaryKey: string;
     /** Represents the unique identifier of the grid. */
     id: string;
     /** The height of the visible rows in the grid. */
@@ -692,6 +711,8 @@ export interface GridType extends IGridDataBindable {
     /** Indicates whether the grid is currently in a moving state. */
     moving: boolean;
     isLoading: boolean;
+    /** @hidden @internal */
+    gridSize: Size;
 
     /** Strategy, used for cloning the provided data. The type has one method, that takes any type of data */
     dataCloneStrategy: IDataCloneStrategy;
@@ -748,7 +769,7 @@ export interface GridType extends IGridDataBindable {
     showRowSelectors: boolean;
     /** Indicates whether the grid's element is pinned to the start of the grid */
     isPinningToStart: boolean;
-    /** Idicates if the column of the grid is in drag mode */
+    /** Indicates if the column of the grid is in drag mode */
     columnInDrag: any;
     /** @hidden @internal */
     /** The width of pinned element */
@@ -781,60 +802,60 @@ export interface GridType extends IGridDataBindable {
     /**
      * Optional
      * The template for grid icons.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     iconTemplate?: TemplateRef<any>;
     /**
      * Optional
      * The template for group-by rows.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     groupRowTemplate?: TemplateRef<IgxGroupByRowTemplateContext>;
     /**
      * Optional
      * The template for the group row selector.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     groupByRowSelectorTemplate?: TemplateRef<IgxGroupByRowSelectorTemplateContext>;
     /**
      * Optional
      * The template for row loading indicators.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     rowLoadingIndicatorTemplate?: TemplateRef<any>;
     /**
      * The template for the header selector.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     headSelectorTemplate: TemplateRef<IgxHeadSelectorTemplateContext>;
     /**
      * The template for row selectors.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     rowSelectorTemplate: TemplateRef<IgxRowSelectorTemplateContext>;
     /**
      * The template for sort header icons.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
     /**
      * The template for ascending sort header icons.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
     /**
      * The template for descending sort header icons.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
     /**
      * The template for header collapsed indicators.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     headerCollapsedIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
     /**
      * The template for header expanded indicators.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     headerExpandedIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
     /** The template for drag indicator icons. Could be of any type */
@@ -853,7 +874,7 @@ export interface GridType extends IGridDataBindable {
     calcHeight: number;
     calcWidth: number;
     outerWidth: number;
-    /** The height of each row in the grid. Setting a constant height can solve problems with not showing all alements when scrolling */
+    /** The height of each row in the grid. Setting a constant height can solve problems with not showing all elements when scrolling */
     rowHeight: number;
     multiRowLayoutRowSize: number;
     /** Minimal width for headers */
@@ -864,13 +885,14 @@ export interface GridType extends IGridDataBindable {
     _baseFontSize?: number;
     scrollSize: number;
 
-    /** The trigger for grid validation. It's value can eighter be `change` or `blur` */
+    /** The trigger for grid validation. It's value can either be `change` or `blur` */
     validationTrigger: GridValidationTrigger;
     /**
      * The configuration for columns and rows pinning in the grid
      * It's of type IPinningConfig, which can have value for columns (start, end) and for rows (top, bottom)
     */
     pinning: IPinningConfig;
+    /* blazorSuppress */
     expansionStates: Map<any, boolean>;
     parentVirtDir: any;
     tbody: any;
@@ -922,7 +944,7 @@ export interface GridType extends IGridDataBindable {
     totalRowsCountAfterFilter: number;
     _totalRecords: number;
     /**
-     * Represents the paging of the grid. It can be eighter 'Local' or 'Remote'
+     * Represents the paging of the grid. It can be either 'Local' or 'Remote'
      * - Local: Default value; The grid will paginate the data source based on the page
      */
     pagingMode: GridPagingMode;
@@ -934,7 +956,7 @@ export interface GridType extends IGridDataBindable {
     /** Represents the last search in the grid
      * It contains the search text (the user has entered), the match and some settings for the search
      */
-    lastSearchInfo: ISearchInfo;
+    readonly lastSearchInfo: ISearchInfo;
     /** @hidden @internal */
     page: number;
     /** @hidden @internal */
@@ -955,12 +977,15 @@ export interface GridType extends IGridDataBindable {
     hasColumnGroups: boolean;
     /** @hidden @internal */
     hasEditableColumns: boolean;
+    /* blazorSuppress */
     /** Property, that provides a callback for loading unique column values on demand.
      * If this property is provided, the unique values it generates will be used by the Excel Style Filtering  */
     uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
+    /* blazorSuppress */
     /** Property, that gets the header cell inner width for auto-sizing. */
     getHeaderCellWidth: (element: HTMLElement) => ISizeInfo;
 
+    /* blazorSuppress */
     /**
      * Provides change detection functionality.
      * A change-detection tree collects all views that are to be checked for changes.
@@ -970,17 +995,17 @@ export interface GridType extends IGridDataBindable {
     document: Document;
      /**
      * The template for expanded row indicators.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     rowExpandedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
     /**
      * The template for collapsed row indicators.
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
     /**
      * The template for header icon
-     * It is of type TemplateRef, which represents an embedded template, used to instanciate embedded views
+     * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
      */
     excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
 
@@ -1003,14 +1028,18 @@ export interface GridType extends IGridDataBindable {
     /** @hidden @internal */
     paginatorOutlet?: ViewContainerRef;
     flatData?: any[] | null;
+    /** @hidden @internal */
     childRow?: any;
     expansionDepth?: number;
     childDataKey?: any;
     foreignKey?: any;
     cascadeOnDelete?: boolean;
+    /* blazorSuppress */
     loadChildrenOnDemand?: (parentID: any, done: (children: any[]) => void) => void;
     hasChildrenKey?: any;
+    /* blazorSuppress */
     loadingRows?: Set<any>;
+    /* blazorAlternateName: GridParent */
     parent?: GridType;
     highlightedRowID?: any;
     updateOnRender?: boolean;
@@ -1019,8 +1048,10 @@ export interface GridType extends IGridDataBindable {
     rootGrid?: GridType;
     processedRootRecords?: ITreeGridRecord[];
     rootRecords?: ITreeGridRecord[];
+    /* blazorSuppress */
     records?: Map<any, ITreeGridRecord>;
     processedExpandedFlatData?: any[] | null;
+    /* blazorSuppress */
     processedRecords?: Map<any, ITreeGridRecord>;
     treeGroupArea?: any;
 
@@ -1029,7 +1060,7 @@ export interface GridType extends IGridDataBindable {
     cellClick: EventEmitter<IGridCellEventArgs>;
     rowClick: EventEmitter<IGridRowEventArgs>;
     doubleClick: EventEmitter<IGridCellEventArgs>;
-    contextMenu: EventEmitter<IGridCellEventArgs>;
+    contextMenu: EventEmitter<IGridContextMenuEventArgs>;
     selected: EventEmitter<IGridCellEventArgs>;
     rangeSelected: EventEmitter<GridSelectionRange>;
     rowSelectionChanging: EventEmitter<IRowSelectionEventArgs>;
@@ -1046,12 +1077,13 @@ export interface GridType extends IGridDataBindable {
     columnVisibilityChanging: EventEmitter<IColumnVisibilityChangingEventArgs>;
     columnVisibilityChanged: EventEmitter<IColumnVisibilityChangedEventArgs>;
     batchEditingChange?: EventEmitter<boolean>;
-    densityChanged: EventEmitter<IDensityChangedEventArgs>;
     rowAdd: EventEmitter<IRowDataCancelableEventArgs>;
     rowAdded: EventEmitter<IRowDataEventArgs>;
+    /* blazorSuppress */
     rowAddedNotifier: Subject<IRowDataEventArgs>;
     rowDelete: EventEmitter<IRowDataCancelableEventArgs>;
     rowDeleted: EventEmitter<IRowDataEventArgs>;
+    /* blazorSuppress */
     rowDeletedNotifier: Subject<IRowDataEventArgs>;
     cellEditEnter: EventEmitter<IGridEditEventArgs>;
     cellEdit: EventEmitter<IGridEditEventArgs>;
@@ -1068,7 +1100,9 @@ export interface GridType extends IGridDataBindable {
     validationStatusChange: EventEmitter<IGridValidationStatusEventArgs>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
+    /* blazorSuppress */
     rendered$: Observable<boolean>;
+    /* blazorSuppress */
     resizeNotify: Subject<void>;
 
     sortStrategy: IGridSortingStrategy;
@@ -1098,7 +1132,7 @@ export interface GridType extends IGridDataBindable {
     /** @hidden @internal */
     activeDescendant?: string;
     /** @hidden @internal */
-    isPivot?: boolean;
+    readonly type: 'flat' | 'tree' | 'hierarchical' | 'pivot';
 
     toggleGroup?(groupRow: IGroupByRecord): void;
     clearGrouping?(field: string): void;
@@ -1117,6 +1151,7 @@ export interface GridType extends IGridDataBindable {
     resetHorizontalVirtualization(): void;
     hasVerticalScroll(): boolean;
     getVisibleContentHeight(): number;
+    /* blazorSuppress */
     getDragGhostCustomTemplate(): TemplateRef<any> | null;
     openRowOverlay(id: any): void;
     openAdvancedFilteringDialog(overlaySettings?: OverlaySettings): void;
@@ -1148,8 +1183,11 @@ export interface GridType extends IGridDataBindable {
     isHierarchicalRecord?(record: any): boolean;
     columnToVisibleIndex(key: string | number): number;
     moveColumn(column: ColumnType, target: ColumnType, pos: DropPosition): void;
+    /* blazorSuppress */
     navigateTo(rowIndex: number, visibleColumnIndex: number, callback?: (e: any) => any): void;
+    /* blazorSuppress */
     getPreviousCell(currRowIndex: number, curVisibleColIndex: number, callback: (c: ColumnType) => boolean): ICellPosition;
+    /* blazorSuppress */
     getNextCell(currRowIndex: number, curVisibleColIndex: number, callback: (c: ColumnType) => boolean): ICellPosition;
     clearCellSelection(): void;
     selectRange(range: GridSelectionRange | GridSelectionRange[]): void;
@@ -1203,6 +1241,7 @@ export interface FlatGridType extends GridType {
  * Extends from `GridType`
  */
 export interface TreeGridType extends GridType {
+    /* blazorSuppress */
     records: Map<any, ITreeGridRecord>;
     isTreeRow(rec: any): boolean;
 }
@@ -1224,21 +1263,25 @@ export interface HierarchicalGridType extends GridType {
 export interface PivotGridType extends GridType {
     /**
      * The configuration settings for the pivot grid.
-     * it includes dimention strategy for rows and columns, filters and data keys
+     * it includes dimension strategy for rows and columns, filters and data keys
      */
     pivotConfiguration: IPivotConfiguration;
     /**
      * An array of all dimensions (rows and columns) in the pivot grid.
-     * it includes hierarchical level, filters and sorting, dimentional level, etc.
+     * it includes hierarchical level, filters and sorting, dimensional level, etc.
      */
     allDimensions: IPivotDimension[],
     /** Specifies whether to show the pivot configuration UI in the grid. */
-    showPivotConfigurationUI: boolean;
+    pivotUI: IPivotUISettings;
     /** @hidden @internal */
     columnDimensions: IPivotDimension[];
     /** @hidden @internal */
     rowDimensions: IPivotDimension[];
     rowDimensionResizing: boolean;
+    /** @hidden @internal */
+    visibleRowDimensions: IPivotDimension[];
+    /** @hidden @internal */
+    hasHorizontalLayout: boolean;
     /** @hidden @internal */
     values: IPivotValue[];
     /** @hidden @internal */
@@ -1246,7 +1289,8 @@ export interface PivotGridType extends GridType {
     /** @hidden @internal */
     dimensionDataColumns: ColumnType[];
     pivotRowWidths: number;
-    /** Represents a method declaration for seting up the columns for the pivot grid based on the pivot configuration */
+    getRowDimensionByName(name: string): IPivotDimension;
+    /** Represents a method declaration for setting up the columns for the pivot grid based on the pivot configuration */
     setupColumns(): void;
     /** Represents a method declaration that allows toggle of expansion state of a row (taken as a parameter) in the pivot grid */
     toggleRow(rowID: any): void;
@@ -1270,17 +1314,21 @@ export interface PivotGridType extends GridType {
     /** Move value from its currently at specified index or at the end.
      * If the parameter is not set, it will add it to the end of the collection. */
     moveValue(value: IPivotValue, index?: number);
+    rowDimensionWidth(dim: IPivotDimension): string;
     rowDimensionWidthToPixels(dim: IPivotDimension): number;
     /** Emits an event when the dimensions in the pivot grid change. */
     dimensionsChange: EventEmitter<IDimensionsChange>;
     /** Emits an event when the values in the pivot grid change. */
     valuesChange: EventEmitter<IValuesChange>;
+    /** Emits an event when the a dimension is sorted. */
+    dimensionsSortingExpressionsChange: EventEmitter<ISortingExpression[]>;
     /** @hidden @internal */
     pivotKeys: IPivotKeys;
     hasMultipleValues: boolean;
     excelStyleFilterMaxHeight: string;
     excelStyleFilterMinHeight: string;
     valueChipTemplate: TemplateRef<any>;
+    rowDimensionHeaderTemplate: TemplateRef<IgxColumnTemplateContext>;
 }
 
 export interface GridSVGIcon {
@@ -1317,6 +1365,7 @@ export interface IgxGridRowDragGhostContext {
 }
 
 export interface IgxGridEmptyTemplateContext {
+    /* blazorSuppress */
     $implicit: undefined
 }
 
@@ -1331,6 +1380,8 @@ export interface IgxGridRowEditTextTemplateContext {
 }
 
 export interface IgxGridRowEditActionsTemplateContext {
+    /* blazorCSSuppress */
+    /* blazorAlternateType: RowEditActionsImplicit */
     $implicit: (commit: boolean, event?: Event) => void
 }
 
@@ -1346,14 +1397,19 @@ export interface IgxColumnTemplateContext {
 export interface IgxCellTemplateContext {
     $implicit: any,
     additionalTemplateContext: any,
+    /* blazorSuppress */
     formControl?: FormControl<any>,
+    /* blazorSuppress */
     defaultErrorTemplate?: TemplateRef<any>,
     cell: CellType
 }
 
+/* jsonAPIComplexObject */
 export interface IgxRowSelectorTemplateDetails {
     index: number;
-    /** @deprecated Use `key` */
+    /**
+     * @deprecated in version 15.1.0. Use the `key` property instead.
+     */
     rowID: any;
     key: any;
     selected: boolean;
@@ -1365,6 +1421,7 @@ export interface IgxRowSelectorTemplateContext {
     $implicit: IgxRowSelectorTemplateDetails;
 }
 
+/* jsonAPIComplexObject */
 export interface IgxGroupByRowSelectorTemplateDetails {
     selectedCount: number;
     totalCount: number;
@@ -1374,6 +1431,7 @@ export interface IgxGroupByRowSelectorTemplateContext {
     $implicit: IgxGroupByRowSelectorTemplateDetails;
 }
 
+/* jsonAPIComplexObject */
 export interface IgxHeadSelectorTemplateDetails {
     selectedCount: number;
     totalCount: number;
@@ -1392,6 +1450,8 @@ export interface IgxGridPaginatorTemplateContext {
     $implicit: GridType;
 }
 
+/* marshalByValue */
+/* tsPlainInterface */
 /**
  * An interface describing settings for row/column pinning position.
  */

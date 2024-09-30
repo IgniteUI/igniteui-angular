@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use '../components/badge/badge-theme' as *;
 @use '../components/banner/banner-theme' as *;
 @use '../components/bottom-nav/bottom-nav-theme' as *;
 @use '../components/button/button-theme' as *;
@@ -19,6 +20,7 @@
 @use '../components/list/list-theme' as *;
 @use '../components/navbar/navbar-theme' as *;
 @use '../components/navdrawer/navdrawer-theme' as *;
+@use '../components/progress/progress-theme' as *;
 @use '../components/radio/radio-theme' as *;
 @use '../components/slider/slider-theme' as *;
 @use '../components/snackbar/snackbar-theme' as *;
@@ -29,18 +31,18 @@
 @use '../components/toast/toast-theme' as *;
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
+@use '../components/label/label-theme' as *;
 
 @mixin typography($type-scale) {
-    $calendar-labels: map.get($type-scale, 'calendar-labels');
-
+    @include badge-typography();
     @include banner-typography();
     @include bottom-nav-typography();
     @include button-typography();
     @include button-group-typography();
     @include calendar-typography($categories: (
-        header-year: 'subtitle-1',
+        header-year: 'body-2',
         header-date: 'h4',
-        weekday-label: if($calendar-labels, 'calendar-labels', 'body-1'),
+        weekday-label: 'body-2',
         picker-date: 'subtitle-1',
         content: 'body-1',
     ));
@@ -51,7 +53,7 @@
         content: 'body-1',
     ));
     @include checkbox-typography($categories: (
-        label: 'body-2',
+        label: 'body-1',
     ));
     @include chip-typography();
     @include column-actions-typography();
@@ -77,24 +79,39 @@
         helper-text: 'body-2',
         input-text: 'body-1'
     ));
+    @include linear-bar-typography();
     @include list-typography($categories: (
         item: 'body-2',
         title: 'body-1',
-        subtitle: 'subtitle-1',
+        subtitle: 'body-2',
         header: 'overline',
     ));
     @include navbar-typography($categories: (
         title: 'h5'
     ));
-    @include navdrawer-typography();
-    @include radio-typography();
+    @include navdrawer-typography($categories: (
+        item: 'body-2',
+        header: 'caption'
+    ));
+    @include radio-typography($categories: (
+        label: 'body-1'
+    ));
     @include slider-typography();
     @include snackbar-typography();
-    @include switch-typography();
+    @include switch-typography($categories: (
+        label: 'body-1'
+    ));
     @include tabs-typography();
-    @include time-picker-typography();
+    @include time-picker-typography($categories: (
+        header-time-period: 'subtitle-1',
+        header-hour: 'h4',
+        selected-time: 'h4'
+    ));
     @include stepper-typography();
     @include toast-typography();
     @include tooltip-typography();
     @include tree-typography();
+    @include label-typography($categories: (
+        label: 'body-1'
+    ));
 }

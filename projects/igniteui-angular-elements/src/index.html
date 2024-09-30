@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>IgniteuiAngularElements</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    body {
+        display: grid;
+        gap: 16px;
+        grid-auto-rows: minmax(400px, max-content);
+    }
+    igc-grid, igc-tree-grid {
+        max-height: 550px;
+        --ig-grid-grouparea-background: #ff000012;
+        --ig-grid-drop-area-background: #ff004c12;
+        --ig-paginator-border-color:#d0ab23;
+    }
+    .range-wrapper {
+        width: 100%;
+        padding: 0 .5rem;
+    }
+    .grid1-actions {
+        display: flex;
+        gap: .5rem;
+        padding: .5rem;
+    }
+  </style>
+</head>
+<body class="ig-typography">
+  <section>
+    <h3 class="ig-typography__h6">Flat Grid (column groups, toolbar, paginator, row actions)</h3>
+    <igc-grid id="grid1" moving="true" paging="true" primary-key="ProductID" row-selection="multiple" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+        <igc-grid-toolbar>
+        <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
+        <igc-grid-toolbar-actions>
+            <igc-grid-toolbar-advanced-filtering></igc-grid-toolbar-advanced-filtering>
+            <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+            <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+            <igc-grid-toolbar-exporter>
+                <span excelText>Export Excel</span>
+                <span csvText>Export CSV</span>
+            </igc-grid-toolbar-exporter>
+            <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+        </igc-grid-toolbar-actions>
+        </igc-grid-toolbar>
+        <igc-grid-state id="state"></igc-grid-state>
+
+
+        <igc-column field="ProductID" header="Product ID" data-type="number" filterable="false" sortable="true"></igc-column>
+        <igc-column field="ProductName" header="Product Name" sortable="true" width="auto"></igc-column>
+
+        <igc-column field="CategoryName" header="Category Name" sortable="true" groupable="true"></igc-column>
+        <igc-column field="InStock" header="In Stock" data-type="number"></igc-column>
+
+        <igc-action-strip>
+            <igc-grid-pinning-actions></igc-grid-pinning-actions>
+            <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
+        </igc-action-strip>
+
+        <igc-paginator per-page="10"></igc-paginator>
+    </igc-grid>
+
+    <div class="grid1-actions">
+        <button id="saveState">Save state</button>
+        <button id="restoreState">Restore</button>
+        <button onclick="grid1.selectAllColumns()">selectAllColumns</button>
+        <button onclick="grid1.deselectAllColumns()">deselectAllColumns</button>
+        <igc-button-group selection="single-required">
+            <igc-toggle-button value="small">Small</igc-toggle-button>
+            <igc-toggle-button value="medium">Medium</igc-toggle-button>
+            <igc-toggle-button value="large" selected>Large</igc-toggle-button>
+        </igc-button-group>
+        <button id="toggleIcon">Change Filter Icon</button>
+    </div>
+
+    <h3 class="ig-typography__h6">Standalone paginator</h3>
+    <igc-paginator per-page="25" total-records="150"></igc-paginator>
+  </section>
+
+  <section>
+      <h3 class="ig-typography__h6">Flat Grid (MRL column layout)</h3>
+      <igc-grid id="grid2" moving="true" paging="true" primary-key="ProductID" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+        <igc-grid-toolbar>
+        <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
+        <igc-grid-toolbar-actions>
+            <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+            <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+            <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+        </igc-grid-toolbar-actions>
+        </igc-grid-toolbar>
+
+        <igc-column-layout header="Product ID">
+            <igc-column row-start="1" col-start="1" row-end="3" field="ProductID" header="Product ID" width="25%"></igc-column>
+        </igc-column-layout>
+        <igc-column-layout header="Product Details" width="50%">
+            <igc-column row-start="1" col-start="1" col-end="3" field="ProductName" header="Product Name"></igc-column>
+            <igc-column row-start="2" col-start="1" col-end="2" field="CategoryName" header="Category Name" groupable="true"></igc-column>
+            <igc-column row-start="2" col-start="2" col-end="3" field="ImageUrl"></igc-column>
+        </igc-column-layout>
+        <igc-column-layout header="Product Stock">
+            <igc-column row-start="1" col-start="1" col-end="3" field="InStock" header="In Stock" width="25%"></igc-column>
+        </igc-column-layout>
+
+        <igc-paginator per-page="10"></igc-paginator>
+      </igc-grid>
+  </section>
+
+  <script src="assets/data/nw-products.js"></script>
+  <script type="module">
+    import { html, nothing } from "/lit-html.js";
+    import { Directive, directive } from "/directive.js";
+
+    import { defineComponents, IgcSelectComponent, IgcComboComponent, IgcButtonComponent, IgcButtonGroupComponent, registerIconFromText, setIconRef  } from "igniteui-webcomponents";
+    // import "igniteui-webcomponents/themes/light/bootstrap.css";
+
+    defineComponents(IgcSelectComponent, IgcComboComponent, IgcButtonComponent, IgcButtonGroupComponent);
+
+
+    const buildIcon =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>';
+  const thumbUpIcon =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>';
+    let icon = thumbUpIcon;
+
+    const grid1 = document.getElementById('grid1');
+    const grid2 = document.getElementById('grid2');
+    const buttonGroup = document.querySelector('igc-button-group');
+
+    grid1.data = northwindProducts;
+    grid2.data = northwindProducts;
+    const categories = Array.from(new Set(northwindProducts.map(x => x.CategoryName)));
+
+    let groupingExpression1 = [];
+    var groupingExpression2 = {};
+    groupingExpression2.fieldName = "CategoryName";
+    groupingExpression2.dir = 1 /* SortingDirection.Asc */;
+    groupingExpression2.ignoreCase = false;
+    groupingExpression1.push(groupingExpression2)
+
+    grid1.groupingExpressions = groupingExpression1;
+
+    // In place of https://lit.dev/docs/api/directives/#ref, too annoying to resolve with current angular.json script resources:
+    class RefDirective extends Directive {
+        constructor(partInfo) {
+            super(partInfo);
+            this.partInfo = partInfo;
+        }
+        render(_ref) {
+            _ref(this.partInfo.element);
+            return nothing;
+        }
+    }
+    // Create the directive function
+    const ref = directive(RefDirective);
+
+    // Using callback
+    const focusCallback = (inputElement) => {
+        // needed for callback without Lit's lifecycle; Consider exposing ready-made directive for this
+        requestAnimationFrame(() => {
+            if (inputElement?.isConnected) {
+                inputElement.focus();
+            }
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        grid1.emptyGridTemplate = () => html`<div>¯\(°_o)/¯ no data</div>`;
+        grid1.dropAreaTemplate = () => html`<span> 👉 Drop here 👈 </span>`;
+        grid1.querySelector('igc-column').bodyTemplate = (context) => html`PK: ${context.implicit}`;
+        grid1.querySelector('igc-column[field="ProductName"]').bodyTemplate = (context) => {
+            return html`
+            <igc-button size="large" class="button">
+            ${context.implicit}
+            </igc-button>`;
+        };
+        grid1.querySelector('igc-column[field="InStock"]').inlineEditorTemplate = (context) =>
+            html`<div class="range-wrapper">
+                <input ${ref(focusCallback)} id="range" type="range"
+                    .value="${context.implicit}"
+                    @change=${e => context.cell.editValue = e.target.nextElementSibling.value = e.target.value}
+                    />
+                <output .value="${context.$implicit}"></output>
+            </div>`;
+        grid1.querySelector('igc-column[field="CategoryName"]').inlineEditorTemplate = (ctx) =>
+            html`
+            <igc-select ${ref(focusCallback)} .value="${ctx.cell.editValue}" style="width:100%; height:100%" @igcChange=${(e) => ctx.cell.editValue = e.detail.value}>
+                ${categories.map(x => html`<igc-select-item value="${x}">${x}</igc-select-item>`)}
+            </igc-select>
+        `;
+        grid1.querySelector('igc-column[field="ProductName"]').inlineEditorTemplate = (ctx) =>
+            html`
+            <igc-combo ${ref(focusCallback)} style="width:100%; height:100%" .data=${northwindProducts} value-key="ProductName" @igcChange=${(e) => ctx.cell.editValue = e.detail.newValue} single-select>
+            </igc-combo>
+        `;
+        grid1.detailTemplate = (ctx) => html`<div><span class="categoryStyle">Stock: ${ctx.implicit.InStock}</span></div>`;
+
+        grid2.querySelector('igc-column[field="ProductName"]').inlineEditorTemplate = (ctx) =>
+            html`
+            <igc-input ${ref(focusCallback)} .value="${ctx.cell.editValue}" style="width:100%; height:100%" @igcInput=${(e) => ctx.cell.editValue = e.detail}>
+            </igc-input>
+        `;
+
+        document.getElementById("saveState").addEventListener("click", saveState);
+        document.getElementById("restoreState").addEventListener("click", restoreState);
+        document.getElementById("toggleIcon").addEventListener("click", toggleIcon);
+        const stateComponent = document.getElementById('state');
+        stateComponent.options = {
+            paging: false
+        };
+    });
+
+    buttonGroup.addEventListener("igcSelect", (e) => {
+        grid1.style.setProperty('--ig-size', `var(--ig-size-${e.detail})`);
+    });
+
+    function saveState() {
+        const stateComponent = document.getElementById('state');
+        const stringData = stateComponent.getStateAsString();
+        window.localStorage.setItem(`grid1-state`, stringData);
+    }
+
+    function restoreState() {
+        const stateComponent = document.getElementById('state');
+        const stateData = window.localStorage.getItem(`grid1-state`);
+        if (stateData) {
+            const obj = JSON.parse(stateData);
+            stateComponent.applyState(obj);
+        }
+    }
+
+    function toggleIcon() {
+        if (icon !== thumbUpIcon) {
+            icon = thumbUpIcon;
+            registerIconFromText("arrow_upward", thumbUpIcon, "customSet");
+            setIconRef('sort_asc', 'default', {
+            name: 'arrow_upward',
+            collection: 'customSet',
+            });
+
+        } else {
+            icon = buildIcon;
+            setIconRef('sort_asc', 'default', {
+            name: 'arrow_upward',
+            collection: 'material',
+            });
+        }
+    }
+  </script>
+
+  <!-- IgxTreeGridComponent -->
+  <igc-tree-grid id="treegrid1" primary-key="id" row-editable="true" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
+    <igc-grid-toolbar>
+        <igc-grid-toolbar-title>Tree Grid Toolbar</igc-grid-toolbar-title>
+        <igc-grid-toolbar-actions>
+            <igc-grid-toolbar-advanced-filtering></igc-grid-toolbar-advanced-filtering>
+            <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+            <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+            <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+        </igc-grid-toolbar-actions>
+    </igc-grid-toolbar>
+    <igc-column field='id' header='Project Id' data-type='number' ></igc-column>
+    <igc-column field='tasks' sortable ></igc-column>
+    <igc-column field='start' data-type='date' sortable has-summary></igc-column>
+    <igc-column field='finish' data-type='date' has-summary></igc-column>
+    <igc-paginator per-page="10"></igc-paginator>
+    <igc-action-strip>
+        <igc-grid-pinning-actions></igc-grid-pinning-actions>
+        <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
+    </igc-action-strip>
+  </igc-tree-grid>
+
+  <script src="assets/data/tree-grid-ds.js"></script>
+  <script>
+    treegrid1.data = treeGridDS;
+    document.addEventListener('DOMContentLoaded', () => {
+        // treegrid1.columns = [
+        //     { field: 'id', header: 'Product Id', dataType: 'number' },
+        //     { field: 'tasks', sortable: true },
+        //     { field: 'start', dataType: 'date', sortable: true, groupable: true, hasSummary: true },
+        //     { field: 'finish', dataType: 'date', hasSummary: true }
+        // ];
+    });
+  </script>
+  <!-- END IgxTreeGridComponent -->
+
+  <igc-hierarchical-grid id="hgrid1" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+    <igc-grid-state id="state2"></igc-grid-state>
+    <igc-column field="ProjectId" data-type="number" header="Project Id" sortable="true" selectable="false"></igc-column>
+    <igc-column field="Name" data-type="string" header="Name" sortable="true" selectable="false"></igc-column>
+    <igc-column field="StartDate" data-type="date" header="Start Date" sortable="true" selectable="false"></igc-column>
+    <igc-column field="EndDate" data-type="date" header="End Date" sortable="true" selectable="false"></igc-column>
+    <igc-column field="IsPostponed" data-type="boolean" header="Postponed" sortable="true" selectable="false"></igc-column>
+
+    <igc-row-island id="DevelopersRowIsland" key="Developers">
+        <igc-column field="Name" header="Name" sortable="true"></igc-column>
+        <igc-column-group header="Position Information">
+            <igc-column-group header="Position Details" collapsible>
+                <igc-column field="Position" header="Position" sortable="true" visible-when-collapsed></igc-column>
+                <igc-column field="Salary" header="Salary" sortable="true" visible-when-collapsed="false"></igc-column>
+            </igc-column-group>
+            <igc-column field="HireDate" header="HireDate" data-type="date" sortable="true"></igc-column>
+        </igc-column-group>
+        <igc-action-strip>
+            <igc-grid-pinning-actions></igc-grid-pinning-actions>
+            <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
+        </igc-action-strip>
+        <igc-row-island auto-generate id="VirtualMachinesRowIsland" key="VirtualMachines"></igc-row-island>
+    </igc-row-island>
+    <igc-paginator per-page="10"></igc-paginator>
+    <igc-action-strip>
+        <igc-grid-pinning-actions></igc-grid-pinning-actions>
+        <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
+    </igc-action-strip>
+  </igc-hierarchical-grid>
+
+  <!-- IgxPivotGridComponent -->
+  <igc-pivot-grid id="pivotgrid1" default-expand-state="true" row-selection="single"></igc-pivot-grid>
+
+  <script src="assets/data/pivot-data.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const clear = (el) => el === 0 || Boolean(el);
+        pivotgrid1.pivotConfiguration = {
+            columns: [
+                {
+                    memberName: 'Country',
+                    enabled: true
+                }
+            ],
+            rows: [
+                {
+                    memberName: 'City',
+                    enabled: true
+                }
+            ],
+            values: [
+                {
+                    member: 'UnitsSold',
+                    aggregate: {
+                        key: 'SUM',
+                        aggregator: (data) => data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => +a + +b) : 0,
+                        label: 'Sum'
+                    },
+                    enabled: true,
+                    styles: {
+                        upFont: (rowData, columnKey) => rowData[columnKey] > 300,
+                        downFont: (rowData, columnKey) => rowData[columnKey] <= 300
+                    },
+                    // dataType: 'currency',
+                    formatter: (value) => value ? value + '$' : undefined
+                },
+                {
+                    member: 'AmountOfSale',
+                    displayName: 'Amount of Sale',
+                    aggregate: {
+                        key: 'SUM',
+                        aggregator: (members, data) => data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0),
+                        label: 'Sum of Sale'
+                    },
+                    aggregateList: [{
+                        key: 'SUM',
+                        aggregator: (members, data) => data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0),
+                        label: 'Sum of Sale'
+                    }, {
+                        key: 'MIN',
+                        aggregator: (members, data) => {
+                            let min = 0;
+                            if (data.length === 1) {
+                                min = data[0].UnitPrice * data[0].UnitsSold;
+                            } else if (data.length > 1) {
+                                const mappedData = data.map(x => x.UnitPrice * x.UnitsSold);
+                                min = mappedData.reduce((a, b) => Math.min(a, b));
+                            }
+                            return min;
+                        },
+                        label: 'Minimum of Sale'
+                    }, {
+                        key: 'MAX',
+                        aggregator: (members, data) => {
+                            let max = 0;
+                            if (data.length === 1) {
+                                max = data[0].UnitPrice * data[0].UnitsSold;
+                            } else if (data.length > 1) {
+                                const mappedData = data.map(x => x.UnitPrice * x.UnitsSold);
+                                max = mappedData.reduce((a, b) => Math.max(a,b));
+                            }
+                            return max;
+                        },
+                        label: 'Maximum of Sale'
+                    }],
+                    enabled: true,
+                    dataType: 'currency',
+                    styles: {
+                        upFont1: (rowData, columnKey) => rowData[columnKey] > 50,
+                        downFont1: (rowData, columnKey) => rowData[columnKey] <= 50
+                    },
+                }
+            ],
+            filters: [
+                {
+                    memberName: 'SellerName',
+                    enabled: true,
+                    //filter: this.filterExpTree
+                }
+            ]
+        };
+    });
+    pivotgrid1.data = pivotData;
+  </script>
+  <!-- END IgxPivotGridComponent -->
+
+  <script type="module">
+    import { html } from "/lit-html.js";
+    // jump around vite import analysis with dynamic import url
+    const hgridData = (await import(`/assets/${'data'}/projects-hgrid.js`)).default;
+    let hgrid = document.getElementById('hgrid1');
+    hgrid.data = hgridData;
+
+    let developersRowIsland = document.getElementById('DevelopersRowIsland');
+    let virtualMachinesRowIsland = document.getElementById('VirtualMachinesRowIsland');
+    virtualMachinesRowIsland.paginatorTemplate = (ctx) => html`
+        <igc-paginator per-page="5"></igc-paginator>
+    `;
+    developersRowIsland.paginatorTemplate = (ctx) => html`
+        <igc-paginator per-page="5"></igc-paginator>
+    `;
+    developersRowIsland.toolbarTemplate = (ctx) => html`
+        <igc-grid-toolbar>
+            <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
+            <igc-grid-toolbar-actions>
+                <igc-grid-toolbar-advanced-filtering></igc-grid-toolbar-advanced-filtering>
+                <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+                <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+                <igc-grid-toolbar-exporter>
+                    <span excelText>Export Excel</span>
+                    <span csvText>Export CSV</span>
+                </igc-grid-toolbar-exporter>
+                <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+            </igc-grid-toolbar-actions>
+        </igc-grid-toolbar>
+    `;
+  </script>
+</body>
+</html>

@@ -475,6 +475,16 @@ describe('igxBanner', () => {
             expect(banner.elementRef.nativeElement.style.display).toEqual('');
             expect(banner.collapsed).toBeTruthy();
         }));
+
+        it('Should apply the appropriate attributes on initialization', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxBannerOneButtonComponent);
+            fixture.detectChanges();
+
+            const panel = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
+            expect(panel).not.toBeNull();
+            expect(panel.attributes.getNamedItem('role').nodeValue).toEqual('status');
+            expect(panel.attributes.getNamedItem('aria-live').nodeValue).toEqual('polite');
+        }));
     });
 
     const getBaseClassElements = <T>(fixture: ComponentFixture<T>) => {

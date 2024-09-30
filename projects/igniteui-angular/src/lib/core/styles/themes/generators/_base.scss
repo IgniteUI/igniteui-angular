@@ -1,4 +1,5 @@
 @use 'sass:list';
+@use 'sass:map';
 @use 'sass:meta';
 @use 'sass:string';
 @use '../schemas' as *;
@@ -72,6 +73,8 @@
     // Stores all excluded component styles
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
+    $theme: map.get($schema, '_meta', 'theme');
+    $variant: map.get($schema, '_meta', 'variant');
 
     @include schema-order($schema);
 
@@ -110,6 +113,13 @@
     @if $roundness {
         #{$scope} {
             --ig-radius-factor: #{$roundness};
+        }
+    }
+
+    @if $theme {
+        #{$scope} {
+            --ig-theme: #{$theme};
+            --ig-theme-variant: #{$variant};
         }
     }
 

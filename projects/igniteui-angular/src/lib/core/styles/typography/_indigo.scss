@@ -1,3 +1,4 @@
+@use '../components/badge/badge-theme' as *;
 @use '../components/banner/banner-theme' as *;
 @use '../components/bottom-nav/bottom-nav-theme' as *;
 @use '../components/button/button-theme' as *;
@@ -18,6 +19,7 @@
 @use '../components/list/list-theme' as *;
 @use '../components/navbar/navbar-theme' as *;
 @use '../components/navdrawer/navdrawer-theme' as *;
+@use '../components/progress/progress-theme' as *;
 @use '../components/radio/radio-theme' as *;
 @use '../components/slider/slider-theme' as *;
 @use '../components/snackbar/snackbar-theme' as *;
@@ -28,15 +30,24 @@
 @use '../components/toast/toast-theme' as *;
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
+@use '../components/label/label-theme' as *;
 
-@mixin typography() {
+@mixin typography($type-scale) {
+    @include badge-typography($categories: (
+        text: 'button',
+    ));
     @include banner-typography();
     @include bottom-nav-typography();
     @include button-typography();
     @include button-group-typography($categories: (
         text: 'body-2',
     ));
-    @include calendar-typography();
+    @include calendar-typography($categories: (
+        header-year: 'body-2',
+        header-date: 'h5',
+        weekday-label: 'body-2',
+        picker-date: 'subtitle-2',
+    ));
     @include card-typography($categories: (
         title: 'h6',
         title-small: 'body-2',
@@ -66,24 +77,49 @@
         helper-text: 'caption',
         input-text: 'body-2'
     ));
+    @include linear-bar-typography();
     @include list-typography($categories: (
         header: 'overline',
-        item: 'subtitle-1',
-        title: 'subtitle-1',
+        item: 'body-2',
+        title: 'body-2',
         subtitle: 'body-2'
     ));
-    @include navbar-typography();
-    @include navdrawer-typography();
+    @include navbar-typography($categories: (
+        title: 'h5',
+    ));
+    @include navdrawer-typography($categories: (
+        item: 'subtitle-2',
+        header: 'overline'
+    ));
     @include radio-typography($categories: (
         label: 'body-2'
     ));
-    @include slider-typography();
+    @include slider-typography($categories: (
+        ticks-label: 'body-2',
+        thumb-label: 'subtitle-2',
+    ));
     @include snackbar-typography();
-    @include switch-typography();
+    @include switch-typography($categories: (
+        label: 'body-2'
+    ));
     @include tabs-typography();
-    @include time-picker-typography();
-    @include stepper-typography();
+    @include time-picker-typography($categories: (
+        header-time-period: 'subtitle-1',
+        header-hour: 'h5',
+        selected-time: 'h6'
+    ));
+    @include stepper-typography($categories: (
+        title: 'body-2',
+        subtitle: 'caption',
+        indicator: 'button',
+        body-content: 'body-2'
+    ));
     @include toast-typography();
-    @include tooltip-typography();
+    @include tooltip-typography($categories: (
+        tooltip-text: 'subtitle-2'
+    ));
     @include tree-typography();
+    @include label-typography($categories: (
+        label: 'caption'
+    ));
 }

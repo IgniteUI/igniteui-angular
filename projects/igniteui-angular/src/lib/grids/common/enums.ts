@@ -81,6 +81,7 @@ export const ColumnDisplayOrder = /*@__PURE__*/mkenum({
 });
 export type ColumnDisplayOrder = (typeof ColumnDisplayOrder)[keyof typeof ColumnDisplayOrder];
 
+/* mustCoerceToInt */
 /**
  * Enumeration representing the possible positions for pinning columns.
  * - Start: Columns are pinned to the start of the grid.
@@ -91,6 +92,7 @@ export enum ColumnPinningPosition {
     End
 }
 
+/* mustCoerceToInt */
 /**
  * Enumeration representing the possible positions for pinning rows.
  * - Top: Rows are pinned to the top of the grid.
@@ -101,6 +103,7 @@ export enum RowPinningPosition {
     Bottom
 }
 
+/* mustCoerceToInt */
 /**
  * Enumeration representing different paging modes for the grid.
  * - Local: The grid will use local data to extract pages during paging.
@@ -111,7 +114,17 @@ export enum GridPagingMode {
     Remote
 }
 
-export enum GridInstanceType {
-    Grid,
-    TreeGrid
-}
+/**
+ * @hidden @internal
+ *
+ * Enumeration representing the possible predefined size options of the grid.
+ * - Small: This is the smallest size with 32px row height. Left and Right paddings are 12px. Minimal column width is 56px.
+ * - Medium: This is the middle size with 40px row height. Left and Right paddings are 16px. Minimal column width is 64px.
+ * - Large:  this is the default Grid size with the lowest intense and row height equal to 50px. Left and Right paddings are 24px. Minimal column width is 80px.
+ */
+export const Size = /*@__PURE__*/mkenum({
+    Small: '1',
+    Medium: '2',
+    Large: '3'
+});
+export type Size = (typeof Size)[keyof typeof Size];

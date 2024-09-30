@@ -79,7 +79,7 @@ Below is the list of all inputs that are specific to the pivot-grid look/behavio
 |Name|Type|Description|
 |--- |--- |--- |
 |`pivotConfiguration`|IPivotConfiguration|Gets/Sets the pivot configuration with all related dimensions and values.|
-|`showPivotConfigurationUI`|boolean|Gets/Sets the pivot configuration ui for the pivot grid - chips and their corresponding containers for row, filter, column dimensions and values|
+|`pivotUI`|IPivotUISettings|Gets/Sets whether to show the ui for the pivot grid configuration - chips and their corresponding containers for row, filter, column dimensions and values. Also enables/disabled row dimension headers.|
 |`defaultExpandState`| boolean | Gets/Sets the default expand state for all rows. |
 
 Note that the pivot-grid extends base igx-grid, so most of the @Input properties make sense and work in the pivot-grid as well. Keep in mind that due to some specifics, not all grid features and @Input properties will work.

@@ -153,10 +153,6 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         return this.addRowUI ? height : null;
     }
 
-    public get cellHeight() {
-        return this.addRowUI && !this.inEditMode ? null : this.grid.rowHeight || 32;
-    }
-
     /**
      * @hidden
      */
@@ -169,6 +165,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     @ViewChildren('igxDirRef', { read: IgxGridForOfDirective })
     public _virtDirRow: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>;
 
+    /* blazorSuppress */
     public get virtDirRow(): IgxGridForOfDirective<ColumnType, ColumnType[]> {
         return this._virtDirRow ? this._virtDirRow.first : null;
     }
@@ -409,6 +406,20 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         } else {
             this.selectionService.selectRowById(this.key, clearSelection, event);
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('contextmenu', ['$event'])
+    public onContextMenu(event: MouseEvent) {
+        const cell = (event.target as HTMLElement).closest('.igx-grid__td');
+        this.grid.contextMenu.emit({
+            row: this,
+            cell: this.cells.find(c => c.nativeElement === cell),
+            event
+        });
     }
 
     /**

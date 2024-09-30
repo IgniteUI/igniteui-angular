@@ -18,10 +18,10 @@ import {
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
-import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition } from '../common/enums';
+import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition, Size } from '../common/enums';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { DisplayDensity } from '../../core/density';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
@@ -94,7 +94,38 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.nativeElement.offsetHeight).toBe(800);
             filteringCells = fixture.debugElement.queryAll(By.css(FILTERING_CELL_CLASS));
             expect(filteringCells.length).toBe(0);
+        }));
 
+        it('should recreate columns when data changes and autoGenerate is true', fakeAsync(() => {
+            hierarchicalGrid.width = '500px';
+            hierarchicalGrid.height = '500px';
+            hierarchicalGrid.autoGenerate = true;
+            fixture.detectChanges();
+
+            const initialData = [
+                { id: 1, name: 'John' },
+                { id: 2, name: 'Jane' }
+            ];
+            hierarchicalGrid.data = initialData;
+            tick();
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.columns.length).toBe(2);
+            expect(hierarchicalGrid.columns[0].field).toBe('id');
+            expect(hierarchicalGrid.columns[1].field).toBe('name');
+
+            const newData = [
+                { id: 1, firstName: 'John', lastName: 'Doe' },
+                { id: 2, firstName: 'Jane', lastName: 'Smith' }
+            ];
+            hierarchicalGrid.data = newData;
+            tick();
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.columns.length).toBe(3);
+            expect(hierarchicalGrid.columns[0].field).toBe('id');
+            expect(hierarchicalGrid.columns[1].field).toBe('firstName');
+            expect(hierarchicalGrid.columns[2].field).toBe('lastName');
         }));
     });
 
@@ -302,6 +333,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             childGrid.columns[0].sortable = true;
             fixture.detectChanges();
+            childGrid.cdr.detectChanges();
 
             const childHeader = GridFunctions.getColumnHeader('ID', fixture, childGrid);
             GridFunctions.clickHeaderSortIcon(childHeader);
@@ -453,8 +485,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childSummaryIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
         }));
 
-        it('should size summaries for parent and child grids correctly when display density is changed and summaryRowHeight is set to falsy value', () => {
-            hierarchicalGrid.displayDensity = DisplayDensity.comfortable;
+        it('should size summaries for parent and child grids correctly when grid size is changed and summaryRowHeight is set to falsy value', () => {
+            setElementSize(hierarchicalGrid.nativeElement, Size.Large)
             fixture.detectChanges();
 
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
@@ -468,23 +500,26 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
             expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
 
-            hierarchicalGrid.displayDensity = DisplayDensity.cosy;
+
+            setElementSize(hierarchicalGrid.nativeElement, Size.Medium)
             hierarchicalGrid.summaryRowHeight = 0;
+            childGrid.summaryRowHeight = 0;
             fixture.detectChanges();
 
             childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
-            tFoot = hierarchicalGrid.nativeElement.querySelector('.igx-grid__tfoot');
+            tFoot = hierarchicalGrid.nativeElement.querySelectorAll('.igx-grid__tfoot')[1];
             childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
 
             expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
             expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
 
-            hierarchicalGrid.displayDensity = DisplayDensity.compact;
+            setElementSize(hierarchicalGrid.nativeElement, Size.Small)
             hierarchicalGrid.summaryRowHeight = 0;
+            childGrid.summaryRowHeight = 0;
             fixture.detectChanges();
 
             childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
-            tFoot = hierarchicalGrid.nativeElement.querySelector('.igx-grid__tfoot');
+            tFoot = hierarchicalGrid.nativeElement.querySelectorAll('.igx-grid__tfoot')[1];
             childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
 
             expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);

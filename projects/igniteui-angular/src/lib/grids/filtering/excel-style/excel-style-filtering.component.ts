@@ -1,5 +1,5 @@
 import {
-    AfterViewChecked,
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -22,8 +22,7 @@ import {
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
-import { Subject, Subscription } from 'rxjs';
-import { DisplayDensity } from '../../../core/density';
+import { Subscription } from 'rxjs';
 import { GridSelectionMode } from '../../common/enums';
 import { IgxFilterItem } from '../../../data-operations/filtering-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode, NgIf, NgClass, DOCUMENT } from '@angular/common';
@@ -73,13 +72,18 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     standalone: true,
     imports: [IgxExcelStyleHeaderComponent, NgIf, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
-export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewChecked, OnDestroy {
+export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewInit, OnDestroy {
 
     /**
      * @hidden @internal
      */
     @HostBinding('class.igx-excel-filter')
     public defaultClass = true;
+
+    @HostBinding('class.igx-excel-filter__sizing')
+    protected get shouldApplySizes(): boolean {
+        return !(this._minHeight || this._maxHeight);
+    }
 
     /**
      * @hidden @internal
@@ -151,7 +155,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     protected defaultExcelFilterOperations: TemplateRef<any>;
 
     /**
-     * An @Input property that sets the column.
+     * Sets the column.
      */
     @Input()
     public set column(value: ColumnType) {
@@ -177,7 +181,6 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             this.subscriptions.add(this.grid.columnVisibilityChanged.subscribe(() => this.detectChanges()));
             this.subscriptions.add(this.grid.sortingExpressionsChange.subscribe(() => this.sortingChanged.emit()));
             this.subscriptions.add(this.grid.filteringExpressionsTreeChange.subscribe(() => this.init()));
-            this.subscriptions.add(this.grid.densityChanged.subscribe(() => this.detectChanges()));
             this.subscriptions.add(this.grid.columnMovingEnd.subscribe(() => this.cdr.markForCheck()));
         }
     }
@@ -215,27 +218,24 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     public isHierarchical = false;
 
     private _minHeight;
-    private _sizeSubscription: Subscription;
-    private _size: string;
-    private _size$ = new Subject();
 
     /**
      * Gets the minimum height.
+     * 
+     * Setting value in template: 
+     * ```ts
+     * [minHeight]="'<number><unit (px|rem|etc..)>'" 
+     * ```
+     * 
+     * Example for setting a value: 
+     * ```ts
+     * [minHeight]="'700px'"
+     * ```
      */
     @Input()
     public get minHeight(): string {
         if (this._minHeight || this._minHeight === 0) {
             return this._minHeight;
-        }
-
-        if (!this.inline) {
-            let minHeight = 645;
-            switch (this.displayDensity) {
-                case DisplayDensity.cosy: minHeight = 465; break;
-                case DisplayDensity.compact: minHeight = 330; break;
-                default: break;
-            }
-            return `${minHeight}px`;
         }
     }
 
@@ -258,22 +258,22 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     /**
      * Gets the maximum height.
+     * 
+     * Setting value in template: 
+     * ```ts
+     * [maxHeight]="'<number><unit (px|rem|etc..)>'" 
+     * ```
+     * 
+     * Example for setting a value: 
+     * ```ts
+     * [maxHeight]="'700px'"
+     * ```
      */
     @Input()
     @HostBinding('style.max-height')
     public get maxHeight(): string {
         if (this._maxHeight) {
             return this._maxHeight;
-        }
-
-        if (!this.inline) {
-            let maxHeight = 775;
-            switch (this.displayDensity) {
-                case DisplayDensity.cosy: maxHeight = 565; break;
-                case DisplayDensity.compact: maxHeight = 405; break;
-                default: break;
-            }
-            return `${maxHeight}px`;
         }
     }
 
@@ -291,34 +291,15 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         return this.column?.grid ?? this.gridAPI;
     }
 
-    /**
-     * @hidden @internal
-     */
-    public get displayDensity() {
-        switch (this._size) {
-            case '1':
-                return DisplayDensity.compact;
-            case '2':
-                return DisplayDensity.cosy;
-            case '3':
-            default:
-                return DisplayDensity.comfortable;
-        }
-    }
-
     constructor(
         cdr: ChangeDetectorRef,
         element: ElementRef<HTMLElement>,
         platform: PlatformUtil,
         @Inject(DOCUMENT)
         private document: any,
-        @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridType) {
+        @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridType,
+    ) {
         super(cdr, element, platform);
-
-        this._sizeSubscription = this._size$.asObservable().subscribe(value => {
-            this._size = value as string;
-            this.cdr.detectChanges();
-        });
     }
 
     /**
@@ -326,29 +307,16 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      */
     public ngOnDestroy(): void {
         this.subscriptions?.unsubscribe();
-        this._sizeSubscription?.unsubscribe();
         delete this.overlayComponentId;
     }
 
-    /** @hidden @internal */
-    public ngAfterViewChecked() {
-        // TODO: Should only check for the value of `--ig-size` in 17.0;
-        const sizeVar = this.grid ? '--grid-size' : '--ig-size';
-
-        if (!this._size) {
-            const cssProp = this.document.defaultView
-                .getComputedStyle(this.element.nativeElement)
-                .getPropertyValue(sizeVar)
-                .trim();
-
-            if (cssProp !== '') {
-                Promise.resolve().then(() => {
-                    this._size$.next(cssProp);
-                    this.cdr.markForCheck();
-                });
-            }
-        }
+    /**
+     * @hidden @internal
+     */
+    public ngAfterViewInit(): void {
+        this.computedStyles = this.document.defaultView.getComputedStyle(this.element.nativeElement);
     }
+
 
     /**
      * @hidden @internal
@@ -435,7 +403,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      * @hidden @internal
      */
     public hide() {
-        this._originalDisplay = document.defaultView.getComputedStyle(this.element.nativeElement).display;
+        this._originalDisplay = this.computedStyles.display;
         this.element.nativeElement.style.display = 'none';
     }
 
@@ -444,6 +412,12 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      */
     public detectChanges() {
         this.cdr.detectChanges();
+    }
+
+    protected computedStyles;
+
+    protected get size(): string {
+        return this.computedStyles?.getPropertyValue('--component-size');
     }
 
     private init() {
@@ -533,37 +507,34 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private renderValues() {
-        this.filterValues = this.generateFilterValues(this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime);
+        this.filterValues = this.generateFilterValues();
         this.generateListData();
     }
 
-    private generateFilterValues(isDateColumn = false) {
-        let filterValues;
+    private generateFilterValues() {
+        const formatValue = (value: any): any => {
+            if (!value) return value;
 
-        if (isDateColumn) {
-            filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
-                if (e.expression.condition.name === 'in') {
-                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
-                        new Date(v).toISOString())];
-                }
-                return [...arr, ...[e.expression.searchVal ? e.expression.searchVal.toISOString() : e.expression.searchVal]];
-            }, []));
-        } else if (this.column.dataType === GridColumnDataType.Time) {
-            filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
-                if (e.expression.condition.name === 'in') {
-                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
-                        typeof v === 'string' ? v : new Date(v).toLocaleTimeString())];
-                }
-                return [...arr, ...[e.expression.searchVal ? e.expression.searchVal.toLocaleTimeString() : e.expression.searchVal]];
-            }, []));
-        } else {
-            filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
-                if (e.expression.condition.name === 'in') {
-                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values())];
-                }
-                return [...arr, ...[e.expression.searchVal]];
-            }, []));
-        }
+            switch (this.column.dataType) {
+                case GridColumnDataType.Date:
+                    return new Date(value).toDateString();
+                case GridColumnDataType.DateTime:
+                    return new Date(value).toISOString();
+                case GridColumnDataType.Time:
+                    return typeof value === 'string' ? value : new Date(value).toLocaleTimeString();
+                default:
+                    return value;
+            }
+        };
+
+        const processExpression = (arr: any[], e: any): any[] => {
+            if (e.expression.condition.name === 'in') {
+                return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v => formatValue(v))];
+            }
+            return [...arr, formatValue(e.expression.searchVal)];
+        };
+
+        const filterValues = new Set<any>(this.expressionsList.reduce(processExpression, []));
 
         return filterValues;
     }
@@ -761,7 +732,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private getExpressionValue(value: any): string {
         if (this.column.dataType === GridColumnDataType.Date) {
-            value = value ? new Date(value).toISOString() : value;
+            value = value ? new Date(value).toDateString() : value;
         } else if (this.column.dataType === GridColumnDataType.DateTime) {
             value = value ? new Date(value).toISOString() : value;
         } else if (this.column.dataType === GridColumnDataType.Time) {

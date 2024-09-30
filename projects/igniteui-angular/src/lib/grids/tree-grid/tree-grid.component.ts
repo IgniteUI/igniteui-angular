@@ -47,14 +47,13 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { CellType, GridServiceType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
-import { GridInstanceType, GridSelectionMode } from '../common/enums';
+import { GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
@@ -64,7 +63,7 @@ import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
 import { IgxTreeGridHierarchizingPipe, IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridAddRowPipe } from './tree-grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
-import { IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
@@ -85,6 +84,21 @@ import { IgxTextHighlightService } from '../../directives/text-highlight/text-hi
 
 let NEXT_ID = 0;
 
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
+/* blazorAdditionalDependency: GridToolbar */
+/* blazorAdditionalDependency: GridToolbarActions */
+/* blazorAdditionalDependency: GridToolbarTitle */
+/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
+/* blazorAdditionalDependency: GridToolbarExporter */
+/* blazorAdditionalDependency: GridToolbarHiding */
+/* blazorAdditionalDependency: GridToolbarPinning */
+/* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
+/* blazorIndirectRender */
 /**
  * **Ignite UI for Angular Tree Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
@@ -155,13 +169,14 @@ let NEXT_ID = 0;
         IgxTreeGridTransactionPipe,
         IgxTreeGridSummaryPipe,
         IgxTreeGridNormalizeRecordsPipe,
-        IgxTreeGridAddRowPipe
-    ],
+        IgxTreeGridAddRowPipe,
+        IgxStringReplacePipe
+],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
     /**
-     * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
+     * Sets the child data key of the `IgxTreeGridComponent`.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" [autoGenerate]="true"></igx-tree-grid>
      * ```
@@ -169,10 +184,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public childDataKey;
+    public childDataKey: string;
 
     /**
-     * An @Input property that sets the foreign key of the `IgxTreeGridComponent`.
+     * Sets the foreign key of the `IgxTreeGridComponent`.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [autoGenerate]="true">
      * </igx-tree-grid>
@@ -181,10 +196,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public foreignKey;
+    public foreignKey: string;
 
     /**
-     * An @Input property that sets the key indicating whether a row has children.
+     * Sets the key indicating whether a row has children.
      * This property is only used for load on demand scenarios.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'"
@@ -196,10 +211,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public hasChildrenKey;
+    public hasChildrenKey: string;
 
     /**
-     * An @Input property indicating whether child records should be deleted when their parent gets deleted.
+     * Sets whether child records should be deleted when their parent gets deleted.
      * By default it is set to true and deletes all children along with the parent.
      * ```html
      * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" cascadeOnDelete="false">
@@ -211,8 +226,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @Input({ transform: booleanAttribute })
     public cascadeOnDelete = true;
 
+    /* csSuppress */
     /**
-     * An @Input property that provides a callback for loading child rows on demand.
+     * Sets a callback for loading child rows on demand.
      * ```html
      * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [loadChildrenOnDemand]="loadChildren">
      * </igx-tree-grid>
@@ -235,7 +251,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public role = 'treegrid';
 
     /**
-     * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
+     * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-tree-grid [id]="'igx-tree-grid-1'"></igx-tree-grid>
      * ```
@@ -292,6 +308,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public rootRecords: ITreeGridRecord[];
 
+    /* blazorSuppress */
     /**
      * Returns a map of all `ITreeGridRecord`s.
      * ```typescript
@@ -314,6 +331,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public processedRootRecords: ITreeGridRecord[];
 
+    /* blazorSuppress */
     /**
      * Returns a map of all processed (filtered and sorted) `ITreeGridRecord`s.
      * ```typescript
@@ -336,8 +354,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
 
+     /* treatAsRef */
     /**
-     * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
+     * Gets/Sets the array of data that populates the component.
      * ```html
      * <igx-tree-grid [data]="Data" [autoGenerate]="true"></igx-tree-grid>
      * ```
@@ -349,16 +368,23 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this._data;
     }
 
+     /* treatAsRef */
     public set data(value: any[] | null) {
+        const oldData = this._data;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (!this._init) {
             this.validation.updateAll(this._data);
         }
-        if (this.shouldGenerate) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
             this.setupColumns();
         }
         this.cdr.markForCheck();
+    }
+
+    /** @hidden @internal */
+    public override get type(): GridType["type"] {
+        return 'tree';
     }
 
     /**
@@ -374,7 +400,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * An @Input property that sets the count of levels to be expanded in the `IgxTreeGridComponent`. By default it is
+     * Sets the count of levels to be expanded in the `IgxTreeGridComponent`. By default it is
      * set to `Infinity` which means all levels would be expanded.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" expansionDepth="1" [autoGenerate]="true"></igx-tree-grid>
@@ -393,7 +419,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * An @Input property that provides a template for the row loading indicator when load on demand is enabled.
+     * Template for the row loading indicator when load on demand is enabled.
      * ```html
      * <ng-template #rowLoadingTemplate>
      *     <igx-icon>loop</igx-icon>
@@ -442,15 +468,34 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
-        super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
-            _zone, document, cdr, differs, viewRef, injector, envInjector, navigation, filteringService, textHighlightService,
-            overlayService, summaryService, _displayDensityOptions, localeId, platform, _diTransactions);
+        super(
+            validationService,
+            selectionService,
+            colResizingService,
+            gridAPI,
+            transactionFactory,
+            _elementRef,
+            _zone,
+            document,
+            cdr,
+            differs,
+            viewRef,
+            injector,
+            envInjector,
+            navigation,
+            filteringService,
+            textHighlightService,
+            overlayService,
+            summaryService,
+            localeId,
+            platform,
+            _diTransactions,
+        );
     }
 
     /**
@@ -592,7 +637,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
     }
 
-
+    /* blazorCSSuppress */
     /**
      * Creates a new `IgxTreeGridRowComponent` with the given data. If a parentRowID is not specified, the newly created
      * row would be added at the root level. Otherwise, it would be added as a child of the row whose primaryKey matches
@@ -915,7 +960,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const rec: any = data ?? this.dataView[dataIndex];
 
         if (this.isSummaryRow(rec)) {
-            row = new IgxSummaryRow(this as any, index, rec.summaries, GridInstanceType.TreeGrid);
+            row = new IgxSummaryRow(this as any, index, rec.summaries);
         }
 
         if (!row && rec) {

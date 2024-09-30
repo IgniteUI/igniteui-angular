@@ -18,7 +18,7 @@ import { ISortingOptions, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvanc
 import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
+import { FormattedValuesSortingStrategy, ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxColumnLayoutComponent } from '../grids/columns/column-layout.component';
@@ -37,11 +37,12 @@ import { IgxGridToolbarActionsComponent } from '../grids/toolbar/common';
 import { IgxGridToolbarHidingComponent } from '../grids/toolbar/grid-toolbar-hiding.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxGridEditingActionsComponent } from '../action-strip/grid-actions/grid-editing-actions.component';
-import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxFilterCellTemplateDirective } from '../grids/columns/templates.directive';
+import { IgxCellEditorTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxFilterCellTemplateDirective } from '../grids/columns/templates.directive';
 import { IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
 import { CellType, ColumnType, IgxAdvancedFilteringDialogComponent } from '../grids/public_api';
 import { IgxGridComponent } from '../grids/grid/public_api';
 import { OverlaySettings } from '../services/public_api';
+import { IgxFocusDirective } from '../directives/focus/focus.directive';
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '',
@@ -765,6 +766,17 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
+        <igx-column width="100px" [field]="'Number'" [header]="'Number'" [filterable]="true" dataType="number"></igx-column>
+    </igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class IgxGridFilteringNumericComponent extends BasicGridComponent {
+    public override data = SampleTestData.numericData();
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
             [filterable]="false" [resizable]="resizable"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
@@ -1175,6 +1187,37 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
+        <igx-grid-toolbar></igx-grid-toolbar>
+        <igx-column *ngFor="let c of columns"
+            [field]="c.field"
+            [header]="c.header"
+            [width]="c.width"
+            [filterable]="true"
+            [dataType]="c.type">
+        </igx-column>
+    </igx-grid>`,
+    standalone: true,
+    imports: [NgFor, IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent]
+})
+export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridComponent {
+    public override data = [];
+    public columns = [];
+
+    public ngOnInit(): void {
+        this.columns = [
+            { field: 'ID', header: 'HeaderID', width: '100px', type: 'number' },
+            { field: 'ProductName', header: 'Product Name', width: '200px', type: 'string'},
+            { field: 'Downloads', header: 'Downloads', width: '100px', type: 'number' },
+            { field: 'Released', header: 'Released', width: '100px', type: 'boolean' },
+            { field: 'ReleaseDate', header: 'Release Date', width: '200px', type: 'date' },
+            { field: 'AnotherField', header: 'Another Field', width: '200px', type: 'string' },
+        ];
+        this.data = SampleTestData.excelFilteringData();
+    }
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
         <igx-grid-toolbar>
             <igx-grid-toolbar-advanced-filtering
                 #filtering
@@ -1235,8 +1278,8 @@ export class IgxGridExternalAdvancedFilteringComponent extends BasicGridComponen
             <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
             <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
         </igx-column-group>
-        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
-        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter"></igx-column>
+        <igx-column width="100px" [field]="'DateTimeCreated'" dataType="dateTime"></igx-column>
     </igx-grid>`,
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
@@ -1735,6 +1778,38 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
 @Component({
     template: `
         <igx-grid [data]="data">
+            <igx-column [editable]="true" field="fullName">
+            </igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'">
+            </igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
+            <igx-column [editable]="true" field="personNumber" [dataType]="'number'">
+            </igx-column>
+        </igx-grid>
+        <ng-template #cellEdit igxCellEditor let-cell="cell">
+            <input name="fullName" [value]="cell.editValue" (change)="onChange($event,cell)"  [igxFocus]="true"/>
+        </ng-template>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxFocusDirective]
+})
+export class CellEditingCustomEditorTestComponent extends BasicGridComponent {
+    @ViewChild('cellEdit', { read: TemplateRef }) public templateCell;
+    public override data = [
+        { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
+        { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
+        { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
+    ];
+
+    public onChange(event: any, cell: CellType) {
+        cell.editValue = event.target.value;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
             <igx-column [editable]="true" field="fullName"></igx-column>
             <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
             <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
@@ -1867,7 +1942,6 @@ export class CollapsibleColumnGroupTestComponent {
         </igx-column-group>
         <igx-column field="ID"></igx-column>
         <igx-column-group header="Country Information">
-
             <igx-column-group header="Region Information">
                 <igx-column  field="Country" [selectable]="false"></igx-column>
                 <igx-column field="Region" ></igx-column>
@@ -2194,6 +2268,42 @@ export class SortOnInitComponent extends GridDeclaredColumnsComponent implements
 
 @Component({
     template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="600px">
+        <igx-column field="ProductID" header="Product ID" [sortable]="true"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [sortable]="true"
+                    [formatter]="formatProductName" [sortStrategy]="sortStrategy"></igx-column>
+        <igx-column field="QuantityPerUnit" header="Quantity Per Unit" [dataType]="'string'" [sortable]="true"
+                    [formatter]="formatQuantity" [sortStrategy]="sortStrategy"></igx-column>
+        <igx-column field="UnitPrice" header="Unit Price" [dataType]="'number'" [sortable]="true"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" [sortable]="true"></igx-column>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class IgxGridFormattedValuesSortingComponent extends BasicGridComponent {
+    public override data = SampleTestData.gridProductData();
+    public sortStrategy = new FormattedValuesSortingStrategy();
+
+    public formatProductName = (value: string) => {
+        if (!value) {
+            return 'a';
+        }
+        const prefix = value.length > 10 ? 'a' : 'b';
+        return `${prefix}-${value}`;
+    }
+
+    public formatQuantity = (value: string) => {
+        if (!value) {
+            return 'c';
+        }
+        const prefix = value.length > 10 ? 'c' : 'd';
+        return `${prefix}-${value}`;
+    }
+}
+
+@Component({
+    template: `
     <igx-grid #grid [data]="data" [height]="'500px'" [width]="'500px'">
         <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
             <igx-column *ngFor='let col of group.columns'
@@ -2441,6 +2551,202 @@ export class GridCurrencySummariesComponent extends BasicGridComponent implement
     }
 }
 
+class CustomSummaryWithNullAndZero {
+    public operate(): IgxSummaryResult[] {
+        const result = [];
+
+        result.push({
+        key: 'total',
+        label: null,
+        summaryResult: 0,
+        });
+
+        result.push({
+        key: 'totalDiscontinued',
+        label: 0,
+        summaryResult: null,
+        });
+        return result;
+    }
+}
+
+class CustomSummaryWithUndefinedZeroAndValidNumber {
+    public operate(): IgxSummaryResult[] {
+        const result = [];
+
+        result.push({
+        key: 'total',
+        label: undefined,
+        summaryResult: 0,
+        });
+
+        result.push({
+        key: 'totalDiscontinued',
+        label: 23,
+        summaryResult: undefined,
+        });
+        return result;
+    }
+}
+
+class CustomSummaryWithUndefinedAndNull {
+    public operate(): IgxSummaryResult[] {
+        const result = [];
+
+        result.push({
+        key: 'total',
+        label: undefined,
+        summaryResult: null,
+        });
+
+        result.push({
+        key: 'totalDiscontinued',
+        label: null,
+        summaryResult: undefined,
+        });
+        return result;
+    }
+}
+
+class DiscontinuedSummary {
+    public operate(data?: any[], allData = [], fieldName = ''): IgxSummaryResult[] {
+        const result = [];
+
+        result.push({
+            key: 'total',
+            label: IgxNumberSummaryOperand.sum(data).toString(),
+            summaryResult: '',
+        });
+
+        result.push({
+            key: 'totalDiscontinued',
+            label: IgxNumberSummaryOperand.sum(
+                allData.filter((rec) => rec['Discontinued']).map((r) => r[fieldName])
+            ).toString(),
+            summaryResult: '',
+        });
+        return result;
+    }
+}
+
+class CustomSummaryWithDate {
+    public operate(): IgxSummaryResult[] {
+        const result = [];
+
+        result.push({
+            key: 'total',
+            label: new Date(2015, 11, 8),
+            summaryResult: null,
+        });
+
+        result.push({
+            key: 'totalDiscontinued',
+            label: null,
+            summaryResult: new Date(2020, 4, 12),
+        });
+        return result;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data">
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+        </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class GridCustomSummaryComponent extends BasicGridComponent implements OnInit {
+    public override data = [];
+    public customSummary = DiscontinuedSummary;
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.gridCustomSummaryData();
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data">
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+        </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class GridCustomSummaryWithNullAndZeroComponent extends BasicGridComponent implements OnInit {
+    public override data = [];
+    public customSummary = CustomSummaryWithNullAndZero;
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.gridCustomSummaryData();
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data">
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+        </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class GridCustomSummaryWithUndefinedZeroAndValidNumberComponent extends BasicGridComponent implements OnInit {
+    public override data = [];
+    public customSummary = CustomSummaryWithUndefinedZeroAndValidNumber;
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.gridCustomSummaryData();
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data">
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+        </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class GridCustomSummaryWithUndefinedAndNullComponent extends BasicGridComponent implements OnInit {
+    public override data = [];
+    public customSummary = CustomSummaryWithUndefinedAndNull;
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.gridCustomSummaryData();
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data">
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+        </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class GridCustomSummaryWithDateComponent extends BasicGridComponent implements OnInit {
+    public override data = [];
+    public customSummary = CustomSummaryWithDate;
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.gridCustomSummaryData();
+    }
+}
 export class ObjectCloneStrategy implements IDataCloneStrategy {
     public clone(data: any): any {
         const clonedData = {};

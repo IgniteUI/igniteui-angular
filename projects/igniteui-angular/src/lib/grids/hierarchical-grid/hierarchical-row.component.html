@@ -1,13 +1,14 @@
 <ng-container *ngTemplateOutlet='addRowUI ? addTemp : defaultTemp'></ng-container>
 <ng-template #defaultExpandedTemplate>
-    <igx-icon [active]='!added'>expand_more</igx-icon>
+    <igx-icon family="default" name="tree_collapse" [active]='!added'></igx-icon>
 </ng-template>
 
 <ng-template #defaultCollapsedTemplate>
-    <igx-icon [active]='!added'>chevron_right</igx-icon>
+    <igx-icon family="default" name="tree_expand" [active]='!added'></igx-icon>
 </ng-template>
 
 <ng-template #defaultEmptyTemplate>
+    <!-- Empty icon used as spacer for size matching-->
     <igx-icon></igx-icon>
 </ng-template>
 
@@ -64,7 +65,6 @@
             [formatter]="col.formatter"
             [intRow]="this"
             [active]="isCellActive(col.visibleIndex)"
-            [style.min-height.px]="cellHeight"
             [rowData]="data"
             [style.min-width]="col.resolvedWidth"
             [style.max-width]="col.resolvedWidth"
@@ -113,7 +113,6 @@
             [active]="isCellActive(col.visibleIndex)"
             [firstPinned]="col.isFirstPinned"
             [lastPinned]="col.isLastPinned"
-            [style.min-height.px]="cellHeight"
             [rowData]="data"
             [style.min-width]="col.resolvedWidth"
             [style.max-width]="col.resolvedWidth"

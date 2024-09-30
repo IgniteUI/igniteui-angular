@@ -5,7 +5,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     ContentChildren,
     CUSTOM_ELEMENTS_SCHEMA,
     DoCheck,
@@ -50,7 +49,7 @@ import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/ex
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxGridHierarchicalPipe, IgxGridHierarchicalPagingPipe } from './hierarchical-grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
-import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
 import { IgxGridSortingPipe, IgxGridFilteringPipe } from '../grid/grid.pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
 import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
@@ -70,6 +69,9 @@ import { IgxActionStripToken } from '../../action-strip/token';
 
 let NEXT_ID = 0;
 
+/**
+ * @hidden @internal
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-child-grid-row',
@@ -126,6 +128,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
+    /* blazorSuppress */
     @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
@@ -134,6 +137,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      */
     public hGrid: IgxHierarchicalGridComponent;
 
+    /* blazorSuppress */
     /**
      * Get a reference to the grid that contains the selected row.
      *
@@ -195,6 +199,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
         this.hGrid = ref.instance;
         this.hGrid.setDataInternal(this.data.childGridsData[this.layout.key]);
+        this.hGrid.nativeElement["__componentRef"] = ref;
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });
@@ -268,6 +273,29 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 }
 
+
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
+/* blazorAdditionalDependency: GridToolbar */
+/* blazorAdditionalDependency: GridToolbarActions */
+/* blazorAdditionalDependency: GridToolbarTitle */
+/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
+/* blazorAdditionalDependency: GridToolbarExporter */
+/* blazorAdditionalDependency: GridToolbarHiding */
+/* blazorAdditionalDependency: GridToolbarPinning */
+/* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
+/* blazorAdditionalDependency: RowIsland */
+/* blazorIndirectRender */
+/**
+ * Hierarchical grid
+ *
+ * @igxModule IgxHierarchicalGridModule
+ *
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid',
@@ -321,8 +349,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxGridRowStylesPipe,
         IgxSummaryDataPipe,
         IgxGridHierarchicalPipe,
-        IgxGridHierarchicalPagingPipe
-    ],
+        IgxGridHierarchicalPagingPipe,
+        IgxStringReplacePipe
+],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirective
@@ -334,6 +363,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @HostBinding('attr.role')
     public role = 'grid';
 
+    /* contentChildren */
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: RowIslandCollection */
+    /* ngQueryListName: childLayoutList */
     /**
      * @hidden
      */
@@ -404,13 +438,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public parent: IgxHierarchicalGridComponent = null;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public childRow: IgxChildGridRowComponent;
 
+    @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
+    protected override actionStripComponents: QueryList<IgxActionStripToken>;
+
     /** @hidden @internal */
-    @ContentChild(IgxActionStripToken, { read: IgxActionStripToken, descendants: false } )
-    public override actionStrip: IgxActionStripToken;
+    public override get actionStrip() {
+        return this.parentIsland ? this.parentIsland.actionStrip : super.actionStrip;
+    }
 
     private _data;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
@@ -435,8 +473,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.h_id = value;
     }
 
+    /* treatAsRef */
     /**
-     * An @Input property that lets you fill the `IgxHierarchicalGridComponent` with an array of data.
+     * Gets/Sets the array of data that populates the component.
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true"></igx-hierarchical-grid>
      * ```
@@ -624,18 +663,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         });
 
         if (this.parent) {
-            this._displayDensity = this.rootGrid.displayDensity;
-            this.summaryService.summaryHeight = 0;
-            this.rootGrid.densityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                this._displayDensity = this.rootGrid.displayDensity;
-                this.summaryService.summaryHeight = 0;
-                this.notifyChanges(true);
-                this.cdr.markForCheck();
-            });
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
         }
-
-        this.actionStrip = this.parentIsland ? this.parentIsland.actionStrip : this.actionStrip;
 
         this.headSelectorsTemplates = this.parentIsland ?
             this.parentIsland.headSelectorsTemplates :
@@ -789,12 +818,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /** @hidden @internal */
     public setDataInternal(value: any) {
+        const oldData = this._data;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (!this._init) {
             this.validation.updateAll(this._data);
         }
-        if (this.shouldGenerate) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
             this.setupColumns();
             this.reflow();
         }
@@ -1087,7 +1117,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     protected resizeNotifyHandler() {
         // do not trigger reflow if element is detached or if it is child grid.
-        if (this.document.contains(this.nativeElement) && !this.parent) {
+        if (this.nativeElement?.isConnected && !this.parent) {
             this.notifyChanges(true);
         }
     }
@@ -1146,7 +1176,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const colLength = this.columns.length;
         const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
         if (topCols.length > 0) {
-            this.updateColumns(topCols);
+            this.initColumns(topCols, (col: IgxColumnComponent) => this.columnInit.emit(col));
             if (recalcColSizes && this.columns.length !== colLength) {
                 this.calculateGridSizes(false);
             }
@@ -1163,4 +1193,3 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         });
     }
 }
-

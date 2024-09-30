@@ -24,7 +24,6 @@ import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.comp
 import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
-import { DisplayDensity } from '../../../core/density';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { isEqual, PlatformUtil } from '../../../core/utils';
@@ -46,6 +45,7 @@ import { IgxInputGroupComponent } from '../../../input-group/input-group.compone
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { NgFor, NgIf, NgTemplateOutlet, NgClass } from '@angular/common';
 import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
+import { Size } from '../../common/enums';
 
 /**
  * @hidden
@@ -80,12 +80,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     public get value(): any {
-        return this.expression ? this.expression.searchVal : null;
+        return this._value;
     }
 
     public set value(val) {
-        if (!val && val !== 0 && this.expression.searchVal) {
+        if (!val && val !== 0 && (this.expression.searchVal || this.expression.searchVal === 0)) {
             this.expression.searchVal = null;
+            this._value = null;
             const index = this.expressionsList.findIndex(item => item.expression === this.expression);
             if (index === 0 && this.expressionsList.length === 1) {
                 this.filteringService.clearFilter(this.column.field);
@@ -97,11 +98,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 return;
             }
         } else {
+            if (val === '') {
+                return;
+            }
             const oldValue = this.expression.searchVal;
             if (isEqual(oldValue, val)) {
                 return;
             }
 
+            this._value = val;
             this.expression.searchVal = DataUtil.parseValue(this.column.dataType, val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
                 this.addExpression(true);
@@ -110,26 +115,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public get displayDensity() {
-        return this.column.grid.displayDensity === DisplayDensity.comfortable ? DisplayDensity.cosy : this.column.grid.displayDensity;
-    }
-
-    protected getIconBtnSize() {
-        return this.column.grid.displayDensity === DisplayDensity.compact ? 1 : 2;
+    protected get filteringElementsSize(): Size {
+        // needed because we want the size of the chips to be either Medium or Small
+        return this.column.grid.gridSize === Size.Large ? Size.Medium : this.column.grid.gridSize;
     }
 
     @HostBinding('class.igx-grid__filtering-row')
     public defaultCSSClass = true;
-
-    @HostBinding('class.igx-grid__filtering-row--compact')
-    public get compactCSSClass() {
-        return this.column.grid.displayDensity === DisplayDensity.compact;
-    }
-
-    @HostBinding('class.igx-grid__filtering-row--cosy')
-    public get cosyCSSClass() {
-        return this.column.grid.displayDensity === DisplayDensity.cosy;
-    }
 
     @ViewChild('defaultFilterUI', { read: TemplateRef, static: true })
     protected defaultFilterUI: TemplateRef<any>;
@@ -206,6 +198,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private isKeyPressed = false;
     private isComposing = false;
     private _cancelChipClick = false;
+    private _value = null;
 
     /** switch to icon buttons when width is below 432px */
     private readonly NARROW_WIDTH_THRESHOLD = 432;
@@ -216,7 +209,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         public filteringService: IgxFilteringService,
         public ref: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef,
-        protected platform: PlatformUtil
+        protected platform: PlatformUtil,
     ) { }
 
     @HostListener('keydown', ['$event'])
@@ -235,6 +228,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         const selectedItem = this.expressionsList.find(expr => expr.isSelected === true);
         if (selectedItem) {
             this.expression = selectedItem.expression;
+            this._value = this.expression.searchVal;
         }
 
         this.filteringService.grid.localeChange
@@ -458,6 +452,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.removeExpression(indexToDeselect, this.expression);
         }
         this.resetExpression();
+        this._value = this.expression.searchVal;
         this.scrollChipsWhenAddingExpression();
     }
 
@@ -631,7 +626,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         item.isSelected = !item.isSelected;
         if (item.isSelected) {
             this.expression = item.expression;
-
+            this._value = this.expression.searchVal;
             this.focusEditElement();
         }
     }

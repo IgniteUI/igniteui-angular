@@ -1,7 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { DisplayDensity } from '../../core/density';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import {
@@ -13,10 +12,12 @@ import {
     IgxTreeGridWithNoForeignKeyComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
-import { GridSelectionMode } from '../common/enums';
+import { GridSelectionMode, Size } from '../common/enums';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { SAFE_DISPOSE_COMP_ID } from '../../test-utils/grid-functions.spec';
+import { setElementSize } from '../../test-utils/helper-utils.spec';
+
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();
@@ -94,12 +95,14 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 expect(grid.rowList.length).toEqual(6);
         });
 
-        it(`should render 11 records if height is 100% and parent container\'s height is unset and display density is changed`, () => {
+        it(`should render 11 records if height is 100% and parent container\'s height is unset and grid size is changed`, async () => {
             grid.height = '100%';
-            fix.componentInstance.density = DisplayDensity.compact;
             fix.detectChanges();
-            // fakeAsync is not needed. Need a second change detection cycle for height changes to be applied.
+            setElementSize(grid.nativeElement, Size.Small);
             fix.detectChanges();
+            await wait(32); // needed because of the throttleTime on the resize observer
+            fix.detectChanges();
+
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeFalsy();
@@ -171,10 +174,18 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         //     element.remove();
         // });
 
-        it('should auto-generate all columns', () => {
+        it('should auto-generate all columns', fakeAsync(() => {
+            grid.data = [];
+            tick();
+            fix.detectChanges();
+
             grid.data = SampleTestData.employeePrimaryForeignKeyTreeData();
+            tick();
+            fix.detectChanges();
+
             grid.primaryKey = 'ID';
             grid.foreignKey = 'ParentID';
+            tick();
             fix.detectChanges();
 
             const expectedColumns = [...Object.keys(grid.data[0])];
@@ -182,11 +193,19 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
             // Verify that records are also rendered by checking the first record cell
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
-        });
+        }));
 
-        it('should auto-generate columns without childDataKey', () => {
+        it('should auto-generate columns without childDataKey', fakeAsync(() => {
+            grid.data = [];
+            tick();
+            fix.detectChanges();
+
+            grid.childDataKey = 'Employees';
+            tick();
+            fix.detectChanges();
+
             grid.data = SampleTestData.employeeAllTypesTreeData();
-            grid.childDataKey ='Employees';
+            tick();
             fix.detectChanges();
 
             const expectedColumns = [...Object.keys(grid.data[0])].filter(col => col !== grid.childDataKey);
@@ -195,7 +214,39 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
             // Verify that records are also rendered by checking the first record cell
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
-        });
+        }));
+
+        it('should recreate columns when data changes and autoGenerate is true', fakeAsync(() => {
+            grid.width = '500px';
+            grid.height = '500px';
+            grid.autoGenerate = true;
+            fix.detectChanges();
+
+            const initialData = [
+                { id: 1, name: 'John' },
+                { id: 2, name: 'Jane' }
+            ];
+            grid.data = initialData;
+            tick();
+            fix.detectChanges();
+
+            expect(grid.columns.length).toBe(2);
+            expect(grid.columns[0].field).toBe('id');
+            expect(grid.columns[1].field).toBe('name');
+
+            const newData = [
+                { id: 1, firstName: 'John', lastName: 'Doe' },
+                { id: 2, firstName: 'Jane', lastName: 'Smith' }
+            ];
+            grid.data = newData;
+            tick();
+            fix.detectChanges();
+
+            expect(grid.columns.length).toBe(3);
+            expect(grid.columns[0].field).toBe('id');
+            expect(grid.columns[1].field).toBe('firstName');
+            expect(grid.columns[2].field).toBe('lastName');
+        }));
     });
 
     describe('Loading Template', () => {

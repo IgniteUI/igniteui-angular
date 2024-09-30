@@ -1,7 +1,7 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DisplayDensity, FilterMode, FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, GridSelectionMode, IChangeCheckboxEventArgs, IGX_GRID_DIRECTIVES, IgxButtonGroupComponent, IgxCheckboxComponent, IgxGridComponent, IgxIconComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilterMode, FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, GridSelectionMode, IChangeCheckboxEventArgs, IGX_GRID_DIRECTIVES, IgxButtonGroupComponent, IgxCheckboxComponent, IgxGridComponent, IgxIconComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 
@@ -14,6 +14,12 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     imports: [NgIf, NgFor, FormsModule, IGX_GRID_DIRECTIVES, IgxCheckboxComponent, IgxButtonGroupComponent, IgxIconComponent]
 })
 export class GridFilteringComponent implements OnInit {
+
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
+    
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
 
@@ -22,18 +28,18 @@ export class GridFilteringComponent implements OnInit {
 
     public data: Array<any>;
     public columns: Array<any>;
-    public displayDensities;
+    public sizes;
     public filterModes;
-    public density: DisplayDensity = 'comfortable';
+    public size = 'large';
     public advancedFilteringTree: FilteringExpressionsTree;
     public selectionMode;
     public filterStrategy = new FormattedValuesFilteringStrategy();
 
     public ngOnInit(): void {
-        this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        this.sizes = [
+            { label: 'large', selected: this.size === 'large', togglable: true },
+            { label: 'medium', selected: this.size === 'medium', togglable: true },
+            { label: 'small', selected: this.size === 'small', togglable: true }
         ];
 
         this.filterModes = [
@@ -99,7 +105,7 @@ export class GridFilteringComponent implements OnInit {
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 
     public selectFilterMode(event) {

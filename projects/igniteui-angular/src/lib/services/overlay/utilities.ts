@@ -1,17 +1,19 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { ComponentRef, ElementRef, NgZone } from '@angular/core';
+import { ComponentRef, ElementRef, Injector, NgZone } from '@angular/core';
 import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 import { AnimationPlayer } from '../animation/animation';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
 
+/* blazorAlternateName: GridHorizontalAlignment */
 export enum HorizontalAlignment {
     Left = -1,
     Center = -0.5,
     Right = 0
 }
 
+/* blazorAlternateName: GridVerticalAlignment */
 export enum VerticalAlignment {
     Top = -1,
     Middle = -0.5,
@@ -47,6 +49,14 @@ export enum AbsolutePosition {
     Center = 'center'
 }
 
+/**
+ * Determines whether to add or set the offset values.
+ */
+export enum OffsetMode {
+    Add,
+    Set
+}
+
 // TODO: make this interface
 export class Point {
     constructor(public x: number, public y: number) { }
@@ -61,12 +71,6 @@ export interface OutOfViewPort {
 }
 
 export interface PositionSettings {
-    /**
-     * @deprecated in version 10.2.0. Set the target point/element in the overlay settings instead
-     *
-     * Attaching target for the component to show
-     */
-    target?: Point | HTMLElement;
     /** Direction in which the component should show */
     horizontalDirection?: HorizontalAlignment;
     /** Direction in which the component should show */
@@ -75,8 +79,10 @@ export interface PositionSettings {
     horizontalStartPoint?: HorizontalAlignment;
     /** Target's starting point */
     verticalStartPoint?: VerticalAlignment;
+    /* blazorSuppress */
     /** Animation applied while overlay opens */
     openAnimation?: AnimationReferenceMetadata;
+    /* blazorSuppress */
     /** Animation applied while overlay closes */
     closeAnimation?: AnimationReferenceMetadata;
     /** The size up to which element may shrink when shown in elastic position strategy */
@@ -96,6 +102,7 @@ export interface OverlaySettings {
     closeOnOutsideClick?: boolean;
     /** Set if the overlay should close when `Esc` key is pressed */
     closeOnEscape?: boolean;
+    /* blazorSuppress */
     /** Set the outlet container to attach the overlay to */
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
@@ -165,6 +172,7 @@ export interface OverlayInfo {
     transformY?: number;
     event?: Event;
     wrapperElement?: HTMLElement;
+    size?: string
 }
 
 /** @hidden */
@@ -180,6 +188,13 @@ export interface ConnectedFit {
     bottom?: number;
     horizontalOffset?: number;
     verticalOffset?: number;
+}
+
+export interface OverlayCreateSettings extends OverlaySettings {
+    /**
+     * An `Injector` instance to add in the created component ref's injectors tree.
+     */
+    injector?: Injector
 }
 
 /** @hidden @internal */

@@ -23,20 +23,20 @@
         @include charts-typography($type-scale);
     }
 
-    @if ($variant == 'material' or $variant == null) {
+    @if $variant == 'material' or not($variant) {
         @include material.typography();
     }
 
-    @if ($variant == 'bootstrap') {
+    @if $variant == 'bootstrap' {
         @include bootstrap.typography($type-scale);
     }
 
-    @if ($variant == 'fluent') {
+    @if $variant == 'fluent' {
         @include fluent.typography();
     }
 
-    @if ($variant == 'indigo') {
-        @include indigo.typography();
+    @if $variant == 'indigo' {
+        @include indigo.typography($type-scale);
     }
 }
 

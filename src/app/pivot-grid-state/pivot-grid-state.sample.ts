@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
     IgxPivotNumericAggregate,
     IgxPivotGridComponent,
@@ -10,7 +11,15 @@ import {
     IGridStateOptions,
     IPivotValue,
     IgxButtonDirective,
-    IgxPivotDataSelectorComponent
+    IgxPivotDataSelectorComponent,
+    IgxPivotRowDimensionHeaderTemplateDirective,
+    IPivotUISettings,
+    PivotRowLayoutType,
+    IgxExcelExporterService,
+    IgxExcelExporterOptions,
+    IgxSwitchComponent,
+    IChangeCheckboxEventArgs,
+    PivotSummaryPosition
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -46,7 +55,8 @@ export class IgxTotalSaleAggregate {
     styleUrls: ['pivot-grid-state.sample.scss'],
     templateUrl: 'pivot-grid-state.sample.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxPivotGridComponent, IgxGridStateDirective, IgxPivotDataSelectorComponent]
+    imports: [FormsModule, IgxButtonDirective, IgxSwitchComponent,
+        IgxPivotGridComponent, IgxGridStateDirective, IgxPivotDataSelectorComponent, IgxPivotRowDimensionHeaderTemplateDirective ]
 })
 export class PivotGridStateSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
@@ -66,19 +76,40 @@ export class PivotGridStateSampleComponent {
         ],
         rows: [
             {
-                memberName: 'AllCities',
-                memberFunction: () => 'All',
+                memberName: 'Country',
+                displayName: 'Country',
                 enabled: true,
+                sortable: true,
+                horizontalSummary: true,
                 childLevel: {
+                    displayName: 'City',
                     memberName: 'City',
-                    enabled: true,
-                    width: '100px'
+                    enabled: true
                 }
             },
             {
-                memberName: 'SellerName',
-                enabled: true
-            }
+                memberName: 'AllProducts',
+                displayName: 'All Products',
+                memberFunction: () => 'All',
+                enabled: true,
+                horizontalSummary: true,
+                childLevel: {
+                    memberName: 'ProductCategory',
+                    displayName: 'Product Category',
+                    enabled: true
+                },
+            },
+            // {
+            //     memberName: 'AllSellers',
+            //     displayName: 'All Sellers',
+            //     memberFunction: () => 'All',
+            //     enabled: true,
+            //     childLevel: {
+            //         displayName: 'Seller Name',
+            //         memberName: 'SellerName',
+            //         enabled: true
+            //     }
+            // },
         ],
         values: [
             {
@@ -123,7 +154,7 @@ export class PivotGridStateSampleComponent {
         },
         {
             ProductCategory: 'Components', UnitPrice: 18.13, SellerName: 'John',
-            Country: 'USA', City: 'New York', Date: '12/08/2021', UnitsSold: 240
+            Country: 'USA', City: 'California', Date: '12/08/2021', UnitsSold: 240
         },
         {
             ProductCategory: 'Clothing', UnitPrice: 68.33, SellerName: 'Larry',
@@ -131,11 +162,19 @@ export class PivotGridStateSampleComponent {
         }];
 
 
+    public pivotUI: IPivotUISettings = {
+        showConfiguration: true,
+        showRowHeaders: true,
+        rowLayout: PivotRowLayoutType.Horizontal,
+        horizontalSummariesPosition: PivotSummaryPosition.Top
+    };
     public options: IGridStateOptions = {
         pivotConfiguration: true
     };
     @ViewChild(IgxGridStateDirective, { static: true })
     public state!: IgxGridStateDirective;
+
+    constructor(private exportService: IgxExcelExporterService) {}
 
     public saveState() {
         const state = this.state.getState() as string;
@@ -160,5 +199,17 @@ export class PivotGridStateSampleComponent {
         }
     }
 
+    public export() {
+        this.exportService.export(this.grid1, new IgxExcelExporterOptions('ExportedFile'));
+    }
 
+    public onShowHeadersToggle(event: IChangeCheckboxEventArgs) {
+        this.pivotUI.showRowHeaders = event.checked;
+        this.grid1.pivotUI = this.pivotUI;
+    }
+
+    public onLayoutToggle(event: IChangeCheckboxEventArgs) {
+        this.pivotUI.rowLayout = event.checked ? PivotRowLayoutType.Horizontal : PivotRowLayoutType.Vertical;
+        this.grid1.pivotUI = this.pivotUI;
+    }
 }

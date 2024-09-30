@@ -23,12 +23,11 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgIf, NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
@@ -128,14 +127,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
 
     /**
-     * An @Input property that sets input placeholder.
+     * Sets input placeholder.
      *
      */
     @Input() public placeholder;
 
 
     /**
-     * An @Input property that disables the `IgxSelectComponent`.
+     * Disables the component.
      * ```html
      * <igx-select [disabled]="'true'"></igx-select>
      * ```
@@ -143,7 +142,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @Input({ transform: booleanAttribute }) public disabled = false;
 
     /**
-     * An @Input property that sets custom OverlaySettings `IgxSelectComponent`.
+     * Sets custom OverlaySettings `IgxSelectComponent`.
      * ```html
      * <igx-select [overlaySettings] = "customOverlaySettings"></igx-select>
      * ```
@@ -282,7 +281,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private _type = null;
 
     /**
-     * An @Input property that gets/sets the component value.
+     * Gets/Sets the component value.
      *
      * ```typescript
      * // get
@@ -310,7 +309,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     /**
-     * An @Input property that sets how the select will be styled.
+     * Sets how the select will be styled.
      * The allowed values are `line`, `box` and `border`. The input-group default is `line`.
      * ```html
      * <igx-select [type]="'box'"></igx-select>
@@ -342,12 +341,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     constructor(
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
+        @Inject(DOCUMENT) document: any,
         selection: IgxSelectionAPIService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
-        private _injector: Injector) {
-        super(elementRef, cdr, selection, _displayDensityOptions);
+        private _injector: Injector,
+    ) {
+        super(elementRef, cdr, document, selection);
     }
 
     //#region ControlValueAccessor
@@ -524,7 +524,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     public override ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
-        super.ngOnInit();
     }
 
     /**
@@ -537,6 +536,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
             this.manageRequiredAsterisk();
         }
+
         this.cdr.detectChanges();
     }
 
@@ -549,6 +549,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (this.inputGroup && this.suffixes?.length > 0) {
             this.inputGroup.suffixes = this.suffixes;
         }
+    }
+
+    /** @hidden @internal */
+    public get toggleIcon(): string {
+        return this.collapsed ? 'input_expand' : 'input_collapse';
     }
 
     /**

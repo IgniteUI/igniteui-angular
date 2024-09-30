@@ -68,12 +68,11 @@
 
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
-
     $box-shadow: map.get((
-        material: null,
-        fluent: null,
-        bootstrap: 0 0 0 rem(3px) var-get($theme, 'background'),
-        indigo-design: null,
+        'material': null,
+        'fluent': null,
+        'bootstrap': 0 0 0 rem(3px) var-get($theme, 'background'),
+        'indigo': null,
     ), $variant);
 
     %igx-avatar-outline {
@@ -87,6 +86,7 @@
 
     %igx-avatar-display {
         @include sizable();
+
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
 
         position: relative;
@@ -104,10 +104,11 @@
 
         igx-icon {
             --component-size: 3;
+
             color: var-get($theme, 'icon-color');
         }
 
-        @if($variant == 'indigo-design'){
+        @if $variant == 'indigo' {
             igx-icon {
                 --component-size: 1;
             }
@@ -115,9 +116,11 @@
 
         &::after {
             box-shadow: none;
+
             @if $bootstrap-theme {
                 @extend %igx-avatar-outline;
             }
+
             transition: box-shadow .15s $in-out-quad;
         }
 

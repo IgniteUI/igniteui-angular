@@ -1,4 +1,4 @@
-import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform } from '@angular/core';
+import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Output, Pipe, PipeTransform } from '@angular/core';
 import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
@@ -9,7 +9,6 @@ import { Subject } from 'rxjs';
 import { editor } from '@igniteui/material-icons-extended';
 import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { PlatformUtil } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
@@ -43,8 +42,8 @@ const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
 const DEFAULT_PIPE_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
-const DEFAULT_DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm:ss tt';
-const DEFAULT_TIME_FORMAT = 'hh:mm:ss tt';
+const DEFAULT_DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm:ss a';
+const DEFAULT_TIME_FORMAT = 'hh:mm:ss a';
 
 @Pipe({
     name: 'fieldFormatter',
@@ -119,7 +118,7 @@ class ExpressionOperandItem extends ExpressionItem {
     standalone: true,
     imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective]
 })
-export class IgxQueryBuilderComponent extends DisplayDensityBase implements AfterViewInit, OnDestroy {
+export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
@@ -140,7 +139,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     }
 
     /**
-     * An @Input property that sets the fields.
+     * Sets the fields.
      */
     @Input()
     public set fields(fields: FieldType[]) {
@@ -164,7 +163,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     }
 
     /**
-     * An @Input property that sets the expression tree.
+     * Sets the expression tree.
      */
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
@@ -399,9 +398,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         protected iconService: IgxIconService,
         protected platform: PlatformUtil,
         protected el: ElementRef,
-        @Inject(LOCALE_ID) protected _localeId: string,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
-        super(_displayDensityOptions, el);
+        @Inject(LOCALE_ID) protected _localeId: string) {
         this.locale = this.locale || this._localeId;
     }
 
@@ -991,31 +988,33 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.currentGroup = groupItem;
     }
 
-    private createExpressionGroupItem(expressionTree: IExpressionTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
-        let groupItem: ExpressionGroupItem;
-        if (expressionTree) {
-            groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
+    private createExpressionGroupItem(expressionTree: IExpressionTree, parent?: ExpressionGroupItem): ExpressionGroupItem | null {
+        if (!expressionTree) {
+            return null;
+        }
 
-            for (const expr of expressionTree.filteringOperands) {
-                if (expr instanceof FilteringExpressionsTree) {
-                    groupItem.children.push(this.createExpressionGroupItem(expr, groupItem));
-                } else {
-                    const filteringExpr = expr as IFilteringExpression;
-                    const exprCopy: IFilteringExpression = {
-                        fieldName: filteringExpr.fieldName,
-                        condition: filteringExpr.condition,
-                        searchVal: filteringExpr.searchVal,
-                        ignoreCase: filteringExpr.ignoreCase
-                    };
+        const groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
+
+        for (const expr of expressionTree.filteringOperands) {
+            if (expr instanceof FilteringExpressionsTree) {
+                const childGroup = this.createExpressionGroupItem(expr, groupItem);
+                if (childGroup) {
+                    groupItem.children.push(childGroup);
+                }
+            } else {
+                const filteringExpr = expr as IFilteringExpression;
+                const field = this.fields.find(el => el.field === filteringExpr.fieldName);
+
+                if (field) {
+                    const exprCopy: IFilteringExpression = { ...filteringExpr };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
-                    const field = this.fields.find(el => el.field === filteringExpr.fieldName);
                     operandItem.fieldLabel = field.label || field.header || field.field;
                     groupItem.children.push(operandItem);
                 }
             }
         }
 
-        return groupItem;
+        return groupItem.children.length > 0 ? groupItem : null;
     }
 
     private createExpressionTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
@@ -1211,7 +1210,10 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
     private registerSVGIcons(): void {
         const editorIcons = editor as any[];
-        editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
+
+        editorIcons.forEach((icon) => {
+            this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
+        });
     }
 }
 

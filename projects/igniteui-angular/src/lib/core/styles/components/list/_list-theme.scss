@@ -244,17 +244,47 @@
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
-    $list-item-padding-inline: (
-        comfortable: rem(16px),
-        cosy: rem(8px),
-        compact: rem(4px)
-    );
+    $theme-padding-block-l: map.get((
+        'material': rem(8px),
+        'fluent': rem(8px),
+        'bootstrap': rem(8px),
+        'indigo': rem(8px),
+    ), $variant);
 
-    $list-item-padding-block: (
-        comfortable: rem(8px),
-        cosy: rem(4px),
-        compact: rem(2px)
-    );
+    $theme-padding-inline-l: map.get((
+        'material': rem(16px),
+        'fluent': rem(16px),
+        'bootstrap': rem(16px),
+        'indigo': rem(16px),
+    ), $variant);
+
+    $theme-padding-block-m: map.get((
+        'material': rem(4px),
+        'fluent': rem(4px),
+        'bootstrap': rem(4px),
+        'indigo': rem(6px),
+    ), $variant);
+
+    $theme-padding-inline-m: map.get((
+        'material': rem(8px),
+        'fluent': rem(8px),
+        'bootstrap': rem(8px),
+        'indigo': rem(12px),
+    ), $variant);
+
+    $theme-padding-block-s: map.get((
+        'material': rem(2px),
+        'fluent': rem(2px),
+        'bootstrap': rem(2px),
+        'indigo': rem(4px),
+    ), $variant);
+
+    $theme-padding-inline-s: map.get((
+        'material': rem(4px),
+        'fluent': rem(4px),
+        'bootstrap': rem(4px),
+        'indigo': rem(8px),
+    ), $variant);
 
     $list-icon-margin-inline: (
         comfortable: rem(16px),
@@ -294,9 +324,17 @@
         overflow-x: hidden;
         z-index: 0;
         border-radius: var-get($theme, 'border-radius');
-        
+
         &:focus-visible {
             outline-style: none;
+        }
+
+        @if $variant == 'indigo' {
+            gap: rem(4px);
+        }
+
+        igx-avatar {
+            --ig-size: #{if($variant == 'indigo', 2, 1)};
         }
     }
 
@@ -318,9 +356,11 @@
         align-items: center;
         color: var-get($theme, 'header-text-color');
         background: var-get($theme, 'header-background');
-        padding-inline: pad-inline(map.get($list-item-padding-inline, 'compact'), map.get($list-item-padding-inline, 'cosy'), map.get($list-item-padding-inline, 'comfortable'));
-        padding-block: pad-block(map.get($list-item-padding-block, 'compact'), map.get($list-item-padding-block, 'cosy'), map.get($list-item-padding-block, 'comfortable'));
         user-select: none;
+
+        @if $variant == 'indigo' {
+            min-height: sizable(rem(24), rem(28), rem(32));
+        }
     }
 
     %igx-list-item-base {
@@ -358,7 +398,8 @@
             %igx-list__item-actions {
                 color: var-get($theme, 'item-action-color-hover');
 
-                igx-icon {
+                igx-icon,
+                igc-icon {
                     color: var-get($theme, 'item-action-color-hover')
                 }
             }
@@ -366,7 +407,8 @@
             %igx-list__item-thumbnail {
                 color: var-get($theme, 'item-thumbnail-color-hover');
 
-                igx-icon {
+                igx-icon,
+                igc-icon {
                     color: var-get($theme, 'item-thumbnail-color-hover')
                 }
             }
@@ -392,6 +434,10 @@
         flex-direction: column;
         flex: 1 0 0%;
 
+        @if $variant == 'indigo' {
+            gap: rem(2px);
+        }
+
         &:empty {
             display: none;
         }
@@ -412,21 +458,30 @@
         justify-content: center;
         color: var-get($theme, 'item-action-color');
 
-        > * {
-            --component-size: var(--list-size);
-            margin-inline-start: pad-inline(map.get($list-actions-margin, 'compact'), map.get($list-actions-margin, 'cosy'), map.get($list-actions-margin, 'comfortable'));
+        @if $variant == 'indigo' {
+            gap: sizable(rem(4), rem(6), rem(8));
         }
 
         &:empty {
             display: none;
         }
 
+        > * {
+            --component-size: #{if($variant == 'indigo', 2, var(--list-size))};
+
+            @if $variant != 'indigo' {
+                margin-inline-start: pad-inline(map.get($list-actions-margin, 'compact'), map.get($list-actions-margin, 'cosy'), map.get($list-actions-margin, 'comfortable'));
+            }
+        }
+
+        igc-icon,
         igx-icon {
             color: var-get($theme, 'item-action-color')
         }
 
         [dir='rtl'] & {
-            igx-icon {
+            igx-icon,
+            igc-icon {
                 transform: scaleX(-1);
             }
         }
@@ -437,33 +492,39 @@
         display: flex;
         align-items: center;
         position: relative;
-        padding-inline: pad-inline(map.get($list-item-padding-inline, 'compact'), map.get($list-item-padding-inline, 'cosy'), map.get($list-item-padding-inline, 'comfortable'));
-        padding-block: pad-block(map.get($list-item-padding-block, 'compact'), map.get($list-item-padding-block, 'cosy'), map.get($list-item-padding-block, 'comfortable'));
         border-radius: var-get($theme, 'item-border-radius');
         background: inherit;
         z-index: 2;
+
+        @if $variant == 'indigo' {
+            gap: rem(8px);
+        }
+    }
+
+    %igx-list-header,
+    %igx-list-item-content {
+        padding-inline: pad-inline($theme-padding-inline-s, $theme-padding-inline-m, $theme-padding-inline-l);
+        padding-block: pad-block($theme-padding-block-s, $theme-padding-block-m, $theme-padding-block-l);
     }
 
     %igx-list__item-thumbnail {
         display: flex;
         align-items: center;
         justify-content: center;
-        align-self: flex-start;
+        align-self: if($variant == 'indigo', center, flex-start);
         padding: 0;
         color: var-get($theme, 'item-thumbnail-color');
+        gap: rem(8px);
 
-        > igx-icon {
-            --component-size: var(--list-size);
-            margin-inline-end: pad-inline(map.get($list-icon-margin-inline, 'compact'), map.get($list-icon-margin-inline, 'cosy'), map.get($list-icon-margin-inline, 'comfortable'));
-            margin-inline-start: 0;
-            margin-block: pad-block(map.get($list-icon-margin-block, 'compact'), map.get($list-icon-margin-block, 'cosy'), map.get($list-icon-margin-block, 'comfortable'));
-        }
 
-        > igx-avatar {
-            --ig-size: 1;
+        > igx-icon,
+        > igc-icon {
+            --component-size: #{if($variant == 'indigo', 2, var(--list-size))};
 
-            > igx-icon {
-                margin: 0;
+            @if $variant != 'indigo' {
+                margin-inline-end: pad-inline(map.get($list-icon-margin-inline, 'compact'), map.get($list-icon-margin-inline, 'cosy'), map.get($list-icon-margin-inline, 'comfortable'));
+                margin-inline-start: 0;
+                margin-block: pad-block(map.get($list-icon-margin-block, 'compact'), map.get($list-icon-margin-block, 'cosy'), map.get($list-icon-margin-block, 'comfortable'));
             }
         }
 
@@ -474,12 +535,16 @@
 
     %igx-list__item-thumbnail:not(:empty) + %igx-list__item-lines {
         --component-size: var(--list-size);
-        margin: 0;
-        margin-inline-start: pad-inline(map.get($list-line-margin, 'compact'), map.get($list-line-margin, 'cosy'), map.get($list-line-margin, 'comfortable'));
+
+        @if $variant != 'indigo' {
+            margin-inline-start: pad-inline(map.get($list-line-margin, 'compact'), map.get($list-line-margin, 'cosy'), map.get($list-line-margin, 'comfortable'));
+        }
     }
 
-    %igx-list__item-lines + %igx-list__item-actions {
-        margin-inline-start: rem(8px);
+    @if $variant != 'indigo' {
+        %igx-list__item-lines + %igx-list__item-actions {
+            margin-inline-start: rem(8px);
+        }
     }
 
     %igx-list-item-content--active {
@@ -494,15 +559,16 @@
         %igx-list__item-actions {
             color: var-get($theme, 'item-action-color-active');
 
-            igx-icon {
-                color: var-get($theme, 'item-action-color-active')
-            }
+            igx-icon,
+            igc-icon {
+                color: var-get($theme, 'item-action-color-active')}
         }
 
         %igx-list__item-thumbnail {
             color: var-get($theme, 'item-thumbnail-color-active');
 
-            igx-icon {
+            igx-icon,
+            igc-icon {
                 color: var-get($theme, 'item-thumbnail-color-active')
             }
         }

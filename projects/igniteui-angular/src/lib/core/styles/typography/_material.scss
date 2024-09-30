@@ -1,3 +1,4 @@
+@use '../components/badge/badge-theme' as *;
 @use '../components/banner/banner-theme' as *;
 @use '../components/bottom-nav/bottom-nav-theme' as *;
 @use '../components/button/button-theme' as *;
@@ -18,6 +19,7 @@
 @use '../components/list/list-theme' as *;
 @use '../components/navbar/navbar-theme' as *;
 @use '../components/navdrawer/navdrawer-theme' as *;
+@use '../components/progress/progress-theme' as *;
 @use '../components/radio/radio-theme' as *;
 @use '../components/slider/slider-theme' as *;
 @use '../components/snackbar/snackbar-theme' as *;
@@ -28,8 +30,10 @@
 @use '../components/toast/toast-theme' as *;
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
+@use '../components/label/label-theme' as *;
 
 @mixin typography() {
+    @include badge-typography();
     @include banner-typography();
     @include bottom-nav-typography();
     @include button-typography();
@@ -47,6 +51,7 @@
     @include excel-filtering-typography();
     @include icon-button-typography();
     @include input-group-typography();
+    @include linear-bar-typography();
     @include list-typography();
     @include navbar-typography();
     @include navdrawer-typography();
@@ -60,4 +65,5 @@
     @include toast-typography();
     @include tooltip-typography();
     @include tree-typography();
+    @include label-typography();
 }

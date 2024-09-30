@@ -1,9 +1,12 @@
 import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
+
+/** @hidden @internal */
+export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
 
 /**
  * @hidden
@@ -22,7 +25,7 @@ export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T)
  *
  * @hidden @internal
  */
-export const getResizeObserver = () => window.ResizeObserver;
+export const getResizeObserver = () => globalThis.window?.ResizeObserver;
 
 /**
  * @hidden
@@ -115,6 +118,9 @@ export const cloneValue = (value: any): any => {
         const result = {};
 
         for (const key of Object.keys(value)) {
+            if (key === "externalObject") {
+                continue;
+            }
             result[key] = cloneValue(value[key]);
         }
         return result;
@@ -227,15 +233,6 @@ export const isEqual = (obj1, obj2): boolean => {
 };
 
 /**
- * Checks if provided variable is the value NaN
- *
- * @param value Value to check
- * @returns true if provided variable is NaN
- * @hidden
- */
- export const isNaNvalue = (value: any): boolean => isNaN(value) && value !== undefined && typeof value !== 'string';
-
-/**
  * Utility service taking care of various utility functions such as
  * detecting browser features, general cross browser DOM manipulation, etc.
  *
@@ -245,10 +242,15 @@ export const isEqual = (obj1, obj2): boolean => {
 export class PlatformUtil {
     public isBrowser: boolean = isPlatformBrowser(this.platformId);
     public isIOS = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
+    public isSafari = this.isBrowser && /Safari[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isFirefox = this.isBrowser && /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
         /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
+    public browserVersion = this.isBrowser ? parseFloat(navigator.userAgent.match(/Version\/([\d.]+)/)?.at(1)) : 0;
+
+    /** @hidden @internal */
+    public isElements = inject(ELEMENTS_TOKEN, { optional: true });
 
     public KEYMAP = mkenum({
         ENTER: 'Enter',
@@ -401,6 +403,7 @@ export interface IBaseEventArgs {
 }
 
 export interface CancelableBrowserEventArgs extends CancelableEventArgs {
+    /* blazorSuppress */
     /** Browser event */
     event?: Event;
 }
@@ -573,11 +576,66 @@ export const formatCurrency = new CurrencyPipe(undefined).transform;
 
 /** Converts pixel values to their rem counterparts for a base value */
 export const rem = (value: number | string) => {
-    const base = parseFloat(getComputedStyle(globalThis.document?.documentElement).getPropertyValue('--ig-base-font-size'))
+    const base = parseFloat(globalThis.window?.getComputedStyle(globalThis.document?.documentElement).getPropertyValue('--ig-base-font-size'))
     return Number(value) / base;
 }
 
 /** Get the size of the component as derived from the CSS size variable */
 export function getComponentSize(el: Element) {
     return globalThis.window?.getComputedStyle(el).getPropertyValue('--component-size');
+}
+
+/** Get the first item in an array */
+export function first<T>(arr: T[]) {
+    return arr.at(0) as T;
+}
+
+/** Get the last item in an array */
+export function last<T>(arr: T[]) {
+    return arr.at(-1) as T;
+}
+
+/** Calculates the modulo of two numbers, ensuring a non-negative result. */
+export function modulo(n: number, d: number) {
+    return ((n % d) + d) % d;
+}
+
+/**
+ * Splits an array into chunks of length `size` and returns a generator
+ * yielding each chunk.
+ * The last chunk may contain less than `size` elements.
+ *
+ * @example
+ * ```typescript
+ * const arr = [0,1,2,3,4,5,6,7,8,9];
+ *
+ * Array.from(chunk(arr, 2)) // [[0, 1], [2, 3], [4, 5], [6, 7], [8, 9]]
+ * Array.from(chunk(arr, 3)) // [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
+ * Array.from(chunk([], 3)) // []
+ * Array.from(chunk(arr, -3)) // Error
+ * ```
+ */
+export function* intoChunks<T>(arr: T[], size: number) {
+  if (size < 1) {
+    throw new Error('size must be an integer >= 1');
+  }
+  for (let i = 0; i < arr.length; i += size) {
+    yield arr.slice(i, i + size);
+  }
+}
+
+/**
+ * @param size
+ * @returns string that represents the --component-size default value
+ */
+export function getComponentCssSizeVar(size: string) {
+    switch (size) {
+        case "1":
+            return 'var(--ig-size, var(--ig-size-small))';
+        case "2":
+            return 'var(--ig-size, var(--ig-size-medium))';
+        case "3":
+        default:
+            return 'var(--ig-size, var(--ig-size-large))';
+    }
 }

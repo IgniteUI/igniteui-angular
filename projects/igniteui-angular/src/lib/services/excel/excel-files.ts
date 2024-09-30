@@ -151,7 +151,10 @@ export class WorksheetFile implements IExcelFile {
                 const pivotGridColumns = this.pivotGridRowHeadersMap.get(this.rowIndex) ?? "";
                 this.sheetData += `<row r="${this.rowIndex}"${this.rowHeight}>${pivotGridColumns}`;
 
-                const allowedColumns = owner.columns.filter(c => c.headerType !== ExportHeaderType.RowHeader && c.headerType !== ExportHeaderType.MultiRowHeader);
+                const allowedColumns = owner.columns.filter(c => c.headerType !== ExportHeaderType.RowHeader &&
+                     c.headerType !== ExportHeaderType.MultiRowHeader &&
+                     c.headerType !== ExportHeaderType.PivotRowHeader &&
+                     c.headerType !== ExportHeaderType.PivotMergedHeader);
 
                 headersForLevel = hasMultiColumnHeader ?
                     allowedColumns
@@ -454,9 +457,33 @@ export class WorksheetFile implements IExcelFile {
                 summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, level, targetCol);
 
                 if (!summaryFunc) {
-                    const cellStr = `${cellValue.label}: ${cellValue.value}`;
-                    const savedValue = dictionary.saveValue(cellStr, false);
-                    return `<c r="${columnName}" t="s" s="1"><v>${savedValue}</v></c>`;
+                    let summaryValue;
+                    const label = cellValue.label?.toString();
+                    const value = cellValue.value?.toString();
+
+                    if (label && value) {
+                        summaryValue = `${cellValue.label}: ${cellValue.value}`;
+                    } else if (label) {
+                        summaryValue = cellValue.label;
+                    } else if (value) {
+                        summaryValue = cellValue.value;
+                    }
+
+                    const savedValue = dictionary.saveValue(summaryValue, false);
+                    const isSavedAsString = savedValue !== -1;
+                    const isSavedAsDate = !isSavedAsString && summaryValue instanceof Date;
+
+                    if (isSavedAsDate) {
+                        const timeZoneOffset = summaryValue.getTimezoneOffset() * 60000;
+                        const isoString = (new Date(summaryValue - timeZoneOffset)).toISOString();
+                        summaryValue = isoString.substring(0, isoString.indexOf('.'));
+                    }
+
+                    const resolvedValue = isSavedAsString ? savedValue : summaryValue;
+                    const type = isSavedAsString ? `t="s"` : isSavedAsDate ? `t="d"` : '';
+                    const style = isSavedAsDate ? `s="2"` : `s="1"`;
+
+                    return `<c r="${columnName}" ${type} ${style}><v>${resolvedValue}</v></c>`;
                 }
 
                 return `<c r="${columnName}"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
@@ -533,7 +560,7 @@ export class WorksheetFile implements IExcelFile {
         let result = '';
         const currencyInfo = this.currencyStyleMap.get(col.currencyCode);
 
-        switch(type.toLowerCase()) {
+        switch(type?.toString().toLowerCase()) {
             case "count":
                 return `"Count: "&amp;_xlfn.COUNTIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel})`
             case "min":
@@ -605,16 +632,18 @@ export class WorksheetFile implements IExcelFile {
         for (const currentCol of headersForLevel) {
             const spanLength = isVertical ? currentCol.rowSpan : currentCol.columnSpan;
 
-            if (currentCol.level === i) {
+            if (currentCol.level === i && currentCol.headerType !== ExportHeaderType.PivotMergedHeader) {
                 let columnCoordinate;
                 const column = isVertical
                     ? this.rowIndex
                     : startValue + (owner.maxRowLevel ?? 0)
 
-                const rowCoordinate = isVertical
+                let rowCoordinate = isVertical
                     ? startValue + owner.maxLevel + 2
                     : this.rowIndex
-
+                if (currentCol.headerType === ExportHeaderType.PivotRowHeader) {
+                    rowCoordinate = startValue + 1;
+                }
                 const columnValue = dictionary.saveValue(currentCol.header, true, false);
 
                 columnCoordinate = (currentCol.field === GRID_LEVEL_COL
@@ -666,12 +695,17 @@ export class WorksheetFile implements IExcelFile {
                                 : this.sheetData += str
                         }
                     }
+                    if ((currentCol.headerType === ExportHeaderType.RowHeader || currentCol.headerType === ExportHeaderType.MultiRowHeader) &&
+                        currentCol.columnSpan && currentCol.columnSpan > 1 ) {
+                        columnCoordinate = ExcelStrings.getExcelColumn(column + currentCol.columnSpan - 1) + (rowCoordinate + spanLength - 1);
+                    }
 
                     this.mergeCellStr += `${columnCoordinate}" />`;
                 }
             }
-
-            startValue += spanLength;
+            if (currentCol.headerType !== ExportHeaderType.PivotRowHeader) {
+                startValue += spanLength;
+            }
         }
     }
 }

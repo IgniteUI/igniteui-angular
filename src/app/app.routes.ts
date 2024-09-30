@@ -64,7 +64,7 @@ import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
-import { DisplayDensityDropDownComponent } from './drop-down/display-density/display-density.sample';
+import { DropDownSizeSampleComponent } from './drop-down/drop-down-size/drop-down-size.sample';
 import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
@@ -137,6 +137,10 @@ import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-sta
 import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 import { GridExportComponent } from './grid-export/grid-export.sample';
 import { DividerComponent } from './divider/divider.component';
+import { MonthPickerSampleComponent } from './month-picker/month-picker.sample';
+import { GridDocManagerSampleComponent } from './docmanager-grid/docmanager-grid.sample';
+import { HoundComponent } from './hound/hound.component';
+import { LabelSampleComponent } from "./label/label.sample";
 
 export const appRoutes: Routes = [
     {
@@ -222,7 +226,7 @@ export const appRoutes: Routes = [
     },
     {
         path: 'dropDown-density',
-        component: DisplayDensityDropDownComponent
+        component: DropDownSizeSampleComponent
     },
     {
         path: 'virtual-dropdown',
@@ -231,6 +235,10 @@ export const appRoutes: Routes = [
     {
         path: 'drag-drop',
         component: DragDropSampleComponent
+    },
+    {
+        path: 'hound',
+        component: HoundComponent
     },
     {
         path: 'icon',
@@ -267,6 +275,10 @@ export const appRoutes: Routes = [
     {
         path: 'mask',
         component: MaskSampleComponent
+    },
+    {
+        path: 'monthPicker',
+        component: MonthPickerSampleComponent
     },
     {
         path: 'date-time-editor',
@@ -597,6 +609,10 @@ export const appRoutes: Routes = [
         component: GridAutoSizeSampleComponent
     },
     {
+        path: 'gridDocManager',
+        component: GridDocManagerSampleComponent
+    },
+    {
         path: 'gridFlex',
         component: GridFlexSampleComponent
     },
@@ -659,5 +675,9 @@ export const appRoutes: Routes = [
     {
         path: 'stepper',
         component: StepperSampleComponent
+    },
+    {
+        path: 'labelDirective',
+        component: LabelSampleComponent
     }
 ];

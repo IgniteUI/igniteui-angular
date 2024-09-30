@@ -13,6 +13,14 @@
 
         @extend %navdrawer-display !optional;
 
+        @include m(pinned) {
+            @extend %navdrawer-display-pinned !optional;
+        }
+
+        @include mx(mini, pinned) {
+            @extend %navdrawer-display-mini-pinned !optional;
+        }
+
         // Main aside element
         @include e(aside) {
             @extend %aside !optional;
@@ -84,6 +92,10 @@
 
         @include e(item, header) {
             @extend %item--header !optional;
+        }
+
+        @include e(item, disabled) {
+            @extend %item--disabled !optional;
         }
 
         @include m(disable-animation) {

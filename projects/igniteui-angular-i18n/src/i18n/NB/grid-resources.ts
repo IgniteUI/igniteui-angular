@@ -113,6 +113,7 @@ const GridResourceStringsNB_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Løsne alle',
     igx_grid_row_edit_btn_done: 'Ferdig',
     igx_grid_row_edit_btn_cancel: 'Avbryt',
+    igx_grid_row_edit_text: 'Du har {0} endringer i denne raden og {1} skjulte kolonner',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrer kolonneliste...',
     igx_grid_toolbar_pinning_button_tooltip: 'Åpne rullegardinmenyen for kolonnefester',
     igx_grid_toolbar_hiding_button_tooltip: 'Åpne kolonne som skjuler rullegardinmenyen',

@@ -6,6 +6,7 @@ import { GridSelectionMode, IgxColumnComponent, IgxGridComponent, IgxGridToolbar
 @Component({
     selector: 'app-grid-performance-sample',
     templateUrl: 'grid-performance.sample.html',
+    styleUrls: ['grid-performance.sample.scss'],
     standalone: true,
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgFor, IgxColumnComponent]
 })
@@ -20,7 +21,7 @@ export class GridPerformanceSampleComponent implements OnInit {
     public selectionMode;
 
     public ngOnInit() {
-        this.selectionMode = GridSelectionMode.none;
+        this.selectionMode = GridSelectionMode.multiple;
         const cols = [];
         cols.push({
             field: 'ID',

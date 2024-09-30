@@ -7,6 +7,11 @@ import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { NgIf, AsyncPipe } from '@angular/common';
 
+/* blazorElement */
+/* wcElementTag: igc-grid-toolbar-pinning */
+/* singleInstanceIdentifier */
+/* blazorIndirectRender */
+/* jsonAPIManageItemInMarkup */
 /**
  * Provides a pre-configured column pinning component for the grid.
  *

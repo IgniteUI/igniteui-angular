@@ -10,6 +10,7 @@ import { GridPagingMode, IgxButtonDirective, IgxCardComponent, IgxCardContentDir
     selector: 'app-grid-remote-paging-sample',
     templateUrl: 'grid-remote-paging.sample.html',
     standalone: true,
+    providers: [RemoteService],
     imports: [IgxGridComponent, IgxColumnComponent, NgIf, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, AsyncPipe]
 })
 export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, OnDestroy {

@@ -259,12 +259,6 @@
 
     $variant: map.get($theme, '_meta', 'variant');
 
-    $chip-height: (
-        comfortable: rem(32px),
-        cosy: rem(24px),
-        compact: rem(20px)
-    );
-
     $chip-padding: (
         comfortable: rem(12px),
         cosy: rem(6px),
@@ -272,17 +266,17 @@
     );
 
     $box-shadow-focus: map.get((
-        material: null,
-        fluent: null,
-        bootstrap: 0 0 0 rem(2px) var-get($theme, 'focus-outline-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color')
+        'material': null,
+        'fluent': null,
+        'bootstrap': 0 0 0 rem(2px) var-get($theme, 'focus-outline-color'),
+        'indigo': 0 0 0 rem(3px) var-get($theme, 'focus-outline-color')
     ), $variant);
 
     $box-shadow-focus-selected: map.get((
-        material: null,
-        fluent: null,
-        bootstrap: 0 0 0 rem(2px) var-get($theme, 'focus-selected-outline-color'),
-        indigo-design: 0 0 0 rem(3px) var-get($theme, 'focus-selected-outline-color')
+        'material': null,
+        'fluent': null,
+        'bootstrap': 0 0 0 rem(2px) var-get($theme, 'focus-selected-outline-color'),
+        'indigo': 0 0 0 rem(3px) var-get($theme, 'focus-selected-outline-color')
     ), $variant);
 
     $border-size: rem(1px);
@@ -355,7 +349,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             &:focus:hover {
                 %igx-chip__item {
                     color: var-get($theme, 'hover-text-color');
@@ -418,8 +412,6 @@
             height: sizable(rem(14px), rem(18px), rem(24px));
         }
 
-        @extend  %igx-chip-custom-icon;
-
         igx-prefix,
         [igxPrefix] {
             @extend %igx-chip__prefix;
@@ -451,7 +443,7 @@
     %igx-chip%igx-chip--primary {
         &:hover {
             %igx-chip__item {
-                @if $variant == 'indigo-design' {
+                @if $variant == 'indigo' {
                     color: contrast-color($color: 'primary', $variant: 400);
                     background: color($color: 'primary', $variant: 400);
                     border-color: color($color: 'primary', $variant: 400);
@@ -469,7 +461,7 @@
                 background: color($color: 'primary', $variant: 800);
                 border-color: color($color: 'primary', $variant: 800);
 
-                @if $variant == 'indigo-design' {
+                @if $variant == 'indigo' {
                     color: contrast-color($color: 'primary', $variant: 500);
                     background: color($color: 'primary', $variant: 500);
                     border-color: color($color: 'primary', $variant: 500);
@@ -492,7 +484,7 @@
     %igx-chip%igx-chip--info {
         &:hover {
             %igx-chip__item {
-                @if $variant == 'indigo-design' {
+                @if $variant == 'indigo' {
                     color: contrast-color($color: 'info', $variant: 400);
                     background: color($color: 'info', $variant: 400);
                     border-color: color($color: 'info', $variant: 400);
@@ -510,7 +502,7 @@
                 background: color($color: 'info', $variant: 800);
                 border-color: color($color: 'info', $variant: 800);
 
-                @if $variant == 'indigo-design' {
+                @if $variant == 'indigo' {
                     color: contrast-color($color: 'info', $variant: 500);
                     background: color($color: 'info', $variant: 500);
                     border-color: color($color: 'info', $variant: 500);
@@ -537,7 +529,7 @@
     %igx-chip%igx-chip--success {
         &:hover {
             %igx-chip__item {
-                @if $variant == 'indigo-design' {
+                @if $variant == 'indigo' {
                     color: contrast-color($color: 'success', $variant: 400);
                     background: color($color: 'success', $variant: 400);
                     border-color: color($color: 'success', $variant: 400);
@@ -555,7 +547,7 @@
                 background: color($color: 'success', $variant: 800);
                 border-color: color($color: 'success', $variant: 800);
 
-                @if $variant == 'indigo-design' {
+                @if $variant == 'indigo' {
                     color: contrast-color($color: 'success', $variant: 500);
                     background: color($color: 'success', $variant: 500);
                     border-color: color($color: 'success', $variant: 500);
@@ -578,7 +570,7 @@
     %igx-chip%igx-chip--warning {
         &:hover {
             %igx-chip__item {
-                @if $variant == 'indigo-design' {
+                @if $variant == 'indigo' {
                     color: contrast-color($color: 'warn', $variant: 400);
                     background: color($color: 'warn', $variant: 400);
                     border-color: color($color: 'warn', $variant: 400);
@@ -596,7 +588,7 @@
                 background: color($color: 'warn', $variant: 800);
                 border-color: color($color: 'warn', $variant: 800);
 
-                @if $variant == 'indigo-design' {
+                @if $variant == 'indigo' {
                     color: contrast-color($color: 'warn', $variant: 500);
                     background: color($color: 'warn', $variant: 500);
                     border-color: color($color: 'warn', $variant: 500);
@@ -623,7 +615,7 @@
     %igx-chip%igx-chip--danger {
         &:hover {
             %igx-chip__item {
-                @if $variant == 'indigo-design' {
+                @if $variant == 'indigo' {
                     color: contrast-color($color: 'error', $variant: 400);
                     background: color($color: 'error', $variant: 400);
                     border-color: color($color: 'error', $variant: 400);
@@ -641,7 +633,7 @@
                 background: color($color: 'error', $variant: 800);
                 border-color: color($color: 'error', $variant: 800);
 
-                @if $variant == 'indigo-design' {
+                @if $variant == 'indigo' {
                     color: contrast-color($color: 'error', $variant: 500);
                     background: color($color: 'error', $variant: 500);
                     border-color: color($color: 'error', $variant: 500);
@@ -701,15 +693,6 @@
 
         &:empty {
             display: none;
-        }
-    }
-
-    %igx-chip-custom-icon {
-        igx-icon {
-            width: sizable(rem(16px), rem(20px), rem(20px));
-            height: sizable(rem(16px), rem(20px), rem(20px));
-            font-size: sizable(rem(16px), rem(20px), rem(20px));
-            outline-style: none;
         }
     }
 
@@ -799,7 +782,7 @@
         pointer-events: none;
 
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             &%igx-chip--primary {
                 %igx-chip__item {
                     color: contrast-color($color: 'primary', $variant: 400);

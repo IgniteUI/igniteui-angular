@@ -12,9 +12,9 @@
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
-///
 /// @param {Color} $background [null] - The navbar background color.
 /// @param {Color} $text-color [null] - The navbar text color.
+/// @param {Color} $border-color [null] - The navbar border color.
 /// @param {box-shadow} $shadow [null] - The shadow of the navbar.
 /// @param {Color} $idle-icon-color [null] - The navbar idle icon color.
 /// @param {Color} $hover-icon-color [null] - The navbar hover icon color.
@@ -27,8 +27,8 @@
 @function navbar-theme(
     $schema: $light-material-schema,
     $elevations: null,
-
     $background: null,
+    $border-color: null,
     $text-color: null,
     $shadow: null,
     $idle-icon-color: null,
@@ -71,6 +71,7 @@
     @return extend($theme, (
         name: $name,
         background: $background,
+        border-color: $border-color,
         text-color: $text-color,
         idle-icon-color: $idle-icon-color,
         hover-icon-color: $hover-icon-color,
@@ -91,14 +92,13 @@
     $navbar-padding: rem(16px);
     $navbar-title-fz: rem(18px, 16px);
     $navbar-title-lh: rem(18px, 16px);
-    $navbar-title-margin: 0;
 
     %igx-navbar-display {
         display: flex;
         position: relative;
         flex-flow: row nowrap;
         align-items: center;
-        justify-content: space-between;
+        gap: rem(16px);
         width: 100%;
         min-height: rem(56px);
         max-height: rem(128px);
@@ -108,9 +108,44 @@
         box-shadow: var-get($theme, 'shadow');
         z-index: 4;
         overflow: hidden;
+        border-bottom: rem(1px) solid var-get($theme, 'border-color');
+
+        igx-avatar {
+            --ig-size: 1;
+        }
+
+        @if $variant == 'material' {
+            igx-input-group {
+                --ig-size: 1;
+            }
+        }
 
         @if $variant == 'bootstrap' {
-            border-bottom: rem(1px) solid var-get($theme, 'border-color');
+            igc-input,
+            igc-icon-button {
+                --ig-size: 1;
+            }
+
+            [igxButton],
+            igc-button,
+            [igxIconButton],
+            igx-input-group {
+                --ig-size: 2;
+            }
+        }
+
+        @if $variant == 'fluent' {
+            igx-input-group {
+                --ig-size: 2;
+            }
+        }
+
+        @if $variant == 'indigo' {
+            igx-avatar,
+            igc-icon-button,
+            [igxIconButton] {
+                --ig-size: 2;
+            }
         }
     }
 
@@ -121,47 +156,70 @@
 
     %igx-navbar-title {
         @include line-clamp(4, true, true);
-        margin: $navbar-title-margin;
+        margin: 0;
         flex-grow: 1;
         user-select: text;
         display: flex;
         flex-direction: row;
     }
 
-    %igx-navbar-bundle {
-        @extend %igx-navbar-part;
-        user-select: none;
-
-        > * + * {
-            margin-inline-start: rem(16px);
-        }
-    }
-
-    %igx-navbar-icon-display,
-    %igx-navbar-part {
-        igx-icon,
-        [igxIconButton] {
-            --component-size: 3;
-
-            cursor: pointer;
-            color: var-get($theme, 'idle-icon-color');
-            transition: color .15s $out-quad;
-
-            &:hover {
-                color: var-get($theme, 'hover-icon-color');
+    %igx-navbar-left {
+        &:not(:empty) {
+            @if $variant != 'indigo' {
+                margin-inline-end: rem(16px)
             }
         }
     }
 
-    %igx-navbar-left {
-        @extend %igx-navbar-bundle;
-        @extend %igx-navbar-icon-display;
+    %igx-navbar-middle {
         flex-grow: 1;
     }
 
     %igx-navbar-right {
-        @extend %igx-navbar-bundle;
-        @extend %igx-navbar-icon-display;
+        gap: if($variant == 'indigo', rem(8px), rem(16px));
+    }
+
+    %igx-navbar-left,
+    %igx-navbar-right {
+        &:empty {
+            display: none;
+        }
+    }
+
+    %igx-navbar-left,
+    %igx-navbar-middle,
+    %igx-navbar-right {
+        display: flex;
+        align-items: center;
+
+        igx-icon,
+        igc-icon {
+            --component-size: 3;
+            cursor: pointer;
+        }
+
+        > igx-icon,
+        > igc-icon {
+            transition: color .15s $out-quad;
+            color: var-get($theme, 'idle-icon-color');
+
+            &:hover {
+                color: var-get($theme, 'hover-icon-color');
+            }
+
+            user-select: none;
+        }
+
+        @if $variant == 'indigo' {
+            igx-icon,
+            igc-icon {
+                --component-size: 2;
+
+                padding: rem(6px);
+                width: auto;
+                height: auto;
+            }
+        }
     }
 
     igx-navbar-action,

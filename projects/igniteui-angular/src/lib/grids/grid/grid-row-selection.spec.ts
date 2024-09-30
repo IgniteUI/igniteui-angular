@@ -2,7 +2,7 @@ import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angul
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxBooleanFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     RowSelectionComponent,
@@ -287,6 +287,141 @@ describe('IgxGrid - Row Selection #grid', () => {
                 owner: grid
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+        });
+
+        it('Should display the newly selected rows in correct order', () => {
+            const firstRow = grid.gridAPI.get_row_by_index(0);
+            const secondRow = grid.gridAPI.get_row_by_index(1);
+            const thirdRow = grid.gridAPI.get_row_by_index(2);
+            spyOn(grid.rowSelectionChanging, 'emit').and.callThrough();
+
+            GridSelectionFunctions.clickRowCheckbox(thirdRow);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
+            let args: IRowSelectionEventArgs = {
+                added: [gridData[2]],
+                cancel: false,
+                event: jasmine.anything() as any,
+                newSelection: [gridData[2]],
+                oldSelection: [],
+                removed: [],
+                allRowsSelected: false,
+                owner: grid
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
+            args = {
+                added: [gridData[0]],
+                cancel: false,
+                event: jasmine.anything() as any,
+                newSelection: [gridData[2], gridData[0]],
+                oldSelection: [gridData[2]],
+                removed: [],
+                allRowsSelected: false,
+                owner: grid
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(3);
+            args = {
+                added: [gridData[1]],
+                cancel: false,
+                event: jasmine.anything() as any,
+                newSelection: [gridData[2], gridData[0], gridData[1]],
+                oldSelection: [gridData[2], gridData[0]],
+                removed: [],
+                allRowsSelected: false,
+                owner: grid
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+
+            expect(grid.selectedRows.length).toEqual(3);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyRowSelected(thirdRow);
+        });
+
+        it('Should maintain selected rows through data change and new selection', async () => {
+            const firstRow = grid.gridAPI.get_row_by_index(0);
+            const secondRow = grid.gridAPI.get_row_by_index(1);
+            spyOn(grid.rowSelectionChanging, 'emit');
+
+            // second detection needed to enable scroll after first runs ngAfterViewInit...
+            fix.detectChanges();
+
+            GridFunctions.scrollTop(grid, 500);
+            await wait(SCROLL_DEBOUNCETIME);
+            fix.detectChanges();
+
+            let row15 = grid.gridAPI.get_row_by_index(14);
+            const row15Data = row15.data;
+            GridSelectionFunctions.clickRowCheckbox(row15);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
+            let args: IRowSelectionEventArgs = {
+                added: [gridData[14]],
+                cancel: false,
+                event: jasmine.anything() as any,
+                newSelection: [gridData[14]],
+                oldSelection: [],
+                removed: [],
+                allRowsSelected: false,
+                owner: grid
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+
+            // halve data:
+            grid.data = grid.data.slice(0, 10);
+            fix.detectChanges();
+
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
+            // row 15 no longer in data, expect partial:
+            args = {
+                ...args,
+                added: [gridData[0]],
+                newSelection: [{ [grid.primaryKey]: row15Data[grid.primaryKey]}, gridData[0]],
+                oldSelection: [{ [grid.primaryKey]: row15Data[grid.primaryKey]}],
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+
+            // restore data:
+            grid.data = SampleTestData.foodProductDataExtended();
+            fix.detectChanges();
+
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
+            fix.detectChanges();
+
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(3);
+            args = {
+                ...args,
+                added: [gridData[1]],
+                newSelection: [gridData[14], gridData[0], gridData[1]],
+                oldSelection: [gridData[14], gridData[0]],
+            };
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
+
+            expect(grid.selectedRows.length).toEqual(3);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+
+            GridFunctions.scrollTop(grid, 500);
+            await wait(SCROLL_DEBOUNCETIME);
+            fix.detectChanges();
+
+            row15 = grid.gridAPI.get_row_by_index(14);
+            GridSelectionFunctions.verifyRowSelected(row15);
         });
 
         it('Should select the row with mouse click ', () => {
@@ -2003,6 +2138,27 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true, false);
             expect(grid.selectedRows.length).toBe(grid.data.length);
+        });
+
+        it('Should deselect updated row with header checkbox when batchEditing is enbaled and filtering is applied', () => {
+            grid.batchEditing = true;
+            grid.selectRows([1]);
+            grid.filter('InStock', null, IgxBooleanFilteringOperand.instance().condition('true'));
+            fix.detectChanges();
+
+            const row = grid.gridAPI.get_row_by_index(0);
+            GridSelectionFunctions.verifyRowSelected(row);
+
+            grid.updateRow({ ProductID: 1, ProductName: 'test', InStock: true, UnitsInStock: 1, OrderDate: new Date('2019-03-01') }, 1);
+            fix.detectChanges();
+
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyRowSelected(row);
+
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyRowSelected(row, false);
         });
     });
 

@@ -10,11 +10,11 @@ import { IBaseSearchInfo } from '../../directives/text-highlight/text-highlight.
 
 /** The event arguments when data from a grid is being copied. */
 export interface IGridClipboardEvent {
-    /** `data` can be of any type and referes to the data that is being copied/stored to the clipboard */
+    /** `data` can be of any type and refers to the data that is being copied/stored to the clipboard */
     data: any[];
     /**
-     * `cancel` returns whether an external event has interepted the copying
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface
+     * `cancel` returns whether an external event has intercepted the copying
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
@@ -23,8 +23,9 @@ export interface IGridClipboardEvent {
 export interface IGridCellEventArgs extends IBaseEventArgs {
     /** Represents the grid cell that triggered the event. */
     cell: CellType;
+    /* blazorCSSuppress */
     /**
-     * Represents the original event that ocurred
+     * Represents the original event that occurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
      */
     event: Event;
@@ -35,22 +36,23 @@ export interface IGridRowEventArgs extends IBaseEventArgs {
     /** Represents the grid row that triggered the event. */
     row: RowType;
     /**
-     * Represents the original event that ocurred
+     * Represents the original event that occurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
      */
     event: Event;
 }
 
+/** Represents an event argument for the grid contextMenu output */
+export interface IGridContextMenuEventArgs extends IGridCellEventArgs, IGridRowEventArgs {}
+
 /** Represents event arguments related to grid editing completion. */
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
-     * @deprecated since version 17.1.0
-     * Use rowKey instead
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     rowID: any;
     /**
-     * @deprecated since version 17.1.0
-     * Use rowKey instead
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     primaryKey: any;
     rowKey: any;
@@ -66,7 +68,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     rowData: any;
     /**
      * Represents the previous (before editing) value of the edited cell.
-     * It's used when the event has been stoped/exited.
+     * It's used when the event has been stopped/exited.
      */
     oldValue: any;
     /**
@@ -75,6 +77,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
      * When there is no `newValue` and the event has ended, the value of the cell returns to the `oldValue`
      */
     newValue?: any;
+    /* blazorSuppress */
     /**
      * Optional
      * Represents the original event, that has triggered the edit
@@ -92,7 +95,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     owner?: GridType;
     /**
      * Optional
-     * Indicates if the editing cosists of adding a new row
+     * Indicates if the editing consists of adding a new row
      */
     isAddRow?: boolean;
     /**
@@ -150,7 +153,7 @@ export interface IPinColumnEventArgs extends IBaseEventArgs {
     insertAtIndex: number;
     /**
      * Returns the actual pin state of the column.
-     * If pinning/unpinning is succesfull, value of `isPinned` will change accordingly when read in the "-ing" and "-ed" event.
+     * If pinning/unpinning is successful, value of `isPinned` will change accordingly when read in the "-ing" and "-ed" event.
      */
     isPinned: boolean;
 }
@@ -159,7 +162,7 @@ export interface IPinColumnEventArgs extends IBaseEventArgs {
  * The event arguments before a column's pin state is changed.
  * `insertAtIndex`specifies at which index in the pinned/unpinned area the column is inserted.
  * Can be changed in the `columnPin` event.
- * `isPinned` returns the actual pin state of the column. When pinning/unpinning is succesfull,
+ * `isPinned` returns the actual pin state of the column. When pinning/unpinning is successful,
  * the value of `isPinned` will change accordingly when read in the "-ing" and "-ed" event.
  */
 export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, CancelableEventArgs {
@@ -171,19 +174,18 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
  */
 export interface IRowDataEventArgs extends IBaseEventArgs {
     /**
-     * @deprecated since version 17.1.0
-     * Use`rowData` instead
+     * @deprecated since version 17.1.0. Use the `rowData` property instead.
      */
     data: any;
     rowData: any
     /**
-     * @deprecated since version 17.1.0
      * Represents the unique key, the row can be associated with.
      * Available if `primaryKey` exists
-     * use rowKey instead
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     primaryKey: any;
     rowKey: any;
+    /* blazorSuppress */
     /** Represents the grid instance that owns the edit event. */
     owner: GridType;
 }
@@ -191,7 +193,7 @@ export interface IRowDataEventArgs extends IBaseEventArgs {
 
 /** The event arguments when a column is being resized */
 export interface IColumnResizeEventArgs extends IBaseEventArgs {
-    /** Represents the informantion of the column that is being resized */
+    /** Represents the information of the column that is being resized */
     column: ColumnType;
     /** Represents the old width of the column before the resizing */
     prevWidth: string;
@@ -227,6 +229,7 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
      * that have been previously selected, but are no longer
      */
     readonly removed: any[];
+    /* blazorSuppress */
     /**
      * Represents the original event, that has triggered the selection change
      * selecting, deselecting
@@ -237,7 +240,7 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
 }
 
 /**
- * The event arguments when the selection state of a column is being chaged
+ * The event arguments when the selection state of a column is being changed
  * The event is cancelable
  */
 export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -255,6 +258,7 @@ export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEve
      * Whenever a column has been deselected, the array is "refreshed" with the columns, that have been previously selected, but are no longer
      */
     readonly removed: string[];
+    /* blazorSuppress */
     /**
      * Represents the original event, that has triggered the selection change
      * selecting, deselecting
@@ -267,6 +271,8 @@ export interface ISearchInfo extends IBaseSearchInfo {
     activeMatchIndex: number;
 }
 
+/* jsonAPIPlainObject */
+/*  tsPlainInterface */
 /**
  * Represents the arguments for the grid toolbar export event.
  * It provides information about the grid instance, exporter service, export options,
@@ -289,8 +295,8 @@ export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
      */
     options: IgxExporterOptionsBase;
     /**
-     * `cancel` returns whether the event has been interepted and stopped
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface
+     * `cancel` returns whether the event has been intercepted and stopped
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
@@ -299,7 +305,7 @@ export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
 export interface IColumnMovingStartEventArgs extends IBaseEventArgs {
     /**
      * Represents the column that is being moved.
-     * The `ColumnType` contains the informatoin (the grid it belongs to, css data, settings, etc.) of the column in its properties
+     * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     source: ColumnType;
 }
@@ -308,12 +314,12 @@ export interface IColumnMovingStartEventArgs extends IBaseEventArgs {
 export interface IColumnMovingEventArgs extends IBaseEventArgs {
     /**
      * Represents the column that is being moved.
-     * The `ColumnType` contains the informatoin (the grid it belongs to, css data, settings, etc.) of the column in its properties
+     * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     source: ColumnType;
     /**
-     * `cancel` returns whether the event has been interepted and stopped
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface
+     * `cancel` returns whether the event has been intercepted and stopped
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
@@ -322,17 +328,17 @@ export interface IColumnMovingEventArgs extends IBaseEventArgs {
 export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
     /**
      * The source of the event represents the column that is being moved.
-     * The `ColumnType` contains the informatoin (the grid it belongs to, css data, settings, etc.) of the column in its properties
+     * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     source: ColumnType;
     /**
      * The target of the event represents the column, the source is being moved to.
-     * The `ColumnType` contains the informatoin (the grid it belongs to, css data, settings, etc.) of the column in its properties
+     * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     target: ColumnType;
     /**
-     * `cancel` returns whether the event has been interepted and stopped
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface
+     * `cancel` returns whether the event has been intercepted and stopped
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
@@ -346,22 +352,25 @@ export interface IGridKeydownEventArgs extends IBaseEventArgs {
     targetType: GridKeydownTargetType;
     /** Represents the information and details of the object itself */
     target: any;
-    /** Represents the original event, that occured. */
+    /* blazorCSSuppress */
+    /** Represents the original event, that occurred. */
     event: Event;
     /**
      * The event is cancelable
-     * `cancel` returns whether the event has been interepted and stopped
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface
+     * `cancel` returns whether the event has been intercepted and stopped
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
 
 /** The event is triggered when getting the current position of a certain cell */
 export interface ICellPosition {
+    /* doNotStringify */
     /** It returns the position (index) of the row, the cell is in */
     rowIndex: number;
+    /* doNotStringify */
     /**
-     * It returns the position (index) of the colunm, the cell is in
+     * It returns the position (index) of the column, the cell is in
      * Counts only the visible (non hidden) columns
      */
     visibleColumnIndex: number;
@@ -373,6 +382,7 @@ export interface IRowDragEndEventArgs extends IBaseEventArgs {
     dragDirective: any;
     /** Represents the information of the row that is being dragged. */
     dragData: RowType;
+    /* blazorSuppress */
     /** Represents the HTML element itself */
     dragElement: HTMLElement;
     /** `animation` returns whether the event is animated */
@@ -388,16 +398,16 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
     dragDirective: any;
     /** Represents the information of the row that is being dragged. */
     dragData: RowType;
+    /* blazorSuppress */
     /** Represents the HTML element itself */
     dragElement: HTMLElement;
 }
 
-/** Рepresents event arguments related to the row's expansion state being changed in a grid */
+/** Represents event arguments related to the row's expansion state being changed in a grid */
 export interface IRowToggleEventArgs extends IBaseEventArgs {
     /**
      * Represents the ID of the row that emitted the event (which state is changed)
-     * @deprecated since version 17.1.0
-     * Use `rowKey` instead
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     rowID: any;
     rowKey: any;
@@ -406,15 +416,16 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
      * Indicating whether the row is being expanded (true) or collapsed (false)
      */
     expanded: boolean;
+    /* blazorSuppress */
     /**
      * Optional
-     * Represents the original event, that has triggered the expantion/collapse
+     * Represents the original event, that has triggered the expansion/collapse
      */
     event?: Event;
     /**
      * The event is cancelable
-     * `cancel` returns whether the event has been interepted and stopped
-     * If the value becomes "true", it returns/exits from the method, instanciating the interface
+     * `cancel` returns whether the event has been intercepted and stopped
+     * If the value becomes "true", it returns/exits from the method, instantiating the interface
      */
     cancel: boolean;
 }
@@ -425,10 +436,9 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
  */
 export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
     /**
-     * @deprecated since version 17.1.0
-     * Use `rowKey` instead
      * The ID of the row, that was pinned/unpinned.
      * ID is either the primaryKey value or the data record instance.
+     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
      */
     readonly rowID: any;
     readonly rowKey: any;
@@ -445,6 +455,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
 export interface IGridScrollEventArgs extends IBaseEventArgs {
     /** The scroll direction - vertical or horizontal. */
     direction: string;
+    /* blazorCSSuppress */
     /** The original browser scroll event. */
     event: Event;
     /** The new scroll position */
@@ -462,7 +473,7 @@ export interface IColumnToggledEventArgs extends IBaseEventArgs {
     checked: boolean;
 }
 
-/** Emmited when the active node is changed */
+/** Emitted when the active node is changed */
 export interface IActiveNodeChangeEventArgs extends IBaseEventArgs {
     /** Represents the row index of the active node */
     row: number;
@@ -494,11 +505,19 @@ export interface ISortingEventArgs extends IBaseEventArgs, CancelableEventArgs {
     sortingExpressions?: ISortingExpression | Array<ISortingExpression>;
     /**
      * Optional
-     * Represents the gouping expressions applied to the grid.
+     * Represents the grouping expressions applied to the grid.
      * It can be a single grouping expression or an array of them
      * The expression contains information like the sorting expression and criteria by which the elements will be grouped
      */
     groupingExpressions?: IGroupingExpression | Array<IGroupingExpression>;
+}
+
+/* blazorInclude */
+/** @hidden @internal */
+export interface IColumnsAutoGeneratedEventArgs extends IBaseEventArgs {
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: ColumnCollection */
+    columns?: ColumnType[]
 }
 
 /**
@@ -518,7 +537,7 @@ export interface IColumnVisibilityChangedEventArgs extends IBaseEventArgs {
     /** Represents the column the event originated from */
     column: any;
     /**
-     * The new hidden state that the column will have, if operation is succesfull.
+     * The new hidden state that the column will have, if operation is successful.
      * Will be `true` when hiding and `false` when showing.
      */
     newValue: boolean;

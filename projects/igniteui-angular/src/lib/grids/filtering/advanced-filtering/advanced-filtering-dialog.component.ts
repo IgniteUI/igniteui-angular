@@ -7,7 +7,6 @@ import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
 import { PlatformUtil } from '../../../core/utils';
 import { FieldType, GridType } from '../../common/grid.interface';
-import { DisplayDensity } from '../../../core/density';
 import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
 import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
 import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
@@ -79,14 +78,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     /**
-     * @hidden @internal
-     */
-    public get displayDensity(): DisplayDensity {
-        return this.grid.displayDensity;
-    }
-
-    /**
-     * An @Input property that sets the grid.
+     * Assigns the grid instance corresponding to the advanced filtering dialog instance.
      */
     @Input()
     public set grid(grid: GridType) {

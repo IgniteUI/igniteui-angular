@@ -1,9 +1,21 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy, booleanAttribute } from '@angular/core';
-import { IgxIconService } from './icon.service';
-import { first, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { SafeHtml } from '@angular/platform-browser';
-import { NgTemplateOutlet } from '@angular/common';
+import {
+    Component,
+    ElementRef,
+    HostBinding,
+    Input,
+    OnInit,
+    OnDestroy,
+    OnChanges,
+    ChangeDetectorRef,
+    booleanAttribute,
+} from "@angular/core";
+import { IgxIconService } from "./icon.service";
+import type { IconReference } from "./types";
+import { filter, takeUntil } from "rxjs/operators";
+import { Subject } from "rxjs";
+import { SafeHtml } from "@angular/platform-browser";
+import { NgIf, NgTemplateOutlet } from "@angular/common";
+import { ThemeService } from "../services/theme/theme.service";
 
 /**
  * Icon provides a way to include material icons to markup
@@ -28,20 +40,32 @@ import { NgTemplateOutlet } from '@angular/common';
  * ```
  */
 @Component({
-    selector: 'igx-icon',
-    templateUrl: 'icon.component.html',
+    selector: "igx-icon",
+    templateUrl: "icon.component.html",
     standalone: true,
-    imports: [NgTemplateOutlet]
+    imports: [NgTemplateOutlet, NgIf],
 })
-export class IgxIconComponent implements OnInit, OnDestroy {
-    /**
-     *  This allows you to change the value of `class.igx-icon`. By default it's `igx-icon`.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-icon')
-    public cssClass = 'igx-icon';
+export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
+    private _iconRef: IconReference;
+    private _destroy$ = new Subject<void>();
+    private _userClasses = new Set<string>();
+    private _iconClasses = new Set<string>();
+
+    @HostBinding("class")
+    protected get elementClasses() {
+        const icon = Array.from(this._iconClasses).join(" ");
+        const user = Array.from(this._userClasses).join(" ");
+
+        return `igx-icon ${icon} ${user}`.trim();
+    }
+
+    private addIconClass(className: string) {
+        this._iconClasses.add(className);
+    }
+
+    private clearIconClasses() {
+        this._iconClasses.clear();
+    }
 
     /**
      *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
@@ -56,8 +80,25 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    @HostBinding('attr.aria-hidden')
+    @HostBinding("attr.aria-hidden")
     public ariaHidden = true;
+
+    /**
+     *  An accessor that returns inactive property.
+     *
+     * @example
+     * ```typescript
+     * @ViewChild("MyIcon")
+     * public icon: IgxIconComponent;
+     * ngAfterViewInit() {
+     *    let iconActive = this.icon.getInactive;
+     * }
+     * ```
+     */
+    @HostBinding("class.igx-icon--inactive")
+    public get getInactive(): boolean {
+        return !this.active;
+    }
 
     /**
      * An @Input property that sets the value of the `family`. By default it's "material".
@@ -67,8 +108,19 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * <igx-icon family="material">settings</igx-icon>
      * ```
      */
-    @Input('family')
+    @Input("family")
     public family: string;
+
+    /**
+     *  Set the `name` of the icon.
+     *
+     *  @example
+     * ```html
+     * <igx-icon name="contains" family="filter-icons"></igx-icon>
+     * ```
+     */
+    @Input("name")
+    public name: string;
 
     /**
      * An @Input property that allows you to disable the `active` property. By default it's applied.
@@ -78,44 +130,27 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * <igx-icon [active]="false">settings</igx-icon>
      * ```
      */
-    @Input({ alias: 'active', transform: booleanAttribute })
+    @Input({ alias: "active", transform: booleanAttribute })
     public active = true;
-
-    /**
-     *  An @Input property that allows you to set the `name` of the icon.
-     *
-     *  @example
-     * ```html
-     * <igx-icon name="contains" family="filter-icons"></igx-icon>
-     * ```
-     */
-    @Input('name')
-    public name: string;
-
-    @ViewChild('noLigature', { read: TemplateRef, static: true })
-    private noLigature: TemplateRef<HTMLElement>;
-
-    @ViewChild('explicitLigature', { read: TemplateRef, static: true })
-    private explicitLigature: TemplateRef<HTMLElement>;
-
-    @ViewChild('svgImage', { read: TemplateRef, static: true })
-    private svgImage: TemplateRef<HTMLElement>;
-
-    private destroy$ = new Subject<void>();
 
     constructor(
         public el: ElementRef,
         private iconService: IgxIconService,
+        private themeService: ThemeService,
         private ref: ChangeDetectorRef,
     ) {
-        this.family = this.iconService.defaultFamily;
-        this.iconService.registerFamilyAlias('material', 'material-icons');
+        this.family = this.iconService.defaultFamily.name;
+        this.iconService.setRefsByTheme(this.themeService.globalTheme);
+
         this.iconService.iconLoaded
             .pipe(
-                first((e) => e.name === this.name && e.family === this.family),
-                takeUntil(this.destroy$)
+                filter((e) => e.name === this.name && e.family === this.family),
+                takeUntil(this._destroy$),
             )
-            .subscribe(() => this.ref.detectChanges());
+            .subscribe(() => {
+                this.setIcon();
+                this.ref.detectChanges()
+            });
     }
 
     /**
@@ -123,7 +158,15 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * @internal
      */
     public ngOnInit() {
-        this.updateIconClass();
+        this.setIcon();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnChanges() {
+        this.setIcon();
     }
 
     /**
@@ -131,8 +174,16 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * @internal
      */
     public ngOnDestroy() {
-        this.destroy$.next();
-        this.destroy$.complete();
+        this._destroy$.next();
+        this._destroy$.complete();
+    }
+
+    protected get iconRef() {
+        return this._iconRef;
+    }
+
+    protected set iconRef(ref: IconReference) {
+        this._iconRef = ref;
     }
 
     /**
@@ -148,7 +199,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * ```
      */
     public get getFamily(): string {
-        return this.family;
+        return this.iconRef.family;
     }
 
     /**
@@ -168,23 +219,6 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     }
 
     /**
-     *  An accessor that returns inactive property.
-     *
-     * @example
-     * ```typescript
-     * @ViewChild("MyIcon")
-     * public icon: IgxIconComponent;
-     * ngAfterViewInit() {
-     *    let iconActive = this.icon.getInactive;
-     * }
-     * ```
-     */
-    @HostBinding('class.igx-icon--inactive')
-    public get getInactive(): boolean {
-        return !this.active;
-    }
-
-    /**
      * An accessor that returns the value of the iconName property.
      *
      * @example
@@ -197,7 +231,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * ```
      */
     public get getName(): string {
-        return this.name;
+        return this.iconRef.name;
     }
 
     /**
@@ -213,47 +247,29 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * ```
      */
     public get getSvg(): SafeHtml {
-        if (this.iconService.isSvgIconCached(this.name, this.family)) {
-            return this.iconService.getSvgIcon(this.name, this.family);
+        const { name, family } = this.iconRef;
+
+        if (this.iconService.isSvgIconCached(name, family)) {
+            return this.iconService.getSvgIcon(name, family);
         }
 
         return null;
     }
 
     /**
-     *   An accessor that returns a TemplateRef to explicit, svg or no ligature.
-     *
-     * @example
-     * ```typescript
-     * @ViewChild("MyIcon")
-     * public icon: IgxIconComponent;
-     * ngAfterViewInit() {
-     *    let iconTemplate = this.icon.template;
-     * }
-     * ```
-     */
-    public get template(): TemplateRef<HTMLElement> {
-        if (this.name) {
-            if (this.iconService.isSvgIconCached(this.name, this.family)) {
-                return this.svgImage;
-            }
-
-            return this.noLigature;
-        }
-
-        return this.explicitLigature;
-    }
-
-    /**
      * @hidden
      * @internal
      */
-    private updateIconClass() {
-        const className = this.iconService.familyClassName(this.family);
-        this.el.nativeElement.classList.add(className);
+    private setIcon() {
+        this.iconRef = this.iconService.getIconRef(this.name, this.family);
+        this.clearIconClasses();
 
-        if (this.name && !this.iconService.isSvgIconCached(this.name, this.family)) {
-            this.el.nativeElement.classList.add(this.name);
+        const { name, type, className } = this.iconRef;
+
+        if (name && type === "font") {
+            this.addIconClass(name);
         }
+
+        this.addIconClass(className);
     }
 }

@@ -6,12 +6,9 @@ import {
     Input,
     Output,
     Renderer2,
-    Optional,
-    Inject,
     booleanAttribute,
     AfterContentInit
 } from '@angular/core';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
@@ -118,11 +115,9 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
 
     constructor(
         public override element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken)
-        protected override _displayDensityOptions: IDisplayDensityOptions,
         private _renderer: Renderer2,
     ) {
-        super(element, _displayDensityOptions);
+        super(element);
     }
 
     public ngAfterContentInit() {
@@ -147,36 +142,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
         if (this._type !== t) {
             this._type = t;
         }
-    }
-
-    /**
-     * @deprecated in version 17.1.0.
-     * Sets the button text color.
-     *
-     * @example
-     * ```html
-     * <button type="button" igxButton igxButtonColor="orange"></button>
-     * ```
-     */
-    @Input('igxButtonColor')
-    public set color(value: string) {
-        this._color = value || this.nativeElement.style.color;
-        this._renderer.setStyle(this.nativeElement, 'color', this._color);
-    }
-
-    /**
-     * @deprecated in version 17.1.0.
-     * Sets the background color of the button.
-     *
-     * @example
-     *  ```html
-     * <button type="button" igxButton igxButtonBackground="red"></button>
-     * ```
-     */
-    @Input('igxButtonBackground')
-    public set background(value: string) {
-        this._backgroundColor = value || this._backgroundColor;
-        this._renderer.setStyle(this.nativeElement, 'background', this._backgroundColor);
     }
 
     /**
@@ -233,15 +198,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
      * @hidden
      * @internal
      */
-    @HostBinding('style.--component-size')
-    public get componentSize() {
-        return this.getComponentSizeStyles();
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     public select() {
         this.selected = true;
     }
@@ -252,6 +208,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
      */
     public deselect() {
         this.selected = false;
+        this.focused = false;
     }
 }
 

@@ -1,4 +1,4 @@
-<ng-content select="igx-grid-toolbar"></ng-content>
+<ng-content select="igx-grid-toolbar,igc-grid-toolbar"></ng-content>
 <ng-container #toolbarOutlet></ng-container>
 
 <igx-grid-header-row class="igx-grid-thead" tabindex="0"
@@ -92,7 +92,7 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
-        <ng-container *ngTemplateOutlet="template"></ng-container>
+        <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
         <span *ngIf="moving && columnInDrag" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
             id="right" class="igx-grid__scroll-on-drag-right"></span>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
@@ -141,8 +141,8 @@
 </div>
 
 <div class="igx-grid__footer" #footer>
-    <ng-content select="igx-grid-footer"></ng-content>
-    <ng-content select="igx-paginator"></ng-content>
+    <ng-content select="igx-grid-footer,igc-grid-footer"></ng-content>
+    <ng-content select="igx-paginator,igc-paginator"></ng-content>
     <ng-container #paginatorOutlet></ng-container>
 </div>
 
@@ -178,11 +178,16 @@
 </ng-template>
 
 <ng-template #defaultCollapsedTemplate>
-    <igx-icon role="button">unfold_more</igx-icon>
+    <igx-icon family="default" name="unfold_more" role="button"></igx-icon>
 </ng-template>
 
 <ng-template #defaultExpandedTemplate>
-    <igx-icon role="button" [active]="hasExpandedRecords() && hasExpandableChildren">unfold_less</igx-icon>
+    <igx-icon
+        family="default"
+        name="unfold_less"
+        role="button"
+        [active]="hasExpandedRecords() && hasExpandableChildren">
+    </igx-icon>
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
@@ -193,7 +198,7 @@
     </div>
 </div>
 <ng-template #defaultRowEditText>
-    You have {{ rowChangesCount }} changes in this row and {{ hiddenColumnsCount }} hidden columns
+    {{ this.resourceStrings.igx_grid_row_edit_text | igxStringReplace:'{0}':rowChangesCount.toString() | igxStringReplace:'{1}':hiddenColumnsCount.toString() }}
 </ng-template>
 <ng-template #defaultRowEditActions>
     <button type="button" igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_cancel }}</button>
@@ -218,9 +223,16 @@
 </ng-template>
 
 <ng-template #dragIndicatorIconBase>
-    <igx-icon>drag_indicator</igx-icon>
+    <igx-icon family="default" name="drag_indicator"></igx-icon>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
+@if (platform.isElements) {
+    <div #sink style="display: none;">
+        <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
+        <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
+        <ng-content select="igx-row-island,igc-row-island"></ng-content>
+    </div>
+}

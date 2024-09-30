@@ -4,5 +4,5 @@
     tabindex="0"
     role="menuitem">
     <span>{{ esf.column.pinned ? esf.grid.resourceStrings.igx_grid_excel_unpin : esf.grid.resourceStrings.igx_grid_excel_pin }}</span>
-    <igx-icon family="imx-icons" name="{{ esf.column.pinned ? 'unpin-left' : 'pin-left' }}"></igx-icon>
+    <igx-icon family="default" [name]="esf.column.pinned ? 'unpin' : 'pin'"></igx-icon>
 </div>

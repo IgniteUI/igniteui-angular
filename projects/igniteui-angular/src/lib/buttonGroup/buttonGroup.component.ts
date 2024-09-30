@@ -1,16 +1,13 @@
 import { NgFor, NgIf } from '@angular/common';
 import {
-    AfterContentInit,
     AfterViewInit,
     Component,
     ContentChildren,
     ChangeDetectorRef,
     EventEmitter,
     HostBinding,
-    Inject,
     Input,
     Output,
-    Optional,
     QueryList,
     Renderer2,
     ViewChildren,
@@ -23,7 +20,6 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -65,7 +61,7 @@ let NEXT_ID = 0;
     standalone: true,
     imports: [NgFor, IgxButtonDirective, IgxRippleDirective, NgIf, IgxIconComponent]
 })
-export class IgxButtonGroupComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit, OnDestroy {
+export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     /**
      * A collection containing all buttons inside the button group.
      */
@@ -74,7 +70,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that sets the value of the `id` attribute. If not set it will be automatically generated.
+     * Gets/Sets the value of the `id` attribute. If not set it will be automatically generated.
      * ```html
      *  <igx-buttongroup [id]="'igx-dialog-56'" [selectionMode]="'multi'" [values]="alignOptions">
      * ```
@@ -120,9 +116,9 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * @deprecated in version 16.1.0. Set/Use selectionMode property instead.
-     *
      * Enables selecting multiple buttons. By default, multi-selection is false.
+     *
+     * @deprecated in version 16.1.0. Use the `selectionMode` property instead.
      */
     @Input()
     public get multiSelection() {
@@ -141,7 +137,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that get/set the selection mode 'single', 'singleRequired' or 'multi' of the buttons. By default, the selection mode is 'single'.
+     * Gets/Sets the selection mode to 'single', 'singleRequired' or 'multi' of the buttons. By default, the selection mode is 'single'.
      * ```html
      * <igx-buttongroup [selectionMode]="'multi'" [alignment]="alignment"></igx-buttongroup>
      * ```
@@ -162,7 +158,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * An @Input property that allows setting the buttons in the button group.
+     * Property that configures the buttons in the button group using a collection of `Button` objects.
      * ```typescript
      *  public ngOnInit() {
      *      this.cities = [
@@ -190,7 +186,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     @Input() public values: any;
 
     /**
-     * An @Input property that allows you to disable the `igx-buttongroup` component. By default it's false.
+     * Disables the `igx-buttongroup` component. By default it's false.
      * ```html
      * <igx-buttongroup [disabled]="true" [selectionMode]="'multi'" [values]="fontOptions"></igx-buttongroup>
      * ```
@@ -319,11 +315,8 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     constructor(
         private _cdr: ChangeDetectorRef,
         private _renderer: Renderer2,
-        private _el: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
-    ) {
-        super(_displayDensityOptions, _el);
-    }
+        private _el: ElementRef
+    ) {}
 
     /**
      * Gets the selected button/buttons.
@@ -357,8 +350,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             return;
         }
 
-        this.updateSelected(index);
-
         const button = this.buttons[index];
         button.select();
     }
@@ -387,10 +378,26 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             this.buttons.forEach((_, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
                     this.deselectButton(i);
+                    this.updateDeselected(i);
                 }
             });
         }
 
+    }
+
+    public updateDeselected(index: number) {
+        const button = this.buttons[index];
+        if (this.selectedIndexes.indexOf(index) !== -1) {
+            this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
+        }
+
+        this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'false');
+        this._renderer.removeClass(button.nativeElement, 'igx-button-group__item--selected');
+
+        const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
+        if (indexInViewButtons !== -1) {
+            this.values[indexInViewButtons].selected = false;
+        }
     }
 
     /**
@@ -412,27 +419,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         }
 
         const button = this.buttons[index];
-        this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
-
-        this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'false');
-        this._renderer.removeClass(button.nativeElement, 'igx-button-group__item--selected');
         button.deselect();
-
-        const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
-        if (indexInViewButtons !== -1) {
-            this.values[indexInViewButtons].selected = false;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterContentInit() {
-        this.templateButtons.forEach((button) => {
-            if (!button.initialDensity) {
-                button.displayDensity = this.displayDensity;
-            }
-        });
     }
 
     /**
@@ -497,8 +484,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @hidden
      */
     public _clickHandler(index: number) {
-        this.mutationObserver.disconnect();
-
         const button = this.buttons[index];
         const args: IButtonGroupEventArgs = { owner: this, button, index };
 
@@ -519,8 +504,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                 this.deselected.emit(args);
             }
         }
-
-        this.mutationObserver?.observe(this._el.nativeElement, this.observerConfig);
     }
 
     private setMutationsObserver() {
@@ -534,19 +517,13 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                 if (updatedButtons.length > 0) {
                     updatedButtons.forEach((button) => {
                         const index = this.buttons.map((b) => b.nativeElement).indexOf(button);
-                        const args: IButtonGroupEventArgs = { owner: this, button: this.buttons[index], index };
 
-                        this.updateButtonSelectionState(index, args);
+                        this.updateButtonSelectionState(index);
                     });
                 }
 
                 // Watch for changes again
                 observer.observe(this._el.nativeElement, this.observerConfig);
-
-                // Cleanup function
-                this._renderer.listen(this._el.nativeElement, 'DOMNodeRemoved', () => {
-                    observer.disconnect();
-                });
             });
         }
     }
@@ -566,13 +543,11 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         return updated;
     }
 
-    private updateButtonSelectionState(index: number, args: IButtonGroupEventArgs) {
-        if (this.selectedIndexes.indexOf(index) === -1) {
-            this.selectButton(index);
-            this.selected.emit(args);
+    private updateButtonSelectionState(index: number) {
+        if (this.buttons[index].selected) {
+            this.updateSelected(index);
         } else {
-            this.deselectButton(index);
-            this.deselected.emit(args);
+            this.updateDeselected(index);
         }
     }
 }

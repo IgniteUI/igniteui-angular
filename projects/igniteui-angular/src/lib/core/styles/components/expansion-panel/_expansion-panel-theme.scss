@@ -164,7 +164,7 @@
             outline: transparent;
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding: $panel-padding-header-indigo;
         }
     }
@@ -176,7 +176,7 @@
         flex: 1 0 0%;
         overflow: hidden;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             %igx-expansion-panel__header-title {
                 margin-block-end: rem(2px);
             }
@@ -187,7 +187,7 @@
         order: 1;
         margin-inline-start: rem(16px, 16px);
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             margin-inline-start: rem(8px, 16px);
         }
     }
@@ -196,7 +196,7 @@
         order: -1;
         margin-inline-end: rem(16px, 16px);
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             margin-inline-end: rem(8px, 16px);
         }
     }
@@ -219,9 +219,9 @@
             color: var-get($theme, 'header-icon-color');
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             igx-icon {
-                --component-size: 1;
+                --component-size: 2;
             }
         }
     }
@@ -232,7 +232,7 @@
         overflow: hidden;
         padding: $panel-padding;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding: $panel-padding-body-indigo;
         }
     }

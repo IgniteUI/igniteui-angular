@@ -112,8 +112,14 @@
             }
         }
 
+        @include m(suffixed) {
+            @extend %suffixed !optional;
+        }
+
         // Textarea modifier
         @include m(textarea-group) {
+            @extend %textarea-group !optional;
+
             @include e(bundle-main) {
                 @extend  %form-group-textarea-group-bundle-main !optional;
             }
@@ -125,6 +131,14 @@
             @include e(label) {
                 @extend  %form-group-textarea-label !optional;
             }
+        }
+
+        @include mx(textarea-group, border) {
+            @extend %textarea-group--outlined !optional;
+        }
+
+        @include mx(textarea-group, box) {
+            @extend %textarea-group--box !optional;
         }
 
         @include mx(textarea-group, focused) {
@@ -144,6 +158,8 @@
         }
 
         @include mx(textarea-group, placeholder) {
+            @extend %form-group-placeholder !optional;
+
             @include e(notch) {
                 @extend %textarea-group-notch--focused !optional;
             }
@@ -164,6 +180,8 @@
         }
 
         @include mx(textarea-group, placeholder, border) {
+            @extend %form-group-placeholder !optional;
+
             @include e(notch) {
                 @extend %textarea-group-notch--focused !optional;
             }
@@ -198,6 +216,8 @@
         }
 
         @include m(placeholder) {
+            @extend %form-group-placeholder !optional;
+
             @include e(label) {
                 @extend %form-group-label--float !optional;
                 @extend %form-group-label--fixed !optional;
@@ -367,6 +387,8 @@
         }
 
         @include mx(box, textarea-group, placeholder) {
+            @extend %form-group-placeholder !optional;
+
             @include e(notch) {
                 @extend %form-group-notch--box-textarea !optional;
             }
@@ -446,6 +468,7 @@
 
         @include mx(border, placeholder) {
             @extend %form-group-label--placeholder-border !optional;
+            @extend %form-group-placeholder !optional;
 
             @include e(label) {
                 @extend %form-group-label--float-border !optional;
@@ -566,6 +589,8 @@
         }
 
         @include mx(fluent, placeholder) {
+            @extend %form-group-placeholder !optional;
+
             @include e(label) {
                 @extend %fluent-placeholder-label !optional;
             }

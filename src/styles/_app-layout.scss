@@ -43,10 +43,6 @@
         bottom: 0;
         left: 0;
         overflow: hidden;
-
-        > * {
-            width: 100%;
-        }
     }
 
     .content {
@@ -54,6 +50,7 @@
         overflow-y: scroll;
         perspective: 5000px;
         padding-top: 90px;
+        flex: 1;
     }
 
     .nav-header {

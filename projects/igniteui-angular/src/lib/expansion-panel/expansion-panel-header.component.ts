@@ -216,8 +216,12 @@ export class IgxExpansionPanelHeaderComponent {
     private _iconTemplate = false;
     private _disabled = false;
 
-    constructor(@Host() @Inject(IGX_EXPANSION_PANEL_COMPONENT) public panel: IgxExpansionPanelBase, public cdr: ChangeDetectorRef,
-        public elementRef: ElementRef) {
+    constructor(
+        @Host() @Inject(IGX_EXPANSION_PANEL_COMPONENT)
+        public panel: IgxExpansionPanelBase,
+        public cdr: ChangeDetectorRef,
+        public elementRef: ElementRef,
+    ) {
         this.id = `${this.panel.id}-header`;
     }
 

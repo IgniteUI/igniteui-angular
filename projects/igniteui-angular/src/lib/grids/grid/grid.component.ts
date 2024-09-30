@@ -23,7 +23,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
-import { FilterMode, GridInstanceType } from '../common/enums';
+import { FilterMode } from '../common/enums';
 import { CellType, GridType, IgxGridMasterDetailContext, IgxGroupByRowSelectorTemplateContext, IgxGroupByRowTemplateContext, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
@@ -36,7 +36,7 @@ import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
 import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe } from './grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
-import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
 import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
@@ -63,6 +63,21 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
+/* blazorAdditionalDependency: GridToolbar */
+/* blazorAdditionalDependency: GridToolbarActions */
+/* blazorAdditionalDependency: GridToolbarTitle */
+/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
+/* blazorAdditionalDependency: GridToolbarExporter */
+/* blazorAdditionalDependency: GridToolbarHiding */
+/* blazorAdditionalDependency: GridToolbarPinning */
+/* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
+/* blazorIndirectRender */
 /**
  * Grid provides a way to present and manipulate tabular data.
  *
@@ -96,7 +111,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxFilteringService,
         IgxColumnResizingService,
         IgxForOfSyncService,
-        IgxForOfScrollSyncService
+        IgxForOfScrollSyncService,
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html',
@@ -138,8 +153,9 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridSortingPipe,
         IgxGridFilteringPipe,
         IgxGridSummaryPipe,
-        IgxGridDetailsPipe
-    ],
+        IgxGridDetailsPipe,
+        IgxStringReplacePipe
+],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
@@ -367,13 +383,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
 
     /**
-     * Gets/Sets the array of data that populates the `IgxGridComponent`.
+     * Gets/Sets the array of data that populates the component.
      *
      * @example
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    /* treatAsRef */
     @Input()
     public get data(): any[] | null {
         return this._data;
@@ -381,15 +398,17 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public set data(value: any[] | null) {
         const dataLoaded = (!this._data || this._data.length === 0) && value && value.length > 0;
+        const oldData = this._data;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (!this._init) {
             this.validation.updateAll(this._data);
         }
 
-        if (this.shouldGenerate) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
             this.setupColumns();
         }
+
         this.cdr.markForCheck();
         if (this.isPercentHeight) {
             this.notifyChanges(true);
@@ -436,6 +455,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public groupingPerformed$: Observable<void> = this.groupingPerformedSubject.asObservable();
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor;React */
     /**
      * Gets/Sets the group by state.
      *
@@ -472,7 +492,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._applyGrouping();
             this.notifyChanges();
         }
-        if (!this._init && JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this._columns) {
+        if (!this._init && JSON.stringify(oldExpressions, this.stringifyCallback) !== JSON.stringify(newExpressions, this.stringifyCallback) && this._columns) {
             const groupedCols: IgxColumnComponent[] = [];
             const ungroupedCols: IgxColumnComponent[] = [];
             const groupedColsArr = newExpressions.filter((obj) => !oldExpressions.some((obj2) => obj.fieldName === obj2.fieldName));
@@ -1233,7 +1253,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             row = new IgxGroupByRow(this, index, rec);
         }
         if (rec && this.isSummaryRow(rec)) {
-            row = new IgxSummaryRow(this, index, rec.summaries, GridInstanceType.Grid);
+            row = new IgxSummaryRow(this, index, rec.summaries);
         }
         // if found record is a no a groupby or summary row, return IgxGridRow instance
         if (!row && rec) {
@@ -1248,7 +1268,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     protected override get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
-        return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
+        return this.renderedActualRowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paginator ? Math.min(allItems, this.perPage) : allItems);
     }
 
@@ -1341,5 +1361,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 col.hidden = value;
             });
         }
+    }
+
+    private stringifyCallback(key: string, val: any) {
+        // Workaround for Blazor, since its wrappers inject this externalObject that cannot serialize.
+        if (key === 'externalObject') {
+            return undefined;
+        }
+        return val;
     }
 }

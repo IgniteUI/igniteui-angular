@@ -1,13 +1,17 @@
-import { Component, ViewChild } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode, DisplayDensity, IgxButtonGroupComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent } from 'igniteui-angular';
+import { Component, HostBinding, ViewChild } from '@angular/core';
+import { IgxGridComponent, GridSelectionMode, IgxButtonGroupComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconModule } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-mrl-custom-navigation-sample',
     templateUrl: 'grid-mrl-custom-navigation.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent]
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconModule]
 })
 export class GridMRLCustomNavigationSampleComponent {
+    @HostBinding('style.--ig-size')
+    protected get sizeStyle() {
+        return `var(--ig-size-${this.size})`;
+    }
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     private grid: IgxGridComponent;
 
@@ -25,8 +29,8 @@ export class GridMRLCustomNavigationSampleComponent {
         }
     ];
 
-    public density: DisplayDensity = 'compact';
-    public displayDensities;
+    public size = 'large';
+    public sizes;
     public selectionMode;
     /* eslint-disable max-len */
     public data = [
@@ -61,16 +65,16 @@ export class GridMRLCustomNavigationSampleComponent {
     /* eslint-enable max-len */
 
     constructor() {
-        this.displayDensities = [
-            { label: 'compact', selected: this.density === 'compact', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        this.sizes = [
+            { label: 'small', selected: this.size === 'small', togglable: true },
+            { label: 'medium', selected: this.size === 'medium', togglable: true },
+            { label: 'large', selected: this.size === 'large', togglable: true }
         ];
         this.selectionMode = GridSelectionMode.none;
     }
 
     public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
+        this.size = this.sizes[event.index].label;
     }
 
     public customNavigation(args) {

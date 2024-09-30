@@ -582,22 +582,22 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
 @Component({
     template: `
     <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'" #hierarchicalGrid>
-        <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+        <igx-column field="CompanyName" [sortable]="true" [resizable]="true"></igx-column>
 
         <igx-row-island [key]="'ChildCompanies'" [autoGenerate]="false">
-            <igx-column-group [movable]="true" [pinned]="false" header="General Information">
-                <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                <igx-column-group [movable]="true" header="Personal Details">
-                    <igx-column field="ContactName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="ContactTitle" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+            <igx-column-group [pinned]="false" header="General Information">
+                <igx-column field="CompanyName" [sortable]="true" [resizable]="true"></igx-column>
+                <igx-column-group header="Personal Details">
+                    <igx-column field="ContactName" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="ContactTitle" [sortable]="true" [resizable]="true"></igx-column>
                 </igx-column-group>
             </igx-column-group>
             <igx-column-group header="Address Information">
                 <igx-column-group header="Location">
-                    <igx-column field="Address" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="City" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="PostalCode" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
-                    <igx-column field="Country" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Address" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="City" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="PostalCode" [sortable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Country" [sortable]="true" [resizable]="true"></igx-column>
                 </igx-column-group>
                 <igx-column-group header="Contact Information">
                     <igx-column field="Phone" [sortable]="true" [resizable]="true"></igx-column>
@@ -685,5 +685,49 @@ class MyChildSummary {
             summaryResult: IgxNumberSummaryOperand.count(data)
         });
         return result;
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid [data]="data" [autoGenerate]="false" [allowFiltering]='true'
+        [height]="'600px'" [width]="'100%'" [rowHeight]="'65px'" [primaryKey]="'ID'" #hierarchicalGrid>
+        <igx-column field="ID" [hidden]="true"></igx-column>
+        <igx-column field="Artist"></igx-column>
+        <igx-column field="Debut" dataType="number"></igx-column>
+        <igx-column field="GrammyNominations" header="Grammy Nominations" dataType="number"></igx-column>
+        <igx-column field="GrammyAwards" header="Grammy Awards" dataType="number"></igx-column>
+
+        <igx-row-island [height]="null" [key]="'Albums'" [autoGenerate]="false" [allowFiltering]='true'>
+            <igx-column field="Album"></igx-column>
+            <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
+            <igx-column field="BillboardReview" header="Billboard Review" dataType="number"></igx-column>
+            <igx-column field="USBillboard200" header="US Billboard 200" dataType="number"></igx-column>
+        <igx-row-island [height]="null" [key]="'Songs'" [autoGenerate]="false" >
+                <igx-column field="Number" header="No."></igx-column>
+                <igx-column field="Title"></igx-column>
+                <igx-column field="Released" dataType="date"></igx-column>
+                <igx-column field="Genre"></igx-column>
+        </igx-row-island>
+        </igx-row-island>
+
+        <igx-row-island [height]="null" [key]="'Tours'" [autoGenerate]="false" [allowFiltering]='true'>
+            <igx-column field="Tour"></igx-column>
+            <igx-column field="StartedOn" header="Started on"></igx-column>
+            <igx-column field="Location"></igx-column>
+            <igx-column field="Headliner"></igx-column>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridDefaultComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hierarchicalGrid: IgxHierarchicalGridComponent;
+
+    public data;
+
+    constructor() {
+        this.data = SampleTestData.hierarchicalGridSingersFullData();
     }
 }

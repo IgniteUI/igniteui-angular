@@ -16,14 +16,17 @@
 
 
 <ng-template #defaultIndicator>
-    <igx-icon [attr.aria-label]="expanded ? resourceStrings.igx_collapse : resourceStrings.igx_expand">
-        {{ expanded ? "keyboard_arrow_down" : "keyboard_arrow_right" }}
+    <igx-icon
+        [attr.aria-label]="expanded ? resourceStrings.igx_collapse : resourceStrings.igx_expand"
+        [name]="!expanded ? 'tree_expand' : 'tree_collapse'"
+        family="default"
+    >
     </igx-icon>
 </ng-template>
 
 <!-- separated in a template in case this ever needs to be templatable -->
 <ng-template #selectMarkerTemplate>
-    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate" [tabindex]="-1">
+    <igx-checkbox [checked]="selected" [disabled]="disabled" [readonly]="true" [indeterminate]="indeterminate" [tabindex]="-1">
     </igx-checkbox>
 </ng-template>
 

@@ -10,6 +10,10 @@
             @extend %igx-excel-filter__loading !optional;
         }
 
+        @include e(sizing) {
+            @extend %igx-excel-filter__sizing !optional;
+        }
+
         @include e(tree) {
             @extend %igx-excel-filter__tree !optional;
         }
@@ -104,6 +108,12 @@
 
         @include e(actions-filter) {
             @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions__action-filter !optional;
+        }
+
+        @include e(actions-filter, $m: active) {
+            @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions__action--active !optional;
         }
 
         @include e(actions-clear) {

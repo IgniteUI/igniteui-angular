@@ -1,10 +1,10 @@
 ﻿import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { ViewChild, Component } from '@angular/core';
+import { ViewChild, Component, DebugElement } from '@angular/core';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -30,6 +30,7 @@ interface ColGroupsType {
 describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let fixture: ComponentFixture<FixtureType>;
     let grid: IgxGridComponent;
+    const COLUMN_HEADER_CLASS = '.igx-grid-th';
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -841,6 +842,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
 
         it('should render rows correctly when grouped by a column and scrolling to bottom should not leave empty space.', async () => {
+            await wait(16); // needed because of throttleTime on the resize observer
+            fixture.detectChanges();
             grid.height = '600px';
             grid.groupBy({
                 dir: SortingDirection.Desc,
@@ -856,7 +859,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const lastIndex = grid.data.length + grid.groupsRecords.length - 1;
             grid.verticalScrollContainer.scrollTo(lastIndex);
-            await wait(100);
+            await wait(16); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
 
             const scrollTop = grid.verticalScrollContainer.getScroll().scrollTop;
@@ -871,7 +874,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(lastRowOffset).toEqual(tbody.scrollHeight);
         });
 
-        it('should render rows correctly and collapsing all should render all groups and there should be no scrollbar.', fakeAsync(() => {
+        it('should render rows correctly and collapsing all should render all groups and there should be no scrollbar.', async () => {
+            await wait(16); // needed because of throttleTime on the resize observer
+            fixture.detectChanges();
             grid.height = '600px';
             fixture.detectChanges();
             grid.groupBy({
@@ -887,15 +892,39 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeGreaterThan(0);
 
             grid.toggleAllGroupRows();
-            tick(100);
+            await wait(16); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
-            tick(100);
+            await wait(16); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(12);
             expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeLessThanOrEqual(0);
-        }));
+        });
+
+        it('should create only one ghost element when dragging a column', async () => {
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            
+            const header = headers[1].nativeElement;
+            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
+            await wait();
+            fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
+            await wait(50);
+            fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointermove', header, 230, 30);
+            await wait();
+            fixture.detectChanges();
+
+            const ghost = fixture.debugElement.queryAll(By.css('.igx-grid__drag-ghost-image'));
+            expect(ghost.length).toEqual(1);
+
+            UIInteractions.simulatePointerEvent('pointerup', header, 230, 30);
+            await wait();
+            fixture.detectChanges();
+        });
     });
 
     describe('Resizing', () => {
@@ -1310,7 +1339,7 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="500px" displayDensity="compact">
+    <igx-grid #grid [data]="data" height="500px" [style.--ig-size]="1">
         <igx-column-layout *ngFor='let group of colGroups' [field]='group.group' [pinned]='group.pinned'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
@@ -1334,6 +1363,19 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
         { field: 'City', rowStart: 2, colStart: 1, groupable: true },
         { field: 'Country', rowStart: 2, colStart: 2, groupable: true },
         { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+    ];
+
+    public override colGroups: ColGroupsType[] = [
+        {
+            group: 'group1',
+            pinned: true,
+            columns: this.cols2
+        },
+        {
+            group: 'group2',
+            pinned: false,
+            columns: this.cols1
+        }
     ];
 }
 @Component({

@@ -1,5 +1,5 @@
 import {
-    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Optional, Input, booleanAttribute
+    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute
 } from '@angular/core';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
@@ -10,8 +10,7 @@ import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxComboItemComponent } from './combo-item.component';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { NgIf } from '@angular/common';
+import { DOCUMENT, NgIf } from '@angular/common';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 
 /** @hidden */
@@ -84,11 +83,11 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     constructor(
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,
+        @Inject(DOCUMENT) document: any,
         selection: IgxSelectionAPIService,
         @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
-        protected comboAPI: IgxComboAPIService,
-        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions) {
-        super(elementRef, cdr, selection, _displayDensityOptions);
+        protected comboAPI: IgxComboAPIService) {
+        super(elementRef, cdr, document, selection);
     }
 
     /**
@@ -128,6 +127,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     public override navigatePrev() {
         if (this._focusedItem && this._focusedItem.index === 0 && this.virtDir.state.startIndex === 0) {
             this.combo.focusSearchInput(false);
+            this.focusedItem = null;
         } else {
             super.navigatePrev();
         }

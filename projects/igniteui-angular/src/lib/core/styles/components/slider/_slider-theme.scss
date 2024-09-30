@@ -19,6 +19,7 @@
 /// @param {Color} $thumb-color [null] - The color of the thumb.
 /// @param {Color} $thumb-focus-color [null] - The focus color of the thumb.
 /// @param {Color} $thumb-border-color [null] - The thumb border color.
+/// @param {Color} $thumb-border-hover-color [null] - The thumb border color when hovered.
 /// @param {Color} $thumb-border-focus-color [null] - The thumb border color when focused.
 /// @param {Color} $thumb-disabled-border-color [null] - The thumb border color when it's disabled.
 /// @param {Color} $disabled-thumb-color [null] - The thumb color when its disabled.
@@ -45,6 +46,7 @@
     $thumb-color: null,
     $thumb-focus-color: null,
     $thumb-border-color: null,
+    $thumb-border-hover-color: null,
     $thumb-border-focus-color: null,
     $thumb-disabled-border-color: null,
     $disabled-thumb-color: null,
@@ -84,6 +86,7 @@
         thumb-color: $thumb-color,
         thumb-focus-color: $thumb-focus-color,
         thumb-border-color: $thumb-border-color,
+        thumb-border-hover-color: $thumb-border-hover-color,
         thumb-border-focus-color: $thumb-border-focus-color,
         thumb-disabled-border-color: $thumb-disabled-border-color,
         disabled-thumb-color: $disabled-thumb-color,
@@ -112,21 +115,33 @@
     $slider-height: rem(48px);
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
-    $thumb-label-width: rem(40px);
-    $thumb-label-height: rem(30px);
+
+    $thumb-label-width: map.get((
+        'material': rem(40px),
+        'fluent': rem(40px),
+        'bootstrap': rem(40px),
+        'indigo': rem(36px)
+    ), $variant);
+
+    $thumb-label-height: map.get((
+        'material': rem(30px),
+        'fluent': rem(30px),
+        'bootstrap': rem(30px),
+        'indigo': rem(22px)
+    ), $variant);
 
     $slider-track-height: map.get((
-        material: 6px,
-        fluent: 4px,
-        bootstrap: 8px,
-        indigo-design: 2px
+        'material': 6px,
+        'fluent': 4px,
+        'bootstrap': 8px,
+        'indigo': 2px
     ), $variant);
 
     $slider-outline-width: map.get((
-        material: 0,
-        fluent: 0,
-        bootstrap: 3px,
-        indigo-design: 3px
+        'material': 0,
+        'fluent': 0,
+        'bootstrap': 3px,
+        'indigo': 3px
     ), $variant);
 
     // Slider ticks
@@ -137,26 +152,29 @@
 
     // Slider Thumb
     $thumb-size: map.get((
-        material: 20px,
-        fluent: 16px,
-        bootstrap: 16px,
-        indigo-design: 14px
+        'material': 20px,
+        'fluent': 16px,
+        'bootstrap': 16px,
+        'indigo': 12px
     ), $variant);
     $thumb-radius: math.div($thumb-size, 2);
 
+    $thumb-indigo-idle: math.div($thumb-size , $thumb-size * 0 + 1);
+    $thumb-indigo-hover: calc(16 / $thumb-indigo-idle);
+
     $thumb-border-width: map.get((
-        material: 0,
-        fluent: 2px,
-        bootstrap: 1px,
-        indigo-design: 0
+        'material': 0,
+        'fluent': 2px,
+        'bootstrap': 1px,
+        'indigo': 2px
     ), $variant);
 
     // Slider Steps
     $steps-top-position: map.get((
-        material: 2px,
-        fluent: 1px,
-        bootstrap: 3px,
-        indigo-design: 0
+        'material': 2px,
+        'fluent': 1px,
+        'bootstrap': 3px,
+        'indigo': 0
     ), $variant);
 
     // Slider Label
@@ -175,6 +193,7 @@
         flex-grow: 1;
         align-items: center;
         transition: all .2s $out-quad;
+        touch-action: pan-y pinch-zoom;
 
         &:hover {
             %igx-slider-track-fill {
@@ -217,8 +236,8 @@
         overflow: hidden;
         border-radius: border-radius(rem(32px));
 
-        @if $variant == 'indigo-design' {
-            border-radius: initial;
+        @if $variant == 'indigo' {
+            border-radius: border-radius(rem(4px));
         }
     }
 
@@ -271,6 +290,14 @@
             top: 0;
             align-items: flex-end;
         }
+
+        @if $variant == 'indigo' {
+            bottom: rem(3px);
+
+            &%igx-slider__ticks--top {
+                top: rem(3px);
+            }
+        }
     }
 
     %igx-slider__ticks-group {
@@ -284,7 +311,7 @@
         }
 
         &:last-of-type {
-            margin-inline-start: rem(-1px);
+            margin-inline-end: rem(-1px);
         }
     }
 
@@ -311,6 +338,10 @@
     %igx-slider__ticks--tall {
         %igx-slider__ticks-label {
             top: calc(#{$tick-height--tall} + #{$tick-height});
+
+            @if $variant == 'indigo' {
+                top: calc(#{$tick-height--tall} + (#{$tick-height} / 2));
+            }
         }
     }
 
@@ -329,6 +360,10 @@
 
         %igx-slider__ticks-label {
             top: calc(#{$tick-height--tall} + #{$tick-height});
+
+            @if $variant == 'indigo' {
+                top: calc(#{$tick-height--tall} + (#{$tick-height} / 2));
+            }
         }
     }
 
@@ -369,6 +404,12 @@
             stroke: currentColor;
             stroke-width: var-get($theme, 'track-step-size');
             stroke-linecap: round;
+        }
+    }
+
+    %igx-slider-track-steps--disabled {
+        @if $variant == 'indigo' {
+            color: transparent;
         }
     }
 
@@ -450,6 +491,19 @@
             }
         }
 
+        @if $variant == 'indigo' {
+            transition: transform .2s $out-quad;
+
+            &:hover,
+            &:active {
+                transform: scale($thumb-indigo-hover);
+
+                div::before {
+                    border-color: var-get($theme, 'thumb-border-hover-color');
+                }
+            }
+        }
+
         &:focus div::before {
             box-shadow: 0 0 0 rem($slider-outline-width) var-get($theme, 'thumb-focus-color');
 
@@ -481,7 +535,7 @@
         &:focus div::before {
             box-shadow: none;
 
-            @if $variant == 'fluent' {
+            @if $variant == 'fluent' or $variant == 'indigo' {
                 border-color: var-get($theme, 'thumb-disabled-border-color') !important;
             }
         }
@@ -497,6 +551,10 @@
         display: flex;
         top: calc(((#{$thumb-label-height}) + rem(20px)) * -1);
         height: $thumb-label-height;
+
+        @if $variant == 'indigo' {
+            top: calc(((#{$thumb-label-height}) + rem(18px)) * -1);
+        }
     }
 
     %igx-slider-thumb-label__container {
@@ -506,11 +564,15 @@
         justify-content: center;
         white-space: nowrap;
         margin-inline-start: -50%;
-        padding: 0 rem(2px);
+        padding: 0 rem(8px);
         background: var-get($theme, 'label-background-color');
         color: var-get($theme, 'label-text-color');
         min-width: $thumb-label-width;
         opacity: 0;
+
+        @if $variant == 'indigo' {
+            border-radius: rem(3px);
+        }
 
         &::after {
             content: '';
@@ -519,6 +581,11 @@
             border-inline-start: rem(10px) solid transparent;
             border-inline-end: rem(10px) solid transparent;
             border-top: rem(10px) solid var-get($theme, 'label-background-color');
+
+            @if $variant == 'indigo' {
+                top: rem(16px);
+                border-top: rem(12px) solid var-get($theme, 'label-background-color');
+            }
         }
     }
 

@@ -19,6 +19,7 @@
 /// @param {Color} $item-hover-text-color [null] - The toolbar drop-down item hover text color.
 /// @param {Color} $item-focus-background [null] - The toolbar drop-down item focus background color.
 /// @param {Color} $item-focus-text-color [null] - The toolbar drop-down item focus text color.
+/// @param {Color} $border-color [null] - The toolbar border-bottom color.
 /// @requires $light-material-schema
 /// @example scss Change the toolbar background color
 ///   $my-toolbar-theme: grid-toolbar-theme(
@@ -40,6 +41,7 @@
     $item-focus-background: null,
     $item-focus-text-color: null,
     $size: null,
+    $border-color: null,
 ) {
     $name: 'igx-grid-toolbar';
     $selector: 'igx-grid-toolbar, .igx-grid-toolbar__dd-list';
@@ -94,6 +96,7 @@
             variant: map.get($schema, '_meta', 'theme')
         )),
         size: $size,
+        border-color: $border-color
     ));
 }
 
@@ -121,10 +124,29 @@
         compact: rem(8px)
     );
 
+    $grid-toolbar-padding-start-indigo: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
+    );
+
+    $grid-toolbar-padding-end-indigo: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
+    );
+
+
     $grid-toolbar-spacer: (
         comfortable: rem(16px),
         cosy: rem(12px),
         compact: rem(8px)
+    );
+
+    $grid-toolbar-spacer-indigo: (
+        comfortable: rem(16px),
+        cosy: rem(16px),
+        compact: rem(16px)
     );
 
     $grid-toolbar-height: (
@@ -134,6 +156,8 @@
     );
 
     %igx-grid-toolbar {
+        @include sizable();
+        --component-size: var(--ig-size, var(--ig-size-large));
         position: relative;
         width: 100%;
         display: flex;
@@ -141,19 +165,19 @@
         justify-content: space-between;
         grid-row: 1;
         font-size: $grid-toolbar-fs;
-
-        @if $bootstrap-theme {
-            border-bottom: rem(1px) solid color($color: 'gray', $variant: 100);
-        } @else {
-            border-bottom: rem(1px) solid color($color: 'gray', $variant: 300);
-        }
-
+        border-bottom: rem(1px) solid var-get($theme, 'border-color');
         background: var-get($theme, 'background-color');
         height: auto;
         min-height: var-get($theme, 'size');
         padding-block: 0;
-        padding-inline-start: pad-inline(map.get($grid-toolbar-padding-start, 'compact'), map.get($grid-toolbar-padding-start, 'cosy'), map.get($grid-toolbar-padding-start, 'comfortable'));
-        padding-inline-end: pad-inline(map.get($grid-toolbar-padding-end, 'compact'), map.get($grid-toolbar-padding-end, 'cosy'), map.get($grid-toolbar-padding-end, 'comfortable'));
+
+        @if $variant == 'indigo' {
+            padding-inline-start: pad-inline(map.get($grid-toolbar-padding-start-indigo, 'compact'), map.get($grid-toolbar-padding-start-indigo, 'cosy'), map.get($grid-toolbar-padding-start-indigo, 'comfortable'));
+            padding-inline-end: pad-inline(map.get($grid-toolbar-padding-end-indigo, 'compact'), map.get($grid-toolbar-padding-end-indigo, 'cosy'), map.get($grid-toolbar-padding-end-indigo, 'comfortable'));
+        } @else {
+            padding-inline-start: pad-inline(map.get($grid-toolbar-padding-start, 'compact'), map.get($grid-toolbar-padding-start, 'cosy'), map.get($grid-toolbar-padding-start, 'comfortable'));
+            padding-inline-end: pad-inline(map.get($grid-toolbar-padding-end, 'compact'), map.get($grid-toolbar-padding-end, 'cosy'), map.get($grid-toolbar-padding-end, 'comfortable'));
+        }
 
         [igxButton] {
             margin-inline-start: pad-inline(map.get($grid-toolbar-spacer, 'compact'), map.get($grid-toolbar-spacer, 'cosy'), map.get($grid-toolbar-spacer, 'comfortable'));
@@ -182,11 +206,22 @@
     }
 
     %igx-grid-toolbar__title {
+        @if $variant == 'indigo' {
+            /* stylelint-disable scss/at-extend-no-missing-placeholder */
+            @extend .ig-typography__h6;
+            /* stylelint-enable scss/at-extend-no-missing-placeholder */
+        }
+
         color: var-get($theme, 'title-text-color');
         flex: 1 1 auto;
         @include ellipsis();
         max-width: 40ch;
-        margin-inline-end: map.get($grid-toolbar-spacer, 'comfortable')
+
+        @if $variant == 'indigo' {
+            margin-inline-end: map.get($grid-toolbar-spacer-indigo, 'comfortable')
+        } @else {
+            margin-inline-end: map.get($grid-toolbar-spacer, 'comfortable')
+        }
     }
 
     %igx-grid-toolbar__custom-content {
@@ -194,7 +229,12 @@
         flex-wrap: wrap;
         flex-grow: 1;
         justify-content: flex-end;
-        margin-inline-end: map.get($grid-toolbar-spacer, 'comfortable');
+
+        @if $variant == 'indigo' {
+            margin-inline-end: map.get($grid-toolbar-spacer-indigo, 'comfortable')
+        } @else {
+            margin-inline-end: map.get($grid-toolbar-spacer, 'comfortable')
+        }
     }
 
     %igx-grid-toolbar__actions {
@@ -203,13 +243,14 @@
         flex-flow: row wrap;
         margin-inline-start: auto;
 
+        @if $variant == 'indigo' {
+            gap: map.get($grid-toolbar-spacer-indigo, 'comfortable')
+        } @else {
+            gap: map.get($grid-toolbar-spacer, 'comfortable')
+        }
+
         > * {
             display: flex;
-            margin-inline-start: map.get($grid-toolbar-spacer, 'comfortable');
-
-            &:first-child {
-                margin-inline-start: 0;
-            }
         }
     }
 
@@ -244,21 +285,6 @@
 
             &:first-child > div {
                 background: color($color: 'secondary');
-            }
-        }
-    }
-
-    %igx-grid-toolbar__adv-filter--filtered {
-        border-color: color($color: 'secondary') !important;
-
-        @if $bootstrap-theme {
-            border-width: rem(2px);
-            border-color: color($color: 'primary', $variant: 800) !important;
-            color: color($color: 'primary', $variant: 800);
-
-            &:hover,
-            &:focus {
-                background: color($color: 'primary', $variant: 800);
             }
         }
     }

@@ -109,32 +109,6 @@ public rightPanPerformed(args) {
 }
 ```
 
-### Display Density
-
-The list provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). We can set it by using the `displayDensity` input of the list.
-
-```html
-<igx-list #list [displayDensity]="'compact'">
-    <igx-list-item [isHeader]="true">
-        Work Contacts
-    </igx-list-item>
-    <igx-list-item>Terrance Orta</igx-list-item>
-    <igx-list-item>Richard Mahoney</igx-list-item>
-	  <igx-list-item>Donna Price</igx-list-item>
-    <igx-list-item [isHeader]="true">
-        Family Contacts
-    </igx-list-item>
-    <igx-list-item>John Smith</igx-list-item>
-    <igx-list-item>Mary Smith</igx-list-item>
-</igx-list>
-```
-
-Or
-
-```typescript
-this.list.displayDensity = "compact";
-```
-
 ## API
 
 ### Inputs
@@ -147,7 +121,6 @@ this.list.displayDensity = "compact";
 | emptyListTemplate | Sets a reference to a custom empty list template, otherwise default template is used |
 | dataLoadingTemplate | Sets a reference to a custom data loading template, otherwise default template is used |
 | panEndTriggeringThreshold | Number | Specifies the threshold after which a panning event is emitted. By default this property has a value of 0.5 which means 50% of list item's width. |
-| displayDensity  | Determines the display density of the list.  |
 
 ### Properties
 
