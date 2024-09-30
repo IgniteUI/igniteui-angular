@@ -1,5 +1,4 @@
 import * as path from 'path';
-import { readFileSync } from 'fs';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { setupTestTree } from '../common/setup.spec';
@@ -9,28 +8,6 @@ const version = '13.1.0';
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
-    const configJson = {
-        version: 1,
-        projects: {
-            testProj: {
-                projectType: 'application',
-                root: '',
-                sourceRoot: 'testSrc',
-                architect: {
-                    build: {
-                        builder: '@angular-devkit/build-angular:application',
-                        options: {
-                        }
-                    }
-                }
-            }
-        },
-        schematics: {
-            '@schematics/angular:component': {
-                prefix: 'appPrefix'
-            }
-        }
-    };
 
     beforeEach(() => {
         appTree = setupTestTree();
@@ -199,14 +176,6 @@ describe(`Update to ${version}`, () => {
     });
 
     it('should rename hgridAPI to gridAPI for hierarchical grids', async () => {
-        pending("Fix, will not succeed if another test configures the LS first");
-        const config = structuredClone(configJson);
-        config.projects.testProj.architect.build.options['browser'] = 'testSrc/appPrefix/component/test.component.ts';
-        // TODO: remove after patch for browser field:
-        config.projects.testProj.architect.build.options['main'] = 'testSrc/appPrefix/component/test.component.ts';
-        appTree.overwrite('/angular.json', JSON.stringify(config));
-        // mirror tsconfig in test tree, otherwise LS server host handling may be off:
-        appTree.create('tsconfig.json', readFileSync('tsconfig.json'));
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
