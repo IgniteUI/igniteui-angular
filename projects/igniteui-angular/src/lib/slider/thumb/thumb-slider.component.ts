@@ -60,6 +60,15 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @Input({ transform: booleanAttribute })
     public deactiveState: boolean;
 
+    @Input()
+    public min: number;
+
+    @Input()
+    public max: number;
+
+    @Input()
+    public labels: any[];
+
     @Output()
     public thumbValueChange = new EventEmitter<number>();
 
@@ -75,18 +84,47 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
-    @HostBinding('attr.z-index')
-    public zIndex = 0;
+    @HostBinding('attr.role')
+    public role = 'slider';
 
     @HostBinding('attr.aria-valuenow')
     public get ariaValueNow() {
         return this.value;
     }
 
-    @HostBinding('attr.aria-labelledby')
-    public get ariaLabelledbyAttr() {
-        return this.type === SliderHandle.FROM ? 'slider-label-from' : 'slider-label-to';
+    @HostBinding('attr.aria-valuemin')
+    public get ariaValueMin() {
+        return this.min;
     }
+
+    @HostBinding('attr.aria-valuemax')
+    public get ariaValueMax() {
+        return this.max;
+    }
+
+    @HostBinding('attr.aria-valuetext')
+    public get ariaValueText() {
+        if (this.labels && this.labels[this.value] !== undefined) {
+            return this.labels[this.value];
+        }
+        return this.value;
+    }
+
+    @HostBinding('attr.aria-label')
+    public get ariaLabelAttr() {
+        return `Slider thumb ${this.type}`;
+    }
+
+    @HostBinding('attr.aria-orientation')
+    public ariaOrientation = 'horizontal';
+
+    @HostBinding(`attr.aria-disabled`)
+    public get ariaDisabled() {
+        return this.disabled;
+    }
+
+    @HostBinding('attr.z-index')
+    public zIndex = 0;
 
     @HostBinding('class.igx-slider-thumb-to--focused')
     public focused = false;
