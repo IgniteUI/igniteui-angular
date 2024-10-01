@@ -18,7 +18,7 @@ import { ISortingOptions, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvanc
 import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
+import { FormattedValuesSortingStrategy, ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxColumnLayoutComponent } from '../grids/columns/column-layout.component';
@@ -2270,6 +2270,42 @@ export class SortOnInitComponent extends GridDeclaredColumnsComponent implements
 
 @Component({
     template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="600px">
+        <igx-column field="ProductID" header="Product ID" [sortable]="true"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [sortable]="true"
+                    [formatter]="formatProductName" [sortStrategy]="sortStrategy"></igx-column>
+        <igx-column field="QuantityPerUnit" header="Quantity Per Unit" [dataType]="'string'" [sortable]="true"
+                    [formatter]="formatQuantity" [sortStrategy]="sortStrategy"></igx-column>
+        <igx-column field="UnitPrice" header="Unit Price" [dataType]="'number'" [sortable]="true"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" [sortable]="true"></igx-column>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class IgxGridFormattedValuesSortingComponent extends BasicGridComponent {
+    public override data = SampleTestData.gridProductData();
+    public sortStrategy = new FormattedValuesSortingStrategy();
+
+    public formatProductName = (value: string) => {
+        if (!value) {
+            return 'a';
+        }
+        const prefix = value.length > 10 ? 'a' : 'b';
+        return `${prefix}-${value}`;
+    }
+
+    public formatQuantity = (value: string) => {
+        if (!value) {
+            return 'c';
+        }
+        const prefix = value.length > 10 ? 'c' : 'd';
+        return `${prefix}-${value}`;
+    }
+}
+
+@Component({
+    template: `
     <igx-grid #grid [data]="data" [height]="'500px'" [width]="'500px'">
         <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
             <igx-column *ngFor='let col of group.columns'
@@ -2532,7 +2568,6 @@ class CustomSummaryWithNullAndZero {
         label: 0,
         summaryResult: null,
         });
-        
         return result;
     }
 }
@@ -2552,7 +2587,6 @@ class CustomSummaryWithUndefinedZeroAndValidNumber {
         label: 23,
         summaryResult: undefined,
         });
-        
         return result;
     }
 }
@@ -2572,7 +2606,6 @@ class CustomSummaryWithUndefinedAndNull {
         label: null,
         summaryResult: undefined,
         });
-        
         return result;
     }
 }
@@ -2594,7 +2627,6 @@ class DiscontinuedSummary {
             ).toString(),
             summaryResult: '',
         });
-        
         return result;
     }
 }
@@ -2614,7 +2646,6 @@ class CustomSummaryWithDate {
             label: null,
             summaryResult: new Date(2020, 4, 12),
         });
-        
         return result;
     }
 }
