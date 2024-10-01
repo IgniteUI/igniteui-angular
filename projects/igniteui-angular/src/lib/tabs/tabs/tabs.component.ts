@@ -84,6 +84,15 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         });
     }
 
+    /**
+     * Determines the tab activation.
+     * When set to auto, the tab is instantly selected while navigating with the Left/Right Arrows, Home or End keys and the corresponding panel is displayed.
+     * When set to manual, the tab is only focused. The selection happens after pressing Space or Enter.
+     * Defaults is auto.
+     */
+    @Input()
+    public activation: 'auto' | 'manual' = 'auto';
+
     /** @hidden */
     @ViewChild('headerContainer', { static: true })
     public headerContainer: ElementRef<HTMLElement>;
@@ -345,4 +354,3 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         return this.dir.rtl ? this.itemsWrapper.nativeElement.offsetWidth - element.offsetLeft - element.offsetWidth : element.offsetLeft;
     }
 }
-
