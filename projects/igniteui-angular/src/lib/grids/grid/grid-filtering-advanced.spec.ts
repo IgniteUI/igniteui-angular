@@ -22,7 +22,7 @@ import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { QueryBuilderConstants, QueryBuilderFunctions } from '../../query-builder/query-builder-functions';
+import { QueryBuilderConstants, QueryBuilderFunctions } from '../../query-builder/query-builder-functions.spec';
 import { By } from '@angular/platform-browser';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {

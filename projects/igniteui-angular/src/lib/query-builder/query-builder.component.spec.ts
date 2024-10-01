@@ -5,7 +5,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
-import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './query-builder-functions';
+import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './query-builder-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 
@@ -126,9 +126,15 @@ describe('IgxQueryBuilder', () => {
 
             const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fixture, false, 0);
             const input = editModeContainer.querySelector('input.custom-class') as HTMLInputElement;
+            const selectedField = editModeContainer.querySelector('p.selectedField') as HTMLInputElement;
+            const selectedCondition = editModeContainer.querySelector('p.selectedCondition') as HTMLInputElement;
 
             expect(input).toBeDefined();
             expect(input.value).toBe('3');
+            expect(selectedField).toBeDefined();
+            expect(selectedField.innerText).toBe('OrderId');
+            expect(selectedCondition).toBeDefined();
+            expect(selectedCondition.innerText).toBe('greaterThan');
 
             //Edit input value
             UIInteractions.clickAndSendInputElementValue(input, '5');
@@ -2211,8 +2217,15 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
     template: `
      <igx-query-builder #queryBuilder [entities]="this.entities" [expressionTree]="this.expressionTree">
          <igx-query-builder-header [title]="'Custom Title'" [showLegend]="showLegend"></igx-query-builder-header>
-         <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-searchValue>
+         <ng-template #searchValueTemplate 
+                        igxQueryBuilderSearchValue 
+                        let-searchValue
+                        let-selectedField = "selectedField" 
+                        let-selectedCondition = "selectedCondition"
+                        let-defaultSearchValueTemplate = "defaultSearchValueTemplate">
             <input type="text" class="custom-class" required [(ngModel)]="searchValue.value"/>
+            <p class="selectedField">{{selectedField.field}}</p>
+            <p class="selectedCondition">{{selectedCondition}}</p>
         </ng-template>
      </igx-query-builder>
     `,
