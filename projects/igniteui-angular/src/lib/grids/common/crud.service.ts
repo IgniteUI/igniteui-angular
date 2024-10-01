@@ -765,6 +765,8 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             this.grid.navigateTo(rowIndex, visibleColIndex);
         }
 
+        this.grid.notifyChanges(false);
+
         return false;
     }
 }

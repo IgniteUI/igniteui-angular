@@ -3591,7 +3591,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
-            if (!this.crudService.cell &&
+            if (/*!this.crudService.cell &&*/
                 !!this.navigation.activeNode &&
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
                     this.navigation.activeNode.row < this.dataView.length)
