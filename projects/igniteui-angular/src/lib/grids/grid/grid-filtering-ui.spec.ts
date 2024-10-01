@@ -54,6 +54,8 @@ import { formatDate, getComponentSize } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { GridResourceStringsEN } from '../../core/i18n/grid-resources';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
+import { IgxTimePickerComponent } from '../../time-picker/time-picker.component';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -470,22 +472,21 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 format: 'longTime'
             };
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
-            tick(DEBOUNCETIME);
-            fix.detectChanges();
 
             let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            let input = filterUIRow.query(By.directive(IgxInputDirective)).nativeElement;
-            expect(input.getAttribute('ng-reflect-input-format')).toMatch('dd-MM-yyyy');
-            expect(input.getAttribute('ng-reflect-display-format')).toMatch('yyyy-dd-MM');
+            let inputDirectiveInstance  = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
+                                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(inputDirectiveInstance.inputFormat).toMatch('dd-MM-yyyy');
+            expect(inputDirectiveInstance.displayFormat).toMatch('yyyy-dd-MM');
 
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseTime');
             tick(DEBOUNCETIME);
             fix.detectChanges();
 
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            input = filterUIRow.query(By.directive(IgxInputDirective)).nativeElement;
-            expect(input.getAttribute('ng-reflect-input-format')).toMatch('hh:mm');
-            expect(input.getAttribute('ng-reflect-display-format')).toMatch('longTime');
+            inputDirectiveInstance = filterUIRow.query(By.directive(IgxTimePickerComponent)).componentInstance;
+            expect(inputDirectiveInstance.inputFormat).toMatch('hh:mm');
+            expect(inputDirectiveInstance.displayFormat).toMatch('longTime');
         }));
 
         it('Time/DateTime: Should set pipeArgs.format as inputFormat to the quick filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
@@ -499,24 +500,28 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             releaseTimeCol.pipeArgs = {
                 format: 'shortTime'
             };
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
             tick(DEBOUNCETIME);
             fix.detectChanges();
 
             let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            let input = filterUIRow.query(By.directive(IgxInputDirective)).nativeElement;
-            expect(input.getAttribute('ng-reflect-input-format')).toMatch('yyyy--dd--MM');
-            expect(input.getAttribute('ng-reflect-display-format')).toMatch('yyyy--dd--MM');
+            let dateTimeEditor  = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
+                                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat).toMatch('yyyy--dd--MM');
+            expect(dateTimeEditor.displayFormat).toMatch('yyyy--dd--MM');
 
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseTime');
             tick(DEBOUNCETIME);
             fix.detectChanges();
 
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            input = filterUIRow.query(By.directive(IgxInputDirective)).nativeElement;
+            dateTimeEditor = filterUIRow.query(By.directive(IgxTimePickerComponent)).componentInstance;
             // since 'shortTime' is numeric, input format will include its numeric parts
-            expect(input.getAttribute('ng-reflect-input-format').normalize('NFKD')).toMatch('hh:mm tt');
-            expect(input.getAttribute('ng-reflect-display-format')).toMatch('shortTime');
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch('hh:mm tt');
+            expect(dateTimeEditor.displayFormat).toMatch('shortTime');
         }));
 
 
@@ -5200,9 +5205,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
             const inputGroup = expr.querySelectorAll('igx-input-group')[1];
-            const dateTimeEditorInput = inputGroup.querySelector('input');
-            expect(dateTimeEditorInput.getAttribute('ng-reflect-input-format')).toMatch(column.editorOptions.dateTimeFormat);
-            expect(dateTimeEditorInput.getAttribute('ng-reflect-display-format')).toMatch(column.pipeArgs.format);
+            const dateTimeEditor = inputGroup.querySelector('input').injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(column.editorOptions.dateTimeFormat);
+            expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
         }));
 
         it('DateTime: Should use pipeArgs.format as inputFormat to the filter editor in the custom filtering dialog if editorOptions.dateTimeFormat not set', fakeAsync(() => {
@@ -5227,9 +5232,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
             const inputGroup = expr.querySelectorAll('igx-input-group')[1];
-            const dateTimeEditorInput = inputGroup.querySelector('input');
-            expect(dateTimeEditorInput.getAttribute('ng-reflect-input-format')).toMatch(column.pipeArgs.format);
-            expect(dateTimeEditorInput.getAttribute('ng-reflect-display-format')).toMatch(column.pipeArgs.format);
+            const dateTimeEditorDirective = inputGroup.querySelector('input').injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
+            expect(dateTimeEditorDirective.displayFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
         }));
 
         it('DateTime: custom filtering dialog input locale should be set as the grid locale', fakeAsync(() => {
@@ -5272,10 +5277,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
             const datePicker = expr.querySelector('igx-time-picker');
-            const input = datePicker.querySelector('input');
-
-            expect(input.getAttribute('ng-reflect-input-format')).toMatch(column.editorOptions.dateTimeFormat);
-            expect(input.getAttribute('ng-reflect-display-format')).toMatch(column.pipeArgs.format);
+            const dateTimeEditorDirective = datePicker.querySelector('input').injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat.normalize('NFKC')).toMatch(column.editorOptions.dateTimeFormat);
+            expect(dateTimeEditorDirective.displayFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
         }));
 
         it('Time: Should use pipeArgs.format as inputFormat to the filter editor in the custom filtering dialog if editorOptions.dateTimeFormat not set', fakeAsync(() => {
@@ -5295,9 +5299,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
             const inputGroup = expr.querySelectorAll('igx-input-group')[1];
-            const dateTimeEditorInput = inputGroup.querySelector('input');
-            expect(dateTimeEditorInput.getAttribute('ng-reflect-input-format')).toMatch(column.pipeArgs.format);
-            expect(dateTimeEditorInput.getAttribute('ng-reflect-display-format')).toMatch(column.pipeArgs.format);
+            const dateTimeEditorDirective = inputGroup.querySelector('input').injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
+            expect(dateTimeEditorDirective.displayFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
         }));
 
         it('Should filter grid through custom date filter dialog when using pipeArgs for the column', fakeAsync(() => {

@@ -28,6 +28,8 @@ import { GridColumnDataType } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../public_api';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxSummaryTemplateDirective } from '../columns/templates.directive';
+import { IgxInputDirective } from '../../input-group/public_api';
+import { IgxGridRowComponent } from './grid-row.component';
 
 describe('IgxGrid - Column properties #grid', () => {
 
@@ -902,23 +904,30 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             const firstCell = orderColumn._cells[0];
-
             expect(firstCell.nativeElement.innerText).toEqual('Oct 1, 2015, 11:37:22 AM');
 
             firstCell.setEditMode(true);
             fix.detectChanges();
             tick();
 
-            const input = firstCell.nativeElement.querySelector('.igx-input-group__input');
+            const firstRow = fix.debugElement.query(By.directive(IgxGridRowComponent));
+            const dateTimeEditor = firstRow.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
             const prefix = firstCell.nativeElement.querySelector('igx-prefix');
             const suffix = firstCell.nativeElement.querySelector('igx-suffix');
+            const input = dateTimeEditor.nativeElement;
 
-            expect((input as any).value.normalize('NFKC')).toEqual('10/01/2015, 11:37:22 AM');
+            // input is not focused yet, so the value is as the display format sets it
+            expect(input.value).toEqual('Oct 1, 2015, 11:37:22 AM');
+
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toBe('MM/dd/yyyy, hh:mm:ss tt');
+            dateTimeEditor.onFocus();
+            fix.detectChanges();
+
+            expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('10/01/2015, 11:37:22 AM');
             expect(prefix).toBeNull();
             expect(suffix).toBeNull();
 
-            const inputElement = fix.debugElement.query(By.css('input'));
-            const dateTimeEditor = inputElement.injector.get(IgxDateTimeEditorDirective);
             dateTimeEditor.value = new Date(2021, 11, 3, 15, 15, 22);
             fix.detectChanges();
 
@@ -1091,12 +1100,22 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
 
+            let inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            let dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.onFocus();
+            fix.detectChanges();
+
             let input = producedDateColumn._cells[0].nativeElement.querySelector('.igx-input-group__input');
             expect((input as any).value).toEqual('2014-10-01');
 
             orderDateColumn._cells[0].setEditMode(true)
             fix.detectChanges();
             tick();
+
+            inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.onFocus();
+            fix.detectChanges();
 
             input = orderDateColumn._cells[0].nativeElement.querySelector('.igx-input-group__input');
             expect((input as any).value).toEqual('2015--10--01');
@@ -1105,8 +1124,12 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
 
-            input = receiveTimeColumn._cells[0].nativeElement.querySelector('.igx-input-group__input');
-            expect((input as any).value).toEqual('8-37-11 a');
+            inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.onFocus();
+            fix.detectChanges();
+
+            expect(dateTimeEditor.nativeElement.value).toEqual('08-37-11 a');
         }));
 
         it('DateTime: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', fakeAsync(() => {
@@ -1137,9 +1160,14 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
 
+            const inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            const dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.onFocus();
+            fix.detectChanges();
+
             input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             // resolve back to the default format for the locale since the pipeArgs.format is not numeric
-            expect((input as any).value.normalize('NFKC')).toEqual('10/01/2015, 11:37:22 AM');
+            expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('10/01/2015, 11:37:22 AM');
         }));
 
         it('Date: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', fakeAsync(() => {
@@ -1170,9 +1198,12 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
 
-            input = firstCell.nativeElement.querySelector('.igx-input-group__input');
+            const inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            const dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.onFocus();
+            fix.detectChanges();
             // resolve back to the default format for the locale since the pipeArgs.format is not numeric
-            expect((input as any).value).toEqual('10/01/2014');
+            expect(dateTimeEditor.nativeElement.value).toEqual('10/01/2014');
         }));
 
         it('Time: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', fakeAsync(() => {
@@ -1203,6 +1234,11 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
 
+            const inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            const dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.onFocus();
+            fix.detectChanges();
+
             input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             // resolve back to the default time format since the pipeArgs.format is not numeric
             expect((input as any).value.normalize('NFKC')).toEqual('08:37 AM');
@@ -1228,22 +1264,34 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
 
-            let input = producedDateColumn._cells[0].nativeElement.querySelector('.igx-input-group__input');
-            expect((input as any).value).toEqual('10/01/2014');
+            let inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            let dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.onFocus();
+            fix.detectChanges();
+
+            expect(dateTimeEditor.nativeElement.value).toEqual('10/01/2014');
 
             orderDateColumn._cells[0].setEditMode(true)
             fix.detectChanges();
             tick();
 
-            input = orderDateColumn._cells[0].nativeElement.querySelector('.igx-input-group__input');
-            expect((input as any).value.normalize('NFKC')).toEqual('10/01/2015, 11:37:22 AM');
+            inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.onFocus();
+            fix.detectChanges();
+
+            expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('10/01/2015, 11:37:22 AM');
 
             receiveTimeColumn._cells[0].setEditMode(true)
             fix.detectChanges();
             tick();
 
-            input = receiveTimeColumn._cells[0].nativeElement.querySelector('.igx-input-group__input');
-            expect((input as any).value.normalize('NFKC')).toEqual('08:37 AM');
+            inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.onFocus();
+            fix.detectChanges();
+
+            expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('08:37 AM');
         }));
 
         it('Sorting dateTime column', () => {
