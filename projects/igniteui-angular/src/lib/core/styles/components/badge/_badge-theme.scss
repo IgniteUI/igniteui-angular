@@ -17,7 +17,6 @@
 /// @param {Color} $icon-color [null] - The icon color used.
 /// @param {Color} $text-color [null] - The text color used.
 /// @param {Color} $border-color [null] - The border color used.
-/// @param {Number} $border-width [null] - The border width of the badge component.
 /// @param {Color} $background-color [null] - The background color used.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the badge.
 /// @param {Number} $border-radius [null] - The border radius used for badge component.
@@ -37,7 +36,6 @@
 
     $border-color: null,
     $border-radius: null,
-    $border-width: null,
 
     $background-color: null,
     $shadow: null,
@@ -75,7 +73,6 @@
         border-radius: $border-radius,
         background-color: $background-color,
         shadow: $shadow,
-        border-width: $border-width,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
         )),
