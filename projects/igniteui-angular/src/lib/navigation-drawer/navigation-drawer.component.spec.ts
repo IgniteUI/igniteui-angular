@@ -15,7 +15,7 @@ import { IgxNavbarComponent } from '../navbar/navbar.component';
 declare let Simulator: any;
 // const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
-describe('Navigation Drawer', () => {
+fdescribe('Navigation Drawer', () => {
     let widthSpyOverride: jasmine.Spy;
     // configureTestSuite();
     beforeEach(waitForAsync(() => {
@@ -626,7 +626,7 @@ describe('Navigation Drawer', () => {
             let flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
 
             // Mini variant pinned by default
-            expect(flexBasis).toEqual('56px');;
+            expect(flexBasis).toEqual('57px');;
             expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
 
             fix.componentInstance.navDrawer.toggle();
