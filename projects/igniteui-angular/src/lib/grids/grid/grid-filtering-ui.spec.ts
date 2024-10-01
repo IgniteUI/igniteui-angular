@@ -5230,11 +5230,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
             tick(200);
 
-            const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
-            const inputGroup = expr.querySelectorAll('igx-input-group')[1];
-            const dateTimeEditorInput = inputGroup.querySelector('input');
-            expect(dateTimeEditorInput.getAttribute('ng-reflect-input-format')).toMatch(column.pipeArgs.format);
-            expect(dateTimeEditorInput.getAttribute('ng-reflect-display-format')).toMatch(column.pipeArgs.format);
+            const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat.normalize('NFKC')).toMatch('dd-MM-yyyy');
+            expect(dateTimeEditorDirective.displayFormat.normalize('NFKC')).toMatch('dd-MM-yyyy');
         }));
 
         it('DateTime: custom filtering dialog input locale should be set as the grid locale', fakeAsync(() => {
