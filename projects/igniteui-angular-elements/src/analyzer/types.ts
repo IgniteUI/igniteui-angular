@@ -11,6 +11,7 @@ export type ContentQuery = {
 }
 
 export type ComponentMetadata<T = ts.InterfaceType> = {
+    selector: string;
     parents: T[],
     contentQueries: ContentQuery[],
     methods: MethodInfo[],
