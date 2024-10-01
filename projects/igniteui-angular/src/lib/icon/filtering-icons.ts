@@ -1,6 +1,6 @@
 import { InjectionToken, inject } from '@angular/core';
 import { IMXIcon, contains, doesNotContain, endsWith, equals, greaterThan, greaterThanOrEqual, isAfter, isBefore, isEmpty, isFalse, isNull, isNotNull, isTrue, lastMonth, lastYear, lessThan, lessThanOrEqual, nextMonth, nextYear, notEmpty, notEqual, selectAll, startsWith, thisMonth, thisYear, today, ungroup, yesterday } from '@igniteui/material-icons-extended';
-import { IgxIconService } from 'igniteui-angular';
+import { IgxIconService } from './icon.service';
 
 export const filteringIcons: IMXIcon[] = [
     contains,
