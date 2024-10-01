@@ -254,7 +254,7 @@ export class QueryBuilderFunctions {
         const actionButtons = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs-actions > button'));
         const commitButton = actionButtons.filter((el: DebugElement) => {
             const icon = el.query(By.directive(IgxIconComponent)).componentInstance;
-            return icon.name === 'check';
+            return icon.name === 'confirm';
         });
 
         return commitButton[level].nativeElement;
