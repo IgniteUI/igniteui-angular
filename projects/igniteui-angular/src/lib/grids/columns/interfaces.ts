@@ -51,10 +51,12 @@ export interface IFieldPipeArgs {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IColumnPipeArgs extends IFieldPipeArgs {}
 
-export interface IColumnEditorOptions {
+export interface IFieldEditorOptions {
     /** A custom or a predefined format string used for the built-in editors of date/time columns */
     dateTimeFormat?: string;
 }
+
+export interface IColumnEditorOptions extends IFieldEditorOptions {}
 
 export interface ISortingOptions {
     mode: 'single' | 'multiple';

@@ -28,7 +28,7 @@ import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { DataType, GridColumnDataType } from '../../data-operations/data-util';
 import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
-import { IColumnEditorOptions, IColumnPipeArgs, IFieldPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
+import { IColumnEditorOptions, IColumnPipeArgs, IFieldEditorOptions, IFieldPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
@@ -302,7 +302,7 @@ export interface FieldType {
     header?: string;
     /* alternateType: GridColumnDataType */
     dataType: DataType;
-    editorOptions: IColumnEditorOptions;
+    editorOptions: IFieldEditorOptions;
     filters: IgxFilteringOperand;
     pipeArgs: IFieldPipeArgs;
     defaultTimeFormat: string;
