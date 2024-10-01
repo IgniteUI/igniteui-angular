@@ -162,6 +162,17 @@
         margin-inline-start: auto;
     }
 
+    %query-builder-dialog {
+        display: flex;
+        flex-direction: column;
+        gap: rem(16px);
+        max-width: rem(310px);
+
+        > * {
+            margin: 0 !important;
+        }
+    }
+
     %advanced-filter__header {
         @if $variant != 'indigo' {
             @include type-style('h6');

@@ -9,6 +9,7 @@
     @include _advanced-filtering-con-menu();
     @include _advanced-filtering-empty();
     @include _query-builder-tree();
+    @include _query-builder-dialog();
 
     @include b(igx-query-builder) {
         $this: bem--selector-to-string(&);
@@ -160,5 +161,11 @@
                 @extend %query-level-#{$i} !optional;
             }
         }
+    }
+}
+
+@mixin _query-builder-dialog {
+    @include b(igx-query-builder-dialog) {
+        @extend %query-builder-dialog !optional;;
     }
 }

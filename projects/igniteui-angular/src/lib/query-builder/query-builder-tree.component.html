@@ -612,12 +612,13 @@
     rightButtonLabel="{{ this.resourceStrings.igx_query_builder_dialog_confirm }}"
     (leftButtonSelect)="onEntityChangeCancel()"
     (rightButtonSelect)="onEntityChangeConfirm()">
-    <div>{{ this.resourceStrings.igx_query_builder_dialog_message }}</div>
-    <igx-checkbox
-        (change)="onShowEntityChangeDialogChange($event)"
-        [disableRipple]="true"
-        [tabindex]="-1"
-        class="igx-combo__checkbox">
-        {{ this.resourceStrings.igx_query_builder_dialog_checkbox_text }}
-    </igx-checkbox>
+    <section class="igx-query-builder-dialog">
+        <p>{{ this.resourceStrings.igx_query_builder_dialog_message }}</p>
+        <igx-checkbox
+                (change)="onShowEntityChangeDialogChange($event)"
+                [disableRipple]="true"
+                [tabindex]="-1">
+            {{ this.resourceStrings.igx_query_builder_dialog_checkbox_text }}
+        </igx-checkbox>
+    </section>
 </igx-dialog>
