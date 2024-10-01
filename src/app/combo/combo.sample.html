@@ -178,17 +178,9 @@
             [displayKey]="valueKeyVar"
             [valueKey]="valueKeyVar"
             [groupKey]="valueKeyVar ? 'region' : ''">
-            <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
-                <div class="state-card--simple">
-                    <div class="display-value--main">{{display[key]}}</div>
-                    <div class="display-value--sub">{{display.region}}</div>
-                </div>
-            </ng-template>
-            <ng-template *ngIf="currentDataType === 'primitive'" #itemTemplate let-display let-key="valueKey">
-                <div class="state-card--simple">
-                    <div class="display-value--main">{{display}}</div>
-                    <div class="display-value--sub"></div>
-                </div>
+            <ng-template igxComboItem let-display let-key="valueKey">
+                <div>{{display[key]}}</div>
+                <small>{{display.region}}</small>
             </ng-template>
             <ng-template igxComboHeader>
                 <div class="custom-combo-header">This is a header</div>
@@ -196,9 +188,8 @@
             <ng-template igxComboFooter>
                 <div class="custom-combo-footer">This is a footer</div>
             </ng-template>
-            <ng-template *ngIf="currentDataType !== 'primitive'" #headerItemTemplate let-display
-                let-key="groupKey">
-                <div>Group header for {{display[key]}}</div>
+            <ng-template igxComboHeaderItem let-display let-key="groupKey">
+                <div>🇺🇸 {{display[key]}}</div>
             </ng-template>
             <ng-template igxComboAddItem>
                 <button igxButton="flat" igxRipple>Add VERY CUSTOM item</button>
@@ -208,10 +199,10 @@
             <igx-hint>Please select the states you've visited</igx-hint>
         </igx-combo>
         <ng-template #customItemTemplate let-display let-key="valueKey">
-            <div class="state-card--simple">
-                <div class="display-value--main">{{display[key]}}</div>
-                <div class="display-value--sub">In Region {{display.region}}</div>
+            <div>
+                <strong>{{display[key]}}</strong>
             </div>
+            <small>In Region: {{display.region}}</small>
         </ng-template>
     </section>
 </div>

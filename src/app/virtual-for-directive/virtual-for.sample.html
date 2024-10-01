@@ -91,7 +91,7 @@
     <h4 class="sample-title">Even Variable</h4>
     <igx-list>
         <div style='height: 500px; position: relative; overflow: hidden'>
-            <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical [igxForScrollOrientation]="'vertical'"
+            <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='"500px"' [igxForItemSize]='itemSize' let-rowIndex="index" let-odd="odd"
                 let-even="even">
                 <igx-list-item [ngClass]="{even: even}">

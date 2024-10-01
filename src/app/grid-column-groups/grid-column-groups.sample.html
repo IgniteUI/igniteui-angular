@@ -21,7 +21,7 @@
                 <igx-column [visibleWhenCollapsed]="false" [hidden]="true" [filterable]="true" [sortable]="true" [resizable]="true" field="ContactName"></igx-column>
                 <igx-column [visibleWhenCollapsed]="false"  [filterable]="true" [sortable]="true" [resizable]="true" field="ContactTitle"></igx-column>
             </igx-column-group>
-            <ng-template igxCollapsibleIndicator let-column="column" #ind >
+            <ng-template igxCollapsibleIndicator let-column="column">
                 <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
             </ng-template>
         </igx-column-group>
