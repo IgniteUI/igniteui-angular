@@ -1,23 +1,71 @@
-.sample-buttons {
-    margin-top: 24px;
+:host {
+    display: flex;
+    gap: 32px;
 
-    & > button,
-    & > igx-drop-down {
-        --ig-size: var(--ig-size-large);
+    > :first-child {
+        flex: 1;
     }
 }
 
-[igxButton] {
-    margin: 8px 8px 8px 0;
+.sample-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid hsla(var(--ig-gray-200));
+    margin-block-end: 8px;
+}
+
+.column-actions {
+    max-width: 230px;
+}
+
+.column-actions,
+.column-actions__header,
+.column-actions__columns {
+    display: flex;
+    flex-direction: column;
+}
+
+.column-actions__header {
+    padding: 16px;
+}
+
+.column-actions__columns {
+    flex: 1;
+    height: 150px;
+    overflow-y: auto;
+
+    gap: 8px;
+
+    > * {
+        padding-block: 4px;
+        padding-inline: 16px;
+    }
+}
+
+.column-hiding__buttons {
+    display: flex;
+    gap: 16px;
+    padding: 8px 16px;
 }
 
 .density-chooser {
-    margin-bottom: 16px;
-    max-width: 900px;
+    display: block;
+    margin-block-end: 16px;
 }
 
 igx-grid {
+    margin-block-end: 32px;
+
+    z-index: 0;
+
     &:first-of-type {
-        margin-bottom: 3rem;
+        z-index: 1;
     }
+}
+
+.selection-mode {
+    text-transform: uppercase;
+    color: hsla(var(--ig-primary-400));
 }
