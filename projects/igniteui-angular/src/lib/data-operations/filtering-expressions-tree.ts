@@ -21,14 +21,8 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
     /* alternateName: treeType */
     type?: FilteringExpressionsTreeType;
 
-    /**
-     * @deprecated
-     */
     find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
 
-    /**
-     * @deprecated
-     */
     findIndex(fieldName: string): number;
 }
 
