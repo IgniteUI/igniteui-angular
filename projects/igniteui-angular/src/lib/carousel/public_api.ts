@@ -6,7 +6,7 @@ export { Direction, CarouselAnimationSettings } from './carousel-base';
 export * from './carousel.component';
 export * from './slide.component';
 export * from './carousel.directives';
-export { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
+export { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
 
 /* NOTE: Carousel directives collection for ease-of-use import in standalone components scenario */
 export const IGX_CAROUSEL_DIRECTIVES = [

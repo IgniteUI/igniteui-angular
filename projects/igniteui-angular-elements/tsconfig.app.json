@@ -3,12 +3,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/app",
-    "types": [
-      "hammerjs"
-    ]
   },
   "files": [
-    "src/main.ts",
+    "src/main.app.ts",
     "src/polyfills.ts"
   ],
   "include": [

@@ -462,6 +462,18 @@
         }
     }
 
+    %form-group-placeholder {
+        %form-group-label {
+            transition: none !important;
+        }
+    }
+
+    %form-group-display:not(%form-group-display--filled) {
+        %form-group-label {
+            transition: all $transition-timing;
+        }
+    }
+
     %form-group-display--no-margin {
         margin-block-start: 0;
     }
@@ -883,7 +895,6 @@
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
-        transition: all $transition-timing;
         margin-inline-start: pad-inline(0, rem(-2px), rem(-4px));
     }
 

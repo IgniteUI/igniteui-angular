@@ -48,7 +48,7 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
 
     public displayDensities: Selection[];
-    public inputType: IgxInputGroupType = null;
+    public inputType: IgxInputGroupType = 'box';
     public inputTypes: Selection[];
     public items: string[] = ['Orange', 'Apple', 'Banana', 'Mango'];
 

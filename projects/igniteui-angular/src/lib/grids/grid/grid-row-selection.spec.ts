@@ -2,7 +2,7 @@ import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angul
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxBooleanFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     RowSelectionComponent,
@@ -2138,6 +2138,27 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true, false);
             expect(grid.selectedRows.length).toBe(grid.data.length);
+        });
+
+        it('Should deselect updated row with header checkbox when batchEditing is enbaled and filtering is applied', () => {
+            grid.batchEditing = true;
+            grid.selectRows([1]);
+            grid.filter('InStock', null, IgxBooleanFilteringOperand.instance().condition('true'));
+            fix.detectChanges();
+
+            const row = grid.gridAPI.get_row_by_index(0);
+            GridSelectionFunctions.verifyRowSelected(row);
+
+            grid.updateRow({ ProductID: 1, ProductName: 'test', InStock: true, UnitsInStock: 1, OrderDate: new Date('2019-03-01') }, 1);
+            fix.detectChanges();
+
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyRowSelected(row);
+
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyRowSelected(row, false);
         });
     });
 

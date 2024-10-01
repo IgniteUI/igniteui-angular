@@ -3,10 +3,12 @@ import { createCustomElement, NgElementConfig, NgElementConstructor } from '@ang
 import { FilteringExpressionsTree, FilteringLogic, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxGridComponent, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from 'igniteui-angular';
 import { ComponentConfig } from './component-config';
 import { IgxCustomNgElementStrategyFactory } from './custom-strategy';
+import type { IgniteComponent } from '../utils/register';
 
 export type IgxNgElementConfig = Omit<NgElementConfig, 'strategyFactory'> & { registerConfig: ComponentConfig[] };
+type IgxElementConstructor<T> = NgElementConstructor<T> & { tagName: string};
 
-export function createIgxCustomElement<T>(component: Type<any>, config: IgxNgElementConfig): NgElementConstructor<T> {
+export function createIgxCustomElement<T>(component: Type<T>, config: IgxNgElementConfig): IgxElementConstructor<T> {
     const strategyFactory = new IgxCustomNgElementStrategyFactory(component, config.injector, config.registerConfig);
 
     guardAttributeNames<T>(strategyFactory);
@@ -71,7 +73,26 @@ export function createIgxCustomElement<T>(component: Type<any>, config: IgxNgEle
         elementCtor.prototype.getFilterFactory = getFilterFactory;
     }
 
-    return elementCtor;
+    // assign static `tagName` for register/define:
+    Object.defineProperty(elementCtor, 'tagName', {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: componentConfig?.selector
+    });
+
+    return elementCtor as typeof elementCtor & { tagName: string};
+}
+
+export function withRegister<T>(elementCtor: IgxElementConstructor<T>, register: () => void): IgniteComponent<T> {
+    Object.defineProperty(elementCtor, 'register', {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: register
+    });
+
+    return elementCtor as IgniteComponent<T>;
 }
 
 /**

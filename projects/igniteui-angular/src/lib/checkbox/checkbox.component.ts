@@ -20,6 +20,7 @@ import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { IgxTheme, ThemeService } from '../services/theme/theme.service';
 
 export const LabelPosition = /*@__PURE__*/mkenum({
     BEFORE: 'before',
@@ -428,11 +429,20 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      */
     private _required = false;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    protected theme: IgxTheme = 'material';
+
     constructor(
         protected cdr: ChangeDetectorRef,
         protected renderer: Renderer2,
+        protected themeService: ThemeService,
         @Optional() @Self() public ngControl: NgControl,
     ) {
+        this.theme = this.themeService?.globalTheme;
+
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }

@@ -11,7 +11,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { NgFor, NgIf } from '@angular/common';
-import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
+import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
 
 describe('Carousel', () => {
     configureTestSuite();
@@ -233,6 +233,7 @@ describe('Carousel', () => {
         it('keyboard navigation test', () => {
             spyOn(carousel.slideChanged, 'emit');
             carousel.pause = true;
+            carousel.keyboardSupport = true;
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
             fixture.detectChanges();
@@ -366,6 +367,20 @@ describe('Carousel', () => {
             expect(HelperTestFunctions.getIndicatorsLabel(fixture)).toBeNull();
         });
 
+        it('`indicators` changes visibility of indicators', () => {
+            expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeDefined();
+
+            carousel.indicators = false;
+            fixture.detectChanges();
+            expect(carousel.indicators).toBe(false);
+            expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeNull();
+
+            carousel.indicators = true;
+            fixture.detectChanges();
+            expect(carousel.indicators).toBe(true);
+            expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeDefined();
+        });
+
         it('indicatorsOrientation changes the position of indicators', () => {
             let indicatorsContainer = HelperTestFunctions.getIndicatorsContainer(fixture);
             expect(indicatorsContainer).toBeDefined();
@@ -388,7 +403,7 @@ describe('Carousel', () => {
         });
 
         it('keyboardSupport changes support for keyboard navigation', () => {
-            carousel.keyboardSupport = false;
+            expect(carousel.keyboardSupport).toBe(false);
             carousel.select(carousel.get(1));
             fixture.detectChanges();
 
@@ -498,6 +513,134 @@ describe('Carousel', () => {
 
             expect(slides.length).toEqual(tabs.length);
         });
+
+        it('should change slide on Enter/Space keys', () => {
+            const nextNav = HelperTestFunctions.getNextButton(fixture);
+            const prevNav = HelperTestFunctions.getPreviousButton(fixture);
+
+            spyOn(carousel, 'next');
+            spyOn(carousel, 'prev');
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', nextNav, true);
+            UIInteractions.triggerKeyDownEvtUponElem(' ', nextNav, true);
+            fixture.detectChanges();
+            expect(carousel.next).toHaveBeenCalledTimes(2);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', prevNav, true);
+            UIInteractions.triggerKeyDownEvtUponElem(' ', prevNav, true);
+            fixture.detectChanges();
+            expect(carousel.prev).toHaveBeenCalledTimes(2);
+        });
+
+        it('should set focused class on indicators container on keyboard tab focus', () => {
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
+
+            expect(indicators.classList).not.toContain('igx-carousel-indicators--focused');
+
+            indicators.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
+            fixture.detectChanges();
+
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+        });
+
+        it('should remove focused class from indicators container on focusout', () => {
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
+            const indicator = HelperTestFunctions.getIndicators(fixture)[1] as HTMLElement;
+
+            indicators.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
+            fixture.detectChanges();
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            // if element gaining focus is an indicator the focused class remains
+            indicators.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: indicator }));
+            fixture.detectChanges();
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            // if element gaining focus is not an indicator the focused class is removed
+            indicators.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+            fixture.detectChanges();
+            expect(indicators.classList).not.toContain('igx-carousel-indicators--focused');
+        });
+
+        it('should remove focused class from indicators container on click', () => {
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
+
+            indicators.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
+            fixture.detectChanges();
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            indicators.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            fixture.detectChanges();
+            expect(indicators.classList).not.toContain('igx-carousel-indicators--focused');
+        });
+
+        it('should keep focused class on indicators container on keyboard nav with supported keys', () => {
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
+
+            indicators.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
+            fixture.detectChanges();
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(1);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(0);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('End', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(3);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('Home', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(0);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+        });
+    });
+
+    describe('RTL Tests: ', () => {
+        beforeEach(() => {
+            document.body.dir = 'rtl';
+            fixture = TestBed.createComponent(CarouselTestComponent);
+            carousel = fixture.componentInstance.carousel;
+            fixture.detectChanges();
+        });
+        afterEach(() => {
+            document.body.dir = 'ltr';
+        });
+
+        it('should support keyboard navigation when the indicators container is focused', () => {
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
+
+            indicators.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
+            fixture.detectChanges();
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(3);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(0);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('End', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(0);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+
+            UIInteractions.triggerKeyDownEvtUponElem('Home', indicators, true);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(3);
+            expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+        });
     });
 
     describe('Templates Tests: ', () => {
@@ -588,7 +731,7 @@ describe('Carousel', () => {
             await wait();
             expect(carousel.get(0).active).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
-            expect(carousel.animationType).toBe(HorizontalAnimationType.slide);
+            expect(carousel.animationType).toBe(CarouselAnimationType.slide);
             carousel.next();
             fixture.detectChanges();
             await wait(200);
@@ -615,12 +758,12 @@ describe('Carousel', () => {
 
         it('Test fade animation', async () => {
             await wait();
-            carousel.animationType = HorizontalAnimationType.fade;
+            carousel.animationType = CarouselAnimationType.fade;
             fixture.detectChanges();
 
             expect(carousel.get(0).active).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
-            expect(carousel.animationType).toBe(HorizontalAnimationType.fade);
+            expect(carousel.animationType).toBe(CarouselAnimationType.fade);
             carousel.next();
             fixture.detectChanges();
             await wait(200);
@@ -772,32 +915,56 @@ describe('Carousel', () => {
         it('verify changing slides with pan left ', () => {
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, -0.05, 0.1);
-
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.05, 0.1, 'horizontal');
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1);
-
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1, 'horizontal');
             expect(carousel.current).toEqual(3);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2);
-
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2, 'horizontal');
             expect(carousel.current).toEqual(0);
         });
 
         it('verify changing slides with pan right ', () => {
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, 0.1, 0.1);
-
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.1, 0.1, 'horizontal');
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1);
-
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1, 'horizontal');
             expect(carousel.current).toEqual(1);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2);
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2, 'horizontal');
+            expect(carousel.current).toEqual(0);
+        });
 
+        it('verify changing slides with pan up', () => {
+            carousel.vertical = true;
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.05, 0.1, 'vertical');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1, 'vertical');
+            expect(carousel.current).toEqual(3);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2, 'vertical');
+            expect(carousel.current).toEqual(0);
+        });
+
+        it('verify changing slides with pan down', () => {
+            carousel.vertical = true;
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.1, 0.1, 'vertical');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1, 'vertical');
+            expect(carousel.current).toEqual(1);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2, 'vertical');
             expect(carousel.current).toEqual(0);
         });
 
@@ -810,7 +977,7 @@ describe('Carousel', () => {
 
             expect(carousel.current).toEqual(0);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2);
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2, 'horizontal');
 
             expect(carousel.current).toEqual(0);
 
@@ -819,7 +986,7 @@ describe('Carousel', () => {
 
             expect(carousel.current).toEqual(3);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, -0.9, 2);
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.9, 2, 'horizontal');
 
             expect(carousel.current).toEqual(3);
         });
@@ -830,12 +997,52 @@ describe('Carousel', () => {
 
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2);
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2, 'horizontal');
 
             expect(carousel.current).toEqual(2);
 
-            HelperTestFunctions.simulatePan(fixture, carousel, -0.6, 2);
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.6, 2, 'horizontal');
 
+            expect(carousel.current).toEqual(2);
+        });
+
+        it('verify pan left/right when `vertical` is true', () => {
+            carousel.vertical = true;
+            fixture.detectChanges();
+            expect(carousel.vertical).toBe(true);
+            expect(carousel.current).toEqual(2);
+
+            // pan left
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1, 'horizontal');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2, 'horizontal');
+            expect(carousel.current).toEqual(2);
+
+            // pan right
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1, 'horizontal');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2, 'horizontal');
+            expect(carousel.current).toEqual(2);
+        });
+
+        it('verify pan up/down when `vertical` is false', () => {
+            expect(carousel.vertical).toBe(false);
+            expect(carousel.current).toEqual(2);
+
+            // pan up
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1, 'vertical');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2, 'vertical');
+            expect(carousel.current).toEqual(2);
+
+            // pan down
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1, 'vertical');
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2, 'vertical');
             expect(carousel.current).toEqual(2);
         });
     });
@@ -911,14 +1118,21 @@ class HelperTestFunctions {
         // Simulator.gestures.press(activeSlide, { duration: 180 });
     }
 
-    public static simulatePan(fixture, carousel, deltaXOffset, velocity) {
+    public static simulatePan(fixture, carousel, deltaOffset, velocity, dir: 'horizontal' | 'vertical') {
         const activeSlide = carousel.get(carousel.current).nativeElement;
         const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
-        const deltaX = activeSlide.offsetWidth * deltaXOffset;
-        const event = deltaXOffset < 0 ? 'panleft' : 'panright';
+        const deltaX = dir === 'horizontal' ? activeSlide.offsetWidth * deltaOffset : 0;
+        const deltaY = dir === 'horizontal' ? 0 : activeSlide.offsetHeight * deltaOffset;
+
+        let event;
+        if (dir === 'horizontal') {
+            event = deltaOffset < 0 ? 'panleft' : 'panright';
+        } else {
+            event = deltaOffset < 0 ? 'panup' : 'pandown';
+        }
         const panOptions = {
             deltaX,
-            deltaY: 0,
+            deltaY,
             duration: 100,
             velocity,
             preventDefault: ( () => {  })

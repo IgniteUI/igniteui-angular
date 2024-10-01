@@ -71,6 +71,7 @@ export class AnalyzerPrinter {
     private createMetaLiteralObject([type, meta]: readonly [ts.InterfaceType, ComponentMetadata]) {
         const properties = [
             ts.factory.createPropertyAssignment('component', ts.factory.createIdentifier(type.symbol.name)),
+            ts.factory.createPropertyAssignment('selector', ts.factory.createStringLiteral(meta.selector)),
             ts.factory.createPropertyAssignment('parents', ts.factory.createArrayLiteralExpression(meta.parents.map(x => ts.factory.createIdentifier(x.symbol.name)))),
             ts.factory.createPropertyAssignment('contentQueries', ts.factory.createArrayLiteralExpression(meta.contentQueries.map(x => this.createContentQueryLiteral(x)))),
             ts.factory.createPropertyAssignment('additionalProperties', ts.factory.createArrayLiteralExpression(meta.additionalProperties.map(x => this.createPropertyLiteral(x)))),

@@ -213,7 +213,7 @@
         background: var-get($theme, 'background');
         top: 0;
         bottom: 0;
-        width: var(--igx-nav-drawer-size);
+        min-width: var(--igx-nav-drawer-size);
         inset-inline-start: 0;
         z-index: 999;
         transition: width, padding, transform;
@@ -280,15 +280,20 @@
 
     %aside--mini {
         transition-duration: .2s, .2s;
-        width: var(--igx-nav-drawer-size--mini);
+        min-width: var(--igx-nav-drawer-size--mini);
 
         %item {
             justify-content: center;
 
+            @if $variant == 'bootstrap' {
+                width: rem(56px);
+            }
+
             @if $variant == 'indigo' {
-                //max-width: rem(32px);
+                width: rem(32px);
+
                 // important is needed to override the typography margins
-                margin: rem(14px) auto !important;
+                margin: rem(4px) auto !important;
             }
 
             igx-icon {

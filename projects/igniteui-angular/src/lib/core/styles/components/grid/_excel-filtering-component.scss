@@ -108,6 +108,7 @@
 
         @include e(actions-filter) {
             @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions__action-filter !optional;
         }
 
         @include e(actions-filter, $m: active) {

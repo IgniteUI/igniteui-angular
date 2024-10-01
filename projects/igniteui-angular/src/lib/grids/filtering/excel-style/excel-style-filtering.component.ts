@@ -221,6 +221,16 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     /**
      * Gets the minimum height.
+     * 
+     * Setting value in template: 
+     * ```ts
+     * [minHeight]="'<number><unit (px|rem|etc..)>'" 
+     * ```
+     * 
+     * Example for setting a value: 
+     * ```ts
+     * [minHeight]="'700px'"
+     * ```
      */
     @Input()
     public get minHeight(): string {
@@ -248,6 +258,16 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     /**
      * Gets the maximum height.
+     * 
+     * Setting value in template: 
+     * ```ts
+     * [maxHeight]="'<number><unit (px|rem|etc..)>'" 
+     * ```
+     * 
+     * Example for setting a value: 
+     * ```ts
+     * [maxHeight]="'700px'"
+     * ```
      */
     @Input()
     @HostBinding('style.max-height')

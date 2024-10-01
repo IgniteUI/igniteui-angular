@@ -38,6 +38,7 @@ export const registerComponents = [
 export var registerConfig = [
   {
     component: IgxActionStripComponent,
+    selector: "igc-action-strip",
     parents: [
       IgxGridComponent,
       IgxTreeGridComponent,
@@ -58,6 +59,7 @@ export var registerConfig = [
   },
   {
     component: IgxColumnComponent,
+    selector: "igc-column",
     parents: [
       IgxGridComponent,
       IgxTreeGridComponent,
@@ -113,6 +115,7 @@ export var registerConfig = [
   },
   {
     component: IgxColumnGroupComponent,
+    selector: "igc-column-group",
     parents: [
       IgxGridComponent,
       IgxTreeGridComponent,
@@ -173,6 +176,7 @@ export var registerConfig = [
   },
   {
     component: IgxColumnLayoutComponent,
+    selector: "igc-column-layout",
     parents: [IgxGridComponent],
     contentQueries: [
       {
@@ -227,6 +231,7 @@ export var registerConfig = [
   },
   {
     component: IgxGridComponent,
+    selector: "igc-grid",
     parents: [],
     contentQueries: [
       {
@@ -395,6 +400,7 @@ export var registerConfig = [
   },
   {
     component: IgxGridEditingActionsComponent,
+    selector: "igc-grid-editing-actions",
     parents: [IgxActionStripComponent],
     contentQueries: [],
     additionalProperties: [{ name: "hasChildren" }],
@@ -404,6 +410,7 @@ export var registerConfig = [
   },
   {
     component: IgxGridPinningActionsComponent,
+    selector: "igc-grid-pinning-actions",
     parents: [IgxActionStripComponent],
     contentQueries: [],
     additionalProperties: [],
@@ -413,6 +420,7 @@ export var registerConfig = [
   },
   {
     component: IgxGridStateComponent,
+    selector: "igc-grid-state",
     parents: [
       IgxGridComponent,
       IgxTreeGridComponent,
@@ -430,6 +438,7 @@ export var registerConfig = [
   },
   {
     component: IgxGridToolbarActionsComponent,
+    selector: "igc-grid-toolbar-actions",
     parents: [IgxGridToolbarComponent],
     contentQueries: [],
     additionalProperties: [],
@@ -437,6 +446,7 @@ export var registerConfig = [
   },
   {
     component: IgxGridToolbarAdvancedFilteringComponent,
+    selector: "igc-grid-toolbar-advanced-filtering",
     parents: [IgxGridToolbarComponent],
     contentQueries: [],
     additionalProperties: [],
@@ -444,6 +454,7 @@ export var registerConfig = [
   },
   {
     component: IgxGridToolbarComponent,
+    selector: "igc-grid-toolbar",
     parents: [
       IgxGridComponent,
       IgxTreeGridComponent,
@@ -460,6 +471,7 @@ export var registerConfig = [
   },
   {
     component: IgxGridToolbarExporterComponent,
+    selector: "igc-grid-toolbar-exporter",
     parents: [IgxGridToolbarComponent],
     contentQueries: [],
     additionalProperties: [],
@@ -468,6 +480,7 @@ export var registerConfig = [
   },
   {
     component: IgxGridToolbarHidingComponent,
+    selector: "igc-grid-toolbar-hiding",
     parents: [IgxGridToolbarComponent],
     contentQueries: [],
     additionalProperties: [],
@@ -477,6 +490,7 @@ export var registerConfig = [
   },
   {
     component: IgxGridToolbarPinningComponent,
+    selector: "igc-grid-toolbar-pinning",
     parents: [IgxGridToolbarComponent],
     contentQueries: [],
     additionalProperties: [],
@@ -486,6 +500,7 @@ export var registerConfig = [
   },
   {
     component: IgxGridToolbarTitleComponent,
+    selector: "igc-grid-toolbar-title",
     parents: [IgxGridToolbarComponent],
     contentQueries: [],
     additionalProperties: [],
@@ -493,6 +508,7 @@ export var registerConfig = [
   },
   {
     component: IgxHierarchicalGridComponent,
+    selector: "igc-hierarchical-grid",
     parents: [],
     contentQueries: [
       {
@@ -665,6 +681,7 @@ export var registerConfig = [
   },
   {
     component: IgxPaginatorComponent,
+    selector: "igc-paginator",
     parents: [
       IgxGridComponent,
       IgxTreeGridComponent,
@@ -684,6 +701,7 @@ export var registerConfig = [
   },
   {
     component: IgxPivotDataSelectorComponent,
+    selector: "igc-pivot-data-selector",
     parents: [],
     contentQueries: [],
     additionalProperties: [{ name: "animationSettings", writable: true }],
@@ -697,6 +715,7 @@ export var registerConfig = [
   },
   {
     component: IgxPivotGridComponent,
+    selector: "igc-pivot-grid",
     parents: [],
     contentQueries: [
       {
@@ -809,6 +828,7 @@ export var registerConfig = [
   },
   {
     component: IgxRowIslandComponent,
+    selector: "igc-row-island",
     parents: [IgxHierarchicalGridComponent, IgxRowIslandComponent],
     contentQueries: [
       {
@@ -957,6 +977,7 @@ export var registerConfig = [
   },
   {
     component: IgxTreeGridComponent,
+    selector: "igc-tree-grid",
     parents: [],
     contentQueries: [
       {

@@ -5,10 +5,11 @@
             "member": "shouldGenerate",
             "replaceWith": "autoGenerate",
             "definedIn": [
-                "IgxGrid",
-                "IgxTreeGrid",
-                "IgxHierarchicalGrid",
-                "IgxPivotGrid"
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent",
+                "IgxPivotGridComponent"
             ]
         }
     ]

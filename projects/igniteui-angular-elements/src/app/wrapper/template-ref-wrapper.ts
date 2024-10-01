@@ -34,8 +34,16 @@ export class TemplateRefWrapper<C extends object> extends TemplateRef<C> {
         let root: any;
         //#endregion
 
+        // https://github.com/angular/angular/pull/51887
         /**  Angular 17+ context is behind a proxy: will throw on set for templates without context & underlying object will change, so Proxy extra props on top */
         let ctx = <C>new Proxy(context, {
+            has(_target, prop): boolean {
+                if (prop === IMPLICIT_PROP) {
+                    return true;
+                }
+                // Angular's Proxy doesn't handle this, so technically everything returns false ¯\(°_o)/¯
+                return false;
+            },
             get(target, prop, receiver) {
                 if (prop === CONTEXT_PROP) {
                     // redirect context prop to this proxy that implements other props:
