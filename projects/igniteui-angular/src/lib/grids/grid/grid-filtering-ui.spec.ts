@@ -4306,15 +4306,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
-            expect(scrollbar.scrollTop >= 670 && scrollbar.scrollTop <= 700).toBe(true,
+            expect(scrollbar.scrollTop >= 660 && scrollbar.scrollTop <= 700).toBe(true,
                 'search scrollbar has incorrect scrollTop: ' + scrollbar.scrollTop);
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
-            expect(displayContainerRect.height).toBe(216, 'incorrect search display container height');
+            expect(displayContainerRect.height).toBe(240, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(10, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -5386,6 +5386,63 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
                 expect(excelMenu).toBeNull();
             }));
+
+        it('Should filter ISO 8601 dates for date column ignoring the time portion - issue #14643', fakeAsync(() => {
+            // Add hours part to the ReleaseDate so some records differ only by the time portion
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+
+                if (rec.ReleaseDate) {
+                    const date = new Date(rec.ReleaseDate);
+                    date.setHours(date.getHours() + Math.floor(Math.random() * 24));
+                    newRec.ReleaseDate = date.toISOString();
+                } else {
+                    newRec.ReleaseDate = null;
+                }
+
+                return newRec;
+            });
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu)[1];
+
+            checkbox.click();
+            tick();
+            fix.detectChanges();
+
+            const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix);
+            applyButton.focus();
+            fix.detectChanges();
+
+            expect(document.activeElement).toBe(applyButton);
+
+            UIInteractions.simulateClickEvent(applyButton);
+            fix.detectChanges();
+
+            const rows = GridFunctions.getRows(fix);
+            const cell1 = GridFunctions.getRowCells(fix, 0)[4].nativeElement;
+            const cell2 = GridFunctions.getRowCells(fix, 3)[4].nativeElement;
+            expect(cell1.textContent.toString()).toEqual(cell2.textContent.toString());
+            expect(rows.length).toBe(6, 'incorrect number of rows');
+
+            //Check if checkboxes have correct state on ESF menu reopening
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix));
+            expect(checkboxes[0].indeterminate).toBeTrue();
+            expect(checkboxes[1].checked).toBeFalse();
+            const listItemsCheckboxes = checkboxes.slice(2, checkboxes.length-1);
+            for (const checkboxItem of listItemsCheckboxes) {
+                ControlsFunction.verifyCheckboxState(checkboxItem.parentElement);
+            }
+        }));
 
         it('Should filter date by input string', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');

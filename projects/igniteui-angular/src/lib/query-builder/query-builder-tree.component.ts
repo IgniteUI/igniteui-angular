@@ -53,7 +53,7 @@ import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
-import { IgxQueryBuilderComponent } from 'igniteui-angular';
+import { IgxQueryBuilderComponent } from './query-builder.component';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';

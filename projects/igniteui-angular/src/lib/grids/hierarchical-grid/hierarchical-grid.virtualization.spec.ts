@@ -425,6 +425,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
         fixture.detectChanges();
         await wait(50);
+        fixture.detectChanges();
 
         const hierarchicalGridRect = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
         const lastRowRect = hierarchicalGrid.dataRowList.last.nativeElement.getBoundingClientRect();

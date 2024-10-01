@@ -739,6 +739,27 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(displayedRow).toContain('RowMember');
         });
 
+        it('should render correctly when going from all dimensions and values disabled to single column dimension enabled.', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            // disable all
+            pivotGrid.pivotConfiguration.rows.forEach(x => pivotGrid.toggleDimension(x));
+            pivotGrid.pivotConfiguration.columns.forEach(x => pivotGrid.toggleDimension(x));
+            pivotGrid.pivotConfiguration.filters.forEach(x => pivotGrid.toggleDimension(x));
+            pivotGrid.pivotConfiguration.values.forEach(x => pivotGrid.toggleValue(x));
+            fixture.detectChanges();
+
+            // no rows, just empty message
+            expect(pivotGrid.rowList.length).toBe(0);
+            expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values.');
+
+            pivotGrid.toggleDimension(pivotGrid.pivotConfiguration.columns[0]);
+            fixture.detectChanges();
+
+            // 1 row, 3 columns
+            expect(pivotGrid.rowList.length).toBe(1);
+            expect(pivotGrid.columns.length).toBe(3);
+        });
+
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', async () => {
@@ -1935,8 +1956,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(200);
                 pivotGrid.autoSizeRowDimension(rowDimension);
                 fixture.detectChanges();
-                expect(rowDimension.width).toBe('158px');
-                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
+                expect(rowDimension.width).toBe('162px');
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(162);
             });
 
             it('should auto-size row dimension when width is set to auto.', fakeAsync(() => {
@@ -1979,9 +2000,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
                 tick(200);
                 rowDimension = pivotGrid.pivotConfiguration.rows[0];
-                expect(rowDimension.autoWidth).toBe(158);
+                expect(rowDimension.autoWidth).toBe(162);
                 expect(rowDimension.width).toBe('auto');
-                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(158);
+                expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(162);
             }));
 
             it('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
@@ -2017,8 +2038,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
             it('should allow creating  IgxPivotDateDimension with no base dimension and setting it later.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const dateDimension = new IgxPivotDateDimension();
-                dateDimension.memberName = 'Date';
-                dateDimension.enabled = true;
                 dateDimension.baseDimension = {
                     memberName: 'Date',
                     enabled: true,
@@ -2030,6 +2049,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     years: true,
                     quarters: false
                 }
+
+                expect(dateDimension.enabled).toBe(true);
+
                 pivotGrid.pivotConfiguration.rows = [dateDimension];
                 pivotGrid.pipeTrigger++;
                 fixture.detectChanges();

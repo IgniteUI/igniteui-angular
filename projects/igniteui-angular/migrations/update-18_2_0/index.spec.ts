@@ -44,6 +44,7 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-40';
 
     it('Should replace deprecated `shouldGenerate` property with `autoGenerate`', async () => {
+        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/grid-test.component.ts',
             `import { Component } from '@angular/core';
@@ -93,5 +94,26 @@ describe(`Update to ${version}`, () => {
     }`;
 
         expect(tree.readContent('/testSrc/appPrefix/component/grid-test.component.ts')).toEqual(expectedContent);
+    });
+
+    it('should migrate scrollbar theme', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$my-scrollbar: scrollbar-theme(
+                $scrollbar-size: 16px,
+                $thumb-background: blue,
+                $track-background: black,
+            );`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$my-scrollbar: scrollbar-theme(
+                $sb-size: 16px,
+                $sb-thumb-bg-color: blue,
+                $sb-track-bg-color: black,
+            );`
+        );
     });
 });
