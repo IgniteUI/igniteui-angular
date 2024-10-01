@@ -6,6 +6,25 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxSimpleCombo`
     - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
+- `ColumnType`, `IgxColumn`
+    - Added a new `editorOptions` property that allows to pass optional parameters to control properties of the default column editors - both for cells and the filtering UI for all modes (`quickFilter`, `excelStyle` and the Advanced filtering). Accepts an `IColumnEditorOptions` object with the `dateTimeFormat` property, that would be used as input format for the editors of
+    `date`, `dateTime` and `time` column data types:
+        ```ts
+            const editorOptions: IColumnEditorOptions = { Field?
+                dateTimeFormat: 'MM/dd/YYYY',
+            }
+        ```
+        ```html
+            <igx-column field="sampleDate" dataType="date" [editorOptions]="editorOptions"></igx-column>
+        ```
+        If not set, the input format will be inferred from the `pipeArgs.displayFormat` property of the column, in case it is set and contains only numeric date-time parts or such that can be handled by the editors. Alternatively, a fallback input format as per the `IgxGrid`'s `locale` is used.
+- `FieldType` (`IgxQueryBuilder`)
+    - Similar to the above, the fields now accept an `editorOptions` object of type `IFieldEditorOptions`. Its `dateTimeFormat` property would be used as input format for the query editors of date-time fields. 
+- `IgxDateTimeEditor`, `IgxDatePicker`, `IgxTimePicker`, `IgxDateRangePicker`
+    - In case the `inputFormat` property is not set, the input format would be inferred from
+    `displayFormat` if set and if it contains only numeric date-time parts.
+- `IgxTimePicker`
+    - The input and display formats are now adjusted based on the locale. For instance, day period time part (AM/PM or a/p) would not be displayed for locales that do not require it.
 
 #### Scrollbar: New CSS variables
 
@@ -27,20 +46,6 @@ For Firefox users, we provide limited scrollbar styling options through the foll
 - `--sb-size`: Adjusts the scrollbar size.
 - `--sb-thumb-bg-color`: Sets the background color of the scrollbar thumb.
 - `--sb-track-bg-color`: Sets the background color of the scrollbar track.
-
-#### Column editor options
-- `ColumnType`, `IgxColumn`
-    - Added a new `editorOptions` property that allows to pass optional parameters to control properties of the default column editors. Accepts an `IColumnEditorOptions` object with the `dateTimeFormat` property, that would be used as input format for the editors of
-    `date`, `dateTime` and `time` column data types:
-        ```ts
-            const editorOptions: IColumnEditorOptions = {
-                dateTimeFormat: 'MM/dd/YYYY',
-            }
-        ```
-        ```html
-            <igx-column field="sampleDate" dataType="date" [editorOptions]="editorOptions"></igx-column>
-        ```
-        If not set, the `dateTimeFormat` resolves to the `pipeArgs.displayFormat` property of the column, in case it is set and contains only numeric date-time parts or such that can be handled by the editors. Alternatively, a fallback input format as per the `IgxGrid`'s `locale` is used.
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
