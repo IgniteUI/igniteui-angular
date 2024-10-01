@@ -1616,9 +1616,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this.grid.pipeTrigger++;
     }
     public get editorOptions(): IColumnEditorOptions {
-        if (!this._editorOptions?.dateTimeFormat) {
-            return { ...this._editorOptions, dateTimeFormat: this.pipeArgs.format };
-        }
         return this._editorOptions;
     }
 

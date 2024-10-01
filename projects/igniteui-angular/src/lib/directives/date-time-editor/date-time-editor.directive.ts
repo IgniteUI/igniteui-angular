@@ -141,6 +141,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             this._displayFormat = value;
         }
         this.updateDefaultFormat();
+        this.setMask(this.inputFormat);
     }
 
     public get displayFormat(): string {
@@ -158,9 +159,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     @Input(`igxDateTimeEditor`)
     public set inputFormat(value: string) {
         if (value) {
+            this.setMask(value);
             this._inputFormat = value;
-            this.setMask(this._inputFormat);
-            this.updateMask();
         }
     }
 
