@@ -15,7 +15,7 @@ import { IgxNavbarComponent } from '../navbar/navbar.component';
 declare let Simulator: any;
 // const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
-fdescribe('Navigation Drawer', () => {
+describe('Navigation Drawer', () => {
     let widthSpyOverride: jasmine.Spy;
     // configureTestSuite();
     beforeEach(waitForAsync(() => {
