@@ -941,9 +941,9 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.displayFormat = displayFormat;
                     fixture.detectChanges();
 
-                    expect(startInputEditor.inputFormat).toEqual('MMM, yy');
+                    expect(startInputEditor.inputFormat).toEqual(inputFormat);
                     expect(startInputEditor.displayFormat).toEqual(displayFormat);
-                    expect(endInputEditor.inputFormat).toEqual('MMM, yy');
+                    expect(endInputEditor.inputFormat).toEqual(inputFormat);
                     expect(endInputEditor.displayFormat).toEqual(displayFormat);
                 });
 
