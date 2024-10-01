@@ -251,7 +251,7 @@
             <ng-container
                 *ngTemplateOutlet="
                     searchValueTemplate ? searchValueTemplate : defaultSearchValueTemplate;
-                    context: getSearchValueTemplateContext()
+                    context: getSearchValueTemplateContext(defaultSearchValueTemplate)
                 "
             >
             </ng-container>
@@ -284,14 +284,14 @@
                                 ? 'number'
                                 : 'text'
                         "
-                        [(ngModel)]="searchValue"
+                        [(ngModel)]="searchValue.value"
                     />
                 </igx-input-group>
 
                 <igx-date-picker
                     #picker
                     *ngIf="selectedField && selectedField.dataType === 'date'"
-                    [(value)]="searchValue"
+                    [(value)]="searchValue.value"
                     (keydown)="openPicker($event)"
                     (click)="picker.open()"
                     type="box"
@@ -320,7 +320,7 @@
                 <igx-time-picker
                     #picker
                     *ngIf="selectedField && selectedField.dataType === 'time'"
-                    [(value)]="searchValue"
+                    [(value)]="searchValue.value"
                     (click)="picker.open()"
                     (keydown)="openPicker($event)"
                     type="box"
@@ -354,7 +354,7 @@
                         #input
                         igxInput
                         tabindex="0"
-                        [(ngModel)]="searchValue"
+                        [(ngModel)]="searchValue.value"
                         [disabled]="
                             !selectedField ||
                             !selectedCondition ||
@@ -391,7 +391,8 @@
                 [queryBuilder]="this.queryBuilder"
                 [parentExpression]="expressionItem"
                 [expressionTree]="expressionItem.expression.searchTree"
-                (inEditModeChange)="onInEditModeChanged($event)">
+                (inEditModeChange)="onInEditModeChanged($event)"
+                [searchValueTemplate]="searchValueTemplate">
             </igx-query-builder-tree>
         </ng-container>
 

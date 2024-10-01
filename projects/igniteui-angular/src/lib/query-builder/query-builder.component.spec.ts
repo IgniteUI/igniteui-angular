@@ -2211,8 +2211,8 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
     template: `
      <igx-query-builder #queryBuilder [entities]="this.entities" [expressionTree]="this.expressionTree">
          <igx-query-builder-header [title]="'Custom Title'" [showLegend]="showLegend"></igx-query-builder-header>
-         <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-expression="expression">
-            <input type="text" class="custom-class" required [(ngModel)]="expression.searchVal"/>
+         <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-searchValue>
+            <input type="text" class="custom-class" required [(ngModel)]="searchValue.value"/>
         </ng-template>
      </igx-query-builder>
     `,

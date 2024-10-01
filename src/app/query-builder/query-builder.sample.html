@@ -10,9 +10,18 @@
             <!-- Custom header -->
             <!-- <igx-query-builder-header [title]="'Builder'" [showLegend]="false"><span>Custom Title</span></igx-query-builder-header> -->
 
-            <!-- <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-expression="expression">
-                <input type="text" required [(ngModel)]="expression.searchVal"/>
-            </ng-template> -->
+            <!-- Custom SearchValue template for a given column and condition -->
+            <!-- <ng-template #searchValueTemplate igxQueryBuilderSearchValue 
+                        let-searchValue
+                        let-selectedField = "selectedField" 
+                        let-selectedCondition = "selectedCondition"
+                        let-defaultSearchValueTemplate = "defaultSearchValueTemplate">
+                @if (selectedField?.field === 'Id' && selectedCondition === 'equals'){
+                    <input type="text" required [(ngModel)]="searchValue.value"/>
+                } @else {  
+                    <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
+                }
+            </ng-template>  -->
         </igx-query-builder>
 
         <!-- <div class="sample-buttons">
