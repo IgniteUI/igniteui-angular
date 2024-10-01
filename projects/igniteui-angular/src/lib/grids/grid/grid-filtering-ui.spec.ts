@@ -5205,9 +5205,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
             const inputGroup = expr.querySelectorAll('igx-input-group')[1];
-            const dateTimeEditor = inputGroup.querySelector('input').injector.get(IgxDateTimeEditorDirective);
-            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(column.editorOptions.dateTimeFormat);
-            expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
+            const dateTimeEditorInput = inputGroup.querySelector('input');
+            expect(dateTimeEditorInput.getAttribute('ng-reflect-input-format')).toMatch(column.editorOptions.dateTimeFormat);
+            expect(dateTimeEditorInput.getAttribute('ng-reflect-display-format')).toMatch(column.pipeArgs.format);
         }));
 
         it('DateTime: Should use pipeArgs.format as inputFormat to the filter editor in the custom filtering dialog if editorOptions.dateTimeFormat not set', fakeAsync(() => {
@@ -5232,9 +5232,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
             const inputGroup = expr.querySelectorAll('igx-input-group')[1];
-            const dateTimeEditorDirective = inputGroup.querySelector('input').injector.get(IgxDateTimeEditorDirective);
-            expect(dateTimeEditorDirective.inputFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
-            expect(dateTimeEditorDirective.displayFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
+            const dateTimeEditorInput = inputGroup.querySelector('input');
+            expect(dateTimeEditorInput.getAttribute('ng-reflect-input-format')).toMatch(column.pipeArgs.format);
+            expect(dateTimeEditorInput.getAttribute('ng-reflect-display-format')).toMatch(column.pipeArgs.format);
         }));
 
         it('DateTime: custom filtering dialog input locale should be set as the grid locale', fakeAsync(() => {
@@ -5277,9 +5277,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
             const datePicker = expr.querySelector('igx-time-picker');
-            const dateTimeEditorDirective = datePicker.querySelector('input').injector.get(IgxDateTimeEditorDirective);
-            expect(dateTimeEditorDirective.inputFormat.normalize('NFKC')).toMatch(column.editorOptions.dateTimeFormat);
-            expect(dateTimeEditorDirective.displayFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
+            const input = datePicker.querySelector('input');
+            expect(input.getAttribute('ng-reflect-input-format')).toMatch(column.editorOptions.dateTimeFormat);
+            expect(input.getAttribute('ng-reflect-display-format')).toMatch(column.pipeArgs.format);
         }));
 
         it('Time: Should use pipeArgs.format as inputFormat to the filter editor in the custom filtering dialog if editorOptions.dateTimeFormat not set', fakeAsync(() => {
@@ -5299,11 +5299,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
             const inputGroup = expr.querySelectorAll('igx-input-group')[1];
-            const dateTimeEditorDirective = inputGroup.querySelector('input').injector.get(IgxDateTimeEditorDirective);
-            expect(dateTimeEditorDirective.inputFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
-            expect(dateTimeEditorDirective.displayFormat.normalize('NFKC')).toMatch(column.pipeArgs.format);
+            const dateTimeEditorInput = inputGroup.querySelector('input');
+            expect(dateTimeEditorInput.getAttribute('ng-reflect-input-format')).toMatch(column.pipeArgs.format);
+            expect(dateTimeEditorInput.getAttribute('ng-reflect-display-format')).toMatch(column.pipeArgs.format);
         }));
-
         it('Should filter grid through custom date filter dialog when using pipeArgs for the column', fakeAsync(() => {
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
