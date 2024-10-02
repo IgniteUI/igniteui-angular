@@ -2138,7 +2138,7 @@ export class GridFunctions {
     };
 
     /*
-    * Get tabbable elements in a container element. Result is returned as node elements ordered they way they will be tabbed
+    * Get tabbable elements in a container element. Result is returned as node elements ordered the way they will be tabbed
     */
     public static getTabbableElements(inElement: HTMLElement) {
         const focusableElements =
