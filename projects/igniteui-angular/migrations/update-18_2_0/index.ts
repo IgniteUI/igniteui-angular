@@ -4,6 +4,7 @@ import type {
     Tree
 } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
+import { FileChange } from '../common/util';
 
 const version = '18.2.0';
 
