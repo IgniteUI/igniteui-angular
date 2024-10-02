@@ -1,0 +1,32 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "build:schematics",
+            "problemMatcher": [],
+            "label": "buildSchematics",
+            "detail": "Build schematics"
+        },
+        {
+            "type": "npm",
+            "script": "build:migrations -- --sourceMap",
+            "dependsOn": [
+                "buildSchematics"
+            ],
+            "problemMatcher": [],
+            "label": "buildMigrationsSourceMap",
+            "detail": "Build migrations with sourceMap for debugging"
+        },
+        {
+            "type": "shell",
+            "command": "node ./scripts/migrations-sourcemap-shift.mjs",
+            "dependsOn": [
+                "buildMigrationsSourceMap"
+            ],
+            "problemMatcher": [],
+            "label": "buildMigrations",
+            "detail": "Build migrations with sourceMap for debugging"
+        },
+    ]
+}
