@@ -694,6 +694,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('class.igx-grid__td--row-pinned-first')
     public displayPinnedChip = false;
 
+    @HostBinding('style.min-height.px')
+    protected get minHeight() {
+        if ((this.grid as any).isCustomSetRowHeight) {
+            return this.grid.renderedRowHeight;
+        }
+    }
 
     @ViewChild('defaultCell', { read: TemplateRef, static: true })
     protected defaultCellTemplate: TemplateRef<any>;

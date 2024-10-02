@@ -188,7 +188,8 @@
         border-color: $border-color,
         border-radius: $border-radius,
         _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
+            variant: map.get($schema, '_meta', 'theme'),
+            theme-variant: map.get($schema, '_meta', 'variant')
         )),
     ));
 }
@@ -205,6 +206,7 @@
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo';
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
     $item-min-width: rem(90px);
     $item-max-width: rem(360px);
@@ -228,9 +230,12 @@
     %tabs-header-item-inner,
     %tabs-header-content {
         display: flex;
+        align-items: center;
     }
 
     %tabs-display {
+        --nav-btn-border-color: #{var-get($theme, 'border-color')};
+
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -240,8 +245,21 @@
         overflow: hidden;
         flex: 0 0 auto;
         background: var-get($theme, 'item-background');
-        min-height: rem(42px);
         z-index: 1;
+
+        @if $indigo-theme {
+            [igxIconButton='flat'].igx-button--focused {
+                box-shadow: none;
+
+                &::after {
+                    border: rem(3px) solid var(--nav-btn-border-color);
+
+                    @if $theme-variant == 'dark' {
+                        border-color: contrast-color($color: 'gray', $variant: 50, $opacity: .2);
+                    }
+                }
+            }
+        }
     }
 
     %tabs-header-content {
@@ -286,6 +304,10 @@
         background: var-get($theme, 'button-background');
         color: var-get($theme, 'button-color');
         outline: 0;
+        align-self: stretch;
+        height: auto;
+        transition: none;
+        border-radius: border-radius(0);
 
         &:hover {
             background: var-get($theme, 'button-hover-background');
@@ -294,7 +316,10 @@
 
         &:focus {
             outline: 0;
-            background: var-get($theme, 'button-hover-background');
+
+            @if $variant != 'indigo' {
+                background: var-get($theme, 'button-hover-background');
+            }
         }
 
         &::-moz-focus-inner {
@@ -304,15 +329,36 @@
 
         &:disabled {
             color: var-get($theme, 'button-disabled-color');
+            cursor: default;
+            pointer-events: none;
         }
 
         &--none {
             display: none;
         }
 
+        @if $indigo-theme {
+            min-width: rem(40px);
+            width: rem(40px);
+
+            &::after {
+                content: '';
+                position: absolute;
+                pointer-events: none;
+                width: 100%;
+                height: 100%;
+                border-bottom: rem(1px) solid var(--nav-btn-border-color);
+            }
+        }
 
         @include ripple($button-ripple-theme);
         @include css-vars($button-ripple-theme);
+
+        @if $variant == 'indigo' {
+            igx-icon {
+                --component-size: 2;
+            }
+        }
 
         [dir='rtl'] & {
             transform: scaleX(-1);
@@ -321,7 +367,7 @@
 
     %tabs-header-item {
         > * {
-            margin-inline-start: rem(12px);
+            margin-inline-start: rem(if($variant != 'indigo', 12px, 8px));
 
             &:first-child {
                 margin-inline-start: 0;
@@ -332,6 +378,7 @@
         align-items: center;
         min-width: $item-min-width;
         max-width: $item-max-width;
+        min-height: #{if($variant == 'indigo', rem(40px), rem(42px))};
         word-wrap: break-word;
         // Flex basis & shrink are Needed for IE11
         flex-basis: auto;
@@ -347,16 +394,6 @@
 
         igx-icon {
             color: var-get($theme, 'item-icon-color');
-        }
-
-        @if $bootstrap-theme {
-            border: rem(1px) solid transparent;
-            border-start-start-radius: var-get($theme, 'border-radius');
-            border-start-end-radius: var-get($theme, 'border-radius');
-        }
-
-        @if $indigo-theme {
-            border-bottom: rem(1px) solid var-get($theme, 'border-color');
         }
 
         &::-moz-focus-inner {
@@ -386,6 +423,7 @@
         }
 
         @if $bootstrap-theme {
+            padding-block: rem(12px);
             border-start-start-radius: var-get($theme, 'border-radius');
             border-start-end-radius: var-get($theme, 'border-radius');
         }
@@ -401,13 +439,18 @@
         }
 
         @if $indigo-theme {
-            border-top: transparent;
-            border-inline: transparent;
+            border-top: rem(1px) solid transparent;
+            border-inline: none;
 
             &:hover,
             &:focus {
-                border-top: transparent;
-                border-inline: transparent;
+                border-top: rem(1px) solid transparent;
+                border-inline: none;
+                border-bottom: rem(1px) solid var-get($theme, 'border-color');
+            }
+
+            igx-icon {
+                --ig-size: 2;
             }
         }
 
@@ -451,6 +494,18 @@
 
             &:hover {
                 box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+            }
+        }
+
+        @if $indigo-theme {
+            &:hover,
+            &:focus-visible {
+                background: var-get($theme, 'item-hover-background');
+                color: var-get($theme, 'item-hover-color');
+
+                igx-icon {
+                    color: var-get($theme, 'item-hover-icon-color');
+                }
             }
         }
     }
@@ -510,8 +565,13 @@
         min-width: $item-min-width;
         background: var-get($theme, 'indicator-color');
         transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
+
         @if $bootstrap-theme {
             display: none;
+        }
+
+        @if $indigo-theme {
+            height: rem(3px);
         }
     }
 

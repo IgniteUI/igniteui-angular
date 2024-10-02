@@ -206,7 +206,6 @@ describe('Grid - nested data source properties #grid', () => {
 
         const setupData = (data: Array<any>) => {
             grid.autoGenerate = true;
-            grid.shouldGenerate = true;
             grid.data = data;
             fixture.detectChanges();
         };

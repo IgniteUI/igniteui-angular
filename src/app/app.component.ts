@@ -144,6 +144,11 @@ export class AppComponent implements OnInit {
             name: 'Drag and Drop'
         },
         {
+            link: '/hound',
+            icon: 'horizontal_split',
+            name: 'Hound sample'
+        },
+        {
             link: '/dropDown',
             icon: 'view_list',
             name: 'DropDown'
@@ -662,6 +667,11 @@ export class AppComponent implements OnInit {
             link: '/virtualForDirective',
             icon: 'view_column',
             name: 'Virtual-For Directive'
+        },
+        {
+            link: '/labelDirective',
+            icon: 'label',
+            name: 'Label Directive'
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
@@ -712,6 +722,8 @@ export class AppComponent implements OnInit {
             });
 
         // register custom SVG icons
+        this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'material');
+        this.iconService.addSvgIcon('fa-breeze', '../assets/images/card/icons/breeze.svg', 'fa-solid');
         this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'weather-icons');
         this.iconService.addSvgIcon('breeze', '../assets/images/card/icons/breeze.svg', 'weather-icons');
     }

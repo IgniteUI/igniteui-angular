@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, OnDestroy, Optional, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { getResizeObserver, mkenum } from '../../core/utils';
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
 import { AnimationService } from '../../services/animation/animation';
@@ -8,7 +8,7 @@ import { IgxTabsDirective } from '../tabs.directive';
 import { NgClass, NgFor, NgTemplateOutlet, NgIf } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
-import { IgxIconService } from '../../icon/icon.service';
+import { IgxIconButtonDirective } from '../../directives/button/icon-button.directive';
 
 export const IgxTabsAlignment = /*@__PURE__*/mkenum({
     start: 'start',
@@ -64,7 +64,7 @@ let NEXT_TAB_ID = 0;
     templateUrl: 'tabs.component.html',
     providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }],
     standalone: true,
-    imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgFor, NgTemplateOutlet, NgIf]
+    imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgFor, NgTemplateOutlet, NgIf, IgxIconButtonDirective]
 })
 
 export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit, OnDestroy {
@@ -131,20 +131,8 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         cdr: ChangeDetectorRef,
         private ngZone: NgZone,
         dir: IgxDirectionality,
-        @Optional() @Inject(IgxIconService)
-        protected iconService?: IgxIconService
     ) {
         super(animationService, cdr, dir);
-
-        iconService.addIconRef('prev', 'default', {
-            name: 'navigate_before',
-            family: 'material'
-        });
-
-        iconService.addIconRef('next', 'default', {
-            name: 'navigate_next',
-            family: 'material'
-        });
     }
 
 

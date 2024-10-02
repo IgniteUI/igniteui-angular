@@ -1,0 +1,46 @@
+@use 'sass:map';
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+$_base-schema: $light-indigo-schema;
+$card-schema: extend(
+    map.get($_base-schema, 'card'),
+    (   
+        content-text-color: (
+            color: (
+                'gray',
+                900,
+            ),
+        ),
+        
+        border-radius: (
+            border-radius: (
+                rem(8px),
+                rem(0),
+                rem(24px),
+            ),
+        ),
+    )
+);
+
+@mixin component() {
+    @include card(
+        card-theme(
+            extend(
+                $_base-schema,
+                (
+                    card: $card-schema,
+                )
+            )
+        )
+    );
+
+    .ig-typography {
+        @include card-typography(
+            $categories: (
+                title: 'h6',
+                subtitle: 'subtitle-2',
+                content: 'body-2'
+            )
+        );
+    }
+}

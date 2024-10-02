@@ -63,7 +63,7 @@ import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
 import { IgxTreeGridHierarchizingPipe, IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridAddRowPipe } from './tree-grid.pipes';
 import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
-import { IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxStringReplacePipe } from '../common/pipes';
 import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
@@ -81,7 +81,6 @@ import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
-import { IgxIconService } from '../../icon/icon.service';
 
 let NEXT_ID = 0;
 
@@ -170,8 +169,9 @@ let NEXT_ID = 0;
         IgxTreeGridTransactionPipe,
         IgxTreeGridSummaryPipe,
         IgxTreeGridNormalizeRecordsPipe,
-        IgxTreeGridAddRowPipe
-    ],
+        IgxTreeGridAddRowPipe,
+        IgxStringReplacePipe
+],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
@@ -370,12 +370,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
      /* treatAsRef */
     public set data(value: any[] | null) {
+        const oldData = this._data;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (!this._init) {
             this.validation.updateAll(this._data);
         }
-        if (this.shouldGenerate) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
             this.setupColumns();
         }
         this.cdr.markForCheck();
@@ -471,7 +472,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-        @Optional() @Inject(IgxIconService) protected override iconService?: IgxIconService
     ) {
         super(
             validationService,
@@ -495,7 +495,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             localeId,
             platform,
             _diTransactions,
-            iconService
         );
     }
 

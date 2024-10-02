@@ -1,0 +1,29 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$scrollbar-size",
+      "replaceWith": "$sb-size",
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$thumb-background",
+      "replaceWith": "$sb-thumb-bg-color",
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$track-background",
+      "replaceWith": "$sb-track-bg-color",
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$border-width",
+      "remove": true,
+      "owner": "badge-theme",
+      "type":"property"
+    }
+  ]
+}

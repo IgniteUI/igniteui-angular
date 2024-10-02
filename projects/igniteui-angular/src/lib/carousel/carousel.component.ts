@@ -1,7 +1,6 @@
 import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
-    AfterViewInit,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -21,25 +20,25 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
+    ViewChildren,
     booleanAttribute
 } from '@angular/core';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18n/carousel-resources';
-import { IBaseEventArgs, PlatformUtil } from '../core/utils';
+import { first, IBaseEventArgs, last, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
 import { Direction, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
+import { IgxButtonDirective } from '../directives/button/button.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGesturesManager } from '../core/touch';
-import { CarouselIndicatorsOrientation, HorizontalAnimationType } from './enums';
-import { ThemeService } from '../services/theme/theme.service';
-import type { IgxTheme } from '../services/theme/theme.service';
-import { IgxIconService } from '../icon/icon.service';
+import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
+import { IgxDirectionality } from '../services/direction/directionality';
 
 let NEXT_ID = 0;
 
@@ -86,10 +85,10 @@ export class CarouselHammerConfig extends HammerGestureConfig {
         outline-style: none;
     }`],
     standalone: true,
-    imports: [IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
+    imports: [IgxButtonDirective, IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 
-export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterViewInit, AfterContentInit {
+export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
 
     /**
      * Sets the `id` of the carousel.
@@ -123,6 +122,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         return this.showIndicatorsLabel ? `${this.id}-label` : null;
     }
 
+    /** @hidden */
+    @HostBinding('class.igx-carousel--vertical')
+	public get isVertical(): boolean {
+		return this.vertical;
+	}
+
     /**
      * Returns the class of the carousel component.
      * ```typescript
@@ -144,11 +149,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public get touchAction() {
         return this.gesturesSupport ? 'pan-y' : 'auto';
     }
-
-    /**
-     * @hidden @internal
-     */
-    protected theme: IgxTheme;
 
     /**
      * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
@@ -184,15 +184,39 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     @Input({ transform: booleanAttribute }) public navigation = true;
 
     /**
-     * Controls whether the carousel should support keyboard navigation.
+     * Controls whether the carousel should render the indicators.
      * Default value is `true`.
      * ```html
-     * <igx-carousel [keyboardSupport]="false"></igx-carousel>
+     * <igx-carousel [indicators]="false"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input({ transform: booleanAttribute }) public keyboardSupport = true;
+    @Input({ transform: booleanAttribute }) public indicators = true;
+
+
+    /**
+     * Controls whether the carousel has vertical alignment.
+     * Default value is `false`.
+     * ```html
+     * <igx-carousel [vertical]="true"></igx-carousel>
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    @Input({ transform: booleanAttribute }) public override vertical = false;
+
+    /**
+     * Controls whether the carousel should support keyboard navigation.
+     * Default value is `false`.
+     * ```html
+     * <igx-carousel [keyboardSupport]="true"></igx-carousel>
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     * @deprecated in version 18.2.0.
+     */
+    @Input({ transform: booleanAttribute }) public keyboardSupport = false;
 
     /**
      * Controls whether the carousel should support gestures.
@@ -238,7 +262,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public override animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
+    @Input() public override animationType: CarouselAnimationType = CarouselAnimationType.slide;
 
     /**
      * The custom template, if any, that should be used when rendering carousel indicators
@@ -383,6 +407,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     @ViewChild('defaultPrevButton', { read: TemplateRef, static: true })
     private defaultPrevButton: TemplateRef<any>;
 
+    @ViewChildren('indicators', { read: ElementRef })
+    private _indicators: QueryList<ElementRef<HTMLDivElement>>;
+
     /**
      * @hidden
      * @internal
@@ -398,36 +425,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private destroy$ = new Subject<any>();
     private differ: IterableDiffer<IgxSlideComponent> | null = null;
     private incomingSlide: IgxSlideComponent;
-    private _icons = [
-        {
-            name: 'carousel_prev',
-            family: 'default',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'arrow_back',
-                    family: 'material'
-                },
-                'indigo': {
-                    name: 'keyboard_arrow_left',
-                    family: 'material'
-                }
-            }))
-        },
-        {
-            name: 'carousel_next',
-            family: 'default',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'arrow_forward',
-                    family: 'material'
-                },
-                'indigo': {
-                    name: 'keyboard_arrow_right',
-                    family: 'material'
-                }
-            }))
-        }
-    ]
+    private _hasKeyboardFocusOnIndicators = false;
 
     /**
      * An accessor that sets the resource strings.
@@ -472,18 +470,21 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /** @hidden */
-    public get indicatorsOrientationClass() {
-        return `igx-carousel-indicators--${this.indicatorsOrientation}`;
+    public get indicatorsClass() {
+        return {
+            ['igx-carousel-indicators--focused']: this._hasKeyboardFocusOnIndicators,
+            [`igx-carousel-indicators--${this.indicatorsOrientation}`]: true
+        };
     }
 
     /** @hidden */
     public get showIndicators(): boolean {
-        return this.total <= this.maximumIndicatorsCount && this.total > 0;
+        return this.indicators && this.total <= this.maximumIndicatorsCount && this.total > 0;
     }
 
     /** @hidden */
     public get showIndicatorsLabel(): boolean {
-        return this.total > this.maximumIndicatorsCount;
+        return this.indicators && this.total > this.maximumIndicatorsCount;
     }
 
     /** @hidden */
@@ -583,8 +584,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private platformUtil: PlatformUtil,
-        private themeService: ThemeService,
-        private iconService: IgxIconService
+        private dir: IgxDirectionality
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
@@ -597,7 +597,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport) {
             event.preventDefault();
             this.next();
-            this.focusSlideElement();
+            this.focusElement();
         }
     }
 
@@ -607,7 +607,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport) {
             event.preventDefault();
             this.prev();
-            this.focusSlideElement();
+            this.focusElement();
         }
     }
 
@@ -633,7 +633,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.first.active = true;
-            this.focusSlideElement();
+            this.focusElement();
         }
     }
 
@@ -643,7 +643,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.last.active = true;
-            this.focusSlideElement();
+            this.focusElement();
         }
     }
 
@@ -667,13 +667,33 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /** @hidden */
     @HostListener('panleft', ['$event'])
     public onPanLeft(event) {
-        this.pan(event);
+        if (!this.vertical) {
+            this.pan(event);
+        }
     }
 
     /** @hidden */
     @HostListener('panright', ['$event'])
     public onPanRight(event) {
-        this.pan(event);
+        if (!this.vertical) {
+            this.pan(event);
+        }
+    }
+
+    /** @hidden */
+    @HostListener('panup', ['$event'])
+    public onPanUp(event) {
+        if (this.vertical) {
+            this.pan(event);
+        }
+    }
+
+    /** @hidden */
+    @HostListener('pandown', ['$event'])
+    public onPanDown(event) {
+        if (this.vertical) {
+            this.pan(event);
+        }
     }
 
     /**
@@ -686,30 +706,33 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
         event.preventDefault();
 
-        const slideWidth = this.currentItem.nativeElement.offsetWidth;
-        const panOffset = (slideWidth / 1000);
-        const deltaX = Math.abs(event.deltaX) + panOffset < slideWidth ? Math.abs(event.deltaX) : slideWidth - panOffset;
+        const slideSize = this.vertical
+            ? this.currentItem.nativeElement.offsetHeight
+            : this.currentItem.nativeElement.offsetWidth;
+        const panOffset = (slideSize / 1000);
+        const eventDelta = this.vertical ? event.deltaY : event.deltaX;
+        const delta = Math.abs(eventDelta) + panOffset < slideSize ? Math.abs(eventDelta) : slideSize - panOffset;
         const velocity = Math.abs(event.velocity);
         this.resetSlideStyles(this.currentItem);
         if (this.incomingSlide) {
             this.resetSlideStyles(this.incomingSlide);
-            if (slideWidth / 2 < deltaX || velocity > 1) {
-                this.incomingSlide.direction = event.deltaX < 0 ? Direction.NEXT : Direction.PREV;
+            if (slideSize / 2 < delta || velocity > 1) {
+                this.incomingSlide.direction = eventDelta < 0 ? Direction.NEXT : Direction.PREV;
                 this.incomingSlide.previous = false;
 
-                this.animationPosition = this.animationType === HorizontalAnimationType.fade ?
-                    deltaX / slideWidth : (slideWidth - deltaX) / slideWidth;
+                this.animationPosition = this.animationType === CarouselAnimationType.fade ?
+                    delta / slideSize : (slideSize - delta) / slideSize;
 
                 if (velocity > 1) {
                     this.newDuration = this.defaultAnimationDuration / velocity;
                 }
                 this.incomingSlide.active = true;
             } else {
-                this.currentItem.direction = event.deltaX > 0 ? Direction.NEXT : Direction.PREV;
+                this.currentItem.direction = eventDelta > 0 ? Direction.NEXT : Direction.PREV;
                 this.previousItem = this.incomingSlide;
                 this.previousItem.previous = true;
-                this.animationPosition = this.animationType === HorizontalAnimationType.fade ?
-                    Math.abs((slideWidth - deltaX) / slideWidth) : deltaX / slideWidth;
+                this.animationPosition = this.animationType === CarouselAnimationType.fade ?
+                    Math.abs((slideSize - delta) / slideSize) : delta / slideSize;
                 this.playAnimations();
             }
         }
@@ -717,37 +740,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.stoppedByInteraction) {
             this.play();
         }
-    }
-
-    /** @hidden */
-    public ngAfterViewInit() {
-        this.cdr.detach();
-
-        if (!this.theme) {
-            this.theme = this.themeService.getComponentTheme(this.element);
-        }
-
-        for (const icon of this._icons) {
-            switch(this.theme) {
-                case 'indigo':
-                    this.iconService.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get('indigo'),
-                    );
-                    break;
-                case 'material':
-                default:
-                    this.iconService.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get('material'),
-                    );
-            }
-        }
-
-        this.cdr.detectChanges();
-        this.cdr.reattach();
     }
 
     /** @hidden */
@@ -767,6 +759,71 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.lastInterval) {
             clearInterval(this.lastInterval);
         }
+    }
+
+    /** @hidden */
+    public handleKeydownPrev(event: KeyboardEvent): void {
+        if (this.platformUtil.isActivationKey(event)) {
+            event.preventDefault();
+            this.prev();
+        }
+    }
+
+    /** @hidden */
+    public handleKeydownNext(event: KeyboardEvent): void {
+        if (this.platformUtil.isActivationKey(event)) {
+            event.preventDefault();
+            this.next();
+        }
+    }
+
+    /** @hidden */
+    public handleKeyUp(event: KeyboardEvent): void {
+        if (event.key === this.platformUtil.KEYMAP.TAB) {
+            this._hasKeyboardFocusOnIndicators = true;
+        }
+    }
+
+    /** @hidden */
+    public handleFocusOut(event: FocusEvent): void {
+        const target = event.relatedTarget as HTMLElement;
+
+        if (!target || !target.classList.contains('igx-carousel-indicators__indicator')) {
+            this._hasKeyboardFocusOnIndicators = false;
+        }
+    }
+
+    /** @hidden */
+    public handleClick(): void {
+        this._hasKeyboardFocusOnIndicators = false;
+    }
+
+    /** @hidden */
+    public handleKeydown(event: KeyboardEvent): void {
+        if (this.keyboardSupport) {
+            return;
+        }
+        const { key } = event;
+        const slides = this.slides.toArray();
+
+        switch (key) {
+            case this.platformUtil.KEYMAP.ARROW_LEFT:
+                this.dir.rtl ? this.next() : this.prev();
+                break;
+            case this.platformUtil.KEYMAP.ARROW_RIGHT:
+                this.dir.rtl ? this.prev() : this.next();
+                break;
+            case this.platformUtil.KEYMAP.HOME:
+                event.preventDefault();
+                this.select(this.dir.rtl ? last(slides) : first(slides));
+                break;
+            case this.platformUtil.KEYMAP.END:
+                event.preventDefault();
+                this.select(this.dir.rtl ? first(slides) : last(slides));
+                break;
+        }
+
+        this.indicatorsElements[this.current].nativeElement.focus();
     }
 
     /**
@@ -906,7 +963,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     protected getCurrentElement(): HTMLElement {
-
         return this.currentItem.nativeElement;
     }
 
@@ -942,6 +998,20 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         return !this.loop && this.current === 0;
     }
 
+    private get indicatorsElements() {
+        return this._indicators.toArray();
+    }
+
+    private focusElement() {
+        const focusedElement = document.activeElement;
+
+        if (focusedElement.classList.contains('igx-carousel-indicators__indicator')) {
+            this.indicatorsElements[this.current].nativeElement.focus();
+        } else {
+            this.focusSlideElement();
+        }
+    }
+
     private getNextIndex(): number {
         return (this.current + 1) % this.total;
     }
@@ -956,17 +1026,19 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     private pan(event) {
-        const slideWidth = this.currentItem.nativeElement.offsetWidth;
-        const panOffset = (slideWidth / 1000);
-        const deltaX = event.deltaX;
-        const index = deltaX < 0 ? this.getNextIndex() : this.getPrevIndex();
-        const offset = deltaX < 0 ? slideWidth + deltaX : -slideWidth + deltaX;
+        const slideSize = this.vertical
+            ? this.currentItem.nativeElement.offsetHeight
+            : this.currentItem.nativeElement.offsetWidth;
+        const panOffset = (slideSize / 1000);
+        const delta = this.vertical ? event.deltaY : event.deltaX;
+        const index = delta < 0 ? this.getNextIndex() : this.getPrevIndex();
+        const offset = delta < 0 ? slideSize + delta : -slideSize + delta;
 
-        if (!this.gesturesSupport || event.isFinal || Math.abs(deltaX) + panOffset >= slideWidth) {
+        if (!this.gesturesSupport || event.isFinal || Math.abs(delta) + panOffset >= slideSize) {
             return;
         }
 
-        if (!this.loop && ((this.current === 0 && deltaX > 0) || (this.current === this.total - 1 && deltaX < 0))) {
+        if (!this.loop && ((this.current === 0 && delta > 0) || (this.current === this.total - 1 && delta < 0))) {
             this.incomingSlide = null;
             return;
         }
@@ -993,11 +1065,15 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
         this.incomingSlide.previous = true;
 
-        if (this.animationType === HorizontalAnimationType.fade) {
-            this.currentItem.nativeElement.style.opacity = `${Math.abs(offset) / slideWidth}`;
+        if (this.animationType === CarouselAnimationType.fade) {
+            this.currentItem.nativeElement.style.opacity = `${Math.abs(offset) / slideSize}`;
         } else {
-            this.currentItem.nativeElement.style.transform = `translateX(${deltaX}px)`;
-            this.incomingSlide.nativeElement.style.transform = `translateX(${offset}px)`;
+            this.currentItem.nativeElement.style.transform = this.vertical
+                ? `translateY(${delta}px)`
+                : `translateX(${delta}px)`;
+            this.incomingSlide.nativeElement.style.transform = this.vertical
+                ? `translateY(${offset}px)`
+                : `translateX(${offset}px)`;
         }
     }
 
