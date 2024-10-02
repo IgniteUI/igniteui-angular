@@ -2150,7 +2150,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(50);
             fix.detectChanges();
             expect(editIcon.getAttribute('aria-hidden')).toBe('true');
-            expect(editIcon.getAttribute('tabIndex')).toBeFalsy();
+            expect(editIcon.getAttribute('tabIndex')).toBe('0');
         }));
 
         describe('Context Menu - ', () => {
