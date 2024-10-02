@@ -131,6 +131,9 @@ describe(`Update to ${version}`, () => {
             }`
         );
 
+        const tree = await schematicRunner
+            .runSchematic(migrationName, {}, appTree);
+
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
         ).toEqual(
