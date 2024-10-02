@@ -1,5 +1,6 @@
-import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
+import { FilteringLogic, IFilteringExpression, ISerializedFilteringExpression } from './filtering-expression.interface';
 import { IBaseEventArgs } from '../core/utils';
+import { IFilteringOperation, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 
 /* mustCoerceToInt */
 export enum FilteringExpressionsTreeType {
@@ -24,6 +25,10 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
     find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
 
     findIndex(fieldName: string): number;
+}
+
+export declare interface ISerializedFilteringExpressionTree extends IExpressionTree {
+    filteringOperands: (ISerializedFilteringExpressionTree | ISerializedFilteringExpression)[];
 }
 
 /* marshalByValue */
@@ -96,13 +101,27 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     public returnFields?: string[];
 
+    /**
+     * Array of filtering operand providers to be used when generating type hints
+     * during serialization.
+     * @memberof FilteringExpressionsTree
+     */
+    public expressionTypes? = [
+        IgxFilteringOperand,
+        IgxStringFilteringOperand,
+        IgxNumberFilteringOperand,
+        IgxBooleanFilteringOperand,
+        IgxDateTimeFilteringOperand,
+        IgxTimeFilteringOperand,
+        IgxDateFilteringOperand,
+    ];
+
     constructor(operator: FilteringLogic, fieldName?: string, entity?: string, returnFields?: string[]) {
         this.operator = operator;
         this.entity = entity;
         this.returnFields = returnFields;
         this.fieldName = fieldName;
     }
-
 
     /**
      * Checks if filtering expressions tree is empty.
@@ -170,5 +189,32 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
             }
         }
         return false;
+    }
+
+    public toJSON() {
+        const containsCondition = (instance: IgxFilteringOperand, operand: IFilteringOperation) => {
+            return instance.operations.find(op =>
+                op.logic.toString() === operand.logic.toString() && op.name === operand.name
+            );
+        };
+        const copy = new FilteringExpressionsTree(this.operator, this.fieldName, this.entity, this.returnFields) as ISerializedFilteringExpressionTree;
+
+        this.filteringOperands.forEach(op => {
+            const condition = (op as IFilteringExpression).condition;
+            if (condition) {
+                let resolvedType = 'unknown';
+                this.expressionTypes.forEach(type => {
+                    const match = containsCondition(type.instance(), condition);
+                    if (match !== undefined) {
+                        resolvedType = type.name.replaceAll('_','');
+                    }
+                });
+
+                copy.filteringOperands.push({...op, expressionType: resolvedType, conditionName: condition.name });
+            } else {
+                copy.filteringOperands.push(op);
+            }
+        });
+        return copy;
     }
 }

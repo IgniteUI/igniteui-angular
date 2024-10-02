@@ -21,3 +21,7 @@ export declare interface IFilteringExpression {
     searchTree?: IExpressionTree;
     ignoreCase?: boolean;
 }
+
+export declare interface ISerializedFilteringExpression extends IFilteringExpression {
+    expressionType?: string;
+}
