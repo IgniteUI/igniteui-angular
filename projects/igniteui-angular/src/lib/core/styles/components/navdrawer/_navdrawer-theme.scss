@@ -202,7 +202,7 @@
     }
 
     %navdrawer-display-mini-pinned {
-        flex-basis: var(--igx-mini-nav-drawer-size, #{$item-mini-size});
+        flex-basis: calc(var(--igx-mini-nav-drawer-size, #{$item-mini-size}) + rem(1px));
     }
 
     %aside {
@@ -213,11 +213,11 @@
         background: var-get($theme, 'background');
         top: 0;
         bottom: 0;
-        min-width: var(--igx-nav-drawer-size);
+        width: var(--igx-nav-drawer-size);
         inset-inline-start: 0;
         z-index: 999;
         transition: width, padding, transform;
-        transition-timing-function: $in-out-quad, $in-out-quad;
+        transition-timing-function: $in-out-quad;
         box-shadow: var-get($theme, 'shadow');
         padding: $aside-padding;
 
@@ -279,11 +279,13 @@
     }
 
     %aside--mini {
-        transition-duration: .2s, .2s;
-        min-width: var(--igx-nav-drawer-size--mini);
+        transition-duration: .3s;
+        width: var(--igx-nav-drawer-size--mini);
+        min-width: fit-content;
 
         %item {
             justify-content: center;
+            min-width: fit-content;
 
             @if $variant == 'bootstrap' {
                 width: rem(56px);
@@ -303,7 +305,7 @@
     }
 
     %aside--normal {
-        transition-duration: .3s, .3s;
+        transition-duration: .3s;
         width: var(--igx-nav-drawer-size);
     }
 
@@ -311,7 +313,7 @@
         opacity: 1;
         background: color(null, 'gray', 500, .54);
         transition: opacity, visibility;
-        transition-duration: .25s, .25s;
+        transition-duration: .3s, .3s;
         transition-timing-function: ease-in, step-start;
         transition-delay: 0s, 0s;
         position: absolute;
