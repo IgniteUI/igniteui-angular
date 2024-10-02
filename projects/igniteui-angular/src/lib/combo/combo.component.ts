@@ -7,7 +7,8 @@ import {
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IgxSelectionAPIService } from '../core/selection';
-import { IBaseEventArgs, IBaseCancelableEventArgs, CancelableEventArgs, areObjectsEqual } from '../core/utils';
+import { IBaseEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
+import { isEqual } from 'lodash-es';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -255,7 +256,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         const oldSelection = this.selection;
 
         if (this.data && this.data.length > 0) {
-            this.applySelection(oldSelection);
+            this.setSelection(new Set(this._value), undefined, false);
         }
     }
 
@@ -270,8 +271,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     /** @hidden @internal */
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['data'] && this.data && this.data.length > 0 && this._value && this._value.length) {
-            const oldSelection = this.selection;
-            this.applySelection(oldSelection);
+            this.setSelection(new Set(this._value), undefined, false);
         }
     }
 
@@ -435,15 +435,18 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         }
     }
 
-    protected setSelection(selection: Set<any>, event?: Event): void {
+    protected setSelection(selection: Set<any>, event?: Event, emitEvent: boolean = true): void {
+        const filteredSelection = this.isRemote ? Array.from(selection) : Array.from(selection).filter(item => this.isItemInData(item));
+
         const currentSelection = this.selectionService.get(this.id);
-        const removed = this.convertKeysToItems(diffInSets(currentSelection, selection));
-        const added = this.convertKeysToItems(diffInSets(selection, currentSelection));
-        const newValue = Array.from(selection);
+        const removed = this.convertKeysToItems(diffInSets(currentSelection, new Set(filteredSelection)));
+        const added = this.convertKeysToItems(diffInSets(new Set(filteredSelection), currentSelection));
+        const newValue = filteredSelection;
         const oldValue = Array.from(currentSelection || []);
         const newSelection = this.convertKeysToItems(newValue);
         const oldSelection = this.convertKeysToItems(oldValue);
         const displayText = this.createDisplayText(this.convertKeysToItems(newValue), oldValue);
+
         const args: IComboSelectionChangingEventArgs = {
             newValue,
             oldValue,
@@ -456,7 +459,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             displayText,
             cancel: false
         };
-        this.selectionChanging.emit(args);
+
+        if (emitEvent) {
+            this.selectionChanging.emit(args);
+        }
+
         if (!args.cancel) {
             this.selectionService.select_items(this.id, args.newValue, true);
             this._value = args.newValue;
@@ -465,7 +472,10 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             } else {
                 this._displayValue = this.createDisplayText(this.selection, args.oldSelection);
             }
-            this._onChangeCallback(args.newValue);
+            this.cdr.markForCheck();
+            if (emitEvent) {
+                this._onChangeCallback(args.newValue);
+            }
         } else if (this.isRemote) {
             this.registerRemoteEntries(diffInSets(selection, currentSelection), false);
         }
@@ -486,20 +496,9 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         return value;
     }
 
-    private applySelection(oldSelection: any[]): void {
-        const selection = this._value || [];
-        const filteredSelection = this.isRemote ? selection : selection.filter(item => this.isItemInData(item));
-
-        this.selectionService.select_items(this.id, filteredSelection, true);
-        this.cdr.markForCheck();
-
-        this._displayValue = this.createDisplayText(this.selection, oldSelection);
-        this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
-    }
-
     private isItemInData(item: any): boolean {
         if (!this.valueKey) {
-            return this.data.some(dataItem => areObjectsEqual(dataItem, item));
+            return this.data.some(dataItem => isEqual(dataItem, item));
         }
 
         return this.data.some(dataItem => {

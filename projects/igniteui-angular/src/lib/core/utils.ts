@@ -94,47 +94,6 @@ export const mergeObjects = (obj1: any, obj2: any): any => mergeWith(obj1, obj2,
 });
 
 /**
- * Recursively checks if two objects are deeply equal.
- * Handles circular references by keeping track of seen objects.
- *
- * @param obj1 First object to compare
- * @param obj2 Second object to compare
- * @param seen Set of already visited objects to handle circular references
- * @returns true if objects are equal, false otherwise
- * @hidden
- */
-export const areObjectsEqual = (obj1: any, obj2: any, seen = new Set()): boolean => {
-    if (obj1 === obj2) return true;
-
-    if (
-        typeof obj1 !== 'object' ||
-        obj1 === null ||
-        typeof obj2 !== 'object' ||
-        obj2 === null
-    ) {
-        return obj1 === obj2;
-    }
-
-    if (seen.has(obj1) || seen.has(obj2)) {
-        return false;
-    }
-    seen.add(obj1);
-    seen.add(obj2);
-
-    const keys1 = Object.keys(obj1);
-    const keys2 = Object.keys(obj2);
-
-    if (keys1.length !== keys2.length) return false;
-
-    for (const key of keys1) {
-        if (!Object.prototype.hasOwnProperty.call(obj2, key)) return false;
-        if (!areObjectsEqual(obj1[key], obj2[key], seen)) return false;
-    }
-
-    return true;
-};
-
-/**
  * Creates deep clone of provided value.
  * Supports primitive values, dates and objects.
  * If passed value is array returns shallow copy of the array.

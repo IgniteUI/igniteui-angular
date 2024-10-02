@@ -106,6 +106,7 @@ describe('igxCombo', () => {
             combo.ngOnInit();
             expect(mockInjector.get).toHaveBeenCalledWith(NgControl, null);
             combo.data = [{ id: 'test', name: 'test' }];
+            combo.valueKey = 'id';
             combo.registerOnChange(mockNgControl.registerOnChangeCb);
             combo.registerOnTouched(mockNgControl.registerOnTouchedCb);
 
@@ -115,7 +116,7 @@ describe('igxCombo', () => {
             spyOnProperty(combo, 'isRemote').and.returnValue(false);
             combo.writeValue(['test']);
             expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
-            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, [], true);
+            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['test'], true);
             expect(combo.displayValue).toEqual('test');
             expect(combo.value).toEqual(['test']);
 
@@ -127,10 +128,11 @@ describe('igxCombo', () => {
 
             // OnChange callback
             combo.data = [{ id: 'simpleValue', name: 'simpleValue' }];
+            combo.valueKey = 'id';
             mockSelection.add_items.and.returnValue(new Set(['simpleValue']));
             combo.select(['simpleValue']);
-            expect(mockSelection.add_items).toHaveBeenCalledWith(combo.id, [], undefined);
-            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, [], true);
+            expect(mockSelection.add_items).toHaveBeenCalledWith(combo.id, ['simpleValue'], undefined);
+            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['simpleValue'], true);
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(['simpleValue']);
 
             // OnTouched callback
@@ -260,8 +262,7 @@ describe('igxCombo', () => {
             );
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
-            combo.data = [{ id: 'EXAMPLE', name: 'Example' }];
-            combo.valueKey = 'id';
+            combo.data = data;
             mockSelection.select_items.calls.reset();
             spyOnProperty(combo, 'isRemote').and.returnValue(false);
             combo.writeValue(['EXAMPLE']);
@@ -270,7 +271,7 @@ describe('igxCombo', () => {
             // Calling "select_items" through the writeValue accessor should clear the previous values;
             // Select items is called with the invalid value and it is written in selection, though no item is selected
             // Controlling the selection is up to the user
-            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['EXAMPLE'], true);
+            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, [], true);
             combo.writeValue(combo.data[0]);
             // When value key is specified, the item's value key is stored in the selection
             expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, [], true);
@@ -2612,7 +2613,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 combo = fixture.componentInstance.combo;
                 const component = fixture.componentInstance;
-                tick(100);
+                tick();
 
                 component.selectedItems = ['SF', 'LA', 'NY']; // 'SF' is invalid, 'LA' and 'NY' are valid
                 fixture.detectChanges();
@@ -2626,7 +2627,7 @@ describe('igxCombo', () => {
                 fixture = TestBed.createComponent(ComboInvalidValuesComponent);
                 fixture.detectChanges();
                 combo = fixture.componentInstance.combo;
-                tick(100);
+                tick();
 
                 combo.select(['SF', 'LA', 'NY']); // 'SF' is invalid, 'LA' and 'NY' are valid
                 fixture.detectChanges();
