@@ -9,9 +9,11 @@
         <igx-column-group header="General Information" title="General Company Information" >
             <igx-column [field]='"Missing"' [groupable]="true"></igx-column>
         </igx-column-group>
-        <igx-column *ngFor="let c of columns" [groupable]="true" [editable] = true [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
-            [hidden]='c.hidden'>
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [groupable]="true" [editable] = true [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
+                [hidden]='c.hidden'>
+            </igx-column>
+        }
     </igx-grid>
 
     <div class='actions-container'>
@@ -19,33 +21,33 @@
             <h4 class="sample-title">Hiding Action</h4>
             <div class="button-sample">
                 <igx-column-actions
-                igxColumnHiding
-                [grid]="grid1"
-                (columnToggled)="columnToggled($event)">
+                    igxColumnHiding
+                    [grid]="grid1"
+                    (columnToggled)="columnToggled($event)">
                 </igx-column-actions>
             </div>
         </article>
 
         <article>
-                <h4 class="sample-title">Pinning Action</h4>
-                <div class="button-sample">
-                    <igx-column-actions
+            <h4 class="sample-title">Pinning Action</h4>
+            <div class="button-sample">
+                <igx-column-actions
                     igxColumnPinning
                     [grid]="grid1">
-                    </igx-column-actions>
-                </div>
+                </igx-column-actions>
+            </div>
         </article>
 
         <article>
             <h4 class="sample-title">Custom Group Action</h4>
             <div class="button-sample">
                 <igx-column-actions
-                appColumnGrouping
-                [indentation]='100'
-                [grid]="grid1"
-                >
+                    appColumnGrouping
+                    [indentation]='100'
+                    [grid]="grid1"
+                    >
                 </igx-column-actions>
             </div>
-    </article>
+        </article>
     </div>
 </div>

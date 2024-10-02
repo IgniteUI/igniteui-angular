@@ -7,20 +7,21 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from './public_api';
-import { NgFor } from '@angular/common';
 
 @Component({
     template: `
         <igx-chips-area #chipsArea class="customClass">
-            <igx-chip #chipElem *ngFor="let chip of chipList"
-            [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable">
-                <igx-icon igxPrefix>drag_indicator</igx-icon>
-                <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-            </igx-chip>
+            @for (chip of chipList; track chip) {
+                <igx-chip #chipElem
+                    [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable">
+                    <igx-icon igxPrefix>drag_indicator</igx-icon>
+                    <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+                </igx-chip>
+            }
         </igx-chips-area>
     `,
     standalone: true,
-    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, NgFor]
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
@@ -60,15 +61,17 @@ class TestChipSelectComponent extends TestChipComponent {
 @Component({
     template: `
         <igx-chips-area #chipsArea (reorder)="chipsOrderChanged($event)">
-            <igx-chip #chipElem *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true"
-                [removable]="true" [selectable]="true" (remove)="chipRemoved($event)">
-                <igx-icon igxPrefix>drag_indicator</igx-icon>
-                <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-            </igx-chip>
+            @for (chip of chipList; track chip) {
+                <igx-chip #chipElem [id]="chip.id" [draggable]="true"
+                    [removable]="true" [selectable]="true" (remove)="chipRemoved($event)">
+                    <igx-icon igxPrefix>drag_indicator</igx-icon>
+                    <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+                </igx-chip>
+            }
         </igx-chips-area>
     `,
     standalone: true,
-    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, NgFor]
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipReorderComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })

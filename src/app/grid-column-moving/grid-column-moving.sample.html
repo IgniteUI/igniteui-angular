@@ -29,16 +29,22 @@
                         </igx-grid-toolbar-advanced-filtering>
                     </igx-grid-toolbar-actions>
                 </igx-grid-toolbar>
-                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [groupable]="c.groupable"
-                    [resizable]="c.resizable" width="auto" [sortable]="c.sortable" [filterable]="c.filterable"
-                    [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="'150px'" [maxWidth]="'400px'"
-                    [dataType]="c.type" [pinned]='c.pinned' [hidden]='c.hidden'>
-                    <ng-template igxCell let-cell="cell">
-                        <div *ngIf='show'>{{ cell.value}}</div>
-                    </ng-template>
-                </igx-column>
-                <igx-paginator *ngIf="pagingEnabled">
-                </igx-paginator>
+                @for (c of columns; track c) {
+                    <igx-column [field]="c.field" [header]="c.field" [groupable]="c.groupable"
+                        [resizable]="c.resizable" width="auto" [sortable]="c.sortable" [filterable]="c.filterable"
+                        [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="'150px'" [maxWidth]="'400px'"
+                        [dataType]="c.type" [pinned]='c.pinned' [hidden]='c.hidden'>
+                        <ng-template igxCell let-cell="cell">
+                            @if (show) {
+                                <div>{{ cell.value}}</div>
+                            }
+                        </ng-template>
+                    </igx-column>
+                }
+                @if (pagingEnabled) {
+                    <igx-paginator>
+                    </igx-paginator>
+                }
             </igx-grid>
         </div>
     </div>
@@ -66,7 +72,7 @@
         </div>
     </div>
 
-    <igx-grid #grid1 [columnSelection]="'single'" [data]="data" 
+    <igx-grid #grid1 [columnSelection]="'single'" [data]="data"
         [allowFiltering]="true" (columnMovingStart)="columnMovingStart()" (columnMoving)="columnMoving()"
         (columnMovingEnd)="columnMovingEnd()" [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'"
         [rowEditable]="true" [primaryKey]="'ID'" [moving]="true">
@@ -78,17 +84,22 @@
                 </igx-grid-toolbar-advanced-filtering>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [groupable]="c.groupable"
-            [resizable]="c.resizable" width="auto" [sortable]="c.sortable" [filterable]="c.filterable"
-            [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="'150px'" [maxWidth]="'400px'"
-            [dataType]="c.type" [pinned]='c.pinned' [hidden]='c.hidden'>
-            <ng-template igxCell let-cell="cell">
-                <div *ngIf='show'>{{ cell.value}}</div>
-
-            </ng-template>
-        </igx-column>
-        <igx-paginator *ngIf="pagingEnabled">
-        </igx-paginator>
+        @for (c of columns; track c) {
+            <igx-column [field]="c.field" [header]="c.field" [groupable]="c.groupable"
+                [resizable]="c.resizable" width="auto" [sortable]="c.sortable" [filterable]="c.filterable"
+                [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="'150px'" [maxWidth]="'400px'"
+                [dataType]="c.type" [pinned]='c.pinned' [hidden]='c.hidden'>
+                <ng-template igxCell let-cell="cell">
+                    @if (show) {
+                        <div>{{ cell.value}}</div>
+                    }
+                </ng-template>
+            </igx-column>
+        }
+        @if (pagingEnabled) {
+            <igx-paginator>
+            </igx-paginator>
+        }
     </igx-grid>
 
     <h4>Sample 2 - Grid with MCH</h4>

@@ -6,22 +6,26 @@
                 <igx-icon>search</igx-icon>
             </igx-prefix>
             <input #searchContacts igxInput type="text" placeholder="Search Contacts" [(ngModel)]="search1">
-            <igx-suffix *ngIf="searchContacts.value.length > 0" (click)="search1 = ''">
-                <igx-icon>clear</igx-icon>
-            </igx-suffix>
+            @if (searchContacts.value.length > 0) {
+                <igx-suffix (click)="search1 = ''">
+                    <igx-icon>clear</igx-icon>
+                </igx-suffix>
+            }
         </igx-input-group>
         <button igxButton (click)='showList = !showList'>Toggle List</button>
         <igx-card>
-            <igx-list *ngIf='showList'>
-                <igx-list-item [isHeader]="true">Contacts</igx-list-item>
-                <div class="virtualized-items" [style.height]="'500px'" [style.overflow]="'hidden'" [style.position]="'relative'">
-                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *igxFor="let item of data | igxFilter: fo1; scrollOrientation : 'vertical'; containerSize: '500px'; itemSize: '56px'">
-                        <igx-avatar igxListThumbnail [src]="item.avatar"></igx-avatar>
-                        <span igxListLine igxListLineTitle>{{item.text}}</span>
-                        <igx-icon igxListAction [style.color]="item.favorite ? 'orange' : 'lightgray'">star</igx-icon>
-                    </igx-list-item>
-                </div>
-            </igx-list>
+            @if (showList) {
+                <igx-list>
+                    <igx-list-item [isHeader]="true">Contacts</igx-list-item>
+                    <div class="virtualized-items" [style.height]="'500px'" [style.overflow]="'hidden'" [style.position]="'relative'">
+                        <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *igxFor="let item of data | igxFilter: fo1; scrollOrientation : 'vertical'; containerSize: '500px'; itemSize: '56px'">
+                            <igx-avatar igxListThumbnail [src]="item.avatar"></igx-avatar>
+                            <span igxListLine igxListLineTitle>{{item.text}}</span>
+                            <igx-icon igxListAction [style.color]="item.favorite ? 'orange' : 'lightgray'">star</igx-icon>
+                        </igx-list-item>
+                    </div>
+                </igx-list>
+            }
         </igx-card>
     </article>
 </section>

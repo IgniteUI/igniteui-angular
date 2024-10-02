@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { DatePipe, NgFor, AsyncPipe } from '@angular/common';
+import { DatePipe, AsyncPipe } from '@angular/common';
 
 import { Observable } from 'rxjs';
 
@@ -16,7 +16,7 @@ const ORDERS_URl = 'https://services.odata.org/V4/Northwind/Northwind.svc/Orders
     styleUrls: ['grid-formatting.component.scss'],
     standalone: true,
     providers: [RemoteService],
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxTreeGridComponent, NgFor, AsyncPipe]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxTreeGridComponent, AsyncPipe]
 })
 export class GridFormattingComponent implements OnInit, AfterViewInit {
 

@@ -7,9 +7,11 @@
         <igx-column field="SupplierName"></igx-column>
         <igx-column field="UnitsInStock"></igx-column>
         <igx-column field="Rating"></igx-column>
-        <igx-paginator #paginator *ngIf="paging" [totalRecords]="totalCount" [selectOptions]="selectOptions" [(page)]="page"
-            [(perPage)]="perPage" (pageChange)="paginate($event)" (perPageChange)="perPageChange($event)">
-        </igx-paginator>
+        @if (paging) {
+            <igx-paginator #paginator [totalRecords]="totalCount" [selectOptions]="selectOptions" [(page)]="page"
+                [(perPage)]="perPage" (pageChange)="paginate($event)" (perPageChange)="perPageChange($event)">
+            </igx-paginator>
+        }
     </igx-grid>
 
     <igx-card style="width: 360px; margin-top: 12px">
@@ -19,7 +21,9 @@
         <igx-card-content>
             <button igxButton="contained" (click)="paging = !paging">Paging {{paging}}</button>
             <igx-select [(ngModel)]="perPage">
-                <igx-select-item *ngFor="let value of selectOptions" [value]="value">{{value}}</igx-select-item>
+                @for (value of selectOptions; track value) {
+                    <igx-select-item [value]="value">{{value}}</igx-select-item>
+                }
             </igx-select>
         </igx-card-content>
     </igx-card>

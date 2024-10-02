@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, QueryList, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -681,20 +680,28 @@ describe('IgxTree #treeView', () => {
 @Component({
     template: `
         <igx-tree>
-            <igx-tree-node [(expanded)]="node.expanded" [data]="node" *ngFor="let node of data">
-            {{ node.label }}
-                <igx-tree-node [(expanded)]="child.expanded" [data]="child" *ngFor="let child of node.children">
-                {{ child.label }}
-                    <igx-tree-node [(expanded)]="leafChild.expanded" [data]="leafChild" *ngFor="let leafChild of child.children">
-                        {{ leafChild.label }}
-                    </igx-tree-node>
+            @for (node of data; track node) {
+                <igx-tree-node [(expanded)]="node.expanded" [data]="node">
+                    {{ node.label }}
+                    @for (child of node.children; track child) {
+                        <igx-tree-node [(expanded)]="child.expanded" [data]="child">
+                            {{ child.label }}
+                            @for (leafChild of child.children; track leafChild) {
+                                <igx-tree-node [(expanded)]="leafChild.expanded" [data]="leafChild">
+                                    {{ leafChild.label }}
+                                </igx-tree-node>
+                            }
+                        </igx-tree-node>
+                    }
                 </igx-tree-node>
-            </igx-tree-node>
-            <div *ngIf="divChild"></div>
+            }
+            @if (divChild) {
+                <div></div>
+            }
         </igx-tree>
     `,
     standalone: true,
-    imports: [IgxTreeComponent, NgIf, IgxTreeNodeComponent, NgFor]
+    imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 class IgxTreeSampleComponent {
     @ViewChild(IgxTreeComponent)

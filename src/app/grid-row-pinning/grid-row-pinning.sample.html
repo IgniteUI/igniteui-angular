@@ -44,10 +44,12 @@
                     <button (click)="grid1.deleteRow(cell.row.key)">Delete</button>
                 </ng-template>
             </igx-column>
-            <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-                [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [hidden]='c.hidden' [editable]='true'
-                [hasSummary]='true'>
-            </igx-column>
+            @for (c of columns; track c) {
+                <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+                    [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [hidden]='c.hidden' [editable]='true'
+                    [hasSummary]='true'>
+                </igx-column>
+            }
             <igx-paginator></igx-paginator>
         </igx-grid>
     </div>
@@ -74,9 +76,11 @@
                     <button (click)="hGrid.deleteRow(cell.id.rowID)">Delete</button>
                 </ng-template>
             </igx-column>
-            <igx-column *ngFor="let c of hColumns" [hasSummary]='true' [editable]="true" [sortable]="true"
-                [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'>
-            </igx-column>
+            @for (c of hColumns; track c) {
+                <igx-column [hasSummary]='true' [editable]="true" [sortable]="true"
+                    [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'>
+                </igx-column>
+            }
             <igx-row-island [key]="'childData'" [autoGenerate]="true" rowSelection="multiple" [allowFiltering]="true">
                 <igx-row-island [key]="'childData'" [autoGenerate]="true" rowSelection="multiple"
                     [allowFiltering]="true"></igx-row-island>
@@ -109,11 +113,13 @@
                     </igx-icon>
                 </ng-template>
             </igx-column>
-            <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
-                [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true"
-                [filterable]="true" [editable]="true" [hidden]="c.hidden" [minWidth]="c.minWidth"
-                [maxWidth]="c.maxWidth">
-            </igx-column>
+            @for (c of treeColumns; track c) {
+                <igx-column [field]="c.field" [dataType]="c.dataType" [header]="c.label"
+                    [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true"
+                    [filterable]="true" [editable]="true" [hidden]="c.hidden" [minWidth]="c.minWidth"
+                    [maxWidth]="c.maxWidth">
+                </igx-column>
+            }
             <igx-paginator>
             </igx-paginator>
         </igx-tree-grid>

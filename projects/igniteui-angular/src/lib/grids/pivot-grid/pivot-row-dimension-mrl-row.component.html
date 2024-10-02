@@ -1,5 +1,7 @@
-<ng-template ngFor let-cell let-cellIndex="index" [ngForOf]="rowGroup
-    | pivotGridHorizontalRowCellMerging:grid.pivotConfiguration:grid.pipeTrigger">
+@for (
+    cell of rowGroup | pivotGridHorizontalRowCellMerging:grid.pivotConfiguration:grid.pipeTrigger;
+    track cell; let cellIndex = $index
+) {
     <igx-pivot-row-dimension-content role="row" class="igx-grid-thead"
         [grid]="grid"
         [dimension]="cell.rootDimension"
@@ -16,4 +18,4 @@
             columnVisibleIndex: cellIndex
         }">
     </igx-pivot-row-dimension-content>
-</ng-template>
+}

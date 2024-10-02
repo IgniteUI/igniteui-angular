@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { ColumnType, GridColumnDataType, GridSelectionMode, IGX_INPUT_GROUP_DIRECTIVES, IgxColumnComponent, IgxDateFilteringOperand, IgxFilterCellTemplateDirective, IgxGridComponent, IgxIconComponent, IgxNumberFilteringOperand, IgxStringFilteringOperand } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
@@ -11,7 +10,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     styleUrls: ['grid-filter-template.sample.scss'],
     templateUrl: 'grid-filter-template.sample.html',
     standalone: true,
-    imports: [IgxGridComponent, NgFor, IgxColumnComponent, IgxFilterCellTemplateDirective, IgxIconComponent, IGX_INPUT_GROUP_DIRECTIVES, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxFilterCellTemplateDirective, IgxIconComponent, IGX_INPUT_GROUP_DIRECTIVES]
 })
 
 export class GridFilterTemplateSampleComponent implements OnInit {

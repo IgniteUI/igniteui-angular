@@ -16,7 +16,6 @@ import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
-import { NgFor, NgIf } from '@angular/common';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective } from '../public_api';
 
@@ -1258,14 +1257,18 @@ describe('IgxGrid Master Detail #grid', () => {
 @Component({
     template: `
     <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]="true" [rowSelection]="rowSelectable">
-        <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width">
-        </igx-column>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @for (c of columns; track c) {
+            <igx-column [field]="c.field" [width]="c.width">
+            </igx-column>
+        }
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
 
         <ng-template igxGridDetail let-dataItem>
             <div>
                 <div class="checkboxArea">
-                <igx-checkbox [disableRipple]="true"></igx-checkbox>
+                    <igx-checkbox [disableRipple]="true"></igx-checkbox>
                     <span style="font-weight: 600">Available</span>
                 </div>
                 <div class="addressArea">{{dataItem.Address}}</div>
@@ -1282,7 +1285,7 @@ describe('IgxGrid Master Detail #grid', () => {
     </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxInputGroupComponent, IgxInputDirective, NgIf, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxInputGroupComponent, IgxInputDirective]
 })
 export class DefaultGridMasterDetailComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1307,9 +1310,13 @@ export class DefaultGridMasterDetailComponent {
     template: `
     <igx-grid [data]="data" [expansionStates]="expStates"
         [width]="width" [height]="height" [primaryKey]="'ID'" [rowSelection]="rowSelectable">
-        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
-        </igx-column>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @for (c of columns; track c) {
+            <igx-column [field]="c.field" [header]="c.field" [width]="c.width">
+            </igx-column>
+        }
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
 
         <ng-template igxGridDetail let-dataItem>
             <div>
@@ -1324,7 +1331,7 @@ export class DefaultGridMasterDetailComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, NgIf, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent]
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
     public expStates = new Map<any, boolean>();
@@ -1353,7 +1360,9 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
         <igx-column-layout field='group1'>
             <igx-column  [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID"></igx-column>
         </igx-column-layout>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
         <ng-template igxGridDetail let-dataItem>
             <div>
                 <div class="checkboxArea">
@@ -1367,7 +1376,7 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, IgxPaginatorComponent, NgIf, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, IgxPaginatorComponent]
 })
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
 

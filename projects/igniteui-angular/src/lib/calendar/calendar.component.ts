@@ -13,7 +13,7 @@ import {
 	booleanAttribute,
     HostListener,
 } from '@angular/core';
-import { NgIf, NgTemplateOutlet, NgStyle, NgFor, DatePipe } from '@angular/common';
+import { NgTemplateOutlet, NgStyle, DatePipe } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import {
@@ -72,7 +72,7 @@ let NEXT_ID = 0;
 	selector: 'igx-calendar',
 	templateUrl: 'calendar.component.html',
 	standalone: true,
-	imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollPageDirective, NgStyle, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar],
+	imports: [NgTemplateOutlet, IgxCalendarScrollPageDirective, NgStyle, IgxIconComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar],
 })
 export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit, OnDestroy {
     /**

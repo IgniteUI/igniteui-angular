@@ -82,7 +82,9 @@
             </div>
         </igx-step>
 
-        <igx-step *ngIf="displayStep"></igx-step>
+        @if (displayStep) {
+            <igx-step></igx-step>
+        }
 
         <igx-step #step2 [active]="true" (activeChange)="activeStepChange($event)" [isValid]="form2.form.valid"
             [completed]="form2.form.valid && stepper.linear">

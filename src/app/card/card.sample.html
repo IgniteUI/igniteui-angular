@@ -19,9 +19,11 @@
                 <span class="chip-label"> Tonight's availability</span>
 
                 <div class="chip-holder">
-                    <igx-chip *ngFor="let chip of cards[8].chip">
-                        <span>{{chip}}</span>
-                    </igx-chip>
+                    @for (chip of cards[8].chip; track chip) {
+                        <igx-chip>
+                            <span>{{chip}}</span>
+                        </igx-chip>
+                    }
                 </div>
 
             </igx-card-content>
@@ -32,7 +34,9 @@
                     <igx-icon>drag_indicator</igx-icon>
                 </button>
                 <button igxIconButton="flat" igxStart><igx-icon>favorite</igx-icon></button>
-                <button igxButton igxEnd igxRipple *ngFor="let button of cards[8].buttons">{{ button }}</button>
+                @for (button of cards[8].buttons; track button) {
+                    <button igxButton igxEnd igxRipple>{{ button }}</button>
+                }
             </igx-card-actions>
         </igx-card>
     </article>
@@ -86,17 +90,19 @@
             <igx-expansion-panel>
                 <igx-expansion-panel-body>
                     <igx-list>
-                        <igx-list-item *ngFor="let day of days;">
+                        @for (day of days; track day) {
+                            <igx-list-item>
                                 <div igxListLineTitle>
                                     <span class="day">{{ day.day }}</span>
                                 </div>
-                                    <span [class]="day.isSunny ? 'isSunny w_icon' : 'w_icon'" class="w_icon">
-                                        <igx-icon>{{day.icon}}</igx-icon>
-                                    </span>
-                                    <span>{{ day.tempHeight}}</span>
-                                    /
-                                    <span>{{day.tempLow}}</span>
-                        </igx-list-item>
+                                <span [class]="day.isSunny ? 'isSunny w_icon' : 'w_icon'" class="w_icon">
+                                    <igx-icon>{{day.icon}}</igx-icon>
+                                </span>
+                                <span>{{ day.tempHeight}}</span>
+                                /
+                                <span>{{day.tempLow}}</span>
+                            </igx-list-item>
+                        }
                     </igx-list>
                 </igx-expansion-panel-body>
             </igx-expansion-panel>
@@ -129,9 +135,11 @@
 
             <igx-card-actions>
                 <button igxButton igxRipple>Read More</button>
-                <span igxIconButton="flat" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[0].icons">
-                    <igx-icon>{{icon}}</igx-icon>
-                </span>
+                @for (icon of cards[0].icons; track icon) {
+                    <span igxIconButton="flat" igxRipple [igxRippleCentered]="true">
+                        <igx-icon>{{icon}}</igx-icon>
+                    </span>
+                }
             </igx-card-actions>
 
         </igx-card>
@@ -150,7 +158,9 @@
             </igx-card-header>
             <igx-card-actions>
                 <div class="igx-card-actions__bgroup">
-                    <button igxButton igxRipple *ngFor="let button of cards[2].buttons">{{ button }}</button>
+                    @for (button of cards[2].buttons; track button) {
+                        <button igxButton igxRipple>{{ button }}</button>
+                    }
                 </div>
             </igx-card-actions>
         </igx-card>
@@ -164,12 +174,16 @@
                 <img width="100%" height="100%" [src]="cards[5].imageUrl">
             </div>
             <igx-card-actions>
-                <span igxIconButton="flat" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[5].icons">
-                    <igx-icon>{{icon}}</igx-icon>
-                </span>
+                @for (icon of cards[5].icons; track icon) {
+                    <span igxIconButton="flat" igxRipple [igxRippleCentered]="true">
+                        <igx-icon>{{icon}}</igx-icon>
+                    </span>
+                }
 
                 <div class="igx-card-actions__bgroup">
-                    <button igxButton igxRipple *ngFor="let button of cards[5].buttons">{{ button }}</button>
+                    @for (button of cards[5].buttons; track button) {
+                        <button igxButton igxRipple>{{ button }}</button>
+                    }
                 </div>
             </igx-card-actions>
         </igx-card>
@@ -188,12 +202,16 @@
                 <img width="100%" height="100%" [src]="cards[6].imageUrl">
             </div>
             <igx-card-actions>
-                <span igxIconButton="flat" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[6].icons">
-                    <igx-icon>{{icon}}</igx-icon>
-                </span>
+                @for (icon of cards[6].icons; track icon) {
+                    <span igxIconButton="flat" igxRipple [igxRippleCentered]="true">
+                        <igx-icon>{{icon}}</igx-icon>
+                    </span>
+                }
 
                 <div class="igx-card-actions__bgroup">
-                    <button igxButton igxRipple *ngFor="let button of cards[6].buttons">{{ button }}</button>
+                    @for (button of cards[6].buttons; track button) {
+                        <button igxButton igxRipple>{{ button }}</button>
+                    }
                 </div>
             </igx-card-actions>
         </igx-card>
@@ -208,9 +226,11 @@
             </div>
 
             <igx-card-actions>
-                <span igxIconButton="flat" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[1].icons">
-                    <igx-icon>{{icon}}</igx-icon>
-                </span>
+                @for (icon of cards[1].icons; track icon) {
+                    <span igxIconButton="flat" igxRipple [igxRippleCentered]="true">
+                        <igx-icon>{{icon}}</igx-icon>
+                    </span>
+                }
             </igx-card-actions>
         </igx-card>
     </article>
@@ -230,9 +250,11 @@
             <igx-divider type="dashed" [middle]="true"></igx-divider>
 
             <igx-card-actions layout="justify">
-                <button *ngFor="let icon of cards[7].icons;" igxIconButton="flat" igxRipple [igxRippleCentered]="true">
-                    <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
-                </button>
+                @for (icon of cards[7].icons; track icon) {
+                    <button igxIconButton="flat" igxRipple [igxRippleCentered]="true">
+                        <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
+                    </button>
+                }
             </igx-card-actions>
         </igx-card>
     </article>
@@ -242,9 +264,11 @@
     <article class="card">
         <igx-card [horizontal]="true">
             <igx-card-actions layout="justify">
-                <button *ngFor="let icon of cards[7].icons;" igxIconButton="flat" igxRipple [igxRippleCentered]="true">
-                    <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
-                </button>
+                @for (icon of cards[7].icons; track icon) {
+                    <button igxIconButton="flat" igxRipple [igxRippleCentered]="true">
+                        <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
+                    </button>
+                }
             </igx-card-actions>
 
             <igx-divider [middle]="true" [vertical]="true"></igx-divider>
@@ -293,7 +317,9 @@
                 </igx-card-header>
 
                 <igx-card-actions [vertical]="false">
-                    <button igxButton igxRipple *ngFor="let button of cards[4].buttons">{{ button }}</button>
+                    @for (button of cards[4].buttons; track button) {
+                        <button igxButton igxRipple>{{ button }}</button>
+                    }
                 </igx-card-actions>
             </div>
 
@@ -381,7 +407,9 @@
                     <p> Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                 </igx-card-content>
                 <igx-card-actions [vertical]="false">
-                    <button igxButton="outlined" *ngFor="let button of cards[4].buttons">{{ button }}</button>
+                    @for (button of cards[4].buttons; track button) {
+                        <button igxButton="outlined">{{ button }}</button>
+                    }
                 </igx-card-actions>
             </div>
 

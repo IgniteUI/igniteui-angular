@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { NgIf } from '@angular/common';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnType, IPinningConfig, IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
@@ -28,7 +27,9 @@ import { IgxPaginatorDirective } from '../paginator/paginator-interfaces';
                 <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true"></igx-column>
                 <igx-column field="ProductName" [groupable]="true" [hasSummary]='true'></igx-column>
         </igx-column-group>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
             <igx-grid-toolbar *igxGridToolbar></igx-grid-toolbar>
             <igx-column field="ID" [groupable]="true" [hasSummary]='true'>
@@ -62,7 +63,6 @@ import { IgxPaginatorDirective } from '../paginator/paginator-interfaces';
         IgxGridToolbarComponent,
         IgxIconComponent,
         IgxCellHeaderTemplateDirective,
-        NgIf
     ]
 })
 export class IgxHierarchicalGridTestBaseComponent {
@@ -102,7 +102,9 @@ export class IgxHierarchicalGridTestBaseComponent {
                 <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true"></igx-column>
                 <igx-column field="ProductName" [groupable]="true" [hasSummary]='true'></igx-column>
         </igx-column-group>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
             <igx-grid-toolbar *igxGridToolbar></igx-grid-toolbar>
             <igx-column field="ID" [groupable]="true" [hasSummary]='true'>
@@ -136,7 +138,6 @@ export class IgxHierarchicalGridTestBaseComponent {
         IgxPaginatorComponent,
         IgxGridToolbarComponent,
         IgxIconComponent,
-        NgIf
     ]
 })
 export class IgxHierarchicalGridWithTransactionProviderComponent {

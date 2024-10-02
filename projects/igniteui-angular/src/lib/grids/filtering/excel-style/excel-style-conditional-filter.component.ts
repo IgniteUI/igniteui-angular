@@ -14,7 +14,7 @@ import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.comp
 import { IgxDropDownComponent } from '../../../drop-down/drop-down.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxDropDownItemNavigationDirective } from '../../../drop-down/drop-down-navigation.directive';
-import { NgIf, NgFor, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
 
 
@@ -25,7 +25,7 @@ import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html',
     standalone: true,
-    imports: [NgIf, NgClass, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
+    imports: [NgClass, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**

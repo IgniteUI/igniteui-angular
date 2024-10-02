@@ -5,7 +5,6 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { NgFor } from '@angular/common';
 import { IgxRadioGroupDirective } from '../directives/radio/radio-group.directive';
 import { IgxRadioComponent } from '../radio/radio.component';
 
@@ -590,11 +589,13 @@ class ButtonGroupWithSelectedButtonComponent {
 @Component({
     template: `
     <igx-buttongroup>
-        <button igxButton *ngFor="let item of items" [selected]="item.key === selectedValue">{{item.value}}</button>
+        @for (item of items; track item) {
+            <button igxButton [selected]="item.key === selectedValue">{{item.value}}</button>
+        }
     </igx-buttongroup>
     `,
     standalone: true,
-    imports: [ IgxButtonGroupComponent, IgxButtonDirective, NgFor ]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class ButtonGroupButtonWithBoundSelectedOutputComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
@@ -611,9 +612,11 @@ class ButtonGroupButtonWithBoundSelectedOutputComponent {
 @Component({
     template: `
     <igx-radio-group #radioGroup name="radioGroup">
-        <igx-radio class="radio-sample" *ngFor="let item of ['Foo', 'Bar']" value="{{item}}" (change)="onRadioChange($event)" [checked]="selectedValue === item">
-            {{ item }}
-        </igx-radio>
+        @for (item of ['Foo', 'Bar']; track item) {
+            <igx-radio class="radio-sample" value="{{item}}" (change)="onRadioChange($event)" [checked]="selectedValue === item">
+                {{ item }}
+            </igx-radio>
+        }
     </igx-radio-group>
 
     <igx-buttongroup #buttonGroup style="display: inline-block; margin-bottom: 10px;" selectionMode="singleRequired">
@@ -630,7 +633,7 @@ class ButtonGroupButtonWithBoundSelectedOutputComponent {
     </igx-buttongroup>
     `,
     standalone: true,
-    imports: [ IgxButtonGroupComponent, IgxButtonDirective, NgFor, IgxRadioGroupDirective, IgxRadioComponent ]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxRadioGroupDirective, IgxRadioComponent]
 })
 class ButtonGroupSelectionBoundToAnotherComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;

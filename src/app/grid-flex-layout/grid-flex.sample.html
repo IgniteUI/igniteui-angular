@@ -9,15 +9,17 @@
                         <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                     </igx-grid-toolbar-actions>
                 </igx-grid-toolbar>
-                <igx-column *ngFor="let c of columns" [field]="c.field"
-                    [header]="c.field"
-                    [resizable]="true"
-                    [width]="c.width"
-                    [groupable] = 'true'
-                    [hasSummary] = 'true'
-                    [minWidth]="c.minWidth"
-                    [maxWidth]="c.maxWidth" [editable]='true'>
-                </igx-column>
+                @for (c of columns; track c) {
+                    <igx-column [field]="c.field"
+                        [header]="c.field"
+                        [resizable]="true"
+                        [width]="c.width"
+                        [groupable] = 'true'
+                        [hasSummary] = 'true'
+                        [minWidth]="c.minWidth"
+                        [maxWidth]="c.maxWidth" [editable]='true'>
+                    </igx-column>
+                }
                 <igx-paginator>
                 </igx-paginator>
             </igx-grid>

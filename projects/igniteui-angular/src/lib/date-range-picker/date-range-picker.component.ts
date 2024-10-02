@@ -4,7 +4,7 @@ import {
     OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
     SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
 } from '@angular/core';
-import { NgTemplateOutlet, NgIf } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AbstractControl, ControlValueAccessor, NgControl,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
@@ -69,7 +69,6 @@ const SingleInputDatesConcatenationString = ' - ';
     ],
     standalone: true,
     imports: [
-        NgIf,
         NgTemplateOutlet,
         IgxIconComponent,
         IgxInputGroupComponent,

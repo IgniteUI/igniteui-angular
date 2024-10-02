@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NgIf, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 
 import { HGRID_DATA } from './hGridData';
 import { GRID_DATA } from './gridData';
@@ -59,7 +59,7 @@ class HGridChildSummary {
     selector: 'app-grid-export-sample',
     templateUrl: 'grid-export.sample.html',
     standalone: true,
-    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxPaginatorComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxIconComponent, NgIf, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, DatePipe]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxPaginatorComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxIconComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, DatePipe]
 })
 export class GridExportComponent {
     @ViewChild('grid', { static: true })

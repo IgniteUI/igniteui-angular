@@ -24,7 +24,6 @@ import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
 import { IgxSelectItemComponent } from '../../../select/select-item.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
-import { NgIf, NgFor } from '@angular/common';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
 
@@ -43,7 +42,7 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html',
     standalone: true,
-    imports: [IgxSelectComponent, IgxPrefixDirective, NgIf, IgxIconComponent, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
+    imports: [IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Input()

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 
 import { foods } from './foods';
 import {
@@ -29,7 +28,6 @@ import {
     styleUrls: ['drop-down.sample.scss'],
     standalone: true,
 	imports: [
-		NgFor,
 		IgxButtonGroupComponent,
 		IgxButtonDirective,
 		IgxDropDownItemNavigationDirective,
@@ -43,7 +41,6 @@ import {
 		IgxRippleDirective,
 		IgxOverlayOutletDirective,
 		IgxIconComponent,
-		NgIf,
 	],
 })
 export class DropDownSampleComponent implements OnInit {

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { IRowSelectionEventArgs, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { AMINO_DATA } from './aminoData';
 
@@ -8,7 +7,7 @@ import { AMINO_DATA } from './aminoData';
     styleUrls: ['./grid-updates.component.scss'],
     templateUrl: './grid-updates.component.html',
     standalone: true,
-    imports: [IgxGridComponent, NgFor, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridUpdatesComponent implements OnInit {
   @ViewChild('grid') public grid: IgxGridComponent;

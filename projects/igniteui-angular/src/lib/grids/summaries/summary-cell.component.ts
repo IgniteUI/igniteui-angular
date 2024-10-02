@@ -4,7 +4,7 @@ import {
     IgxSummaryResult
 } from './grid-summary';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { formatCurrency, formatDate, formatNumber, formatPercent, getLocaleCurrencyCode, getLocaleCurrencySymbol, NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
+import { formatCurrency, formatDate, formatNumber, formatPercent, getLocaleCurrencyCode, getLocaleCurrencySymbol, NgTemplateOutlet } from '@angular/common';
 import { ISelectionNode } from '../common/types';
 import { ColumnType } from '../common/grid.interface';
 
@@ -13,7 +13,7 @@ import { ColumnType } from '../common/grid.interface';
     selector: 'igx-grid-summary-cell',
     templateUrl: './summary-cell.component.html',
     standalone: true,
-    imports: [NgIf, NgTemplateOutlet, NgFor]
+    imports: [NgTemplateOutlet]
 })
 export class IgxSummaryCellComponent {
 

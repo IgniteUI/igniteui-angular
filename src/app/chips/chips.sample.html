@@ -13,11 +13,19 @@
                 [removeIcon]="customIcons ? myRemoveIcon : null"
                 [selectIcon]="customIcons ? mySelectIcon : null"
                 (remove)="removeChip(me)">
-                <igx-avatar igxPrefix *ngIf="hasAvatar" class="chip-area-avatar" [shape]="'circle'" initials="MP"></igx-avatar>
-                <igx-icon *ngIf="hasPrefix" igxPrefix>face</igx-icon>
+                @if (hasAvatar) {
+                    <igx-avatar igxPrefix class="chip-area-avatar" [shape]="'circle'" initials="MP"></igx-avatar>
+                }
+                @if (hasPrefix) {
+                    <igx-icon igxPrefix>face</igx-icon>
+                }
                 Chip component
-                <igx-icon *ngIf="hasSuffix" igxSuffix>face</igx-icon>
-                <igx-circular-bar *ngIf="hasProgressbar" igxSuffix class="circular-sample" [indeterminate]="true"></igx-circular-bar>
+                @if (hasSuffix) {
+                    <igx-icon igxSuffix>face</igx-icon>
+                }
+                @if (hasProgressbar) {
+                    <igx-circular-bar igxSuffix class="circular-sample" [indeterminate]="true"></igx-circular-bar>
+                }
             </igx-chip>
 
             <div class="preview__info">
@@ -44,9 +52,11 @@
                 [style.--ig-size]="'var(--ig-size-small)'"
                 type="border" class="preview__variant-select">
 
-                <igx-select-item *ngFor="let type of chipTypes" [value]="type">
-                    {{type}}
-                </igx-select-item>
+                @for (type of chipTypes; track type) {
+                    <igx-select-item [value]="type">
+                        {{type}}
+                    </igx-select-item>
+                }
             </igx-select>
 
             <size-selector #sizeSelector></size-selector>
@@ -63,9 +73,11 @@
                 <label for="removable">Removable</label>
             </igx-switch>
 
-            <igx-switch *ngIf="isRemovable" id="customIcons" [(ngModel)]="customIcons">
-                <label for="customIcons">Custom Icons</label>
-            </igx-switch>
+            @if (isRemovable) {
+                <igx-switch id="customIcons" [(ngModel)]="customIcons">
+                    <label for="customIcons">Custom Icons</label>
+                </igx-switch>
+            }
 
             <igx-switch id="addPrefix"  [(ngModel)]="hasPrefix">
                 <label for="addPrefix">Add prefix</label>
@@ -98,7 +110,7 @@
             <h4 class="sample-title">Chips in Chip Area</h4>
         </header>
         <igx-chips-area #chipsArea (reorder)="chipsOrderChanged($event)" (moveEnd)="chipMovingEnded()" (selectionChange)="onChipsSelected($event)">
-            <ng-container *ngFor="let chipElem of chipList; let last = last;">
+            @for (chipElem of chipList; track chipElem; let last = $last) {
                 <igx-chip
                     [id]="chipElem.id"
                     [draggable]="true"
@@ -108,55 +120,61 @@
                     <igx-icon igxPrefix>{{chipElem.icon}}</igx-icon>
                     {{chipElem.text}}
                 </igx-chip>
-                <igx-icon *ngIf="!last" class="chip-area-connector">keyboard_arrow_right</igx-icon>
-            </ng-container>
+                @if (!last) {
+                    <igx-icon class="chip-area-connector">keyboard_arrow_right</igx-icon>
+                }
+            }
         </igx-chips-area>
     </article>
 
     <article class="sample-column sample-min-width">
-            <header>
-                <h4 class="sample-title">Chips in a Custom Scenario</h4>
-            </header>
-            <div class="wrapperAreaTo">
-                <igx-chips-area #chipsAreaTo class="chipAreaTo" (reorder)="chipsOrderChangedTo($event)">
-                    <span>To:</span>
-                    <igx-chip *ngFor="let chip of chipListTo"
-                              [id]="chip.id"
-                              [draggable]="true"
-                              (moveStart)="onMoveStartTo()"
-                              (moveEnd)="moveEndedTo()">
+        <header>
+            <h4 class="sample-title">Chips in a Custom Scenario</h4>
+        </header>
+        <div class="wrapperAreaTo">
+            <igx-chips-area #chipsAreaTo class="chipAreaTo" (reorder)="chipsOrderChangedTo($event)">
+                <span>To:</span>
+                @for (chip of chipListTo; track chip) {
+                    <igx-chip
+                        [id]="chip.id"
+                        [draggable]="true"
+                        (moveStart)="onMoveStartTo()"
+                        (moveEnd)="moveEndedTo()">
                         <igx-avatar igxPrefix class="chip-area-avatar" [shape]="'circle'" [src]="chip.picture">
                         </igx-avatar>
                         <span>{{chip.text}}</span>
                     </igx-chip>
-                    <div class="dropAreaTo" igxDrop #dropTo
-                         (dropped)="onDropTo($event)"
-                         (igxDragEnter)="onDragEnterCc()"
-                         (igxDragLeave)="onDragLeaveCc()">
-                    </div>
-                </igx-chips-area>
-            </div>
+                }
+                <div class="dropAreaTo" igxDrop #dropTo
+                    (dropped)="onDropTo($event)"
+                    (igxDragEnter)="onDragEnterCc()"
+                    (igxDragLeave)="onDragLeaveCc()">
+                </div>
+            </igx-chips-area>
+        </div>
 
-            <div class="wrapperAreaCc">
-                <igx-chips-area #chipsAreaCc class="chipAreaCc" (reorder)="chipsOrderChangedCc($event)">
-                    <span>Cc:</span>
-                    <igx-chip *ngFor="let chip of chipListCc"
-                              [id]="chip.id"
-                              [draggable]="true"
-                              (moveStart)="onMoveStartCc()"
-                              (moveEnd)="moveEndedCc()">
+        <div class="wrapperAreaCc">
+            <igx-chips-area #chipsAreaCc class="chipAreaCc" (reorder)="chipsOrderChangedCc($event)">
+                <span>Cc:</span>
+                @for (chip of chipListCc; track chip) {
+                    <igx-chip
+                        [id]="chip.id"
+                        [draggable]="true"
+                        (moveStart)="onMoveStartCc()"
+                        (moveEnd)="moveEndedCc()">
                         <igx-avatar igxPrefix class="chip-area-avatar" [shape]="'circle'"
-                                [src]="chip.picture">
+                            [src]="chip.picture">
                         </igx-avatar>
                         <span>{{chip.text}}</span>
                     </igx-chip>
-                    <div igxDrop #dropCc
-                         (dropped)="onDropCc($event)"
-                         (igxDragEnter)="onDragEnterCc()"
-                         (igxDragLeave)="onDragLeaveCc()"
-                         class="dropAreaCc">
-                    </div>
-                </igx-chips-area>
-            </div>
-        </article>
+                }
+                <div igxDrop #dropCc
+                    (dropped)="onDropCc($event)"
+                    (igxDragEnter)="onDragEnterCc()"
+                    (igxDragLeave)="onDragLeaveCc()"
+                    class="dropAreaCc">
+                </div>
+            </igx-chips-area>
+        </div>
+    </article>
 </div>

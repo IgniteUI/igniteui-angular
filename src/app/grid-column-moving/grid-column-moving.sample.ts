@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -13,7 +12,7 @@ import { IgxButtonDirective, IgxButtonGroupComponent, IgxCellHeaderTemplateDirec
     styleUrls: ['grid-column-moving.sample.scss'],
     templateUrl: 'grid-column-moving.sample.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxLabelDirective, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxPaginatorComponent, PageHeaderComponent, IgxColumnGroupComponent, IgxCellHeaderTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent]
+    imports: [IgxButtonDirective, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxLabelDirective, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxPaginatorComponent, PageHeaderComponent, IgxColumnGroupComponent, IgxCellHeaderTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent]
 })
 export class GridColumnMovingSampleComponent implements OnInit {
     @HostBinding('style.--ig-size')

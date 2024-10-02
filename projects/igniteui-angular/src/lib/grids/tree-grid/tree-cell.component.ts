@@ -3,7 +3,7 @@ import {
     Component,
     Input
 } from '@angular/core';
-import { NgIf, NgClass, NgStyle, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { NgClass, NgStyle, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
 
 import { HammerGesturesManager } from '../../core/touch';
 import { IgxGridExpandableCellComponent } from '../grid/expandable-cell.component';
@@ -35,7 +35,6 @@ import { IgxTextSelectionDirective } from '../../directives/text-selection/text-
     providers: [HammerGesturesManager],
     standalone: true,
     imports: [
-        NgIf,
         NgClass,
         NgStyle,
         NgTemplateOutlet,

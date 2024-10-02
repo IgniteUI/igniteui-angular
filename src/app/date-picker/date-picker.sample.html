@@ -33,8 +33,8 @@
             <igx-date-picker #model="ngModel" required #dp2 [displayMonthsCount]="3" [(ngModel)]="date2"
                 [minValue]="date1" [maxValue]="date7">
                 <label igxLabel>Select a Date</label>
-                <igx-hint *ngIf="model.errors?.value">This field is required.</igx-hint>
-                <igx-hint *ngIf="model.errors?.minValue || model.errors?.maxValue">Value is not in range.</igx-hint>
+                @if (model.errors?.value) {<igx-hint>This field is required.</igx-hint> }
+                @if (model.errors?.minValue || model.errors?.maxValue) { <igx-hint>Value is not in range.</igx-hint> }
             </igx-date-picker>
         </div>
     </article>

@@ -41,8 +41,10 @@
                     Row
                 </label>
                 <select [(ngModel)]="update_row">
-                    <option *ngFor="let row of data" [value]="row[gridRowEditTransaction.primaryKey]">{{
+                    @for (row of data; track row) {
+                        <option [value]="row[gridRowEditTransaction.primaryKey]">{{
                         row[gridRowEditTransaction.primaryKey] }}</option>
+                    }
                 </select>
             </div>
             <div class="properties-input">
@@ -50,8 +52,10 @@
                     Column
                 </label>
                 <select [(ngModel)]="update_column">
-                    <option *ngFor="let column of gridRowEditTransaction.columns" [value]="column.field">{{
+                    @for (column of gridRowEditTransaction.columns; track column) {
+                        <option [value]="column.field">{{
                         column.field }}</option>
+                    }
                 </select>
             </div>
         </div>
@@ -114,24 +118,26 @@
             <igx-column width="100px" field="OrderDate2" [dataType]="'date'" header="PINNED DATE" [editable]="true" [pinned]="pinFlag"></igx-column>
             <igx-column width="100px" field="Discontinued" header="Discontinued" [dataType]="'boolean'" [editable]="true">
             </igx-column>
-            <ng-template *ngIf="customTemplate" igxRowEdit>
-                <div class='igx-banner'>
-                    <div class="igx-banner__message">
-                        <!--<div class="igx-banner__illustration">-->
-                        <!--<igx-icon name="edit"></igx-icon>-->
-                        <!--</div>-->
-                        <span class="igx-banner__text">This is a custom editing template</span>
-                    </div>
-                    <div class="igx-banner__actions">
-                        <div class="igx-banner__row">
-                            <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.crudService.endEdit()">Cancel</button>
-                            <button igxButton igxRowEditTabStop (click)="console.log(gridRowEditTransaction.transactions)">Log
-                                Changes</button>
-                            <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.crudService.endEdit(true)">Apply</button>
+            @if (customTemplate) {
+                <ng-template igxRowEdit>
+                    <div class='igx-banner'>
+                        <div class="igx-banner__message">
+                            <!--<div class="igx-banner__illustration">-->
+                            <!--<igx-icon name="edit"></igx-icon>-->
+                            <!--</div>-->
+                            <span class="igx-banner__text">This is a custom editing template</span>
+                        </div>
+                        <div class="igx-banner__actions">
+                            <div class="igx-banner__row">
+                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.crudService.endEdit()">Cancel</button>
+                                <button igxButton igxRowEditTabStop (click)="console.log(gridRowEditTransaction.transactions)">Log
+                                    Changes</button>
+                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.crudService.endEdit(true)">Apply</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </ng-template>
+                </ng-template>
+            }
             <ng-template igxRowEditText let-rowChangesCount>
                 Changes: {{rowChangesCount}}
             </ng-template>
@@ -205,16 +211,20 @@
     <article class="grid-row-edit-wrapper">
         <h4 class="sample-title">Performance grid with transactions and row edit</h4>
         <igx-grid #gridPerformance [batchEditing]="true" primaryKey="ID" [data]="performanceData" [rowEditable]="true" [width]="'1000px'" [height]="'800px'" [rowSelection]="selectionMode">
-            <igx-column *ngFor="let c of columns" [sortable]="true" [filterable]="true" [field]="c.field" [header]="c.field" [width]="c.width">
-            </igx-column>
+            @for (c of columns; track c) {
+                <igx-column [sortable]="true" [filterable]="true" [field]="c.field" [header]="c.field" [width]="c.width">
+                </igx-column>
+            }
         </igx-grid>
     </article>
     <div igxToggle class="dialog__container">
         <div class="dialog__header">Submit the following transactions?</div>
         <div class="dialog__body">
-            <p *ngFor="let transaction of currentActiveGrid.transactions" class="dialog__body-transaction">
-                {{ transaction }}
-            </p>
+            @for (transaction of currentActiveGrid.transactions; track transaction) {
+                <p class="dialog__body-transaction">
+                    {{ transaction }}
+                </p>
+            }
         </div>
         <div class="dialog__buttons">
             <button igxButton (click)="commit(currentActiveGrid.id)">Commit</button>

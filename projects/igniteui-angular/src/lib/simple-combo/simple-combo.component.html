@@ -24,25 +24,33 @@
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
 
-    <igx-suffix *ngIf="hasSelectedItem" [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
-        (click)="handleClear($event)">
-        <ng-container *ngIf="clearIconTemplate">
-            <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
-        </ng-container>
-        <igx-icon *ngIf="!clearIconTemplate" family="default" name="input_clear"></igx-icon>
-    </igx-suffix>
+    @if (hasSelectedItem) {
+        <igx-suffix [attr.aria-label]="resourceStrings.igx_combo_clearItems_placeholder" class="igx-combo__clear-button"
+            (click)="handleClear($event)">
+            @if (clearIconTemplate) {
+                <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
+            }
+            @if (!clearIconTemplate) {
+                <igx-icon family="default" name="input_clear"></igx-icon>
+            }
+        </igx-suffix>
+    }
 
-    <igx-suffix *ngIf="showSearchCaseIcon">
-        <igx-icon family="default" name="case_sensitive" [active]="filteringOptions.caseSensitive"
-            (click)="toggleCaseSensitive()">
-        </igx-icon>
-    </igx-suffix>
+    @if (showSearchCaseIcon) {
+        <igx-suffix>
+            <igx-icon family="default" name="case_sensitive" [active]="filteringOptions.caseSensitive"
+                (click)="toggleCaseSensitive()">
+            </igx-icon>
+        </igx-suffix>
+    }
 
     <igx-suffix class="igx-combo__toggle-button" (click)="onClick($event)">
-        <ng-container *ngIf="toggleIconTemplate">
+        @if (toggleIconTemplate) {
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
-        </ng-container>
-        <igx-icon *ngIf="!toggleIconTemplate" family="default" [name]="toggleIcon"></igx-icon>
+        }
+        @if (!toggleIconTemplate) {
+            <igx-icon family="default" [name]="toggleIcon"></igx-icon>
+        }
     </igx-suffix>
 
 </igx-input-group>
@@ -64,33 +72,39 @@
                 | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator;
                 index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
                 [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex">
-            <ng-container *ngIf="item?.isHeader">
+            @if (item?.isHeader) {
                 <ng-container
                     *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase;
                     context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}">
                 </ng-container>
-            </ng-container>
+            }
             <!-- if item is 'null' it should be displayed and !!(item?.isHeader) would resolve it to 'false' and not display it -->
-            <ng-container *ngIf="!item?.isHeader">
+            @if (!item?.isHeader) {
                 <ng-container #listItem
                     *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, displayKey: displayKey};">
                 </ng-container>
-            </ng-container>
+            }
         </igx-combo-item>
     </div>
 
-    <div class="igx-combo__add" *ngIf="filteredData.length === 0 || isAddButtonVisible()">
-        <div class="igx-combo__empty" *ngIf="filteredData.length === 0">
-            <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty">
-            </ng-container>
+    @if (filteredData.length === 0 || isAddButtonVisible()) {
+        <div class="igx-combo__add">
+            @if (filteredData.length === 0) {
+                <div class="igx-combo__empty">
+                    <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty">
+                    </ng-container>
+                </div>
+            }
+            @if (isAddButtonVisible()) {
+                <igx-combo-add-item #addItem [itemHeight]="itemHeight"
+                    [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add-item" role="button"
+                    [attr.aria-label]="resourceStrings.igx_combo_addCustomValues_placeholder" [index]="virtualScrollContainer.igxForOf.length">
+                    <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault">
+                    </ng-container>
+                </igx-combo-add-item>
+            }
         </div>
-        <igx-combo-add-item #addItem [itemHeight]="itemHeight" *ngIf="isAddButtonVisible()"
-            [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add-item" role="button"
-            [attr.aria-label]="resourceStrings.igx_combo_addCustomValues_placeholder" [index]="virtualScrollContainer.igxForOf.length">
-            <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault">
-            </ng-container>
-        </igx-combo-add-item>
-    </div>
+    }
     <ng-container *ngTemplateOutlet="footerTemplate">
     </ng-container>
 </igx-combo-drop-down>

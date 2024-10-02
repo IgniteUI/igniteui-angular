@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
     AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter,
     HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren, booleanAttribute
@@ -40,7 +39,7 @@ let NEXT_ID = 0;
     selector: 'igx-slider',
     templateUrl: 'slider.component.html',
     standalone: true,
-    imports: [NgIf, IgxTicksComponent, IgxThumbLabelComponent, IgxSliderThumbComponent, IgxTickLabelsPipe]
+    imports: [IgxTicksComponent, IgxThumbLabelComponent, IgxSliderThumbComponent, IgxTickLabelsPipe]
 })
 export class IgxSliderComponent implements
     ControlValueAccessor,

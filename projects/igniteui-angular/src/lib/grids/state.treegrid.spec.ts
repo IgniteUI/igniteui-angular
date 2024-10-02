@@ -16,7 +16,6 @@ import { IgxTreeGridComponent } from './tree-grid/public_api';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
-import { NgFor } from '@angular/common';
 import { IgxColumnComponent } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 
@@ -352,31 +351,33 @@ class HelperFunctions {
     <igx-tree-grid [moving]="true" #treeGrid [data]="data" childDataKey="Employees" [expansionDepth]="2" width="900px" height="800px" igxGridState
         primaryKey="ID" rowSelection="multiple" cellSelection="multiple">
 
-        <igx-column *ngFor="let c of columns"
-            [width]="c.width"
-            [sortable]="c.sortable"
-            [editable]="c.editable"
-            [sortingIgnoreCase]="c.sortingIgnoreCase"
-            [filteringIgnoreCase]="c.sortingIgnoreCase"
-            [maxWidth]="c.maxWidth"
-            [hasSummary]="c.hasSummary"
-            [filterable]="c.filterable"
-            [searchable]="c.searchable"
-            [resizable]="c.resizable"
-            [headerClasses]="c.headerClasses"
-            [headerGroupClasses]="c.headerGroupClasses"
-            [groupable]="c.groupable"
-            [field]="c.field"
-            [header]="c.header"
-            [dataType]="c.dataType"
-            [pinned]="c.pinned"
-            [hidden]="c.hidden">
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column
+                [width]="c.width"
+                [sortable]="c.sortable"
+                [editable]="c.editable"
+                [sortingIgnoreCase]="c.sortingIgnoreCase"
+                [filteringIgnoreCase]="c.sortingIgnoreCase"
+                [maxWidth]="c.maxWidth"
+                [hasSummary]="c.hasSummary"
+                [filterable]="c.filterable"
+                [searchable]="c.searchable"
+                [resizable]="c.resizable"
+                [headerClasses]="c.headerClasses"
+                [headerGroupClasses]="c.headerGroupClasses"
+                [groupable]="c.groupable"
+                [field]="c.field"
+                [header]="c.header"
+                [dataType]="c.dataType"
+                [pinned]="c.pinned"
+                [hidden]="c.hidden">
+            </igx-column>
+        }
         <igx-paginator [perPage]="5"></igx-paginator>
     </igx-tree-grid>
     `,
     standalone: true,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective, NgFor]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxTreeGridTreeDataTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;

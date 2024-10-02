@@ -12,13 +12,15 @@
     [moving]="true"
     [filterMode]="'excelStyleFilter'">
 
-    <igx-grid-toolbar *ngIf="showToolbar">
-        <igx-grid-toolbar-actions>
-            <igx-grid-toolbar-hiding title="Indicators"></igx-grid-toolbar-hiding>
-            <igx-grid-toolbar-pinning title=" "></igx-grid-toolbar-pinning>
-            <igx-grid-toolbar-exporter [exportCSV]="false"></igx-grid-toolbar-exporter>
-        </igx-grid-toolbar-actions>
-    </igx-grid-toolbar>
+    @if (showToolbar) {
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-hiding title="Indicators"></igx-grid-toolbar-hiding>
+                <igx-grid-toolbar-pinning title=" "></igx-grid-toolbar-pinning>
+                <igx-grid-toolbar-exporter [exportCSV]="false"></igx-grid-toolbar-exporter>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
+    }
 
     <!-- Empty templates for Sorting,Moving,Hiding, Pinning actions inside ESF dialog -->
     <!-- <ng-template igxExcelStyleSorting></ng-template>
@@ -33,7 +35,9 @@
     <igx-column [field]="'Contract'" [width]="'auto'" [groupable]="true" [sortable]="true" [editable]='true'>
         <ng-template igxCellEditor let-cell="cell" let-value>
             <igx-select [placeholder]="value" [(ngModel)]="cell.editValue" [igxFocus]="true">
-                <igx-select-item *ngFor="let c of contracts" [value]="c">{{ c }}</igx-select-item>
+                @for (c of contracts; track c) {
+                    <igx-select-item [value]="c">{{ c }}</igx-select-item>
+                }
             </igx-select>
         </ng-template>
     </igx-column>
@@ -42,7 +46,9 @@
     <igx-column [field]="'Region'" [width]="'auto'" [groupable]="true" [sortable]="true" [editable]='true'>
         <ng-template igxCellEditor let-cell="cell" let-value>
             <igx-select [placeholder]="value" [(ngModel)]="cell.editValue" [igxFocus]="true">
-                <igx-select-item *ngFor="let r of regions" [value]="r.Region">{{ r.Region }}</igx-select-item>
+                @for (r of regions; track r) {
+                    <igx-select-item [value]="r.Region">{{ r.Region }}</igx-select-item>
+                }
             </igx-select>
         </ng-template>
     </igx-column>
@@ -52,8 +58,12 @@
         <ng-template igxCell let-cell="cell">
             <div class="finjs-icons">
                 <span>{{cell.value | currency:'USD':'symbol':'1.4-4'}}</span>
-                <igx-icon *ngIf="trends.positive(cell.row.data)">trending_up</igx-icon>
-                <igx-icon *ngIf="trends.negative(cell.row.data)">trending_down</igx-icon>
+                @if (trends.positive(cell.row.data)) {
+                    <igx-icon>trending_up</igx-icon>
+                }
+                @if (trends.negative(cell.row.data)) {
+                    <igx-icon>trending_down</igx-icon>
+                }
             </div>
         </ng-template>
     </igx-column>

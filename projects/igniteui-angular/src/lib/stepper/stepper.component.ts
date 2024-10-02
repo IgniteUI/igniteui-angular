@@ -1,5 +1,5 @@
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit, ChangeDetectorRef, Component, ContentChild, ContentChildren,
     ElementRef, EventEmitter, HostBinding, Inject, Input, OnChanges, OnDestroy,
@@ -74,7 +74,7 @@ import { fadeIn, growVerIn, growVerOut } from 'igniteui-angular/animations';
         { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
     ],
     standalone: true,
-    imports: [NgIf, NgTemplateOutlet, NgFor]
+    imports: [NgTemplateOutlet]
 })
 export class IgxStepperComponent extends IgxCarouselComponentBase implements IgxStepper, OnChanges, OnInit, AfterContentInit, OnDestroy {
 

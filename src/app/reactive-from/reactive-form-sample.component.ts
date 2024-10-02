@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent, IgxLabelDirective, IgxSelectToggleIconDirective, IgxIconComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxPrefixDirective, IgxHintDirective, IgxComboComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular';
 
@@ -8,7 +7,7 @@ import { IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent, Ig
     styleUrls: ['reactive-form-sample.component.scss'],
     templateUrl: 'reactive-form-sample.component.html',
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxSelectComponent, NgFor, IgxSelectGroupComponent, IgxSelectItemComponent, IgxLabelDirective, IgxSelectToggleIconDirective, IgxIconComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxPrefixDirective, IgxHintDirective, IgxComboComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxButtonDirective, IgxRippleDirective]
+    imports: [FormsModule, ReactiveFormsModule, IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent, IgxLabelDirective, IgxSelectToggleIconDirective, IgxIconComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxPrefixDirective, IgxHintDirective, IgxComboComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxButtonDirective, IgxRippleDirective]
 })
 export class ReactiveFormSampleComponent {
     public genres = [];

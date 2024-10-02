@@ -5,7 +5,7 @@ import { GridType, IGX_GRID_BASE, PivotGridType } from '../common/grid.interface
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { SortingIndexPipe } from '../headers/pipes';
-import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { takeUntil } from 'rxjs/operators';
@@ -20,7 +20,7 @@ import { PivotUtil } from './pivot-util';
     selector: 'igx-pivot-row-dimension-header',
     templateUrl: '../headers/grid-header.component.html',
     standalone: true,
-    imports: [IgxIconComponent, NgTemplateOutlet, NgIf, NgClass, SortingIndexPipe]
+    imports: [IgxIconComponent, NgTemplateOutlet, NgClass, SortingIndexPipe]
 })
 export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent implements AfterViewInit {
     private pivotGrid: PivotGridType;

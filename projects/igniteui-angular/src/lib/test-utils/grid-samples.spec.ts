@@ -1,5 +1,4 @@
 import { Component, TemplateRef, ViewChild, Input, AfterViewInit, QueryList, ViewChildren, OnInit } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs } from '../grids/common/events';
@@ -57,17 +56,19 @@ export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
 @Component({
     template: `
         <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'600px'" [moving]="true">
-            <igx-column *ngFor="let c of columns" [field]="c.field"
-                [header]="c.field"
-                [width]="c.width"
-                [editable]="true"
-                [pinned]="c.pinned"
-                [dataType]="c.type">
-            </igx-column>
+            @for (c of columns; track c) {
+                <igx-column [field]="c.field"
+                    [header]="c.field"
+                    [width]="c.width"
+                    [editable]="true"
+                    [pinned]="c.pinned"
+                    [dataType]="c.type">
+                </igx-column>
+            }
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridAddColumnComponent extends BasicGridComponent implements OnInit {
     public columns: Array<any>;
@@ -117,9 +118,9 @@ export class FilteringComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` [width]="width" [height]="height" [rowSelection]="'multiple'" [primaryKey]="'ProductID'" [selectedRows]="selectedRows"`,
-        '', ColumnDefinitions.productBasicNumberID, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
+        '', ColumnDefinitions.productBasicNumberID, '', '@if (paging) { <igx-paginator></igx-paginator> }'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class RowSelectionComponent extends BasicGridComponent {
     public override data = SampleTestData.foodProductDataExtended();
@@ -201,9 +202,9 @@ export class SummaryColumnComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.productBasic, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.productBasic, '', '@if (paging) {<igx-paginator></igx-paginator>}'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class ProductsComponent extends BasicGridComponent {
     public override data = SampleTestData.foodProductData();
@@ -256,15 +257,19 @@ export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
             [height]='"500px"'
             [data]="data"
             [autoGenerate]="false">
-            <igx-column-layout *ngFor='let group of colGroups' [pinned]='group.pinned'>
-                <igx-column *ngFor='let col of group.columns'
-                [rowStart]="col.rowStart" [colStart]="col.colStart"
-                [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
-            </igx-column-layout>
+            @for (group of colGroups; track group) {
+                <igx-column-layout [pinned]='group.pinned'>
+                    @for (col of group.columns; track col) {
+                        <igx-column
+                            [rowStart]="col.rowStart" [colStart]="col.colStart"
+                        [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+                    }
+                </igx-column-layout>
+            }
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
     public colGroups = [
@@ -297,7 +302,7 @@ export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
         `${EventSubscriptions.selected}${EventSubscriptions.columnPin}`,
         ColumnDefinitions.generatedWithWidth),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class PinningComponent extends GridWithSizeComponent
     implements IGridSelection {
@@ -343,9 +348,10 @@ export class GridFeaturesComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` columnWidth="200" `,
-        '', ColumnDefinitions.idNameJobHireDate, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
+        '', ColumnDefinitions.idNameJobHireDate, '',
+        '@if (paging) { <igx-paginator></igx-paginator>}'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
     public override data = SampleTestData.generateFromData(SampleTestData.personJobDataFull(), 30);
@@ -355,9 +361,10 @@ export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` columnWidth="200" [height]="null" `,
-        '', ColumnDefinitions.idNameJobTitleCompany, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
+        '', ColumnDefinitions.idNameJobTitleCompany, '',
+        '@if (paging) { <igx-paginator></igx-paginator> }'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
     public override data = SampleTestData.personIDNameJobCompany();
@@ -494,9 +501,10 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="300px" width="500px" [moving]="true" [autoGenerate]="autoGenerate"`,
-        EventSubscriptions.columnInit, '', '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
+        EventSubscriptions.columnInit, '', '',
+        '@if (paging) { <igx-paginator></igx-paginator> }'),
     standalone: true,
-    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 
@@ -551,9 +559,10 @@ export class GridWithAvatarComponent extends GridWithSizeComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="1000px"  width="900px" primaryKey="ID"`, '',
-        ColumnDefinitions.summariesGroupByColumns, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
+        ColumnDefinitions.summariesGroupByColumns, '',
+        '@if (paging) { <igx-paginator></igx-paginator> }'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class SummariesGroupByComponent extends BasicGridComponent {
     public override data = SampleTestData.employeeGroupByData();
@@ -617,7 +626,7 @@ class AgeSummaryTest extends IgxNumberSummaryOperand {
     template: GridTemplateStrings.declareGrid(`[height]="gridHeight" [columnWidth]="defaultWidth" [width]="gridWidth"`,
         `${EventSubscriptions.selected}`, ColumnDefinitions.generatedWithWidth),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class VirtualGridComponent extends BasicGridComponent {
     public gridWidth = '800px';
@@ -680,9 +689,10 @@ export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="300px"  width="600px" primaryKey="ID"`, '',
-        ColumnDefinitions.selectionWithScrollsColumns, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
+        ColumnDefinitions.selectionWithScrollsColumns, '',
+        '@if (paging) { <igx-paginator></igx-paginator> }'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class SelectionWithScrollsComponent extends BasicGridComponent {
     public override data = SampleTestData.employeeGroupByData();
@@ -1188,16 +1198,18 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
         <igx-grid-toolbar></igx-grid-toolbar>
-        <igx-column *ngFor="let c of columns"
-            [field]="c.field"
-            [header]="c.header"
-            [width]="c.width"
-            [filterable]="true"
-            [dataType]="c.type">
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column
+                [field]="c.field"
+                [header]="c.header"
+                [width]="c.width"
+                [filterable]="true"
+                [dataType]="c.type">
+            </igx-column>
+        }
     </igx-grid>`,
     standalone: true,
-    imports: [NgFor, IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent]
 })
 export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridComponent {
     public override data = [];
@@ -1305,10 +1317,12 @@ export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridCompo
         <igx-column width="100px" [field]="'Downloads'" [editable]="true" dataType="number" [header]="'Downloads'"></igx-column>
         <igx-column width="100px" [field]="'Released'" [editable]="true" dataType="boolean" [header]="'Released'"></igx-column>
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxGridClipboardComponent extends BasicGridComponent {
     public override data = SampleTestData.excelFilteringData();
@@ -1321,7 +1335,7 @@ export class IgxGridClipboardComponent extends BasicGridComponent {
     template: GridTemplateStrings.declareGrid(`id="testGridSum" [height]="height" [width]="width"`, ``,
         ColumnDefinitions.generatedWithDataType),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class DynamicColumnsComponent extends GridWithSizeComponent {
     public columns = [
@@ -1414,21 +1428,25 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
 @Component({
     template: `
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="600px" [rowEditable]="true">
-        <igx-grid-toolbar *ngIf="showToolbar">
-            <igx-grid-toolbar-actions>
-                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-            </igx-grid-toolbar-actions>
-        </igx-grid-toolbar>
+        @if (showToolbar) {
+            <igx-grid-toolbar>
+                <igx-grid-toolbar-actions>
+                    <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
+        }
         <igx-column field="ProductID" header="Product ID" [editable]="false" width="200px"></igx-column>
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px">
         </igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [editable]="true" [sortable]="true" width="200px">
         </igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" [editable]="true" width="200px"></igx-column>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent]
 })
 export class IgxGridRowEditingComponent extends BasicGridComponent {
     public showToolbar = false;
@@ -1469,25 +1487,27 @@ export class IgxGridRowEditingWithoutEditableColumnsComponent extends BasicGridC
         </igx-column>
         <igx-column field="ReleaseDate" header="Release Date" [dataType]="'date'" [editable]="true" [hidden]="hiddenFlag" width="150px">
         </igx-column>
-        <igx-column-group header="Column Group 1" *ngIf="columnGroupingFlag">
-            <igx-column field="Released" header="Released" [dataType]="'boolean'" [pinned]="pinnedFlag" [editable]="true" width="100px">
-            </igx-column>
-            <igx-column field="Category" header="Category" [dataType]="'string'" [editable]="false" [hidden]="hiddenFlag" width="150px">
-            </igx-column>
-        </igx-column-group>
-        <ng-container *ngIf="!columnGroupingFlag">
+        @if (columnGroupingFlag) {
+            <igx-column-group header="Column Group 1">
+                <igx-column field="Released" header="Released" [dataType]="'boolean'" [pinned]="pinnedFlag" [editable]="true" width="100px">
+                </igx-column>
+                <igx-column field="Category" header="Category" [dataType]="'string'" [editable]="false" [hidden]="hiddenFlag" width="150px">
+                </igx-column>
+            </igx-column-group>
+        }
+        @if (!columnGroupingFlag) {
             <igx-column field="Released" header="Released" [dataType]="'boolean'" [pinned]="pinnedFlag" [editable]="true" width="100px">
             </igx-column>
             <igx-column field="Category" header="Category" [dataType]="'string'" [editable]="true" [hidden]="hiddenFlag" width="150px">
             </igx-column>
-        </ng-container>
+        }
         <igx-column field="Items" header="Items" [dataType]="'string'" [editable]="true" width="150px">
         </igx-column>
         <igx-column field="Test" header="Test" [dataType]="'string'" [editable]="true" [hidden]="hiddenFlag" width="150px">
         </igx-column>
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
     /* Data fields: Downloads:number, ID: number, ProductName: string, ReleaseDate: Date,
@@ -1608,10 +1628,12 @@ export class IgxGridCustomRowEditTemplateComponent extends BasicGridComponent {
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
         <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'number'" width="150px"></igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="200px"></igx-column>
-        <igx-paginator *ngIf="paging" [perPage]="7"></igx-paginator>
+        @if (paging) {
+            <igx-paginator [perPage]="7"></igx-paginator>
+        }
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxGridRowEditingTransactionComponent extends BasicGridComponent {
     public override data = SampleTestData.foodProductData();
@@ -1628,10 +1650,12 @@ export class IgxGridRowEditingTransactionComponent extends BasicGridComponent {
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
         <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'currency'" width="150px"></igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="200px"></igx-column>
-        <igx-paginator *ngIf="paging" [perPage]="7"></igx-paginator>
+        @if (paging) {
+            <igx-paginator [perPage]="7"></igx-paginator>
+        }
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxGridCurrencyColumnComponent extends BasicGridComponent {
     public override data = SampleTestData.foodProductData();
@@ -1664,10 +1688,12 @@ export class IgxGridPercentColumnComponent extends BasicGridComponent {
         <igx-column field="ReceiveTime" header="Receive Time" [dataType]="'time'" width="200px"></igx-column>
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
         <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'currency'" width="150px"></igx-column>
-        <igx-paginator *ngIf="paging" [perPage]="7"></igx-paginator>
+        @if (paging) {
+            <igx-paginator [perPage]="7"></igx-paginator>
+        }
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxGridDateTimeColumnComponent extends BasicGridComponent {
     public override data = SampleTestData.foodProductDateTimeData();
@@ -2010,14 +2036,18 @@ export class CollapsibleGroupsTemplatesTestComponent {
 @Component({
     template: `
         <igx-grid [data]="data" height="500px" width="800px" columnWidth="100px">
-            <igx-column-group *ngFor="let colGroup of columnGroups" [header]="colGroup.columnHeader" [collapsible]="colGroup.collapsible">
-                <igx-column *ngFor="let column of colGroup.columns" [field]="column.field" [dataType]="column.type"
-                    [visibleWhenCollapsed]="column.visibleWhenCollapsed"></igx-column>
-            </igx-column-group>
+            @for (colGroup of columnGroups; track colGroup) {
+                <igx-column-group [header]="colGroup.columnHeader" [collapsible]="colGroup.collapsible">
+                    @for (column of colGroup.columns; track column) {
+                        <igx-column [field]="column.field" [dataType]="column.type"
+                        [visibleWhenCollapsed]="column.visibleWhenCollapsed"></igx-column>
+                    }
+                </igx-column-group>
+            }
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class CollapsibleGroupsDynamicColComponent {
     @ViewChild(IgxGridComponent, { static: true })
@@ -2305,15 +2335,19 @@ export class IgxGridFormattedValuesSortingComponent extends BasicGridComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [height]="'500px'" [width]="'500px'">
-        <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group) {
+            <igx-column-layout [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
+                @for (col of group.columns; track col) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                    [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class MRLTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -2352,10 +2386,14 @@ export class MRLTestComponent {
     template: `
 <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
     [rowEditable]="true" [primaryKey]="'ID'" [allowFiltering]="true" [moving]="true">
-    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width" [resizable]="true">
-    </igx-column>
-    <igx-paginator *ngIf="paging"></igx-paginator>
+    @for (c of columns; track c) {
+        <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+            [width]="c.width" [resizable]="true">
+        </igx-column>
+    }
+    @if (paging) {
+        <igx-paginator></igx-paginator>
+    }
 
     <igx-action-strip #actionStrip>
         <igx-grid-editing-actions [addRow]='true'></igx-grid-editing-actions>
@@ -2366,7 +2404,7 @@ export class MRLTestComponent {
 </igx-grid>
 `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxPaginatorComponent, IgxRowAddTextDirective, NgFor, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxPaginatorComponent, IgxRowAddTextDirective]
 })
 export class IgxAddRowComponent implements OnInit {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -2486,7 +2524,7 @@ export class EmptyGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.generatedWithDataType),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnsAddedOnInitComponent extends BasicGridComponent implements OnInit {
     public columns = [];
@@ -2510,7 +2548,7 @@ export class ColumnsAddedOnInitComponent extends BasicGridComponent implements O
 @Component({
     template: GridTemplateStrings.declareGrid(' [hideGroupedColumns]="true"', '', ColumnDefinitions.generatedGroupableWithEnabledSummariesAndDataType),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GroupedGridWithSummariesComponent extends BasicGridComponent implements OnInit {
     public columns = [];
@@ -2531,7 +2569,7 @@ export class GroupedGridWithSummariesComponent extends BasicGridComponent implem
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.generatedWithColumnBasedSummariesAndDataType),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridCurrencySummariesComponent extends BasicGridComponent implements OnInit {
     public columns = [];
@@ -2657,7 +2695,7 @@ class CustomSummaryWithDate {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridCustomSummaryComponent extends BasicGridComponent implements OnInit {
     public override data = [];
@@ -2677,7 +2715,7 @@ export class GridCustomSummaryComponent extends BasicGridComponent implements On
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridCustomSummaryWithNullAndZeroComponent extends BasicGridComponent implements OnInit {
     public override data = [];
@@ -2697,7 +2735,7 @@ export class GridCustomSummaryWithNullAndZeroComponent extends BasicGridComponen
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridCustomSummaryWithUndefinedZeroAndValidNumberComponent extends BasicGridComponent implements OnInit {
     public override data = [];
@@ -2717,7 +2755,7 @@ export class GridCustomSummaryWithUndefinedZeroAndValidNumberComponent extends B
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridCustomSummaryWithUndefinedAndNullComponent extends BasicGridComponent implements OnInit {
     public override data = [];
@@ -2737,7 +2775,7 @@ export class GridCustomSummaryWithUndefinedAndNullComponent extends BasicGridCom
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridCustomSummaryWithDateComponent extends BasicGridComponent implements OnInit {
     public override data = [];

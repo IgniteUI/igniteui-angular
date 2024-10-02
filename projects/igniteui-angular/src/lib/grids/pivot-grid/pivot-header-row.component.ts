@@ -35,7 +35,7 @@ import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxPrefixDirective } from '../../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { NgIf, NgFor, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
+import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 
@@ -52,7 +52,7 @@ import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-
     selector: 'igx-pivot-header-row',
     templateUrl: './pivot-header-row.component.html',
     standalone: true,
-    imports: [NgIf, IgxDropDirective, IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent,
+    imports: [IgxDropDirective, IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent,
         IgxPrefixDirective, IgxBadgeComponent, IgxSuffixDirective, IgxDropDownItemNavigationDirective,
         NgTemplateOutlet, IgxGridHeaderGroupComponent, NgClass, NgStyle, IgxGridForOfDirective,
         IgxDropDownComponent, IgxDropDownItemComponent, IgxGridExcelStyleFilteringComponent,

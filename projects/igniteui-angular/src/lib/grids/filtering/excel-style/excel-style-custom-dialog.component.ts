@@ -32,7 +32,7 @@ import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolut
 import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
-import { NgClass, NgIf, NgFor } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 /**
  * @hidden
@@ -41,7 +41,7 @@ import { NgClass, NgIf, NgFor } from '@angular/common';
     selector: 'igx-excel-style-custom-dialog',
     templateUrl: './excel-style-custom-dialog.component.html',
     standalone: true,
-    imports: [IgxToggleDirective, NgClass, NgIf, NgFor, IgxExcelStyleDateExpressionComponent, IgxExcelStyleDefaultExpressionComponent, IgxButtonDirective, IgxIconComponent]
+    imports: [IgxToggleDirective, NgClass, IgxExcelStyleDateExpressionComponent, IgxExcelStyleDefaultExpressionComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()

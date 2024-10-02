@@ -19,9 +19,12 @@
                 </igx-grid-toolbar-exporter>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <!-- <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [sortable]="true">
-        </igx-column> -->
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        <!-- @for (c of columns; track c) {
+            <igx-column [field]="c.field" [header]="c.field" [sortable]="true"></igx-column>
+        } -->
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-tree-grid>
 
     <div class="topMargin">
@@ -30,9 +33,11 @@
         <div class="sample-buttons">
             <button igxButton="contained" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" class="size">Row Selection: {{grid1.rowSelection}}</button>
             <igx-drop-down #dropDownRowSelection (selectionChanging)="selectionMode = $event.newSelection.value"  class="size">
-                <igx-drop-down-item *ngFor="let item of selectionModes" [value]="item">
+                @for (item of selectionModes; track item) {
+                    <igx-drop-down-item [value]="item">
                         {{ item }}
-                </igx-drop-down-item>
+                    </igx-drop-down-item>
+                }
             </igx-drop-down>
             <button igxButton="contained" (click)="addRow()">Add row</button>
             <button igxButton="contained" (click)="addChildRow()">Add child row</button>

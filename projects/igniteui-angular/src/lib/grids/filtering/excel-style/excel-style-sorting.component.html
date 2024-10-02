@@ -1,33 +1,32 @@
-<ng-container *ngIf="esf.column">
-<header>
-    {{ esf.grid.resourceStrings.igx_grid_excel_filter_sorting_header }}
-</header>
-<igx-buttongroup #sortButtonGroup>
-    <button type="button"
-        igxButton
-        [attr.data-togglable]="true"
-        (buttonSelected)="onSortButtonClicked(1)"
-        >
-        <igx-icon family="default" name="sort_asc"></igx-icon>
-        <span>
-            {{ esfSize === '1'?
-            esf.grid.resourceStrings.igx_grid_excel_filter_sorting_asc_short:
-            esf.grid.resourceStrings.igx_grid_excel_filter_sorting_asc  }}
-        </span>
-    </button>
-
-    <button type="button"
-        igxButton
-        [attr.data-togglable]="true"
-        (buttonSelected)="onSortButtonClicked(2)"
-        >
-        <igx-icon family="default" name="sort_desc"></igx-icon>
-        <span>
-            {{ esfSize === '1' ?
-            esf.grid.resourceStrings.igx_grid_excel_filter_sorting_desc_short:
-            esf.grid.resourceStrings.igx_grid_excel_filter_sorting_desc
-        }}
-        </span>
-    </button>
-</igx-buttongroup>
-</ng-container>
+@if (esf.column) {
+    <header>
+        {{ esf.grid.resourceStrings.igx_grid_excel_filter_sorting_header }}
+    </header>
+    <igx-buttongroup #sortButtonGroup>
+        <button type="button"
+            igxButton
+            [attr.data-togglable]="true"
+            (buttonSelected)="onSortButtonClicked(1)"
+            >
+            <igx-icon family="default" name="sort_asc"></igx-icon>
+            <span>
+                {{ esfSize === '1'?
+                esf.grid.resourceStrings.igx_grid_excel_filter_sorting_asc_short:
+                esf.grid.resourceStrings.igx_grid_excel_filter_sorting_asc  }}
+            </span>
+        </button>
+        <button type="button"
+            igxButton
+            [attr.data-togglable]="true"
+            (buttonSelected)="onSortButtonClicked(2)"
+            >
+            <igx-icon family="default" name="sort_desc"></igx-icon>
+            <span>
+                {{ esfSize === '1' ?
+                esf.grid.resourceStrings.igx_grid_excel_filter_sorting_desc_short:
+                esf.grid.resourceStrings.igx_grid_excel_filter_sorting_desc
+                }}
+            </span>
+        </button>
+    </igx-buttongroup>
+}

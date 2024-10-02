@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef, HostBinding } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -63,7 +62,7 @@ export class GridColumnSelectionFilterPipe implements PipeTransform {
     styleUrls: ['grid-column-selection.sample.scss'],
     templateUrl: 'grid-column-selection.sample.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, NgIf, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe, IgxLabelDirective, IgxIconComponent, IgxSuffixDirective, IgxGridToolbarTitleComponent]
+    imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe, IgxLabelDirective, IgxIconComponent, IgxSuffixDirective, IgxGridToolbarTitleComponent]
 })
 export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit {
     @HostBinding('style.--ig-size')

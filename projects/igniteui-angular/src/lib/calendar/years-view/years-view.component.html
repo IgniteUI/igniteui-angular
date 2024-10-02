@@ -1,21 +1,22 @@
 <div class="igx-calendar-view__items" role="row">
-    <span
-        igxCalendarYear
-        #item="igxCalendarYear"
-        *ngFor="let year of range; trackBy: yearTracker"
-        class="igx-calendar-view__item"
-        role="gridcell"
-        [attr.id]="year.getTime()"
-        [attr.aria-label]="formattedYear(year).long"
-        [attr.aria-selected]="item.isSelected"
-        [attr.aria-current]="item.isCurrent"
-        [value]="year"
-        [date]="date"
-        [showActive]="showActive"
-        (itemSelection)="selectDate($event)"
-    >
-        <span class="igx-calendar-view__item-inner" aria-hidden="true">
-            {{ formattedYear(year).formatted }}
+    @for (year of range; track yearTracker($index, year)) {
+        <span
+            igxCalendarYear
+            #item="igxCalendarYear"
+            class="igx-calendar-view__item"
+            role="gridcell"
+            [attr.id]="year.getTime()"
+            [attr.aria-label]="formattedYear(year).long"
+            [attr.aria-selected]="item.isSelected"
+            [attr.aria-current]="item.isCurrent"
+            [value]="year"
+            [date]="date"
+            [showActive]="showActive"
+            (itemSelection)="selectDate($event)"
+        >
+            <span class="igx-calendar-view__item-inner" aria-hidden="true">
+                {{ formattedYear(year).formatted }}
+            </span>
         </span>
-    </span>
+    }
 </div>

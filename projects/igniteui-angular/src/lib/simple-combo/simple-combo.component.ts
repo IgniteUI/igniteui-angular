@@ -1,4 +1,4 @@
-import { DOCUMENT, NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostListener, Inject, Injector,
     Optional, Output, ViewChild
@@ -68,7 +68,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
     ],
     standalone: true,
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, NgIf, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
     /** @hidden @internal */

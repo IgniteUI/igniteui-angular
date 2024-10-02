@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
 import { IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgcFormControlDirective } from 'igniteui-angular';
 
@@ -12,7 +11,7 @@ defineComponents(IgcRatingComponent);
     styleUrls: ['rating.sample.scss'],
     templateUrl: 'rating.sample.html',
     standalone: true,
-    imports: [NgFor, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgcFormControlDirective]
+    imports: [IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgcFormControlDirective]
 })
 export class RatingSampleComponent {
     public models = [{

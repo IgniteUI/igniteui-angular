@@ -6,11 +6,14 @@
     </div>
     <ng-content></ng-content>
     <div [class]="iconPositionClass">
-        <ng-content *ngIf="iconTemplate" select="igx-expansion-panel-icon"></ng-content>
-        <igx-icon
-            *ngIf="!iconTemplate"
-            family="default"
-            [name]="panel.collapsed ? 'expand' : 'collapse'">
-        </igx-icon>
+        @if (iconTemplate) {
+            <ng-content select="igx-expansion-panel-icon"></ng-content>
+        }
+        @if (!iconTemplate) {
+            <igx-icon
+                family="default"
+                [name]="panel.collapsed ? 'expand' : 'collapse'">
+            </igx-icon>
+        }
     </div>
 </div>

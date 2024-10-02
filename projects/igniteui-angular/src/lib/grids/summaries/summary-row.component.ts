@@ -17,7 +17,7 @@ import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive'
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxGridNotGroupedPipe } from '../common/pipes';
-import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 
 @Component({
@@ -26,7 +26,7 @@ import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
     templateUrl: './summary-row.component.html',
     providers: [IgxForOfSyncService],
     standalone: true,
-    imports: [NgIf, NgTemplateOutlet, IgxGridForOfDirective, IgxSummaryCellComponent, NgFor, IgxGridNotGroupedPipe]
+    imports: [NgTemplateOutlet, IgxGridForOfDirective, IgxSummaryCellComponent, IgxGridNotGroupedPipe]
 })
 export class IgxSummaryRowComponent implements DoCheck  {
 

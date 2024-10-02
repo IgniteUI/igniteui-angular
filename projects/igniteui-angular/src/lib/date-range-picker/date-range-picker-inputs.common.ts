@@ -10,7 +10,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { NgIf, NgTemplateOutlet, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
 
 /** Represents a range between two dates. */
 export interface DateRange {
@@ -127,7 +127,7 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeStartComponent }
     ],
     standalone: true,
-    imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
+    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent { }
 
@@ -163,7 +163,7 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeEndComponent }
     ],
     standalone: true,
-    imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
+    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent { }
 

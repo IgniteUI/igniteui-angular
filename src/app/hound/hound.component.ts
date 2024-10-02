@@ -26,7 +26,6 @@ import {
     IgxToggleDirective
 } from "igniteui-angular";
 import {FormsModule} from "@angular/forms";
-import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
     selector: 'app-hound',
@@ -42,7 +41,6 @@ import {NgForOf, NgIf} from "@angular/common";
         IgxPrefixDirective,
         IgxSuffixDirective,
         IgxSelectComponent,
-        NgForOf,
         IgxComboComponent,
         IgxCheckboxComponent,
         IgxDropDownComponent,
@@ -51,7 +49,6 @@ import {NgForOf, NgIf} from "@angular/common";
         IgxToggleActionDirective,
         IgxRadioComponent,
         IgxRadioGroupDirective,
-        NgIf,
         IgxSelectItemComponent,
         IgxTabsModule,
         IgxTabsComponent,

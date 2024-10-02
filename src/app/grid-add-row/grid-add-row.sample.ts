@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IRowDataCancelableEventArgs, IRowDataEventArgs, IgxActionStripComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxColumnComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular';
 
@@ -8,7 +7,7 @@ import { IRowDataCancelableEventArgs, IRowDataEventArgs, IgxActionStripComponent
     styleUrls: ['grid-add-row.sample.scss'],
     templateUrl: `grid-add-row.sample.html`,
     standalone: true,
-    imports: [IgxGridComponent, NgFor, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, NgIf, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective]
 })
 export class GridAddRowSampleComponent implements OnInit {
 

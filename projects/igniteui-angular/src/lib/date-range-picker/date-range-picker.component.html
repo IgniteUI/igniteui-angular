@@ -28,9 +28,11 @@
             role="combobox" aria-haspopup="grid" [attr.aria-expanded]="!collapsed" [attr.aria-labelledby]="label?.id"
             [value]="value | dateRange: appliedFormat : locale : formatter" />
 
-        <igx-prefix *ngIf="!toggleComponents.length">
-            <ng-container *ngTemplateOutlet="defIcon"></ng-container>
-        </igx-prefix>
+        @if (!toggleComponents.length) {
+            <igx-prefix>
+                <ng-container *ngTemplateOutlet="defIcon"></ng-container>
+            </igx-prefix>
+        }
 
         <ng-container ngProjectAs="[igxLabel]">
             <ng-content select="[igxLabel]"></ng-content>

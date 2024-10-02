@@ -12,7 +12,6 @@ import { VirtualGridComponent, NoScrollsComponent,
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { CellType } from '../common/grid.interface';
-import { NgFor } from '@angular/common';
 import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 
 describe('IgxGrid - Cell component #grid', () => {
@@ -406,20 +405,22 @@ describe('IgxGrid - Cell component #grid', () => {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" [width]="'900px'" [height]="'500px'" rowSelection = "multiple" [moving]="true">
-        <igx-column *ngFor="let c of columns" [field]="c.field"
-                                              [header]="c.field"
-                                              [width]="c.width"
-                                              [groupable]="true"
-                                              [resizable]="true"
-                                              [sortable]="true"
-                                              [filterable]="true"
-                                              [editable]="true"
-                                              [cellClasses]="c.cellClasses">
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [field]="c.field"
+                [header]="c.field"
+                [width]="c.width"
+                [groupable]="true"
+                [resizable]="true"
+                [sortable]="true"
+                [filterable]="true"
+                [editable]="true"
+                [cellClasses]="c.cellClasses">
+            </igx-column>
+        }
     </igx-grid>`,
     styleUrls: ['../../test-utils/grid-cell-style-testing.scss'],
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ConditionalCellStyleTestComponent implements OnInit {
     @ViewChild('grid', { static: true }) public grid: IgxGridComponent;

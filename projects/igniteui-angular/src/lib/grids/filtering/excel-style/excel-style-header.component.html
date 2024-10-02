@@ -1,31 +1,38 @@
-<header *ngIf="esf.column"
-        class="igx-excel-filter__menu-header">
-    <h4>{{ esf.column.header || esf.column.field }}</h4>
-    <div class="igx-excel-filter__menu-header-actions">
-        <button *ngIf="showSelecting"
-            type="button"
-            igxIconButton="flat"
-            (click)="esf.onSelect()"
-            [ngClass]="esf.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select'"
-            [attr.aria-label]="esf.column.selected ? esf.grid.resourceStrings.igx_grid_excel_deselect : esf.grid.resourceStrings.igx_grid_excel_select"
-        >
-            <igx-icon family="default" name="selected"></igx-icon>
-        </button>
-        <button *ngIf="showPinning"
-            type="button"
-            igxIconButton="flat"
-            (click)="esf.onPin()"
-            [attr.aria-label]="esf.column.pinned ? esf.grid.resourceStrings.igx_grid_excel_unpin : esf.grid.resourceStrings.igx_grid_excel_pin"
-        >
-            <igx-icon family="default" [name]="esf.column.pinned ? 'unpin' : 'pin'"></igx-icon>
-        </button>
-        <button *ngIf="showHiding"
-            type="button"
-            igxIconButton="flat"
-            (click)="esf.onHideToggle()"
-            [attr.aria-label]="esf.column.hidden ? esf.grid.resourceStrings.igx_grid_excel_show : esf.grid.resourceStrings.igx_grid_excel_hide"
-        >
-            <igx-icon family="default" [name]="esf.column.hidden ? 'show' : 'hide'"></igx-icon>
-        </button>
-    </div>
-</header>
+@if (esf.column) {
+    <header class="igx-excel-filter__menu-header">
+        <h4>{{ esf.column.header || esf.column.field }}</h4>
+        <div class="igx-excel-filter__menu-header-actions">
+            @if (showSelecting) {
+                <button
+                    type="button"
+                    igxIconButton="flat"
+                    (click)="esf.onSelect()"
+                    [ngClass]="esf.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select'"
+                    [attr.aria-label]="esf.column.selected ? esf.grid.resourceStrings.igx_grid_excel_deselect : esf.grid.resourceStrings.igx_grid_excel_select"
+                >
+                    <igx-icon family="default" name="selected"></igx-icon>
+                </button>
+            }
+            @if (showPinning) {
+                <button
+                    type="button"
+                    igxIconButton="flat"
+                    (click)="esf.onPin()"
+                    [attr.aria-label]="esf.column.pinned ? esf.grid.resourceStrings.igx_grid_excel_unpin : esf.grid.resourceStrings.igx_grid_excel_pin"
+                >
+                    <igx-icon family="default" [name]="esf.column.pinned ? 'unpin' : 'pin'"></igx-icon>
+                </button>
+            }
+            @if (showHiding) {
+                <button
+                    type="button"
+                    igxIconButton="flat"
+                    (click)="esf.onHideToggle()"
+                    [attr.aria-label]="esf.column.hidden ? esf.grid.resourceStrings.igx_grid_excel_show : esf.grid.resourceStrings.igx_grid_excel_hide"
+                >
+                    <igx-icon family="default" [name]="esf.column.hidden ? 'show' : 'hide'"></igx-icon>
+                </button>
+            }
+        </div>
+    </header>
+}

@@ -14,29 +14,33 @@
     </header>
 
     <article #expressionsContainer class="igx-excel-filter__secondary-main">
-        <ng-container *ngIf="column.dataType === 'date' || column.dataType === 'dateTime' || column.dataType === 'time'">
-            <igx-excel-style-date-expression *ngFor="let expression of expressionsList;"
-                class="igx-excel-filter__condition"
-                [expressionUI]="expression"
-                [column]="column"
-                [grid]="grid"
-                [expressionsList]="expressionsList"
-                (expressionRemoved)="onExpressionRemoved($event)"
-                (logicOperatorChanged)="onLogicOperatorChanged($event)">
-            </igx-excel-style-date-expression>
-        </ng-container>
+        @if (column.dataType === 'date' || column.dataType === 'dateTime' || column.dataType === 'time') {
+            @for (expression of expressionsList; track expression) {
+                <igx-excel-style-date-expression
+                    class="igx-excel-filter__condition"
+                    [expressionUI]="expression"
+                    [column]="column"
+                    [grid]="grid"
+                    [expressionsList]="expressionsList"
+                    (expressionRemoved)="onExpressionRemoved($event)"
+                    (logicOperatorChanged)="onLogicOperatorChanged($event)">
+                </igx-excel-style-date-expression>
+            }
+        }
 
-        <ng-container *ngIf="column.dataType !== 'date' && column.dataType !== 'dateTime' && column.dataType !== 'time'">
-            <igx-excel-style-default-expression *ngFor="let expression of expressionsList;"
-                class="igx-excel-filter__condition"
-                [expressionUI]="expression"
-                [column]="column"
-                [grid]="grid"
-                [expressionsList]="expressionsList"
-                (expressionRemoved)="onExpressionRemoved($event)"
-                (logicOperatorChanged)="onLogicOperatorChanged($event)">
-            </igx-excel-style-default-expression>
-        </ng-container>
+        @if (column.dataType !== 'date' && column.dataType !== 'dateTime' && column.dataType !== 'time') {
+            @for (expression of expressionsList; track expression) {
+                <igx-excel-style-default-expression
+                    class="igx-excel-filter__condition"
+                    [expressionUI]="expression"
+                    [column]="column"
+                    [grid]="grid"
+                    [expressionsList]="expressionsList"
+                    (expressionRemoved)="onExpressionRemoved($event)"
+                    (logicOperatorChanged)="onLogicOperatorChanged($event)">
+                </igx-excel-style-default-expression>
+            }
+        }
 
         <button type="button" igxButton
             class="igx-excel-filter__add-filter"

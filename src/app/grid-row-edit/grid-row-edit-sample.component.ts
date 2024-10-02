@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { data } from '../shared/data';
@@ -21,7 +20,7 @@ import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/
     styleUrls: [`grid-row-edit-sample.component.scss`],
     templateUrl: 'grid-row-edit-sample.component.html',
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxColumnRequiredValidatorDirective, IgxCellEditorTemplateDirective, FormsModule, IgxFocusDirective, IgxCheckboxComponent, NgFor, IgxButtonDirective, IgxSwitchComponent, IgxColumnGroupComponent, NgIf, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IgxRowEditActionsDirective, IgxPaginatorComponent, IgxToggleDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxColumnRequiredValidatorDirective, IgxCellEditorTemplateDirective, FormsModule, IgxFocusDirective, IgxCheckboxComponent, IgxButtonDirective, IgxSwitchComponent, IgxColumnGroupComponent, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IgxRowEditActionsDirective, IgxPaginatorComponent, IgxToggleDirective]
 })
 export class GridRowEditSampleComponent {
     @ViewChild(IgxToggleDirective, { static: true })

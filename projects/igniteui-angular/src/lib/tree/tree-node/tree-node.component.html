@@ -6,13 +6,14 @@
 <ng-template *ngTemplateOutlet="noDragTemplate">
 </ng-template>
 
-<div #childrenContainer
-    *ngIf="expanded && !loading"
-    class="igx-tree-node__group"
-    role="group"
->
-    <ng-content select="igx-tree-node"></ng-content>
-</div>
+@if (expanded && !loading) {
+    <div #childrenContainer
+        class="igx-tree-node__group"
+        role="group"
+    >
+        <ng-content select="igx-tree-node"></ng-content>
+    </div>
+}
 
 
 <ng-template #defaultIndicator>
@@ -45,40 +46,46 @@
         (blur)="clearFocus()"
     >
         <div aria-hidden="true">
-            <span *ngFor="let item of [].constructor(level)"
-                aria-hidden="true"
-                class="igx-tree-node__spacer"
-            ></span>
+            @for (item of [].constructor(level); track item) {
+                <span
+                    aria-hidden="true"
+                    class="igx-tree-node__spacer"
+                ></span>
+            }
         </div>
 
         <!-- Expand/Collapse indicator -->
-        <span *ngIf="!loading"
-            class="igx-tree-node__toggle-button"
-            [ngClass]="{ 'igx-tree-node__toggle-button--hidden': !_children?.length }"
-            (click)="indicatorClick()"
-        >
-            <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: expanded }">
-            </ng-container>
-        </span>
-        <span *ngIf="loading"
-            class="igx-tree-node__toggle-button"
-        >
-        	<igx-circular-bar
-            	[animate]="false"
-            	[indeterminate]="true"
-            	[textVisibility]="false"
-        	>
-        	</igx-circular-bar>
-        </span>
+        @if (!loading) {
+            <span
+                class="igx-tree-node__toggle-button"
+                [ngClass]="{ 'igx-tree-node__toggle-button--hidden': !_children?.length }"
+                (click)="indicatorClick()"
+            >
+                <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: expanded }">
+                </ng-container>
+            </span>
+        }
+        @if (loading) {
+            <span class="igx-tree-node__toggle-button">
+                <igx-circular-bar
+                    [animate]="false"
+                    [indeterminate]="true"
+                    [textVisibility]="false"
+                >
+                </igx-circular-bar>
+            </span>
+        }
 
         <!-- Item selection -->
-        <div *ngIf="showSelectors"
-            class="igx-tree-node__select"
-            (pointerdown)="onSelectorPointerDown($event)"
-            (click)="onSelectorClick($event)">
-            <ng-container *ngTemplateOutlet="selectMarkerTemplate">
-            </ng-container>
-        </div>
+        @if (showSelectors) {
+            <div
+                class="igx-tree-node__select"
+                (pointerdown)="onSelectorPointerDown($event)"
+                (click)="onSelectorClick($event)">
+                <ng-container *ngTemplateOutlet="selectMarkerTemplate">
+                </ng-container>
+            </div>
+        }
 
         <div class="igx-tree-node__content">
             <!-- Ghost content -->
@@ -88,7 +95,9 @@
 
     <!--  Buffer element for 'move after' when D&D is implemented-->
     <div class="igx-tree-node__drop-indicator">
-        <span aria-hidden="true" class="igx-tree-node__spacer" *ngFor="let item of [].constructor(level)"></span>
+        @for (item of [].constructor(level); track item) {
+            <span aria-hidden="true" class="igx-tree-node__spacer"></span>
+        }
         <!-- style rules target this div, do not delete it -->
         <div></div>
     </div>

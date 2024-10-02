@@ -3,12 +3,14 @@
         {{ title || this.resourceStrings.igx_query_builder_title }}
         <ng-content></ng-content>
     </div>
-    <div *ngIf="showLegend" class="igx-builder-legend" >
-        <div class="igx-builder-legend__item--and">
-            <span>{{this.resourceStrings.igx_query_builder_and_label}}</span>
+    @if (showLegend) {
+        <div class="igx-builder-legend" >
+            <div class="igx-builder-legend__item--and">
+                <span>{{this.resourceStrings.igx_query_builder_and_label}}</span>
+            </div>
+            <div class="igx-builder-legend__item--or">
+                <span>{{this.resourceStrings.igx_query_builder_or_label}}</span>
+            </div>
         </div>
-        <div class="igx-builder-legend__item--or">
-            <span>{{this.resourceStrings.igx_query_builder_or_label}}</span>
-        </div>
-    </div>
+    }
 </div>

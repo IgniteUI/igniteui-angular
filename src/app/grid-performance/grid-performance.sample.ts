@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { GridSelectionMode, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
 
 
@@ -8,7 +7,7 @@ import { GridSelectionMode, IgxColumnComponent, IgxGridComponent, IgxGridToolbar
     templateUrl: 'grid-performance.sample.html',
     styleUrls: ['grid-performance.sample.scss'],
     standalone: true,
-    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgFor, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent]
 })
 
 export class GridPerformanceSampleComponent implements OnInit {

@@ -22,7 +22,6 @@ import {
     IGX_EXPANSION_PANEL_COMPONENT
 } from './expansion-panel.common';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from './toggle-animation-component';
-import { NgIf } from '@angular/common';
 
 let NEXT_ID = 0;
 
@@ -31,7 +30,7 @@ let NEXT_ID = 0;
     templateUrl: 'expansion-panel.component.html',
     providers: [{ provide: IGX_EXPANSION_PANEL_COMPONENT, useExisting: IgxExpansionPanelComponent }],
     standalone: true,
-    imports: [NgIf]
+    imports: []
 })
 export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements IgxExpansionPanelBase, AfterContentInit {
     /**

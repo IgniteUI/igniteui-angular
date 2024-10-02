@@ -11,7 +11,6 @@ import { By } from '@angular/platform-browser';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxListComponent } from '../list/list.component';
 import { IgxListItemComponent } from '../list/list-item.component';
-import { NgIf } from '@angular/common';
 import { IGX_EXPANSION_PANEL_DIRECTIVES } from './public_api';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
@@ -1366,20 +1365,28 @@ export class IgxExpansionPanelListComponent {
     <igx-expansion-panel
         (contentCollapsed)="handleCollapsed()"
         (contentExpanded)="handleExpanded()">
-        <igx-expansion-panel-header *ngIf="showHeader" headerHeight="50px">
-            <igx-expansion-panel-title *ngIf="showTitle">Example Title</igx-expansion-panel-title>
-            <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
-            <igx-expansion-panel-icon *ngIf="customIcon">
-                <span class="custom-test-icon">TEST_ICON</span>
-            </igx-expansion-panel-icon>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body *ngIf="showBody">
-        Example body
-        </igx-expansion-panel-body>
+        @if (showHeader) {
+            <igx-expansion-panel-header headerHeight="50px">
+                @if (showTitle) {
+                    <igx-expansion-panel-title>Example Title</igx-expansion-panel-title>
+                }
+                <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
+                @if (customIcon) {
+                    <igx-expansion-panel-icon>
+                        <span class="custom-test-icon">TEST_ICON</span>
+                    </igx-expansion-panel-icon>
+                }
+            </igx-expansion-panel-header>
+        }
+        @if (showBody) {
+            <igx-expansion-panel-body>
+                Example body
+            </igx-expansion-panel-body>
+        }
     </igx-expansion-panel>
     `,
     standalone: true,
-    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, NgIf]
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective]
 })
 export class IgxExpansionPanelSampleComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })

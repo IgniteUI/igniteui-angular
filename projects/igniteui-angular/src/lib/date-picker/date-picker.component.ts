@@ -25,7 +25,6 @@ import {
     ViewContainerRef,
     booleanAttribute
 } from '@angular/core';
-import { NgIf } from '@angular/common';
 import {
     AbstractControl,
     ControlValueAccessor,
@@ -94,7 +93,6 @@ let NEXT_ID = 0;
     styles: [':host { display: block; }'],
     standalone: true,
     imports: [
-        NgIf,
         IgxInputGroupComponent,
         IgxPrefixDirective,
         IgxIconComponent,

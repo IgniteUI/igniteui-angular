@@ -1,11 +1,17 @@
 <ng-template #defaultTitle>
-    <ng-content *ngIf="isTitleVisible" select="[igxStepTitle]"></ng-content>
-    <ng-content *ngIf="isTitleVisible" select="[igxStepSubtitle]"></ng-content>
+    @if (isTitleVisible) {
+        <ng-content select="[igxStepTitle]"></ng-content>
+    }
+    @if (isTitleVisible) {
+        <ng-content select="[igxStepSubtitle]"></ng-content>
+    }
 </ng-template>
 
 <ng-template #contentTemplate>
     <div [ngClass]="contentClasses" #contentContainer>
-        <ng-content *ngIf="active || collapsing" select="[igxStepContent]"></ng-content>
+        @if (active || collapsing) {
+            <ng-content select="[igxStepContent]"></ng-content>
+        }
     </div>
 </ng-template>
 
@@ -20,17 +26,19 @@
 <div class="igx-stepper__step-header" igxRipple [ngClass]="stepHeaderClasses" (keydown)="handleKeydown($event)"
     (click)="onPointerDown($event)">
 
-    <div *ngIf="isIndicatorVisible" class="igx-stepper__step-indicator">
-        <ng-container *ngTemplateOutlet="indicatorTemplate ? indicatorTemplate : defaultIndicator"></ng-container>
-    </div>
+    @if (isIndicatorVisible) {
+        <div class="igx-stepper__step-indicator">
+            <ng-container *ngTemplateOutlet="indicatorTemplate ? indicatorTemplate : defaultIndicator"></ng-container>
+        </div>
+    }
 
     <div class="igx-stepper__step-title-wrapper">
         <ng-container *ngTemplateOutlet="defaultTitle"></ng-container>
     </div>
 </div>
 
-<ng-container *ngIf="!isHorizontal">
+@if (!isHorizontal) {
     <div class="igx-stepper__step-content-wrapper">
         <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
     </div>
-</ng-container>
+}

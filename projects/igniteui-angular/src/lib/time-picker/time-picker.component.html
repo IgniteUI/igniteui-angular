@@ -7,17 +7,19 @@
         [attr.aria-expanded]="!toggleDirective.collapsed" [attr.aria-labelledby]="label?.id"
         (click)="!isDropdown && toggle()"/>
 
-    <igx-prefix *ngIf="!toggleComponents.length" (click)="toggle()">
-        <igx-icon
-            [title]="
-                value
-                    ? resourceStrings.igx_time_picker_change_time
-                    : resourceStrings.igx_time_picker_choose_time
-            "
-            family="default"
-            name="clock"
-        ></igx-icon>
-    </igx-prefix>
+    @if (!toggleComponents.length) {
+        <igx-prefix (click)="toggle()">
+            <igx-icon
+                [title]="
+                    value
+                        ? resourceStrings.igx_time_picker_change_time
+                        : resourceStrings.igx_time_picker_choose_time
+                "
+                family="default"
+                name="clock"
+            ></igx-icon>
+        </igx-prefix>
+    }
 
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
@@ -26,9 +28,11 @@
         <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
     </ng-container>
 
-    <igx-suffix *ngIf="showClearButton" (click)="clear(); $event.stopPropagation()">
-        <igx-icon family="default" name="input_clear"></igx-icon>
-    </igx-suffix>
+    @if (showClearButton) {
+        <igx-suffix (click)="clear(); $event.stopPropagation()">
+            <igx-icon family="default" name="input_clear"></igx-icon>
+        </igx-suffix>
+    }
 
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
@@ -39,57 +43,81 @@
 </igx-input-group>
 
 <ng-template #defaultTimePickerActions>
-    <div *ngIf="cancelButtonLabel || okButtonLabel" class="igx-time-picker__buttons">
-        <button *ngIf="cancelButtonLabel" type="button" igxButton="flat" (click)="cancelButtonClick()">
-            {{cancelButtonLabel}}
-        </button>
-        <button *ngIf="okButtonLabel" type="button" igxButton="flat" (click)="okButtonClick()">
-            {{okButtonLabel}}
-        </button>
-    </div>
+    @if (cancelButtonLabel || okButtonLabel) {
+        <div class="igx-time-picker__buttons">
+            @if (cancelButtonLabel) {
+                <button type="button" igxButton="flat" (click)="cancelButtonClick()">
+                    {{cancelButtonLabel}}
+                </button>
+            }
+            @if (okButtonLabel) {
+                <button type="button" igxButton="flat" (click)="okButtonClick()">
+                    {{okButtonLabel}}
+                </button>
+            }
+        </div>
+    }
 </ng-template>
 
 <div #toggleDirective="toggle" igxToggle role="dialog" class="igx-time-picker"
     [ngClass]="{'igx-time-picker--dropdown': isDropdown, 'igx-time-picker--vertical': isVertical && !isDropdown}">
     <div class="igx-time-picker__main">
-        <div *ngIf="!isDropdown" class="igx-time-picker__header">
-            <h2 class="igx-time-picker__header-hour">
-                <span>{{ selectedDate | timeFormatPipe }}</span>
-            </h2>
-        </div>
+        @if (!isDropdown) {
+            <div class="igx-time-picker__header">
+                <h2 class="igx-time-picker__header-hour">
+                    <span>{{ selectedDate | timeFormatPipe }}</span>
+                </h2>
+            </div>
+        }
         <div class="igx-time-picker__body">
-            <div *ngIf="showHoursList" #hourList [igxItemList]="'hourList'">
-            <span [igxTimeItem]="hour" #timeItem="timeItem" aria-label="hour"
-                  [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
-                  [attr.aria-valuenow]="timeItem.isSelectedTime ? timeItem.hourValue : null"
-                  [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
-                  [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                  *ngFor="let hour of hourItems | timeItemPipe:'hour':selectedDate:minDropdownValue:maxDropdownValue">{{ hour }}</span>
-            </div>
-            <div *ngIf="showMinutesList" #minuteList [igxItemList]="'minuteList'">
-            <span [igxTimeItem]="minute" #timeItem="timeItem" aria-label="minutes"
-                  [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
-                  [attr.aria-valuenow]="timeItem.isSelectedTime ? minute : null"
-                  [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
-                  [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                  *ngFor="let minute of minuteItems | timeItemPipe:'minutes':selectedDate:minDropdownValue:maxDropdownValue">{{ minute }}</span>
-            </div>
-            <div *ngIf="showSecondsList" #secondsList [igxItemList]="'secondsList'">
-            <span [igxTimeItem]="seconds" #timeItem="timeItem" aria-label="seconds"
-                  [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
-                  [attr.aria-valuenow]="timeItem.isSelectedTime ? seconds : null"
-                  [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
-                  [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                  *ngFor="let seconds of secondsItems | timeItemPipe:'seconds':selectedDate:minDropdownValue:maxDropdownValue">{{ seconds }}</span>
-            </div>
-            <div *ngIf="showAmPmList" #ampmList [igxItemList]="'ampmList'">
-            <span [igxTimeItem]="ampm" #timeItem="timeItem" aria-label="ampm"
-                  [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
-                  [attr.aria-valuenow]="timeItem.isSelectedTime ? ampm : null"
-                  [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
-                  [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                  *ngFor="let ampm of ampmItems | timeItemPipe:'ampm':selectedDate:minDropdownValue:maxDropdownValue">{{ ampm }}</span>
-            </div>
+            @if (showHoursList) {
+                <div #hourList [igxItemList]="'hourList'">
+                    @for (hour of hourItems | timeItemPipe:'hour':selectedDate:minDropdownValue:maxDropdownValue; track hour) {
+                        <span [igxTimeItem]="hour" #timeItem="timeItem" aria-label="hour"
+                            [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                            [attr.aria-valuenow]="timeItem.isSelectedTime ? timeItem.hourValue : null"
+                            [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                            [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
+                        >{{ hour }}</span>
+                    }
+                </div>
+            }
+            @if (showMinutesList) {
+                <div #minuteList [igxItemList]="'minuteList'">
+                    @for (minute of minuteItems | timeItemPipe:'minutes':selectedDate:minDropdownValue:maxDropdownValue; track minute) {
+                        <span [igxTimeItem]="minute" #timeItem="timeItem" aria-label="minutes"
+                            [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                            [attr.aria-valuenow]="timeItem.isSelectedTime ? minute : null"
+                            [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                            [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
+                        >{{ minute }}</span>
+                    }
+                </div>
+            }
+            @if (showSecondsList) {
+                <div #secondsList [igxItemList]="'secondsList'">
+                    @for (seconds of secondsItems | timeItemPipe:'seconds':selectedDate:minDropdownValue:maxDropdownValue; track seconds) {
+                        <span [igxTimeItem]="seconds" #timeItem="timeItem" aria-label="seconds"
+                            [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                            [attr.aria-valuenow]="timeItem.isSelectedTime ? seconds : null"
+                            [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                            [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
+                        >{{ seconds }}</span>
+                    }
+                </div>
+            }
+            @if (showAmPmList) {
+                <div #ampmList [igxItemList]="'ampmList'">
+                    @for (ampm of ampmItems | timeItemPipe:'ampm':selectedDate:minDropdownValue:maxDropdownValue; track ampm) {
+                        <span [igxTimeItem]="ampm" #timeItem="timeItem" aria-label="ampm"
+                            [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                            [attr.aria-valuenow]="timeItem.isSelectedTime ? ampm : null"
+                            [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                            [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
+                        >{{ ampm }}</span>
+                    }
+                </div>
+            }
         </div>
     </div>
     <igx-divider></igx-divider>

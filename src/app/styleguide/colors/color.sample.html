@@ -2,14 +2,20 @@
     <article class="sample-column">
         <h4 class="sample-title">Color Palettes</h4>
         <div class="color-palettes">
-            <div class="color-palette" *ngFor="let color of colors">
-                <div *ngIf="color.variants.length > 1" class="color-container">
-                    <h4 class="color-title bg-{{color.name}}-500 color-{{color.name}}-500-contrast">{{color.name}}</h4>
-                    <div *ngFor="let variant of color.variants" class="color-values bg-{{color.name}}-{{variant}} color-{{color.name}}-{{variant}}-contrast">
-                        <span class="variables">{{variant}}</span>
-                    </div>
+            @for (color of colors; track color) {
+                <div class="color-palette">
+                    @if (color.variants.length > 1) {
+                        <div class="color-container">
+                            <h4 class="color-title bg-{{color.name}}-500 color-{{color.name}}-500-contrast">{{color.name}}</h4>
+                            @for (variant of color.variants; track variant) {
+                                <div class="color-values bg-{{color.name}}-{{variant}} color-{{color.name}}-{{variant}}-contrast">
+                                    <span class="variables">{{variant}}</span>
+                                </div>
+                            }
+                        </div>
+                    }
                 </div>
-            </div>
+            }
         </div>
     </article>
 

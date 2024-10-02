@@ -6,7 +6,6 @@ import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
 import { IgxNavigationService } from '../core/navigation/nav.service';
 import { PlatformUtil } from '../core/utils';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
-import { NgIf } from '@angular/common';
 import { IgxLayoutModule } from '../directives/layout/layout.module';
 import { IgxNavbarModule } from '../navbar/navbar.module';
 import { IgxNavbarComponent } from '../navbar/navbar.component';
@@ -216,7 +215,7 @@ describe('Navigation Drawer', () => {
         });
         const template = `<igx-nav-drawer [miniWidth]="'56px'">
                             <ng-template igxDrawer></ng-template>
-                            <ng-template *ngIf="miniView" igxDrawerMini></ng-template>
+                            @if (miniView) { <ng-template igxDrawerMini></ng-template> }
                             </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentMiniComponent, {
             set: {
@@ -693,7 +692,7 @@ class TestComponent {
     selector: 'igx-test-cmp-di',
     template: '<igx-nav-drawer></igx-nav-drawer>',
     standalone: true,
-    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
+    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
 })
 class TestComponentDIComponent {
     @ViewChild(IgxNavigationDrawerComponent, { static: true }) public navDrawer: IgxNavigationDrawerComponent;
@@ -706,7 +705,7 @@ class TestComponentDIComponent {
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
     standalone: true,
-    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
+    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
 })
 class TestComponentPinComponent extends TestComponentDIComponent {
     public pin = true;
@@ -719,7 +718,7 @@ class TestComponentPinComponent extends TestComponentDIComponent {
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
     standalone: true,
-    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
+    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
 })
 class TestComponentMiniComponent extends TestComponentDIComponent {
     public miniView = true;
@@ -735,7 +734,6 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
         IgxNavigationDrawerComponent,
         IgxNavDrawerTemplateDirective,
         IgxNavDrawerMiniTemplateDirective,
-        NgIf,
     ],
     styles: `
         .igx-nav-drawer__aside--pinned {
@@ -749,11 +747,13 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
           <span igxDrawerItem>Item</span>
         </ng-template>
 
-        <ng-template igxDrawerMini *ngIf="nav.pin">
-          <nav>
-            <span igxDrawerItem>Item</span>
-          </nav>
-        </ng-template>
+        @if (nav.pin) {
+          <ng-template igxDrawerMini>
+              <nav>
+                  <span igxDrawerItem>Item</span>
+              </nav>
+          </ng-template>
+        }
       </igx-nav-drawer>
 
       <div igxFlex igxLayout igxLayoutDir="columns">

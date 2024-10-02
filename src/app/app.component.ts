@@ -4,7 +4,6 @@ import { filter } from 'rxjs/operators';
 import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective } from 'igniteui-angular';
 import { PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { NgFor, NgIf } from '@angular/common';
 import { IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective } from '../../projects/igniteui-angular/src/lib/navigation-drawer/navigation-drawer.directives';
 
 @Component({
@@ -16,11 +15,9 @@ import { IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective, IgxNavDrawerM
 		IgxNavigationDrawerComponent,
 		IgxNavDrawerTemplateDirective,
 		IgxNavDrawerItemDirective,
-		NgFor,
 		RouterLinkActive,
 		RouterLink,
 		IgxIconComponent,
-		NgIf,
 		IgxNavDrawerMiniTemplateDirective,
 		PageHeaderComponent,
 		RouterOutlet,

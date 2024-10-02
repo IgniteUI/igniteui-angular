@@ -1,5 +1,4 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { timer } from 'rxjs';
@@ -16,7 +15,7 @@ import {
     styleUrls: ['./controllers.component.scss'],
     templateUrl: './controllers.component.html',
     standalone: true,
-    imports: [IgxSwitchComponent, IgxSliderComponent, FormsModule, IgxButtonGroupComponent, NgIf]
+    imports: [IgxSwitchComponent, IgxSliderComponent, FormsModule, IgxButtonGroupComponent]
 })
 export class ControllerComponent implements OnInit, OnDestroy {
     @ViewChild('buttonGroup1', { static: true }) public playButtons: IgxButtonGroupComponent;

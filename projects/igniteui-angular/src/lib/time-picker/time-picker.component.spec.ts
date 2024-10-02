@@ -17,7 +17,6 @@ import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.direct
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 import { Subscription } from 'rxjs';
 import { HammerGesturesManager } from '../core/touch';
-import { NgIf } from '@angular/common';
 import { HammerOptions } from '../core/touch-annotations';
 
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
@@ -1805,15 +1804,19 @@ export class IgxTimePickerTestComponent {
     template: `
         <igx-time-picker [mode]="mode">
             <label igxLabel>Label</label>
-            <igx-picker-toggle igxPrefix *ngIf="showCustomToggle">CustomToggle</igx-picker-toggle>
+            @if (showCustomToggle) {
+                <igx-picker-toggle igxPrefix>CustomToggle</igx-picker-toggle>
+            }
             <igx-prefix>Prefix</igx-prefix>
-            <igx-picker-clear igxSuffix *ngIf="showCustomClear">CustomClear</igx-picker-clear>
+            @if (showCustomClear) {
+                <igx-picker-clear igxSuffix>CustomClear</igx-picker-clear>
+            }
             <igx-suffix>Suffix</igx-suffix>
             <igx-hint>Hint</igx-hint>
         </igx-time-picker>
 `,
     standalone: true,
-    imports: [IgxTimePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective, NgIf]
+    imports: [IgxTimePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective]
 })
 export class IgxTimePickerWithProjectionsComponent {
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;

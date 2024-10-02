@@ -19,17 +19,19 @@
                 width="80%"
                 height="600px"
             >
-                <igx-column *ngFor="let c of columns"
-                    [field]="c.field"
-                    [header]="c.field"
-                    [groupable]="true"
-                    [resizable]="true"
-                    [sortable]="true"
-                    [editable]="true"
-                    [cellClasses]="c.cellClasses"
-                    [cellStyles]="c.cellStyles"
-                >
-                </igx-column>
+                @for (c of columns; track c) {
+                    <igx-column
+                        [field]="c.field"
+                        [header]="c.field"
+                        [groupable]="true"
+                        [resizable]="true"
+                        [sortable]="true"
+                        [editable]="true"
+                        [cellClasses]="c.cellClasses"
+                        [cellStyles]="c.cellStyles"
+                    >
+                    </igx-column>
+                }
             </igx-grid>
             <h4 class="sample-title">Grid sample with rowClasses property applied based on row ID</h4>
             <igx-grid style="margin-bottom: 10vh;"
@@ -44,17 +46,19 @@
                 [pinning]='pinningConfig'
                 (cellClick)="selectedRowId = $event.cell.row.key"
             >
-                <igx-column *ngFor="let c of columns"
-                    [field]="c.field"
-                    [header]="c.field"
-                    [groupable]="true"
-                    [resizable]="true"
-                    [sortable]="true"
-                    [editable]="true"
-                    [cellClasses]="c.cellClasses"
-                    [cellStyles]="c.cellStyles"
-                >
-                </igx-column>
+                @for (c of columns; track c) {
+                    <igx-column
+                        [field]="c.field"
+                        [header]="c.field"
+                        [groupable]="true"
+                        [resizable]="true"
+                        [sortable]="true"
+                        [editable]="true"
+                        [cellClasses]="c.cellClasses"
+                        [cellStyles]="c.cellStyles"
+                    >
+                    </igx-column>
+                }
                 <igx-action-strip #actionStrip1>
                     <igx-grid-pinning-actions></igx-grid-pinning-actions>
                     <igx-grid-editing-actions></igx-grid-editing-actions>
@@ -71,16 +75,18 @@
                 width="80%"
                 height="600px"
             >
-                <igx-column *ngFor="let c of columns"
-                    [field]="c.field"
-                    [header]="c.field"
-                    [resizable]="true"
-                    [sortable]="true"
-                    [editable]="true"
-                    [cellClasses]="c.cellClasses"
-                    [cellStyles]="c.cellStyles"
-                >
-                </igx-column>
+                @for (c of columns; track c) {
+                    <igx-column
+                        [field]="c.field"
+                        [header]="c.field"
+                        [resizable]="true"
+                        [sortable]="true"
+                        [editable]="true"
+                        [cellClasses]="c.cellClasses"
+                        [cellStyles]="c.cellStyles"
+                    >
+                    </igx-column>
+                }
             </igx-tree-grid>
         </div>
     </div>

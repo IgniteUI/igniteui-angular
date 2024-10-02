@@ -38,13 +38,17 @@
             <p>Strategies</p>
             <div class="radio-group">
                 <p>Position Strategies</p>
-                <igx-radio *ngFor="let item of positionStrategies" value="{{item}}" name="ps"
+                @for (item of positionStrategies; track item) {
+                    <igx-radio value="{{item}}" name="ps"
                     [(ngModel)]="positionStrategy" (change)="onChange($event)">{{item}}</igx-radio>
+                }
             </div>
             <div class="radio-group">
                 <p>Scroll Strategies</p>
-                <igx-radio *ngFor="let item of scrollStrategies" value="{{item}}" name="ss" [(ngModel)]="scrollStrategy"
+                @for (item of scrollStrategies; track item) {
+                    <igx-radio value="{{item}}" name="ss" [(ngModel)]="scrollStrategy"
                     (change)="onChange($event)">{{item}}</igx-radio>
+                }
             </div>
         </div>
         <div class="column">
@@ -86,11 +90,13 @@
         <button #button igxButton="contained" igxRipple igxDrag (click)="toggleDropDown()" [style.position]="'absolute'"
             (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
         <igx-drop-down width="{{dropDownWidth}}px">
-            <igx-drop-down-item *ngFor="let item of items">
-                <div class="igx-drop-down__item-template">
-                    {{ item }}
-                </div>
-            </igx-drop-down-item>
+            @for (item of items; track item) {
+                <igx-drop-down-item>
+                    <div class="igx-drop-down__item-template">
+                        {{ item }}
+                    </div>
+                </igx-drop-down-item>
+            }
         </igx-drop-down>
     </section>
 </div>

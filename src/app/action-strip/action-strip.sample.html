@@ -8,10 +8,14 @@
             Lorem ipsum dolor sit amet, consectetur adipiscing elit,
             sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </p>
-        <igx-action-strip [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'" class="my-action-strip" #actionstrip
-            *ngIf="isVisible">
-            <igx-icon (click)="doSomeAction()">alarm</igx-icon>
-        </igx-action-strip>
+        @if (isVisible) {
+            <igx-action-strip
+                class="my-action-strip" #actionstrip
+                [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
+            >
+                <igx-icon (click)="doSomeAction()">alarm</igx-icon>
+            </igx-action-strip>
+        }
     </div>
 </div>
 <div class="sample-column">
@@ -44,14 +48,16 @@
         (rowAdd)="rowAdd($event)"
         (rowAdded)="rowAdded($event)"
         >
-        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-            <ng-template igxCell let-cell="cell" let-val>
-                <div class="cell-template">
-                    <span>{{val}}</span>
-                </div>
-            </ng-template>
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+                [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+                <ng-template igxCell let-cell="cell" let-val>
+                    <div class="cell-template">
+                        <span>{{val}}</span>
+                    </div>
+                </ng-template>
+            </igx-column>
+        }
 
         <igx-action-strip #actionstrip2 [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
@@ -64,15 +70,17 @@
     <h5>Actions in menu</h5>
     <igx-grid #grid3 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelection]="'multiple'"
         [rowEditable]="true" [primaryKey]="'ID'" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
-       >
-        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-        </igx-column>
+    >
+        @for (c of columns; track c) {
+            <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+                [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+            </igx-column>
+        }
 
         <igx-action-strip #actionstrip3 [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
-            <ng-container *ngIf='customItem'>
-                    <igx-icon *igxActionStripMenuItem (click)="doSomeAction()">alarm</igx-icon>
-            </ng-container>
+            @if (customItem) {
+                <igx-icon *igxActionStripMenuItem (click)="doSomeAction()">alarm</igx-icon>
+            }
             <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
             <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
         </igx-action-strip>

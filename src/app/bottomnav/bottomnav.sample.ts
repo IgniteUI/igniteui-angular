@@ -6,7 +6,6 @@ import {
     Renderer2,
     ViewChildren
 } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { IgxAvatarComponent, IgxBottomNavComponent, IgxBottomNavContentComponent, IgxBottomNavHeaderComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxBottomNavItemComponent, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxRippleDirective } from 'igniteui-angular';
 
 @Component({
@@ -15,7 +14,6 @@ import { IgxAvatarComponent, IgxBottomNavComponent, IgxBottomNavContentComponent
     templateUrl: 'bottomnav.sample.html',
     standalone: true,
     imports: [
-        NgFor,
         IgxBottomNavComponent,
         IgxBottomNavItemComponent,
         IgxBottomNavHeaderComponent,

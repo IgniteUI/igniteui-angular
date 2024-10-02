@@ -10,19 +10,20 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { IgxIconComponent } from '../icon/icon.component';
-import { NgFor } from '@angular/common';
 import { getComponentSize } from '../core/utils';
 
 @Component({
     template: `
         <igx-chips-area #chipsArea>
-            <igx-chip #chipElem *ngFor="let chip of chipList" class="custom"
-            [id]="chip.id" [draggable]="chip.draggable"
-            [removable]="chip.removable" [selectable]="chip.selectable"
-            [style]="'--ig-size: var(' + chip.chipSize + ')'" (remove)="chipRemoved($event)">
-                <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon igxPrefix>drag_indicator</igx-icon>
-            </igx-chip>
+            @for (chip of chipList; track chip) {
+                <igx-chip #chipElem class="custom"
+                    [id]="chip.id" [draggable]="chip.draggable"
+                    [removable]="chip.removable" [selectable]="chip.selectable"
+                    [style]="'--ig-size: var(' + chip.chipSize + ')'" (remove)="chipRemoved($event)">
+                    <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+                    <igx-icon igxPrefix>drag_indicator</igx-icon>
+                </igx-chip>
+            }
             <igx-chip #chipElem tabIndex="1" [id]="tabChipAttr">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
@@ -41,7 +42,7 @@ import { getComponentSize } from '../core/utils';
         </igx-chips-area>
     `,
     standalone: true,
-    imports: [IgxChipComponent, IgxChipsAreaComponent, IgxIconComponent, IgxPrefixDirective, NgFor]
+    imports: [IgxChipComponent, IgxChipsAreaComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipComponent {
 
@@ -69,14 +70,16 @@ class TestChipComponent {
 @Component({
     template: `
         <igx-chips-area>
-            <igx-chip *ngFor="let chip of chipList">
-                <span igxLabel>label</span>
-                <span igxSuffix>suf</span>
-            </igx-chip>
+            @for (chip of chipList; track chip) {
+                <igx-chip>
+                    <span igxLabel>label</span>
+                    <span igxSuffix>suf</span>
+                </igx-chip>
+            }
         </igx-chips-area>
     `,
     standalone: true,
-    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxLabelDirective, IgxSuffixDirective, NgFor]
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxLabelDirective, IgxSuffixDirective]
 })
 class TestChipsLabelAndSuffixComponent {
 

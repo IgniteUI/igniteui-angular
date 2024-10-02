@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
-import { NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 
 /** @hidden */
@@ -43,7 +43,7 @@ let NEXT_BOTTOM_NAV_ITEM_ID = 0;
     templateUrl: 'bottom-nav.component.html',
     providers: [{ provide: IgxTabsBase, useExisting: IgxBottomNavComponent }],
     standalone: true,
-    imports: [NgFor, NgTemplateOutlet]
+    imports: [NgTemplateOutlet]
 })
 export class IgxBottomNavComponent extends IgxTabsDirective {
     /** @hidden */

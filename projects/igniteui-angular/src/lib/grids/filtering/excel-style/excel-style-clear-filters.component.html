@@ -1,10 +1,12 @@
-<div *ngIf="esf.column"
-    tabindex="0"
-    [ngClass]="clearFilterClass()"
-    (keydown)="onClearFilterKeyDown($event)"
-    (click)="clearFilter()"
-    role="menuitem"
-    [attr.aria-disabled]="!this.esf.column.filteringExpressionsTree">
-    <span>{{ esf.grid.resourceStrings.igx_grid_excel_filter_clear }}</span>
-    <igx-icon family="default" name="cancel"></igx-icon>
-</div>
+@if (esf.column) {
+    <div
+        tabindex="0"
+        [ngClass]="clearFilterClass()"
+        (keydown)="onClearFilterKeyDown($event)"
+        (click)="clearFilter()"
+        role="menuitem"
+        [attr.aria-disabled]="!this.esf.column.filteringExpressionsTree">
+        <span>{{ esf.grid.resourceStrings.igx_grid_excel_filter_clear }}</span>
+        <igx-icon family="default" name="cancel"></igx-icon>
+    </div>
+}

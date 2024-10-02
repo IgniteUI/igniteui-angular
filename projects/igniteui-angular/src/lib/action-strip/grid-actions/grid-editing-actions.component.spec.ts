@@ -1,7 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NgFor } from '@angular/common';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -391,9 +390,11 @@ describe('igxGridEditingActions #grid ', () => {
     template: `
     <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
-        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+                [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+            </igx-column>
+        }
 
         <igx-action-strip #actionStrip>
             <igx-grid-editing-actions></igx-grid-editing-actions>
@@ -401,7 +402,7 @@ describe('igxGridEditingActions #grid ', () => {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 class IgxActionStripTestingComponent implements OnInit {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -471,9 +472,11 @@ class IgxActionStripTestingComponent implements OnInit {
     template: `
     <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
-        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+                [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+            </igx-column>
+        }
 
         <igx-action-strip #actionStrip>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
@@ -483,7 +486,7 @@ class IgxActionStripTestingComponent implements OnInit {
     `,
     standalone: true,
     selector: 'igx-action-strip-pin-edit-component',
-    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent]
 })
 class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
 }
@@ -492,9 +495,11 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
     template: `
     <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
-        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+                [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+            </igx-column>
+        }
 
         <igx-action-strip #actionStrip>
             <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
@@ -503,7 +508,7 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
     `,
     standalone: true,
     selector: 'igx-action-strip-edit-menu-component',
-    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
 }
@@ -512,9 +517,11 @@ class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
     template: `
     <igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
-        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+                [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+            </igx-column>
+        }
 
         <igx-action-strip #actionStrip>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
@@ -524,7 +531,7 @@ class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
     `,
     standalone: true,
     selector: 'igx-action-strip-one-row-component',
-    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent]
 })
 class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
 }
@@ -533,9 +540,11 @@ class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
     template: `
     <igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
-        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+                [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+            </igx-column>
+        }
 
         <igx-action-strip #actionStrip>
             <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
@@ -544,7 +553,7 @@ class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
     `,
     standalone: true,
     selector: 'igx-action-strip-menu-one-row-component',
-    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 class IgxActionStripMenuOneRowComponent extends IgxActionStripTestingComponent {
 }

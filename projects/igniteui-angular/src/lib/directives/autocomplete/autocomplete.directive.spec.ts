@@ -10,7 +10,6 @@ import { IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffi
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective } from '../../drop-down/public_api';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../services/public_api';
-import { NgFor } from '@angular/common';
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 
@@ -949,9 +948,11 @@ export class IgxAutocompletePipeStartsWith implements PipeTransform {
         <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
     </igx-input-group>
     <igx-drop-down #townsPanel [width]="ddWidth">
-        <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
-            {{town}}
-        </igx-drop-down-item>
+        @for (town of towns | startsWith:townSelected; track town) {
+            <igx-drop-down-item [value]="town">
+                {{town}}
+            </igx-drop-down-item>
+        }
     </igx-drop-down>`,
     standalone: true,
     imports: [
@@ -965,7 +966,6 @@ export class IgxAutocompletePipeStartsWith implements PipeTransform {
         IgxIconComponent,
         IgxAutocompleteDirective,
         IgxAutocompletePipeStartsWith,
-        NgFor
     ]
 })
 class AutocompleteComponent {
@@ -999,9 +999,11 @@ class AutocompleteComponent {
         [igxAutocomplete]='townsPanel' #textarea></textarea>
     <label igxLabel for="towns">Towns</label>
     <igx-drop-down #townsPanel>
-        <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
-            {{town}}
-        </igx-drop-down-item>
+        @for (town of towns | startsWith:townSelected; track town) {
+            <igx-drop-down-item [value]="town">
+                {{town}}
+            </igx-drop-down-item>
+        }
     </igx-drop-down>`,
     standalone: true,
     imports: [
@@ -1011,7 +1013,6 @@ class AutocompleteComponent {
         IgxDropDownComponent,
         IgxDropDownItemComponent,
         IgxAutocompletePipeStartsWith,
-        NgFor
     ]
 })
 class AutocompleteInputComponent extends AutocompleteComponent {
@@ -1031,9 +1032,11 @@ class AutocompleteInputComponent extends AutocompleteComponent {
             <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
         </igx-input-group>
         <igx-drop-down #townsPanel>
-            <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
-                {{town}}
-            </igx-drop-down-item>
+            @for (town of towns | startsWith:townSelected; track town) {
+                <igx-drop-down-item [value]="town">
+                    {{town}}
+                </igx-drop-down-item>
+            }
         </igx-drop-down>
         <input #plainInput/>
         <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
@@ -1052,7 +1055,6 @@ class AutocompleteInputComponent extends AutocompleteComponent {
         IgxIconComponent,
         IgxAutocompleteDirective,
         IgxAutocompletePipeStartsWith,
-        NgFor
     ]
 })
 

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { ButtonGroupAlignment, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxLayoutDirective } from 'igniteui-angular';
 
 
@@ -40,7 +39,7 @@ class Button {
     selector: 'app-buttongroup-sample',
     templateUrl: 'buttonGroup.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent, NgFor, IgxLayoutDirective]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent, IgxLayoutDirective]
 })
 
 export class ButtonGroupSampleComponent implements OnInit {

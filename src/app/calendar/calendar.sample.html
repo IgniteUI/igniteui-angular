@@ -46,88 +46,95 @@
     <div class="preview__settings">
         <small>Change locale</small>
         <igx-buttongroup selectionMode="singleRequired">
-            <button
-                igxButton
-                *ngFor="let item of locales"
-                [selected]="locale === item.iso"
-                (click)="changeLocale(item.text)"
-            >
-                {{ item.text }}
-            </button>
+            @for (item of locales; track item) {
+                <button
+                    igxButton
+                    [selected]="locale === item.iso"
+                    (click)="changeLocale(item.text)"
+                >
+                    {{ item.text }}
+                </button>
+            }
         </igx-buttongroup>
 
         <small>Weekday format</small>
         <igx-buttongroup selectionMode="singleRequired">
-            <button
-                igxButton
-                *ngFor="let option of ['narrow', 'short', 'long']"
-                value="option"
-                (click)="setWeekDayFormat(option)"
-                [selected]="option === formatOptions['weekday']"
-            >
-                {{option}}
-            </button>
+            @for (option of ['narrow', 'short', 'long']; track option) {
+                <button
+                    igxButton
+                    value="option"
+                    (click)="setWeekDayFormat(option)"
+                    [selected]="option === formatOptions['weekday']"
+                >
+                    {{option}}
+                </button>
+            }
         </igx-buttongroup>
 
         <small>Month format</small>
         <igx-buttongroup selectionMode="singleRequired">
-            <button
-                igxButton
-                *ngFor="let option of ['numeric', '2-digit', 'narrow', 'short', 'long']"
-                value="option"
-                (click)="setMonthFormat(option)"
-                [selected]="option === formatOptions['month']"
-            >
-                {{option}}
-            </button>
+            @for (option of ['numeric', '2-digit', 'narrow', 'short', 'long']; track option) {
+                <button
+                    igxButton
+                    value="option"
+                    (click)="setMonthFormat(option)"
+                    [selected]="option === formatOptions['month']"
+                >
+                    {{option}}
+                </button>
+            }
         </igx-buttongroup>
 
         <small>Week Start</small>
         <igx-buttongroup selectionMode="singleRequired">
-            <button
-                igxButton
-                *ngFor="let ws of ['monday', 'sunday']"
-                (click)="changeWeekStart(ws)"
-                [selected]="ws === weekStart"
-            >
-                {{ ws }}
-            </button>
+            @for (ws of ['monday', 'sunday']; track ws) {
+                <button
+                    igxButton
+                    (click)="changeWeekStart(ws)"
+                    [selected]="ws === weekStart"
+                >
+                    {{ ws }}
+                </button>
+            }
         </igx-buttongroup>
 
         <small>Selection type</small>
         <igx-buttongroup selectionMode="singleRequired">
-            <button
-                igxButton
-                *ngFor="let type of selectionTypes"
-                (click)="setSelectionType(type)"
-                [selected]="type === selectionType"
-            >
-                {{ type.wc }}
-            </button>
+            @for (type of selectionTypes; track type) {
+                <button
+                    igxButton
+                    (click)="setSelectionType(type)"
+                    [selected]="type === selectionType"
+                >
+                    {{ type.wc }}
+                </button>
+            }
         </igx-buttongroup>
 
         <small>Header orientation</small>
         <igx-buttongroup selectionMode="singleRequired">
-            <button
-                igxButton
-                (click)="setHeaderOrientation(ho)"
-                *ngFor="let ho of orientations"
-                [selected]="ho === headerOrientation"
-            >
-                {{ ho }}
-            </button>
+            @for (ho of orientations; track ho) {
+                <button
+                    igxButton
+                    (click)="setHeaderOrientation(ho)"
+                    [selected]="ho === headerOrientation"
+                >
+                    {{ ho }}
+                </button>
+            }
         </igx-buttongroup>
 
         <small>View orientation</small>
         <igx-buttongroup selectionMode="singleRequired">
-            <button
-                igxButton
-                (click)="setOrientation(vo)"
-                *ngFor="let vo of orientations"
-                [selected]="vo === orientation"
-            >
-                {{ vo }}
-            </button>
+            @for (vo of orientations; track vo) {
+                <button
+                    igxButton
+                    (click)="setOrientation(vo)"
+                    [selected]="vo === orientation"
+                >
+                    {{ vo }}
+                </button>
+            }
         </igx-buttongroup>
 
         <small>Special Dates</small>

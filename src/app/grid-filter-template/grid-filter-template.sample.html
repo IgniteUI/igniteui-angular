@@ -9,22 +9,23 @@
                 [rowSelection]="selectionMode"
                 [width]="'900px'"
                 [height]="'800px'">
-                <igx-column *ngFor="let c of columns" [field]="c.field"
-                                                    [header]="c.field"
-                                                    [groupable]="c.groupable"
-                                                    [resizable]="c.resizable"
-                                                    [width]="c.width"
-                                                    [sortable]="c.sortable"
-                                                    [filterable]="c.filterable"
-                                                    [editable]="true"
-                                                    [hidden]="c.hidden"
-                                                    [hasSummary]="c.summary"
-                                                    [minWidth]="c.minWidth"
-                                                    [maxWidth]="c.maxWidth"
-                                                    [dataType]="c.type"
-                                                    [filterCellTemplate]="filterTemplate">
-
-                </igx-column>
+                @for (c of columns; track c) {
+                    <igx-column [field]="c.field"
+                        [header]="c.field"
+                        [groupable]="c.groupable"
+                        [resizable]="c.resizable"
+                        [width]="c.width"
+                        [sortable]="c.sortable"
+                        [filterable]="c.filterable"
+                        [editable]="true"
+                        [hidden]="c.hidden"
+                        [hasSummary]="c.summary"
+                        [minWidth]="c.minWidth"
+                        [maxWidth]="c.maxWidth"
+                        [dataType]="c.type"
+                        [filterCellTemplate]="filterTemplate">
+                    </igx-column>
+                }
             </igx-grid>
             <ng-template #filterTemplate igxFilterCellTemplate let-column="column">
                 <igx-input-group class="filter-input" type="box" class="size">
@@ -39,9 +40,11 @@
                         autocomplete="off"
                         (input)="onInput(input, column)"
                         (keydown)="onKeyDown($event)"/>
-                    <igx-suffix *ngIf="input.value" (click)="clearInput(input, column)" tabindex="0">
-                        <igx-icon>clear</igx-icon>
-                    </igx-suffix>
+                    @if (input.value) {
+                        <igx-suffix (click)="clearInput(input, column)" tabindex="0">
+                            <igx-icon>clear</igx-icon>
+                        </igx-suffix>
+                    }
                 </igx-input-group>
             </ng-template>
         </div>

@@ -18,7 +18,7 @@ import { IgxChipsAreaComponent } from '../../../chips/chips-area.component';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../../chips/chip.component';
 import { ColumnType } from '../../common/grid.interface';
 import { IgxBadgeComponent } from '../../../badge/badge.component';
-import { NgFor, NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { Size } from '../../common/enums';
@@ -36,8 +36,6 @@ import { Size } from '../../common/enums';
         IgxChipComponent,
         IgxIconComponent,
         IgxPrefixDirective,
-        NgFor,
-        NgIf,
         NgClass,
         IgxBadgeComponent,
         NgTemplateOutlet

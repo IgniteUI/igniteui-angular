@@ -10,12 +10,14 @@
     (rowSelectionChanging)="handleRowSelectionChange($event)"
     rowSelection="single"
     #grid>
-    <igx-column *ngFor="let each of nestedConfigColumns"
-        [sortable]="true"
-        [field]="each.field"
-        [header]="each.header"
-    >
-    </igx-column>
+    @for (each of nestedConfigColumns; track each) {
+        <igx-column
+            [sortable]="true"
+            [field]="each.field"
+            [header]="each.header"
+        >
+        </igx-column>
+    }
 </igx-grid>
 
 <p>Selected Name: {{selectedItem?.name}}</p>

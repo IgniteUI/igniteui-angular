@@ -1,1 +1,3 @@
-<ng-content *ngIf="tab.selected || tab.previous"></ng-content>
+@if (tab.selected || tab.previous) {
+    <ng-content></ng-content>
+}

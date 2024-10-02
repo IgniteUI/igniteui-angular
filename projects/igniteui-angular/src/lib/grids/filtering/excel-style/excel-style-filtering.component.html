@@ -1,38 +1,3 @@
-<ng-template #defaultExcelColumnOperations>
-    <igx-excel-style-header
-        [showHiding]="size !== '3' && !column?.disableHiding"
-        [showPinning]="size !== '3' && !column?.disablePinning"
-        [showSelecting]="size !== '3' && columnSelectable()"
-    >
-    </igx-excel-style-header>
-
-    <igx-excel-style-sorting *ngIf="column?.sortable">
-    </igx-excel-style-sorting>
-
-    <igx-excel-style-moving *ngIf="grid?.moving">
-    </igx-excel-style-moving>
-
-    <igx-excel-style-pinning *ngIf="!column?.disablePinning && size === '3'">
-    </igx-excel-style-pinning>
-
-    <igx-excel-style-hiding *ngIf="!column?.disableHiding && size === '3'">
-    </igx-excel-style-hiding>
-
-    <igx-excel-style-selecting *ngIf="columnSelectable() && size === '3'">
-    </igx-excel-style-selecting>
-</ng-template>
-
-<ng-template #defaultExcelFilterOperations>
-    <igx-excel-style-clear-filters>
-    </igx-excel-style-clear-filters>
-
-    <igx-excel-style-conditional-filter>
-    </igx-excel-style-conditional-filter>
-
-    <igx-excel-style-search>
-    </igx-excel-style-search>
-</ng-template>
-
 <article #mainDropdown
     class="igx-excel-filter__menu"
     [ngClass]="{
@@ -46,13 +11,40 @@
     [style.max-height]="maxHeight"
     role="menu">
 
-    <ng-container *ngIf="this.excelColumnOperationsDirective; else defaultExcelColumnOperations">
+    @if (this.excelColumnOperationsDirective) {
         <ng-content select="igx-excel-style-column-operations,[igxExcelStyleColumnOperations]">
         </ng-content>
-    </ng-container>
+    } @else {
+        <igx-excel-style-header
+            [showHiding]="size !== '3' && !column?.disableHiding"
+            [showPinning]="size !== '3' && !column?.disablePinning"
+            [showSelecting]="size !== '3' && columnSelectable()"
+        >
+        </igx-excel-style-header>
+        @if (column?.sortable) {
+            <igx-excel-style-sorting>
+            </igx-excel-style-sorting>
+        }
+        @if (grid?.moving) {
+            <igx-excel-style-moving></igx-excel-style-moving>
+        }
+        @if (!column?.disablePinning && size === '3') {
+            <igx-excel-style-pinning></igx-excel-style-pinning>
+        }
+        @if (!column?.disableHiding && size === '3') {
+            <igx-excel-style-hiding></igx-excel-style-hiding>
+        }
+        @if (columnSelectable() && size === '3') {
+            <igx-excel-style-selecting></igx-excel-style-selecting>
+        }
+    }
 
-    <ng-container *ngIf="this.excelFilterOperationsDirective; else defaultExcelFilterOperations">
+    @if (this.excelFilterOperationsDirective) {
         <ng-content select="igx-excel-style-filter-operations,[igxExcelStyleFilterOperations]">
         </ng-content>
-    </ng-container>
+    } @else {
+        <igx-excel-style-clear-filters></igx-excel-style-clear-filters>
+        <igx-excel-style-conditional-filter></igx-excel-style-conditional-filter>
+        <igx-excel-style-search></igx-excel-style-search>
+    }
 </article>

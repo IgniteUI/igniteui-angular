@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 /**
  * A component used for presenting Excel style conditional filter UI.
@@ -10,7 +10,7 @@ import { NgIf, NgClass } from '@angular/common';
     selector: 'igx-excel-style-selecting',
     templateUrl: './excel-style-selecting.component.html',
     standalone: true,
-    imports: [NgIf, NgClass, IgxIconComponent]
+    imports: [NgClass, IgxIconComponent]
 })
 export class IgxExcelStyleSelectingComponent {
     constructor(public esf: BaseFilteringComponent) { }

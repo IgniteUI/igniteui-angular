@@ -25,7 +25,7 @@ import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { GridSelectionMode } from '../../common/enums';
 import { IgxFilterItem } from '../../../data-operations/filtering-strategy';
-import { formatNumber, formatPercent, getLocaleCurrencyCode, NgIf, NgClass, DOCUMENT } from '@angular/common';
+import { formatNumber, formatPercent, getLocaleCurrencyCode, NgClass, DOCUMENT } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
@@ -70,7 +70,7 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './excel-style-filtering.component.html',
     standalone: true,
-    imports: [IgxExcelStyleHeaderComponent, NgIf, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
+    imports: [IgxExcelStyleHeaderComponent, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
 export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewInit, OnDestroy {
 

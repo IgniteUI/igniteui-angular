@@ -1,6 +1,6 @@
 <div class="igx-action-strip__actions">
     <ng-content #content></ng-content>
-    <ng-container *ngIf="menuItems.length > 0">
+    @if (menuItems.length > 0) {
         <button
             type="button"
             igxIconButton="flat"
@@ -13,20 +13,21 @@
         >
             <igx-icon family="default" name="more_vert"></igx-icon>
         </button>
-    </ng-container>
+    }
     <igx-drop-down #dropdown>
-        <igx-drop-down-item
-            *ngFor="let item of menuItems"
-            class="igx-action-strip__menu-item"
-        >
-            <div class="igx-drop-down__item-template">
-                <ng-container
-                    *ngTemplateOutlet="
-                        item.templateRef;
-                        context: { $implicit: item }
-                    "
-                ></ng-container>
-            </div>
-        </igx-drop-down-item>
+        @for (item of menuItems; track item) {
+            <igx-drop-down-item
+                class="igx-action-strip__menu-item"
+            >
+                <div class="igx-drop-down__item-template">
+                    <ng-container
+                        *ngTemplateOutlet="
+                            item.templateRef;
+                            context: { $implicit: item }
+                        "
+                    ></ng-container>
+                </div>
+            </igx-drop-down-item>
+        }
     </igx-drop-down>
 </div>

@@ -31,9 +31,13 @@
             </igx-input-group>
 
             <div class="radio-group">
-                <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender" (click)="onClick($event)"
+                @for (item of ['Male', 'Female']; track item) {
+                    <igx-radio value="{{item}}" name="group" [(ngModel)]="user.gender" (click)="onClick($event)"
                     (change)="onRadioChanged($event)">{{item}}</igx-radio>
-                <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group2" [disabled]="true" [(ngModel)]="user.gender">{{item}}</igx-radio>
+                }
+                @for (item of ['Male', 'Female']; track item) {
+                    <igx-radio value="{{item}}" name="group2" [disabled]="true" [(ngModel)]="user.gender">{{item}}</igx-radio>
+                }
             </div>
 
         </form>
@@ -58,15 +62,17 @@
                     </div>
                 </igx-list-item>
 
-                <igx-list-item *ngFor="let item of settings">
-                    <igx-icon igxListThumbnail>{{item.icon}}</igx-icon>
-                    <h1 igxListLineTitle>{{item.name}}</h1>
-                    <div igxListAction>
-                        <igx-switch labelPosition="before" [(ngModel)]="item.active" [value]="item.active" [disabled]="item.disabled">
-                            {{item.active ? 'ON': 'OFF'}}
-                        </igx-switch>
-                    </div>
-                </igx-list-item>
+                @for (item of settings; track item) {
+                    <igx-list-item>
+                        <igx-icon igxListThumbnail>{{item.icon}}</igx-icon>
+                        <h1 igxListLineTitle>{{item.name}}</h1>
+                        <div igxListAction>
+                            <igx-switch labelPosition="before" [(ngModel)]="item.active" [value]="item.active" [disabled]="item.disabled">
+                                {{item.active ? 'ON': 'OFF'}}
+                            </igx-switch>
+                        </div>
+                    </igx-list-item>
+                }
             </igx-list>
         </div>
     </article>
@@ -82,8 +88,8 @@
                     <igx-avatar igxListThumbnail src="assets/images/avatar/22.jpg"></igx-avatar>
                     <span igxListLineTitle>Alicia Keys</span>
                     <igx-checkbox igxListAction
-                                  [(ngModel)]="user.registered"
-                                  [disableTransitions]="true">
+                        [(ngModel)]="user.registered"
+                        [disableTransitions]="true">
                         Value
                     </igx-checkbox>
                 </igx-list-item>

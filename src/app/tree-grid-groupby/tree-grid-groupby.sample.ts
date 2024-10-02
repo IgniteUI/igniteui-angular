@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -12,7 +11,7 @@ import { IgxButtonGroupComponent, IgxSwitchComponent, IgxTreeGridComponent, IgxT
     styleUrls: ['tree-grid-groupby.sample.scss'],
     templateUrl: 'tree-grid-groupby.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, NgIf, IgxSwitchComponent, FormsModule, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, NgFor, IgxTreeGridGroupingPipe]
+    imports: [IgxButtonGroupComponent, IgxSwitchComponent, FormsModule, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, IgxTreeGridGroupingPipe]
 })
 
 export class TreeGridGroupBySampleComponent implements OnInit {

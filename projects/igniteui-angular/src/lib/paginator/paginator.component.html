@@ -1,4 +1,8 @@
 <ng-content select="[igxPaginatorContent],igx-paginator-content"></ng-content>
 
-<igx-page-size *ngIf="!customContent"></igx-page-size>
-<igx-page-nav *ngIf="!customContent"></igx-page-nav>
+@if (!customContent) {
+    <igx-page-size></igx-page-size>
+}
+@if (!customContent) {
+    <igx-page-nav></igx-page-nav>
+}

@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit, AfterViewInit, ViewChild, ElementRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { UntypedFormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgIf, NgFor } from '@angular/common';
 
 import { defineComponents, IgcInputComponent, IgcIconComponent } from 'igniteui-webcomponents';
 import { ButtonGroupAlignment, IButtonGroupEventArgs, IGX_BUTTON_GROUP_DIRECTIVES, IGX_DATE_PICKER_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IGX_INPUT_GROUP_TYPE, IGX_SELECT_DIRECTIVES, IgxIconComponent, IgxInputGroupType, IgxMaskDirective, IgxSwitchComponent } from 'igniteui-angular';
@@ -24,9 +23,7 @@ interface Selection {
     standalone: true,
     imports: [
         FormsModule,
-        NgIf,
         ReactiveFormsModule,
-        NgFor,
         IGX_INPUT_GROUP_DIRECTIVES,
         IGX_BUTTON_GROUP_DIRECTIVES,
         IGX_DATE_PICKER_DIRECTIVES,

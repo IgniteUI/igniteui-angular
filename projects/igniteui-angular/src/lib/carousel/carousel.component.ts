@@ -1,4 +1,4 @@
-import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectorRef,
@@ -85,7 +85,7 @@ export class CarouselHammerConfig extends HammerGestureConfig {
         outline-style: none;
     }`],
     standalone: true,
-    imports: [IgxButtonDirective, IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
+    imports: [IgxButtonDirective, IgxIconComponent, NgClass, NgTemplateOutlet]
 })
 
 export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {

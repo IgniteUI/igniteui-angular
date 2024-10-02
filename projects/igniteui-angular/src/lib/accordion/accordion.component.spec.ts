@@ -1,5 +1,4 @@
 import { useAnimation } from '@angular/animations';
-import { NgIf } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { waitForAsync, TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -401,11 +400,13 @@ describe('Rendering Tests', () => {
                 </div>
             </igx-expansion-panel-body>
         </igx-expansion-panel>
-        <div *ngIf="divChild"></div>
+        @if (divChild) {
+            <div></div>
+        }
     </igx-accordion>
     `,
     standalone: true,
-    imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, NgIf]
+    imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxAccordionSampleTestComponent {
     @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;

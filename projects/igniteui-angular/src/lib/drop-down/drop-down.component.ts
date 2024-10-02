@@ -30,7 +30,7 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxForOfToken } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
 import { OverlaySettings } from '../services/overlay/utilities';
-import { DOCUMENT, NgIf } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { ConnectedPositioningStrategy } from '../services/public_api';
 
 /**
@@ -55,7 +55,7 @@ import { ConnectedPositioningStrategy } from '../services/public_api';
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }],
     standalone: true,
-    imports: [IgxToggleDirective, NgIf]
+    imports: [IgxToggleDirective]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
     /**

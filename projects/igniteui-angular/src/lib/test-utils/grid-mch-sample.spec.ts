@@ -3,7 +3,6 @@ import { SampleTestData } from './sample-test-data.spec';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxGridComponent } from '../grids/grid/public_api';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
-import { NgFor, NgIf } from '@angular/common';
 import { IgxCellHeaderTemplateDirective } from '../grids/columns/templates.directive';
 
 @Component({
@@ -289,14 +288,18 @@ export class NestedColGroupsGridComponent {
 @Component({
     template: `
         <igx-grid [data]="data" [allowFiltering]="true">
-            <igx-column-group *ngFor="let colGroup of columnGroups" [header]="colGroup.columnHeader">
-                <igx-column *ngFor="let column of colGroup.columns" [field]="column.field" [dataType]="column.type"
-                    [filterable]="true"></igx-column>
-            </igx-column-group>
+            @for (colGroup of columnGroups; track colGroup) {
+                <igx-column-group [header]="colGroup.columnHeader">
+                    @for (column of colGroup.columns; track column) {
+                        <igx-column [field]="column.field" [dataType]="column.type"
+                        [filterable]="true"></igx-column>
+                    }
+                </igx-column-group>
+            }
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class DynamicColGroupsGridComponent {
 
@@ -449,15 +452,23 @@ export class StegosaurusGridComponent implements OnInit {
     template: `
         <igx-grid #grid [data]="data" [height]="gridHeight" [columnWidth]="columnWidth">
             <igx-column-group headerGroupClasses="firstGroup" [header]="firstGroupTitle">
-                <igx-column headerClasses="firstGroupColumn" field="ID" *ngFor="let item of hunderdItems;"></igx-column>
-                <igx-column *ngIf="extraMissingColumn" headerClasses="firstGroupColumn" [field]='"Missing"'></igx-column>
+                @for (item of hunderdItems; track item) {
+                    <igx-column headerClasses="firstGroupColumn" field="ID"></igx-column>
+                }
+                @if (extraMissingColumn) {
+                    <igx-column headerClasses="firstGroupColumn" [field]='"Missing"'></igx-column>
+                }
             </igx-column-group>
             <igx-column-group headerGroupClasses="secondGroup" [header]="secondGroupTitle">
                 <igx-column-group headerGroupClasses="secondSubGroup" [header]="secondSubGroupTitle">
-                    <igx-column headerClasses="secondSubGroupColumn" field="ID" *ngFor="let item of fiftyItems;"></igx-column>
+                    @for (item of fiftyItems; track item) {
+                        <igx-column headerClasses="secondSubGroupColumn" field="ID"></igx-column>
+                    }
                 </igx-column-group>
                 <igx-column-group headerGroupClasses="secondSubGroup" [header]="secondSubGroupTitle">
-                    <igx-column  headerClasses="secondSubGroupColumn" field="ID" *ngFor="let item of fiftyItems;"></igx-column>
+                    @for (item of fiftyItems; track item) {
+                        <igx-column  headerClasses="secondSubGroupColumn" field="ID"></igx-column>
+                    }
                 </igx-column-group>
             </igx-column-group>
             <igx-column headerClasses="lonelyId" [header]="idHeaderTitle" field="ID"></igx-column>
@@ -484,7 +495,7 @@ export class StegosaurusGridComponent implements OnInit {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent, NgIf, NgFor]
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class BlueWhaleGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -594,13 +605,15 @@ export class NestedColumnGroupsGridComponent {
 @Component({
     template: `
         <igx-grid #grid [data]="data" height="500px" columnWidth="100px">
-            <igx-column-group header="MCH" *ngFor="let item of mchCount;">
-                <igx-column field="City"></igx-column>
-            </igx-column-group>
+            @for (item of mchCount; track item) {
+                <igx-column-group header="MCH">
+                    <igx-column field="City"></igx-column>
+                </igx-column-group>
+            }
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class DynamicGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

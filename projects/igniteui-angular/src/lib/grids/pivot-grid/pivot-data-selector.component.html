@@ -10,160 +10,168 @@
         />
     </igx-input-group>
     <igx-list>
-        <igx-list-item
-            *ngFor="
-                let item of dims
-                    | filterPivotItems: input.value:grid?.pipeTrigger
-            "
-            [id]="item.memberName"
-        >
-            <igx-checkbox
-                [aria-labelledby]="item.memberName"
-                [disableRipple]="true"
-                [checked]="item.enabled"
-                (click)="toggleItem(item)"
-            ></igx-checkbox>
-            <span>{{ item.displayName || item.memberName }}</span>
-        </igx-list-item>
-        <igx-list-item
-            *ngFor="
-                let item of values
-                    | filterPivotItems: input.value:grid?.pipeTrigger
-            "
-            [id]="item.member"
-        >
-            <igx-checkbox
-                [aria-labelledby]="item.member"
-                [disableRipple]="true"
-                [checked]="item.enabled"
-                (click)="toggleItem(item)"
-            ></igx-checkbox>
-            <span>{{ item.displayName || item.member }}</span>
-        </igx-list-item>
+        @for (
+            item of dims | filterPivotItems: input.value:grid?.pipeTrigger;
+            track item
+        ) {
+            <igx-list-item [id]="item.memberName">
+                <igx-checkbox
+                    [aria-labelledby]="item.memberName"
+                    [disableRipple]="true"
+                    [checked]="item.enabled"
+                    (click)="toggleItem(item)"
+                ></igx-checkbox>
+                <span>{{ item.displayName || item.memberName }}</span>
+            </igx-list-item>
+        }
+        @for (
+            item of values | filterPivotItems: input.value:grid?.pipeTrigger;
+            track item
+        ) {
+            <igx-list-item [id]="item.member">
+                <igx-checkbox
+                    [aria-labelledby]="item.member"
+                    [disableRipple]="true"
+                    [checked]="item.enabled"
+                    (click)="toggleItem(item)"
+                ></igx-checkbox>
+                <span>{{ item.displayName || item.member }}</span>
+            </igx-list-item>
+        }
     </igx-list>
 </div>
 
 <igx-accordion>
-    <igx-expansion-panel
-        *ngFor="let panel of _panels"
-        [animationSettings]="animationSettings"
-        [collapsed]="getPanelCollapsed(panel.type)"
-        (collapsedChange)="onCollapseChange($event, panel.type)"
-    >
-        <igx-expansion-panel-header
-            iconPosition="left"
-            [disabled]="false"
-            igxDrop
-            (enter)="onPanelEntry($event, panel.name)"
-            (dropped)="onItemDropped($event, panel.type)"
+    @for (panel of _panels; track panel) {
+        <igx-expansion-panel
+            [animationSettings]="animationSettings"
+            [collapsed]="getPanelCollapsed(panel.type)"
+            (collapsedChange)="onCollapseChange($event, panel.type)"
         >
-            <igx-expansion-panel-title class="igx-pivot-data-selector__header">
-                <h6 class="igx-pivot-data-selector__header-title">
-                    {{ grid?.resourceStrings[panel.i18n] }}
-                </h6>
-                <div class="igx-pivot-data-selector__header-extra">
-                    <igx-icon family="default" [name]="panel.icon"></igx-icon>
-                    <igx-chip>{{ this.grid ? this.grid[panel.dataKey].length : 0 }}</igx-chip>
-                </div>
-            </igx-expansion-panel-title>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body
-            igxDrop
-            (enter)="onPanelEntry($event, panel.name)"
-            (dropped)="onItemDropped($event, panel.type)"
-        >
-            <igx-list
-                *ngIf="this.grid && this.grid[panel.dataKey].length > 0"
+            <igx-expansion-panel-header
+                iconPosition="left"
+                [disabled]="false"
+                igxDrop
+                (enter)="onPanelEntry($event, panel.name)"
+                (dropped)="onItemDropped($event, panel.type)"
             >
-                <igx-list-item
-                    igxDrop
-                    [igxDrag]="{ gridID: grid.id, selectorChannels: panel.dragChannels }"
-                    [ghostTemplate]="itemGhost"
-                    (ghostCreate)="ghostCreated($event, item[panel.itemKey])"
-                    (over)="onItemDragOver($event)"
-                    (leave)="onItemDragLeave($event)"
-                    (dragMove)="onItemDragMove($event)"
-                    (dragEnd)="onItemDragEnd($event)"
-                    (dropped)="onItemDropped($event, panel.type)"
-                    *ngFor="
-                        let item of this.grid[panel.dataKey];
-                        let index
-                    "
-                    [id]="item[panel.itemKey]"
-                >
-                    <div class="igx-pivot-data-selector__item">
-                        <div
-                            class="igx-pivot-data-selector__item-start"
-                            (click)="onItemSort($event, item, panel.type)"
-                            [class.igx-pivot-data-selector__action-sort]="
-                                panel.sortable
-                            "
-                        >
-                            <div class="igx-pivot-data-selector__item-text">
-                                <span *ngIf="panel.type === null">{{
-                                    item.aggregate.key
-                                }}</span>
-                                <span *ngIf="panel.type === null">(</span>
-                                <span>{{ item[panel.displayKey] || item[panel.itemKey] }}</span>
-                                <span *ngIf="panel.type === null">)</span>
-                            </div>
-                            <igx-icon
-                                family="default"
-                                [name]="item.sortDirection < 2 ? 'sort_asc' : 'sort_desc'"
-                                class="igx-pivot-data-selector__action-sort"
-                                *ngIf="panel.sortable && item.sortDirection"
-                            >
-                            </igx-icon>
-                        </div>
-                        <div class="igx-pivot-data-selector__item-end">
-                            <igx-icon
-                                family="default"
-                                name="filter_list"
-                                class="igx-pivot-data-selector__action-filter"
-                                *ngIf="panel.type !== null"
-                                (pointerdown)="
-                                    onFilteringIconPointerDown($event)
-                                "
-                                (click)="onFilteringIconClick($event, item)">
-                            </igx-icon>
-                            <igx-icon
-                                family="default"
-                                name="functions"
-                                class="igx-pivot-data-selector__action-summary"
-                                *ngIf="panel.type === null"
-                                (click)="onSummaryClick($event, item, dropdown)"
-                                [igxDropDownItemNavigation]="dropdown">
-                            </igx-icon>
-                            <igx-icon
-                                family="default"
-                                name="drag_indicator"
-                                igxDragHandle
-                                class="igx-pivot-data-selector__action-move"
-                                *ngIf="panel.dragChannels.length > 0">
-                            </igx-icon
-                            >
-                        </div>
+                <igx-expansion-panel-title class="igx-pivot-data-selector__header">
+                    <h6 class="igx-pivot-data-selector__header-title">
+                        {{ grid?.resourceStrings[panel.i18n] }}
+                    </h6>
+                    <div class="igx-pivot-data-selector__header-extra">
+                        <igx-icon family="default" [name]="panel.icon"></igx-icon>
+                        <igx-chip>{{ this.grid ? this.grid[panel.dataKey].length : 0 }}</igx-chip>
                     </div>
-                </igx-list-item>
-            </igx-list>
-            <div
-                class="igx-pivot-data-selector__empty"
-                *ngIf="this.grid && this.grid[panel.dataKey].length === 0"
+                </igx-expansion-panel-title>
+            </igx-expansion-panel-header>
+            <igx-expansion-panel-body
+                igxDrop
+                (enter)="onPanelEntry($event, panel.name)"
+                (dropped)="onItemDropped($event, panel.type)"
             >
-                {{ grid?.resourceStrings.igx_grid_pivot_selector_panel_empty }}
-            </div>
-        </igx-expansion-panel-body>
-    </igx-expansion-panel>
+                @if (this.grid && this.grid[panel.dataKey].length > 0) {
+                    <igx-list>
+                        @for (
+                            item of this.grid[panel.dataKey];
+                            track item
+                        ) {
+                            <igx-list-item
+                                igxDrop
+                                [igxDrag]="{ gridID: grid.id, selectorChannels: panel.dragChannels }"
+                                [ghostTemplate]="itemGhost"
+                                (ghostCreate)="ghostCreated($event, item[panel.itemKey])"
+                                (over)="onItemDragOver($event)"
+                                (leave)="onItemDragLeave($event)"
+                                (dragMove)="onItemDragMove($event)"
+                                (dragEnd)="onItemDragEnd($event)"
+                                (dropped)="onItemDropped($event, panel.type)"
+                                [id]="item[panel.itemKey]"
+                            >
+                                <div class="igx-pivot-data-selector__item">
+                                    <div
+                                        class="igx-pivot-data-selector__item-start"
+                                        (click)="onItemSort($event, item, panel.type)"
+                                        [class.igx-pivot-data-selector__action-sort]="
+                                            panel.sortable
+                                        "
+                                    >
+                                        <div class="igx-pivot-data-selector__item-text">
+                                            @if (panel.type === null) {
+                                                <span>{{
+                                                    item.aggregate.key
+                                                }}</span>
+                                            }
+                                            @if (panel.type === null) {
+                                                <span>(</span>
+                                            }
+                                            <span>{{ item[panel.displayKey] || item[panel.itemKey] }}</span>
+                                            @if (panel.type === null) {
+                                                <span>)</span>
+                                            }
+                                        </div>
+                                        @if (panel.sortable && item.sortDirection) {
+                                            <igx-icon
+                                                family="default"
+                                                [name]="item.sortDirection < 2 ? 'sort_asc' : 'sort_desc'"
+                                                class="igx-pivot-data-selector__action-sort"
+                                            >
+                                            </igx-icon>
+                                        }
+                                    </div>
+                                    <div class="igx-pivot-data-selector__item-end">
+                                        @if (panel.type !== null) {
+                                            <igx-icon
+                                                family="default"
+                                                name="filter_list"
+                                                class="igx-pivot-data-selector__action-filter"
+                                                (pointerdown)="onFilteringIconPointerDown($event)"
+                                                (click)="onFilteringIconClick($event, item)">
+                                            </igx-icon>
+                                        }
+                                        @if (panel.type === null) {
+                                            <igx-icon
+                                                family="default"
+                                                name="functions"
+                                                class="igx-pivot-data-selector__action-summary"
+                                                (click)="onSummaryClick($event, item, dropdown)"
+                                                [igxDropDownItemNavigation]="dropdown">
+                                            </igx-icon>
+                                        }
+                                        @if (panel.dragChannels.length > 0) {
+                                            <igx-icon
+                                                family="default"
+                                                name="drag_indicator"
+                                                igxDragHandle
+                                                class="igx-pivot-data-selector__action-move"
+                                            >
+                                            </igx-icon>
+                                        }
+                                    </div>
+                                </div>
+                            </igx-list-item>
+                        }
+                    </igx-list>
+                    }
+                    @if (this.grid && this.grid[panel.dataKey].length === 0) {
+                        <div class="igx-pivot-data-selector__empty">
+                            {{ grid?.resourceStrings.igx_grid_pivot_selector_panel_empty }}
+                        </div>
+                    }
+            </igx-expansion-panel-body>
+        </igx-expansion-panel>
+    }
 </igx-accordion>
 
 <igx-drop-down #dropdown (selectionChanging)="onAggregationChange($event)">
-    <igx-drop-down-item
-        *ngFor="let item of aggregateList"
-        [selected]="isSelected(item)"
-        [value]="item"
-    >
-        {{ item.label }}
-    </igx-drop-down-item>
+    @for (item of aggregateList; track item) {
+        <igx-drop-down-item
+            [selected]="isSelected(item)"
+            [value]="item"
+        >
+            {{ item.label }}
+        </igx-drop-down-item>
+    }
 </igx-drop-down>
 
 <ng-template #itemGhost>

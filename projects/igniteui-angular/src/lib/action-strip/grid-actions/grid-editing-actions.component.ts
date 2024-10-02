@@ -3,7 +3,6 @@ import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { showMessage } from '../../core/utils';
 import { addRow, addChild } from '@igniteui/material-icons-extended';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
-import { NgIf } from '@angular/common';
 
 
 /* blazorElement */
@@ -20,7 +19,7 @@ import { NgIf } from '@angular/common';
     templateUrl: 'grid-editing-actions.component.html',
     providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridEditingActionsComponent }],
     standalone: true,
-    imports: [NgIf, IgxGridActionButtonComponent]
+    imports: [IgxGridActionButtonComponent]
 })
 
 export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {

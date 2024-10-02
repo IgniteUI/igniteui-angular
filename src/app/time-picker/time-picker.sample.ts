@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
     IgxTimePickerComponent,
@@ -22,7 +21,7 @@ import {
     styleUrls: ['time-picker.sample.scss'],
     templateUrl: 'time-picker.sample.html',
     standalone: true,
-    imports: [IgxTimePickerComponent, FormsModule, NgIf, IgxHintDirective, IgxButtonDirective, IgxPickerActionsDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxIconComponent, IgxPickerClearComponent, IgxSuffixDirective]
+    imports: [IgxTimePickerComponent, FormsModule, IgxHintDirective, IgxButtonDirective, IgxPickerActionsDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxIconComponent, IgxPickerClearComponent, IgxSuffixDirective]
 })
 export class TimePickerSampleComponent {
     @ViewChild('tp', { read: IgxTimePickerComponent, static: true })

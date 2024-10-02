@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { TemplateRefWrapper } from './template-ref-wrapper';
 
@@ -11,7 +10,7 @@ type TemplateFunction = (arg: any) => TemplateResult;
     templateUrl: './wrapper.component.html',
     styleUrls: ['./wrapper.component.scss'],
     standalone: true,
-    imports: [NgFor]
+    imports: []
 })
 export class TemplateWrapperComponent {
 
@@ -19,7 +18,8 @@ export class TemplateWrapperComponent {
 
     /**
      * All template refs
-     * Warning: the first is always the root `ngFor` template. TODO(D.P.): filter it out?
+     * Warning: the first is always the root `@for` template
+     * (internally creates one like the old `<ng-template ngFor` would). TODO(D.P.): filter it out?
      */
     @ViewChildren(TemplateRef)
     public templateRefs: QueryList<TemplateRef<any>>;

@@ -15,7 +15,7 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgIf, NgFor, TitleCasePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { CalendarSelection, ScrollDirection } from '../../calendar/calendar';
 import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeType } from '../../core/dates';
@@ -46,7 +46,7 @@ let NEXT_ID = 0;
     templateUrl: 'days-view.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, NgFor, IgxDayItemComponent, TitleCasePipe]
+    imports: [IgxDayItemComponent, TitleCasePipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     #standalone = true;

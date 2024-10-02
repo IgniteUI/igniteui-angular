@@ -1,5 +1,4 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
@@ -10,7 +9,7 @@ import { GridSummaryCalculationMode, GridSummaryPosition, IPinningConfig, IgxBut
     styleUrls: ['grid-row-api.sample.scss'],
     templateUrl: 'grid-row-api.sample.html',
     standalone: true,
-    imports: [FormsModule, IgxGridComponent, IgxGridDetailTemplateDirective, NgFor, IgxColumnComponent, IgxRowDragGhostDirective, IgxIconComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxButtonDirective, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxPaginatorDirective]
+    imports: [FormsModule, IgxGridComponent, IgxGridDetailTemplateDirective, IgxColumnComponent, IgxRowDragGhostDirective, IgxIconComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxButtonDirective, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxPaginatorDirective]
 })
 
 export class GridRowAPISampleComponent implements OnInit {

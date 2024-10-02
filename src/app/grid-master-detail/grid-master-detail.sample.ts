@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 import { Component, ViewChild, OnInit, TemplateRef, HostBinding } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridDetailTemplateDirective, IgxGridStateDirective } from 'igniteui-angular';
 
 
@@ -9,7 +8,7 @@ import { IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGr
     styleUrls: ['grid-master-detail.sample.scss'],
     templateUrl: 'grid-master-detail.sample.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxGridComponent, IgxGridStateDirective, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxGridDetailTemplateDirective]
+    imports: [IgxButtonDirective, IgxGridComponent, IgxGridStateDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxGridDetailTemplateDirective]
 })
 export class GridMasterDetailSampleComponent implements OnInit {
     @HostBinding('style.--ig-size')

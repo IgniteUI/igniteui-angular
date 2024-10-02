@@ -1,17 +1,18 @@
-<igx-ticks
-    *ngIf="showTicks && showTopTicks"
-    ticksOrientation="top"
-    [primaryTicks]="primaryTicks"
-    [secondaryTicks]="secondaryTicks"
-    [primaryTickLabels]="primaryTickLabels"
-    [secondaryTickLabels]="secondaryTickLabels"
-    [tickLabelsOrientation]="tickLabelsOrientation"
-    [labelsViewEnabled]="labelsViewEnabled"
-    [labels]="labels | spreadTickLabels:secondaryTicks"
-    [tickLabelTemplateRef]="tickLabelTemplateRef"
-    [minValue]="minValue"
-    [maxValue]="maxValue">
-</igx-ticks>
+@if (showTicks && showTopTicks) {
+    <igx-ticks
+        ticksOrientation="top"
+        [primaryTicks]="primaryTicks"
+        [secondaryTicks]="secondaryTicks"
+        [primaryTickLabels]="primaryTickLabels"
+        [secondaryTickLabels]="secondaryTickLabels"
+        [tickLabelsOrientation]="tickLabelsOrientation"
+        [labelsViewEnabled]="labelsViewEnabled"
+        [labels]="labels | spreadTickLabels:secondaryTicks"
+        [tickLabelTemplateRef]="tickLabelTemplateRef"
+        [minValue]="minValue"
+        [maxValue]="maxValue">
+    </igx-ticks>
+}
 <div class="igx-slider__track">
     <div class="igx-slider__track-inactive"></div>
     <div #track class="igx-slider__track-fill"></div>
@@ -22,32 +23,34 @@
     </div>
 </div>
 <div class="igx-slider__thumbs">
-    <igx-thumb-label
-        *ngIf="isRange"
-        type="from"
-        [value]="lowerLabel"
-        [templateRef]="thumbFromTemplateRef"
-        [continuous]="continuous"
-        [context]="context"
-        [deactiveState]="deactivateThumbLabel"
-        [thumb]="thumbFrom"></igx-thumb-label>
+    @if (isRange) {
+        <igx-thumb-label
+            type="from"
+            [value]="lowerLabel"
+            [templateRef]="thumbFromTemplateRef"
+            [continuous]="continuous"
+            [context]="context"
+            [deactiveState]="deactivateThumbLabel"
+            [thumb]="thumbFrom"></igx-thumb-label>
+    }
 
-    <igx-thumb
-        *ngIf="isRange"
-        #thumbFrom
-        type="from"
-        [value]="lowerLabel"
-        [disabled]="disabled"
-        [continuous]="continuous"
-        [onPan]="onPan"
-        [stepDistance]="stepDistance"
-        [step]="step"
-        [templateRef]="thumbFromTemplateRef"
-        [context]="context"
-        (thumbChange)="onThumbChange()"
-        (hoverChange)="onHoverChange($event)"
-        [deactiveState]="deactivateThumbLabel"
-        [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
+    @if (isRange) {
+        <igx-thumb
+            #thumbFrom
+            type="from"
+            [value]="lowerLabel"
+            [disabled]="disabled"
+            [continuous]="continuous"
+            [onPan]="onPan"
+            [stepDistance]="stepDistance"
+            [step]="step"
+            [templateRef]="thumbFromTemplateRef"
+            [context]="context"
+            (thumbChange)="onThumbChange()"
+            (hoverChange)="onHoverChange($event)"
+            [deactiveState]="deactivateThumbLabel"
+            [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
+    }
 
     <igx-thumb-label
         [value]="upperLabel"
@@ -74,17 +77,18 @@
         [deactiveState]="deactivateThumbLabel"
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
 </div>
-<igx-ticks
-    *ngIf="showTicks && showBottomTicks"
-    ticksOrientation="bottom"
-    [primaryTicks]="primaryTicks"
-    [secondaryTicks]="secondaryTicks"
-    [primaryTickLabels]="primaryTickLabels"
-    [secondaryTickLabels]="secondaryTickLabels"
-    [tickLabelsOrientation]="tickLabelsOrientation"
-    [labelsViewEnabled]="labelsViewEnabled"
-    [labels]="labels | spreadTickLabels:secondaryTicks"
-    [tickLabelTemplateRef]="tickLabelTemplateRef"
-    [minValue]="minValue"
-    [maxValue]="maxValue">
-</igx-ticks>
+@if (showTicks && showBottomTicks) {
+    <igx-ticks
+        ticksOrientation="bottom"
+        [primaryTicks]="primaryTicks"
+        [secondaryTicks]="secondaryTicks"
+        [primaryTickLabels]="primaryTickLabels"
+        [secondaryTickLabels]="secondaryTickLabels"
+        [tickLabelsOrientation]="tickLabelsOrientation"
+        [labelsViewEnabled]="labelsViewEnabled"
+        [labels]="labels | spreadTickLabels:secondaryTicks"
+        [tickLabelTemplateRef]="tickLabelTemplateRef"
+        [minValue]="minValue"
+        [maxValue]="maxValue">
+    </igx-ticks>
+}

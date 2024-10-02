@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, QueryList, ViewChildren, TemplateRef } from '@angular/core';
-import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -51,7 +51,7 @@ interface GridState {
     styleUrls: ['./grid-state.component.scss'],
     templateUrl: './grid-state.component.html',
     standalone: true,
-    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, NgIf, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, NgTemplateOutlet, IgxGridComponent, IgxGridStateDirective, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, IgxTooltipDirective, IgxColumnGroupComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, RouterLink, IgxTooltipTargetDirective, IgxIconComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxCellTemplateDirective]
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, NgTemplateOutlet, IgxGridComponent, IgxGridStateDirective, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, IgxTooltipDirective, IgxColumnGroupComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, RouterLink, IgxTooltipTargetDirective, IgxIconComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxCellTemplateDirective]
 })
 export class GridSaveStateComponent implements OnInit {
     @ViewChild(IgxExpansionPanelComponent, { static: true })

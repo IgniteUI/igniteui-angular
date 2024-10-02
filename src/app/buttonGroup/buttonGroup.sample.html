@@ -178,14 +178,15 @@
     <article class="sample-column">
         <h4 class="sample-title">Programmatic Selection</h4>
         <igx-buttongroup #programmatic>
-            <button
-                igxButton
-                *ngFor="let button of buttons; let i = index"
-                [selected]="i === selectedIndex"
-                (click)="selectedIndex = i"
-            >
-                {{ button }}
-            </button>
+            @for (button of buttons; track button; let i = $index) {
+                <button
+                    igxButton
+                    [selected]="i === selectedIndex"
+                    (click)="selectedIndex = i"
+                >
+                    {{ button }}
+                </button>
+            }
         </igx-buttongroup>
         <div igxLayout igxLayoutJustify="flex-end">
             <button
