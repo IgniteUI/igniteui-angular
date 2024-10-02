@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import type { ComponentMetadata, ContentQuery } from './types';
-import { asString, first, getDecoratorName, getDecorators, getProvidedAs, getTypeExpressionIdentifier, isMethod, isOverride, isProperty, isPublic, isReadOnly } from './utils';
+import { asString, first, getDecoratorName, getDecorators, getProvidedAs, getSelector, getTypeExpressionIdentifier, isMethod, isOverride, isProperty, isPublic, isReadOnly } from './utils';
 
 
 const isInput = (dec: ts.Decorator) => getDecoratorName(dec).includes('Input');
@@ -42,6 +42,7 @@ export class AnalyzerComponent {
     public get metadata(): ComponentMetadata<string> {
         let parents = this.parents;
         let provideAs!: ts.Type;
+        const selector = getSelector(this.node as ts.ClassDeclaration, ['igx-', 'igc-']);
 
         if (parents.length) {
             parents = this.standaloneParents;
@@ -53,6 +54,7 @@ export class AnalyzerComponent {
         }
 
         return {
+            selector,
             parents,
             contentQueries: this.parseQueryProps(),
             methods: this.publicMethods.map(m => ({ name: m.name })),
