@@ -136,8 +136,8 @@
         'indigo': none,
     ), $variant);
 
-    $label-margin: map.get((
-        'material': rem(12px),
+    $label-gap: map.get((
+        'material': rem(2px),
         'fluent': rem(8px),
         'bootstrap': rem(8px),
         'indigo': rem(8px),
@@ -171,6 +171,7 @@
         flex-flow: row nowrap;
         align-items: center;
         outline-style: none;
+        gap: $label-gap;
     }
 
     %cbx-display--disabled {
@@ -190,6 +191,12 @@
         position: relative;
         width: $size;
         height: $size;
+
+        @if $variant == 'material' {
+            width: calc($size * 2);
+            height: calc($size * 2);
+            min-width: calc($size * 2);
+        }
 
         //ripple color
         --color: #{var-get($theme, 'empty-color')};
@@ -298,7 +305,6 @@
         fill: none;
         opacity: 0;
         z-index: 1;
-        transition: opacity .1s $ease-out-quad;
 
         @if $variant == 'material' {
             inset-inline-start: -.5px;
@@ -497,12 +503,7 @@
         }
     }
 
-    %cbx-label-pos--after {
-        margin-inline-start: $label-margin;
-    }
-
     %cbx-label-pos--before {
-        margin-inline-end: $label-margin;
         order: -1;
     }
 
