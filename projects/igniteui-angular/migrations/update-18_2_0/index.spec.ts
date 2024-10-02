@@ -131,9 +131,6 @@ describe(`Update to ${version}`, () => {
             }`
         );
 
-        const tree = await schematicRunner
-            .runSchematic(migrationName, {}, appTree);
-
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.scss')
         ).toEqual(
@@ -146,6 +143,25 @@ describe(`Update to ${version}`, () => {
             	color: var(--ig-secondary-100);
             	background: var(--ig-gray-900);
             }`
+        );
+    });
+
+    it('should remove the $border-width property from the badge-theme', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-badge: badge-theme(
+                $text-color: red,
+                $border-width: 2px
+            );`
+        );
+
+        const tree = await schematicRunner
+            .runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-badge: badge-theme(
+                $text-color: red
+            );`
         );
     });
 });
