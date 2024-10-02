@@ -431,8 +431,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    public rowTracker(index: number, item: CalendarDay[]): string {
-        return `${item[index].month}${item[index].date}`;
+    public rowTracker(_: number, item: CalendarDay[]): string {
+        return `${item[0].month}${item[0].date}`;
     }
 
     /**
