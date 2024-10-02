@@ -44,6 +44,10 @@ For Firefox users, we provide limited scrollbar styling options through the foll
     - **Behavioral Changes** - the `keyboardSupport` input property now defaults to `false`.
     - **Deprecation** - the `keyboardSupport` input property has been deprecated and will be removed in a future version. Keyboard navigation with `ArrowLeft`, `ArrowRight`, `Home`, and `End` keys will be supported when focusing the indicators' container via ` Tab`/`Shift+Tab`. 
 
+- `IgxBadge`
+    - **Breaking Change** The `$border-width` property has been removed from the badge theme.
+    - New outlined variant of the badge component has been added. Users can switch to `outlined` by adding the newly created `outlined` property to a badge.
+
 ## 18.1.0
 ### New Features
 - `IgxPivotGrid`
