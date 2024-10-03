@@ -180,6 +180,12 @@
             border-top-right-radius: border-radius(rem(10px));
         }
 
+        @if $variant == 'bootstrap' {
+            > * {
+                margin-bottom: rem(0) !important;
+            }
+        }
+
         display: flex;
         align-items: center;
         background-color: var-get($theme, 'header-background');
@@ -316,6 +322,7 @@
     %filter-tree__expression-actions {
         display: inline-flex;
         gap: $gap;
+        box-sizing: border-box;
 
         igx-icon {
             cursor: pointer;
@@ -493,7 +500,7 @@
                 color: contrast-color(null, 'gray', 50, .6);
             }
         } @else {
-            color: color(null, 'gray', 600);
+            color: color(null, 'gray', 500);
         }
     }
 
