@@ -37,7 +37,6 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
-import { DateTimeUtil } from '../date-common/util/date-time.util';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -910,17 +909,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
             field.pipeArgs.format = field.dataType === DataType.Time ?
                 DEFAULT_PIPE_TIME_FORMAT : field.dataType === DataType.DateTime ?
                     DEFAULT_PIPE_DATE_TIME_FORMAT : DEFAULT_PIPE_DATE_FORMAT;
-        }
-
-        this.setDateTimeEditorFormat(field, field.pipeArgs.format);
-    }
-
-    private setDateTimeEditorFormat(field: FieldType, format: string) {
-        if (!DateTimeUtil.isDateTimeDataType(field.dataType)) {
-            return;
-        }
-        if (!field.editorOptions?.dateTimeFormat) {
-            field.editorOptions.dateTimeFormat = format;
         }
     }
 

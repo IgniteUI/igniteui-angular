@@ -24,6 +24,8 @@ import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { By } from '@angular/platform-browser';
+import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -2074,10 +2076,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column
             selectOperatorInEditModeExpression(fix, 0);
 
-            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            expect(input.getAttribute('ng-reflect-input-format')).toMatch(releaseDateColumn.editorOptions.dateTimeFormat);
-            expect(input.getAttribute('ng-reflect-display-format')).toMatch(releaseDateColumn.pipeArgs.format);
-            expect(input.getAttribute('ng-reflect-locale')).toMatch(grid.locale);
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseDateColumn.editorOptions.dateTimeFormat);
+            expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
+            expect(dateTimeEditor.locale).toMatch(grid.locale);
         }));
 
         it('DateTime: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
@@ -2101,9 +2104,10 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 4);
             selectOperatorInEditModeExpression(fix, 0);
 
-            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            expect(input.getAttribute('ng-reflect-input-format')).toMatch(releaseDateColumn.pipeArgs.format);
-            expect(input.getAttribute('ng-reflect-display-format')).toMatch(releaseDateColumn.pipeArgs.format);
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
+            expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
         }));
 
         it('Time: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
@@ -2126,8 +2130,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 6);
             selectOperatorInEditModeExpression(fix, 0);
 
-            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            expect(input.getAttribute('ng-reflect-input-format')).toMatch(releaseTimeColumn.editorOptions.dateTimeFormat);
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.editorOptions.dateTimeFormat);
         }));
 
         it('Time: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
@@ -2150,8 +2155,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 6);
             selectOperatorInEditModeExpression(fix, 0);
 
-            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            expect(input.getAttribute('ng-reflect-input-format')).toMatch(releaseTimeColumn.pipeArgs.format);
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.pipeArgs.format);
         }));
 
         it('should handle advanced filtering correctly when grid columns and data are dynamically changed', fakeAsync(() => {

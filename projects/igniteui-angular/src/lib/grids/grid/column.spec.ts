@@ -1184,7 +1184,7 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
 
-            let input = firstCell.nativeElement.querySelector('.igx-input-group__input');
+            const input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             expect((input as any).value).toEqual('01-10-2014');
 
             producedDateColumn.pipeArgs = { format: 'MMM d, y' };

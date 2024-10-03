@@ -847,13 +847,4 @@ export abstract class DateTimeUtil {
             }
         }
     }
-
-    public static isDateTimeDataType(dataType: DataType) {
-        if (dataType !== DataType.Date &&
-            dataType !== DataType.Time &&
-            dataType !== DataType.DateTime) {
-            return false;
-        }
-        return true;
-    }
 }
