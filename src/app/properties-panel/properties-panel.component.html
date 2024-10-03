@@ -1,0 +1,71 @@
+<div id="properties-panel" [formGroup]="form">
+    <div *ngFor="let key of getConfigKeys()">
+        <label *ngIf="getControlType(key) !== 'boolean'">{{ config[key]?.label || (key | titlecase) }}</label>
+
+        <!-- Text Input -->
+        <igx-input-group *ngIf="getControlType(key) === 'text'" type="border">
+            <input [formControlName]="key" igxInput type="text">
+        </igx-input-group>
+
+        <!-- Number Input -->
+        <igx-input-group *ngIf="getControlType(key) === 'number'" type="border">
+            <input [formControlName]="key" igxInput type="number">
+        </igx-input-group>
+
+        <!-- Range Input -->
+        <igx-slider *ngIf="getControlType(key) === 'range'" [formControlName]="key" type="range"
+            [lowerValue]="config[key]?.control?.min ?? 0" [upperValue]="config[key]?.control?.max ?? 100"
+            [minValue]="config[key]?.control?.min ?? 0" [maxValue]="config[key]?.control?.max ?? 100"
+            [step]="config[key]?.control?.step ?? 1" [primaryTicks]="3" [secondaryTicks]="3">
+        </igx-slider>
+
+        <!-- Boolean Switch -->
+        <div *ngIf="getControlType(key) === 'boolean'" class="switch-container">
+            <label>{{ config[key]?.label || (key | titlecase) }}</label>
+            <igx-switch [formControlName]="key"></igx-switch>
+        </div>
+
+        <!-- Date Picker -->
+        <igx-date-picker *ngIf="getControlType(key) === 'date'" [formControlName]="key" mode="dialog"></igx-date-picker>
+
+        <!-- Time Picker -->
+        <igx-time-picker *ngIf="getControlType(key) === 'time'" [formControlName]="key"></igx-time-picker>
+
+        <!-- Date Time Editor Input -->
+        <div id="date-time" *ngIf="getControlType(key) === 'date-time'" [formControlName]="key">
+            <igx-date-picker mode="dialog"></igx-date-picker>
+            <igx-time-picker></igx-time-picker>
+        </div>
+
+        <!-- Vertical Radio Group -->
+        <igx-radio-group *ngIf="getControlType(key) === 'radio'" [alignment]="alignment" [formControlName]="key">
+            <igx-radio *ngFor="let option of getOptions(key); let i = index" value="{{option}}">
+                {{ getLabels(key)[i] }}
+            </igx-radio>
+        </igx-radio-group>
+
+        <!-- Inline Radio Group -->
+        <igx-radio-group *ngIf="getControlType(key) === 'radio-inline'" [formControlName]="key">
+            <igx-radio *ngFor="let option of getOptions(key); let i = index" value="{{option}}">
+                {{ getLabels(key)[i] }}
+            </igx-radio>
+        </igx-radio-group>
+
+        <!-- Button Group -->
+        <div *ngIf="getControlType(key) === 'button-group'">
+            <igx-buttongroup [selectionMode]="'single'">
+                <button igxButton *ngFor="let option of getOptions(key); let i = index"
+                    [selected]="form.controls[key].value === option" (click)="form.controls[key].setValue(option)">
+                    {{ getLabels(key)[i] }}
+                </button>
+            </igx-buttongroup>
+        </div>
+
+        <!-- Select Dropdown -->
+        <igx-select [placeholder]="'Pick One'" [type]="'border'" *ngIf="getControlType(key) === 'select'"
+            [formControlName]="key">
+            <igx-select-item *ngFor="let option of getOptions(key)" [value]="option">{{ option }}</igx-select-item>
+        </igx-select>
+        <br>
+    </div>
+</div>
