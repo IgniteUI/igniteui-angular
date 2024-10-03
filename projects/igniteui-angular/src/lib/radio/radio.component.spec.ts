@@ -272,7 +272,7 @@ class InitRadioComponent {
     template: `
         @for (item of ['Foo', 'Bar', 'Baz']; track item) {
             <igx-radio [value]="item"
-                name="group" [(ngModel)]="selected">{{item}}</igx- >
+                name="group" [(ngModel)]="selected">{{item}}</igx-radio>
         }`,
     standalone: true,
     imports: [FormsModule, IgxRadioComponent]
