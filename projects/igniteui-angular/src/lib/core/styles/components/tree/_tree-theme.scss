@@ -240,9 +240,7 @@
         }
 
         igx-icon {
-            @if $variant == 'indigo' {
-                --component-size: 2;
-            }
+            --component-size: #{if($variant == 'indigo', 2, 3)};
         }
 
         [dir='rtl'] & {
