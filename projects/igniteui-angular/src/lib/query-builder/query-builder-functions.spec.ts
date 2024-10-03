@@ -689,11 +689,11 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-icon');
-                    expect(element.innerText).toContain('edit');
+                case 0: expect(element.firstChild).toHaveClass('igx-icon');
+                    expect(element.firstChild.textContent).toContain('edit');
                     break;
-                case 1: expect(element).toHaveClass('igx-icon');
-                    expect(element.innerText).toContain('add');
+                case 1: expect(element.firstChild).toHaveClass('igx-icon');
+                    expect(element.firstChild.textContent).toContain('add');
                     break;
             }
             i++;
