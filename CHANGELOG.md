@@ -11,7 +11,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCarousel`
     - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
     - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
-- `IgxTabsComponent`
+- `IgxTabs`
     - Added `activation` property to control tab selection. In `auto` mode (default), tabs are selected instantly with Arrow or Home/End keys. In `manual` mode, tabs are focused with keys but only selected with Enter or Space.
 
 #### Scrollbar: New CSS variables
