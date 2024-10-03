@@ -56,33 +56,7 @@ export class UpdateChanges {
     public get projectService(): tss.server.ProjectService {
         const projectService = serviceContainer.projectService;
         if (!serviceContainer.configured) {
-            // Force Angular service to compile project on initial load w/ configure project
-            // otherwise if the first compilation occurs on an HTML file the project won't have proper refs
-            // and no actual angular metadata will be resolved for the rest of the migration
-
-            // TODO: this pattern/issue might be obsolete
-            const mainRelPath = this.getWorkspaceProjectEntryPath();
-            if (!mainRelPath) {
-                serviceContainer.configured = true;
-                return projectService;
-            }
-
-            // patch TSConfig so it includes angularOptions.strictTemplates
-            // ivy ls requires this in order to function properly on templates
-            this.patchTsConfig();
-            const mainAbsPath = path.resolve(projectService.currentDirectory, mainRelPath);
-            const scriptInfo = projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.toNormalizedPath(mainAbsPath), false);
-            projectService.openClientFile(scriptInfo.fileName);
-
-
-            try {
-                const project = projectService.findProject(scriptInfo.containingProjects[0].getProjectName());
-                project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
-            } catch (err) {
-                this.context.logger.warn(
-                    "An error occurred during TypeScript project service setup. Some migrations relying on language services might not be applied."
-                );
-            }
+            this.configureForAngularLS(projectService);
             serviceContainer.configured = true;
         }
 
@@ -838,6 +812,36 @@ export class UpdateChanges {
         const project = this.projectService.findProject(scriptInfo.containingProjects[0].getProjectName());
         project.addMissingFileRoot(scriptInfo.fileName);
         return project;
+    }
+
+    /**
+     * Force Angular service to compile project on initial load w/ configured project
+     * otherwise if the first compilation occurs on an HTML file the project won't have proper refs
+     * and no actual angular metadata will be resolved for the rest of the migration
+     */
+    private configureForAngularLS(projectService: ts.server.ProjectService): void {
+        // TODO: this pattern/issue might be obsolete
+        const mainRelPath = this.getWorkspaceProjectEntryPath();
+        if (!mainRelPath) {
+            return;
+        }
+
+        // patch TSConfig so it includes angularOptions.strictTemplates
+        // ivy ls requires this in order to function properly on templates
+        this.patchTsConfig();
+        const mainAbsPath = path.resolve(projectService.currentDirectory, mainRelPath);
+        const scriptInfo = projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.toNormalizedPath(mainAbsPath), false);
+        projectService.openClientFile(scriptInfo.fileName);
+
+
+        try {
+            const project = projectService.findProject(scriptInfo.containingProjects[0].getProjectName());
+            project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
+        } catch (err) {
+            this.context.logger.warn(
+                "An error occurred during TypeScript project service setup. Some migrations relying on language services might not be applied."
+            );
+        }
     }
 
     private getWorkspaceProjectEntryPath(): string | null {
