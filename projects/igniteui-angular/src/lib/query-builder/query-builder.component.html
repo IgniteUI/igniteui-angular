@@ -147,16 +147,18 @@
                     expressionItem.hovered
                 "
             >
-                <span tabindex="0">
+                <span tabindex="-1">
                     <igx-icon
+                        tabindex="0"
                         (keydown)="invokeClick($event)"
                         (click)="enterExpressionEdit(expressionItem)"
                     >
                         edit
                     </igx-icon>
                 </span>
-                <span tabindex="0">
+                <span tabindex="-1">
                     <igx-icon
+                        tabindex="0"
                         (keydown)="invokeClick($event)"
                         (click)="enterExpressionAdd(expressionItem)"
                         *ngIf="
