@@ -1395,6 +1395,7 @@ describe('Excel Exporter', () => {
             fix = TestBed.createComponent(GridCustomSummaryWithNullAndZeroComponent);
             fix.detectChanges();
             await wait(300);
+
             grid = fix.componentInstance.grid;
 
             await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithNullAndZero);

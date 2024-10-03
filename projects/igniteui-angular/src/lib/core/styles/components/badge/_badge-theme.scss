@@ -132,7 +132,7 @@
 
     %igx-badge-value {
         white-space: nowrap;
-        padding-inline: rem(4px);
+        padding-inline: $badge-value-padding;
     }
 
     %igx-badge--success {
