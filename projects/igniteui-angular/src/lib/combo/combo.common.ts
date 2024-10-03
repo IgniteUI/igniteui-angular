@@ -87,7 +87,7 @@ let NEXT_ID = 0;
  * The default number of items that should be in the combo's
  * drop-down list if no `[itemsMaxHeight]` is specified
  */
-const itemsInContainer = 10; // TODO: make private readonly
+// const itemsInContainer = 10; // TODO: make private readonly
 
 /** @hidden @internal */
 export const enum DataTypes {
