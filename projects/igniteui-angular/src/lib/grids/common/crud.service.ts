@@ -329,6 +329,7 @@ export class IgxCellCrudState {
 
     /** Clears cell editing state */
     public endCellEdit() {
+        //console.log("cell is cleared now");
         this.cell = null;
     }
 
@@ -626,6 +627,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
 export class IgxGridCRUDService extends IgxRowAddCrudState {
 
     public enterEditMode(cell, event?: Event) {
+        //console.log(event);
         if (this.isInCompositionMode) {
             return;
         }
@@ -677,6 +679,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
      * @param event Base event that triggered the add row mode.
      */
     public enterAddRowMode(parentRow: RowType, asChild?: boolean, event?: Event) {
+        
         if (!this.rowEditing && (this.grid.primaryKey === undefined || this.grid.primaryKey === null)) {
             console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
             return;

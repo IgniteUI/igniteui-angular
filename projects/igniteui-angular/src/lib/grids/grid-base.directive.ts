@@ -3591,7 +3591,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
-            console.log("Grid focusout", document.activeElement);
+            //console.log("Grid focusout", document.activeElement);
             //console.log(this.crudService.cell);
             //console.log(this.navigation.activeNode);
             //console.log(event.target);
@@ -3608,7 +3608,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
                 this.navigation.lastActiveNode = this.navigation.activeNode;
                 this.navigation.activeNode = {} as IActiveNode;
-                console.log("cleared");
+                //console.log("cleared");
                 this.notifyChanges();
             }
         });
