@@ -45,8 +45,8 @@ import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_ap
 import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { DOCUMENT } from '@angular/common';
-import { Size } from '../grids/common/enums';
 import { isEqual } from 'lodash-es';
+import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -88,13 +88,6 @@ let NEXT_ID = 0;
  * drop-down list if no `[itemsMaxHeight]` is specified
  */
 const itemsInContainer = 10; // TODO: make private readonly
-
-/** @hidden @internal */
-const ItemHeights = {
-    "3": 40,
-    "2": 32,
-    "1": 28
-};
 
 /** @hidden @internal */
 export const enum DataTypes {
@@ -237,9 +230,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input()
     public get itemsMaxHeight(): number {
-        if (this._itemsMaxHeight === null || this._itemsMaxHeight === undefined) {
-            return this.itemHeight * itemsInContainer;
-        }
         return this._itemsMaxHeight;
     }
 
@@ -249,15 +239,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden */
     public get itemsMaxHeightInRem() {
-        return rem(this.itemsMaxHeight);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public get comboSize(): Size {
-        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Large;
+        if (this.itemsMaxHeight) {
+            return rem(this.itemsMaxHeight);
+        }
     }
 
     /**
@@ -275,9 +259,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input()
     public get itemHeight(): number {
-        if (this._itemHeight === null || this._itemHeight === undefined) {
-            return ItemHeights[this.comboSize];
-        }
         return this._itemHeight;
     }
 
@@ -946,6 +927,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public set filteringOptions(value: IComboFilteringOptions) {
         this._filteringOptions = value;
     }
+
+    public containerSize = undefined;
+    public itemSize = undefined;
     protected _data = [];
     protected _value = [];
     protected _displayValue = '';
@@ -966,12 +950,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _id: string = `igx-combo-${NEXT_ID++}`;
     private _type = null;
     private _dataType = '';
-    private _itemHeight = null;
+    private _itemHeight = undefined;
     private _itemsMaxHeight = null;
     private _overlaySettings: OverlaySettings;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
     private _filteringOptions: IComboFilteringOptions;
     private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false, filterable: true };
+    private _defaultItemSize = 40;
 
     public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
@@ -1031,6 +1016,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.virtDir.chunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
             const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
             this.dataPreLoad.emit(eventArgs);
+        });
+        this.dropdown?.appended.subscribe((_args: ToggleViewEventArgs) => {
+            // eslint-disable-next-line no-console
+            console.log(this.dropdownContainer.nativeElement.getBoundingClientRect())
+            const dropdownContainerHeight = this.dropdownContainer.nativeElement.getBoundingClientRect().height;
+            this.containerSize = parseFloat(dropdownContainerHeight);
+            this.itemSize = this.dropdown.children.first.element.nativeElement.getBoundingClientRect().height;
         });
     }
 

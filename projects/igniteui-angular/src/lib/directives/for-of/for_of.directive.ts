@@ -169,6 +169,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     @Input()
     public igxForContainerSize: any;
 
+    @Input()
+    public igxForItemsInContainer: any;
+
     /**
      * Sets the px-affixed size of the item along the axis of scrolling.
      * For "horizontal" orientation this value is the width of the column and for "vertical" is the height or the row.
@@ -1206,7 +1209,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             }
         } else {
             if (this.igxForOf) {
-                chunkSize = this.igxForOf.length;
+                chunkSize = this.igxForItemsInContainer || this.igxForOf.length;
             }
         }
         return chunkSize;
