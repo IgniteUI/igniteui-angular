@@ -236,6 +236,10 @@ export const appRoutes: Routes = [
         component: DragDropSampleComponent
     },
     {
+        path: 'hound',
+        component: HoundComponent
+    },
+    {
         path: 'icon',
         component: IconSampleComponent
     },

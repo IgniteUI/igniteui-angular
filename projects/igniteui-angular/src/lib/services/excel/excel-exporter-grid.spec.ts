@@ -581,7 +581,7 @@ describe('Excel Exporter', () => {
 
             const grid = fix.componentInstance.grid;
             // Verify the data without formatting
-            await exportAndVerify(grid, options, actualData.gridWithEmptyColums);
+            await exportAndVerify(grid, options, actualData.gridWithEmptyColumns);
 
             exporter.columnExporting.subscribe((value: IColumnExportingEventArgs) => {
                 if (value.columnIndex === 0 || value.columnIndex === 2) {
