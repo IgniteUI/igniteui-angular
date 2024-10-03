@@ -8,10 +8,11 @@ All notable changes for each version of this project will be documented in this 
     - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - To streamline the sorting of columns with custom formats, a new `FormattedValuesSortingStrategy` has been introduced. This strategy simplifies the sorting process by allowing direct sorting based on formatted values, eliminating the need to extend the `DefaultSortingStrategy` or implement a custom `ISortingStrategy`. This enhancement improves the ease of handling sorting with custom column formatters.
-
 - `IgxCarousel`
     - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
     - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
+- `IgxTabsComponent`
+    - Added `activation` property to control tab selection. In `auto` mode (default), tabs are selected instantly with Arrow or Home/End keys. In `manual` mode, tabs are focused with keys but only selected with Enter or Space.
 
 #### Scrollbar: New CSS variables
 
