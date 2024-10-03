@@ -136,7 +136,7 @@
         'indigo': none,
     ), $variant);
 
-    $label-gap: map.get((
+    $label-margin: map.get((
         'material': rem(2px),
         'fluent': rem(8px),
         'bootstrap': rem(8px),
@@ -171,7 +171,6 @@
         flex-flow: row nowrap;
         align-items: center;
         outline-style: none;
-        gap: $label-gap;
     }
 
     %cbx-display--disabled {
@@ -193,9 +192,7 @@
         height: $size;
 
         @if $variant == 'material' {
-            width: calc($size * 2);
-            height: calc($size * 2);
-            min-width: calc($size * 2);
+            padding: rem(20px);
         }
 
         //ripple color
@@ -503,7 +500,12 @@
         }
     }
 
+    %cbx-label-pos--after {
+        margin-inline-start: $label-margin;
+    }
+
     %cbx-label-pos--before {
+        margin-inline-end: $label-margin;
         order: -1;
     }
 
