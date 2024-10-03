@@ -159,6 +159,10 @@ const loadIconRefs = () => [
             name: 'cancel',
             family: 'material',
         },
+        indigo: {
+            name: 'cancel',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('input_clear', {
         default: {
@@ -211,12 +215,20 @@ const loadIconRefs = () => [
             name: 'calendar_today',
             family: 'material',
         },
+        indigo: {
+            name: 'calendar_today',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('clock', {
         default: {
             name: 'access_time',
             family: 'material',
         },
+        indigo: {
+            name: 'access_time',
+            family: 'internal_indigo',
+        }
     }),
     addIcon('date_range', {
         default: {
@@ -269,6 +281,10 @@ const loadIconRefs = () => [
             name: 'add',
             family: 'material',
         },
+        indigo: {
+            name: 'add',
+            family: 'internal_indigo',
+        }
     }),
     addIcon('close', {
         default: {
@@ -285,6 +301,10 @@ const loadIconRefs = () => [
             name: 'error',
             family: 'material',
         },
+        indigo: {
+            name: 'error',
+            family: 'internal_indigo',
+        }
     }),
     addIcon('confirm', {
         default: {
@@ -323,11 +343,19 @@ const loadIconRefs = () => [
             name: 'pin-left',
             family: 'imx-icons',
         },
+        indigo: {
+            name: 'pin',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('unpin', {
         default: {
             name: 'unpin-left',
             family: 'imx-icons',
+        },
+        indigo: {
+            name: 'unpin',
+            family: 'internal_indigo',
         },
     }),
     addIcon('show', {
@@ -393,6 +421,10 @@ const loadIconRefs = () => [
             name: 'filter_list',
             family: 'material',
         },
+        indigo: {
+            name: 'filter_list',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('import_export', {
         default: {
@@ -457,6 +489,10 @@ const loadIconRefs = () => [
             name: 'search',
             family: 'material',
         },
+        indigo: {
+            name: 'search',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('functions', {
         default: {
@@ -480,6 +516,10 @@ const loadIconRefs = () => [
         default: {
             name: 'refresh',
             family: 'material',
+        },
+        indigo: {
+            name: 'refresh',
+            family: 'internal_indigo',
         },
     }),
     addIcon('add_row', {
@@ -685,6 +725,10 @@ const loadIconRefs = () => [
             name: 'file_download',
             family: 'material',
         },
+        indigo: {
+            name: 'file_download',
+            family: 'internal_indigo',
+        }
     }),
 ];
 
