@@ -17,7 +17,7 @@ import {
     getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage, getPackageVersion
 } from './util';
 import { ServerHost } from './ServerHost';
-import { serviceContainer } from './service-container';
+import { serviceContainer } from './project-service-container';
 
 const TSCONFIG_PATH = 'tsconfig.json';
 
@@ -180,7 +180,7 @@ export class UpdateChanges {
         this.themeChanges = this.loadConfig('theme-changes.json');
         this.importsChanges = this.loadConfig('imports.json');
         this.membersChanges = this.loadConfig('members.json');
-        // update LS server host with the schematics tree host:
+        // update LS server host with the schematics tree:
         this.serverHost.host = this.host;
     }
 

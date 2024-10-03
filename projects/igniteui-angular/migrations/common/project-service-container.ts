@@ -2,13 +2,12 @@ import * as tss from 'typescript/lib/tsserverlibrary';
 import { createProjectService } from './tsUtils';
 import { ServerHost } from './ServerHost';
 
-export class ServiceContainer {
+export class ProjectServiceContainer {
     private _serverHost: ServerHost;
     private _projectService: tss.server.ProjectService;
 
     /** Indicates additional config adjustments after init have been made */
     public configured = false;
-
 
     public get serverHost(): ServerHost {
         if (!this._serverHost) {
@@ -26,4 +25,4 @@ export class ServiceContainer {
     }
 }
 
-export const serviceContainer = new ServiceContainer();
+export const serviceContainer = new ProjectServiceContainer();

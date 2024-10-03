@@ -4,7 +4,7 @@ import { join } from 'path';
 import { EmptyTree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as tss from 'typescript/lib/tsserverlibrary';
-import { serviceContainer } from './service-container';
+import { serviceContainer } from './project-service-container';
 
 const configJson = {
     version: 1,
@@ -54,8 +54,8 @@ class IgxUnitTestTree extends UnitTestTree {
             // integrate incoming virtual file in project/program for LS to work:
             const project = serviceContainer.projectService.configuredProjects.values().next().value as tss.server.ConfiguredProject;
             if (!project.containsScriptInfo(scriptInfo)) {
-                // add first to prevent open from creating another project that'll be inferred
-                project.addMissingFileRoot(scriptInfo.fileName);
+                // add the file to the configured project to prevent tss from creating an inferred project for floating files
+                scriptInfo.attachToProject(project);
             } else {
                 // if using same file, force-reload from host for new content
                 scriptInfo.reloadFromFile(tss.server.asNormalizedPath(entryPath));
