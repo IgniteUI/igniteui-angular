@@ -143,11 +143,8 @@
             }
 
             %advanced-filter__main {
-                padding: pad-inline(
-                    map.get($vertical-space, 'compact'),
-                    map.get($vertical-space, 'cosy'),
-                    map.get($vertical-space, 'comfortable')
-                );
+                padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+                padding-block: pad-block(rem(16px));
             }
         }
     }
@@ -345,7 +342,7 @@
 
     %filter-tree__inputs {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         gap: rem(8px);
         width: 100%;
 
@@ -384,10 +381,8 @@
         display: inline-flex;
         align-items: center;
         font-size: rem(12px);
-
-        @if $variant == 'indigo' {
-            font-weight: 400;
-        }
+        line-height: rem(16px);
+        font-weight: 400;
 
         &::before {
             content: '';
