@@ -345,12 +345,17 @@
 
     %filter-tree__inputs {
         display: flex;
-        justify-content: space-between;
         align-items: center;
         gap: rem(8px);
+        width: 100%;
 
         igx-input-group {
             --ig-size: 1;
+        }
+
+        > * {
+            max-width: rem(300px);
+            width: 100%;
         }
 
         &:empty {
