@@ -711,7 +711,9 @@
 
     %igx-chip__prefix,
     %igx-chip__suffix {
-        display: inline-flex;
+        @include ellipsis();
+
+        display: inline-block;
         vertical-align: middle;
         max-width: $chip-max-width;
 

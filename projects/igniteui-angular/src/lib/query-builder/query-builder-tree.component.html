@@ -93,17 +93,14 @@
                 <span igxPrefix class="igx-filter-tree__expression-column">
                     {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
                 </span>
-                <span class="igx-filter-tree__expression-condition">
+                <span igxPrefix class="igx-filter-tree__expression-condition">
                     {{
                         getConditionFriendlyName(
                             expressionItem.expression.condition.name
                         )
                     }}
                 </span>
-                <span
-                    igxSuffix
-                    *ngIf="!expressionItem.expression.condition.isUnary"
-                >
+                <span *ngIf="!expressionItem.expression.condition.isUnary">
                     <ng-container *ngIf="expressionItem.expression.searchTree">
                         <strong>{{expressionItem.expression.searchTree.entity}}</strong>&nbsp;/ {{formatReturnFields(expressionItem.expression.searchTree)}}
                     </ng-container>

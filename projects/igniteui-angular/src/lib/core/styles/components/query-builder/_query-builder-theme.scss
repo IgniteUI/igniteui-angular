@@ -293,8 +293,12 @@
                 }
             }
 
-            .igx-filter-tree__expression-column {
+            %filter-tree__expression-column {
                 padding-inline: pad-inline(rem(3px), rem(6px), rem(8px));
+            }
+
+            %filter-tree__expression-condition {
+                padding-inline-start: pad-inline(rem(3px), rem(6px), rem(8px));
             }
 
             igx-prefix {
