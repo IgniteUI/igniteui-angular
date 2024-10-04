@@ -198,7 +198,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     public override get inputFormat(): string {
-        return super.inputFormat || this._defaultInputFormat;
+        return super.inputFormat;
     }
 
     /**

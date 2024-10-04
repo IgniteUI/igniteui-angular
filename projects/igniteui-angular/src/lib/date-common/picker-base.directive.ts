@@ -59,9 +59,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      */
     @Input()
     public set displayFormat(value: string) {
-        if (value) {
-            this._displayFormat = value;
-        }
+        this._displayFormat = value;
         this.updateDefaultFormat();
     }
 
