@@ -235,6 +235,10 @@ const loadIconRefs = () => [
             name: 'date_range',
             family: 'material',
         },
+        indigo: {
+            name: 'calendar_today',
+            family: 'internal_indigo',
+        },
     }),
     addIcon('prev', {
         default: {
@@ -414,6 +418,10 @@ const loadIconRefs = () => [
         default: {
             name: 'expand_more',
             family: 'material',
+        },
+        indigo: {
+            name: 'chevron_down',
+            family: 'internal_indigo',
         },
     }),
     addIcon('filter_list', {
@@ -727,6 +735,36 @@ const loadIconRefs = () => [
         },
         indigo: {
             name: 'file_download',
+            family: 'internal_indigo',
+        }
+    }),
+    addIcon('file_upload', {
+        default: {
+            name: 'file_upload',
+            family: 'material',
+        },
+        indigo: {
+            name: 'file_upload',
+            family: 'internal_indigo',
+        }
+    }),
+    addIcon('horizontal_rule', {
+        default: {
+            name: 'horizontal_rule',
+            family: 'material',
+        },
+        indigo: {
+            name: 'horizontal_rule',
+            family: 'internal_indigo',
+        }
+    }),
+    addIcon('menu', {
+        default: {
+            name: 'menu',
+            family: 'material',
+        },
+        indigo: {
+            name: 'menu',
             family: 'internal_indigo',
         }
     }),
