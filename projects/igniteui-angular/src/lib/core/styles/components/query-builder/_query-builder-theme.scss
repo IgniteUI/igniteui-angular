@@ -322,7 +322,10 @@
     %filter-tree__expression-actions {
         display: inline-flex;
         gap: $gap;
-        box-sizing: border-box;
+
+        span {
+            display: inline-flex;
+        }
 
         igx-icon {
             cursor: pointer;
@@ -396,8 +399,8 @@
             width: rem(24px);
             height: rem(24px);
             background: white;
-            border-radius: $border-radius;
             margin-inline-end: rem(8px);
+            border-radius: if($variant != 'indigo', $border-radius, #{rem(4px)});
         }
 
         + %filter-legend__item {
