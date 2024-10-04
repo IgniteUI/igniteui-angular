@@ -1,7 +1,5 @@
 import { DateTimeUtil } from './date-time.util';
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
-import { registerLocaleData } from '@angular/common';
-import localeBg from '@angular/common/locales/bg';
 import { DataType } from '../../data-operations/data-util';
 
 const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
@@ -237,7 +235,6 @@ describe(`DateTimeUtil Unit tests`, () => {
     });
 
     it('should properly build input formats based on locale for dateTime data type ', () => {
-        spyOn(DateTimeUtil, 'getDefaultInputFormat').and.callThrough();
         let result = DateTimeUtil.getDefaultInputFormat('en-US', DataType.DateTime);
         expect(result.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
 
@@ -249,7 +246,6 @@ describe(`DateTimeUtil Unit tests`, () => {
     });
 
     it('should properly build input formats based on locale for time data type ', () => {
-        spyOn(DateTimeUtil, 'getDefaultInputFormat').and.callThrough();
         let result = DateTimeUtil.getDefaultInputFormat('en-US', DataType.Time);
         expect(result.normalize('NFKC')).toEqual('hh:mm tt');
 
@@ -658,7 +654,6 @@ describe(`DateTimeUtil Unit tests`, () => {
 
     it('should correctly identify formats that would resolve to only numeric parts (and period) for the date/time parts', () => {
         // test with locale covering non-ASCII characters as well
-        registerLocaleData(localeBg, 'bg');
         const locale = 'bg';
 
         const numericFormats = ['y', 'yy', 'yyy', 'yyyy', 'M', 'MM', 'd', 'dd', 'h', 'hh',

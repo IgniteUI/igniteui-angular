@@ -69,7 +69,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditor.mask).toEqual('00:00:00:000');
             });
 
-            it('should set default inputFormat with parts for day, month, year, hour, minutes, seconds and day period based on locale', () => {
+            it('should set default inputFormat with parts for day, month, year based on locale', () => {
                 registerLocaleData(localeBg);
                 registerLocaleData(localeJa);
                 locale = 'en-US';
@@ -78,19 +78,19 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 expect(dateTimeEditor.locale).toEqual('en-US');
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy');
 
                 dateTimeEditor.locale = 'bg-BG';
                 let change: SimpleChange = new SimpleChange('en-US', 'bg-BG', false);
                 let changes: SimpleChanges = { locale: change };
                 dateTimeEditor.ngOnChanges(changes);
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г., HH:mm:ss');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
 
                 dateTimeEditor.locale = 'ja-JP';
                 change = new SimpleChange('bg-BG', 'ja-JP', false);
                 changes = { locale: change };
                 dateTimeEditor.ngOnChanges(changes);
-                expect(dateTimeEditor.inputFormat).toEqual('yyyy/MM/dd HH:mm:ss');
+                expect(dateTimeEditor.inputFormat).toEqual('yyyy/MM/dd');
             });
 
             it('should resolve inputFormat, if not set, to the value of displayFormat if it contains only numeric date/time parts', () => {
@@ -123,7 +123,7 @@ describe('IgxDateTimeEditor', () => {
                 let changes: SimpleChanges = { displayFormat: change };
                 dateTimeEditor.ngOnChanges(changes);
 
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy');
 
                 oldDisplayFormat = displayFormat;
                 displayFormat = 'full';
@@ -134,7 +134,7 @@ describe('IgxDateTimeEditor', () => {
                 dateTimeEditor.ngOnChanges(changes);
 
                 expect(dateTimeEditor.displayFormat.normalize('NFKC')).toEqual('MMM d, y, h:mm:ss a');
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г., HH:mm:ss');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
             });
         });
 
