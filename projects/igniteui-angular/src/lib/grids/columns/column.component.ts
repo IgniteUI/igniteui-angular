@@ -1613,7 +1613,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public set editorOptions(value: IColumnEditorOptions) {
         this._editorOptions = value;
-        this.grid.pipeTrigger++;
     }
     public get editorOptions(): IColumnEditorOptions {
         return this._editorOptions;
