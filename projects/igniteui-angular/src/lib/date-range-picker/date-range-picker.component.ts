@@ -163,6 +163,26 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @Input()
     public override overlaySettings: OverlaySettings;
 
+    /**
+     * The format used when editable inputs are not focused.
+     *
+     * @remarks
+     * Uses Angular's DatePipe.
+     *
+     * @example
+     * ```html
+     * <igx-date-range-picker displayFormat="EE/M/yy"></igx-date-range-picker>
+     * ```
+     *
+     */
+    @Input()
+    public override set displayFormat(value: string) {
+        super.displayFormat = value;
+    }
+
+    public override get displayFormat(): string {
+        return super.displayFormat;
+    }
 
     /**
      * The expected user input format and placeholder.
@@ -174,16 +194,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     @Input()
     public override set inputFormat(value: string) {
-        if (value) {
-            this._inputFormat = value;
-            if (this.hasProjectedInputs) {
-                this.updateInputFormat();
-            }
-        }
+       super.inputFormat = value;
     }
 
     public override get inputFormat(): string {
-        return this._inputFormat || this._defaultInputFormat;
+        return super.inputFormat || this._defaultInputFormat;
     }
 
     /**
@@ -638,6 +653,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['displayFormat'] && this.hasProjectedInputs) {
             this.updateDisplayFormat();
+        }
+        if (changes['inputFormat'] && this.hasProjectedInputs) {
+            this.updateInputFormat();
         }
         if (changes['disabled']) {
             this.updateDisabledState();
