@@ -1,11 +1,11 @@
-<ng-template #remoteDataLoading>
-    <div class="remote-data-loading-template-medium"></div>
-</ng-template>
-
 <ng-template #cellTemplate igxCell let-val let-rowData="cell.row.data">
-    <div *ngIf="!rowData.emptyRec; else remoteDataLoading">
-       {{ val }}
-    </div>
+    @if (!rowData.emptyRec) {
+        <div>
+            {{ val }}
+        </div>
+    } @else {
+        <div class="remote-data-loading-template-medium"></div>
+    }
 </ng-template>
 
 <igx-hierarchical-grid #hGrid [data]="gridData" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'500px'" [width]="'100%'" [emptyGridMessage]="''">

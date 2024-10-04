@@ -19,7 +19,7 @@ import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { SortingIndexPipe } from './pipes';
-import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 
 /**
@@ -30,7 +30,7 @@ import { IgxIconComponent } from '../../icon/icon.component';
     selector: 'igx-grid-header',
     templateUrl: 'grid-header.component.html',
     standalone: true,
-    imports: [IgxIconComponent, NgTemplateOutlet, NgIf, NgClass, SortingIndexPipe]
+    imports: [IgxIconComponent, NgTemplateOutlet, NgClass, SortingIndexPipe]
 })
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NgFor } from '@angular/common';
 
 import { IgxColumnGroupingDirective } from './custom-action-directive';
 import { IColumnToggledEventArgs, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
@@ -10,7 +9,7 @@ import { IColumnToggledEventArgs, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
     styleUrls: ['grid-column-actions.sample.scss'],
     templateUrl: 'grid-column-actions.sample.html',
     standalone: true,
-    imports: [IgxColumnGroupingDirective, NgFor, IGX_GRID_DIRECTIVES]
+    imports: [IgxColumnGroupingDirective, IGX_GRID_DIRECTIVES]
 })
 export class GridColumnActionsSampleComponent implements OnInit {
     public data: any[];

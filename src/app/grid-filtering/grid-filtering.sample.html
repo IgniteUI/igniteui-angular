@@ -18,30 +18,34 @@
         [columnSelection]="'single'">
         <igx-grid-toolbar >
             <igx-grid-toolbar-actions>
-               <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-               <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-                <igx-grid-toolbar-advanced-filtering *ngIf="grid1.allowAdvancedFiltering">
-                    Really advanced filtering
-                </igx-grid-toolbar-advanced-filtering>
+                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                @if (grid1.allowAdvancedFiltering) {
+                    <igx-grid-toolbar-advanced-filtering>
+                        Really advanced filtering
+                    </igx-grid-toolbar-advanced-filtering>
+                }
                 <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
                     <span excelText>Export to Excel 👌</span>
                     <span csvText>Export to CSV 👍</span>
                 </igx-grid-toolbar-exporter>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-column *ngFor="let c of columns" [field]="c.field"
-                                            [header]="c.header"
-                                            [groupable]="true"
-                                            [resizable]="c.resizable"
-                                            [width]="c.width"
-                                            [sortable]="true"
-                                            [filterable]="true"
-                                            [editable]="true"
-                                            [hidden]="c.hidden"
-                                            [minWidth]="c.minWidth"
-                                            [maxWidth]="c.maxWidth"
-                                            [dataType]="c.type">
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [field]="c.field"
+                [header]="c.header"
+                [groupable]="true"
+                [resizable]="c.resizable"
+                [width]="c.width"
+                [sortable]="true"
+                [filterable]="true"
+                [editable]="true"
+                [hidden]="c.hidden"
+                [minWidth]="c.minWidth"
+                [maxWidth]="c.maxWidth"
+                [dataType]="c.type">
+            </igx-column>
+        }
         <igx-column field="Capital" [dataType]="'number'" [filterable]="true" [formatter]="formatNumber"></igx-column>
         <igx-column field="Index" [dataType]="'string'" [filterable]="true" [formatter]="formatEvenOdd"></igx-column>
     </igx-grid>
@@ -73,8 +77,8 @@
         [columnSelection]="'single'">
         <igx-grid-toolbar >
             <igx-grid-toolbar-actions>
-               <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-               <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                 <igx-grid-toolbar-advanced-filtering>Really advanced filtering</igx-grid-toolbar-advanced-filtering>
                 <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
                     <span excelText>Export to Excel 👌</span>
@@ -82,19 +86,21 @@
                 </igx-grid-toolbar-exporter>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-column *ngFor="let c of columns" [field]="c.field"
-                                            [header]="c.header"
-                                            [groupable]="true"
-                                            [resizable]="c.resizable"
-                                            [width]="c.width"
-                                            [sortable]="true"
-                                            [filterable]="true"
-                                            [editable]="true"
-                                            [hidden]="c.hidden"
-                                            [minWidth]="c.minWidth"
-                                            [maxWidth]="c.maxWidth"
-                                            [dataType]="c.type">
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [field]="c.field"
+                [header]="c.header"
+                [groupable]="true"
+                [resizable]="c.resizable"
+                [width]="c.width"
+                [sortable]="true"
+                [filterable]="true"
+                [editable]="true"
+                [hidden]="c.hidden"
+                [minWidth]="c.minWidth"
+                [maxWidth]="c.maxWidth"
+                [dataType]="c.type">
+            </igx-column>
+        }
 
         <ng-template igxExcelStyleHeaderIcon>
             <igx-icon>filter_alt</igx-icon>

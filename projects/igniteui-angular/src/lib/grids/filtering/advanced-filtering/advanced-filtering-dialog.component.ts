@@ -12,7 +12,7 @@ import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
 import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxQueryBuilderHeaderComponent } from '../../../query-builder/query-builder-header.component';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { getCurrentResourceStrings } from '../../../core/i18n/resources';
 import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
 
@@ -31,7 +31,7 @@ import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-
     selector: 'igx-advanced-filtering-dialog',
     templateUrl: './advanced-filtering-dialog.component.html',
     standalone: true,
-    imports: [NgIf, IgxDragDirective, NgClass, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxDragHandleDirective, IgxButtonDirective]
+    imports: [IgxDragDirective, NgClass, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxDragHandleDirective, IgxButtonDirective]
 })
 export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
     /**

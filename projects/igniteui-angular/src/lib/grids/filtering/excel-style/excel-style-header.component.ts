@@ -2,7 +2,7 @@ import { Component, Input, booleanAttribute } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { IgxIconButtonDirective } from '../../../directives/button/icon-button.directive';
 
 /**
@@ -12,7 +12,7 @@ import { IgxIconButtonDirective } from '../../../directives/button/icon-button.d
     selector: 'igx-excel-style-header',
     templateUrl: './excel-style-header.component.html',
     standalone: true,
-    imports: [NgIf, IgxButtonDirective, NgClass, IgxIconComponent, IgxIconButtonDirective]
+    imports: [IgxButtonDirective, NgClass, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxExcelStyleHeaderComponent {
     /**

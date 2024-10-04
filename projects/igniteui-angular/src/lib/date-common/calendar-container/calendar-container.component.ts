@@ -1,4 +1,4 @@
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     Component,
     ViewChild,
@@ -21,7 +21,6 @@ import { IgxDividerDirective } from "../../directives/divider/divider.directive"
     templateUrl: 'calendar-container.component.html',
     standalone: true,
     imports: [
-        NgIf,
         IgxButtonDirective,
         IgxRippleDirective,
         IgxCalendarComponent,

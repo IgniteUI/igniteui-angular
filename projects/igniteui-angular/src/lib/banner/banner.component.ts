@@ -14,7 +14,6 @@ import { IToggleView } from '../core/navigation';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxBannerActionsDirective } from './banner.directives';
-import { NgIf } from '@angular/common';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxExpansionPanelBodyComponent } from '../expansion-panel/expansion-panel-body.component';
@@ -50,7 +49,7 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
     selector: 'igx-banner',
     templateUrl: 'banner.component.html',
     standalone: true,
-    imports: [ IgxExpansionPanelComponent, IgxExpansionPanelBodyComponent, NgIf, IgxButtonDirective, IgxRippleDirective ]
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelBodyComponent, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxBannerComponent implements IToggleView {
     /**

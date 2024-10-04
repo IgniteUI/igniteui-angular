@@ -14,23 +14,27 @@
 
 <ng-template #defaultFilter>
     <igx-chips-area #chipsArea class="igx-filtering-chips">
-        <ng-container *ngFor="let item of expressionsList; let last = last; let index = index;" >
-            <igx-chip *ngIf="isChipVisible(index)"
-                [removable]="true"
-                [tabIndex]="-1"
-                [style.--ig-size]="filteringElementsSize"
-                (click)="onChipClicked(item.expression)"
-                (remove)="onChipRemoved($event, item)">
-                <igx-icon igxPrefix
-                    family="default"
-                    [name]="item.expression.condition.iconName">
-                </igx-icon>
-                <span #label>
-                    {{filteringService.getChipLabel(item.expression)}}
-                </span>
-            </igx-chip>
-            <span class="igx-filtering-chips__connector" *ngIf="!last && isChipVisible(index + 1)">{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
-        </ng-container>
+        @for (item of expressionsList; track item; let last = $last; let index = $index) {
+            @if (isChipVisible(index)) {
+                <igx-chip
+                    [removable]="true"
+                    [tabIndex]="-1"
+                    [style.--ig-size]="filteringElementsSize"
+                    (click)="onChipClicked(item.expression)"
+                    (remove)="onChipRemoved($event, item)">
+                    <igx-icon igxPrefix
+                        family="default"
+                        [name]="item.expression.condition.iconName">
+                    </igx-icon>
+                    <span #label>
+                        {{filteringService.getChipLabel(item.expression)}}
+                    </span>
+                </igx-chip>
+            }
+            @if (!last && isChipVisible(index + 1)) {
+                <span class="igx-filtering-chips__connector">{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
+            }
+        }
         <div #moreIcon [ngClass]="filteringIndicatorClass()" (click)="onChipClicked()">
             <igx-icon family="default" name="filter_list"></igx-icon>
             <igx-badge [value]="moreFiltersCount"></igx-badge>

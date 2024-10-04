@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CarouselIndicatorsOrientation, IgxButtonDirective, IgxCarouselComponent, IgxCarouselIndicatorDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxSlideComponent, IgxSwitchComponent, IgxToggleActionDirective } from 'igniteui-angular';
 
@@ -9,7 +8,7 @@ import { CarouselIndicatorsOrientation, IgxButtonDirective, IgxCarouselComponent
     styleUrls: ['carousel.sample.scss'],
     templateUrl: 'carousel.sample.html',
     standalone: true,
-    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective, NgIf]
+    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective]
 })
 export class CarouselSampleComponent {
     @ViewChild('car', { static: true })

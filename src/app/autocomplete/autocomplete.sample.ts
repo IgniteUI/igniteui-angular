@@ -1,5 +1,4 @@
 import { Component, PipeTransform, Pipe, ViewChild } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { UntypedFormBuilder, UntypedFormControl, Validators, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { worldInfo, attractions } from './data';
@@ -28,7 +27,6 @@ export class AutocompleteGroupPipeContains implements PipeTransform {
     templateUrl: `autocomplete.sample.html`,
     standalone: true,
     imports: [
-        NgFor,
         FormsModule,
         ReactiveFormsModule,
         IgxInputGroupComponent,

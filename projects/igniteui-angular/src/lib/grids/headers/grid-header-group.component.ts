@@ -25,7 +25,7 @@ import { IgxResizeHandleDirective } from '../resizing/resize-handle.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
-import { NgIf, NgClass, NgStyle, NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 
 const Z_INDEX = 9999;
 
@@ -37,7 +37,7 @@ const Z_INDEX = 9999;
     selector: 'igx-grid-header-group',
     templateUrl: './grid-header-group.component.html',
     standalone: true,
-    imports: [NgIf, NgClass, NgStyle, NgFor, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
+    imports: [NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
 

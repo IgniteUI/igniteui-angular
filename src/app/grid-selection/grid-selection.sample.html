@@ -3,12 +3,16 @@
 
     <igx-select [(ngModel)]="grid1.cellSelection" type="border">
         <label igxLabel>Cell Selection</label>
-        <igx-select-item *ngFor="let item of selectionModes" [value]="item">{{ item }}</igx-select-item>
+        @for (item of selectionModes; track item) {
+            <igx-select-item [value]="item">{{ item }}</igx-select-item>
+        }
     </igx-select>
 
     <igx-select [(ngModel)]="grid1.rowSelection" type="border">
         <label igxLabel>Row Selection</label>
-        <igx-select-item *ngFor="let item of selectionModes" [value]="item">{{ item }}</igx-select-item>
+        @for (item of selectionModes; track item) {
+            <igx-select-item [value]="item">{{ item }}</igx-select-item>
+        }
     </igx-select>
 </div>
 

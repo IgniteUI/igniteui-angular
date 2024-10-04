@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { cloneDeep } from 'lodash-es';
 import { take } from 'rxjs/operators';
 
@@ -8,14 +8,15 @@ import { RemoteNWindService } from './remote-nwind.service';
 import {
     ButtonGroupAlignment,
     ConnectedPositioningStrategy,
-    ElasticPositionStrategy, 
+    ElasticPositionStrategy,
     GlobalPositionStrategy,
     HorizontalAlignment,
     IChangeCheckboxEventArgs,
     IComboFilteringOptions,
     IComboSearchInputEventArgs,
     IComboSelectionChangingEventArgs,
-    IForOfState, 
+    IForOfState,
+    IGX_COMBO_DIRECTIVES,
     ISimpleComboSelectionChangingEventArgs,
     IgxButtonDirective,
     IgxButtonGroupComponent,
@@ -53,11 +54,10 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
         IgxSimpleComboComponent,
         IgxLabelDirective,
         IgxHintDirective,
-        IgxComboComponent,
+        IGX_COMBO_DIRECTIVES,
         IgxButtonDirective,
         ReactiveFormsModule,
         IgxToastComponent,
-        NgIf,
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
         IgxComboAddItemDirective,
@@ -121,7 +121,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private itemCount = 0;
 
     public valueKeyVar = 'field';
-    public currentDataType = '';
 
     public genres = [];
     public user: UntypedFormGroup;

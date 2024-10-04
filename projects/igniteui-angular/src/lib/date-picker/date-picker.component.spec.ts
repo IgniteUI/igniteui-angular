@@ -21,7 +21,7 @@ import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { NgIf, registerLocaleData } from "@angular/common";
+import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
@@ -1400,14 +1400,18 @@ export class IgxDatePickerTestKbrdComponent {
     template: `
     <igx-date-picker [mode]="mode">
         <label igxLabel>Label</label>
-        <igx-picker-toggle igxPrefix *ngIf="showCustomToggle">CustomToggle</igx-picker-toggle>
+        @if (showCustomToggle) {
+            <igx-picker-toggle igxPrefix>CustomToggle</igx-picker-toggle>
+        }
         <igx-prefix>Prefix</igx-prefix>
-        <igx-picker-clear igxSuffix *ngIf="showCustomClear">CustomClear</igx-picker-clear>
+        @if (showCustomClear) {
+            <igx-picker-clear igxSuffix>CustomClear</igx-picker-clear>
+        }
         <igx-suffix>Suffix</igx-suffix>
         <igx-hint>Hint</igx-hint>
     </igx-date-picker>`,
     standalone: true,
-    imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxLabelDirective, IgxSuffixDirective, IgxHintDirective, NgIf]
+    imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxLabelDirective, IgxSuffixDirective, IgxHintDirective]
 })
 export class IgxDatePickerWithProjectionsComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;

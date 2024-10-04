@@ -1,5 +1,5 @@
 <igx-chips-area (reorder)="handleReorder($event)" (moveEnd)="handleMoveEnd()">
-    <ng-container *ngFor="let expression of chipExpressions; let last = last;">
+    @for (expression of chipExpressions; track expression; let last = $last) {
         <igx-chip
             [id]="expression.fieldName"
             [title]="(expression.fieldName | igxGroupByMeta:grid).title"
@@ -25,7 +25,7 @@
                 [hidden]="(last && !dropAreaVisible)">
             </igx-icon>
         </span>
-    </ng-container>
+    }
     <div igxGroupAreaDrop
         class="igx-drop-area"
         [attr.gridId]="grid.id"

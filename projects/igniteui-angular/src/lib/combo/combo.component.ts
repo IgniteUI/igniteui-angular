@@ -1,4 +1,4 @@
-import { DOCUMENT, NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
     Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute
@@ -104,7 +104,6 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     ],
     standalone: true,
     imports: [
-        NgIf,
         NgTemplateOutlet,
         NgClass,
         FormsModule,

@@ -182,20 +182,22 @@ export class ColumnDefinitions {
     `;
 
     public static resizableColsComponent = `
-        <igx-column *ngFor="let c of columns" [field]="c.field"
-                                              [header]="c.field"
-                                              [resizable]="c.resizable"
-                                              [width]="c.width"
-                                              [minWidth]="c.minWidth"
-                                              [maxWidth]="c.maxWidth"
-                                              [hidden]="c.hidden"
-                                              [pinned]="c.pinned">
+    @for (c of columns; track c) {
+        <igx-column [field]="c.field"
+                    [header]="c.field"
+                    [resizable]="c.resizable"
+                    [width]="c.width"
+                    [minWidth]="c.minWidth"
+                    [maxWidth]="c.maxWidth"
+                    [hidden]="c.hidden"
+                    [pinned]="c.pinned">
         </igx-column>
-    `;
+    }`;
 
     public static iterableComponent = `
-        <igx-column *ngFor="let each of columns" [field]="each"></igx-column>
-    `;
+    @for (each of columns; track c) {
+        <igx-column [field]="each"></igx-column>
+    }`;
 
     public static columnTemplates = `
     <igx-column field="ID" [hasSummary]="true">
@@ -316,36 +318,41 @@ export class ColumnDefinitions {
     `;
 
     public static generatedWithSummaries = `
-        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [hasSummary]="true">
+    @for (c of columns; track c) {
+        <igx-column [field]="c.field" [header]="c.header" [hasSummary]="true">
         </igx-column>
-    `;
+    }`;
 
     public static generatedWithDataType = `
-        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [dataType]="c.dataType">
+    @for (c of columns; track c) {
+        <igx-column [field]="c.field" [header]="c.field" [dataType]="c.dataType">
         </igx-column>
-    `;
+    }`;
 
     public static generatedGroupableWithEnabledSummariesAndDataType = `
-        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [hasSummary]="true" [dataType]="c.dataType" [groupable]='c.groupable'>
+    @for (c of columns; track c) {
+        <igx-column [field]="c.field" [header]="c.header" [hasSummary]="true" [dataType]="c.dataType" [groupable]='c.groupable'>
         </igx-column>
-    `;
+    }`;
 
     public static generatedWithColumnBasedSummariesAndDataType = `
-        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [hasSummary]="c.hasSummary" [dataType]="c.dataType"></igx-column>
-    `;
+    @for (c of columns; track c) {
+        <igx-column [field]="c.field" [header]="c.header" [hasSummary]="c.hasSummary" [dataType]="c.dataType"></igx-column>
+    }`;
 
     public static generatedEditable = `
-    <igx-column *ngFor="let col of columns"
-            [field]="col.key"
-            [header]="col.key"
-            [dataType]="col.dataType"
-            [editable]="col.editable"></igx-column>
-    `;
+    @for (col of columns; track c) {
+        <igx-column [field]="col.key"
+                    [header]="col.key"
+                    [dataType]="col.dataType"
+                    [editable]="col.editable"></igx-column>
+    }`;
 
     public static generatedWithWidth = `
-        <igx-column  *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
+    @for (c of columns; track c) {
+        <igx-column  [field]="c.field" [header]="c.field" [width]="c.width">
         </igx-column>
-    `;
+    }`;
 
     public static productFilterSortPin = `
         <igx-column [field]="'ID'" [header]="'ID'"></igx-column>

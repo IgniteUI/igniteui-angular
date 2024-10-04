@@ -109,9 +109,11 @@
                 <span slot="suffix"><igx-icon>face</igx-icon></span>
                 <span slot="helper-text">
                     Web component
-                    <strong *ngIf="inputType === 'line'" style="color: hsla(var(--ig-error-500))">
-                        don't have {{inputType}} type!
-                    </strong>
+                    @if (inputType === 'line') {
+                        <strong style="color: hsla(var(--ig-error-500))">
+                            don't have {{inputType}} type!
+                        </strong>
+                    }
                 </span>
             </igc-input>
 
@@ -191,19 +193,21 @@
             </igx-input-group>
 
             <!-- required date field -->
-            <igx-date-picker *ngIf="isRequired" #requiredDatePicker
-                             required
-                             name="requiredDatePicker"
-                             [(ngModel)]="date"
-                             [type]="inputType"
-                             [disabled]="isDisabled">
-                <label igxLabel>Date: </label>
-                <igx-picker-toggle igxSuffix>
-                    <igx-icon (click)="requiredDatePicker.open()">date_range</igx-icon>
-                </igx-picker-toggle>
-                <igx-picker-clear></igx-picker-clear>
-                <igx-hint>Input is shown only if is required is ON</igx-hint>
-            </igx-date-picker>
+            @if (isRequired) {
+                <igx-date-picker #requiredDatePicker
+                        required
+                        name="requiredDatePicker"
+                        [(ngModel)]="date"
+                        [type]="inputType"
+                        [disabled]="isDisabled">
+                    <label igxLabel>Date: </label>
+                    <igx-picker-toggle igxSuffix>
+                        <igx-icon (click)="requiredDatePicker.open()">date_range</igx-icon>
+                    </igx-picker-toggle>
+                    <igx-picker-clear></igx-picker-clear>
+                    <igx-hint>Input is shown only if is required is ON</igx-hint>
+                </igx-date-picker>
+            }
 
             <!-- Text field mask -->
             <igx-input-group [type]="inputType">
@@ -221,17 +225,19 @@
             </igx-input-group>
 
             <!-- date field -->
-            <igx-date-picker *ngIf="!isRequired" #datePicker
-                             [(value)]="date"
-                             [type]="inputType"
-                             [disabled]="isDisabled">
-                <label igxLabel>Date: </label>
-                <igx-picker-toggle igxSuffix>
-                    <igx-icon (click)="datePicker.open()">date_range</igx-icon>
-                </igx-picker-toggle>
-                <igx-picker-clear></igx-picker-clear>
-                <igx-hint>Input is shown only if is required is OFF</igx-hint>
-            </igx-date-picker>
+            @if (!isRequired) {
+                <igx-date-picker #datePicker
+                        [(value)]="date"
+                        [type]="inputType"
+                        [disabled]="isDisabled">
+                    <label igxLabel>Date: </label>
+                    <igx-picker-toggle igxSuffix>
+                        <igx-icon (click)="datePicker.open()">date_range</igx-icon>
+                    </igx-picker-toggle>
+                    <igx-picker-clear></igx-picker-clear>
+                    <igx-hint>Input is shown only if is required is OFF</igx-hint>
+                </igx-date-picker>
+            }
 
             <div class="border-wrapper">
                 <p class="input-group-sample__info">
@@ -276,12 +282,11 @@
                             placeholder="Search"
                             [disabled]="isDisabled"
                     />
-                    <igx-suffix
-                            *ngIf="input.value.length > 0"
-                            (click)="input.value = input.defaultValue"
-                    >
-                        <igx-icon>clear</igx-icon>
-                    </igx-suffix>
+                    @if (input.value.length > 0) {
+                        <igx-suffix (click)="input.value = input.defaultValue">
+                            <igx-icon>clear</igx-icon>
+                        </igx-suffix>
+                    }
                     <igx-hint>Helper text</igx-hint>
                 </igx-input-group>
 
@@ -384,9 +389,11 @@
             </igx-input-group>
             <igx-select #select required formControlName="mySelectField">
                 <label igxLabel>A Select Field</label>
-                <igx-select-item *ngFor="let item of items" [value]="item">
-                    {{item}}
-                </igx-select-item>
+                @for (item of items; track item) {
+                    <igx-select-item [value]="item">
+                        {{item}}
+                    </igx-select-item>
+                }
             </igx-select>
         </form>
     </div>

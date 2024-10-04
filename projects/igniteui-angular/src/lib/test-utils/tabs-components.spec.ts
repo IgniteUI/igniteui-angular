@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -101,15 +100,17 @@ export class TabsTestComponent {
     template: `
     <div #wrapperDiv style="display: flex;">
         <igx-tabs>
-            <igx-tab-item *ngFor="let tab of collection">
-                <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
-                <igx-tab-content></igx-tab-content>
-            </igx-tab-item>
+            @for (tab of collection; track tab) {
+                <igx-tab-item>
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                    <igx-tab-content></igx-tab-content>
+                </igx-tab-item>
+            }
         </igx-tabs>
     </div>
     `,
     standalone: true,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, NgFor]
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTest2Component {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
@@ -201,14 +202,16 @@ export class TemplatedTabsTestComponent {
     template: `
     <div>
         <igx-tabs [selectedIndex]="2">
-            <igx-tab-item *ngFor="let tab of collection">
-                <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
-            </igx-tab-item>
+            @for (tab of collection; track tab) {
+                <igx-tab-item>
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                </igx-tab-item>
+            }
         </igx-tabs>
     </div>
     `,
     standalone: true,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective, NgFor]
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTestSelectedTabComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
@@ -537,18 +540,20 @@ export class TabsWithPrefixSuffixTestComponent extends TabsTestComponent {
     template: `
     <div #wrapperDiv>
         <igx-tabs>
-            <igx-tab-item *ngFor="let contact of contacts">
-                <igx-tab-header>
-                    <span igxTabHeaderLabel>{{contact.Name}}</span>
-                </igx-tab-header>
-                <igx-tab-content>
-                </igx-tab-content>
-            </igx-tab-item>
+            @for (contact of contacts; track contact) {
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <span igxTabHeaderLabel>{{contact.Name}}</span>
+                    </igx-tab-header>
+                    <igx-tab-content>
+                    </igx-tab-content>
+                </igx-tab-item>
+            }
         </igx-tabs>
     </div>
     `,
     standalone: true,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, NgFor]
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsContactsComponent extends TabsTestComponent {
     public contacts = SampleTestData.personAvatarData();
@@ -558,15 +563,17 @@ export class TabsContactsComponent extends TabsTestComponent {
     template: `
     <div #wrapperDiv style="display: flex;">
         <igx-tabs>
-            <igx-tab-item *ngFor="let tab of collection" [(selected)]="tab.selected">
-                <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
-                <igx-tab-content></igx-tab-content>
-            </igx-tab-item>
+            @for (tab of collection; track tab) {
+                <igx-tab-item [(selected)]="tab.selected">
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                    <igx-tab-content></igx-tab-content>
+                </igx-tab-item>
+            }
         </igx-tabs>
     </div>
     `,
     standalone: true,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, NgFor]
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class AddingSelectedTabComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
@@ -588,15 +595,17 @@ export class AddingSelectedTabComponent {
     template: `
     <div #wrapperDiv>
         <igx-tabs>
-            <igx-tab-item *ngFor="let tab of collection">
-                <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
-                <igx-tab-content></igx-tab-content>
-            </igx-tab-item>
+            @for (tab of collection; track tab) {
+                <igx-tab-item>
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                    <igx-tab-content></igx-tab-content>
+                </igx-tab-item>
+            }
         </igx-tabs>
     </div>
     `,
     standalone: true,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, NgFor]
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsRtlComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;

@@ -1,7 +1,7 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { getLocaleCurrencySymbol, NgFor, registerLocaleData } from '@angular/common';
+import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import localeJa from '@angular/common/locales/ja';
 
@@ -1468,7 +1468,7 @@ describe('IgxGrid - Column properties #grid', () => {
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnsFromIterableComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1495,7 +1495,7 @@ interface IColumnConfig {
     </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor, IgxButtonDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxButtonDirective]
 })
 export class ResizableColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1546,10 +1546,12 @@ export class TemplatedColumnsComponent {
 @Component({
     template: `
         <igx-grid [data]="data">
-            <igx-column *ngFor="let field of columns" [field]="field" [editable]="true"
-                [cellTemplate]="cell" [headerTemplate]="header"
-                [cellEditorTemplate]="editor" [hasSummary]="true" [summaryTemplate]="summary">
-            </igx-column>
+            @for (field of columns; track field) {
+                <igx-column [field]="field" [editable]="true"
+                    [cellTemplate]="cell" [headerTemplate]="header"
+                    [cellEditorTemplate]="editor" [hasSummary]="true" [summaryTemplate]="summary">
+                </igx-column>
+            }
         </igx-grid>
 
         <ng-template #cell let-value>
@@ -1569,7 +1571,7 @@ export class TemplatedColumnsComponent {
         </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor, IgxSummaryTemplateDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxSummaryTemplateDirective]
 })
 export class TemplatedInputColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

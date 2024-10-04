@@ -32,13 +32,14 @@
                     <igx-tab-content>
                         <div class="sample-scrollable">
                             <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
-                                <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
-                                               *ngFor="let contact of contacts">
-                                    <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
-                                    <p igxListLineTitle>{{contact.text}}</p>
-                                    <span igxListLineSubTitle>{{contact.phone}}</span>
-                                    <igx-icon igxListAction>phone</igx-icon>
-                                </igx-list-item>
+                                @for (contact of contacts; track contact) {
+                                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item">
+                                        <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
+                                        <p igxListLineTitle>{{contact.text}}</p>
+                                        <span igxListLineSubTitle>{{contact.phone}}</span>
+                                        <igx-icon igxListAction>phone</igx-icon>
+                                    </igx-list-item>
+                                }
                             </igx-list>
                         </div>
                     </igx-tab-content>
@@ -224,15 +225,17 @@
         <div>
             <h3 class="sample-title">Tabs with scroll</h3>
             <igx-tabs>
-                <igx-tab-item *ngFor="let tab of scrollableTabs;">
-                    <igx-tab-header>
-                        <igx-icon igxTabHeaderIcon>folder</igx-icon>
-                        <span igxTabHeaderLabel>Lorem ipsum. {{tab}}</span>
-                    </igx-tab-header>
-                    <igx-tab-content>
-                        Content of {{tab}}
-                    </igx-tab-content>
-                </igx-tab-item>
+                @for (tab of scrollableTabs; track tab) {
+                    <igx-tab-item>
+                        <igx-tab-header>
+                            <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                            <span igxTabHeaderLabel>Lorem ipsum. {{tab}}</span>
+                        </igx-tab-header>
+                        <igx-tab-content>
+                            Content of {{tab}}
+                        </igx-tab-content>
+                    </igx-tab-item>
+                }
             </igx-tabs>
         </div>
 
@@ -243,22 +246,24 @@
             <igx-tabs
                 #dynamicTabs
             >
-                <igx-tab-item *ngFor="let contact of contacts; index as i">
-                    <igx-tab-header>
-                        <igx-avatar igxPrefix [initials]="contact.text" size="small">person</igx-avatar>
-                        <span igxTabHeaderLabel>{{contact.text}}</span>
-                        <button
-                            igxIconButton="flat"
-                            igxSuffix
-                            (click)="closeTab(i)"
-                        >
-                            <igx-icon family="internal_indigo" name="clear"></igx-icon>
-                        </button>
-                    </igx-tab-header>
-                    <igx-tab-content>
-                        Phone: {{contact.phone}}
-                    </igx-tab-content>
-                </igx-tab-item>
+                @for (contact of contacts; track contact; let i = $index) {
+                    <igx-tab-item>
+                        <igx-tab-header>
+                            <igx-avatar igxPrefix [initials]="contact.text" size="small">person</igx-avatar>
+                            <span igxTabHeaderLabel>{{contact.text}}</span>
+                            <button
+                                igxIconButton="flat"
+                                igxSuffix
+                                (click)="closeTab(i)"
+                            >
+                                <igx-icon family="internal_indigo" name="clear"></igx-icon>
+                            </button>
+                        </igx-tab-header>
+                        <igx-tab-content>
+                            Phone: {{contact.phone}}
+                        </igx-tab-content>
+                    </igx-tab-item>
+                }
             </igx-tabs>
         </div>
 
@@ -269,17 +274,18 @@
             <igx-tabs
                 #dynamicTabs
             >
-                <igx-tab-item
-                    *ngFor="let tab of tabsArray; index as i"
-                    [(selected)]="tab.selected"
-                >
-                    <igx-tab-header>
-                        <span igxTabHeaderLabel>{{tab.name}}</span>
-                    </igx-tab-header>
-                    <igx-tab-content>
-                        {{tab.name}}
-                    </igx-tab-content>
-                </igx-tab-item>
+                @for (tab of tabsArray; track tab; let i = $index) {
+                    <igx-tab-item
+                        [(selected)]="tab.selected"
+                    >
+                        <igx-tab-header>
+                            <span igxTabHeaderLabel>{{tab.name}}</span>
+                        </igx-tab-header>
+                        <igx-tab-content>
+                            {{tab.name}}
+                        </igx-tab-content>
+                    </igx-tab-item>
+                }
             </igx-tabs>
         </div>
 
@@ -302,12 +308,12 @@
                         <span igxTabHeaderLabel>Favorite</span>
                     </igx-tab-header>
                     <igx-tab-content>
-                       <div style="height: 80vh;">
-                        Test
-                       </div>
+                        <div style="height: 80vh;">
+                            Test
+                        </div>
                     </igx-tab-content>
                 </igx-tab-item>
-                </igx-tabs>
+            </igx-tabs>
         </div>
     </div>
 </div>

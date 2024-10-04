@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
-import { NgFor } from '@angular/common';
 
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -12,7 +11,7 @@ import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.compo
     styleUrls: ['grid-search.sample.scss'],
     templateUrl: 'grid-search.sample.html',
     standalone: true,
-    imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, GridSearchBoxComponent]
+    imports: [IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, GridSearchBoxComponent]
 })
 
 export class GridSearchComponent implements OnInit {
