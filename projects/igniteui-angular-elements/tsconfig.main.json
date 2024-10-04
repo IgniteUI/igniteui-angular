@@ -5,7 +5,7 @@
     "outDir": "../../out-tsc/app",
   },
   "files": [
-    "src/main.app.ts",
+    "src/main.ts",
     "src/polyfills.ts"
   ],
   "include": [
