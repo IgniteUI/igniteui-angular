@@ -738,7 +738,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(displayedRow).toContain('RowMember');
         });
 
-        fit('should render correctly when going from all dimensions and values disabled to single column dimension enabled.', () => {
+        it('should render correctly when going from all dimensions and values disabled to single column dimension enabled.', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
             // disable all
             pivotGrid.pivotConfiguration.rows.forEach(x => pivotGrid.toggleDimension(x));
