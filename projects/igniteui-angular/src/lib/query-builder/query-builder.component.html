@@ -147,20 +147,17 @@
                     expressionItem.hovered
                 "
             >
-                <span tabindex="-1">
-                    <igx-icon
-                        tabindex="0"
-                        (keydown)="invokeClick($event)"
-                        (click)="enterExpressionEdit(expressionItem)"
-                    >
+                <span tabindex="0"
+                    (keydown)="invokeClick($event)"
+                    (click)="enterExpressionEdit(expressionItem)">
+                    <igx-icon>
                         edit
                     </igx-icon>
                 </span>
-                <span tabindex="-1">
+                <span tabindex="0"
+                    (keydown)="invokeClick($event)"
+                    (click)="enterExpressionAdd(expressionItem)">
                     <igx-icon
-                        tabindex="0"
-                        (keydown)="invokeClick($event)"
-                        (click)="enterExpressionAdd(expressionItem)"
                         *ngIf="
                             !expressionItem.inAddMode &&
                             (expressionItem.parent !== currentGroup ||

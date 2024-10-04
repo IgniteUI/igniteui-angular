@@ -2092,11 +2092,11 @@ export class GridFunctions {
                 case 0: expect(element).toHaveClass('igx-filter-tree__line--or'); break;
                 case 1: expect(element).toHaveClass('igx-chip'); break;
                 case 2: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 3: expect(element).toHaveClass('igx-icon');
-                    expect(element.innerText).toContain('edit');
+                case 3: expect(element.firstChild).toHaveClass('igx-icon');
+                    expect(element.firstChild.textContent).toContain('edit');
                     break;
-                case 4: expect(element).toHaveClass('igx-icon');
-                    expect(element.innerText).toContain('add');
+                case 4: expect(element.firstChild).toHaveClass('igx-icon');
+                    expect(element.firstChild.textContent).toContain('add');
                     break;
                 case 5: expect(element).toHaveClass('igx-chip'); break;
                 case 6: expect(element).toHaveClass('igx-chip__remove'); break;
