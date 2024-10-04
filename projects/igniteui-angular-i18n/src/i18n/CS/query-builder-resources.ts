@@ -3,6 +3,7 @@ import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 const QueryBuilderResourceStringsCS_: ExpandRequire<IQueryBuilderResourceStrings> = {
     igx_query_builder_date_placeholder: 'Datum výdeje',
     igx_query_builder_time_placeholder: 'Čas vyzvednutí',
+    igx_query_builder_datetime_placeholder: 'Select date & time',
     igx_query_builder_filter_operator_and: 'A',
     igx_query_builder_filter_operator_or: 'Nebo',
     igx_query_builder_filter_contains: 'Obsahuje',

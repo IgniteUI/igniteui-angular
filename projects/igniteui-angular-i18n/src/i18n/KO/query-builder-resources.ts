@@ -3,6 +3,7 @@ import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 const QueryBuilderResourceStringsKO_: ExpandRequire<IQueryBuilderResourceStrings> = {
     igx_query_builder_date_placeholder: '픽업 날짜',
     igx_query_builder_time_placeholder: '인도 시간',
+    igx_query_builder_datetime_placeholder: 'Select date & time',
     igx_query_builder_filter_operator_and: '그리고',
     igx_query_builder_filter_operator_or: '또는',
     igx_query_builder_filter_contains: '포함',

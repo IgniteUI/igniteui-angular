@@ -3,6 +3,7 @@ import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 const QueryBuilderResourceStringsZHHANS_: ExpandRequire<IQueryBuilderResourceStrings> = {
     igx_query_builder_date_placeholder: '选择日期',
     igx_query_builder_time_placeholder: '取车时间',
+    igx_query_builder_datetime_placeholder: 'Select date & time',
     igx_query_builder_filter_operator_and: '和',
     igx_query_builder_filter_operator_or: '或',
     igx_query_builder_filter_contains: '包含',

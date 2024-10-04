@@ -3,6 +3,7 @@ import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 const QueryBuilderResourceStringsDE_: ExpandRequire<IQueryBuilderResourceStrings> = {
     igx_query_builder_date_placeholder: 'Wähle Datum',
     igx_query_builder_time_placeholder: 'Abholungszeit',
+    igx_query_builder_datetime_placeholder: 'Select date & time',
     igx_query_builder_filter_operator_and: 'Und',
     igx_query_builder_filter_operator_or: 'Oder',
     igx_query_builder_filter_contains: 'Enthält',

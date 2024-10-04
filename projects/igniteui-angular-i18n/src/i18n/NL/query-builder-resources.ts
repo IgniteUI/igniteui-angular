@@ -3,6 +3,7 @@ import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 const QueryBuilderResourceStringsNL_: ExpandRequire<IQueryBuilderResourceStrings> = {
     igx_query_builder_date_placeholder: 'Ophaaldatum',
     igx_query_builder_time_placeholder: 'Ophaaltijd',
+    igx_query_builder_datetime_placeholder: 'Select date & time',
     igx_query_builder_filter_operator_and: 'En',
     igx_query_builder_filter_operator_or: 'Of',
     igx_query_builder_filter_contains: 'Bevat',

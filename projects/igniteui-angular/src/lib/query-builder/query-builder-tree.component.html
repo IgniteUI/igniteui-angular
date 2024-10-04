@@ -296,9 +296,6 @@
                     (click)="picker.open()"
                     type="box"
                     [readOnly]="true"
-                    [placeholder]="
-                        this.resourceStrings.igx_query_builder_date_placeholder
-                    "
                     [disabled]="
                         !selectedField ||
                         !selectedCondition ||
@@ -312,6 +309,7 @@
                     [displayFormat]="selectedField.pipeArgs.format"
                     [weekStart]="selectedField.pipeArgs.weekStart"
                 >
+                    <label igxLabel>{{this.resourceStrings.igx_query_builder_date_placeholder}}</label>
                     <!-- disable default icons -->
                     <igx-picker-toggle></igx-picker-toggle>
                     <igx-picker-clear></igx-picker-clear>
@@ -349,7 +347,7 @@
                     *ngIf="selectedField && selectedField.dataType === 'dateTime'"
                     type="box"
                 >
-                    <label igxLabel>{{this.resourceStrings.igx_query_builder_date_placeholder}}</label>
+                    <label igxLabel>{{this.resourceStrings.igx_query_builder_datetime_placeholder}}</label>
                     <input
                         #input
                         igxInput

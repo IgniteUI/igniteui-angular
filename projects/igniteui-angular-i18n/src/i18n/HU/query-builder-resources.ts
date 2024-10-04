@@ -3,6 +3,7 @@ import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 const QueryBuilderResourceStringsHU_: ExpandRequire<IQueryBuilderResourceStrings> = {
     igx_query_builder_date_placeholder: 'Felvétel dátuma',
     igx_query_builder_time_placeholder: 'Felvétel időpontja',
+    igx_query_builder_datetime_placeholder: 'Select date & time',
     igx_query_builder_filter_operator_and: 'És',
     igx_query_builder_filter_operator_or: 'Vagy',
     igx_query_builder_filter_contains: 'Tartalmazza',
