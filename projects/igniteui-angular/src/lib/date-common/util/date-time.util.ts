@@ -549,24 +549,27 @@ export abstract class DateTimeUtil {
 
     /**
      * Returns an input format that can be used by the date-time editors, as
-     * - if the input format is already numeric, return it as is
+     * - if the format is already numeric, return it as is
      * - if it is among the predefined numeric ones, return it as the equivalent locale-based format
      *   for the corresponding numeric date parts
      * - otherwise, return an empty string
      */
-    public static getNumericInputFormat(locale: string, inputFormat: string): string {
+    public static getNumericInputFormat(locale: string, format: string): string {
         let resultFormat = '';
-        if (predefinedNumericFormats.has(inputFormat)) {
-            resultFormat = DateTimeUtil.getLocaleInputFormatFromParts(locale, predefinedNumericFormats.get(inputFormat));
+        if (!format) {
+            return resultFormat;
+        }
+        if (predefinedNumericFormats.has(format)) {
+            resultFormat = DateTimeUtil.getLocaleInputFormatFromParts(locale, predefinedNumericFormats.get(format));
 
-        } else if (DateTimeUtil.isFormatNumeric(locale, inputFormat)) {
-            resultFormat = inputFormat;
+        } else if (DateTimeUtil.isFormatNumeric(locale, format)) {
+            resultFormat = format;
         }
         return resultFormat;
     }
 
     /** Gets the locale-based format from an array of date parts */
-    public static getLocaleInputFormatFromParts(locale: string, dateParts: DateParts[]): string {
+    private static getLocaleInputFormatFromParts(locale: string, dateParts: DateParts[]): string {
         const options = {};
         dateParts.forEach(p => {
             if (p === DateParts.Year) {
