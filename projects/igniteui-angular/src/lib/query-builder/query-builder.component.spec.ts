@@ -1680,12 +1680,12 @@ describe('IgxQueryBuilder', () => {
                 (item.querySelector('.igx-filter-tree__expression-condition') as HTMLElement).innerText == 'Not In'
             )[0];
             const toggleBtn = expandableItem.querySelector('.igx-filter-tree__details-button') as HTMLElement;
-            expect((toggleBtn.querySelector('igx-icon') as HTMLElement).innerText).toBe('unfold_less');
+            expect((toggleBtn.querySelector('igx-icon') as HTMLElement).innerText).toBe('unfold_more');
             toggleBtn.click();
             tick(100);
             fix.detectChanges();
 
-            expect((toggleBtn.querySelector('igx-icon') as HTMLElement).innerText).toBe('unfold_more');
+            expect((toggleBtn.querySelector('igx-icon') as HTMLElement).innerText).toBe('unfold_less');
             expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
         }));
 
@@ -2114,8 +2114,8 @@ describe('IgxQueryBuilder', () => {
             expect(dialogOutlet).toBeDefined();
 
             expect(dialogOutlet.querySelector('.igx-dialog__window-title').textContent.trim()).toBe('My Confirmation');
-            expect(dialogOutlet.querySelector('.igx-dialog__window-content').children[0].textContent.trim()).toBe('My changing entity message');
-            expect(dialogOutlet.querySelector('.igx-dialog__window-content').children[1].textContent.trim()).toBe('My do not show this dialog again');
+            expect(dialogOutlet.querySelector('.igx-query-builder-dialog').children[0].textContent.trim()).toBe('My changing entity message');
+            expect(dialogOutlet.querySelector('.igx-query-builder-dialog').children[1].textContent.trim()).toBe('My do not show this dialog again');
             expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[0].textContent.trim()).toBe('My Cancel');
             expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[1].textContent.trim()).toBe('My Confirm');
 
@@ -2217,10 +2217,10 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
     template: `
      <igx-query-builder #queryBuilder [entities]="this.entities" [expressionTree]="this.expressionTree">
          <igx-query-builder-header [title]="'Custom Title'" [showLegend]="showLegend"></igx-query-builder-header>
-         <ng-template #searchValueTemplate 
-                        igxQueryBuilderSearchValue 
+         <ng-template #searchValueTemplate
+                        igxQueryBuilderSearchValue
                         let-searchValue
-                        let-selectedField = "selectedField" 
+                        let-selectedField = "selectedField"
                         let-selectedCondition = "selectedCondition"
                         let-defaultSearchValueTemplate = "defaultSearchValueTemplate">
             <input type="text" class="custom-class" required [(ngModel)]="searchValue.value"/>
