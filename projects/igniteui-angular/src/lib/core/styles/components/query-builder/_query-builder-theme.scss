@@ -171,15 +171,6 @@
     }
 
     %advanced-filter__header {
-        @if $variant != 'indigo' {
-            @include type-style('h6');
-        } @else {
-            @include type-style('h5');
-
-            border-top-left-radius: border-radius(rem(10px));
-            border-top-right-radius: border-radius(rem(10px));
-        }
-
         @if $variant == 'bootstrap' {
             > * {
                 margin-bottom: rem(0) !important;
@@ -194,6 +185,10 @@
         border-radius: $border-radius $border-radius 0 0;
         margin-bottom: 0;
         border-block-end: rem(1px) solid var-get($theme, 'header-border');
+    }
+
+    %advanced-filter__title {
+        @include type-style(if($variant != 'indigo', 'h6', 'h5'));
     }
 
     %advanced-filter__main {
@@ -287,7 +282,7 @@
         display: flex;
         align-items: center;
         width: 100%;
-        gap: $gap;
+        gap: if($variant != 'indigo', $gap, rem(8px));
         position: relative;
 
         > igx-chip {
@@ -318,7 +313,7 @@
 
     %filter-tree__expression-actions {
         display: inline-flex;
-        gap: $gap;
+        gap: if($variant != 'indigo', $gap, rem(8px));
 
         span {
             display: inline-flex;
