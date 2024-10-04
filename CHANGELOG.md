@@ -13,7 +13,9 @@ All notable changes for each version of this project will be documented in this 
     - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
     - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
 - `ColumnType`, `IgxColumn`
-    - Added a new `editorOptions` property that allows to pass optional parameters to control properties of the default column editors - both for cells and the filtering UI for all modes (`quickFilter`, `excelStyle` and the Advanced filtering). Accepts an `IColumnEditorOptions` object with the `dateTimeFormat` property, that would be used as input format for the editors of
+    - The built-in editors for columns of type `date`, `dateTime` and `time` now use a default input format as per the `IgxGrid`'s `locale`. This is valid both for cell editors and the ones in the filtering UI for all modes - `quickFilter`, `excelStyle` and the Advanced filtering.
+    - In case the `pipeArgs.displayFormat` property of a date-time column is set and contains only numeric date-time parts or such that can be handled by the editors, the built-in editors input format is inferred from it.
+    - To configure the built-in editors, a new `editorOptions` property is added that allows to pass optional parameters. Accepts an `IColumnEditorOptions` object with the `dateTimeFormat` property, that is used as input format for the editors of
     `date`, `dateTime` and `time` column data types:
         ```ts
             const editorOptions: IColumnEditorOptions = { Field?
@@ -23,11 +25,10 @@ All notable changes for each version of this project will be documented in this 
         ```html
             <igx-column field="sampleDate" dataType="date" [editorOptions]="editorOptions"></igx-column>
         ```
-        If not set, the input format will be inferred from the `pipeArgs.displayFormat` property of the column, in case it is set and contains only numeric date-time parts or such that can be handled by the editors. Alternatively, a fallback input format as per the `IgxGrid`'s `locale` is used.
 - `FieldType` (`IgxQueryBuilder`)
-    - Similar to the above, the fields now accept an `editorOptions` object of type `IFieldEditorOptions`. Its `dateTimeFormat` property would be used as input format for the query editors of date-time fields. 
+    - Similar to the above, the fields now accept an `editorOptions` object of type `IFieldEditorOptions`. Its `dateTimeFormat` property is used as input format for the query editors of date-time fields.
 - `IgxDateTimeEditor`, `IgxDatePicker`, `IgxTimePicker`, `IgxDateRangePicker`
-    - In case the `inputFormat` property is not set, the input format would be inferred from
+    - In case the `inputFormat` property is not set, the input format is inferred from
     `displayFormat` if set and if it contains only numeric date-time parts.
 - `IgxTimePicker`
     - The input and display formats are now adjusted based on the locale. For instance, day period time part (AM/PM or a/p) would not be displayed for locales that do not require it.
