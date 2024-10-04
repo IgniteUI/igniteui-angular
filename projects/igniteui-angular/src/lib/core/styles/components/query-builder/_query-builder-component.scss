@@ -24,6 +24,10 @@
             @extend %advanced-filter__header !optional;
         }
 
+        @include e(title) {
+            @extend %advanced-filter__title !optional;
+        }
+
         @include e(main) {
             @extend %advanced-filter__main !optional;
         }

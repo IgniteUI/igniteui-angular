@@ -152,7 +152,7 @@
                     (click)="enterExpressionEdit(expressionItem)">
                     <igx-icon
                         family="default"
-                        name="edit"                        
+                        name="edit"
                     >
                     </igx-icon>
                 </span>
@@ -161,7 +161,7 @@
                     (click)="enterExpressionAdd(expressionItem)">
                     <igx-icon
                         family="default"
-                        name="add"                        
+                        name="add"
                         *ngIf="
                             !expressionItem.inAddMode &&
                             (expressionItem.parent !== currentGroup ||
@@ -177,8 +177,8 @@
             <div igxButton class="igx-filter-tree__details-button" *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree"
                 (click)="expanderClick($event, expressionItem)">
                 <span>{{this.resourceStrings.igx_query_builder_details}}</span>
-                <igx-icon *ngIf="!expressionItem.expanded" family="default" name="unfold_less" role="button"></igx-icon>
-                <igx-icon *ngIf="expressionItem.expanded" family="default" name="unfold_more" role="button"></igx-icon>
+                <igx-icon *ngIf="expressionItem.expanded" family="default" name="unfold_less" role="button"></igx-icon>
+                <igx-icon *ngIf="!expressionItem.expanded" family="default" name="unfold_more" role="button"></igx-icon>
             </div>
 
         </div>
