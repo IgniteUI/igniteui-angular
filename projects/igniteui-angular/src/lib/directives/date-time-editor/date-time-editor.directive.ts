@@ -324,10 +324,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['locale'] && !changes['locale'].firstChange) {
             this.updateDefaultFormat();
-            if (!this._inputFormat) {
-                this.setMask(this.inputFormat);
-                this.updateMask();
-            }
+            this.setMask(this.inputFormat);
+            this.updateMask();
         }
         if (changes['inputFormat'] && !changes['inputFormat'].firstChange) {
             this.updateMask();

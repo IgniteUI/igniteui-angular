@@ -1245,6 +1245,21 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 expect(dateTimeEditorDirective.value.getMilliseconds()).toEqual(today.getMilliseconds());
             });
+
+            it('should update the displayed value on locale change when both inputFormat and displayFormat are set', () => {
+                registerLocaleData(localeBg);
+                dateTimeEditorDirective.inputFormat = 'dd/MM/yyyy';
+                dateTimeEditorDirective.displayFormat = 'shortDate';
+                dateTimeEditorDirective.value = new Date(2023, 1, 1);
+                fixture.detectChanges();
+
+                expect(inputElement.nativeElement.value.normalize('NFKC')).toBe('2/1/23');
+
+                fixture.componentInstance.locale = 'bg-BG';
+                fixture.detectChanges();
+
+                expect(inputElement.nativeElement.value.normalize('NFKC')).toBe('1.02.23 г.');
+            });
         });
 
         describe('Form control tests: ', () => {
@@ -1353,7 +1368,7 @@ export class IgxDateTimeEditorBaseTestComponent {
 @Component({
     template: `
     <igx-input-group #igxInputGroup>
-        <input type="text" igxInput [disabled]="disabled" [readonly]="readonly"
+        <input type="text" igxInput [disabled]="disabled" [readonly]="readonly" [locale]="locale"
             [igxDateTimeEditor]="dateTimeFormat" [displayFormat]="displayFormat" [placeholder]="placeholder"
             [(ngModel)]="date" [minValue]="minDate" [maxValue]="maxDate" [promptChar]="promptChar"/>
     </igx-input-group>
@@ -1374,6 +1389,7 @@ export class IgxDateTimeEditorSampleComponent {
     public disabled = false;
     public readonly = false;
     public placeholder = null;
+    public locale = 'en-US';
 }
 
 @Component({
