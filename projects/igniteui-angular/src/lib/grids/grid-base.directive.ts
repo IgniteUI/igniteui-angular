@@ -3584,13 +3584,30 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.summaryService.grid = this as any;
     }
 
+    private onFocusOut(event: FocusEvent) {
+        if (!this.crudService.cell &&
+            !!this.navigation.activeNode &&
+            ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
+                this.navigation.activeNode.row < this.dataView.length)
+                || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
+                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
+            !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
+            this.navigation.lastActiveNode = this.navigation.activeNode;
+            this.navigation.activeNode = {} as IActiveNode;
+            //console.log("cleared");
+            this.notifyChanges();
+        }
+    }
+
     /**
      * @hidden
      * @internal
      */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
-        fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
+        fromEvent(this.nativeElement, 'focusout')
+            .pipe(filter(() => !!this.navigation.activeNode), destructor)
+            .subscribe(event => this.onFocusOut(event));
             //console.log("Grid focusout", document.activeElement);
             //console.log(this.crudService.cell);
             //console.log(this.navigation.activeNode);
@@ -3599,19 +3616,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             //console.log(this.rowEditable);
             //console.log(this.crudService.rowEditingBlocked);
             //console.log(this.crudService.rowInEditMode);
-            if (!this.crudService.cell &&
-                !!this.navigation.activeNode &&
-                ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
-                    this.navigation.activeNode.row < this.dataView.length)
-                    || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                    || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
-                !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
-                this.navigation.lastActiveNode = this.navigation.activeNode;
-                this.navigation.activeNode = {} as IActiveNode;
-                //console.log("cleared");
-                this.notifyChanges();
-            }
-        });
         this.rowAddedNotifier.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.rowDeletedNotifier.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
@@ -6248,7 +6252,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     /* blazorCSSuppress */
     public endEdit(commit = true, event?: Event): boolean {
-        return this.crudService.endEdit(commit, event);
+        const success = this.crudService.endEdit(commit, event);
+        this.onFocusOut({ target: this.tbody.nativeElement } as unknown as FocusEvent);
+        return success;
     }
 
     /**
