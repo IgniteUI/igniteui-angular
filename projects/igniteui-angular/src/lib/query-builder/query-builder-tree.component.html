@@ -133,7 +133,7 @@
             <div #tooltipRef="tooltip" igxTooltip>
                 {{
                     expressionItem.expression.searchTree ?
-                        expressionItem.expression.searchTree.returnFields :
+                        expressionItem.expression.searchTree.returnFields.join(', ') :
                         expressionItem.expression.condition.isUnary ?
                             getConditionFriendlyName(expressionItem.expression.condition.name) :
                             expressionItem.expression.searchVal
@@ -174,8 +174,12 @@
                     </igx-icon>
                 </span>
             </div>
-            <div igxButton class="igx-filter-tree__details-button" *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree"
-                (click)="expanderClick($event, expressionItem)">
+            <div *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree"
+                igxButton
+                class="igx-filter-tree__details-button"
+                (click)="expanderClick($event, expressionItem)"
+                (keydown)="invokeClick($event)"
+                tabindex="0">
                 <span>{{this.resourceStrings.igx_query_builder_details}}</span>
                 <igx-icon *ngIf="expressionItem.expanded" family="default" name="unfold_less" role="button"></igx-icon>
                 <igx-icon *ngIf="!expressionItem.expanded" family="default" name="unfold_more" role="button"></igx-icon>
