@@ -22,7 +22,6 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { DateTimeUtil } from './util/date-time.util';
-import { DataType } from '../data-operations/data-util';
 
 @Directive()
 export abstract class PickerBaseDirective implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
@@ -39,9 +38,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      */
     @Input()
     public set inputFormat(value: string) {
-        if (value) {
-            this._inputFormat = value;
-        }
+        this._inputFormat = value;
     }
 
     public get inputFormat(): string {
@@ -342,7 +339,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
     protected updateDefaultFormat(): void {
         this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
-                                || DateTimeUtil.getDefaultInputFormat(this.locale, DataType.Date);
+                                || DateTimeUtil.getDefaultInputFormat(this.locale);
     }
 
     public abstract select(value: Date | DateRange | string): void;
