@@ -2613,11 +2613,10 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 combo = fixture.componentInstance.combo;
                 const component = fixture.componentInstance;
-                tick();
 
                 component.selectedItems = ['SF', 'LA', 'NY']; // 'SF' is invalid, 'LA' and 'NY' are valid
                 fixture.detectChanges();
-                tick(100);
+                tick();
 
                 expect(combo.selection).toEqual([{ name: 'Los Angeles', id: 'LA' }, { name: 'New York', id: 'NY' }]);
                 expect(combo.value).toEqual(['LA', 'NY']);
@@ -2627,11 +2626,9 @@ describe('igxCombo', () => {
                 fixture = TestBed.createComponent(ComboInvalidValuesComponent);
                 fixture.detectChanges();
                 combo = fixture.componentInstance.combo;
-                tick();
 
                 combo.select(['SF', 'LA', 'NY']); // 'SF' is invalid, 'LA' and 'NY' are valid
                 fixture.detectChanges();
-                tick(100);
 
                 expect(combo.selection).toEqual([{ name: 'Los Angeles', id: 'LA' }, { name: 'New York', id: 'NY' }]);
                 expect(combo.value).toEqual(['LA', 'NY']);

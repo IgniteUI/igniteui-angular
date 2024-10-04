@@ -255,7 +255,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         this._value = Array.isArray(value) ? value.filter(x => x !== undefined) : [];
 
         if (this.data && this.data.length > 0) {
-            this.setSelection(new Set(this._value), undefined, false);
+            this.setSelection(new Set(this._value), undefined, false, false);
         }
     }
 
@@ -270,7 +270,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     /** @hidden @internal */
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['data'] && this.data && this.data.length > 0 && this._value && this._value.length) {
-            this.setSelection(new Set(this._value), undefined, false);
+            this.setSelection(new Set(this._value), undefined, false, true);
         }
     }
 
@@ -320,14 +320,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             return;
         }
 
-        if (this.isRemote || (this.data && this.data.length)) {
-            const validItems = !this.isRemote
-                ? newItems.filter(item => this.isItemInData(item))
-                : newItems;
-
-            const newSelection = this.selectionService.add_items(this.id, validItems, clearCurrentSelection);
-            this.setSelection(newSelection, event);
+        let validItems = newItems;
+        if (!this.isRemote && this.data && this.data.length) {
+            validItems = newItems.filter(item => this.isItemInData(item));
         }
+
+        const newSelection = this.selectionService.add_items(this.id, validItems, clearCurrentSelection);
+        this.setSelection(newSelection, event);
     }
 
     /**
@@ -434,13 +433,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         }
     }
 
-    protected setSelection(selection: Set<any>, event?: Event, emitEvent: boolean = true): void {
+    protected setSelection(selection: Set<any>, event?: Event, emit: boolean = true, updateModel: boolean = true): void {
         const filteredSelection = this.isRemote ? Array.from(selection) : Array.from(selection).filter(item => this.isItemInData(item));
+        const newValue = filteredSelection;
 
         const currentSelection = this.selectionService.get(this.id);
         const removed = this.convertKeysToItems(diffInSets(currentSelection, new Set(filteredSelection)));
         const added = this.convertKeysToItems(diffInSets(new Set(filteredSelection), currentSelection));
-        const newValue = filteredSelection;
         const oldValue = Array.from(currentSelection || []);
         const newSelection = this.convertKeysToItems(newValue);
         const oldSelection = this.convertKeysToItems(oldValue);
@@ -459,7 +458,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             cancel: false
         };
 
-        if (emitEvent) {
+        if (emit) {
             this.selectionChanging.emit(args);
         }
 
@@ -471,8 +470,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             } else {
                 this._displayValue = this.createDisplayText(this.selection, args.oldSelection);
             }
-            this.cdr.markForCheck();
-            if (emitEvent) {
+            if (updateModel) {
                 this._onChangeCallback(args.newValue);
             }
         } else if (this.isRemote) {
@@ -503,6 +501,8 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         return this.data.some(dataItem => {
             const dataValue = dataItem[this.valueKey];
             const itemValue = item;
+            // Treat NaN values as equal (since NaN !== NaN in regular comparisons)
+            // to ensure we support all falsy comparisons correctly
             if (Number.isNaN(dataValue) && Number.isNaN(itemValue)) {
                 return true;
             }

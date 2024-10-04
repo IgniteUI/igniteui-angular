@@ -8,10 +8,11 @@ All notable changes for each version of this project will be documented in this 
     - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - To streamline the sorting of columns with custom formats, a new `FormattedValuesSortingStrategy` has been introduced. This strategy simplifies the sorting process by allowing direct sorting based on formatted values, eliminating the need to extend the `DefaultSortingStrategy` or implement a custom `ISortingStrategy`. This enhancement improves the ease of handling sorting with custom column formatters.
-
 - `IgxCarousel`
     - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
     - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
+- `IgxCombo`
+    - Introduced the ability to automatically filter out and exclude values that are not in the data when programmatically setting selected items. This behavior specifically applies when the `combo` is bound to local data, as querying the entire data source to verify value presence is not feasible in remote scenarios.
 
 #### Scrollbar: New CSS variables
 
@@ -46,8 +47,6 @@ For Firefox users, we provide limited scrollbar styling options through the foll
 - `IgxBadge`
     - **Breaking Change** The `$border-width` property has been removed from the badge theme.
     - New outlined variant of the badge component has been added. Users can switch to `outlined` by adding the newly created `outlined` property to a badge.
-- `IgxCombo`
-    - Introduced the ability to automatically filter out and exclude values that are not in the data when programmatically setting selected items. Now, only values that match the bound data will appear in the selection.
 
 ## 18.1.0
 ### New Features
