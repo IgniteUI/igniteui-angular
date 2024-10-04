@@ -291,9 +291,6 @@
         position: relative;
 
         > igx-chip {
-            @container style(--ig-size: 1) {
-                --ig-size: 2;
-            }
 
             @if $variant != 'indigo' {
                 .igx-chip__item {
