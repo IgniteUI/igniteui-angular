@@ -147,32 +147,33 @@
                     expressionItem.hovered
                 "
             >
-                <span tabindex="0">
-                    <igx-icon
-                        family="default"
-                        name="edit"
-                        (keydown)="invokeClick($event)"
-                        (click)="enterExpressionEdit(expressionItem)"
-                    >
-                    </igx-icon>
-                </span>
-                <span tabindex="0">
-                    <igx-icon
-                        family="default"
-                        name="add"
-                        (keydown)="invokeClick($event)"
-                        (click)="enterExpressionAdd(expressionItem)"
-                        *ngIf="
-                            !expressionItem.inAddMode &&
-                            (expressionItem.parent !== currentGroup ||
-                                expressionItem !==
-                                    currentGroup.children[
-                                        currentGroup.children.length - 1
-                                    ])
-                        "
-                    >
-                    </igx-icon>
-                </span>
+                <igx-icon
+                    tabindex="0"
+                    family="default"
+                    name="edit"
+                    role="button"
+                    (keydown)="invokeClick($event)"
+                    (click)="enterExpressionEdit(expressionItem)"
+                >
+                </igx-icon>
+
+                <igx-icon
+                    tabindex="0"
+                    family="default"
+                    name="add"
+                    role="button"
+                    (keydown)="invokeClick($event)"
+                    (click)="enterExpressionAdd(expressionItem)"
+                    *ngIf="
+                        !expressionItem.inAddMode &&
+                        (expressionItem.parent !== currentGroup ||
+                            expressionItem !==
+                                currentGroup.children[
+                                    currentGroup.children.length - 1
+                                ])
+                    "
+                >
+                </igx-icon>
             </div>
         </div>
 
