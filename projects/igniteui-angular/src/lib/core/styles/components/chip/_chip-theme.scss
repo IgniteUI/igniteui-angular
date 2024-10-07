@@ -255,7 +255,6 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin chip($theme) {
     @include css-vars($theme);
-    $transition: all 120ms $in-out-quad;
     $chip-max-width: 32ch;
 
     $variant: map.get($theme, '_meta', 'variant');
@@ -308,17 +307,10 @@
         position: relative;
         display: inline-flex;
         flex-shrink: 0;
-        transition: $transition;
-        transition-property: top, left;
 
         // Fix: The grid resizing does not autosize the filter header cells with the default filter chips
         // https://github.com/IgniteUI/igniteui-angular/pull/12770/files/efd2a274038c051e82561903f8799fd03265fd74#r1150993630
         min-width: max-content;
-
-        [dir='rtl'] & {
-            transition-property: top right;
-        }
-
         touch-action: none;
         outline: none;
 
@@ -336,7 +328,6 @@
                 color: var-get($theme, 'focus-selected-text-color');
                 background: var-get($theme, 'focus-selected-background');
                 border-color: var-get($theme, 'focus-selected-border-color');
-                transition: $transition;
                 box-shadow: $box-shadow-focus-selected;
             }
         }
@@ -377,10 +368,7 @@
         user-select: none;
         overflow: hidden;
         cursor: pointer;
-        // hacking `overflow: hidden` with border radius
-        // not playing nicely together
         filter: opacity(1);
-        // transition: all 120ms ease-in;
 
         igx-avatar {
             display: flex !important;
@@ -424,7 +412,6 @@
         color: var-get($theme, 'selected-text-color');
         background: var-get($theme, 'selected-background');
         border-color: var-get($theme, 'selected-border-color');
-        transition: $transition;
     }
 
     %igx-chip__item--primary {
@@ -759,12 +746,15 @@
     %igx-chip__select {
         display: inline-flex;
         align-items: center;
+        max-width: rem(24px);
         opacity: 1;
         z-index: 1;
-        transition: opacity 120ms $out-quad, width 120ms $out-quad;
+        transition: max-width .12s $in-out-quad, opacity .12s $in-out-quad .06s;
+        transition-behavior: allow-discrete;
 
-        > * {
-            width: inherit !important;
+        @starting-style {
+            max-width: 0;
+            opacity: 0;
         }
     }
 
