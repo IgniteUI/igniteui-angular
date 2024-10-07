@@ -147,32 +147,31 @@
                     expressionItem.hovered
                 "
             >
-                <span tabindex="0"
+                <igx-icon
+                    tabindex="0"
                     (keydown)="invokeClick($event)"
-                    (click)="enterExpressionEdit(expressionItem)">
-                    <igx-icon
-                        family="default"
-                        name="edit"                        
-                    >
-                    </igx-icon>
-                </span>
-                <span tabindex="0"
+                    (click)="enterExpressionEdit(expressionItem)"
+                    family="default"
+                    name="edit"
+                >
+                </igx-icon>
+
+                <igx-icon
+                    tabindex="0"
                     (keydown)="invokeClick($event)"
-                    (click)="enterExpressionAdd(expressionItem)">
-                    <igx-icon
-                        family="default"
-                        name="add"                        
-                        *ngIf="
-                            !expressionItem.inAddMode &&
-                            (expressionItem.parent !== currentGroup ||
-                                expressionItem !==
-                                    currentGroup.children[
-                                        currentGroup.children.length - 1
-                                    ])
-                        "
-                    >
-                    </igx-icon>
-                </span>
+                    (click)="enterExpressionAdd(expressionItem)"
+                    family="default"
+                    name="add"
+                    *ngIf="
+                        !expressionItem.inAddMode &&
+                        (expressionItem.parent !== currentGroup ||
+                            expressionItem !==
+                                currentGroup.children[
+                                    currentGroup.children.length - 1
+                                ])
+                    "
+                >
+                </igx-icon>
             </div>
         </div>
 
