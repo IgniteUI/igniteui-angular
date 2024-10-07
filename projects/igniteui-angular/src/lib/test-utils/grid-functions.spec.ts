@@ -827,8 +827,8 @@ export class GridFunctions {
         let pinUnpinIcon: any;
         if (isIconInHeader) {
             const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
-            const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin-left"') !== -1);
-            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin-left"') !== -1);
+            const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1);
+            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1);
             pinUnpinIcon = headerAreaPinIcon ? headerAreaPinIcon : headerAreaUnpinIcon;
         } else {
             const pinContainer = GridFunctions.getExcelFilteringPinContainer(fix);
@@ -864,7 +864,7 @@ export class GridFunctions {
      * Click the sort ascending button in the ESF.
      */
     public static clickSortAscInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortAscIcon: DebugElement = this.getIconFromButton('arrow_upward', fix);
+        const sortAscIcon: DebugElement = this.getIconFromButton('sort_asc', fix);
         sortAscIcon?.nativeElement.click();
     }
 
@@ -880,7 +880,7 @@ export class GridFunctions {
      * Click the sort descending button in the ESF.
      */
     public static clickSortDescInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortDescIcon: any = this.getIconFromButton('arrow_downward', fix);
+        const sortDescIcon: any = this.getIconFromButton('sort_desc', fix);
         sortDescIcon?.nativeElement.click();
     }
 
@@ -1270,7 +1270,7 @@ export class GridFunctions {
     public static getFilterRowInputCommitIcon(fix) {
         const suffix = GridFunctions.getFilterRowSuffix(fix);
         const commitIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
-            .find((icon: any) => icon.nativeElement.innerText === 'done');
+            .find((icon: any) => icon.nativeElement.innerText === 'check');
         return commitIcon;
     }
 
@@ -1720,7 +1720,7 @@ export class GridFunctions {
         const actionButtons = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs-actions > button'));
         const commitButton = actionButtons.find((el: DebugElement) => {
             const icon = el.query(By.directive(IgxIconComponent)).componentInstance;
-            return icon.name === 'check';
+            return icon.name === 'confirm';
         }).nativeElement;
 
         return commitButton;
@@ -2088,6 +2088,75 @@ export class GridFunctions {
     public static verifyCellValid(cell: IgxGridCellComponent, valid = true) {
         expect(cell.isInvalid).toEqual(!valid);
         expect(cell.nativeElement.classList.contains(CELL_INVALID_CSS_CLASS)).not.toEqual(valid);
+    }
+
+    public static verifyTabbableElements = (chipActions: DebugElement) => {
+        const tabElements = this.getTabbableElements(chipActions.nativeElement);
+
+        let i = 0;
+        tabElements.forEach((element: HTMLElement) => {
+            switch (i) {
+                case 0: expect(element).toHaveClass('igx-filter-tree__line--or'); break;
+                case 1: expect(element).toHaveClass('igx-chip'); break;
+                case 2: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 3: expect(element.firstChild).toHaveClass('igx-icon');
+                    expect(element.firstChild.textContent).toContain('edit');
+                    break;
+                case 4: expect(element.firstChild).toHaveClass('igx-icon');
+                    expect(element.firstChild.textContent).toContain('add');
+                    break;
+                case 5: expect(element).toHaveClass('igx-chip'); break;
+                case 6: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 7: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('Condition');
+                    break;
+                case 8: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('"And" Group');
+                    break;
+                case 9: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('"Or" Group');
+                    break;
+            }
+            i++;
+        });
+    };
+
+    public static verifyInEditTabbableElements = (chipActions: DebugElement) => {
+        const tabElements = this.getTabbableElements(chipActions.nativeElement);
+
+        let i = 0;
+        tabElements.forEach((element: HTMLElement) => {
+            switch (i) {
+                case 0: expect(element).toHaveClass('igx-filter-tree__line--or'); break;
+                case 1: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 2: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 3: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 4: expect(element).toHaveClass('igx-icon-button');
+                    expect(element.innerText).toContain('check');
+                    break;
+                case 5: expect(element).toHaveClass('igx-icon-button');
+                    expect(element.innerText).toContain('close');
+                    break;
+                case 6: expect(element).toHaveClass('igx-chip'); break;
+                case 7: expect(element).toHaveClass('igx-chip__remove'); break;
+            }
+            i++;
+        });
+    };
+
+    /*
+    * Get tabbable elements in a container element. Result is returned as node elements ordered the way they will be tabbed
+    */
+    public static getTabbableElements(inElement: HTMLElement) {
+        const focusableElements =
+            'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+
+        return Array.prototype.filter.call(
+            inElement.querySelectorAll(focusableElements),
+            element => {
+                return (element.offsetWidth > 0 || element.offsetHeight > 0);
+            }
+        );
     }
 }
 export class GridSummaryFunctions {

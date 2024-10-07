@@ -204,7 +204,7 @@
     $variant: map.get($theme, '_meta', 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
-    $indigo-theme: $variant == 'indigo-design';
+    $indigo-theme: $variant == 'indigo';
 
     $item-min-width: rem(90px);
     $item-max-width: rem(360px);
@@ -350,7 +350,7 @@
         }
 
         @if $bootstrap-theme {
-            border: rem(1px) solid transparent;
+            padding-block: rem(12px);
             border-start-start-radius: var-get($theme, 'border-radius');
             border-start-end-radius: var-get($theme, 'border-radius');
         }

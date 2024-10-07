@@ -220,7 +220,7 @@
                 --ig-size: 2;
             }
 
-            @if $variant != 'indigo-design' {
+            @if $variant != 'indigo' {
                 .igx-chip__item {
                     border-block: none;
                 }

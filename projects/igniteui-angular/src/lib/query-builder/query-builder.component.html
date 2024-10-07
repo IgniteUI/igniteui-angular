@@ -8,7 +8,7 @@
 
 <igx-query-builder-header
     *ngIf="!headerContent"
-    [title]="this.resourceStrings.igx_query_builder_title"
+    [resourceStrings]="this.resourceStrings"
 >
 </igx-query-builder-header>
 
@@ -147,30 +147,32 @@
                     expressionItem.hovered
                 "
             >
-                <igx-icon
-                    family="default"
-                    name="edit"
-                    tabindex="0"
+                <span tabindex="0"
                     (keydown)="invokeClick($event)"
-                    (click)="enterExpressionEdit(expressionItem)"
-                >
-                </igx-icon>
-                <igx-icon
-                    family="default"
-                    name="add"
-                    tabindex="0"
+                    (click)="enterExpressionEdit(expressionItem)">
+                    <igx-icon
+                        family="default"
+                        name="edit"                        
+                    >
+                    </igx-icon>
+                </span>
+                <span tabindex="0"
                     (keydown)="invokeClick($event)"
-                    (click)="enterExpressionAdd(expressionItem)"
-                    *ngIf="
-                        !expressionItem.inAddMode &&
-                        (expressionItem.parent !== currentGroup ||
-                            expressionItem !==
-                                currentGroup.children[
-                                    currentGroup.children.length - 1
-                                ])
-                    "
-                >
-                </igx-icon>
+                    (click)="enterExpressionAdd(expressionItem)">
+                    <igx-icon
+                        family="default"
+                        name="add"                        
+                        *ngIf="
+                            !expressionItem.inAddMode &&
+                            (expressionItem.parent !== currentGroup ||
+                                expressionItem !==
+                                    currentGroup.children[
+                                        currentGroup.children.length - 1
+                                    ])
+                        "
+                    >
+                    </igx-icon>
+                </span>
             </div>
         </div>
 
@@ -338,6 +340,7 @@
             >
                 <input
                     #input
+                    #searchValueInput
                     igxInput
                     tabindex="0"
                     [placeholder]="
@@ -361,7 +364,7 @@
                     [disabled]="!operandCanBeCommitted()"
                     (click)="commitOperandEdit()"
                 >
-                    <igx-icon family="default" name="check"></igx-icon>
+                    <igx-icon family="default" name="confirm"></igx-icon>
                 </button>
                 <button type="button"
                     igxIconButton="flat"

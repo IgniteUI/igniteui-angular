@@ -1,6 +1,7 @@
 import { Injectable, Optional } from '@angular/core';
 import { PlatformUtil } from '../../../igniteui-angular/src/lib/core/utils';
-import { IconMeta, IgxIconService } from '../../../igniteui-angular/src/lib/icon/icon.service';
+import { IgxIconService } from '../../../igniteui-angular/src/lib/icon/icon.service';
+import { IconMeta } from '../../../igniteui-angular/src/lib/icon/public_api';
 
 
 export interface SvgIcon {
@@ -71,9 +72,10 @@ export class IgxIconBroadcastService {
             const collection = collections.get(collectionKey);
             for (const iconKey of collection.keys()) {
                 const collectionName = collection.get(iconKey).collection;
+                const iconName = collection.get(iconKey).name;
                 this._iconService.setIconRef(iconKey, 'default', {
                     family: collectionName,
-                    name: iconKey
+                    name: iconName
                 });
             }
         }
