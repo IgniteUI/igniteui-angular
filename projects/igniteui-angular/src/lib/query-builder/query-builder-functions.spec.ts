@@ -668,15 +668,16 @@ export class QueryBuilderFunctions {
                 case 2: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
                 case 4: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 5: expect(element).toHaveClass('igx-chip'); break;
-                case 6: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 7: expect(element).toHaveClass('igx-chip'); break;
-                case 8: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 9: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('Condition'); break;
+                case 5: expect(element).toHaveClass('igx-filter-tree__details-button'); break;
+                case 6: expect(element).toHaveClass('igx-chip'); break;
+                case 7: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 8: expect(element).toHaveClass('igx-chip'); break;
+                case 9: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 10: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('"And" Group'); break;
+                    expect(element.innerText).toContain('Condition'); break;
                 case 11: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('"And" Group'); break;
+                case 12: expect(element).toHaveClass('igx-button');
                     expect(element.innerText).toContain('"Or" Group'); break;
             }
             i++;
