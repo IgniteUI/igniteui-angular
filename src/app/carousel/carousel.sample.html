@@ -4,10 +4,12 @@
             <h4 class="sample-title">Desktop</h4>
 
             <igx-switch [(ngModel)]="car.navigation">navigation</igx-switch>
+            <igx-switch [(ngModel)]="car.indicators">indicators</igx-switch>
             <igx-switch [(ngModel)]="car.keyboardSupport">keyboardSupport</igx-switch>
             <igx-switch [(ngModel)]="car.gesturesSupport">gesturesSupport</igx-switch>
             <igx-switch [(ngModel)]="loop">loop</igx-switch>
             <igx-switch [(ngModel)]="pause">pause</igx-switch>
+            <igx-switch [(ngModel)]="car.vertical">vertical</igx-switch>
             <br>
             <button igxButton="contained" [igxToggleAction]="dropDownAnimation" [igxDropDownItemNavigation]="dropDownAnimation">Animation Type: {{car.animationType}}</button>
             <igx-drop-down #dropDownAnimation (selectionChanging)="onAnimationSelection($event)" >
@@ -20,7 +22,7 @@
             <button igxButton="contained" (click)="changeSlides()">Change slides add</button>
             <button igxButton="contained" (click)="changeSlidesRemove()">Change slides remove</button>
             <button igxButton="contained" (click)="changeOrientation()">changeOrientation</button>
-            <div style="height: 800px;">
+            <div>
                 <igx-carousel #car  [pause]="pause" [loop]="loop" [interval]="interval">
                     <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
                         <img [src]="slide.image">

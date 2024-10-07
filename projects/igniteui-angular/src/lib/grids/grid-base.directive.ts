@@ -2197,9 +2197,15 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```typescript
      *  this.grid.shouldGenerate = true;
      * ```
-     * @deprecated in version 18.2.0. Use the `autoGenerate` property instead.
+     * @deprecated in version 18.2.0. Column re-creation now relies on `autoGenerate` instead.
      */
-    public shouldGenerate: boolean;
+    public get shouldGenerate(): boolean {
+        return this.autoGenerate;
+    }
+
+    public set shouldGenerate(value: boolean) {
+        this.autoGenerate = value;
+    }
 
     /**
      * Gets/Sets the message displayed when there are no records and the grid is filtered.
@@ -2450,6 +2456,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* blazorByValueArray */
     /* blazorAlwaysWriteback */
     /* @tsTwoWayProperty (true, "RowSelectionChanging", "Detail.NewSelection", false) */
+    /* blazorPrimitiveValue */
     /**
      * Gets/Sets the current selection state.
      *

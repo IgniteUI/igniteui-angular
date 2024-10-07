@@ -303,6 +303,20 @@
         @if $variant == 'material' {
             inset-inline-start: -.5px;
         }
+
+        @if $variant == 'indigo' {
+            stroke: unset;
+            stroke-linecap: unset;
+            stroke-width: unset;
+            stroke-dasharray: unset;
+            stroke-dashoffset: unset;
+            fill: var-get($theme, 'tick-color');
+            transition: none !important;
+
+            rect {
+                fill: none;
+            }
+        }
     }
 
     %igx-checkbox--indeterminate {
@@ -360,6 +374,19 @@
 
                 &::before {
                     background: var-get($theme, 'disabled-color');
+                }
+            }
+        }
+
+        @if $variant == 'indigo' {
+            %cbx-composite-mark {
+                fill: none;
+                stroke-dashoffset: unset !important;
+                transform: none !important;
+
+                rect {
+                    fill: var-get($theme, 'tick-color');
+                    opacity: 1;
                 }
             }
         }

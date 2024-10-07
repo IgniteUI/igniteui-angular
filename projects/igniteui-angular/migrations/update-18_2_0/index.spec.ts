@@ -44,6 +44,7 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-40';
 
     it('Should replace deprecated `shouldGenerate` property with `autoGenerate`', async () => {
+        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/grid-test.component.ts',
             `import { Component } from '@angular/core';
@@ -112,6 +113,25 @@ describe(`Update to ${version}`, () => {
                 $sb-size: 16px,
                 $sb-thumb-bg-color: blue,
                 $sb-track-bg-color: black,
+            );`
+        );
+    });
+
+    it('should remove the $border-width property from the badge-theme', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-badge: badge-theme(
+                $text-color: red,
+                $border-width: 2px
+            );`
+        );
+
+        const tree = await schematicRunner
+            .runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-badge: badge-theme(
+                $text-color: red
             );`
         );
     });
