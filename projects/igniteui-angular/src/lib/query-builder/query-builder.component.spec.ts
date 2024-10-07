@@ -155,6 +155,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "greaterThan",
         "isUnary": false,
+        "isNestedQuery": false,
         "iconName": "filter_greater_than"
       },
       "conditionName": "greaterThan",
@@ -523,6 +524,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "contains",
         "isUnary": false,
+        "isNestedQuery": false,
         "iconName": "filter_contains"
       },
       "conditionName": null,
@@ -719,6 +721,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "startsWith",
         "isUnary": false,
+        "isNestedQuery": false,
         "iconName": "filter_starts_with"
       },
       "conditionName": null,
@@ -772,6 +775,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "greaterThan",
         "isUnary": false,
+        "isNestedQuery": false,
         "iconName": "filter_greater_than"
       },
       "conditionName": null,
@@ -825,6 +829,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "equals",
         "isUnary": false,
+        "isNestedQuery": false,
         "iconName": "filter_equal"
       },
       "conditionName": null,
@@ -873,6 +878,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "true",
         "isUnary": true,
+        "isNestedQuery": false,
         "iconName": "filter_true"
       },
       "conditionName": null,
@@ -922,6 +928,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "thisYear",
         "isUnary": true,
+        "isNestedQuery": false,
         "iconName": "filter_this_year"
       },
       "conditionName": null,
@@ -1014,6 +1021,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "in",
         "isUnary": false,
+        "isNestedQuery": true,
         "iconName": "in"
       },
       "conditionName": null,
@@ -1026,6 +1034,7 @@ describe('IgxQueryBuilder', () => {
             "condition": {
               "name": "contains",
               "isUnary": false,
+              "isNestedQuery": false,
               "iconName": "filter_contains"
             },
             "conditionName": null,
@@ -1097,6 +1106,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "notIn",
         "isUnary": false,
+        "isNestedQuery": true,
         "iconName": "not-in"
       },
       "conditionName": null,
@@ -1109,6 +1119,7 @@ describe('IgxQueryBuilder', () => {
             "condition": {
               "name": "contains",
               "isUnary": false,
+              "isNestedQuery": false,
               "iconName": "filter_contains"
             },
             "conditionName": null,

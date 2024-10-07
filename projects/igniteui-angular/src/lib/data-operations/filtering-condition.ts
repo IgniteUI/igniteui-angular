@@ -12,22 +12,26 @@ export class IgxFilteringOperand {
         this.operations = [{
             name: 'null',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_null',
             logic: (target: any) => target === null
         }, {
             name: 'notNull',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_not_null',
             logic: (target: any) => target !== null
         }, {
             name: 'in',
             isUnary: false,
+            isNestedQuery: true,
             iconName: 'in',
             logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
         },
         {
             name: 'notIn',
             isUnary: false,
+            isNestedQuery: true,
             iconName: 'not-in',
             logic: (target: any, searchVal: Set<any>) => !this.findValueInSet(target, searchVal)
         }];
@@ -41,7 +45,7 @@ export class IgxFilteringOperand {
      * Returns an array of names of the conditions which are visible in the filtering UI
      */
     public conditionList(): string[] {
-        return this.extendedConditionList().filter(c => c !== 'in' && c !== 'notIn');
+        return this.operations.filter(f => !f.hidden && !f.isNestedQuery).map((element) => element.name);    
     }
 
     /**
@@ -89,26 +93,31 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'all',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_all',
             logic: (_target: boolean) => true
         }, {
             name: 'true',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_true',
             logic: (target: boolean) => !!(target && target !== null && target !== undefined)
         }, {
             name: 'false',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_false',
             logic: (target: boolean) => !target && target !== null && target !== undefined
         }, {
             name: 'empty',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_empty',
             logic: (target: boolean) => target === null || target === undefined
         }, {
             name: 'notEmpty',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_not_empty',
             logic: (target: boolean) => target !== null && target !== undefined
         }].concat(this.operations);
@@ -126,11 +135,13 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'empty',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_empty',
             logic: (target: Date) => target === null || target === undefined
         }, {
             name: 'notEmpty',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_not_empty',
             logic: (target: Date) => target !== null && target !== undefined
         }].concat(this.operations);
@@ -207,6 +218,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         this.operations = [{
             name: 'equals',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_equal',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -224,6 +236,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'doesNotEqual',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_not_equal',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -241,6 +254,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'before',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_before',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -254,6 +268,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'after',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_after',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -267,6 +282,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'today',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_today',
             logic: (target: Date) => {
                 if (!target) {
@@ -284,6 +300,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'yesterday',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_yesterday',
             logic: (target: Date) => {
                 if (!target) {
@@ -302,6 +319,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'thisMonth',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_this_month',
             logic: (target: Date) => {
                 if (!target) {
@@ -318,6 +336,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'lastMonth',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_last_month',
             logic: (target: Date) => {
                 if (!target) {
@@ -340,6 +359,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'nextMonth',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_next_month',
             logic: (target: Date) => {
                 if (!target) {
@@ -362,6 +382,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'thisYear',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_this_year',
             logic: (target: Date) => {
                 if (!target) {
@@ -377,6 +398,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'lastYear',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_last_year',
             logic: (target: Date) => {
                 if (!target) {
@@ -392,6 +414,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'nextYear',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_next_year',
             logic: (target: Date) => {
                 if (!target) {
@@ -424,6 +447,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         this.operations = [{
             name: 'equals',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_equal',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -442,6 +466,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'doesNotEqual',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_not_equal',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -460,6 +485,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'before',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_before',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -473,6 +499,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'after',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_after',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -486,6 +513,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'today',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_today',
             logic: (target: Date) => {
                 if (!target) {
@@ -503,6 +531,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'yesterday',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_yesterday',
             logic: (target: Date) => {
                 if (!target) {
@@ -521,6 +550,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'thisMonth',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_this_month',
             logic: (target: Date) => {
                 if (!target) {
@@ -537,6 +567,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'lastMonth',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_last_month',
             logic: (target: Date) => {
                 if (!target) {
@@ -559,6 +590,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'nextMonth',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_next_month',
             logic: (target: Date) => {
                 if (!target) {
@@ -581,6 +613,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'thisYear',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_this_year',
             logic: (target: Date) => {
                 if (!target) {
@@ -596,6 +629,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'lastYear',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_last_year',
             logic: (target: Date) => {
                 if (!target) {
@@ -611,6 +645,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
         }, {
             name: 'nextYear',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_next_year',
             logic: (target: Date) => {
                 if (!target) {
@@ -634,6 +669,7 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         this.operations = [{
             name: 'at',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_equal',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -649,6 +685,7 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'not_at',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_not_equal',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -664,6 +701,7 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'before',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_before',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -680,6 +718,7 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'after',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_after',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -696,6 +735,7 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'at_before',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_before',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -712,6 +752,7 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }, {
             name: 'at_after',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_after',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
@@ -751,41 +792,49 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'equals',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_equal',
             logic: (target: number, searchVal: number) => target === searchVal
         }, {
             name: 'doesNotEqual',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_not_equal',
             logic: (target: number, searchVal: number) => target !== searchVal
         }, {
             name: 'greaterThan',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_greater_than',
             logic: (target: number, searchVal: number) => target > searchVal
         }, {
             name: 'lessThan',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_less_than',
             logic: (target: number, searchVal: number) => target < searchVal
         }, {
             name: 'greaterThanOrEqualTo',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_greater_than_or_equal',
             logic: (target: number, searchVal: number) => target >= searchVal
         }, {
             name: 'lessThanOrEqualTo',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_less_than_or_equal',
             logic: (target: number, searchVal: number) => target <= searchVal
         }, {
             name: 'empty',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_empty',
             logic: (target: number) => target === null || target === undefined || isNaN(target)
         }, {
             name: 'notEmpty',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_not_empty',
             logic: (target: number) => target !== null && target !== undefined && !isNaN(target)
         }].concat(this.operations);
@@ -804,6 +853,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'contains',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_contains',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
@@ -813,6 +863,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'doesNotContain',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_does_not_contain',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
@@ -822,6 +873,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'startsWith',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_starts_with',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
@@ -831,6 +883,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'endsWith',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_ends_with',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
@@ -840,6 +893,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'equals',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_equal',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
@@ -849,6 +903,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'doesNotEqual',
             isUnary: false,
+            isNestedQuery: false,
             iconName: 'filter_not_equal',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
@@ -858,11 +913,13 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'empty',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_empty',
             logic: (target: string) => target === null || target === undefined || target.length === 0
         }, {
             name: 'notEmpty',
             isUnary: true,
+            isNestedQuery: false,
             iconName: 'filter_not_empty',
             logic: (target: string) => target !== null && target !== undefined && target.length > 0
         }].concat(this.operations);
@@ -890,6 +947,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
 export interface IFilteringOperation {
     name: string;
     isUnary: boolean;
+    isNestedQuery: boolean;
     iconName: string;
     hidden?: boolean;
     /* blazorCSSuppress */

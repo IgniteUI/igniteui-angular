@@ -746,7 +746,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     : this.selectedField.field;
 
             const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0]
-            if (innerQuery && (this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) {
+            if (innerQuery && this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery) {
                 if (!this._editedExpression.expression.searchTree) {
                     this._editedExpression.expression.searchTree = new FilteringExpressionsTree(innerQuery.expressionTree.operator);
                 }
@@ -815,7 +815,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
         return this.selectedField && this.selectedCondition &&
             (
-                ((!!this.searchValue.value || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) && !(this.selectedCondition === 'in' || this.selectedCondition === 'notIn')) ||
+                ((!!this.searchValue.value || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) && !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)) ||
                 (innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined) ||
                 this.selectedField.filters.condition(this.selectedCondition).isUnary
             );

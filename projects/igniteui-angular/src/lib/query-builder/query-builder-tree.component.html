@@ -275,10 +275,8 @@
                             !selectedField ||
                             !selectedCondition ||
                             (selectedField &&
-                                selectedField.filters.condition(selectedCondition)
-                                    .isUnary) ||
-                            selectedCondition === 'in' ||
-                            selectedCondition === 'notIn'
+                                (selectedField.filters.condition(selectedCondition).isUnary ||
+                                selectedField.filters.condition(selectedCondition).isNestedQuery))
                         "
                         [type]="
                             selectedField && selectedField.dataType === 'number'
@@ -383,7 +381,7 @@
             </div>
         </div>
 
-        <ng-container *ngIf="(!expressionItem.inEditMode && expressionItem.expression.searchTree) || (expressionItem.inEditMode && (selectedCondition === 'in' || selectedCondition === 'notIn'))">
+        <ng-container *ngIf="(!expressionItem.inEditMode && expressionItem.expression.searchTree) || (expressionItem.inEditMode && selectedField?.filters?.condition(selectedCondition)?.isNestedQuery)">
             <igx-query-builder-tree
                 [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
                 [entities]="entities"

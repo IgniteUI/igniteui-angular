@@ -137,7 +137,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
         // eslint-disable-next-line max-len
-        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":35,"fieldName":"Age","ignoreCase":true}],"operator":0,"fieldName":"Age"}],"operator":0,"type":0}}';
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"greaterThan","isUnary":false,"isNestedQuery": false,"iconName":"filter_greater_than"},"searchVal":35,"fieldName":"Age","ignoreCase":true}],"operator":0,"fieldName":"Age"}],"operator":0,"type":0}}';
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
 
         let gridState = state.getState(true, 'filtering');
@@ -268,7 +268,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
         // eslint-disable-next-line max-len
-        const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"Age","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":25,"ignoreCase":true},{"fieldName":"ID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
+        const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"Age","condition":{"name":"greaterThan","isUnary":false,"isNestedQuery": false,"iconName":"filter_greater_than"},"searchVal":25,"ignoreCase":true},{"fieldName":"ID","condition":{"name":"greaterThan","isUnary":false,"isNestedQuery": false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
         const initialState = '{"advancedFiltering":{}}';
 
         let gridState = state.getState(true, 'advancedFiltering');

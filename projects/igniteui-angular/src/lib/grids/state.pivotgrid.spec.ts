@@ -168,7 +168,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
                             {
                                 "filteringOperands":[
                                     {
-                                        "condition": {"name":"in","isUnary":false,"iconName":"is-in","hidden":true},
+                                        "condition": {"name":"in","isUnary":false,"isNestedQuery": true,"iconName":"is-in","hidden":true},
                                         "fieldName":"City","ignoreCase":true,"searchVal":["Sofia"]
                                     }
                                     ],
