@@ -153,6 +153,7 @@
                     (click)="enterExpressionEdit(expressionItem)"
                     family="default"
                     name="edit"
+                    role="button"
                 >
                 </igx-icon>
 
@@ -162,6 +163,7 @@
                     (click)="enterExpressionAdd(expressionItem)"
                     family="default"
                     name="add"
+                    role="button"
                     *ngIf="
                         !expressionItem.inAddMode &&
                         (expressionItem.parent !== currentGroup ||
