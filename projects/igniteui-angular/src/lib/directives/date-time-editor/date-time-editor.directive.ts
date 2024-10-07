@@ -16,6 +16,7 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
 import { DateTimeUtil } from '../../date-common/util/date-time.util';
+import { DataType } from '../../data-operations/data-util';
 
 /**
  * Date Time Editor provides a functionality to input, edit and format date and time.
@@ -185,6 +186,18 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     /**
+     * Specify the default input format type. Defaults to `date`, which includes
+     * only date parts for editing. Other valid options are `time` and `dateTime`.
+     *
+     * @example
+     * ```html
+     * <input igxDateTimeEditor [defaultInputFormatType]="'dateTime'">
+     * ```
+     */
+    @Input()
+    public defaultInputFormatType: DataType = DataType.Date;
+
+    /**
      * Delta values used to increment or decrement each editor date part on spin actions.
      * All values default to `1`.
      *
@@ -318,7 +331,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['locale'] && !changes['locale'].firstChange) {
+        if (changes['locale'] && !changes['locale'].firstChange ||
+            changes['defaultInputFormatType'] && !changes['defaultInputFormatType'].firstChange
+        ) {
             this.updateDefaultFormat();
             this.setMask(this.inputFormat);
             this.updateMask();
@@ -508,7 +523,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     private updateDefaultFormat(): void {
         this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
-                                || DateTimeUtil.getDefaultInputFormat(this.locale);
+                                || DateTimeUtil.getDefaultInputFormat(this.locale, this.defaultInputFormatType);
     }
 
     private updateMask(): void {

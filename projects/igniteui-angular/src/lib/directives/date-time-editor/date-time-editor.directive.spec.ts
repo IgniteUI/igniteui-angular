@@ -136,6 +136,28 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditor.displayFormat.normalize('NFKC')).toEqual('MMM d, y, h:mm:ss a');
                 expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
             });
+
+            it('should set the default input format as per the defaultInputFormatType property', () => {
+                inputFormat = undefined;
+                displayFormat = undefined;
+                elementRef = { nativeElement: { value: inputDate } };
+                initializeDateTimeEditor();
+
+                expect(dateTimeEditor.defaultInputFormatType).toEqual('date');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy');
+
+                dateTimeEditor.defaultInputFormatType = 'dateTime';
+                let change: SimpleChange = new SimpleChange('date', 'dateTime', false);
+                let changes: SimpleChanges = { defaultInputFormatType: change };
+                dateTimeEditor.ngOnChanges(changes);
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
+
+                dateTimeEditor.defaultInputFormatType = 'time';
+                change = new SimpleChange('dateTime', 'time', false);
+                changes = { defaultInputFormatType: change };
+                dateTimeEditor.ngOnChanges(changes);
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
+            });
         });
 
         describe('Date portions spinning', () => {
