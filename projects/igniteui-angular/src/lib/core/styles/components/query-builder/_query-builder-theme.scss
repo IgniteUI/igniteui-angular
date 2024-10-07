@@ -370,6 +370,7 @@
         display: flex;
         gap: $gap;
         align-items: center;
+        width: auto;
 
         [igxIconButton] {
             transition: none;
