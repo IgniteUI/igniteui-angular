@@ -147,17 +147,20 @@
                     expressionItem.hovered
                 "
             >
-                <igx-icon
-                    role="button"
-                    tabindex="0"
+                <button
+                    igxIconButton="flat"
+                    aria-labelledby="edit-expression"
+                    [style.--component-size]="getComponentSizeStyles()"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionEdit(expressionItem)">
-                    edit
-                </igx-icon>
+                    <igx-icon id="edit-expression">edit</igx-icon>
+                </button>
 
-                <igx-icon
-                    role="button"
-                    tabindex="0"
+                <button
+                    igxIconButton="flat"
+                    igxButton="icon"
+                    aria-labelledby="add-expression"
+                    [style.--component-size]="getComponentSizeStyles()"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionAdd(expressionItem)"
                     *ngIf="
@@ -169,8 +172,8 @@
                                 ])
                     "
                 >
-                    add
-                </igx-icon>
+                    <igx-icon id="add-expression">add</igx-icon>
+                </button>
             </div>
         </div>
 
