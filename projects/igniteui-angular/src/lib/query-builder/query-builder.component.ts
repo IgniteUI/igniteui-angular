@@ -1,4 +1,4 @@
-import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform } from '@angular/core';
+import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Output, Pipe, PipeTransform } from '@angular/core';
 import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
@@ -36,7 +36,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
-import { FILTERING_ICONS } from '../icon/filtering-icons';
+import { registerFilteringSVGIcons } from '../icon/filtering-icons';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -146,6 +146,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         this._fields = fields;
 
         if (this._fields) {
+            this.registerSVGIcons();
 
             this._fields.forEach(field => {
                 this.setFilters(field);
@@ -157,7 +158,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     /**
     * Returns the expression tree.
     */
-     public get expressionTree(): IExpressionTree {
+    public get expressionTree(): IExpressionTree {
         return this._expressionTree;
     }
 
@@ -397,8 +398,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         protected iconService: IgxIconService,
         protected platform: PlatformUtil,
         protected el: ElementRef,
-        @Inject(LOCALE_ID) protected _localeId: string,
-        @Optional() @Inject(FILTERING_ICONS) _filteringIcons: any) {
+        @Inject(LOCALE_ID) protected _localeId: string) {
         this.locale = this.locale || this._localeId;
     }
 
@@ -651,8 +651,8 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
 
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
-            } else if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
-                this.conditionSelect.input.nativeElement.focus();
+        } else if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
+            this.conditionSelect.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
             input.focus();
@@ -1207,5 +1207,8 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
         this.currentGroup = this.rootGroup;
     }
-}
 
+    private registerSVGIcons(): void {
+        registerFilteringSVGIcons(this.iconService);
+    }
+}

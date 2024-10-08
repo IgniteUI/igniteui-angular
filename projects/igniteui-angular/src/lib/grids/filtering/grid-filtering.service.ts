@@ -1,8 +1,6 @@
 import {
-    Inject,
     Injectable,
-    OnDestroy,
-    Optional,
+    OnDestroy
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -21,8 +19,8 @@ import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { fadeIn } from 'igniteui-angular/animations';
-import { FILTERING_ICONS } from '../../icon/filtering-icons';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
+import { registerFilteringSVGIcons } from '../../icon/filtering-icons';
 
 /**
  * @hidden
@@ -57,8 +55,7 @@ export class IgxFilteringService implements OnDestroy {
 
     constructor(
         private iconService: IgxIconService,
-        protected _overlayService: IgxOverlayService,
-        @Optional() @Inject(FILTERING_ICONS) _filteringIcons: any
+        protected _overlayService: IgxOverlayService
     ) { }
 
     public ngOnDestroy(): void {
@@ -322,6 +319,8 @@ export class IgxFilteringService implements OnDestroy {
      * Register filtering SVG icons in the icon service.
      */
     public registerSVGIcons(): void {
+        registerFilteringSVGIcons(this.iconService);
+
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }
