@@ -15,7 +15,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IFilteringExpression`
     - **Breaking Change** There is a new `conditionName` property which is required. This would generally be equal to the old `condition.name`.
-
+    - A new optional property called `isNestedQuery` has been introduced. It's used to indicate whether the condition leads to a sub-query creation.
 
 #### Scrollbar: New CSS variables
 
