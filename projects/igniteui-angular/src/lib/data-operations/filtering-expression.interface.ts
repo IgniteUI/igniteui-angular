@@ -1,5 +1,4 @@
 import { IFilteringOperation } from './filtering-condition';
-import { Serializable } from 'node:child_process';
 import { IExpressionTree } from './filtering-expressions-tree';
 
 /* mustCoerceToInt */
@@ -17,7 +16,7 @@ export declare interface IFilteringExpression {
     fieldName: string;
     condition?: IFilteringOperation;
     conditionName?: string;
-    searchVal?: Serializable;
+    searchVal?: any;
     searchTree?: IExpressionTree;
     ignoreCase?: boolean;
 }
