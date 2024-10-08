@@ -302,7 +302,9 @@
                         !selectedCondition ||
                         (selectedField &&
                             selectedField.filters.condition(selectedCondition)
-                                .isUnary)
+                                .isUnary)||
+                        selectedCondition === 'in' ||
+                        selectedCondition === 'notIn'
                     "
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
@@ -329,7 +331,9 @@
                         !selectedCondition ||
                         (selectedField &&
                             selectedField.filters.condition(selectedCondition)
-                                .isUnary)
+                                .isUnary) ||
+                        selectedCondition === 'in' ||
+                        selectedCondition === 'notIn'
                     "
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
@@ -359,7 +363,9 @@
                             !selectedCondition ||
                             (selectedField &&
                                 selectedField.filters.condition(selectedCondition)
-                                    .isUnary)
+                                    .isUnary) ||
+                            selectedCondition === 'in' ||
+                            selectedCondition === 'notIn'
                         "
                         [igxDateTimeEditor]="selectedField.defaultDateTimeFormat"
                     />
