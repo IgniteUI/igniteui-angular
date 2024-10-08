@@ -199,7 +199,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
-        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"equals","isUnary":false,"isNestedQuery": false,"iconName":"filter_equal"},"fieldName":"LastDate","ignoreCase":true,"searchVal":"2021-06-05T20:59:00.000Z"}],"operator":1,"fieldName":"LastDate"}],"operator":0,"type":0}}';
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"equals","isUnary":false,"iconName":"filter_equal"},"fieldName":"LastDate","ignoreCase":true,"searchVal":"2021-06-05T20:59:00.000Z"}],"operator":1,"fieldName":"LastDate"}],"operator":0,"type":0}}';
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
 
         let gridState = state.getState(true, 'filtering');
@@ -220,7 +220,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
-        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"empty","isUnary":true,"isNestedQuery": false,"iconName":"filter_empty"},"fieldName":"OrderDate","ignoreCase":true,"searchVal":null}],"operator":1,"fieldName":"OrderDate"}],"operator":0,"type":0}}';
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"empty","isUnary":true,"iconName":"filter_empty"},"fieldName":"OrderDate","ignoreCase":true,"searchVal":null}],"operator":1,"fieldName":"OrderDate"}],"operator":0,"type":0}}';
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
 
         let gridState = state.getState(true, 'filtering');
