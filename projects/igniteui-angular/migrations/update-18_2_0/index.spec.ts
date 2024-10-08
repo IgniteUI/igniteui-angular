@@ -135,4 +135,20 @@ describe(`Update to ${version}`, () => {
             );`
         );
     });
+
+    it('should replace QueryBuilder deprecated property `fields` with `entities`', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-query-builder [fields]="[{ field: 'ID', dataType: 'number' }, { field: 'Name', dataType: 'string' }]"></igx-query-builder>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-query-builder [entities]="[{ name: '', fields: [{ field: 'ID', dataType: 'number' }, { field: 'Name', dataType: 'string' }]}]"></igx-query-builder>
+        `
+        );
+    });
 });
