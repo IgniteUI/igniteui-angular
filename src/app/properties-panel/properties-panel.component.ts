@@ -19,12 +19,26 @@ import {
     IgxDateTimeEditorModule
 } from 'igniteui-angular';
 
-export interface PropertyPanelConfig {
+export type ControlType =
+    'boolean' |
+    'number' |
+    'range' |
+    'radio' |
+    'radio-inline' |
+    'button-group' |
+    'select' |
+    'text' |
+    'date' |
+    'time' |
+    'date-time';
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type PropertyPanelConfig = {
     [key: string]: {
         label?: string;
         control: {
-            type: 'boolean' | 'number' | 'range' | 'radio' | 'radio-inline' | 'button-group' | 'select' | 'text' | 'date' | 'time' | 'date-time',
-            options?: any[];
+            type: ControlType,
+            options?: string[];
             labels?: string[];
             min?: number;
             max?: number;
@@ -63,8 +77,8 @@ export class PropertiesPanelComponent implements OnInit {
     @Input() public config!: PropertyPanelConfig;
     @Output() public propertyChanged: EventEmitter<{ key: string; value: any }> = new EventEmitter<{ key: string; value: any }>();
 
-    public form!: FormGroup;
-    public alignment = RadioGroupAlignment.vertical;
+    protected form!: FormGroup;
+    protected radioAlignment = RadioGroupAlignment.vertical;
 
     public ngOnInit(): void {
         this.form = this.createFormGroup(this.config);
@@ -72,23 +86,46 @@ export class PropertiesPanelComponent implements OnInit {
         this.form.valueChanges.subscribe(this.onFormValueChange.bind(this));
     }
 
-    private onFormValueChange(value: any): void {
+    protected onFormValueChange(value: any): void {
         Object.keys(value).forEach(key => {
-            this.propertyChanged.emit({ key, value: value[key] });
+            const controlConfig = this.config[key]?.control;
+
+            if (controlConfig?.type === 'number') {
+                const maxValue = controlConfig.max;
+                const minValue = controlConfig.min;
+                let controlValue = parseFloat(value[key]);
+
+                // Check if value exceeds min or max limits
+                if (maxValue !== undefined && controlValue > maxValue) {
+                    controlValue = maxValue;
+                }
+                if (minValue !== undefined && controlValue < minValue) {
+                    controlValue = minValue;
+                }
+
+                // Only update form control if value changes
+                if (this.form.controls[key].value !== controlValue) {
+                    this.form.controls[key].setValue(controlValue, { emitEvent: false });
+                }
+
+                this.propertyChanged.emit({ key, value: controlValue });
+            } else {
+                this.propertyChanged.emit({ key, value: value[key] });
+            }
         });
     }
 
-    private emitInitialValues(): void {
+    protected emitInitialValues(): void {
         Object.keys(this.config).forEach(key => {
             const defaultValue = this.config[key]?.control?.defaultValue;
-            if (defaultValue !== undefined) {
+            if (defaultValue !== undefined && defaultValue !== null) {
                 this.propertyChanged.emit({ key, value: defaultValue });
                 this.form.controls[key].setValue(defaultValue);
             }
         });
     }
 
-    private createFormGroup(config: PropertyPanelConfig): FormGroup {
+    protected createFormGroup(config: PropertyPanelConfig): FormGroup {
         const group: Record<string, FormControl> = {};
         Object.keys(config).forEach(key => {
             const defaultValue = config[key]?.control?.defaultValue ?? '';
@@ -97,25 +134,21 @@ export class PropertiesPanelComponent implements OnInit {
         return new FormGroup(group);
     }
 
-    // Public method to retrieve the control type for the template
-    public getControlType(key: string): string {
+    protected getControlType(key: string): string {
         return this.config[key].control.type;
     }
 
-    // Public method to retrieve options for specific controls
-    public getOptions(key: string): any {
+    protected getControlOptions(key: string): any {
         return this.config[key].control.options;
     }
 
-    // Retrieve the labels for a given control (if any)
-    public getLabels(key: string): string[] {
+    protected getControlLabels(key: string): string[] {
         const labels = this.config[key].control.labels || [];
-        const options = this.getOptions(key);
+        const options = this.getControlOptions(key);
         return labels.length > 0 ? labels : options.map(option => option.toString());
     }
 
-    // Retrieve the keys of the config to iterate over in the template
-    public getConfigKeys(): string[] {
+    protected getConfigKeys(): string[] {
         return Object.keys(this.config);
     }
 }
