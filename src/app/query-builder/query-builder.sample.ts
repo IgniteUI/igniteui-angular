@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import {
-    FilteringExpressionsTree, IgxStringFilteringOperand,
+    FilteringExpressionsTree,
     FilteringLogic,
     IgxQueryBuilderComponent,
     changei18n,
@@ -8,7 +8,13 @@ import {
     IgxButtonDirective,
     IgxButtonGroupComponent,
     IgxRippleDirective,
-    IgxQueryBuilderHeaderComponent
+    IgxQueryBuilderHeaderComponent,
+    IgxNumberFilteringOperand,
+    IgxStringFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxTimeFilteringOperand,
+    IgxDateTimeFilteringOperand
 } from 'igniteui-angular';
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
@@ -32,62 +38,78 @@ export class QueryBuilderComponent implements OnInit {
     public searchValueTemplate: IgxQueryBuilderSearchValueTemplateDirective;
 
     public entities: Array<any>;
-    public assaysFields: Array<any>;
-    public compoundsFields: Array<any>;
+    public fieldsEntityA: Array<any>;
+    public fieldsEntityB: Array<any>;
     public displayDensities;
     public expressionTree: IExpressionTree;
     public queryResult: string;
 
     public ngOnInit(): void {
-        this.assaysFields = [
+        this.fieldsEntityA = [
             { field: 'Id', dataType: 'number' },
-            { field: 'CompoundId', dataType: 'number' },
             { field: 'Name', dataType: 'string' },
-            { field: 'EndpointName', dataType: 'string' },
-            { field: 'EndpointValue', dataType: 'string' },
-            { field: 'Date', dataType: 'date' }
+            { field: 'Validated', dataType: 'boolean' },
+            { field: 'Date created', dataType: 'date' },
+            { field: 'Time created', dataType: 'time' },
+            { field: 'DateTime created', dataType: 'dateTime' }
         ];
-        this.compoundsFields = [
-            { field: 'Id', dataType: 'number' },
-            { field: 'Structure', dataType: 'string' },
-            { field: 'Date', dataType: 'date' }
+        this.fieldsEntityB = [
+            { field: 'Number', dataType: 'number' },
+            { field: 'String', dataType: 'string' },
+            { field: 'Boolean', dataType: 'boolean' },
+            { field: 'Date', dataType: 'date' },
+            { field: 'Time', dataType: 'time' },
+            { field: 'DateTime', dataType: 'dateTime' }
         ];
         this.entities = [
             {
-                name: 'Assays',
-                fields: this.assaysFields
+                name: 'Entity A',
+                fields: this.fieldsEntityA
             },
             {
-                name: 'Compounds',
-                fields: this.compoundsFields
+                name: 'Entity B',
+                fields: this.fieldsEntityB
             }
         ];
 
-        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Assays', ['Id']);
+        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Entity B', ['Number']);
         innerTree.filteringOperands.push({
-            fieldName: 'Name',
+            fieldName: 'Number',
+            condition: IgxNumberFilteringOperand.instance().condition('equals'),
+            conditionName: IgxNumberFilteringOperand.instance().condition('equals').name,
+            searchVal: 123
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'String',
             condition: IgxStringFilteringOperand.instance().condition('equals'),
             conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
-            searchVal: 'Hepacity',
-            // ignoreCase: true
+            searchVal: 'abc'
         });
         innerTree.filteringOperands.push({
-            fieldName: 'EndpointName',
-            condition: IgxStringFilteringOperand.instance().condition('equals'),
-            conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
-            searchVal: 'IC60',
-            // ignoreCase: true
+            fieldName: 'Boolean',
+            condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: IgxBooleanFilteringOperand.instance().condition('true').name
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'Date',
+            condition: IgxDateFilteringOperand.instance().condition('before'),
+            conditionName: IgxDateFilteringOperand.instance().condition('before').name,
+            searchVal: new Date()
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'Time',
+            condition: IgxTimeFilteringOperand.instance().condition('before'),
+            conditionName: IgxTimeFilteringOperand.instance().condition('before').name,
+            searchVal: new Date()
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'DateTime',
+            condition: IgxDateTimeFilteringOperand.instance().condition('before'),
+            conditionName: IgxDateTimeFilteringOperand.instance().condition('before').name,
+            searchVal: new Date()
         });
 
-        const innerTree2 = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Assays', ['Name']);
-        innerTree2.filteringOperands.push({
-            fieldName: 'Name',
-            condition: IgxStringFilteringOperand.instance().condition('null'),
-            conditionName: IgxStringFilteringOperand.instance().condition('null').name,
-            // ignoreCase: true
-        });
-
-        const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Compounds', ['*']);
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Entity A', ['*']);
         tree.filteringOperands.push({
             fieldName: 'Id',
             condition: IgxStringFilteringOperand.instance().condition('in'),
@@ -95,39 +117,10 @@ export class QueryBuilderComponent implements OnInit {
             searchTree: innerTree
         });
         tree.filteringOperands.push({
-            fieldName: 'Id',
-            condition: IgxStringFilteringOperand.instance().condition('equals'),
-            conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
-            searchVal: '123',
-            ignoreCase: true
+            fieldName: 'Validated',
+            condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: IgxBooleanFilteringOperand.instance().condition('true').name
         });
-
-        // tree.filteringOperands.push({
-        //     fieldName: 'Structure',
-        //     condition: IgxStringFilteringOperand.instance().condition('in'),
-        //     searchTree: innerTree2
-        // });
-
-        // const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
-        // orTree.filteringOperands.push({
-        //     fieldName: 'ID',
-        //     condition: IgxStringFilteringOperand.instance().condition('contains'),
-        //     searchVal: 'b',
-        //     ignoreCase: true
-        // });
-        // orTree.filteringOperands.push({
-        //     fieldName: 'CompanyName',
-        //     condition: IgxStringFilteringOperand.instance().condition('contains'),
-        //     searchVal: 'c',
-        //     ignoreCase: true
-        // });
-        // tree.filteringOperands.push(orTree);
-        // tree.filteringOperands.push({
-        //     fieldName: 'CompanyName',
-        //     condition: IgxStringFilteringOperand.instance().condition('contains'),
-        //     searchVal: 'd',
-        //     ignoreCase: true
-        // });
 
         this.expressionTree = tree;
         // this.onChange();
