@@ -323,16 +323,9 @@
             display: inline-flex;
         }
 
-        igx-icon {
-            cursor: pointer;
-            color: color(null, 'gray', 500);
-            outline-style: none;
-
-            &:hover,
-            &:focus {
-                color: color(null, 'gray', 800);
-            }
-        }
+        %igx-icon-button-display {
+            --size: #{sizable(rem(20px), rem(24px), if($variant != 'indigo', rem(32px), rem(28px)))}
+        };
     }
 
     %filter-tree__expression-condition {
