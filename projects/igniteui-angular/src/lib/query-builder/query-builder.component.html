@@ -147,23 +147,20 @@
                     expressionItem.hovered
                 "
             >
-                <igx-icon
-                    tabindex="0"
+                <button
+                    igxIconButton="flat"
+                    aria-labelledby="edit-expression"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionEdit(expressionItem)"
-                    family="default"
-                    name="edit"
-                    role="button"
                 >
-                </igx-icon>
+                    <igx-icon id="edit-expression">edit</igx-icon>
+                </button>
 
-                <igx-icon
-                    tabindex="0"
+                <button
+                    igxIconButton="flat"
+                    aria-labelledby="add-expression"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionAdd(expressionItem)"
-                    family="default"
-                    name="add"
-                    role="button"
                     *ngIf="
                         !expressionItem.inAddMode &&
                         (expressionItem.parent !== currentGroup ||
@@ -173,7 +170,8 @@
                                 ])
                     "
                 >
-                </igx-icon>
+                    <igx-icon id="add-expression">add</igx-icon>
+                </button>
             </div>
         </div>
 
