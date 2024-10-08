@@ -336,7 +336,7 @@
     }
 
     %filter-tree__expression-condition {
-        opacity: .7;
+        opacity: if($variant != 'indigo', .6, .8);
     }
 
     %filter-tree__buttons {
@@ -370,6 +370,7 @@
         display: flex;
         gap: $gap;
         align-items: center;
+        width: auto;
 
         [igxIconButton] {
             transition: none;
