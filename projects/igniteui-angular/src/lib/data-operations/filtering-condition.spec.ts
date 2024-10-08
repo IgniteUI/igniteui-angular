@@ -157,7 +157,6 @@ class CustomFilter extends IgxFilteringOperand {
             name: 'Custom',
             logic: (value: any, searchVal: any) => value === searchVal,
             isUnary: false,
-            isNestedQuery: false,
             iconName: 'starts-with'
         });
     }

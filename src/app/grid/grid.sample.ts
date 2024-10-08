@@ -284,7 +284,6 @@ export class CustomStringFilter extends IgxStringFilteringOperand {
             name: 'Custom',
             logic: (value: any, searchVal: any) => value === searchVal,
             isUnary: false,
-            isNestedQuery: false,
             iconName: 'starts_with'
         });
     }

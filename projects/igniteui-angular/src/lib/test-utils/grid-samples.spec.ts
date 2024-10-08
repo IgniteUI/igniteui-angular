@@ -724,7 +724,6 @@ export class CustomFilter extends IgxFilteringOperand {
         this.operations = [{
             name: 'custom',
             isUnary: false,
-            isNestedQuery: false,
             logic: (target: string): boolean => target === 'custom',
             iconName: 'custom'
         }];
