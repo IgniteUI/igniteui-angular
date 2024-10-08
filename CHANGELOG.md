@@ -13,8 +13,8 @@ All notable changes for each version of this project will be documented in this 
     - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
 - `IgxQueryBuilder`
     - Introduced ability to create nested queries by specifying IN/NOT IN operators.
-    - Added the `entities` property that accepts an array describing the entity name and an array of its fields. The `fields` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
-    - Add option to template the search value input:
+    - Added the `entities` property that accepts an array of `EntityType` objects describing an entity with its name and an array of fields. The `fields` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
+    - Added option to template the search value input:
     ```
     <ng-template igxQueryBuilderSearchValue 
                 let-searchValue
