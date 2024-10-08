@@ -299,10 +299,8 @@
                         !selectedField ||
                         !selectedCondition ||
                         (selectedField &&
-                            selectedField.filters.condition(selectedCondition)
-                                .isUnary)||
-                        selectedCondition === 'in' ||
-                        selectedCondition === 'notIn'
+                            (selectedField.filters.condition(selectedCondition).isUnary ||
+                            selectedField.filters.condition(selectedCondition).isNestedQuery))
                     "
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
@@ -328,10 +326,8 @@
                         !selectedField ||
                         !selectedCondition ||
                         (selectedField &&
-                            selectedField.filters.condition(selectedCondition)
-                                .isUnary) ||
-                        selectedCondition === 'in' ||
-                        selectedCondition === 'notIn'
+                            (selectedField.filters.condition(selectedCondition).isUnary ||
+                            selectedField.filters.condition(selectedCondition).isNestedQuery))
                     "
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
@@ -360,10 +356,8 @@
                             !selectedField ||
                             !selectedCondition ||
                             (selectedField &&
-                                selectedField.filters.condition(selectedCondition)
-                                    .isUnary) ||
-                            selectedCondition === 'in' ||
-                            selectedCondition === 'notIn'
+                                (selectedField.filters.condition(selectedCondition).isUnary ||
+                                selectedField.filters.condition(selectedCondition).isNestedQuery))
                         "
                         [igxDateTimeEditor]="selectedField.defaultDateTimeFormat"
                     />
