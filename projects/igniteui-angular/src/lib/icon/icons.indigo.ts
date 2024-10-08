@@ -238,7 +238,7 @@ const refresh: IMXIcon = {
 
 const search: IMXIcon = {
     name: 'search',
-    value: `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.393 3a7.393 7.393 0 1 0 4.068 13.567l3.996 3.997a1.49 1.49 0 1 0 2.107-2.107l-3.997-3.996A7.393 7.393 0 0 0 10.393 3ZM6 10.393a4.393 4.393 0 1 1 8.786 0 4.393 4.393 0 0 1-8.786 0Z"></svg>`,
+    value: `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 24 24"><path d="M10.393 3a7.393 7.393 0 1 0 4.068 13.567l3.996 3.997a1.49 1.49 0 1 0 2.107-2.107l-3.997-3.996A7.393 7.393 0 0 0 10.393 3ZM6 10.393a4.393 4.393 0 1 1 8.786 0 4.393 4.393 0 0 1-8.786 0Z"></svg>`,
     categories: ['editor'],
     fontSet: 'indigo'
 }
