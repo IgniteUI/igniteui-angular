@@ -111,6 +111,33 @@ describe('Unit testing FilteringUtil', () => {
         }
     });
 
+    it('Sub-queries should deserialize correctly', () => {
+        const tree = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'myEntity', ['Id']);
+        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'otherEntity', ['*']);
+        innerTree.filteringOperands.push({
+            fieldName: 'Id',
+            condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: 'true',
+            searchVal: true
+        });
+
+        tree.filteringOperands.push({
+            fieldName: 'Id',
+            conditionName: 'in',
+            condition: IgxFilteringOperand.instance().condition('in'),
+            searchTree: innerTree
+        });
+
+        const serializedTree = serialize(tree, true);
+        const deserializedTree = FilteringUtil.recreateTreeFromJson(serializedTree);
+        const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
+        const nestedOperand = firstOperand.searchTree.filteringOperands[0] as IFilteringExpression;
+
+        expect(firstOperand.conditionName).toBe('in');
+        expect(nestedOperand.condition.logic(true, nestedOperand.searchVal)).toBe(true);
+        expect(nestedOperand.conditionName).toBe('true');
+    });
+
     it('Number search values should deserialize correctly', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.Or, 'myField', 'myEntity', ['Id']);
         tree.filteringOperands.push({

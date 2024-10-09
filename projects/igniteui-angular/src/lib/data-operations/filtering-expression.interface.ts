@@ -1,6 +1,6 @@
 import { IFilteringOperation } from './filtering-condition';
 import { Serializable } from 'node:child_process';
-import { IExpressionTree } from './filtering-expressions-tree';
+import { IExpressionTree, ISerializedFilteringExpressionTree } from './filtering-expressions-tree';
 
 /* mustCoerceToInt */
 export enum FilteringLogic {
@@ -24,4 +24,5 @@ export declare interface IFilteringExpression {
 
 export declare interface ISerializedFilteringExpression extends IFilteringExpression {
     expressionType?: string;
+    searchTree?: ISerializedFilteringExpressionTree;
 }

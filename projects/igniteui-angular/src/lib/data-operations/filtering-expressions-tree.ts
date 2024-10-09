@@ -107,13 +107,13 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * @memberof FilteringExpressionsTree
      */
     public expressionTypes? = [
-        IgxFilteringOperand,
         IgxStringFilteringOperand,
         IgxNumberFilteringOperand,
         IgxBooleanFilteringOperand,
         IgxDateTimeFilteringOperand,
         IgxTimeFilteringOperand,
         IgxDateFilteringOperand,
+        IgxFilteringOperand,
     ];
 
     constructor(operator: FilteringLogic, fieldName?: string, entity?: string, returnFields?: string[]) {
@@ -191,30 +191,46 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
         return false;
     }
 
-    public toJSON() {
+    /**
+     * Converts the expression tree to a an intermediate object which
+     * contains type hints for operand deserialization.
+     *
+     * This method is called by `JSON.stringify` when performing serialization.
+     * ```typescript
+     * let serializedTree = JSON.stringify(tree);
+     * ```
+     * @memberof FilteringExpressionsTree
+     * @returns The intermediate `ISerializedFilteringExpressionTree` object.
+     */
+    public toJSON(): ISerializedFilteringExpressionTree {
         const containsCondition = (instance: IgxFilteringOperand, operand: IFilteringOperation) => {
             return instance.operations.find(op =>
                 op.logic.toString() === operand.logic.toString() && op.name === operand.name
             );
         };
+
         const copy = new FilteringExpressionsTree(this.operator, this.fieldName, this.entity, this.returnFields) as ISerializedFilteringExpressionTree;
 
-        this.filteringOperands.forEach(op => {
-            const condition = (op as IFilteringExpression).condition;
-            if (condition) {
+        this.filteringOperands?.forEach(op => {
+            const expression = op as IFilteringExpression;
+            if (expression.condition) {
                 let resolvedType = 'unknown';
                 this.expressionTypes.forEach(type => {
-                    const match = containsCondition(type.instance(), condition);
+                    const match = containsCondition(type.instance(), expression.condition);
                     if (match !== undefined) {
                         resolvedType = type.name.replaceAll('_','');
                     }
                 });
 
-                copy.filteringOperands.push({...op, expressionType: resolvedType, conditionName: condition.name });
+                copy.filteringOperands.push({...op, expressionType: resolvedType, conditionName: expression.condition.name });
             } else {
                 copy.filteringOperands.push(op);
             }
         });
+
+
+        // Remove expressionTypes from serialized model.
+        (copy as any).expressionTypes = undefined;
         return copy;
     }
 }
