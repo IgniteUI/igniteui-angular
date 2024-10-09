@@ -125,15 +125,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      */
     @Input()
-    public override set displayFormat(value: string) {
-        if (this.dateTimeEditor) {
-            this.dateTimeEditor.displayFormat = value;
-        }
-    }
-
-    public override get displayFormat(): string {
-        return this.dateTimeEditor?.displayFormat;
-    }
+    public override displayFormat: string;
 
     /**
      * The expected user input format and placeholder.
@@ -147,15 +139,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public override set inputFormat(value: string) {
-        if (this.dateTimeEditor) {
-            this.dateTimeEditor.inputFormat = value;
-        }
-    }
-
-    public override get inputFormat(): string {
-        return this.dateTimeEditor?.inputFormat;
-    }
+    public override inputFormat: string;
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.

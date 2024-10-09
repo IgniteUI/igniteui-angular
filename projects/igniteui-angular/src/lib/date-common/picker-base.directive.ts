@@ -36,13 +36,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      * ```
      */
     @Input()
-    public set inputFormat(value: string) {
-        this._inputFormat = value;
-    }
-
-    public get inputFormat(): string {
-        return this._inputFormat;
-    }
+    public inputFormat: string;
 
     /**
      * The format used to display the picker's value when it's not being edited.
@@ -57,13 +51,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      *
      */
     @Input()
-    public set displayFormat(value: string) {
-        this._displayFormat = value;
-    }
-
-    public get displayFormat(): string {
-        return this._displayFormat;
-    }
+    public displayFormat: string;
 
     /**
      * Sets the `placeholder` of the picker's input.
@@ -262,8 +250,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
     protected _locale: string;
     protected _collapsed = true;
-    protected _displayFormat: string;
-    protected _inputFormat: string;
     protected _type: IgxInputGroupType;
     protected _minValue: Date | string;
     protected _maxValue: Date | string;

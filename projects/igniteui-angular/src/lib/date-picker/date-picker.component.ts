@@ -334,50 +334,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.valueChange.emit(this.dateValue);
         this._onChangeCallback(this.dateValue);
     }
-    /**
-     * The format used to display the picker's value when it's not being edited.
-     *
-     * @remarks
-     * Uses Angular's DatePipe.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker displayFormat="EE/M/yy"></igx-date-picker>
-     * ```
-     *
-     */
-    @Input()
-    public override set displayFormat(value: string) {
-        if (this.dateTimeEditor) {
-            this.dateTimeEditor.displayFormat = value;
-        }
-    }
-
-    public override get displayFormat(): string {
-        return this.dateTimeEditor?.displayFormat;
-    }
-
-    /**
-     * The editor's input mask.
-     *
-     * @remarks
-     * Also used as a placeholder when none is provided.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker inputFormat="dd/MM/yy"></igx-date-picker>
-     * ```
-     */
-    @Input()
-    public override set inputFormat(value: string) {
-        if (this.dateTimeEditor) {
-            this.dateTimeEditor.inputFormat = value;
-        }
-    }
-
-    public override get inputFormat(): string {
-        return this.dateTimeEditor?.inputFormat;
-    }
 
     /**
      * The minimum value the picker will accept.

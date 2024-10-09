@@ -175,13 +175,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      *
      */
     @Input()
-    public override set displayFormat(value: string) {
-        super.displayFormat = value;
-    }
-
-    public override get displayFormat(): string {
-        return super.displayFormat;
-    }
+    public override displayFormat: string;
 
     /**
      * The expected user input format and placeholder.
@@ -192,13 +186,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public override set inputFormat(value: string) {
-       super.inputFormat = value;
-    }
-
-    public override get inputFormat(): string {
-        return super.inputFormat;
-    }
+    public override inputFormat: string;
 
     /**
      * The minimum value in a valid range.
@@ -347,7 +335,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     /**
      * Gets the `locale` of the date-range-picker.
-     * If not set, defaults to applciation's locale.
+     * If not set, defaults to application's locale.
      */
     @Input()
     public override get locale(): string {
