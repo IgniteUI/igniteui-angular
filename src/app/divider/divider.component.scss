@@ -28,7 +28,7 @@ $padding: 32px;
 .preview {
     display: flex;
     justify-content: space-between;
-    border: 1px solid hsla(var(--ig-gray-300));
+    border: 1px solid var(--ig-gray-300);
     gap: $padding;
     margin: 0 auto;
 }
@@ -58,8 +58,8 @@ $padding: 32px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    background: hsla(var(--ig-gray-50));
-    border-left: 1px solid hsla(var(--ig-gray-300));
+    background: var(--ig-gray-50);
+    border-left: 1px solid var(--ig-gray-300);
     padding: $padding;
     min-width: 320px;
 }
@@ -71,15 +71,15 @@ $padding: 32px;
     text-decoration: none;
     outline: none;
     margin-top: 1rem;
-    color: hsla(var(--ig-primary-600));
+    color: var(--ig-primary-600);
 
     &:focus,
     &:hover {
-        color: hsla(var(--ig-primary-300));
+        color: var(--ig-primary-300);
     }
 }
 
 .preview__warning {
-    color: hsla(var(--ig-warn-600));
+    color: var(--ig-warn-600);
 }
 
