@@ -49,7 +49,7 @@
 }
 
 .toggle-group:nth-child(odd) {
-    background: hsl(var(--ig-surface-500));
+    background: var(--ig-surface-500);
 }
 
 .paging-config {

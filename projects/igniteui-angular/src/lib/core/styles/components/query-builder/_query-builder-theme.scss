@@ -323,20 +323,13 @@
             display: inline-flex;
         }
 
-        igx-icon {
-            cursor: pointer;
-            color: color(null, 'gray', 500);
-            outline-style: none;
-
-            &:hover,
-            &:focus {
-                color: color(null, 'gray', 800);
-            }
-        }
+        %igx-icon-button-display {
+            --size: #{sizable(rem(20px), rem(24px), if($variant != 'indigo', rem(32px), rem(28px)))}
+        };
     }
 
     %filter-tree__expression-condition {
-        opacity: .7;
+        opacity: if($variant != 'indigo', .6, .8);
     }
 
     %filter-tree__buttons {
@@ -370,6 +363,7 @@
         display: flex;
         gap: $gap;
         align-items: center;
+        width: auto;
 
         [igxIconButton] {
             transition: none;
@@ -467,8 +461,9 @@
 
     %filter-con-menu__close-btn {
         position: absolute;
-        top: rem(-18px);
-        inset-inline-end: rem(-18px);
+        top: 0;
+        inset-inline-start: 100%;
+        transform: translate(-50%, -50%);
         background-color: var-get($theme, 'background');
         border: rem(1px) solid color(null, 'gray', 200);
 

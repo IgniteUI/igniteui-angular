@@ -73,7 +73,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     /**
      * Sets/gets the field name of the column where the filtering expression is placed.
      * ```typescript
-     *  gridExpressionTree.fieldName = 'Column Field';
+     * gridExpressionTree.fieldName = 'Column Field';
      * ```
      * ```typescript
      * let columnField = expressionTree.fieldName;
@@ -87,7 +87,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     /**
      * Sets/gets the type of the filtering expressions tree.
      * ```typescript
-     *  gridExpressionTree.type = FilteringExpressionsTree.Advanced;
+     * gridExpressionTree.type = FilteringExpressionsTree.Advanced;
      * ```
      * ```typescript
      * let type = expressionTree.type;
@@ -97,8 +97,30 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      */
     public type?: FilteringExpressionsTreeType;
 
+    /**
+     * Sets/gets the entity.
+     * ```typescript
+     * gridExpressionsTree.entity = 'Entity A';
+     * ```
+     * ```typescript
+     * let entity = gridExpressionsTree.entity;
+     * ```
+     *
+     * @memberof FilteringExpressionsTree
+     */
     public entity?: string;
 
+    /**
+     * Sets/gets the return fields.
+     * ```typescript
+     * gridExpressionsTree.returnFields = ['Column Field 1', 'Column Field 2'];
+     * ```
+     * ```typescript
+     * let returnFields = gridExpressionsTree.returnFields;
+     * ```
+     *
+     * @memberof FilteringExpressionsTree
+     */
     public returnFields?: string[];
 
     /**

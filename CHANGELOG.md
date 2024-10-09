@@ -8,14 +8,57 @@ All notable changes for each version of this project will be documented in this 
     - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - To streamline the sorting of columns with custom formats, a new `FormattedValuesSortingStrategy` has been introduced. This strategy simplifies the sorting process by allowing direct sorting based on formatted values, eliminating the need to extend the `DefaultSortingStrategy` or implement a custom `ISortingStrategy`. This enhancement improves the ease of handling sorting with custom column formatters.
-
 - `IgxCarousel`
     - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
     - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
-
+- `IgxQueryBuilder`
+    - Introduced ability to create nested queries by specifying IN/NOT IN operators.
+    - Added the `entities` property that accepts an array of `EntityType` objects describing an entity with its name and an array of fields. The `fields` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
+    - Added option to template the search value input:
+    ```
+    <ng-template igxQueryBuilderSearchValue 
+                let-searchValue
+                let-selectedField = "selectedField" 
+                let-selectedCondition = "selectedCondition"
+                let-defaultSearchValueTemplate = "defaultSearchValueTemplate">
+        @if (selectedField?.field === 'Id' && selectedCondition === 'equals'){
+            <input type="text" required [(ngModel)]="searchValue.value"/>
+        } @else {  
+            <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
+        }
+    </ng-template> 
+    ```
 - `IFilteringExpression`
-    - **Breaking Change** There is a new `conditionName` property which is required. This would generally be equal to the old `condition.name`.
+    - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
 
+- `IFilteringOperation`
+    - A new optional property called `isNestedQuery` has been introduced. It's used to indicate whether the condition leads to a nested query creation.
+
+### Themes
+- `Palettes`
+    - All palette colors have been migrated to the [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors). This means that color consumed as CSS variables no longer need to be wrapped in an `hsl` function. 
+
+    Example: 
+    ```css
+    /* 18.1.x and before: */
+    background: hsl(var(--igx-primary-600));
+
+    /* 18.2.0+: */
+    background: var(--igx-primary-600);
+    ```
+
+    This change also opens up the door for declaring the base (500) variants of each color in CSS from any color, including other CSS variables, whereas before the Sass `palette` function was needed to generate color shades from a base color.
+
+    Example: 
+    ```scss
+    /* 18.1.x and before: */
+    $my-palette: palette($primary: #09f, ...);
+
+    /* 18.2.0+: */
+    --ig-primary-500: #09f;
+    ```
+
+    This change adds to our continuous effort to make theming configurable in CSS as much as it is in Sass.
 
 #### Scrollbar: New CSS variables
 

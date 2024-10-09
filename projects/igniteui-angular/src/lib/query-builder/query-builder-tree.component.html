@@ -144,22 +144,19 @@
                     expressionItem.hovered
                 "
             >
-                <span tabindex="0"
+                <button
+                    igxIconButton="flat"
+                    aria-labelledby="edit-expression"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionEdit(expressionItem)">
-                    <igx-icon
-                        family="default"
-                        name="edit"
-                    >
-                    </igx-icon>
-                </span>
-                <span tabindex="0"
+                    <igx-icon id="edit-expression">edit</igx-icon>
+                </button>
+                <button
+                    igxIconButton="flat"
+                    aria-labelledby="add-expression"
                     (keydown)="invokeClick($event)"
-                    (click)="enterExpressionAdd(expressionItem)">
-                    <igx-icon
-                        family="default"
-                        name="add"
-                        *ngIf="
+                    (click)="enterExpressionAdd(expressionItem)"
+                    *ngIf="
                             !expressionItem.inAddMode &&
                             (expressionItem.parent !== currentGroup ||
                                 expressionItem !==
@@ -167,9 +164,9 @@
                                         currentGroup.children.length - 1
                                     ])
                         "
-                    >
-                    </igx-icon>
-                </span>
+                >
+                    <igx-icon id="add-expression">add</igx-icon>
+                </button>
             </div>
             <div *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree"
                 igxButton
@@ -181,7 +178,6 @@
                 <igx-icon *ngIf="expressionItem.expanded" family="default" name="unfold_less" role="button"></igx-icon>
                 <igx-icon *ngIf="!expressionItem.expanded" family="default" name="unfold_more" role="button"></igx-icon>
             </div>
-
         </div>
 
         <div
@@ -275,10 +271,8 @@
                             !selectedField ||
                             !selectedCondition ||
                             (selectedField &&
-                                selectedField.filters.condition(selectedCondition)
-                                    .isUnary) ||
-                            selectedCondition === 'in' ||
-                            selectedCondition === 'notIn'
+                                (selectedField.filters.condition(selectedCondition).isUnary ||
+                                selectedField.filters.condition(selectedCondition).isNestedQuery))
                         "
                         [type]="
                             selectedField && selectedField.dataType === 'number'
@@ -301,8 +295,8 @@
                         !selectedField ||
                         !selectedCondition ||
                         (selectedField &&
-                            selectedField.filters.condition(selectedCondition)
-                                .isUnary)
+                            (selectedField.filters.condition(selectedCondition).isUnary ||
+                            selectedField.filters.condition(selectedCondition).isNestedQuery))
                     "
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
@@ -328,8 +322,8 @@
                         !selectedField ||
                         !selectedCondition ||
                         (selectedField &&
-                            selectedField.filters.condition(selectedCondition)
-                                .isUnary)
+                            (selectedField.filters.condition(selectedCondition).isUnary ||
+                            selectedField.filters.condition(selectedCondition).isNestedQuery))
                     "
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
@@ -358,8 +352,8 @@
                             !selectedField ||
                             !selectedCondition ||
                             (selectedField &&
-                                selectedField.filters.condition(selectedCondition)
-                                    .isUnary)
+                                (selectedField.filters.condition(selectedCondition).isUnary ||
+                                selectedField.filters.condition(selectedCondition).isNestedQuery))
                         "
                         [igxDateTimeEditor]="selectedField.defaultDateTimeFormat"
                     />
@@ -383,7 +377,7 @@
             </div>
         </div>
 
-        <ng-container *ngIf="(!expressionItem.inEditMode && expressionItem.expression.searchTree) || (expressionItem.inEditMode && (selectedCondition === 'in' || selectedCondition === 'notIn'))">
+        <ng-container *ngIf="(!expressionItem.inEditMode && expressionItem.expression.searchTree) || (expressionItem.inEditMode && selectedField?.filters?.condition(selectedCondition)?.isNestedQuery)">
             <igx-query-builder-tree
                 [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
                 [entities]="entities"

@@ -1,0 +1,14 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "fields",
+            "replaceWith": "entities",
+            "valueTransform": "fields_to_entities",
+            "owner": {
+                "selector": "igx-query-builder",
+                "type": "component"
+            }
+        }
+    ]
+}

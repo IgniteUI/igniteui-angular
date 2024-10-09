@@ -1014,6 +1014,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "in",
         "isUnary": false,
+        "isNestedQuery": true,
         "iconName": "in"
       },
       "conditionName": null,
@@ -1097,6 +1098,7 @@ describe('IgxQueryBuilder', () => {
       "condition": {
         "name": "notIn",
         "isUnary": false,
+        "isNestedQuery": true,
         "iconName": "not-in"
       },
       "conditionName": null,
