@@ -6,6 +6,8 @@ import { PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { NgFor, NgIf } from '@angular/common';
 import { IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective } from '../../projects/igniteui-angular/src/lib/navigation-drawer/navigation-drawer.directives';
+import { PropertiesPanelComponent, PropertyPanelConfig } from './properties-panel/properties-panel.component';
+import { PropertyChangeService } from './property-change.service';
 
 @Component({
     selector: 'app-root',
@@ -25,6 +27,7 @@ import { IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective, IgxNavDrawerM
 		PageHeaderComponent,
 		RouterOutlet,
 		IgxRippleDirective,
+        PropertiesPanelComponent
 	],
 })
 export class AppComponent implements OnInit {
@@ -33,6 +36,8 @@ export class AppComponent implements OnInit {
 
     @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
     public navdrawer;
+
+    public panelConfig: PropertyPanelConfig | null = null;
 
     public urlString: string;
 
@@ -811,9 +816,13 @@ export class AppComponent implements OnInit {
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
-    constructor(private router: Router, private iconService: IgxIconService) {
+    constructor(private router: Router, private iconService: IgxIconService, private propertyChangeService: PropertyChangeService) {
         iconService.setFamily('fa-solid', { className: 'fa', type: 'font', prefix: 'fa-'});
         iconService.setFamily('fa-brands', { className: 'fab', type: 'font' });
+
+        this.propertyChangeService.panelConfig$.subscribe(config => {
+            this.panelConfig = config;
+         });
 
         router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
             for (const component of this.componentLinks) {
