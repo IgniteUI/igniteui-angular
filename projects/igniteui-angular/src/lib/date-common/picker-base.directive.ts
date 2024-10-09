@@ -21,7 +21,6 @@ import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from '../input-group/inputGro
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { DateTimeUtil } from './util/date-time.util';
 
 @Directive()
 export abstract class PickerBaseDirective implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
@@ -42,7 +41,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     }
 
     public get inputFormat(): string {
-        return this._inputFormat || this._defaultInputFormat;
+        return this._inputFormat;
     }
 
     /**
@@ -60,7 +59,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     @Input()
     public set displayFormat(value: string) {
         this._displayFormat = value;
-        this.updateDefaultFormat();
     }
 
     public get displayFormat(): string {
@@ -141,7 +139,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
         } catch (e) {
             this._locale = this._localeId;
         }
-        this.updateDefaultFormat();
     }
 
     /**
@@ -265,7 +262,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
     protected _locale: string;
     protected _collapsed = true;
-    protected _defaultInputFormat: string;
     protected _displayFormat: string;
     protected _inputFormat: string;
     protected _type: IgxInputGroupType;
@@ -333,11 +329,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
                 .pipe(takeUntil(merge(components.changes, this._destroy$)))
                 .subscribe(next);
         });
-    }
-
-    protected updateDefaultFormat(): void {
-        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
-                                || DateTimeUtil.getDefaultInputFormat(this.locale);
     }
 
     public abstract select(value: Date | DateRange | string): void;

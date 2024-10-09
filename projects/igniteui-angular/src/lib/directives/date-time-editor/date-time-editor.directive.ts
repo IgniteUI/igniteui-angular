@@ -141,7 +141,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     public get displayFormat(): string {
-        return this._displayFormat;
+        return this._displayFormat || this.inputFormat;
     }
 
     /**
@@ -523,6 +523,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     private updateDefaultFormat(): void {
         this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
                                 || DateTimeUtil.getDefaultInputFormat(this.locale, this.defaultFormatType);
+        this.setMask(this.inputFormat);
     }
 
     private updateMask(): void {

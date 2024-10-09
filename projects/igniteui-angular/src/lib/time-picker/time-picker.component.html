@@ -1,8 +1,8 @@
 <igx-input-group #inputGroup [type]="type">
-    <input [displayValuePipe]="formatter ? displayValue : null" igxInput [igxDateTimeEditor]="inputFormat"
+    <input [displayValuePipe]="formatter ? displayValue : null" igxInput igxDateTimeEditor
         type="text" [readonly]="!isDropdown || readOnly" [minValue]="minValue" [maxValue]="maxValue"
         [locale]="locale" [spinDelta]="itemsDelta" [spinLoop]="spinLoop" [placeholder]="placeholder"
-        [disabled]="disabled" [displayFormat]="displayFormat"
+        [disabled]="disabled" [defaultFormatType]="'time'"
         [igxTextSelection]="isDropdown && !readOnly" role="combobox" aria-haspopup="dialog"
         [attr.aria-expanded]="!toggleDirective.collapsed" [attr.aria-labelledby]="label?.id"
         (click)="!isDropdown && toggle()"/>

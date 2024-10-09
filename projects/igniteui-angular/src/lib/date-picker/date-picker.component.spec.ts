@@ -515,6 +515,63 @@ describe('IgxDatePicker', () => {
                 expect(wrapper.getAttribute('aria-activedescendant')).not.toEqual('test');
             }));
         });
+
+        describe('Input and Display formats', () => {
+            let fixture: ComponentFixture<any>;
+            let datePicker: IgxDatePickerComponent;
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+                registerLocaleData(localeBg);
+                registerLocaleData(localeES);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+            }));
+
+            it('should set default inputFormat, if none, with parts for day, month and year based on locale', () => {
+                datePicker.locale = 'en-US';
+                fixture.detectChanges();
+                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
+
+                datePicker.locale = 'bg-BG';
+                fixture.detectChanges();
+                expect(datePicker.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+
+                datePicker.locale = 'es-ES';
+                fixture.detectChanges();
+                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
+            });
+
+            it('should resolve inputFormat, if not set, to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
+                datePicker.locale = 'en-US';
+                fixture.detectChanges();
+
+                datePicker.displayFormat = 'dd/MM/yyyy';
+                fixture.detectChanges();
+                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
+
+                datePicker.displayFormat = 'shortDate';
+                fixture.detectChanges();
+                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
+            }));
+
+            it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
+                datePicker.locale = 'en-US';
+                datePicker.displayFormat = 'MMM d, y, h:mm:ss a';
+                fixture.detectChanges();
+                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
+
+                datePicker.locale = 'bg-BG';
+                datePicker.displayFormat = 'full';
+                fixture.detectChanges();
+                expect(datePicker.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+
+                datePicker.locale = 'es-ES';
+                datePicker.displayFormat = 'MMM d, y';
+                fixture.detectChanges();
+                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
+            }));
+        });
     });
 
     describe('Unit Tests', () => {
@@ -714,7 +771,6 @@ describe('IgxDatePicker', () => {
         });
         describe('API tests', () => {
             registerLocaleData(localeES);
-            registerLocaleData(localeBg);
             it('Should initialize and update all inputs properly', () => {
                 // no ngControl initialized
                 expect(datePicker.required).toEqual(false);
@@ -729,7 +785,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.formatViews).toEqual(undefined);
                 expect(datePicker.headerOrientation).toEqual(PickerHeaderOrientation.Horizontal);
                 expect(datePicker.hideOutsideDays).toEqual(undefined);
-                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
+                expect(datePicker.inputFormat).toEqual(undefined);
                 expect(datePicker.mode).toEqual(PickerInteractionMode.DropDown);
                 expect(datePicker.isDropdown).toEqual(true);
                 expect(datePicker.minValue).toEqual(undefined);
@@ -1317,48 +1373,6 @@ describe('IgxDatePicker', () => {
                     { type: DateRangeType.After, dateRange: [mockMaxValue] }
                 ]);
             });
-            //#endregion
-
-            //#region inputFormat
-            it('should set default inputFormat, if none, with parts for day, month and year based on locale', () => {
-                datePicker.ngAfterViewInit();
-
-                datePicker.locale = 'en-US';
-                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
-
-                datePicker.locale = 'bg-BG';
-                expect(datePicker.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
-
-                datePicker.locale = 'es-ES';
-                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
-            });
-
-            it('should resolve inputFormat, if not set, to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
-                datePicker.ngAfterViewInit();
-                datePicker.locale = 'en-US';
-
-                datePicker.displayFormat = 'dd/MM/yyyy';
-                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
-
-                datePicker.displayFormat = 'shortDate';
-                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
-            }));
-
-            it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
-                datePicker.ngAfterViewInit();
-
-                datePicker.locale = 'en-US';
-                datePicker.displayFormat = 'MMM d, y, h:mm:ss a';
-                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
-
-                datePicker.locale = 'bg-BG';
-                datePicker.displayFormat = 'full';
-                expect(datePicker.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
-
-                datePicker.locale = 'es-ES';
-                datePicker.displayFormat = 'MMM d, y';
-                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
-            }));
             //#endregion
         });
 

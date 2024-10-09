@@ -60,7 +60,6 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
-import { DataType } from '../data-operations/data-util';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -113,6 +112,50 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @Input()
     public id = `igx-time-picker-${NEXT_ID++}`;
 
+    /**
+     * The format used when editable input is not focused. Defaults to the `inputFormat` if not set.
+     *
+     * @remarks
+     * Uses Angular's `DatePipe`.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker displayFormat="mm:ss"></igx-time-picker>
+     * ```
+     *
+     */
+    @Input()
+    public override set displayFormat(value: string) {
+        if (this.dateTimeEditor) {
+            this.dateTimeEditor.displayFormat = value;
+        }
+    }
+
+    public override get displayFormat(): string {
+        return this.dateTimeEditor?.displayFormat;
+    }
+
+    /**
+     * The expected user input format and placeholder.
+     *
+     * @remarks
+     * Default is `hh:mm tt`
+     *
+     * @example
+     * ```html
+     * <igx-time-picker inputFormat="HH:mm"></igx-time-picker>
+     * ```
+     */
+    @Input()
+    public override set inputFormat(value: string) {
+        if (this.dateTimeEditor) {
+            this.dateTimeEditor.inputFormat = value;
+        }
+    }
+
+    public override get inputFormat(): string {
+        return this.dateTimeEditor?.inputFormat;
+    }
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
@@ -333,27 +376,27 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden */
     public get showHoursList(): boolean {
-        return this.inputFormat.indexOf('h') !== - 1 || this.inputFormat.indexOf('H') !== - 1;
+        return this.inputFormat?.indexOf('h') !== - 1 || this.inputFormat?.indexOf('H') !== - 1;
     }
 
     /** @hidden */
     public get showMinutesList(): boolean {
-        return this.inputFormat.indexOf('m') !== - 1;
+        return this.inputFormat?.indexOf('m') !== - 1;
     }
 
     /** @hidden */
     public get showSecondsList(): boolean {
-        return this.inputFormat.indexOf('s') !== - 1;
+        return this.inputFormat?.indexOf('s') !== - 1;
     }
 
     /** @hidden */
     public get showAmPmList(): boolean {
-        return this.inputFormat.indexOf('t') !== - 1 || this.inputFormat.indexOf('a') !== - 1;
+        return this.inputFormat?.indexOf('t') !== - 1 || this.inputFormat?.indexOf('a') !== - 1;
     }
 
     /** @hidden */
     public get isTwelveHourFormat(): boolean {
-        return this.inputFormat.indexOf('h') !== - 1;
+        return this.inputFormat?.indexOf('h') !== - 1;
     }
 
     /** @hidden @internal */
@@ -619,7 +662,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public getPartValue(value: Date, type: string): string {
         const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.inputFormat);
         const part = inputDateParts.find(element => element.type === type);
-        return DateTimeUtil.getPartValue(value, part, part.format.length);
+        return DateTimeUtil.getPartValue(value, part, part.format?.length);
     }
 
     /** @hidden @internal */
@@ -1057,11 +1100,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
             this._inputGroup.isRequired = this.required;
         }
-    }
-
-    protected override updateDefaultFormat(): void {
-        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
-                                || DateTimeUtil.getDefaultInputFormat(this.locale, DataType.Time);
     }
 
     private get isTouchedOrDirty(): boolean {
