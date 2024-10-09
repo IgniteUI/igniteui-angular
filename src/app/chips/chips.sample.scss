@@ -17,7 +17,7 @@ $padding: 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid hsla(var(--ig-gray-300));
+    border: 1px solid var(--ig-gray-300);
     gap: $padding;
     margin: 0 auto;
 
@@ -35,8 +35,8 @@ $padding: 32px;
         display: flex;
         flex-direction: column;
         gap: 8px;
-        background: hsla(var(--ig-gray-50));
-        border-left: 1px solid hsla(var(--ig-gray-300));
+        background: var(--ig-gray-50);
+        border-left: 1px solid var(--ig-gray-300);
         padding: $padding;
     }
 
@@ -58,12 +58,12 @@ $padding: 32px;
         justify-content: center;
         gap: 4px;
         text-decoration: none;
-        color: hsla(var(--ig-secondary-600));
+        color: var(--ig-secondary-600);
         outline: none;
 
         &:focus,
         &:hover {
-            color: hsla(var(--ig-secondary-300));
+            color: var(--ig-secondary-300);
         }
     }
 }

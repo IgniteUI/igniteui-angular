@@ -33,6 +33,32 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTimePicker`
     - The input and display formats are now adjusted based on the locale. For instance, day period time part (AM/PM or a/p) would not be displayed for locales that do not require it.
 
+### Themes
+- `Palettes`
+    - All palette colors have been migrated to the [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors). This means that color consumed as CSS variables no longer need to be wrapped in an `hsl` function. 
+
+    Example: 
+    ```css
+    /* 18.1.x and before: */
+    background: hsl(var(--igx-primary-600));
+
+    /* 18.2.0+: */
+    background: var(--igx-primary-600);
+    ```
+
+    This change also opens up the door for declaring the base (500) variants of each color in CSS from any color, including other CSS variables, whereas before the Sass `palette` function was needed to generate color shades from a base color.
+
+    Example: 
+    ```scss
+    /* 18.1.x and before: */
+    $my-palette: palette($primary: #09f, ...);
+
+    /* 18.2.0+: */
+    --ig-primary-500: #09f;
+    ```
+
+    This change adds to our continuous effort to make theming configurable in CSS as much as it is in Sass.
+
 #### Scrollbar: New CSS variables
 
 We have introduced new CSS variables to allow for more customizable scrollbars. This enhancement utilizes the available WebKit pseudo-selectors such as `::-webkit-scrollbar-track`. However, please note that these pseudo-selectors are prefixed with `-webkit-` and are only supported in WebKit-based browsers (e.g., Chrome, Safari).
