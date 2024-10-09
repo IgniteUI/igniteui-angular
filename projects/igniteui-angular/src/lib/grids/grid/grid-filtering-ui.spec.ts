@@ -5273,9 +5273,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
             tick(200);
 
-            const timePicker = fix.debugElement.query(By.directive(IgxTimePickerComponent)).componentInstance;
-            expect(timePicker.inputFormat).toMatch(column.editorOptions.dateTimeFormat);
-            expect(timePicker.displayFormat).toMatch(column.pipeArgs.format);
+            const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat).toMatch(column.editorOptions.dateTimeFormat);
+            expect(dateTimeEditorDirective.displayFormat).toMatch(column.pipeArgs.format);
         }));
 
         it('Time: Should use pipeArgs.format as inputFormat to the filter editor in the custom filtering dialog if editorOptions.dateTimeFormat not set', fakeAsync(() => {
@@ -5293,9 +5294,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
             tick(200);
 
-            const timePicker = fix.debugElement.query(By.directive(IgxTimePickerComponent)).componentInstance;
-            expect(timePicker.inputFormat).toMatch(column.pipeArgs.format);
-            expect(timePicker.displayFormat).toMatch(column.pipeArgs.format);
+            const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat).toMatch(column.pipeArgs.format);
+            expect(dateTimeEditorDirective.displayFormat).toMatch(column.pipeArgs.format);
         }));
         it('Should filter grid through custom date filter dialog when using pipeArgs for the column', fakeAsync(() => {
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
