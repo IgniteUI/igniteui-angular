@@ -231,28 +231,39 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
             );
         };
 
-        const copy = new FilteringExpressionsTree(this.operator, this.fieldName, this.entity, this.returnFields) as ISerializedFilteringExpressionTree;
+        const packTree = (tree: IExpressionTree, expressionTypes: any[]) => {
+            const copy = new FilteringExpressionsTree(tree.operator, tree.fieldName, tree.entity, tree.returnFields) as ISerializedFilteringExpressionTree;
 
-        this.filteringOperands?.forEach(op => {
-            const expression = op as IFilteringExpression;
-            if (expression.condition) {
-                let resolvedType = 'unknown';
-                this.expressionTypes.forEach(type => {
-                    const match = containsCondition(type.instance(), expression.condition);
-                    if (match !== undefined) {
-                        resolvedType = type.name.replaceAll('_','');
+            tree.filteringOperands?.forEach(op => {
+                const expression = op as IFilteringExpression;
+                if (expression.condition || expression.conditionName) {
+                    let resolvedType = 'unknown';
+
+                    if (expression.condition) {
+                        expressionTypes?.forEach(type => {
+                            const match = containsCondition(type.instance(), expression.condition);
+                            if (match !== undefined) {
+                                resolvedType = type.name.replaceAll('_','');
+                            }
+                        });
                     }
-                });
 
-                copy.filteringOperands.push({...op, expressionType: resolvedType, conditionName: expression.condition.name });
-            } else {
-                copy.filteringOperands.push(op);
-            }
-        });
+                    if(expression.searchTree) {
+                        expression.searchTree = packTree(expression.searchTree, expressionTypes);
+                    }
+
+                    copy.filteringOperands.push({...op, expressionType: resolvedType, conditionName: expression?.condition?.name || expression.conditionName });
+                } else {
+                    copy.filteringOperands.push(packTree(op as IExpressionTree, expressionTypes));
+                }
+            });
 
 
-        // Remove expressionTypes from serialized model.
-        (copy as any).expressionTypes = undefined;
-        return copy;
+            // Remove expressionTypes from serialized model.
+            (copy as any).expressionTypes = undefined;
+            return copy;
+        };
+
+        return packTree(this, this.expressionTypes);
     }
 }
