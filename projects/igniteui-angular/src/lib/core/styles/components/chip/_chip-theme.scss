@@ -349,7 +349,8 @@
 
     %igx-chip__item {
         display: grid;
-        grid-template-columns: minmax(0, auto) 1fr minmax(0, auto);
+        grid-auto-flow: column;
+        grid-auto-columns: auto;
         align-items: center;
         justify-content: center;
         text-align: center;
@@ -710,7 +711,6 @@
     %igx-chip__content {
         @include ellipsis();
 
-        grid-column: 2 / 3;
         max-width: $chip-max-width;
 
         &:empty {
