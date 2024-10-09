@@ -52,7 +52,7 @@
         [placeholder]="inputDatePlaceholder"
         [locale]="column.grid.locale"
         [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat"
-        [defaultInputFormatType]="column.dataType"
+        [defaultFormatType]="column.dataType"
         [displayFormat]="column.pipeArgs.format"
         [(ngModel)]="expressionUI.expression.searchVal"
         [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>

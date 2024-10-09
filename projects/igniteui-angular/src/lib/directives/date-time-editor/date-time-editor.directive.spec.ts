@@ -137,24 +137,24 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
             });
 
-            it('should set the default input format as per the defaultInputFormatType property', () => {
+            it('should set the default input format as per the defaultFormatType property', () => {
                 inputFormat = undefined;
                 displayFormat = undefined;
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
 
-                expect(dateTimeEditor.defaultInputFormatType).toEqual('date');
+                expect(dateTimeEditor.defaultFormatType).toEqual('date');
                 expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy');
 
-                dateTimeEditor.defaultInputFormatType = 'dateTime';
+                dateTimeEditor.defaultFormatType = 'dateTime';
                 let change: SimpleChange = new SimpleChange('date', 'dateTime', false);
-                let changes: SimpleChanges = { defaultInputFormatType: change };
+                let changes: SimpleChanges = { defaultFormatType: change };
                 dateTimeEditor.ngOnChanges(changes);
                 expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('MM/dd/yyyy, hh:mm:ss tt');
 
-                dateTimeEditor.defaultInputFormatType = 'time';
+                dateTimeEditor.defaultFormatType = 'time';
                 change = new SimpleChange('dateTime', 'time', false);
-                changes = { defaultInputFormatType: change };
+                changes = { defaultFormatType: change };
                 dateTimeEditor.ngOnChanges(changes);
                 expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
             });

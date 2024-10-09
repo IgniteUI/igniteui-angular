@@ -16,7 +16,6 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
 import { DateTimeUtil } from '../../date-common/util/date-time.util';
-import { DataType } from '../../data-operations/data-util';
 
 /**
  * Date Time Editor provides a functionality to input, edit and format date and time.
@@ -191,11 +190,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      *
      * @example
      * ```html
-     * <input igxDateTimeEditor [defaultInputFormatType]="'dateTime'">
+     * <input igxDateTimeEditor [defaultFormatType]="'dateTime'">
      * ```
      */
     @Input()
-    public defaultInputFormatType: DataType = DataType.Date;
+    public defaultFormatType: 'date' | 'time' | 'dateTime' = 'date';
 
     /**
      * Delta values used to increment or decrement each editor date part on spin actions.
@@ -332,7 +331,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     /** @hidden @internal */
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['locale'] && !changes['locale'].firstChange ||
-            changes['defaultInputFormatType'] && !changes['defaultInputFormatType'].firstChange
+            changes['defaultFormatType'] && !changes['defaultFormatType'].firstChange
         ) {
             this.updateDefaultFormat();
             this.setMask(this.inputFormat);
@@ -523,7 +522,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     private updateDefaultFormat(): void {
         this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
-                                || DateTimeUtil.getDefaultInputFormat(this.locale, this.defaultInputFormatType);
+                                || DateTimeUtil.getDefaultInputFormat(this.locale, this.defaultFormatType);
     }
 
     private updateMask(): void {

@@ -159,7 +159,7 @@
             [locale]="filteringService.grid.locale"
             [displayFormat]="column.pipeArgs.format"
             [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat"
-            [defaultInputFormatType]="column.dataType"
+            [defaultFormatType]="'dateTime'"
             [value]="value"
             (valueChange)="onInput($event)"
             [readonly]="isUnaryCondition"
