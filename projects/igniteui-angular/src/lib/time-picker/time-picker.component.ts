@@ -360,27 +360,27 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden */
     public get showHoursList(): boolean {
-        return this.inputFormat?.indexOf('h') !== - 1 || this.inputFormat?.indexOf('H') !== - 1;
+        return this.appliedFormat?.indexOf('h') !== - 1 || this.appliedFormat?.indexOf('H') !== - 1;
     }
 
     /** @hidden */
     public get showMinutesList(): boolean {
-        return this.inputFormat?.indexOf('m') !== - 1;
+        return this.appliedFormat?.indexOf('m') !== - 1;
     }
 
     /** @hidden */
     public get showSecondsList(): boolean {
-        return this.inputFormat?.indexOf('s') !== - 1;
+        return this.appliedFormat?.indexOf('s') !== - 1;
     }
 
     /** @hidden */
     public get showAmPmList(): boolean {
-        return this.inputFormat?.indexOf('t') !== - 1 || this.inputFormat?.indexOf('a') !== - 1;
+        return this.appliedFormat?.indexOf('t') !== - 1 || this.appliedFormat?.indexOf('a') !== - 1;
     }
 
     /** @hidden */
     public get isTwelveHourFormat(): boolean {
-        return this.inputFormat?.indexOf('h') !== - 1;
+        return this.appliedFormat?.indexOf('h') !== - 1;
     }
 
     /** @hidden @internal */
@@ -413,6 +413,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
 
         return this._dateMaxValue;
+    }
+
+    /** @hidden @internal */
+    public get appliedFormat(): string {
+        return this.inputFormat || this.dateTimeEditor?.inputFormat;
     }
 
     private get required(): boolean {
@@ -644,7 +649,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public getPartValue(value: Date, type: string): string {
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.inputFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.appliedFormat);
         const part = inputDateParts.find(element => element.type === type);
         return DateTimeUtil.getPartValue(value, part, part.format?.length);
     }
