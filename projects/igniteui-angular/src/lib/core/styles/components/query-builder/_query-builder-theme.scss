@@ -461,8 +461,9 @@
 
     %filter-con-menu__close-btn {
         position: absolute;
-        top: rem(-18px);
-        inset-inline-end: rem(-18px);
+        top: 0;
+        inset-inline-start: 100%;
+        transform: translate(-50%, -50%);
         background-color: var-get($theme, 'background');
         border: rem(1px) solid color(null, 'gray', 200);
 
