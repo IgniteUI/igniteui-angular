@@ -518,7 +518,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            dateTimeEditor = filterUIRow.query(By.directive(IgxTimePickerComponent)).componentInstance;
+            dateTimeEditor = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
+                                                .injector.get(IgxDateTimeEditorDirective);
             // since 'shortTime' is numeric, input format will include its numeric parts
             expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch('hh:mm tt');
             expect(dateTimeEditor.displayFormat).toMatch('shortTime');

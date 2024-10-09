@@ -24,6 +24,7 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { NgIf, registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
+import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
@@ -519,6 +520,7 @@ describe('IgxDatePicker', () => {
         describe('Input and Display formats', () => {
             let fixture: ComponentFixture<any>;
             let datePicker: IgxDatePickerComponent;
+            let dateTimeEditor: IgxDateTimeEditorDirective;
 
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxDatePickerTestComponent);
@@ -526,50 +528,52 @@ describe('IgxDatePicker', () => {
                 registerLocaleData(localeES);
                 fixture.detectChanges();
                 datePicker = fixture.componentInstance.datePicker;
+                dateTimeEditor = fixture.debugElement.query(By.directive(IgxDateTimeEditorDirective)).
+                    injector.get(IgxDateTimeEditorDirective);
             }));
 
-            it('should set default inputFormat, if none, with parts for day, month and year based on locale', () => {
+            it('should set default inputFormat, if none, to the editor with parts for day, month and year based on locale', () => {
                 datePicker.locale = 'en-US';
                 fixture.detectChanges();
-                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
+                expect(dateTimeEditor.inputFormat).toEqual('MM/dd/yyyy');
 
                 datePicker.locale = 'bg-BG';
                 fixture.detectChanges();
-                expect(datePicker.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
 
                 datePicker.locale = 'es-ES';
                 fixture.detectChanges();
-                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
+                expect(dateTimeEditor.inputFormat).toEqual('dd/MM/yyyy');
             });
 
-            it('should resolve inputFormat, if not set, to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
+            it('should resolve inputFormat, if not set, to the editor to the value of displayFormat if it contains only numeric date/time parts', fakeAsync(() => {
                 datePicker.locale = 'en-US';
                 fixture.detectChanges();
 
                 datePicker.displayFormat = 'dd/MM/yyyy';
                 fixture.detectChanges();
-                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
+                expect(dateTimeEditor.inputFormat).toEqual('dd/MM/yyyy');
 
                 datePicker.displayFormat = 'shortDate';
                 fixture.detectChanges();
-                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
+                expect(dateTimeEditor.inputFormat).toEqual('MM/dd/yyyy');
             }));
 
-            it('should resolve to the default locale-based input format in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
+            it('should resolve to the default locale-based input format for the editor in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
                 datePicker.locale = 'en-US';
                 datePicker.displayFormat = 'MMM d, y, h:mm:ss a';
                 fixture.detectChanges();
-                expect(datePicker.inputFormat).toEqual('MM/dd/yyyy');
+                expect(dateTimeEditor.inputFormat).toEqual('MM/dd/yyyy');
 
                 datePicker.locale = 'bg-BG';
                 datePicker.displayFormat = 'full';
                 fixture.detectChanges();
-                expect(datePicker.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
+                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('dd.MM.yyyy г.');
 
                 datePicker.locale = 'es-ES';
                 datePicker.displayFormat = 'MMM d, y';
                 fixture.detectChanges();
-                expect(datePicker.inputFormat).toEqual('dd/MM/yyyy');
+                expect(dateTimeEditor.inputFormat).toEqual('dd/MM/yyyy');
             }));
         });
     });
