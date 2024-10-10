@@ -214,7 +214,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     }
 
     /**
-     * Converts the expression tree to a an intermediate object which
+     * Converts the expression tree to an intermediate object which
      * contains type hints for operand deserialization.
      *
      * This method is called by `JSON.stringify` when performing serialization.
