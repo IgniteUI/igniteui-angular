@@ -853,6 +853,12 @@
                 }
             }
         }
+
+        %igx-chip__end {
+            &:has(%igx-chip__remove:only-child) {
+                display: none;
+            }
+        }
     }
 }
 
