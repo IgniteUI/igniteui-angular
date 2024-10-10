@@ -578,7 +578,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             UIInteractions.simulateMouseEvent('dblclick', headerResArea, 0, 0);
             tick(200);
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('31');
+            expect(grid.columnList.get(0).width).toBe('31%');
         }));
     });
 
