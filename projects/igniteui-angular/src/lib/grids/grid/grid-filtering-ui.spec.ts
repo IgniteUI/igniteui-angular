@@ -5374,6 +5374,63 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 expect(excelMenu).toBeNull();
             }));
 
+        it('Should filter ISO 8601 dates for date column ignoring the time portion - issue #14643', fakeAsync(() => {
+            // Add hours part to the ReleaseDate so some records differ only by the time portion
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+
+                if (rec.ReleaseDate) {
+                    const date = new Date(rec.ReleaseDate);
+                    date.setHours(date.getHours() + Math.floor(Math.random() * 24));
+                    newRec.ReleaseDate = date.toISOString();
+                } else {
+                    newRec.ReleaseDate = null;
+                }
+
+                return newRec;
+            });
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu)[1];
+
+            checkbox.click();
+            tick();
+            fix.detectChanges();
+
+            const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix);
+            applyButton.focus();
+            fix.detectChanges();
+
+            expect(document.activeElement).toBe(applyButton);
+
+            UIInteractions.simulateClickEvent(applyButton);
+            fix.detectChanges();
+
+            const rows = GridFunctions.getRows(fix);
+            const cell1 = GridFunctions.getRowCells(fix, 0)[4].nativeElement;
+            const cell2 = GridFunctions.getRowCells(fix, 3)[4].nativeElement;
+            expect(cell1.textContent.toString()).toEqual(cell2.textContent.toString());
+            expect(rows.length).toBe(6, 'incorrect number of rows');
+
+            //Check if checkboxes have correct state on ESF menu reopening
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix));
+            expect(checkboxes[0].indeterminate).toBeTrue();
+            expect(checkboxes[1].checked).toBeFalse();
+            const listItemsCheckboxes = checkboxes.slice(2, checkboxes.length-1);
+            for (const checkboxItem of listItemsCheckboxes) {
+                ControlsFunction.verifyCheckboxState(checkboxItem.parentElement);
+            }
+        }));
+
         it('Should filter date by input string', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
             tick(100);
