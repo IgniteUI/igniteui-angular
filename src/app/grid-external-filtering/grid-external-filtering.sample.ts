@@ -38,6 +38,7 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
         tree.filteringOperands.push({
             fieldName: 'ID',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'a',
             ignoreCase: true
         });
@@ -45,12 +46,14 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
         orTree.filteringOperands.push({
             fieldName: 'ID',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'b',
             ignoreCase: true
         });
         orTree.filteringOperands.push({
             fieldName: 'CompanyName',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'c',
             ignoreCase: true
         });
@@ -58,6 +61,7 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
         tree.filteringOperands.push({
             fieldName: 'CompanyName',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'd',
             ignoreCase: true
         });

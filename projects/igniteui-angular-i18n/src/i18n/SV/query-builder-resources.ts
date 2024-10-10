@@ -3,6 +3,7 @@ import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 const QueryBuilderResourceStringsSV_: ExpandRequire<IQueryBuilderResourceStrings> = {
     igx_query_builder_date_placeholder: 'Upphämtningsdatum',
     igx_query_builder_time_placeholder: 'Upphämtningstid',
+    igx_query_builder_datetime_placeholder: 'Välj datum och tid',
     igx_query_builder_filter_operator_and: 'Och',
     igx_query_builder_filter_operator_or: 'Eller',
     igx_query_builder_filter_contains: 'Innehåller',
@@ -15,6 +16,8 @@ const QueryBuilderResourceStringsSV_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Inte tom',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Inte null',
+    igx_query_builder_filter_in: 'I',
+    igx_query_builder_filter_notIn: 'Inte i',
     igx_query_builder_filter_before: 'Innan',
     igx_query_builder_filter_after: 'Efter',
     igx_query_builder_filter_at: 'Vid',
@@ -52,6 +55,17 @@ const QueryBuilderResourceStringsSV_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Välj kolumn',
     igx_query_builder_condition_placeholder: 'Välj filter',
     igx_query_builder_value_placeholder: 'Värde',
+    igx_query_builder_all_fields: 'Alla fält',
+    igx_query_builder_details: 'Detaljer',
+    igx_query_builder_search: 'Sök',
+    igx_query_builder_select_all: 'Välj alla',
+    igx_query_builder_select_entity: 'Välj enhet',
+    igx_query_builder_select_return_fields: 'Välj returfält',
+    igx_query_builder_dialog_title: 'Bekräftelse',
+    igx_query_builder_dialog_message: 'Genom att ändra entitet förlorar du dina nuvarande inställningar. Vill du fortsätta?',
+    igx_query_builder_dialog_checkbox_text: 'Visa inte den här dialogrutan igen',
+    igx_query_builder_dialog_cancel: 'Avbryt',
+    igx_query_builder_dialog_confirm: 'Bekräfta',
 };
 
 /**

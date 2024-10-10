@@ -15,7 +15,7 @@
 
 <igx-date-picker #picker *ngIf="column.dataType === 'date'"
     [weekStart]="column.pipeArgs.weekStart ?? weekStart"
-    [(value)]="expressionUI.expression.searchVal"
+    [(value)]="searchVal"
     [locale]="grid.locale"
     [outlet]="grid.outlet"
     (click)="picker.open()"
@@ -32,7 +32,7 @@
 
 <igx-time-picker #picker *ngIf="column.dataType === 'time'"
     [inputFormat]="column.defaultTimeFormat"
-    [(value)]="expressionUI.expression.searchVal"
+    [(value)]="searchVal"
     [locale]="grid.locale"
     [outlet]="grid.outlet"
     (click)="picker.open()"
@@ -51,7 +51,7 @@
     <input #input igxInput tabindex="0"
         [placeholder]="inputDatePlaceholder"
         [igxDateTimeEditor]="column.defaultDateTimeFormat"
-        [(ngModel)]="expressionUI.expression.searchVal"
+        [(ngModel)]="searchVal"
         [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
 </igx-input-group>
 

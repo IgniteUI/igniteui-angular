@@ -3,6 +3,7 @@ import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 const QueryBuilderResourceStringsIT_: ExpandRequire<IQueryBuilderResourceStrings> = {
     igx_query_builder_date_placeholder: 'Data di prelievo',
     igx_query_builder_time_placeholder: 'Ora ritiro',
+    igx_query_builder_datetime_placeholder: 'Seleziona data e ora',
     igx_query_builder_filter_operator_and: 'E',
     igx_query_builder_filter_operator_or: 'O',
     igx_query_builder_filter_contains: 'Contiene',
@@ -15,6 +16,8 @@ const QueryBuilderResourceStringsIT_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Non vuoto',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Non null',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Non in',
     igx_query_builder_filter_before: 'Prima',
     igx_query_builder_filter_after: 'Dopo',
     igx_query_builder_filter_at: 'A',
@@ -52,6 +55,17 @@ const QueryBuilderResourceStringsIT_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Seleziona colonna',
     igx_query_builder_condition_placeholder: 'Seleziona filtro',
     igx_query_builder_value_placeholder: 'Valore',
+    igx_query_builder_all_fields: 'Tutti i campi',
+    igx_query_builder_details: 'Dettagli',
+    igx_query_builder_search: 'Cerca',
+    igx_query_builder_select_all: 'Seleziona tutto',
+    igx_query_builder_select_entity: 'Seleziona entità',
+    igx_query_builder_select_return_fields: 'Seleziona campi di ritorno',
+    igx_query_builder_dialog_title: 'Conferma',
+    igx_query_builder_dialog_message: 'Modificando l\'entità, perderai le impostazioni correnti. Procedere?',
+    igx_query_builder_dialog_checkbox_text: 'Non visualizzare più questo messaggio',
+    igx_query_builder_dialog_cancel: 'Annulla',
+    igx_query_builder_dialog_confirm: 'Conferma',
 };
 
 /**
