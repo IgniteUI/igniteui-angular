@@ -302,12 +302,12 @@ export interface FieldType {
     header?: string;
     /* alternateType: GridColumnDataType */
     dataType: DataType;
-    filters: IgxFilteringOperand;
-    pipeArgs: IFieldPipeArgs;
-    defaultTimeFormat: string;
-    defaultDateTimeFormat: string;
+    filters?: IgxFilteringOperand;
+    pipeArgs?: IFieldPipeArgs;
+    defaultTimeFormat?: string;
+    defaultDateTimeFormat?: string;
 
-    formatter(value: any, rowData?: any): any;
+    formatter?(value: any, rowData?: any): any;
 }
 
 /**
