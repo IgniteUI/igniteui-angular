@@ -1,5 +1,5 @@
 import { IFilteringExpression } from './filtering-expression.interface';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
+import { IFilteringExpressionsTree } from './filtering-expressions-tree';
 
 export class FilteringUtil {
     /**
@@ -25,17 +25,14 @@ export class FilteringUtil {
      * ```
      */
     public static findIndex(tree: IFilteringExpressionsTree, fieldName: string): number {
-        let expr;
         for (let i = 0; i < tree.filteringOperands.length; i++) {
-            expr = tree.filteringOperands[i];
-            if (expr instanceof FilteringExpressionsTree) {
-                if (this.isFilteringExpressionsTreeForColumn(expr, fieldName)) {
+            const expr = tree.filteringOperands[i];
+            if ((expr as IFilteringExpressionsTree).operator !== undefined) {
+                if (this.isFilteringExpressionsTreeForColumn(expr as IFilteringExpressionsTree, fieldName)) {
                     return i;
                 }
-            } else {
-                if ((expr as IFilteringExpression).fieldName === fieldName) {
-                    return i;
-                }
+            } else if ((expr as IFilteringExpression).fieldName === fieldName) {
+                return i;
             }
         }
 
@@ -48,8 +45,8 @@ export class FilteringUtil {
         }
 
         for (const expr of expressionsTree.filteringOperands) {
-            if ((expr instanceof FilteringExpressionsTree)) {
-                return this.isFilteringExpressionsTreeForColumn(expr, fieldName);
+            if ((expr as IFilteringExpressionsTree).operator !== undefined) {
+                return this.isFilteringExpressionsTreeForColumn(expr as IFilteringExpressionsTree, fieldName);
             } else if ((expr as IFilteringExpression).fieldName === fieldName) {
                 return true;
             }
