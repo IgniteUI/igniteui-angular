@@ -29,7 +29,6 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      *
      * @remarks
      * Also used as a placeholder when none is provided.
-     * Default is `"'MM/dd/yyyy'"`
      *
      * @example
      * ```html
