@@ -32,6 +32,9 @@ All notable changes for each version of this project will be documented in this 
     `displayFormat` if set and if it contains only numeric date-time parts.
 - `IgxTimePicker`
     - The input and display formats are now adjusted based on the locale. For instance, day period time part (AM/PM or a/p) would not be displayed for locales that do not require it.
+- `IgxDateTimeEditor`
+    - Added a new `defaultFormatType` property (`date` | `time` | `dateTime`) which configures the date-time parts
+    according to the target type that the editor mask includes. Defaults to `date`.
 
 ### Themes
 - `Palettes`
