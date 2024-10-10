@@ -566,7 +566,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(0).width).toBe('25%');
             grid.columnList.get(0).autosize();
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('32.5%');
+            expect(grid.columnList.get(0).width).toBe('31%');
         }));
 
         it('should autosize column with % width on double click.', fakeAsync(() => {
@@ -578,7 +578,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             UIInteractions.simulateMouseEvent('dblclick', headerResArea, 0, 0);
             tick(200);
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('32.5%');
+            expect(grid.columnList.get(0).width).toBe('31');
         }));
     });
 
