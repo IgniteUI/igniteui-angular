@@ -1,0 +1,32 @@
+<div class="combo-sample">
+    <section class="combo-sample__section">
+        <h1 class="combo-sample__title">Angular and WC combo next to each other</h1>
+        <size-selector #sizeSelector></size-selector>
+        <igx-switch (click)="isDisabled = !isDisabled">{{isDisabled? 'Enable' : 'Disable'}}</igx-switch>
+        <form class="combo-sample__form" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
+            <div class="combo-sample__row combo-sample__row--stretch">
+                <!-- Simple combo -->
+                <igx-combo [allowCustomValues]="true"
+                           name="falsyValueCombo"
+                           required
+                           [data]="uniqueFalsyData"
+                           displayKey="field"
+                           valueKey="value"
+                           type="border"
+                           [disabled]="isDisabled">
+                    <label igxLabel>Angular Combo</label>
+                    <igx-hint>Select a unique falsy value</igx-hint>
+                </igx-combo>
+                <igc-combo required
+                           [data]="uniqueFalsyData"
+                           display-key="field"
+                           value-key="value"
+                           outlined="true"
+                           [disabled]="isDisabled"
+                           placeholder="WC Combo">
+                    <igx-hint>Select a unique falsy value</igx-hint>
+                </igc-combo>
+            </div>
+        </form>
+    </section>
+</div>

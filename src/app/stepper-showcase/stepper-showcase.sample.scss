@@ -1,0 +1,19 @@
+.nav-buttons {
+    margin: 40px 0;
+
+    > * {
+        margin-right: 16px;
+    }
+}
+
+.sample-stepper-wrapper {
+    margin: 16px 0;
+    padding: 16px;
+    border: 1px solid rgba(54, 54, 54, .43);
+}
+
+strong {
+    display: block;
+    text-align: center;
+    margin-bottom: 24px;
+}

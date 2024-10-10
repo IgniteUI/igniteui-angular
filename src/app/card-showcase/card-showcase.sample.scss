@@ -1,0 +1,17 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    column-gap: 10px;
+    justify-content: space-between;
+    padding: 30px;
+}
+
+.card {
+    min-width: 320px;
+    max-width: 320px;
+    margin: 10px;
+
+    h4 {
+        margin-bottom: 1rem;
+    }
+}
