@@ -39,6 +39,7 @@
     }
 
     $theme: digest-schema($column-actions-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($title-color) and $background-color {
         $title-color: text-contrast($background-color);
@@ -48,7 +49,10 @@
         name: $name,
         elevations: $elevations,
         title-color: $title-color,
-        background-color: $background-color
+        background-color: $background-color,
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme'),
+        )),
     ));
 }
 
@@ -57,6 +61,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin column-actions($theme) {
     @include css-vars($theme);
+    $variant: map.get($theme, '_meta', 'variant');
 
     %column-actions-display {
         display: flex;
@@ -66,6 +71,27 @@
         width: 100%;
         flex: 1 1 auto;
         min-width: rem(180px);
+
+        @if $variant == 'material' {
+            %cbx-composite-wrapper {
+                padding: 0;
+            }
+
+            %cbx-label-pos--after {
+                margin-inline-start: rem(12px);
+            }
+
+            %cbx-label-pos--before {
+                margin-inline-end: rem(12px);
+            }
+
+            %cbx-label-pos--before,
+            %cbx-label-pos--after {
+                &:empty {
+                    margin: 0;
+                }
+            }
+        }
     }
 
     %column-actions-title {
