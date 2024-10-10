@@ -1593,10 +1593,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
+     * Pass optional properties for the default column editors.
      * @remarks
-     * Pass optional parameters to control properties of the default column editors.
-     * Accepts an `IColumnEditorOptions` object with the `dateTimeFormat` property.
-     * For more details see https://angular.io/api/common/DatePipe
+     * Options may be applicable only to specific column type editors.
      * @example
      * ```typescript
      * const editorOptions: IColumnEditorOptions = {

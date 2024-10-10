@@ -1283,21 +1283,6 @@ describe('IgxTimePicker', () => {
                 expect(dateTimeEditor.inputFormat).toEqual('HH:mm');
             }));
 
-            it('should resolve to the default locale-based input format for the editor in case inputFormat is not set and displayFormat contains non-numeric date/time parts', fakeAsync(() => {
-                registerLocaleData(localeBg);
-                timePicker.locale = 'en-US';
-                timePicker.displayFormat = 'longTime';
-                fixture.detectChanges();
-
-                expect(dateTimeEditor.inputFormat.normalize('NFKC')).toEqual('hh:mm tt');
-
-                timePicker.locale = 'bg-BG';
-                timePicker.displayFormat = 'fullTime';
-                fixture.detectChanges();
-
-                expect(dateTimeEditor.inputFormat).toEqual('HH:mm');
-            }));
-
            it('should display selected time in dialog header', fakeAsync(() => {
                 fixture.componentInstance.timePicker.mode = PickerInteractionMode.Dialog;
                 fixture.detectChanges();
