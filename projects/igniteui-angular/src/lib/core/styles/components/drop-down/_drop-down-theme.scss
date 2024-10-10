@@ -282,7 +282,11 @@
 
         igx-icon {
             justify-content: center;
-            --component-size: var(--dropdown-size);
+            --component-size: 1;
+
+            @if $variant == 'fluent' {
+                --component-size: 3;
+            }
 
             @if $variant == 'indigo' {
                 $icon-size: sizable(rem(14px), rem(16px), rem(16px));
