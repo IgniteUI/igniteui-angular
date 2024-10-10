@@ -230,6 +230,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input()
     public get itemsMaxHeight(): number {
+        if (this.itemHeight && !this._itemsMaxHeight) {
+            return this.itemHeight * this.itemsInCointaner;
+        }
         return this._itemsMaxHeight;
     }
 
@@ -928,8 +931,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this._filteringOptions = value;
     }
 
-    public containerSize = undefined;
-    public itemSize = undefined;
+    protected containerSize = undefined;
+    protected itemSize = undefined;
     protected _data = [];
     protected _value = [];
     protected _displayValue = '';
@@ -956,7 +959,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
     private _filteringOptions: IComboFilteringOptions;
     private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false, filterable: true };
-    private _defaultItemSize = 40;
+    private itemsInCointaner = 10;
 
     public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
@@ -1017,12 +1020,15 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
             this.dataPreLoad.emit(eventArgs);
         });
-        this.dropdown?.appended.subscribe((_args: ToggleViewEventArgs) => {
-            // eslint-disable-next-line no-console
-            console.log(this.dropdownContainer.nativeElement.getBoundingClientRect())
+        this.dropdown?.animationStarting.subscribe((_args: ToggleViewEventArgs) => {
+            // calculate the container size and item size based on the sizes from the DOM
             const dropdownContainerHeight = this.dropdownContainer.nativeElement.getBoundingClientRect().height;
-            this.containerSize = parseFloat(dropdownContainerHeight);
-            this.itemSize = this.dropdown.children.first.element.nativeElement.getBoundingClientRect().height;
+            if (dropdownContainerHeight) {
+                this.containerSize = parseFloat(dropdownContainerHeight);
+            }
+            if (this.dropdown.children?.first) {
+                this.itemSize = this.dropdown.children.first.element.nativeElement.getBoundingClientRect().height;
+            }
         });
     }
 

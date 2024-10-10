@@ -132,6 +132,10 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     @Output()
     public appended = new EventEmitter<ToggleViewEventArgs>();
 
+    /**
+     * @hidden @internal
+     * Emitted just before the overlay animation start.
+     */
     @Output()
     public animationStarting = new EventEmitter();
 

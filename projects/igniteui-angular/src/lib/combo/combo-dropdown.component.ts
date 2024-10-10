@@ -185,11 +185,9 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
 
     public override ngAfterViewInit() {
         this.virtDir.getScroll().addEventListener('scroll', this.scrollHandler);
-        if (this.toggleDirective) {
-            this.toggleDirective.animationStarting.subscribe((_args: any) => {
-                this.appended.emit(_args);
-            });
-        }
+        this.toggleDirective?.animationStarting.subscribe((_args: any) => {
+            this.animationStarting.emit(_args);
+        });
     }
 
     /**

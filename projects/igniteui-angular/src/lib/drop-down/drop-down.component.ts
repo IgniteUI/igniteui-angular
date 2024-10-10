@@ -108,9 +108,10 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden
      * @internal
+     * Emitted just before the overlay animation start.
      */
     @Output()
-    public appended = new EventEmitter<ToggleViewEventArgs>();
+    public animationStarting = new EventEmitter<ToggleViewEventArgs>();
 
     /**
      * Gets/sets whether items take focus. Disabled by default.
