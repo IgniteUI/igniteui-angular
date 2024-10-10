@@ -1214,7 +1214,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             }
         } else {
             if (this.igxForOf) {
-                chunkSize = this.igxForInitialChunkSize  > this.igxForOf.length ? this.igxForOf.length : this.igxForInitialChunkSize;
+                chunkSize = Math.min(this.igxForInitialChunkSize || this.igxForOf.length, this.igxForOf.length);
             }
         }
         return chunkSize;
