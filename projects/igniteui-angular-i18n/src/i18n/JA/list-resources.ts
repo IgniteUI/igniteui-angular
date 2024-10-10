@@ -1,12 +1,10 @@
 import { IListResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const ListResourceStringsJA_: ExpandRequire<IListResourceStrings> = {
-    igx_list_no_items: 'リストに項目がありません。',
-    igx_list_loading: 'サーバーからデータを読み込んでいます。'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Japanese resource strings for IgxList
  */
-export const ListResourceStringsJA = ListResourceStringsJA_ as ExpandRequire<IListResourceStrings>;
+export const ListResourceStringsJA = {
+    igx_list_no_items: 'リストに項目がありません。',
+    igx_list_loading: 'サーバーからデータを読み込んでいます。'
+} satisfies MakeRequired<IListResourceStrings>;

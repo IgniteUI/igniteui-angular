@@ -1,11 +1,9 @@
 import { IActionStripResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const ActionStripResourceStringsBG_: ExpandRequire<IActionStripResourceStrings> = {
-    igx_action_strip_button_more_title: 'Още'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Bulgarian resource strings for IgxActionStrip
  */
-export const ActionStripResourceStringsBG = ActionStripResourceStringsBG_ as ExpandRequire<IActionStripResourceStrings>;
+export const ActionStripResourceStringsBG = {
+    igx_action_strip_button_more_title: 'Още'
+} satisfies MakeRequired<IActionStripResourceStrings>;
