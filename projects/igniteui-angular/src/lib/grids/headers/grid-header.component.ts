@@ -108,15 +108,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         return this.selected;
     }
 
-    @HostBinding('style.height.rem')
-    public get height() {
-        if (!this.grid.hasColumnGroups || this.grid.type === 'pivot') {
-            return null;
-        }
-
-        return (this.grid.maxLevelHeaderDepth + 1 - this.column.level) * this.grid.defaultRowHeight / this.grid._baseFontSize;
-    }
-
     /**
      * @hidden
      */
