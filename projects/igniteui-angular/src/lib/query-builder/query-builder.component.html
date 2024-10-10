@@ -147,29 +147,32 @@
                     expressionItem.hovered
                 "
             >
-                <span tabindex="0"
+                <button
+                    igxIconButton="flat"
+                    aria-labelledby="edit-expression"
+                    [style.--component-size]="getComponentSizeStyles()"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionEdit(expressionItem)">
-                    <igx-icon>
-                        edit
-                    </igx-icon>
-                </span>
-                <span tabindex="0"
+                    <igx-icon id="edit-expression">edit</igx-icon>
+                </button>
+
+                <button
+                    igxIconButton="flat"
+                    aria-labelledby="add-expression"
+                    [style.--component-size]="getComponentSizeStyles()"
                     (keydown)="invokeClick($event)"
-                    (click)="enterExpressionAdd(expressionItem)">
-                    <igx-icon
-                        *ngIf="
-                            !expressionItem.inAddMode &&
-                            (expressionItem.parent !== currentGroup ||
-                                expressionItem !==
-                                    currentGroup.children[
-                                        currentGroup.children.length - 1
-                                    ])
-                        "
-                    >
-                        add
-                    </igx-icon>
-                </span>
+                    (click)="enterExpressionAdd(expressionItem)"
+                    *ngIf="
+                        !expressionItem.inAddMode &&
+                        (expressionItem.parent !== currentGroup ||
+                            expressionItem !==
+                                currentGroup.children[
+                                    currentGroup.children.length - 1
+                                ])
+                    "
+                >
+                    <igx-icon id="add-expression">add</igx-icon>
+                </button>
             </div>
         </div>
 
