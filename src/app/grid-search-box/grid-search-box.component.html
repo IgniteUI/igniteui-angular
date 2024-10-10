@@ -1,6 +1,6 @@
 <igx-input-group type="search" class="search-box">
     <igx-prefix>
-        <igx-icon *ngIf="searchText.length === 0">search</igx-icon>
+        <igx-icon *ngIf="searchText.length === 0" family="default" name="search"></igx-icon>
         <igx-icon *ngIf="searchText.length > 0" (click)="clearSearch()">clear</igx-icon>
     </igx-prefix>
 
