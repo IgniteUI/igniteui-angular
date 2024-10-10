@@ -199,6 +199,25 @@ export abstract class DateTimeUtil {
         return formattedDate;
     }
 
+    /** Adjusts the given date to or from the specified timezone. */
+    public static adjustDate(timezone: string, value: Date, isDateOnly: boolean, reverse: boolean = false): any {
+        const reverseValue = reverse ? -1 : 1;
+        const inputTimezoneOffset = value.getTimezoneOffset();
+        const columnTimezoneOffset = this.timezoneToOffset(timezone, inputTimezoneOffset);
+        const offsetDifference = reverseValue * (columnTimezoneOffset - inputTimezoneOffset);
+
+        if (isDateOnly) {
+            // When column timezone is left of the locale timezone (date is shifted one day before), add 1 day
+            if (columnTimezoneOffset - inputTimezoneOffset > 0) {
+                return new Date(value.setDate(value.getDate() + 1))
+            }
+
+            return value;
+        }
+
+        return this.addDateMinutes(value, offsetDifference);
+    }
+
     /**
      * Returns the date format based on a provided locale.
      * Supports Angular's DatePipe format options such as `shortDate`, `longDate`.
@@ -618,5 +637,14 @@ export abstract class DateTimeUtil {
                 currentPos++;
             }
         }
+    }
+
+    private static timezoneToOffset(timezone: string, fallback: number): number {
+        const requestedTimezoneOffset = Date.parse('Jan 01, 1970 00:00:00 ' + timezone) / 60000;
+        return isNaN(requestedTimezoneOffset) ? fallback : requestedTimezoneOffset;
+    }
+
+    private static addDateMinutes(date: Date, minutes: number): Date {
+        return new Date(date.getTime() + minutes * 60000);
     }
 }
