@@ -1,5 +1,5 @@
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from 'igniteui-angular';
-import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
+import { FilteringLogic, IFilteringExpression, ISerializedFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { FilteringUtil } from './filtering-util';
 
@@ -163,6 +163,29 @@ describe('Unit testing FilteringUtil', () => {
         expect(firstOperand.conditionName).toBe('in');
         expect(nestedOperand.condition.logic(true, nestedOperand.searchVal)).toBe(true);
         expect(nestedOperand.conditionName).toBe('true');
+    });
+
+    it('Should apply expressionType to sub-query expressions', () => {
+        const tree = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'myEntity', ['Id']);
+        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'otherEntity', ['*']);
+        innerTree.filteringOperands.push({
+            fieldName: 'Id',
+            condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: 'true',
+            searchVal: true
+        });
+
+        tree.filteringOperands.push({
+            fieldName: 'Id',
+            conditionName: 'in',
+            condition: IgxFilteringOperand.instance().condition('in'),
+            searchTree: innerTree
+        });
+
+        const serializedTree = tree.toJSON();
+        const firstOperand = serializedTree.filteringOperands[0] as ISerializedFilteringExpression;
+        const nestedOperand = firstOperand.searchTree.filteringOperands[0] as ISerializedFilteringExpression;
+        expect(nestedOperand.expressionType).toBe('IgxBooleanFilteringOperand');
     });
 
     it('Number search values should deserialize correctly', () => {
