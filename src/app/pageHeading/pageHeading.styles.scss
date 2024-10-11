@@ -24,10 +24,16 @@
 .sample-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     height: rem(90px);
     padding: 0 rem(16px);
     background: hsla(var(--ig-primary-500));
     overflow: hidden;
+
+    .wrapper {
+        display: flex;
+        align-items: center;
+    }
 
     .title {
         color: hsla(var(--ig-primary-500-contrast));

@@ -1,7 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { PropertyChangeService } from '../property-change.service';
+import { PropertyChangeService } from './property-change.service';
 import {
     IgxButtonGroupComponent,
     IgxButtonDirective,
@@ -76,7 +76,6 @@ export type PropertyPanelConfig = {
 
 export class PropertiesPanelComponent implements OnInit {
     @Input() public config!: PropertyPanelConfig;
-    @Output() public propertyChanged: EventEmitter<{ key: string; value: any }> = new EventEmitter<{ key: string; value: any }>();
 
     protected form!: FormGroup;
     protected radioAlignment = RadioGroupAlignment.vertical;

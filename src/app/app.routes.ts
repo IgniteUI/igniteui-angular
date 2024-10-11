@@ -21,6 +21,7 @@ import { DialogShowcaseSampleComponent } from './dialog-showcase/dialog-showcase
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
+import { IconButtonShowcaseSampleComponent } from './icon-button-showcase/icon-button-showcase.sample';
 import { InputSampleComponent } from './input/input.sample';
 import { InputsShowcaseSampleComponent } from './inputs-showcase/inputs-showcase.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
@@ -313,6 +314,10 @@ export const appRoutes: Routes = [
     {
         path: 'icon',
         component: IconSampleComponent
+    },
+    {
+        path: 'icon-button-showcase',
+        component: IconButtonShowcaseSampleComponent
     },
     {
         path: 'lazyIconModule',

@@ -68,13 +68,15 @@
         </ng-template>
     </igx-nav-drawer>
 
-    <igx-nav-drawer #paneldrawer
+    <igx-nav-drawer
+        *ngIf="panelConfig"
+        #paneldrawer
         [pin]="true"
         position="right"
-        [isOpen]="!!panelConfig"
+        [isOpen]="panelConfig"
         id="paneldrawer">
 
-        <ng-template igxDrawer *ngIf="panelConfig">
+        <ng-template igxDrawer>
             <app-properties-panel [config]="panelConfig"></app-properties-panel>
         </ng-template>
 

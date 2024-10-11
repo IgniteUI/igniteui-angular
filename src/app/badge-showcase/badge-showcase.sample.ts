@@ -1,8 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { IgxBadgeComponent } from 'igniteui-angular';
 import { defineComponents, IgcBadgeComponent } from "igniteui-webcomponents";
 import { PropertyPanelConfig } from '../properties-panel/properties-panel.component';
-import { PropertyChangeService } from '../property-change.service';
+import { PropertyChangeService } from '../properties-panel/property-change.service';
 
 defineComponents(IgcBadgeComponent);
 
@@ -15,7 +15,7 @@ defineComponents(IgcBadgeComponent);
     imports: [IgxBadgeComponent]
 })
 
-export class BadgeShowcaseSampleComponent implements OnInit, OnDestroy {
+export class BadgeShowcaseSampleComponent implements OnInit {
     public panelConfig: PropertyPanelConfig = {
         shape: {
             control: {
@@ -32,14 +32,10 @@ export class BadgeShowcaseSampleComponent implements OnInit, OnDestroy {
         }
     };
 
-    constructor(protected propertyChangeService: PropertyChangeService) { }
+    constructor(protected propertyChangeService: PropertyChangeService) {}
 
-    public ngOnInit(): void {
+    public ngOnInit() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
-
-    public ngOnDestroy(): void {
-        this.propertyChangeService.clearPanelConfig();
     }
 
     private variantMapping: { [key: string]: { angular: string; webComponent: string } } = {
@@ -50,17 +46,17 @@ export class BadgeShowcaseSampleComponent implements OnInit, OnDestroy {
         warning: { angular: 'warning', webComponent: 'warning' },
     };
 
-    public get angularVariant(): string {
+    public get angularVariant() {
         const variant = this.propertyChangeService.getProperty('variant') || 'default';
         return this.variantMapping[variant]?.angular || 'default';
     }
 
-    public get webComponentVariant(): string {
+    public get webComponentVariant() {
         const variant = this.propertyChangeService.getProperty('variant') || 'default';
         return this.variantMapping[variant]?.webComponent || 'primary';
     }
 
-    public get shape(): string {
+    public get shape() {
         return this.propertyChangeService.getProperty('shape');
     }
 }

@@ -4,6 +4,10 @@
     gap: 10px;
 }
 
+#properties-panel {
+    padding: .5rem;
+}
+
 igx-input-group {
     --ig-size: var(--ig-size-small);
 }
@@ -16,4 +20,8 @@ igx-input-group {
     label {
         margin: 0;
     }
+}
+
+.panel-title {
+    margin-bottom: 2rem;
 }
