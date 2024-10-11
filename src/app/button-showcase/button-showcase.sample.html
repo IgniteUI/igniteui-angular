@@ -1,80 +1,15 @@
 <div class="columns-container">
     <article class="title">
-        <h4 class="sample-title">Angular Buttons</h4>
-        <h4 class="sample-title">WC Buttons</h4>
+        <h4 class="sample-title">Angular Button</h4>
+        <h4 class="sample-title">WC Button</h4>
     </article>
 
     <div class="buttons-sample">
         <div class="button-sample">
-            <button igxButton="flat">Flat</button>
+            <button [igxButton]="variant" [disabled]="disabled">Button</button>
         </div>
         <div class="button-sample">
-            <igc-button variant="flat"> Flat </igc-button>
-        </div>
-    </div>
-
-    <div class="buttons-sample">
-        <div class="button-sample">
-            <button igxButton="contained">Contained</button>
-        </div>
-
-        <div class="button-sample">
-            <igc-button variant="contained"> Contained </igc-button>
-        </div>
-    </div>
-
-    <div class="buttons-sample">
-        <div class="button-sample">
-            <button igxButton="outlined">Outlined</button>
-        </div>
-
-        <div class="button-sample">
-            <igc-button variant="outlined"> Outlined </igc-button>
-        </div>
-    </div>
-
-    <div class="buttons-sample">
-        <div class="button-sample">
-            <button igxButton="fab">
-                <igx-icon>favorite</igx-icon>
-            </button>
-        </div>
-
-        <div class="button-sample">
-            <igc-button variant="fab"><igc-icon name="favorite"></igc-icon></igc-button>
-        </div>
-    </div>
-
-    <div class="buttons-sample">
-        <div class="button-sample">
-            <button igxIconButton="flat">
-                <igx-icon family="fa-solid" name="fa-coffee"></igx-icon>
-            </button>
-        </div>
-        <div class="button-sample">
-            <igc-icon-button variant="flat">
-                <igx-icon family="fa-solid" name="fa-coffee"></igx-icon>
-            </igc-icon-button>
-        </div>
-        <div class="button-sample">
-            <button igxIconButton>
-                <igx-icon>favorite</igx-icon>
-            </button>
-        </div>
-        <div class="button-sample">
-            <igc-icon-button>
-                <igx-icon>favorite</igx-icon>
-            </igc-icon-button>
-        </div>
-        <div class="button-sample">
-            <button igxIconButton="outlined">
-                <igx-icon>cloud</igx-icon>
-            </button>
-        </div>
-        <div class="button-sample">
-            <igc-icon-button variant="outlined">
-                <igx-icon>cloud</igx-icon>
-            </igc-icon-button>
+            <igc-button [variant]="variant" [disabled]="disabled">Button</igc-button>
         </div>
     </div>
 </div>

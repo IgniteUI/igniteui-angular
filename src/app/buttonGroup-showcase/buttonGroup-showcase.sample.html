@@ -1,44 +1,35 @@
 <section class="sample-content">
     <article class="sample-column">
         <h4 class="sample-title">Angular ButtonGroup</h4>
-        <igx-buttongroup
-            [values]="alignOptions"
-        ></igx-buttongroup>
-
-        <br/>
 
         <igx-buttongroup
-            [selectionMode]="'multi'"
-            [values]="cities"
-            alignment="vertical"
+            [selectionMode]="angularSelection"
+            [alignment]="alignment"
+            [disabled]="disabled"
         >
+            <button
+                    igxButton
+                    *ngFor="let city of cities"
+                    [selected]="city.selected"
+                >
+                    {{ city.label }}
+            </button>
         </igx-buttongroup>
     </article>
 
     <article class="sample-column">
         <h4 class="sample-title">WC ButtonGroup</h4>
-        <igc-button-group>
-            <igc-toggle-button value="align_left">
-                <igx-icon name="format_align_left"></igx-icon>
-            </igc-toggle-button>
-            <igc-toggle-button value="align_center">
-                <igx-icon name="format_align_center"></igx-icon>
-            </igc-toggle-button>
-            <igc-toggle-button value="align_right">
-                <igx-icon name="format_align_right"></igx-icon>
-            </igc-toggle-button>
-            <igc-toggle-button value="align_justify" selected>
-                <igx-icon name="format_align_justify"></igx-icon>
-            </igc-toggle-button>
-        </igc-button-group>
 
-        <br/>
-
-        <igc-button-group alignment="vertical" selection="multiple">
-            <igc-toggle-button>Sofia</igc-toggle-button>
-            <igc-toggle-button>London</igc-toggle-button>
-            <igc-toggle-button>New York</igc-toggle-button>
-            <igc-toggle-button disabled="true">Tokyo</igc-toggle-button>
+        <igc-button-group
+        [selection]="webComponentSelection"
+        [alignment]="alignment"
+        [disabled]="disabled">
+            <igc-toggle-button *ngFor="let city of cities"
+                [disabled]="city.disabled"
+                [value]="city.label"
+                [selected]="city.selected">
+                {{ city.label }}
+            </igc-toggle-button>
         </igc-button-group>
     </article>
 </section>

@@ -1,9 +1,9 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { IgxAvatarComponent } from 'igniteui-angular';
 import { CommonModule } from '@angular/common';
 import { defineComponents, IgcAvatarComponent } from "igniteui-webcomponents";
 import { PropertyPanelConfig, PropertiesPanelComponent } from '../properties-panel/properties-panel.component';
-import { PropertyChangeService } from '../property-change.service';
+import { PropertyChangeService } from '../properties-panel/property-change.service';
 
 defineComponents(IgcAvatarComponent);
 
@@ -16,33 +16,7 @@ defineComponents(IgcAvatarComponent);
     imports: [CommonModule, IgxAvatarComponent, PropertiesPanelComponent]
 })
 
-export class AvatarShowcaseSampleComponent implements OnInit, OnDestroy {
-    constructor(protected propertyChangeService: PropertyChangeService) { }
-
-    public ngOnInit(): void {
-        this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
-
-    public ngOnDestroy(): void {
-        this.propertyChangeService.clearPanelConfig();
-    }
-
-    public get src(): string {
-        return this.propertyChangeService.getProperty('src');
-    }
-
-    public get shape(): string {
-        return this.propertyChangeService.getProperty('shape');
-    }
-
-    public get initials(): string {
-        return this.propertyChangeService.getProperty('initials');
-    }
-
-    public get size(): string {
-        return this.propertyChangeService.getProperty('size');
-    }
-
+export class AvatarShowcaseSampleComponent implements OnInit {
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
@@ -55,7 +29,7 @@ export class AvatarShowcaseSampleComponent implements OnInit, OnDestroy {
             control: {
                 type: 'radio-inline',
                 options: ['circle', 'rounded', 'square'],
-                defaultValue: 'circle'
+                defaultValue: 'square'
             }
         },
         src: {
@@ -67,8 +41,31 @@ export class AvatarShowcaseSampleComponent implements OnInit, OnDestroy {
         },
         initials: {
             control: {
-                type: 'text'
+                type: 'text',
+                defaultValue: 'RK'
             }
         }
+    }
+
+    constructor(protected propertyChangeService: PropertyChangeService) {}
+
+    public ngOnInit() {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+    }
+
+    protected get src() {
+        return this.propertyChangeService.getProperty('src');
+    }
+
+    protected get shape() {
+        return this.propertyChangeService.getProperty('shape');
+    }
+
+    protected get initials() {
+        return this.propertyChangeService.getProperty('initials');
+    }
+
+    protected get size() {
+        return this.propertyChangeService.getProperty('size');
     }
 }

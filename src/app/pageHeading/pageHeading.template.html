@@ -1,12 +1,22 @@
 <div class="sample-header">
-    <button igxIconButton="flat"
+    <div class="wrapper">
+        <button igxIconButton="flat"
             igxRipple
             [igxRippleCentered]="true"
             igxToggleAction="navdrawer"
             class="hamburger">
         <igx-icon>menu</igx-icon>
+        </button>
+        <h5 class="title">
+            {{ title }}
+        </h5>
+    </div>
+    <button *ngIf="panelConfig"
+            igxIconButton="flat"
+            igxRipple
+            [igxRippleCentered]="true"
+            igxToggleAction="paneldrawer"
+            class="toggle-properties-panel">
+        <igx-icon>settings</igx-icon>
     </button>
-    <h5 class="title">
-        {{ title }}
-    </h5>
 </div>

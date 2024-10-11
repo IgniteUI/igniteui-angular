@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { PropertyPanelConfig } from './properties-panel/properties-panel.component';
+import { PropertyPanelConfig } from './properties-panel.component';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root',
 })
 export class PropertyChangeService {
-    private propertyChanges = new BehaviorSubject<{ [key: string]: any }>({});
+    private propertyChanges = new BehaviorSubject<PropertyPanelConfig>({});
     public propertyChanges$ = this.propertyChanges.asObservable();
 
-    private panelConfig = new BehaviorSubject<PropertyPanelConfig | null>(null);
+    public panelConfig = new BehaviorSubject<PropertyPanelConfig | null>(null);
     public panelConfig$ = this.panelConfig.asObservable();
 
     public updateProperty(key: string, value: any): void {
@@ -28,7 +29,7 @@ export class PropertyChangeService {
         });
     }
 
-    public setPanelConfig(config: PropertyPanelConfig | null): void {
+    public setPanelConfig(config: PropertyPanelConfig): void {
         this.panelConfig.next(config);
     }
 
@@ -38,8 +39,15 @@ export class PropertyChangeService {
 
     public getProperty(key: string): any {
         const changes = this.propertyChanges.getValue();
-        const config = this.panelConfig.getValue();
-        return changes[key] !== undefined ? changes[key] : config?.[key]?.control?.defaultValue;
+        return changes[key];
+    }
+
+    constructor(private router: Router) {
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd) {
+                this.clearPanelConfig();
+            }
+        });
     }
 }
 
