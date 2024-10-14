@@ -21,7 +21,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { SortingIndexPipe } from './pipes';
 import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
-import { FilteringUtil } from '../../data-operations/filtering-util';
+import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
 
 /**
  * @hidden
@@ -281,7 +281,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         if(!this.grid.advancedFilteringExpressionsTree) {
             return false;
         }
-        return !!FilteringUtil.find(this.grid.advancedFilteringExpressionsTree, this.column.field);
+        return !!ExpressionsTreeUtil.find(this.grid.advancedFilteringExpressionsTree, this.column.field);
     }
 
     private triggerSort() {

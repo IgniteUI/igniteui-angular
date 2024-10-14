@@ -1,6 +1,6 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { IBaseEventArgs } from '../core/utils';
-import { FilteringUtil } from './filtering-util';
+import { ExpressionsTreeUtil } from './expressions-tree-util';
 
 /* mustCoerceToInt */
 export enum FilteringExpressionsTreeType {
@@ -21,12 +21,12 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
     type?: FilteringExpressionsTreeType;
 
     /**
-     * @deprecated in version 18.2.0. Use `FilteringUtil.find` instead.
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.find` instead.
      */
     find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
 
     /**
-     * @deprecated in version 18.2.0. Use `FilteringUtil.findIndex` instead.
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.findIndex` instead.
      */
     findIndex(fieldName: string): number;
 }
@@ -119,10 +119,10 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```
      *
      * @memberof FilteringExpressionsTree
-     * @deprecated in version 18.2.0. Use `FilteringUtil.find` instead.
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.find` instead.
      */
     public find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression {
-        return FilteringUtil.find(this, fieldName);
+        return ExpressionsTreeUtil.find(this, fieldName);
     }
 
     /**
@@ -132,9 +132,9 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```
      *
      * @memberof FilteringExpressionsTree
-     * @deprecated in version 18.2.0. Use `FilteringUtil.findIndex` instead.
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.findIndex` instead.
      */
     public findIndex(fieldName: string): number {
-        return FilteringUtil.findIndex(this, fieldName);
+        return ExpressionsTreeUtil.findIndex(this, fieldName);
     }
 }

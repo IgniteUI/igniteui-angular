@@ -56,7 +56,7 @@ import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
 import { Size } from '../common/enums';
-import { FilteringUtil } from '../../data-operations/filtering-util';
+import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -1648,7 +1648,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     public get filteringExpressionsTree(): FilteringExpressionsTree {
-        return FilteringUtil.find(this.grid.filteringExpressionsTree, this.field) as FilteringExpressionsTree;
+        return ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, this.field) as FilteringExpressionsTree;
     }
 
     /* alternateName: parentColumn */

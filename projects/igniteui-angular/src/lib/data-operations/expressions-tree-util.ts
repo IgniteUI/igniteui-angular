@@ -1,11 +1,11 @@
 import { IFilteringExpression } from './filtering-expression.interface';
 import { IFilteringExpressionsTree } from './filtering-expressions-tree';
 
-export class FilteringUtil {
+export class ExpressionsTreeUtil {
     /**
      * Returns the filtering expression for a column with the provided tree and fieldName.
      * ```typescript
-     * let filteringExpression = FilteringUtil.find(gridExpressionTree, 'Column Field');
+     * let filteringExpression = ExpressionsTreeUtil.find(gridExpressionTree, 'Column Field');
      * ```
      */
     public static find(tree: IFilteringExpressionsTree, fieldName: string): IFilteringExpressionsTree | IFilteringExpression {
@@ -21,7 +21,7 @@ export class FilteringUtil {
     /**
      * Returns the index of the filtering expression for a column with the provided tree and fieldName.
      * ```typescript
-     * let filteringExpressionIndex = FilteringUtil.findIndex(gridExpressionTree, 'Column Field');
+     * let filteringExpressionIndex = ExpressionsTreeUtil.findIndex(gridExpressionTree, 'Column Field');
      * ```
      */
     public static findIndex(tree: IFilteringExpressionsTree, fieldName: string): number {
