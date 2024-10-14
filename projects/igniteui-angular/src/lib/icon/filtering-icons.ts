@@ -2,9 +2,9 @@ import {
     contains, doesNotContain, endsWith, equals, greaterThan, greaterThanOrEqual,
     isAfter, isBefore, isEmpty, isFalse, isNull, isNotNull, isTrue,
     lastMonth, lastYear, lessThan, lessThanOrEqual, nextMonth, nextYear,
-    notEmpty, notEqual, selectAll, startsWith, thisMonth, thisYear, today, ungroup, yesterday
-} from '@igniteui/material-icons-extended/editor';
-import { IMXIcon } from '@igniteui/material-icons-extended';
+    notEmpty, notEqual, selectAll, startsWith, thisMonth, thisYear, today, ungroup, yesterday,
+    IMXIcon
+} from '@igniteui/material-icons-extended';
 import { IgxIconService } from './icon.service';
 
 /**
