@@ -821,7 +821,7 @@ describe('IgxSimpleCombo', () => {
             const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearButton).toBeNull();
 
-            comboComponent.selectedItem = { id: 1, text: 'Option 1' };
+            comboComponent.selectedItem = 1;
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
@@ -836,6 +836,9 @@ describe('IgxSimpleCombo', () => {
 
             const comboComponent = fixture.componentInstance;
             tick();
+            fixture.detectChanges();
+
+            comboComponent.items = [{ id: null, text: '' }];
             fixture.detectChanges();
 
             const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
@@ -862,7 +865,7 @@ describe('IgxSimpleCombo', () => {
             const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearButton).toBeNull();
 
-            comboComponent.formControl.setValue({ id: 2, text: 'Option 2' });
+            comboComponent.formControl.setValue(2);
             tick();
             fixture.detectChanges();
 
@@ -875,6 +878,9 @@ describe('IgxSimpleCombo', () => {
 
             const comboComponent = fixture.componentInstance;
             tick();
+            fixture.detectChanges();
+
+            comboComponent.items = [{ id: '', text: '' }];
             fixture.detectChanges();
 
             const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
@@ -923,7 +929,7 @@ describe('IgxSimpleCombo', () => {
             const clearButtonAfterUndefined = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearButtonAfterUndefined).toBeNull();
         }));
-        it('should show clear icon button when empty object is set with ngModel', fakeAsync(() => {
+        it('should not show clear icon button when empty object is set with ngModel', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSimpleComboNgModelComponent);
             fixture.detectChanges();
 
@@ -941,7 +947,7 @@ describe('IgxSimpleCombo', () => {
             fixture.whenStable().then(() => {
                 fixture.detectChanges();
                 const clearButtonAfterEmptyObject = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-                expect(clearButtonAfterEmptyObject).not.toBeNull();
+                expect(clearButtonAfterEmptyObject).toBeNull();
             });
         }));
         it('should properly assign the resource string to the aria-label of the clear button',() => {
@@ -1062,6 +1068,7 @@ describe('IgxSimpleCombo', () => {
             const component = fixture.componentInstance;
             combo = fixture.componentInstance.combo;
             component.items = ['One', 'Two', 'Three', 'Four', 'Five'];
+            fixture.detectChanges();
             combo.select('Three');
             fixture.detectChanges();
             expect(combo.selection).toEqual('Three');
@@ -2842,6 +2849,32 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toEqual(5);
             expect(input.nativeElement.value).toEqual('Product 5');
         }));
+        it('should not select value that do not exist in the data when setting selection via ngModel', fakeAsync(() => {
+            fixture = TestBed.createComponent(SimpleComboInvalidValuesComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.simpleCombo;
+            const component = fixture.componentInstance;
+
+            component.selectedItems = 'SF'; // 'SF' is invalid
+            fixture.detectChanges();
+            tick();
+
+            expect(combo.selection).toEqual(undefined);
+            expect(combo.value).toEqual(undefined);
+            expect(combo.displayValue).toEqual('');
+        }));
+        it('should not select value that do not exist in the data when using the select method programmatically', fakeAsync(() => {
+            fixture = TestBed.createComponent(SimpleComboInvalidValuesComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.simpleCombo;
+
+            combo.select('SF'); // 'SF' is invalid
+            fixture.detectChanges();
+
+            expect(combo.selection).toEqual(undefined);
+            expect(combo.value).toEqual(undefined);
+            expect(combo.displayValue).toEqual('');
+        }));
     });
 
     describe('Integration', () => {
@@ -3469,5 +3502,35 @@ export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {
             { id: 4, name: 'Houston' },
             { id: 5, name: 'Phoenix' }
         ];
+    }
+}
+
+@Component({
+    template: `
+        <igx-simple-combo
+            [(ngModel)]="selectedItems"
+            [data]="cities"
+            [valueKey]="'id'"
+            [displayKey]="'name'">
+        </igx-simple-combo>`,
+    standalone: true,
+    imports: [IgxSimpleComboComponent, FormsModule]
+})
+export class SimpleComboInvalidValuesComponent implements OnInit {
+    @ViewChild(IgxSimpleComboComponent, { read: IgxSimpleComboComponent, static: true })
+    public simpleCombo: IgxSimpleComboComponent;
+
+    public cities: any[] = [];
+    public selectedItems: any[] = [];
+
+    constructor(private cdr: ChangeDetectorRef) { }
+
+    public ngOnInit() {
+        this.cities = [
+            { name: 'New York', id: 'NY' },
+            { name: 'Los Angeles', id: 'LA' },
+            { name: 'Chicago', id: 'CHI' }
+        ];
+        this.cdr.detectChanges();
     }
 }
