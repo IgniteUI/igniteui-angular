@@ -1050,6 +1050,113 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(rows.length).toEqual(1, 'Wrong filtered rows count');
         }));
 
+        // it('DateTime: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
+        //     const releaseDateColumn = grid.getColumnByName('ReleaseDate');
+        //     releaseDateColumn.dataType = 'dateTime';
+        //     releaseDateColumn.editorOptions = {
+        //         dateTimeFormat: 'dd-MM-yyyy HH:mm aaaaa'
+        //     }
+        //     fix.detectChanges();
+
+        //     grid.openAdvancedFilteringDialog();
+        //     fix.detectChanges();
+
+        //     GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+        //     tick(100);
+        //     fix.detectChanges();
+
+        //     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+        //     fix.detectChanges();
+        //     const dropdownItems = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix);
+        //     expect(dropdownItems[4].innerText).toBe('ReleaseDate');
+
+        //     selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column
+        //     selectOperatorInEditModeExpression(fix, 0);
+
+        //     const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+        //         .injector.get(IgxDateTimeEditorDirective);
+        //     expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseDateColumn.editorOptions.dateTimeFormat);
+        //     expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
+        //     expect(dateTimeEditor.locale).toMatch(grid.locale);
+        // }));
+
+        // it('DateTime: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+        //     const releaseDateColumn = grid.getColumnByName('ReleaseDate');
+        //     releaseDateColumn.dataType = 'dateTime';
+        //     releaseDateColumn.pipeArgs = {
+        //         format: 'dd-MM-yyyy HH:mm aaaaa'
+        //     }
+        //     fix.detectChanges();
+
+        //     grid.openAdvancedFilteringDialog();
+        //     fix.detectChanges();
+
+        //     GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+        //     tick(100);
+        //     fix.detectChanges();
+
+        //     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+        //     fix.detectChanges();
+
+        //     selectColumnInEditModeExpression(fix, 4);
+        //     selectOperatorInEditModeExpression(fix, 0);
+
+        //     const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+        //         .injector.get(IgxDateTimeEditorDirective);
+        //     expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
+        //     expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
+        // }));
+
+        // it('Time: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
+        //     const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
+        //     releaseTimeColumn.editorOptions = {
+        //         dateTimeFormat: 'hh:mm'
+        //     }
+        //     fix.detectChanges();
+
+        //     grid.openAdvancedFilteringDialog();
+        //     fix.detectChanges();
+
+        //     GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+        //     tick(100);
+        //     fix.detectChanges();
+
+        //     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+        //     fix.detectChanges();
+
+        //     selectColumnInEditModeExpression(fix, 6);
+        //     selectOperatorInEditModeExpression(fix, 0);
+
+        //     const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+        //         .injector.get(IgxDateTimeEditorDirective);
+        //     expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.editorOptions.dateTimeFormat);
+        // }));
+
+        // it('Time: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+        //     const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
+        //     releaseTimeColumn.pipeArgs = {
+        //         format: 'hh:mm'
+        //     }
+        //     fix.detectChanges();
+
+        //     grid.openAdvancedFilteringDialog();
+        //     fix.detectChanges();
+
+        //     GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+        //     tick(100);
+        //     fix.detectChanges();
+
+        //     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+        //     fix.detectChanges();
+
+        //     selectColumnInEditModeExpression(fix, 6);
+        //     selectOperatorInEditModeExpression(fix, 0);
+
+        //     const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+        //         .injector.get(IgxDateTimeEditorDirective);
+        //     expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.pipeArgs.format);
+        // }));
+
         it('should handle advanced filtering correctly when grid columns and data are dynamically changed', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridAdvancedFilteringDynamicColumnsComponent);
             grid = fixture.componentInstance.grid;

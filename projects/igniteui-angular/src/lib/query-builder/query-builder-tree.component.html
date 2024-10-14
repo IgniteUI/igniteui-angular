@@ -328,7 +328,8 @@
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
                     [formatter]="selectedField.formatter"
-                    [inputFormat]="selectedField.defaultTimeFormat"
+                    [displayFormat]="selectedField.pipeArgs.format"
+                    [inputFormat]="selectedField.editorOptions?.dateTimeFormat"
                 >
                     <!-- disable default icons -->
                     <label igxLabel>{{this.resourceStrings.igx_query_builder_time_placeholder}}</label>
@@ -355,7 +356,10 @@
                                 (selectedField.filters.condition(selectedCondition).isUnary ||
                                 selectedField.filters.condition(selectedCondition).isNestedQuery))
                         "
-                        [igxDateTimeEditor]="selectedField.defaultDateTimeFormat"
+                        [locale]="this.locale"
+                        [igxDateTimeEditor]="selectedField.editorOptions?.dateTimeFormat"
+                        [defaultFormatType]="selectedField.dataType"
+                        [displayFormat]="selectedField.pipeArgs.format"
                     />
                 </igx-input-group>
             </ng-template>

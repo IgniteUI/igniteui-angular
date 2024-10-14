@@ -31,14 +31,14 @@
 </igx-date-picker>
 
 <igx-time-picker #picker *ngIf="column.dataType === 'time'"
-    [inputFormat]="column.defaultTimeFormat"
-    [(value)]="searchVal"
+    [(ngModel)]="searchVal"
     [locale]="grid.locale"
     [outlet]="grid.outlet"
     (click)="picker.open()"
     [readOnly]="true"
     [placeholder]="inputTimePlaceholder"
     [displayFormat]="column.pipeArgs.format"
+    [inputFormat]="column.editorOptions?.dateTimeFormat"
     [formatter]="column.formatter"
     [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
     type="box">
@@ -50,7 +50,10 @@
 <igx-input-group #dropDownTarget *ngIf="column.dataType === 'dateTime'" #inputGroup type="box">
     <input #input igxInput tabindex="0"
         [placeholder]="inputDatePlaceholder"
-        [igxDateTimeEditor]="column.defaultDateTimeFormat"
+        [locale]="column.grid.locale"
+        [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat"
+        [defaultFormatType]="column.dataType"
+        [displayFormat]="column.pipeArgs.format"
         [(ngModel)]="searchVal"
         [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
 </igx-input-group>

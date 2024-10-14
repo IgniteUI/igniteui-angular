@@ -49,7 +49,7 @@ import {
     IgxSummaryTemplateDirective,
     IgxCellValidationErrorDirective
 } from './templates.directive';
-import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
+import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs, IColumnEditorOptions } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { isConstructor, PlatformUtil } from '../../core/utils';
@@ -1593,6 +1593,31 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
+     * Pass optional properties for the default column editors.
+     * @remarks
+     * Options may be applicable only to specific column type editors.
+     * @example
+     * ```typescript
+     * const editorOptions: IColumnEditorOptions = {
+     *      dateTimeFormat: 'MM/dd/YYYY',
+     * }
+     * ```
+     * ```html
+     * <igx-column dataType="date" [editorOptions]="editorOptions"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public set editorOptions(value: IColumnEditorOptions) {
+        this._editorOptions = value;
+    }
+    public get editorOptions(): IColumnEditorOptions {
+        return this._editorOptions;
+    }
+
+    /**
      * @hidden
      * @internal
      */
@@ -1787,6 +1812,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     private _field: string;
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
+    private _editorOptions: IColumnEditorOptions = { };
 
     constructor(
         @Inject(IGX_GRID_BASE) public grid: GridType,
