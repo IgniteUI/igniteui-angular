@@ -51,6 +51,16 @@ export interface IFieldPipeArgs {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IColumnPipeArgs extends IFieldPipeArgs {}
 
+export interface IFieldEditorOptions {
+    /**
+     * A custom input format string used for the built-in editors of date/time columns.
+     * See the Editing section under https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-types#datetime-date-and-time
+     */
+    dateTimeFormat?: string;
+}
+
+export interface IColumnEditorOptions extends IFieldEditorOptions {}
+
 export interface ISortingOptions {
     mode: 'single' | 'multiple';
 }
