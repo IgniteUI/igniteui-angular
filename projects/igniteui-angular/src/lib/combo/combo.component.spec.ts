@@ -2608,7 +2608,7 @@ describe('igxCombo', () => {
                 expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
                 expect(input.nativeElement.value).toEqual(expectedDisplayText);
             });
-            it('should only select and display valid values when programmatically selecting invalid items with ngModel', fakeAsync(() => {
+            it('should only select and display existing values in the data when programmatically selecting non existing items with ngModel', fakeAsync(() => {
                 fixture = TestBed.createComponent(ComboInvalidValuesComponent);
                 fixture.detectChanges();
                 combo = fixture.componentInstance.combo;
@@ -2622,7 +2622,7 @@ describe('igxCombo', () => {
                 expect(combo.value).toEqual(['LA', 'NY']);
                 expect(combo.displayValue).toEqual('Los Angeles, New York');
             }));
-            it('should only select and display valid values when selecting invalid items programmatically using select', fakeAsync(() => {
+            it('should only select and display existing values in the data when programmatically selecting non existing items with ngModel', fakeAsync(() => {
                 fixture = TestBed.createComponent(ComboInvalidValuesComponent);
                 fixture.detectChanges();
                 combo = fixture.componentInstance.combo;
