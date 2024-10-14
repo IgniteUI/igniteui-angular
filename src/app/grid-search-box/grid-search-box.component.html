@@ -1,7 +1,7 @@
 <igx-input-group type="search" class="search-box">
     <igx-prefix>
         @if (searchText.length === 0) {
-            <igx-icon>search</igx-icon>
+            <igx-icon family="default" name="search"></igx-icon>
         }
         @if (searchText.length > 0) {
             <igx-icon (click)="clearSearch()">clear</igx-icon>

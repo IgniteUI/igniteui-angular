@@ -31,7 +31,8 @@
         [displayFormat]="column.pipeArgs.format"
         [formatter]="column.formatter"
         [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
-        type="box">
+        type="box"
+    >
         <!-- disable default icons -->
         <igx-picker-toggle></igx-picker-toggle>
         <igx-picker-clear></igx-picker-clear>
@@ -40,7 +41,6 @@
 
 @if (column.dataType === 'time') {
     <igx-time-picker #picker
-        [inputFormat]="column.defaultTimeFormat"
         [(value)]="expressionUI.expression.searchVal"
         [locale]="grid.locale"
         [outlet]="grid.outlet"
@@ -48,9 +48,11 @@
         [readOnly]="true"
         [placeholder]="inputTimePlaceholder"
         [displayFormat]="column.pipeArgs.format"
+        [inputFormat]="column.editorOptions?.dateTimeFormat"
         [formatter]="column.formatter"
         [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
-        type="box">
+        type="box"
+    >
         <!-- disable default icons -->
         <igx-picker-toggle></igx-picker-toggle>
         <igx-picker-clear></igx-picker-clear>
@@ -61,7 +63,10 @@
     <igx-input-group #dropDownTarget #inputGroup type="box">
         <input #input igxInput tabindex="0"
             [placeholder]="inputDatePlaceholder"
-            [igxDateTimeEditor]="column.defaultDateTimeFormat"
+            [locale]="column.grid.locale"
+            [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat"
+            [defaultFormatType]="column.dataType"
+            [displayFormat]="column.pipeArgs.format"
             [(ngModel)]="expressionUI.expression.searchVal"
             [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
     </igx-input-group>

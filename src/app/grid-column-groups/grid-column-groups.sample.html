@@ -3,7 +3,7 @@
         <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
     <ng-template igxCollapsibleIndicator let-column="column" #ind >
-        <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+        <igx-icon family="default" [name]="column.expanded ? 'horizontal_rule' : 'add'"></igx-icon>
     </ng-template>
     <igx-grid [allowFiltering]="true" [moving]="true" [pinning]="pinningConfig" [rowSelection]="selectionMode" #grid [data]="data">
         <igx-grid-toolbar >
@@ -22,7 +22,7 @@
                 <igx-column [visibleWhenCollapsed]="false"  [filterable]="true" [sortable]="true" [resizable]="true" field="ContactTitle"></igx-column>
             </igx-column-group>
             <ng-template igxCollapsibleIndicator let-column="column">
-                <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+                <igx-icon family="default" [name]="column.expanded ? 'horizontal_rule' : 'add'"></igx-icon>
             </ng-template>
         </igx-column-group>
         <igx-column [hidden]="s" [resizable]="true" field="ID" [editable]="true"></igx-column>

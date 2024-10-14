@@ -109,9 +109,9 @@
                     </igx-prefix>
                     <span class="igx-filter-tree__expression-condition">
                         {{
-                        getConditionFriendlyName(
-                        expressionItem.expression.condition.name
-                        )
+                            getConditionFriendlyName(
+                                expressionItem.expression.condition.name
+                            )
                         }}
                     </span>
                     @if (!expressionItem.expression.condition.isUnary) {
@@ -143,33 +143,32 @@
                     expressionItem.hovered
                 ) {
                     <div class="igx-filter-tree__expression-actions">
-                        <span tabindex="0">
-                            <igx-icon
-                                family="default"
-                                name="edit"
+                        <button
+                            igxIconButton="flat"
+                            aria-labelledby="edit-expression"
+                            (keydown)="invokeClick($event)"
+                            (click)="enterExpressionEdit(expressionItem)"
+                        >
+                            <igx-icon id="edit-expression">edit</igx-icon>
+                        </button>
+
+                        @if (
+                            !expressionItem.inAddMode &&
+                            (expressionItem.parent !== currentGroup ||
+                                expressionItem !==
+                                    currentGroup.children[
+                                        currentGroup.children.length - 1
+                                    ])
+                        ) {
+                            <button
+                                igxIconButton="flat"
+                                aria-labelledby="add-expression"
                                 (keydown)="invokeClick($event)"
-                                (click)="enterExpressionEdit(expressionItem)"
+                                (click)="enterExpressionAdd(expressionItem)"
                             >
-                            </igx-icon>
-                        </span>
-                        <span tabindex="0">
-                            @if (
-                                !expressionItem.inAddMode &&
-                                (expressionItem.parent !== currentGroup ||
-                                    expressionItem !==
-                                        currentGroup.children[
-                                            currentGroup.children.length - 1
-                                        ])
-                            ) {
-                                <igx-icon
-                                    family="default"
-                                    name="add"
-                                    (keydown)="invokeClick($event)"
-                                    (click)="enterExpressionAdd(expressionItem)"
-                                >
-                                </igx-icon>
-                            }
-                        </span>
+                                <igx-icon id="add-expression">add</igx-icon>
+                            </button>
+                        }
                     </div>
                 }
             </div>
@@ -310,22 +309,23 @@
                         [(value)]="searchValue"
                         (click)="picker.open()"
                         (keydown)="openPicker($event)"
-                [placeholder]="
-                    this.resourceStrings.igx_query_builder_time_placeholder
-                "
-                        type="box"
-                        [readOnly]="true"
-                [disabled]="
-                    !selectedField ||
-                    !selectedCondition ||
-                    (selectedField &&
-                        selectedField.filters.condition(selectedCondition)
-                            .isUnary)
-                "
+                        [placeholder]="
+                            this.resourceStrings.igx_query_builder_time_placeholder
+                        "
+                                type="box"
+                                [readOnly]="true"
+                        [disabled]="
+                            !selectedField ||
+                            !selectedCondition ||
+                            (selectedField &&
+                                selectedField.filters.condition(selectedCondition)
+                                    .isUnary)
+                        "
                         [locale]="this.locale"
                         [outlet]="pickerOutlet"
                         [formatter]="selectedField.formatter"
-                        [inputFormat]="selectedField.defaultTimeFormat"
+                        [displayFormat]="selectedField.pipeArgs.format"
+                        [inputFormat]="selectedField.editorOptions?.dateTimeFormat"
                     >
                         <!-- disable default icons -->
                         <igx-picker-toggle></igx-picker-toggle>
@@ -354,7 +354,10 @@
                                     selectedField.filters.condition(selectedCondition)
                                         .isUnary)
                             "
-                            [igxDateTimeEditor]="selectedField.defaultDateTimeFormat"
+                            [locale]="this.locale"
+                            [igxDateTimeEditor]="selectedField.editorOptions?.dateTimeFormat"
+                            [defaultFormatType]="selectedField.dataType"
+                            [displayFormat]="selectedField.pipeArgs.format"
                         />
                     </igx-input-group>
                 }

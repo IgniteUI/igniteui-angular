@@ -2174,6 +2174,28 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextUnselect);
     }));
 
+    it('should update chips state when columns are added/removed', fakeAsync(() => {
+        const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
+        const cols = fix.componentInstance.columns;
+        fix.componentInstance.columns = [];
+        fix.componentInstance.instance.groupingExpressions = [
+            {
+                dir: SortingDirection.Asc,
+                fieldName: 'A',
+                ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance()
+            }
+        ];
+        fix.detectChanges();
+        const chips = fix.componentInstance.instance.groupArea.chips;
+        let chipContent = chips.first.nativeElement.querySelector('.igx-chip__content').textContent.trim();
+        expect(chipContent).toBe('A');
+        fix.componentInstance.columns = cols;
+        fix.detectChanges();
+        chipContent = chips.first.nativeElement.querySelector('.igx-chip__content').textContent.trim();
+        expect(chipContent).toBe('AA');
+    }));
+
     // GroupBy Row Formatting
     it('should properly apply formatters, both custom and default ones for the default row value template', fakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
@@ -4105,7 +4127,7 @@ export class CustomTemplateGridComponent extends DataParent {
             [height]='height'
             [data]="testData">
             @for (c of columns; track c) {
-                <igx-column [groupable]="true" [field]="c.field" [header]="c.field" [width]="c.width + 'px'">
+                <igx-column [groupable]="true" [field]="c.field" [header]="c.header || c.field" [width]="c.width + 'px'">
                 </igx-column>
             }
         </igx-grid>
@@ -4122,7 +4144,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
     public testData = [];
 
     public columns = [
-        { field: 'A', width: 100 },
+        { field: 'A', header: 'AA', width: 100 },
         { field: 'B', width: 100 },
         { field: 'C', width: 100 },
         { field: 'D', width: 100 },

@@ -2,7 +2,7 @@
     @for (expression of chipExpressions; track expression; let last = $last) {
         <igx-chip
             [id]="expression.fieldName"
-            [title]="(expression.fieldName | igxGroupByMeta:grid).title"
+            [title]="(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).title"
             [removable]="(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).groupable"
             [draggable]="(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).groupable"
             [disabled]="!(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).groupable"
@@ -10,7 +10,7 @@
             (remove)="clearGrouping($event.owner.id)"
             (chipClick)="handleClick(expression.fieldName)"
         >
-            <span>{{ (expression.fieldName | igxGroupByMeta:grid).title }}</span>
+            <span>{{ (expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).title }}</span>
             <igx-icon
                 family="default"
                 [name]="expression.dir === 1 ? 'sort_asc' : 'sort_desc'"

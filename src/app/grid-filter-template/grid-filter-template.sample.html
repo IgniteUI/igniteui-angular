@@ -30,7 +30,7 @@
             <ng-template #filterTemplate igxFilterCellTemplate let-column="column">
                 <igx-input-group class="filter-input" type="box" class="size">
                     <igx-prefix>
-                        <igx-icon>search</igx-icon>
+                        <igx-icon family="default" name="search"></igx-icon>
                     </igx-prefix>
                     <input
                         #input
@@ -42,7 +42,7 @@
                         (keydown)="onKeyDown($event)"/>
                     @if (input.value) {
                         <igx-suffix (click)="clearInput(input, column)" tabindex="0">
-                            <igx-icon>clear</igx-icon>
+                            <igx-icon family="default" name="input_clear"></igx-icon>
                         </igx-suffix>
                     }
                 </igx-input-group>
