@@ -8,7 +8,6 @@ import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/f
 
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
-import { isEqual } from 'lodash-es';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -326,7 +325,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         }
 
         const newSelection = this.selectionService.add_items(this.id, validItems, clearCurrentSelection);
-        this.setSelection(newSelection, event);
+        this.setSelection(newSelection, event, true, true);
     }
 
     /**
@@ -491,22 +490,5 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             selection.map(entry => entry[this.displayKey]).join(', ') :
             selection.join(', ');
         return value;
-    }
-
-    private isItemInData(item: any): boolean {
-        if (!this.valueKey) {
-            return this.data.some(dataItem => isEqual(dataItem, item));
-        }
-
-        return this.data.some(dataItem => {
-            const dataValue = dataItem[this.valueKey];
-            const itemValue = item;
-            // Treat NaN values as equal (since NaN !== NaN in regular comparisons)
-            // to ensure we support all falsy comparisons correctly
-            if (Number.isNaN(dataValue) && Number.isNaN(itemValue)) {
-                return true;
-            }
-            return dataValue === itemValue;
-        });
     }
 }

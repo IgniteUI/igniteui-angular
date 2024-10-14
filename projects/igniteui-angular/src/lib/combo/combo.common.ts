@@ -1357,6 +1357,23 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
     }
 
+    protected isItemInData(item: any): boolean {
+        if (!this.valueKey) {
+            return this.data.some(dataItem => isEqual(dataItem, item));
+        }
+
+        return this.data.some(dataItem => {
+            const dataValue = dataItem[this.valueKey];
+            const itemValue = item;
+            // Treat NaN values as equal (since NaN !== NaN in regular comparisons)
+            // to ensure we support all falsy comparisons correctly
+            if (Number.isNaN(dataValue) && Number.isNaN(itemValue)) {
+                return true;
+            }
+            return dataValue === itemValue;
+        });
+    }
+
     protected get required(): boolean {
         if (this.ngControl && this.ngControl.control && this.ngControl.control.validator) {
             // Run the validation with empty object to check if required is enabled.
@@ -1381,6 +1398,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     public abstract writeValue(value: any): void;
 
-    protected abstract setSelection(newSelection: Set<any>, event?: Event): void;
+    protected abstract setSelection(newSelection: Set<any>, event?: Event, emit?: boolean, updateModel?: boolean): void;
     protected abstract createDisplayText(newSelection: any[], oldSelection: any[]);
 }
