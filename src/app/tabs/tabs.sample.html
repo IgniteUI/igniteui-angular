@@ -225,14 +225,16 @@
         <div>
             <h3 class="sample-title">Short Tabs with scroll</h3>
             <igx-tabs>
-                <igx-tab-item *ngFor="let tab of scrollableTabs;">
-                    <igx-tab-header>
-                        <span igxTabHeaderLabel>Lorem ipsum. {{tab}}</span>
-                    </igx-tab-header>
-                    <igx-tab-content>
-                        Content of {{tab}}
-                    </igx-tab-content>
-                </igx-tab-item>
+                @for (tab of scrollableTabs; track tab) {
+                    <igx-tab-item>
+                        <igx-tab-header>
+                            <span igxTabHeaderLabel>Lorem ipsum. {{tab}}</span>
+                        </igx-tab-header>
+                        <igx-tab-content>
+                            Content of {{tab}}
+                        </igx-tab-content>
+                    </igx-tab-item>
+                }
             </igx-tabs>
         </div>
 
