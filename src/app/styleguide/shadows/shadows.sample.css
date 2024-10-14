@@ -16,7 +16,7 @@
 
 .elevation-sample {
     padding: 16px;
-    color: hsl(var(--ig-gray-700));
+    color: var(--ig-gray-700);
 }
 
 .elevation-sample p.variable {
