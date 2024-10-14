@@ -11,7 +11,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCarousel`
     - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
     - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
-- `IgxCombo`
+- `IgxCombo`, `IgxSimpleCombo`
     - Introduced the ability to automatically filter out and exclude values that are not in the data when programmatically setting selected items. This behavior specifically applies when the `combo` is bound to local data, as querying the entire data source to verify value presence is not feasible in remote scenarios.
 
 ### Themes
