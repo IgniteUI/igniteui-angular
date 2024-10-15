@@ -59,8 +59,6 @@ const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
 const DEFAULT_PIPE_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
-const DEFAULT_DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm:ss a';
-const DEFAULT_TIME_FORMAT = 'hh:mm:ss a';
 
 @Pipe({
     name: 'fieldFormatter',
@@ -818,13 +816,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return this.selectedField && this.selectedCondition &&
             (
                 (
-                    (!!this.searchValue.value || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal))
-                    &&
+                    (!!this.searchValue.value || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) &&
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
-                )
-                ||
-                (innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.expressionTree.returnFields?.length > 0)
-                ||
+                ) ||
+                (
+                    innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields.length > 0
+                ) ||
                 this.selectedField.filters.condition(this.selectedCondition).isUnary
             );
     }

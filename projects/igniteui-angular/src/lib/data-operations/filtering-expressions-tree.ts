@@ -1,5 +1,6 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { IBaseEventArgs } from '../core/utils';
+import { ExpressionsTreeUtil } from './expressions-tree-util';
 
 /* mustCoerceToInt */
 export enum FilteringExpressionsTreeType {
@@ -21,8 +22,14 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
     /* alternateName: treeType */
     type?: FilteringExpressionsTreeType;
 
+    /**
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.find` instead.
+     */
     find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
 
+    /**
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.findIndex` instead.
+     */
     findIndex(fieldName: string): number;
 }
 
@@ -142,15 +149,10 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```
      *
      * @memberof FilteringExpressionsTree
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.find` instead.
      */
     public find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression {
-        const index = this.findIndex(fieldName);
-
-        if (index > -1) {
-            return this.filteringOperands[index];
-        }
-
-        return null;
+        return ExpressionsTreeUtil.find(this, fieldName);
     }
 
     /**
@@ -160,37 +162,9 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```
      *
      * @memberof FilteringExpressionsTree
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.findIndex` instead.
      */
     public findIndex(fieldName: string): number {
-        let expr;
-        for (let i = 0; i < this.filteringOperands.length; i++) {
-            expr = this.filteringOperands[i];
-            if (expr instanceof FilteringExpressionsTree) {
-                if (this.isFilteringExpressionsTreeForColumn(expr, fieldName)) {
-                    return i;
-                }
-            } else {
-                if ((expr as IFilteringExpression).fieldName === fieldName) {
-                    return i;
-                }
-            }
-        }
-
-        return -1;
-    }
-
-    protected isFilteringExpressionsTreeForColumn(expressionsTree: IFilteringExpressionsTree, fieldName: string): boolean {
-        if (expressionsTree.fieldName === fieldName) {
-            return true;
-        }
-
-        for (const expr of expressionsTree.filteringOperands) {
-            if ((expr instanceof FilteringExpressionsTree)) {
-                return this.isFilteringExpressionsTreeForColumn(expr, fieldName);
-            } else if ((expr as IFilteringExpression).fieldName === fieldName) {
-                return true;
-            }
-        }
-        return false;
+        return ExpressionsTreeUtil.findIndex(this, fieldName);
     }
 }

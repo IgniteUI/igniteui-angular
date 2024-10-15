@@ -20,6 +20,7 @@ import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { fadeIn } from 'igniteui-angular/animations';
+import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
 
 /**
  * @hidden
@@ -172,9 +173,9 @@ export class IgxFilteringService implements OnDestroy {
         const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
         const filteringTree = grid.filteringExpressionsTree;
-        const columnFilteringExpressionsTree = filteringTree.find(field) as IFilteringExpressionsTree;
+        const columnFilteringExpressionsTree = ExpressionsTreeUtil.find(filteringTree, field) as IFilteringExpressionsTree;
         conditionOrExpressionTree = conditionOrExpressionTree ?? columnFilteringExpressionsTree;
-        const fieldFilterIndex = filteringTree.findIndex(field);
+        const fieldFilterIndex = ExpressionsTreeUtil.findIndex(filteringTree, field);
 
         const newFilteringTree: FilteringExpressionsTree =
             this.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree,
@@ -182,7 +183,7 @@ export class IgxFilteringService implements OnDestroy {
 
         const eventArgs: IFilteringEventArgs = {
             owner: grid,
-            filteringExpressions: newFilteringTree.find(field) as FilteringExpressionsTree, cancel: false
+            filteringExpressions: ExpressionsTreeUtil.find(newFilteringTree, field) as FilteringExpressionsTree, cancel: false
         };
         this.grid.filtering.emit(eventArgs);
 
@@ -193,7 +194,7 @@ export class IgxFilteringService implements OnDestroy {
         if (conditionOrExpressionTree) {
             this.filter_internal(field, value, conditionOrExpressionTree, filteringIgnoreCase);
         } else {
-            const expressionsTreeForColumn = this.grid.filteringExpressionsTree.find(field);
+            const expressionsTreeForColumn = ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, field);
             if (!expressionsTreeForColumn) {
                 throw new Error('Invalid condition or Expression Tree!');
             } else if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
@@ -203,7 +204,7 @@ export class IgxFilteringService implements OnDestroy {
                 this.filter_internal(field, value, expressionForColumn.condition, filteringIgnoreCase);
             }
         }
-        const doneEventArgs = this.grid.filteringExpressionsTree.find(field) as FilteringExpressionsTree;
+        const doneEventArgs = ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, field) as FilteringExpressionsTree;
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.grid.filteringDone.emit(doneEventArgs));
     }
@@ -273,7 +274,7 @@ export class IgxFilteringService implements OnDestroy {
         const grid = this.grid;
         grid.crudService.endEdit(false);
         const filteringState = grid.filteringExpressionsTree;
-        const index = filteringState.findIndex(fieldName);
+        const index = ExpressionsTreeUtil.findIndex(filteringState, fieldName);
 
         if (index > -1) {
             filteringState.filteringOperands.splice(index, 1);
@@ -512,7 +513,7 @@ export class IgxFilteringService implements OnDestroy {
         this.grid.crudService.endEdit(false);
         this.grid.page = 0;
 
-        const fieldFilterIndex = filteringTree.findIndex(fieldName);
+        const fieldFilterIndex = ExpressionsTreeUtil.findIndex(filteringTree, fieldName);
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
         this.grid.filteringExpressionsTree = filteringTree;
     }

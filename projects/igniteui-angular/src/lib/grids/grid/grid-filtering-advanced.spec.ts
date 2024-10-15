@@ -24,6 +24,7 @@ import { IFilteringEventArgs } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { QueryBuilderConstants, QueryBuilderFunctions } from '../../query-builder/query-builder-functions.spec';
 import { By } from '@angular/platform-browser';
+import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     configureTestSuite((() => {
@@ -633,10 +634,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
             fix.detectChanges();
             const dropdownItems = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement);
-            expect(dropdownItems.length).toBe(3);
+            expect(dropdownItems.length).toBe(4);
             expect((dropdownItems[0] as HTMLElement).innerText).toBe('HeaderID');
             expect((dropdownItems[1] as HTMLElement).innerText).toBe('ProductName');
             expect((dropdownItems[2] as HTMLElement).innerText).toBe('Another Field');
+            expect((dropdownItems[3] as HTMLElement).innerText).toBe('ReleaseTime');
         }));
 
         it('Should scroll the adding buttons into view when the add icon of a chip is clicked.', fakeAsync(() => {
@@ -1050,112 +1052,113 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(rows.length).toEqual(1, 'Wrong filtered rows count');
         }));
 
-        // it('DateTime: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
-        //     const releaseDateColumn = grid.getColumnByName('ReleaseDate');
-        //     releaseDateColumn.dataType = 'dateTime';
-        //     releaseDateColumn.editorOptions = {
-        //         dateTimeFormat: 'dd-MM-yyyy HH:mm aaaaa'
-        //     }
-        //     fix.detectChanges();
+        it('DateTime: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
+            const releaseDateColumn = grid.getColumnByName('ReleaseDate');
+            releaseDateColumn.dataType = 'dateTime';
+            releaseDateColumn.editorOptions = {
+                dateTimeFormat: 'dd-MM-yyyy HH:mm aaaaa'
+            }
+            fix.detectChanges();
 
-        //     grid.openAdvancedFilteringDialog();
-        //     fix.detectChanges();
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
 
-        //     GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
-        //     tick(100);
-        //     fix.detectChanges();
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
 
-        //     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
-        //     fix.detectChanges();
-        //     const dropdownItems = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix);
-        //     expect(dropdownItems[4].innerText).toBe('ReleaseDate');
+            QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
+            fix.detectChanges();
+            const dropdownItems = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement);
+            expect((dropdownItems[4] as HTMLElement).innerText).toBe('ReleaseDate');
 
-        //     selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column
-        //     selectOperatorInEditModeExpression(fix, 0);
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
 
-        //     const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
-        //         .injector.get(IgxDateTimeEditorDirective);
-        //     expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseDateColumn.editorOptions.dateTimeFormat);
-        //     expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
-        //     expect(dateTimeEditor.locale).toMatch(grid.locale);
-        // }));
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseDateColumn.editorOptions.dateTimeFormat);
+            expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
+            expect(dateTimeEditor.locale).toMatch(grid.locale);
+        }));
 
-        // it('DateTime: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
-        //     const releaseDateColumn = grid.getColumnByName('ReleaseDate');
-        //     releaseDateColumn.dataType = 'dateTime';
-        //     releaseDateColumn.pipeArgs = {
-        //         format: 'dd-MM-yyyy HH:mm aaaaa'
-        //     }
-        //     fix.detectChanges();
+        it('DateTime: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            const releaseDateColumn = grid.getColumnByName('ReleaseDate');
+            releaseDateColumn.dataType = 'dateTime';
+            releaseDateColumn.pipeArgs = {
+                format: 'dd-MM-yyyy HH:mm aaaaa'
+            }
+            fix.detectChanges();
 
-        //     grid.openAdvancedFilteringDialog();
-        //     fix.detectChanges();
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
 
-        //     GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
-        //     tick(100);
-        //     fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
 
-        //     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
-        //     fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
+            fix.detectChanges();
 
-        //     selectColumnInEditModeExpression(fix, 4);
-        //     selectOperatorInEditModeExpression(fix, 0);
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 4);
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
 
-        //     const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
-        //         .injector.get(IgxDateTimeEditorDirective);
-        //     expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
-        //     expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
-        // }));
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
+            expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
+        }));
 
-        // it('Time: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
-        //     const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
-        //     releaseTimeColumn.editorOptions = {
-        //         dateTimeFormat: 'hh:mm'
-        //     }
-        //     fix.detectChanges();
+        it('Time: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
+            const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
+            releaseTimeColumn.editorOptions = {
+                dateTimeFormat: 'hh:mm'
+            }
+            fix.detectChanges();
 
-        //     grid.openAdvancedFilteringDialog();
-        //     fix.detectChanges();
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
 
-        //     GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
-        //     tick(100);
-        //     fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
 
-        //     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
-        //     fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
+            fix.detectChanges();
 
-        //     selectColumnInEditModeExpression(fix, 6);
-        //     selectOperatorInEditModeExpression(fix, 0);
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 6);
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
 
-        //     const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
-        //         .injector.get(IgxDateTimeEditorDirective);
-        //     expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.editorOptions.dateTimeFormat);
-        // }));
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.editorOptions.dateTimeFormat);
+        }));
 
-        // it('Time: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
-        //     const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
-        //     releaseTimeColumn.pipeArgs = {
-        //         format: 'hh:mm'
-        //     }
-        //     fix.detectChanges();
+        it('Time: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
+            releaseTimeColumn.pipeArgs = {
+                format: 'hh:mm'
+            }
+            fix.detectChanges();
 
-        //     grid.openAdvancedFilteringDialog();
-        //     fix.detectChanges();
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
 
-        //     GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
-        //     tick(100);
-        //     fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
 
-        //     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
-        //     fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
+            fix.detectChanges();
 
-        //     selectColumnInEditModeExpression(fix, 6);
-        //     selectOperatorInEditModeExpression(fix, 0);
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 6);
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
 
-        //     const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
-        //         .injector.get(IgxDateTimeEditorDirective);
-        //     expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.pipeArgs.format);
-        // }));
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.pipeArgs.format);
+        }));
 
         it('should handle advanced filtering correctly when grid columns and data are dynamically changed', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridAdvancedFilteringDynamicColumnsComponent);
