@@ -44,7 +44,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
-import { IgxComboComponent } from "../combo/combo.component";
+import { IComboSelectionChangingEventArgs, IgxComboComponent } from "../combo/combo.component";
 import { IgxLabelDirective } from '../input-group/public_api';
 import { IgxComboHeaderDirective } from '../combo/public_api';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from "../checkbox/checkbox.component";
@@ -560,6 +560,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         } else {
             this.onEntityChangeConfirm();
         }
+
+        this.initExpressionTree(event.newSelection.value, this.selectedReturnFields);
     }
 
     /**
@@ -815,8 +817,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
         return this.selectedField && this.selectedCondition &&
             (
-                ((!!this.searchValue.value || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) && !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)) ||
-                (innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined) ||
+                (
+                    (!!this.searchValue.value || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal))
+                    &&
+                    !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
+                )
+                ||
+                (innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.expressionTree.returnFields?.length > 0)
+                ||
                 this.selectedField.filters.condition(this.selectedCondition).isUnary
             );
     }
@@ -1237,6 +1245,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    public onReturnFieldSelectChanging(event: IComboSelectionChangingEventArgs) {
+        this.initExpressionTree(this.selectedEntity.name, event.newSelection)
+    }
+
+    public initExpressionTree(selectedEntityName: string, selectedReturnFields: string[]) {
+        console.log("recals", selectedEntityName, selectedReturnFields)
+        this.expressionTree = this.createExpressionTreeFromGroupItem(new ExpressionGroupItem(FilteringLogic.And, this.rootGroup), selectedEntityName, selectedReturnFields);
+    }
+
     public getSearchValueTemplateContext(defaultSearchValueTemplate): any {
         const ctx = {
             $implicit: this.searchValue,
@@ -1439,7 +1456,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (!expressionItem.parent) {
             this.rootGroup = null;
             this.currentGroup = null;
-            this._expressionTree = null;
+            //this._expressionTree = null;
             return;
         }
 
