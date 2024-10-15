@@ -11,14 +11,34 @@ All notable changes for each version of this project will be documented in this 
     - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - To streamline the sorting of columns with custom formats, a new `FormattedValuesSortingStrategy` has been introduced. This strategy simplifies the sorting process by allowing direct sorting based on formatted values, eliminating the need to extend the `DefaultSortingStrategy` or implement a custom `ISortingStrategy`. This enhancement improves the ease of handling sorting with custom column formatters.
-
 - `IgxCarousel`
     - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
     - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
+- `IgxQueryBuilder`
+    - Introduced ability to create nested queries by specifying IN/NOT IN operators.
+    - Added the `entities` property that accepts an array of `EntityType` objects describing an entity with its name and an array of fields. The `fields` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
+    - Added option to template the search value input:
+    ```
+    <ng-template igxQueryBuilderSearchValue 
+                let-searchValue
+                let-selectedField = "selectedField" 
+                let-selectedCondition = "selectedCondition"
+                let-defaultSearchValueTemplate = "defaultSearchValueTemplate">
+        @if (selectedField?.field === 'Id' && selectedCondition === 'equals'){
+            <input type="text" required [(ngModel)]="searchValue.value"/>
+        } @else {  
+            <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
+        }
+    </ng-template> 
+    ```
+- `IFilteringExpression`
+    - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
+- `IFilteringOperation`
+    - A new optional property called `isNestedQuery` has been introduced. It's used to indicate whether the condition leads to a nested query creation.
 - `ColumnType`, `IgxColumn`
     - The built-in editors for columns of type `date`, `dateTime` and `time` now use a default input format as per the `IgxGrid`'s `locale`. This is valid both for cell editors and the ones in the filtering UI for all modes - `quickFilter`, `excelStyle` and the Advanced filtering.
     - In case the `pipeArgs.displayFormat` property of a date-time column is set and contains only numeric date-time parts or such that can be handled by the editors, the built-in editors input format is inferred from it.
-    - To configure the built-in editors, a new `editorOptions` property is added that allows to pass optional parameters. Accepts an `IColumnEditorOptions` object with the `dateTimeFormat` property, that is used as input format for the editors of
+    - To configure the built-in editors, a new `editorOptions` optional property is added that allows to pass optional parameters. Accepts an `IColumnEditorOptions` object with the `dateTimeFormat` property, that is used as input format for the editors of
     `date`, `dateTime` and `time` column data types:
         ```ts
             const editorOptions: IColumnEditorOptions = { Field?
