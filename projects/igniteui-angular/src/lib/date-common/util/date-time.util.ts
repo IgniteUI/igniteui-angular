@@ -2,6 +2,7 @@ import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-t
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
 import { isDate } from '../../core/utils';
+import { DataType } from '../../data-operations/data-util';
 
 /** @hidden */
 const enum FormatDesc {
@@ -24,8 +25,30 @@ const enum AmPmValues {
 const enum DateParts {
     Day = 'day',
     Month = 'month',
-    Year = 'year'
+    Year = 'year',
+    Hour = 'hour',
+    Minute = 'minute',
+    Second = 'second',
+    AmPm = 'dayPeriod'
 }
+
+/** Maps of the pre-defined date-time format options supported by the Angular DatePipe
+ * - predefinedNumericFormats resolve to numeric parts only (and period) for the default 'en' culture
+ * - predefinedNonNumericFormats usually contain non-numeric date/time parts, which cannot be
+ *   handled for editing by the date/time editors
+ *  Ref: https://angular.dev/api/common/DatePipe?tab=usage-notes
+ * @hidden
+ */
+const predefinedNumericFormats = new Map<string, DateParts[]>([
+    ['short', [DateParts.Month, DateParts.Day, DateParts.Year, DateParts.Hour, DateParts.Minute]],
+    ['shortDate', [DateParts.Month, DateParts.Day, DateParts.Year]],
+    ['shortTime', [DateParts.Hour, DateParts.Minute]],
+    ['mediumTime', [DateParts.Hour, DateParts.Minute, DateParts.Second]],
+]);
+
+const predefinedNonNumericFormats = new Set<string>([
+    'medium', 'long', 'full', 'mediumDate', 'longDate', 'fullDate', 'longTime', 'fullTime',
+])
 
 /** @hidden */
 export abstract class DateTimeUtil {
@@ -194,7 +217,7 @@ export abstract class DateTimeUtil {
                 break;
         }
 
-        if (datePartInfo.type !== DatePart.AmPm) {
+        if (datePartInfo.type !== DatePart.AmPm && datePartInfo.type !== DatePart.Literal) {
             return this.prependValue(maskedValue, partLength, '0');
         }
 
@@ -224,16 +247,16 @@ export abstract class DateTimeUtil {
         return (value === AmPmValues.PM.toLowerCase() || value === AmPmValues.P.toLowerCase());
     }
 
-    /** Builds a date-time editor's default input format based on provided locale settings. */
-    public static getDefaultInputFormat(locale: string): string {
+    /** Builds a date-time editor's default input format based on provided locale settings and data type. */
+    public static getDefaultInputFormat(locale: string, dataType: DataType = DataType.Date): string {
         locale = locale || DateTimeUtil.DEFAULT_LOCALE;
         if (!Intl || !Intl.DateTimeFormat || !Intl.DateTimeFormat.prototype.formatToParts) {
             // TODO: fallback with Intl.format for IE?
             return DateTimeUtil.DEFAULT_INPUT_FORMAT;
         }
-        const parts = DateTimeUtil.getDefaultLocaleMask(locale);
+        const parts = DateTimeUtil.getDefaultLocaleMask(locale, dataType);
         parts.forEach(p => {
-            if (p.type !== DatePart.Year && p.type !== DateTimeUtil.SEPARATOR) {
+            if (p.type !== DatePart.Year && p.type !== DateTimeUtil.SEPARATOR && p.type !== DatePart.AmPm) {
                 p.formatType = FormatDesc.TwoDigits;
             }
         });
@@ -506,6 +529,61 @@ export abstract class DateTimeUtil {
         return false;
     }
 
+    public static isFormatNumeric(locale: string, inputFormat: string): boolean {
+        const dateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
+        if (predefinedNonNumericFormats.has(inputFormat) || dateParts.every(p => p.type === DatePart.Literal)) {
+            return false;
+        }
+        for (let i = 0; i < dateParts.length; i++) {
+            if (dateParts[i].type === DatePart.AmPm || dateParts[i].type === DatePart.Literal) {
+                continue;
+            }
+            const transformedValue = formatDate(new Date(), dateParts[i].format, locale);
+            // check if the transformed date/time part contains any kind of letter from any language
+            if (/\p{L}+/gu.test(transformedValue)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns an input format that can be used by the date-time editors, as
+     * - if the format is already numeric, return it as is
+     * - if it is among the predefined numeric ones, return it as the equivalent locale-based format
+     *   for the corresponding numeric date parts
+     * - otherwise, return an empty string
+     */
+    public static getNumericInputFormat(locale: string, format: string): string {
+        let resultFormat = '';
+        if (!format) {
+            return resultFormat;
+        }
+        if (predefinedNumericFormats.has(format)) {
+            resultFormat = DateTimeUtil.getLocaleInputFormatFromParts(locale, predefinedNumericFormats.get(format));
+
+        } else if (DateTimeUtil.isFormatNumeric(locale, format)) {
+            resultFormat = format;
+        }
+        return resultFormat;
+    }
+
+    /** Gets the locale-based format from an array of date parts */
+    private static getLocaleInputFormatFromParts(locale: string, dateParts: DateParts[]): string {
+        const options = {};
+        dateParts.forEach(p => {
+            if (p === DateParts.Year) {
+                options[p] = FormatDesc.Numeric;
+            } else if (p !== DateParts.AmPm) {
+                options[p] = FormatDesc.TwoDigits;
+            }
+        });
+        const formatter = new Intl.DateTimeFormat(locale, options);
+        const dateStruct = DateTimeUtil.getDateStructFromParts(formatter.formatToParts(new Date()), formatter);
+        DateTimeUtil.fillDatePartsPositions(dateStruct);
+        return DateTimeUtil.getMask(dateStruct);
+    }
+
     private static addCurrentPart(currentPart: DatePartInfo, dateTimeParts: DatePartInfo[]): void {
         DateTimeUtil.ensureLeadingZero(currentPart);
         currentPart.end = currentPart.start + currentPart.format.length;
@@ -524,26 +602,52 @@ export abstract class DateTimeUtil {
     private static getMask(dateStruct: any[]): string {
         const mask = [];
         for (const part of dateStruct) {
-            switch (part.formatType) {
-                case FormatDesc.Numeric: {
-                    if (part.type === DateParts.Day) {
+            if (part.formatType === FormatDesc.Numeric) {
+                switch (part.type) {
+                    case DateParts.Day:
                         mask.push('d');
-                    } else if (part.type === DateParts.Month) {
+                        break;
+                    case DateParts.Month:
                         mask.push('M');
-                    } else {
+                        break;
+                    case DateParts.Year:
                         mask.push('yyyy');
-                    }
-                    break;
+                        break;
+                    case DateParts.Hour:
+                        mask.push(part.hour12 ? 'h' : 'H');
+                        break;
+                    case DateParts.Minute:
+                        mask.push('m');
+                        break;
+                    case DateParts.Second:
+                        mask.push('s');
+                        break;
                 }
-                case FormatDesc.TwoDigits: {
-                    if (part.type === DateParts.Day) {
+            } else if (part.formatType === FormatDesc.TwoDigits) {
+                switch (part.type) {
+                    case DateParts.Day:
                         mask.push('dd');
-                    } else if (part.type === DateParts.Month) {
+                        break;
+                    case DateParts.Month:
                         mask.push('MM');
-                    } else {
+                        break;
+                    case DateParts.Year:
                         mask.push('yy');
-                    }
+                        break;
+                    case DateParts.Hour:
+                        mask.push(part.hour12 ? 'hh' : 'HH');
+                        break;
+                    case DateParts.Minute:
+                        mask.push('mm');
+                        break;
+                    case DateParts.Second:
+                        mask.push('ss');
+                        break;
                 }
+            }
+
+            if (part.type === DateParts.AmPm) {
+                mask.push('tt');
             }
 
             if (part.type === DateTimeUtil.SEPARATOR) {
@@ -623,11 +727,44 @@ export abstract class DateTimeUtil {
         }
     }
 
-    private static getDefaultLocaleMask(locale: string) {
-        const dateStruct = [];
-        const formatter = new Intl.DateTimeFormat(locale);
+    private static getFormatOptions(dataType: DataType) {
+        const dateOptions = {
+            day: FormatDesc.TwoDigits,
+            month: FormatDesc.TwoDigits,
+            year: FormatDesc.Numeric
+        };
+        const timeOptions = {
+            hour: FormatDesc.TwoDigits,
+            minute: FormatDesc.TwoDigits
+        };
+        switch (dataType) {
+            case DataType.Date:
+                return dateOptions;
+            case DataType.Time:
+                return timeOptions;
+            case DataType.DateTime:
+                return {
+                    ...dateOptions,
+                    ...timeOptions,
+                    second: FormatDesc.TwoDigits
+                };
+            default:
+                return { };
+        }
+    }
+
+    private static getDefaultLocaleMask(locale: string, dataType: DataType = DataType.Date) {
+        const options = DateTimeUtil.getFormatOptions(dataType);
+        const formatter = new Intl.DateTimeFormat(locale, options);
         const formatToParts = formatter.formatToParts(new Date());
-        for (const part of formatToParts) {
+        const dateStruct = DateTimeUtil.getDateStructFromParts(formatToParts, formatter);
+        DateTimeUtil.fillDatePartsPositions(dateStruct);
+        return dateStruct;
+    }
+
+    private static getDateStructFromParts(parts: Intl.DateTimeFormatPart[], formatter: Intl.DateTimeFormat): any[] {
+        const dateStruct = [];
+        for (const part of parts) {
             if (part.type === DateTimeUtil.SEPARATOR) {
                 dateStruct.push({
                     type: DateTimeUtil.SEPARATOR,
@@ -654,9 +791,27 @@ export abstract class DateTimeUtil {
                     part.formatType = formatterOptions.year;
                     break;
                 }
+                case DateParts.Hour: {
+                    part.formatType = formatterOptions.hour;
+                    if (formatterOptions.hour12) {
+                        part.hour12 = true;
+                    }
+                    break;
+                }
+                case DateParts.Minute: {
+                    part.formatType = formatterOptions.minute;
+                    break;
+                }
+                case DateParts.Second: {
+                    part.formatType = formatterOptions.second;
+                    break;
+                }
+                case DateParts.AmPm: {
+                    part.formatType = formatterOptions.dayPeriod;
+                    break;
+                }
             }
         }
-        DateTimeUtil.fillDatePartsPositions(dateStruct);
         return dateStruct;
     }
 
@@ -664,8 +819,11 @@ export abstract class DateTimeUtil {
         let currentPos = 0;
 
         for (const part of dateArray) {
-            // Day|Month part positions
-            if (part.type === DateParts.Day || part.type === DateParts.Month) {
+            // Day|Month|Hour|Minute|Second|AmPm part positions
+            if (part.type === DateParts.Day || part.type === DateParts.Month ||
+                part.type === DateParts.Hour || part.type === DateParts.Minute || part.type === DateParts.Second ||
+                part.type === DateParts.AmPm
+            ) {
                 // Offset 2 positions for number
                 part.position = [currentPos, currentPos + 2];
                 currentPos += 2;

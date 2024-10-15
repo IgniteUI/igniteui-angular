@@ -13,12 +13,12 @@
 
 .setting-title {
     margin-bottom: 0;
-    color: hsl(var(--ig-secondary-500));
+    color: var(--ig-secondary-500);
 }
 
 .setting-note {
     font-size: 14px;
-    color: hsl(var(--ig-gray-400));
+    color: var(--ig-gray-400);
     margin: 4px 0;
 }
 
