@@ -836,16 +836,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public commitCurrentState(): boolean {
+    public commitCurrentState(): void {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
         if (innerQuery) {
-            return innerQuery.commitCurrentState();
-        } else {
-            if (this._editedExpression && this.selectedField) {
-                this.commitOperandEdit();
-            } else {
-                this.cancelOperandEdit();
-            }
+            innerQuery.commitCurrentState();
+        }
+
+        if (this._editedExpression && this.selectedField) {
+            this.commitOperandEdit();
         }
     }
 
