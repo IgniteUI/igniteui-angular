@@ -1,6 +1,5 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { IBaseEventArgs } from '../core/utils';
-import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 
 /* mustCoerceToInt */
 export enum FilteringExpressionsTreeType {
@@ -118,21 +117,6 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * @memberof FilteringExpressionsTree
      */
     public returnFields?: string[];
-
-    /**
-     * Array of filtering operand providers to be used when generating type hints
-     * during serialization.
-     * @memberof FilteringExpressionsTree
-     */
-    public static expressionTypes? = [
-        IgxStringFilteringOperand,
-        IgxNumberFilteringOperand,
-        IgxBooleanFilteringOperand,
-        IgxDateTimeFilteringOperand,
-        IgxTimeFilteringOperand,
-        IgxDateFilteringOperand,
-        IgxFilteringOperand,
-    ];
 
     constructor(operator: FilteringLogic, fieldName?: string, entity?: string, returnFields?: string[]) {
         this.operator = operator;
