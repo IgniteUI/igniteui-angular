@@ -48,7 +48,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     }
 
     update.addValueTransform('filterable_to_disableFiltering', (args: BoundPropertyObject): void => {
-        args.bindingType = InputPropertyType.STRING;
+        args.bindingType = InputPropertyType.EVAL;
 
         switch (args.value) {
             case 'true':
@@ -58,7 +58,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
                 args.value = 'true';
                 break;
             default:
-                args.value += ` ? 'false' : 'true' `;
+                args.value = `!(${args.value})`;
         }
     });
 

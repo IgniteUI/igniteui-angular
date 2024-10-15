@@ -80,9 +80,9 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
         `
-        <igx-combo disableFiltering="true"></igx-combo>
-        <igx-combo disableFiltering="false"></igx-combo>
-        <igx-combo disableFiltering="myProp ? 'false' : 'true' "></igx-combo>
+        <igx-combo [disableFiltering]="true"></igx-combo>
+        <igx-combo [disableFiltering]="false"></igx-combo>
+        <igx-combo [disableFiltering]="!(myProp)"></igx-combo>
         `
         );
     });
