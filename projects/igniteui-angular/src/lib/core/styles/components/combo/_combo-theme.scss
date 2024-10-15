@@ -100,7 +100,15 @@
     }
 
     %igx-combo__checkbox {
-        margin-inline-end: rem(8);
+        margin-inline-end: rem(8px);
+
+        @if $variant == 'material' {
+            margin-inline-end: rem(16px);
+
+            div {
+                padding: 0;
+            }
+        }
     }
 
     %igx-combo__drop-down {
@@ -113,8 +121,8 @@
     }
 
     %igx-combo__search {
-        padding-inline: pad-inline(rem(16px));
-        padding-block: pad-block(rem(8px));
+        padding-inline: if($variant == 'indigo', pad-inline(rem(12px)), pad-inline(rem(16px)));
+        padding-block: if($variant == 'indigo', pad-block(rem(12px)), pad-block(rem(8px)));
         margin: 0 !important;
         z-index: 26;
         border-bottom: rem(1px) dashed var-get($theme, 'search-separator-border-color');
@@ -124,8 +132,18 @@
             height: auto;
         }
 
+        .igx-input-group__bundle-main {
+            padding-inline-start: 0;
+        }
+
+        .igx-input-group__bundle-start,
+        .igx-input-group__bundle-end {
+            display: none;
+        }
+
         igx-input-group {
-            --ig-size: var(--ig-size-small);
+            --theme: #{if($variant == 'indigo', 'indigo', 'material')};
+            --ig-size: #{if($variant == 'indigo', 2, 1)};
         }
     }
 
@@ -226,10 +244,16 @@
         }
     }
 
-    .igx-input-group:not(.igx-input-group--disabled) {
+    %form-group-bundle:not(%form-group-bundle--disabled):hover,
+    %form-group-bundle:not(%form-group-bundle--disabled):focus-within {
+        %igx-combo__toggle-button {
+            color: var-get($theme, 'toggle-button-foreground-focus');
+            background: var-get($theme, 'toggle-button-background-focus');
+        }
+
         %igx-combo__clear-button {
-            background: var-get($theme, 'clear-button-background');
-            color: var-get($theme, 'clear-button-foreground');
+            color: var-get($theme, 'clear-button-foreground-focus');
+            background: var-get($theme, 'clear-button-background-focus');
         }
     }
 

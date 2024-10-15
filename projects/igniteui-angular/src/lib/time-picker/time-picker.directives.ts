@@ -250,7 +250,7 @@ export class IgxTimeItemDirective {
     public get isSelectedTime(): boolean {
         const currentValue = this.value.length < 2 ? `0${this.value}` : this.value;
         const dateType = this.itemList.type;
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.inputFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
         switch (dateType) {
             case 'hourList':
                 const hourPart = inputDateParts.find(element => element.type === 'hours');
@@ -269,7 +269,7 @@ export class IgxTimeItemDirective {
 
     public get minValue(): string {
         const dateType = this.itemList.type;
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.inputFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
         switch (dateType) {
             case 'hourList':
                 return this.getHourPart(this.timePicker.minDropdownValue);
@@ -297,7 +297,7 @@ export class IgxTimeItemDirective {
 
     public get maxValue(): string {
         const dateType = this.itemList.type;
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.inputFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
         switch (dateType) {
             case 'hourList':
                 return this.getHourPart(this.timePicker.maxDropdownValue);
@@ -353,7 +353,7 @@ export class IgxTimeItemDirective {
     }
 
     private getHourPart(date: Date): string {
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.inputFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat);
         const hourPart = inputDateParts.find(element => element.type === 'hours');
         const ampmPart = inputDateParts.find(element =>element.format.indexOf('a') !== -1 || element.format === 'tt');
         const hour = DateTimeUtil.getPartValue(date, hourPart, hourPart.format.length);

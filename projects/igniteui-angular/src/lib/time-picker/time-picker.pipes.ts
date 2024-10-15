@@ -14,7 +14,7 @@ export class TimeFormatPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
     public transform(value: Date): string {
-        const format = this.timePicker.inputFormat.replace('tt', 'aa');
+        const format = this.timePicker.appliedFormat.replace('tt', 'aa');
         const datePipe = new DatePipe(this.timePicker.locale);
         return datePipe.transform(value, format);
     }
@@ -69,10 +69,10 @@ export class TimeItemPipe implements PipeTransform {
         if (item === null) {
             item = '';
         } else if (dateType && typeof (item) !== 'string') {
-            const leadZeroHour = (item < 10 && (this.timePicker.inputFormat.indexOf('hh') !== -1
-                || this.timePicker.inputFormat.indexOf('HH') !== -1));
-            const leadZeroMinute = (item < 10 && this.timePicker.inputFormat.indexOf('mm') !== -1);
-            const leadZeroSeconds = (item < 10 && this.timePicker.inputFormat.indexOf('ss') !== -1);
+            const leadZeroHour = (item < 10 && (this.timePicker.appliedFormat?.indexOf('hh') !== -1
+                || this.timePicker.appliedFormat?.indexOf('HH') !== -1));
+            const leadZeroMinute = (item < 10 && this.timePicker.appliedFormat?.indexOf('mm') !== -1);
+            const leadZeroSeconds = (item < 10 && this.timePicker.appliedFormat?.indexOf('ss') !== -1);
 
             const leadZero = {
                 hours: leadZeroHour,

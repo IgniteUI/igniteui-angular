@@ -1040,7 +1040,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    public get gridWithEmptyColums() {
+    public get gridWithEmptyColumns() {
         this._sharedStringsData =
             `count="25" uniqueCount="23"><si><t>Column1</t></si><si><t>ID</t></si><si><t>Column2</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Erika Wells</t></si><si><t>Software Development Team Lead</t></si><si><t>Leslie Hansen</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>`;
 
