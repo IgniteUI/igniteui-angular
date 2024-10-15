@@ -28,6 +28,12 @@
             <button igxButton="contained" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
         </div> -->
 
+        <div class="sample-buttons">
+            <button igxButton="contained" igxRipple (click)="canCommitExpressionTree()">can commit</button>
+            <button igxButton="contained" igxRipple (click)="commitExpressionTree()">commit</button>
+            <button igxButton="contained" igxRipple (click)="discardExpressionTree()">discard</button>
+        </div>
+
         <div *ngIf="this.queryResult" style="margin-top: 1em">
             {{ this.queryResult }}
         </div>

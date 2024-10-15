@@ -760,7 +760,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this._editedExpression.expression.searchTree = null;
             }
 
-            if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
+            if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary) {
                 this._editedExpression.expression.searchVal = null;
             }
 
@@ -817,8 +817,36 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             (
                 ((!!this.searchValue.value || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) && !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)) ||
                 (innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined) ||
-                this.selectedField.filters.condition(this.selectedCondition).isUnary
+                this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public canCommitCurrentState(): boolean {
+        const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
+        if (innerQuery) {
+            return innerQuery.canCommitCurrentState();
+        } else {
+            return !this._editedExpression || !this.selectedField || this.operandCanBeCommitted() === true;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public commitCurrentState(): boolean {
+        const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
+        if (innerQuery) {
+            return innerQuery.commitCurrentState();
+        } else {
+            if (this._editedExpression && this.selectedField) {
+                this.commitOperandEdit();
+            } else {
+                this.cancelOperandEdit();
+            }
+        }
     }
 
     /**
@@ -926,7 +954,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
-        } else if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
+        } else if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary) {
             this.conditionSelect.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();

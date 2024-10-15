@@ -22,7 +22,7 @@ import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.dir
  *
  * @example
  * ```html
- * <igx-query-builder [fields]="this.fields">
+ * <igx-query-builder [entities]="this.entities">
  * </igx-query-builder>
  * ```
  */
@@ -160,6 +160,27 @@ export class IgxQueryBuilderComponent implements OnDestroy {
 
     constructor(protected iconService: IgxIconService) {
         this.registerSVGIcons();
+    }
+
+    /**
+     * Returns whether the expression tree can be committed in the current state.
+     */
+    public canCommit(): boolean {
+        return this.queryTree.canCommitCurrentState();
+    }
+
+    /**
+     * Commits the expression tree in the current state.
+     */
+    public commit(): void {
+        this.queryTree.commitCurrentState();
+    }
+
+    /**
+     * Discards all unsaved changes to the expression tree.
+     */
+    public discard(): void {
+        this.queryTree.cancelOperandEdit();
     }
 
     /**
