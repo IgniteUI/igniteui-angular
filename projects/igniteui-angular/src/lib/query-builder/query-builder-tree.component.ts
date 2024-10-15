@@ -231,8 +231,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
         if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
-            //this._expressionTree = expressionTree;
-            this._expressionTree = ExpressionsTreeUtil.recreateTreeFromEntities(expressionTree, this.entities) as FilteringExpressionsTree;
+            if (this.entities && expressionTree) {
+                this._expressionTree = ExpressionsTreeUtil.recreateTreeFromEntities(expressionTree, this.entities) as FilteringExpressionsTree;
+            } else {
+                this._expressionTree = expressionTree;
+            }
             if (!expressionTree) {
                 this._selectedEntity = null;
                 this._selectedReturnFields = [];

@@ -1,15 +1,90 @@
+import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { EntityType, FieldType } from '../grids/common/grid.interface';
 import { GridColumnDataType } from './data-util';
-import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
+import { IFilteringOperation, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 import { IFilteringExpression } from './filtering-expression.interface';
-import { FilteringExpressionsTree, IExpressionTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
+import { IExpressionTree } from './filtering-expressions-tree';
 
 export class ExpressionsTreeUtil {
+    public static recreateTreeFromEntities(tree: IExpressionTree, entities: EntityType[]): IExpressionTree {
+        const isTree = (entry: IExpressionTree | IFilteringExpression): entry is IExpressionTree => {
+            return 'operator' in entry;
+        }
+
+        const entity = entities.find(e => e.name === tree.entity);
+
+        for (let i = 0; i < tree.filteringOperands.length; i++) {
+            const operand = tree.filteringOperands[i];
+            if (isTree(operand)) {
+                tree.filteringOperands[i] = this.recreateTreeFromEntities(operand, entities);
+            } else {
+                if (operand.searchTree) {
+                    operand.searchTree = this.recreateTreeFromEntities(operand.searchTree, entities);
+                }
+                tree.filteringOperands[i] = this.recreateExpression(operand, entity?.fields);
+            }
+        }
+
+        return tree;
+    }
+
+    /**
+     * Recreates the IFilteringOperation for a given expression.
+     * If the `logic` is already populated - it will return the original IFilteringOperation
+     * of the expression.
+     * @param expression The expression for which to resolve the IFilteringOperation.
+     * @param dataType The data type of the field.
+     * @returns The IFilteringOperation for the given expression.
+     */
+    public static recreateOperatorFromDataType(expression: IFilteringExpression, dataType: string): IFilteringOperation {
+        if (!expression.condition?.logic) {
+            return this.generateFilteringCondition(dataType, expression.conditionName || expression.condition?.name);
+        }
+
+        return expression.condition;
+    }
+
+    public static recreateSearchValue(searchValue: any, dataType: string): any {
+        if (!dataType) {
+            return searchValue;
+        }
+        // In ESF, values are stored as a Set.
+        // Those values are converted to an array before returning string in the stringifyCallback
+        // now we need to convert those back to Set
+        if (Array.isArray(searchValue)) {
+            return new Set(searchValue);
+        } else if (dataType.toLowerCase().includes('date') || dataType.toLowerCase().includes('time')) {
+            return DateTimeUtil.parseIsoDate(searchValue);
+        }
+
+        return searchValue;
+    }
+
+    public static recreateExpression(expression: IFilteringExpression, fields: FieldType[]): IFilteringExpression {
+        const field = fields?.find(f => f.field === expression.fieldName);
+
+        if (field && !expression.condition?.logic) {
+            if (!field.filters) {
+                expression.condition = this.recreateOperatorFromDataType(expression, field.dataType);
+            } else {
+                expression.condition = field.filters.condition(expression.conditionName || expression.condition?.name);
+            }
+        }
+
+        if (!expression.conditionName) {
+            expression.conditionName = expression.condition?.name;
+        }
+
+        expression.searchVal = this.recreateSearchValue(expression.searchVal, field?.dataType);
+
+        return expression;
+    }
+
     /**
      * Returns the filtering logic function for a given dataType and condition (contains, greaterThan, etc.)
      */
-    private static generateFilteringCondition(dataType: string, name: string) {
-        let filters;
+    private static generateFilteringCondition(dataType: string, name: string): IFilteringOperation {
+        let filters: IgxFilteringOperand;
         switch (dataType) {
             case GridColumnDataType.Boolean:
                 filters = IgxBooleanFilteringOperand.instance();
@@ -34,91 +109,5 @@ export class ExpressionsTreeUtil {
                 break;
         }
         return filters.condition(name);
-    }
-
-    public static recreateTreeFromEntities(tree: IExpressionTree, entities: EntityType[]): IExpressionTree {
-        const isTree = (entry: IExpressionTree | IFilteringExpression): entry is IExpressionTree => {
-            return 'operator' in entry;
-        }
-
-        const entity = entities.find(e => e.name === tree.entity);
-
-        for (let i = 0; i < tree.filteringOperands.length; i++) {
-            const operand = tree.filteringOperands[i];
-            if (isTree(operand)) {
-                tree.filteringOperands[i] = this.recreateTreeFromEntities(operand, entities);
-            } else {
-                tree.filteringOperands[i] = this.recreateExpression(operand, entity.fields);
-                if(operand.searchTree) {
-                    operand.searchTree = this.recreateTreeFromEntities(operand.searchTree, entities);
-                }
-            }
-        }
-
-        return tree;
-    }
-
-    public static recreateExpression(expression: IFilteringExpression, fields: FieldType[]): IFilteringExpression {
-        const field = fields.find(f => f.field === expression.fieldName);
-        if (field) {
-            if (!field.filters) {
-                expression.condition = this.generateFilteringCondition(field.dataType, expression.conditionName || expression.condition?.name);
-            } else {
-                expression.condition = field.filters.condition(expression.conditionName || expression.condition?.name);
-            }
-        } else {
-            expression = this.recreateOperandFromValueType(expression);
-        }
-
-        return expression;
-    }
-
-    /**
-     * Recreates a `IFilteringExpression` from its serialized state by using the operand's `searchVal` to infer the filtering logic type.
-     * @param operand The operand to reconstruct.
-     * @returns A reconstructed operand with its condition instance populated.
-     */
-    protected static recreateOperandFromValueType(operand: IFilteringExpression): IFilteringExpression {
-        const isValidDate = (str: string) => {
-            const date = Date.parse(str);
-            return !isNaN(date);
-        }
-
-        const hasTime = (str: string) => {
-            const parts = str.split(':');
-            return parts.length === 3;
-        };
-
-        if (operand.searchVal === undefined || operand.searchVal === null) {
-            operand.condition = { ...IgxFilteringOperand.instance().condition(operand.conditionName) };
-            return operand;
-        }
-
-        if (typeof operand.searchVal === 'number') {
-            operand.condition = { ...IgxNumberFilteringOperand.instance().condition(operand.conditionName) };
-        } else if (typeof operand.searchVal === 'boolean') {
-            operand.condition = { ...IgxBooleanFilteringOperand.instance().condition(operand.conditionName) };
-        } else if (typeof operand.searchVal === 'string') {
-            const hasTimeComponent = hasTime(operand.searchVal);
-
-            // Check for date and time components
-            if (isValidDate(operand.searchVal)) {
-                operand.searchVal = new Date(operand.searchVal);
-                if (hasTimeComponent) {
-                    operand.condition = { ...IgxDateTimeFilteringOperand.instance().condition(operand.conditionName) };
-                } else {
-                    operand.condition = { ...IgxDateFilteringOperand.instance().condition(operand.conditionName) };
-                }
-                return operand;
-            } else if(hasTimeComponent) {
-                operand.searchVal = new Date('2024/12/30 ' + operand.searchVal);
-                operand.condition = { ...IgxTimeFilteringOperand.instance().condition(operand.conditionName) };
-                return operand;
-            }
-
-            operand.condition = { ...IgxStringFilteringOperand.instance().condition(operand.conditionName) };
-        }
-
-        return operand as IFilteringExpression;
     }
 }
