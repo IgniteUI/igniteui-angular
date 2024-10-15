@@ -32,7 +32,8 @@ export const SampleEntities = [
         name: 'Orders', fields: [
             { field: 'OrderId', dataType: 'number' },
             { field: 'OrderName', dataType: 'string' },
-            { field: 'OrderDate', dataType: 'date' }
+            { field: 'OrderDate', dataType: 'date' },
+            { field: 'Delivered', dataType: 'boolean' }
         ]
     }
 ];

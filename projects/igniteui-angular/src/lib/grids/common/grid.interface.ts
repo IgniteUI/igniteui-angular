@@ -28,7 +28,7 @@ import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { DataType, GridColumnDataType } from '../../data-operations/data-util';
 import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
-import { IColumnPipeArgs, IFieldPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
+import { IColumnEditorOptions, IColumnPipeArgs, IFieldEditorOptions, IFieldPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
@@ -302,12 +302,13 @@ export interface FieldType {
     header?: string;
     /* alternateType: GridColumnDataType */
     dataType: DataType;
-    filters: IgxFilteringOperand;
-    pipeArgs: IFieldPipeArgs;
-    defaultTimeFormat: string;
-    defaultDateTimeFormat: string;
+    editorOptions?: IFieldEditorOptions;
+    filters?: IgxFilteringOperand;
+    pipeArgs?: IFieldPipeArgs;
+    defaultTimeFormat?: string;
+    defaultDateTimeFormat?: string;
 
-    formatter(value: any, rowData?: any): any;
+    formatter?(value: any, rowData?: any): any;
 }
 
 /**
@@ -382,6 +383,10 @@ export interface ColumnType extends FieldType {
      * string, number, boolean, currency, date, time, etc.
      */
     dataType: GridColumnDataType;
+    /**
+     * Sets properties on the default column editors
+     */
+    editorOptions: IColumnEditorOptions;
     /**
      * The template reference for the custom inline editor of the column
      * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views

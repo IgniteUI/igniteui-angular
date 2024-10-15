@@ -3,6 +3,9 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 18.2.0
+### General
+- `IFilteringExpressionsTree`, `FilteringExpressionsTree`
+    - **Deprecation** The `find` and `findIndex` methods have been deprecated and will be removed in a future version. A `ExpressionsTreeUtil` class has been added which provides the same functionality.
 ### New Features
 - `IgxSimpleCombo`
     - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
@@ -30,9 +33,31 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `IFilteringExpression`
     - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
-
 - `IFilteringOperation`
     - A new optional property called `isNestedQuery` has been introduced. It's used to indicate whether the condition leads to a nested query creation.
+- `ColumnType`, `IgxColumn`
+    - The built-in editors for columns of type `date`, `dateTime` and `time` now use a default input format as per the `IgxGrid`'s `locale`. This is valid both for cell editors and the ones in the filtering UI for all modes - `quickFilter`, `excelStyle` and the Advanced filtering.
+    - In case the `pipeArgs.displayFormat` property of a date-time column is set and contains only numeric date-time parts or such that can be handled by the editors, the built-in editors input format is inferred from it.
+    - To configure the built-in editors, a new `editorOptions` optional property is added that allows to pass optional parameters. Accepts an `IColumnEditorOptions` object with the `dateTimeFormat` property, that is used as input format for the editors of
+    `date`, `dateTime` and `time` column data types:
+        ```ts
+            const editorOptions: IColumnEditorOptions = { Field?
+                dateTimeFormat: 'MM/dd/YYYY',
+            }
+        ```
+        ```html
+            <igx-column field="sampleDate" dataType="date" [editorOptions]="editorOptions"></igx-column>
+        ```
+- `FieldType` (`IgxQueryBuilder`)
+    - Similar to the above, the fields now accept an `editorOptions` object of type `IFieldEditorOptions`. Its `dateTimeFormat` property is used as input format for the query editors of date-time fields.
+- `IgxDateTimeEditor`, `IgxDatePicker`, `IgxTimePicker`, `IgxDateRangePicker`
+    - In case the `inputFormat` property is not set, the input format is inferred from
+    `displayFormat` if set and if it contains only numeric date-time parts.
+- `IgxTimePicker`
+    - The input and display formats are now adjusted based on the locale. For instance, day period time part (AM/PM or a/p) would not be displayed for locales that do not require it.
+- `IgxDateTimeEditor`
+    - Added a new `defaultFormatType` property (`date` | `time` | `dateTime`) which configures the date-time parts
+    according to the target type that the editor mask includes. Defaults to `date`.
 
 ### Themes
 - `Palettes`

@@ -83,7 +83,7 @@ describe('IgxQueryBuilder', () => {
             // entity select should have proper value
             expect(queryBuilder.queryTree.selectedEntity.name).toEqual(queryBuilder.expressionTree.entity);
             // fields input should have proper value
-            expect(queryBuilder.queryTree.selectedReturnFields.length).toEqual(3);
+            expect(queryBuilder.queryTree.selectedReturnFields.length).toEqual(4);
             // nested queries should be collapsed
             const nestedQueryTrees = queryTreeExpressionContainer.querySelectorAll(QueryBuilderConstants.QUERY_BUILDER_TREE);
             for (let i = 0; i < nestedQueryTrees.length; i++) {
@@ -168,7 +168,8 @@ describe('IgxQueryBuilder', () => {
   "returnFields": [
     "OrderId",
     "OrderName",
-    "OrderDate"
+    "OrderDate",
+    "Delivered"
   ]
 }`);
         }));
@@ -603,7 +604,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
             fix.detectChanges();
             const dropdownItems = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement);
-            expect(dropdownItems.length).toBe(3);
+            expect(dropdownItems.length).toBe(4);
             expect((dropdownItems[0] as HTMLElement).innerText).toBe('OrderId');
             expect((dropdownItems[1] as HTMLElement).innerText).toBe('OrderName');
             expect((dropdownItems[2] as HTMLElement).innerText).toBe('OrderDate');
@@ -935,7 +936,8 @@ describe('IgxQueryBuilder', () => {
   "returnFields": [
     "OrderId",
     "OrderName",
-    "OrderDate"
+    "OrderDate",
+    "Delivered"
   ]
 }`);
         }));
@@ -1051,9 +1053,49 @@ describe('IgxQueryBuilder', () => {
   "returnFields": [
     "OrderId",
     "OrderName",
-    "OrderDate"
+    "OrderDate",
+    "Delivered"
   ]
 }`);
+        }));
+
+        it('Should disable value fields when isNestedQuery condition is selected', fakeAsync(() => {
+            //Run test for all data type fields of the Order entity 
+            for (let i = 0; i <= 3; i++) {                 
+                QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0); // Click the initial 'Add Or Group' button.
+                tick(100);
+                fix.detectChanges();
+
+                QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+                tick(100);
+                fix.detectChanges();
+
+                QueryBuilderFunctions.selectColumnInEditModeExpression(fix, i); // Select 'OrderId','OrderName','OrderDate','Delivered' column.
+                
+                let InConditionIndex;
+                switch(i){
+                    case 0:
+                    case 1: InConditionIndex = 10; break;// for string and number
+                    case 2: InConditionIndex = 16; break; //for date
+                    case 3: InConditionIndex = 7; break; // for boolean
+                }
+
+                //Verify 'In' disables value input and renders empty sub query
+                QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex); // Select 'In' operator.
+                QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
+                let nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
+                expect(nestedTree).toBeDefined();
+
+                //Verify 'NotIn' disables value input and renders empty sub query
+                QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex + 1); // Select 'NotIn' operator.
+                QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
+                nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
+                expect(nestedTree).toBeDefined();
+
+                const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
+                closeBtn.click();
+                fix.detectChanges();
+            }
         }));
 
         it('Should correctly apply an \'not-in\' column condition through UI.', fakeAsync(() => {
@@ -1135,7 +1177,8 @@ describe('IgxQueryBuilder', () => {
   "returnFields": [
     "OrderId",
     "OrderName",
-    "OrderDate"
+    "OrderDate",
+    "Delivered"
   ]
 }`);
         }));
@@ -1513,7 +1556,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Verify all inputs
-            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Orders', 'OrderId, OrderName, OrderDate', '', '', '');
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Orders', 'OrderId, OrderName, OrderDate, Delivered', '', '', '');
         }));
 
         it('Should NOT reset all inputs when the entity is not changed.', fakeAsync(() => {

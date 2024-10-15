@@ -26,6 +26,7 @@ import { igxI18N } from '../../core/i18n/resources';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeFr from '@angular/common/locales/fr';
+import localeBg from '@angular/common/locales/bg';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
@@ -53,6 +54,8 @@ import { formatDate, getComponentSize } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { GridResourceStringsEN } from '../../core/i18n/grid-resources';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
+import { IgxTimePickerComponent } from '../../time-picker/time-picker.component';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -451,6 +454,77 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const expectedResult = today.getFullYear() - 3;
             expect(month.innerHTML.trim()).toEqual(expectedResult.toString());
         }));
+
+        it('Time/DateTime: Should set editorOptions.dateTimeFormat as inputFormat to the quick filter editor', fakeAsync(() => {
+            const releaseDateTimeCol = grid.getColumnByName('ReleaseDateTime');
+            const releaseTimeCol = grid.getColumnByName('ReleaseTime');
+            releaseDateTimeCol.editorOptions = {
+                dateTimeFormat: 'dd-MM-yyyy'
+            };
+            releaseDateTimeCol.pipeArgs = {
+                format: 'yyyy-dd-MM'
+            };
+
+            releaseTimeCol.editorOptions = {
+                dateTimeFormat: 'hh:mm'
+            };
+            releaseTimeCol.pipeArgs = {
+                format: 'longTime'
+            };
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
+
+            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            let inputDirectiveInstance  = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
+                                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(inputDirectiveInstance.inputFormat).toMatch('dd-MM-yyyy');
+            expect(inputDirectiveInstance.displayFormat).toMatch('yyyy-dd-MM');
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseTime');
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            inputDirectiveInstance = filterUIRow.query(By.directive(IgxTimePickerComponent)).componentInstance;
+            expect(inputDirectiveInstance.inputFormat).toMatch('hh:mm');
+            expect(inputDirectiveInstance.displayFormat).toMatch('longTime');
+        }));
+
+        it('Time/DateTime: Should set pipeArgs.format as inputFormat to the quick filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            const releaseDateTimeCol = grid.getColumnByName('ReleaseDateTime');
+            const releaseTimeCol = grid.getColumnByName('ReleaseTime');
+
+            releaseDateTimeCol.pipeArgs = {
+                format: 'yyyy--dd--MM'
+            };
+
+            releaseTimeCol.pipeArgs = {
+                format: 'shortTime'
+            };
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            let dateTimeEditor  = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
+                                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat).toMatch('yyyy--dd--MM');
+            expect(dateTimeEditor.displayFormat).toMatch('yyyy--dd--MM');
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseTime');
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            dateTimeEditor = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
+                                                .injector.get(IgxDateTimeEditorDirective);
+            // since 'shortTime' is numeric, input format will include its numeric parts
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch('hh:mm tt');
+            expect(dateTimeEditor.displayFormat).toMatch('shortTime');
+        }));
+
 
         // UI tests custom column
         it('UI tests on custom column', fakeAsync(() => {
@@ -5123,6 +5197,121 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(1);
         }));
 
+        it('DateTime: Should use editorOptions.dateTimeFormat as inputFormat to the filter editor in the custom filtering dialog', fakeAsync(() => {
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDateTime = rec.ReleaseDateTime ? rec.ReleaseDateTime.toISOString() : null;
+                return newRec;
+            });
+            const column = grid.getColumnByName('ReleaseDateTime');
+            column.editorOptions = {
+                dateTimeFormat: 'dd-MM-yyyy HH:mm aaaaa'
+            }
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDateTime');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                    .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat).toMatch(column.editorOptions.dateTimeFormat);
+            expect(dateTimeEditor.displayFormat).toMatch(column.pipeArgs.format);
+        }));
+
+        it('DateTime: Should use pipeArgs.format as inputFormat to the filter editor in the custom filtering dialog if editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDateTime = rec.ReleaseDateTime ? rec.ReleaseDateTime.toISOString() : null;
+                return newRec;
+            });
+            const column = grid.getColumnByName('ReleaseDateTime');
+            column.pipeArgs = {
+                format: 'dd-MM-yyyy'
+            }
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDateTime');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat.normalize('NFKC')).toMatch('dd-MM-yyyy');
+            expect(dateTimeEditorDirective.displayFormat.normalize('NFKC')).toMatch('dd-MM-yyyy');
+        }));
+
+        it('DateTime: custom filtering dialog input locale should be set as the grid locale', fakeAsync(() => {
+            registerLocaleData(localeBg, 'bg');
+            grid.locale = 'bg';
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDateTime = rec.ReleaseDateTime ? rec.ReleaseDateTime.toISOString() : null;
+                return newRec;
+            });
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDateTime');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.locale).toMatch(grid.locale);
+        }));
+
+        it('Time: Should use editorOptions.dateTimeFormat as inputFormat to the filter editor in the custom filtering dialog', fakeAsync(() => {
+            const column = grid.getColumnByName('ReleaseTime');
+            column.editorOptions = {
+                dateTimeFormat: 'HH:mm'
+            }
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseTime');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat).toMatch(column.editorOptions.dateTimeFormat);
+            expect(dateTimeEditorDirective.displayFormat).toMatch(column.pipeArgs.format);
+        }));
+
+        it('Time: Should use pipeArgs.format as inputFormat to the filter editor in the custom filtering dialog if editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            const column = grid.getColumnByName('ReleaseTime');
+            column.pipeArgs = {
+                format: 'HH:mm'
+            }
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseTime');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat).toMatch(column.pipeArgs.format);
+            expect(dateTimeEditorDirective.displayFormat).toMatch(column.pipeArgs.format);
+        }));
         it('Should filter grid through custom date filter dialog when using pipeArgs for the column', fakeAsync(() => {
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;

@@ -11,7 +11,7 @@
     class="igx-query-builder__main"
     (scroll)="onExpressionsScrolled()"
 >
-    <ng-container *ngIf="!rootGroup">
+    <ng-container *ngIf="!rootGroup && this.entities.length > 0 && !this.entities[0].name">
         <div class="igx-query-builder__root">
             <div class="igx-query-builder__root-actions">
                 <button type="button"
@@ -328,7 +328,8 @@
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
                     [formatter]="selectedField.formatter"
-                    [inputFormat]="selectedField.defaultTimeFormat"
+                    [displayFormat]="selectedField.pipeArgs.format"
+                    [inputFormat]="selectedField.editorOptions?.dateTimeFormat"
                 >
                     <!-- disable default icons -->
                     <label igxLabel>{{this.resourceStrings.igx_query_builder_time_placeholder}}</label>
@@ -355,7 +356,10 @@
                                 (selectedField.filters.condition(selectedCondition).isUnary ||
                                 selectedField.filters.condition(selectedCondition).isNestedQuery))
                         "
-                        [igxDateTimeEditor]="selectedField.defaultDateTimeFormat"
+                        [locale]="this.locale"
+                        [igxDateTimeEditor]="selectedField.editorOptions?.dateTimeFormat"
+                        [defaultFormatType]="selectedField.dataType"
+                        [displayFormat]="selectedField.pipeArgs.format"
                     />
                 </igx-input-group>
             </ng-template>
@@ -517,7 +521,7 @@
         </div>
     </ng-template>
 
-    <ng-container *ngIf="rootGroup">
+    <ng-container *ngIf="rootGroup && this.entities.length > 0 && this.entities[0].name">
         <ng-container
             *ngTemplateOutlet="
                 expressionGroupTemplate;
