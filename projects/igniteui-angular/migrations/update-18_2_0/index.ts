@@ -3,7 +3,7 @@ import type {
     SchematicContext,
     Tree
 } from '@angular-devkit/schematics';
-import { UpdateChanges } from '../common/UpdateChanges';
+import { BoundPropertyObject, InputPropertyType, UpdateChanges } from '../common/UpdateChanges';
 
 const version = '18.2.0';
 
@@ -47,5 +47,21 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         });
     }
 
+    update.addValueTransform('filterable_to_disableFiltering', (args: BoundPropertyObject): void => {
+        args.bindingType = InputPropertyType.EVAL;
+
+        switch (args.value) {
+            case 'true':
+                args.value = 'false';
+                break;
+            case 'false':
+                args.value = 'true';
+                break;
+            default:
+                args.value = `!(${args.value})`;
+        }
+    });
+
     update.applyChanges();
 };
+
