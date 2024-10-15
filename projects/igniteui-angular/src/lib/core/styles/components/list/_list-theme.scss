@@ -332,6 +332,31 @@
         @if $variant == 'indigo' {
             gap: rem(4px);
         }
+
+        igx-avatar {
+            --ig-size: #{if($variant == 'indigo', 2, 1)};
+        }
+
+        @if $variant == 'material' {
+            %cbx-composite-wrapper {
+                padding: 0;
+            }
+
+            %cbx-label-pos--after {
+                margin-inline-start: rem(12px);
+            }
+
+            %cbx-label-pos--before {
+                margin-inline-end: rem(12px);
+            }
+
+            %cbx-label-pos--before,
+            %cbx-label-pos--after {
+                &:empty {
+                    margin: 0;
+                }
+            }
+        }
     }
 
     %igx-list--empty {
@@ -522,10 +547,6 @@
                 margin-inline-start: 0;
                 margin-block: pad-block(map.get($list-icon-margin-block, 'compact'), map.get($list-icon-margin-block, 'cosy'), map.get($list-icon-margin-block, 'comfortable'));
             }
-        }
-
-        > igx-avatar {
-            --ig-size: #{if($variant == 'indigo', 2, 1)};
         }
 
         &:empty {

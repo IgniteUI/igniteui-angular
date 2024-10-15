@@ -129,7 +129,7 @@
     $icon-size-default: rem(24px);
     $icon-space-default: rem(8px);
 
-    $icon-size-indigo: rem(14px);
+    $icon-size-indigo: rem(16px);
     $icon-space-indigo: rem(4px);
 
     $node-indent: map.get((
@@ -186,6 +186,12 @@
         --tree-size: var(--component-size);
         flex-direction: column;
 
+        %cbx-composite-wrapper {
+            @if $variant == 'material' {
+                padding: 0;
+            }
+        }
+
         @if $variant == 'indigo' {
             border-radius: rem(4px);
         }
@@ -239,11 +245,8 @@
             }
         }
 
-        // We need this here, since we count on it to calculate the width of the tree drop indicator
         igx-icon {
-            width: var(--igx-icon-size, #{$icon-size});
-            height: var(--igx-icon-size, #{$icon-size});
-            font-size: var(--igx-icon-size, #{$icon-size});
+            --component-size: #{if($variant == 'indigo', 2, 3)};
         }
 
         [dir='rtl'] & {
@@ -365,8 +368,9 @@
         --spacer: #{sizable(#{map.get($node-indent, 'compact')}, #{map.get($node-indent, 'cosy')}, #{map.get($node-indent, 'comfortable')})};
 
         @if $variant == 'indigo' {
-            --spacer: #{sizable(24px)};
+            --spacer: #{$icon-size};
         }
+
         width: var(--spacer);
         display: inline-block;
     }

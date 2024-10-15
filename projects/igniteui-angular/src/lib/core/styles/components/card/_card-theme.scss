@@ -115,7 +115,7 @@
     $not-material-theme: $variant != 'material';
 
     $card-heading-padding: rem(16px, 16px);
-    $card-content-padding: rem(14px);
+    $card-content-padding: rem(16px);
     $card-actions-padding: rem(8px);
 
     $card-tgroup-margin: 0 em(16px);
@@ -134,6 +134,10 @@
 
         &:hover {
             box-shadow: none;
+        }
+
+        igx-avatar {
+            --ig-size: #{if($variant == 'indigo', 3, 1)};
         }
     }
 
@@ -165,6 +169,10 @@
             display: block;
             padding: 0;
         }
+
+        @if $variant == 'fluent' {
+            padding: rem(16px) rem(8px);
+        }
     }
 
     %igx-card-header--vertical {
@@ -194,10 +202,6 @@
         @if $variant == 'indigo' {
             margin-inline-end: rem(8px);
             margin-block: auto;
-
-            igx-avatar {
-                --ig-size: 3;
-            }
         }
 
         &:empty {
@@ -275,6 +279,19 @@
 
         &:last-child {
             margin-block-start: auto;
+        }
+    }
+
+    @if $variant == 'bootstrap' {
+        %igx-card-content {
+            @if $variant == 'bootstrap' {
+                padding-block: rem(16px) rem(24px);
+                padding-inline: rem(24px);
+            }
+        }
+
+        %igx-card-actions {
+            padding: rem(16px);
         }
     }
 

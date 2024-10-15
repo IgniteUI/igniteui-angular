@@ -30,6 +30,7 @@
 @use '../components/toast/toast-theme' as *;
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
+@use '../components/label/label-theme' as *;
 
 @mixin typography() {
     @include badge-typography();
@@ -98,7 +99,9 @@
     @include switch-typography($categories: (
         label: 'body-2'
     ));
-    @include tabs-typography();
+    @include tabs-typography($categories: (
+        label: 'body-2'
+    ));
     @include time-picker-typography();
     @include stepper-typography();
     @include toast-typography($categories: (
@@ -106,4 +109,7 @@
     ));
     @include tooltip-typography();
     @include tree-typography();
+    @include label-typography($categories: (
+        label: 'subtitle-2'
+    ));
 }
