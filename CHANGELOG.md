@@ -14,6 +14,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxQueryBuilder`
     - Introduced ability to create nested queries by specifying IN/NOT IN operators.
     - Added the `entities` property that accepts an array of `EntityType` objects describing an entity with its name and an array of fields. The `fields` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
+    - Added the `canCommit`, `commit` and `discard` public methods that allows the user to save/discard the current state of the expression tree.
     - Added option to template the search value input:
     ```
     <ng-template igxQueryBuilderSearchValue 
