@@ -54,6 +54,7 @@ import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
+import { ExpressionsTreeUtil } from '../data-operations/expressions-tree-util';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -230,7 +231,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
         if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
-            this._expressionTree = expressionTree;
+            //this._expressionTree = expressionTree;
+            this._expressionTree = ExpressionsTreeUtil.recreateTreeFromEntities(expressionTree, this.entities) as FilteringExpressionsTree;
             if (!expressionTree) {
                 this._selectedEntity = null;
                 this._selectedReturnFields = [];
@@ -1347,7 +1349,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     const exprCopy: IFilteringExpression = {
                         fieldName: filteringExpr.fieldName,
                         condition: filteringExpr.condition,
-                        conditionName: filteringExpr.condition.name,
+                        conditionName: filteringExpr.condition?.name || filteringExpr.conditionName,
                         searchVal: filteringExpr.searchVal,
                         searchTree: filteringExpr.searchTree, // this.createExpressionGroupItem(filteringExpr.searchTree, groupItem),
                         ignoreCase: filteringExpr.ignoreCase

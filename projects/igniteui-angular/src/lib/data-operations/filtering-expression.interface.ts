@@ -1,5 +1,5 @@
 import { IFilteringOperation } from './filtering-condition';
-import { IExpressionTree, ISerializedFilteringExpressionTree } from './filtering-expressions-tree';
+import { IExpressionTree } from './filtering-expressions-tree';
 
 /* mustCoerceToInt */
 export enum FilteringLogic {
@@ -19,9 +19,4 @@ export declare interface IFilteringExpression {
     searchVal?: any;
     searchTree?: IExpressionTree;
     ignoreCase?: boolean;
-}
-
-export declare interface ISerializedFilteringExpression extends IFilteringExpression {
-    expressionType?: string;
-    searchTree?: ISerializedFilteringExpressionTree;
 }

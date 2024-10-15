@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
-import { IExpressionTree } from '../data-operations/filtering-expressions-tree';
+import { FilteringExpressionsTree, IExpressionTree } from '../data-operations/filtering-expressions-tree';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { EntityType, FieldType } from '../grids/common/grid.interface';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
@@ -14,6 +14,7 @@ import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from '../icon/icon.service';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
+import { ExpressionsTreeUtil } from '../data-operations/expressions-tree-util';
 
 /**
  * A component used for operating with complex filters by creating or editing conditions
@@ -78,7 +79,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
             this._fields = fields;
             this.entities = [
                 {
-                    name: null, 
+                    name: null,
                     fields: fields
                 }
             ];
@@ -98,7 +99,10 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
         if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
-            this._expressionTree = expressionTree;
+            // rehydrate, preserve original somehow?
+            // double the field, keep original
+            //this._expressionTree = expressionTree;
+            this._expressionTree = ExpressionsTreeUtil.recreateTreeFromEntities(expressionTree, this.entities) as FilteringExpressionsTree;
         }
     }
 

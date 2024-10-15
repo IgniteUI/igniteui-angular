@@ -1,4 +1,4 @@
-import { FilteringLogic, IFilteringExpression, ISerializedFilteringExpression } from './filtering-expression.interface';
+import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { IBaseEventArgs } from '../core/utils';
 import { IFilteringOperation, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 
@@ -25,10 +25,6 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
     find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
 
     findIndex(fieldName: string): number;
-}
-
-export declare interface ISerializedFilteringExpressionTree extends IExpressionTree {
-    filteringOperands: (ISerializedFilteringExpressionTree | ISerializedFilteringExpression)[];
 }
 
 /* marshalByValue */
@@ -211,56 +207,5 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
             }
         }
         return false;
-    }
-
-    /**
-     * Converts the expression tree to an intermediate object which
-     * contains type hints for operand deserialization.
-     *
-     * This method is called by `JSON.stringify` when performing serialization.
-     * ```typescript
-     * let serializedTree = JSON.stringify(tree);
-     * ```
-     * @memberof FilteringExpressionsTree
-     * @returns The intermediate `ISerializedFilteringExpressionTree` object.
-     */
-    public toJSON(): ISerializedFilteringExpressionTree {
-        const containsCondition = (instance: IgxFilteringOperand, operand: IFilteringOperation) => {
-            return instance.operations.find(op =>
-                op.logic.toString() === operand.logic.toString() && op.name === operand.name
-            );
-        };
-
-        const packTree = (tree: IExpressionTree) => {
-            const copy = new FilteringExpressionsTree(tree.operator, tree.fieldName, tree.entity, tree.returnFields) as ISerializedFilteringExpressionTree;
-
-            tree.filteringOperands?.forEach(op => {
-                const expression = op as IFilteringExpression;
-                if (expression.condition || expression.conditionName) {
-                    let resolvedType = 'unknown';
-
-                    if (expression.condition && expression.condition.logic) {
-                        FilteringExpressionsTree.expressionTypes?.forEach(type => {
-                            const match = containsCondition(type.instance(), expression.condition);
-                            if (match !== undefined) {
-                                resolvedType = type.name.replaceAll('_', '');
-                            }
-                        });
-                    }
-
-                    if (expression.searchTree) {
-                        expression.searchTree = packTree(expression.searchTree);
-                    }
-
-                    copy.filteringOperands.push({ ...op, expressionType: resolvedType, conditionName: expression?.condition?.name || expression.conditionName });
-                } else {
-                    copy.filteringOperands.push(packTree(op as IExpressionTree));
-                }
-            });
-
-            return copy;
-        };
-
-        return packTree(this);
     }
 }
