@@ -1,12 +1,10 @@
 import { ITreeResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const TreeResourceStringsPL_: ExpandRequire<ITreeResourceStrings> = {
-    igx_expand: 'Rozwiń',
-    igx_collapse: 'Zwiń'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Polish resource strings for IgxTree
  */
-export const TreeResourceStringsPL = TreeResourceStringsPL_ as ExpandRequire<ITreeResourceStrings>;
+export const TreeResourceStringsPL = {
+    igx_expand: 'Rozwiń',
+    igx_collapse: 'Zwiń'
+} satisfies MakeRequired<ITreeResourceStrings>;
