@@ -6,7 +6,7 @@
     <igx-icon family="default" name="close"></igx-icon>
 </ng-template>
 
-<ng-container #SelectFromTemplate>
+<ng-container SelectFromTemplate>
     <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && this.entities.length > 0 && this.entities[0].name) ? 'flex' : 'none'">
     <igx-select #entitySelect
         type="box"
@@ -220,7 +220,7 @@
                     <igx-icon id="add-expression">add</igx-icon>
                 </button>
             </div>
-            <div *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree"
+            <div *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree && expressionItem.expression.searchTree.filteringOperands.length > 0"
                 igxButton
                 class="igx-filter-tree__details-button"
                 (click)="expanderClick($event, expressionItem)"
@@ -481,14 +481,6 @@
             ></div>
 
             <div class="igx-filter-tree__expression">
-                <!-- <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && this.entities.length > 0 && this.entities[0].name) ? 'flex' : 'none'">
-                    REMOVED!
-                    <!-- <ng-container *ngIf="!expressionItem.parent">
-                        <!-- <ng-container *ngTemplateOutlet="SelectFromTemplate">                        
-                        </ng-container> 
-                    </ng-container> 
-                </div> -->
-
                 <ng-container *ngFor="let expr of expressionItem?.children">
                     <ng-container
                         *ngTemplateOutlet="
