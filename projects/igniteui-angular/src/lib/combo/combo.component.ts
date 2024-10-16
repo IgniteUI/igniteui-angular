@@ -132,20 +132,20 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public autoFocusSearch = true;
 
     /**
-     * Enables/disables filtering in the list. The default is `true`.
-     *
-     * @deprecated in version 14.0.0. Use the `filteringOptions.filterable` property instead.
+     * Enables/disables filtering in the list. The default is `false`.
      */
     @Input({ transform: booleanAttribute })
-    public get filterable(): boolean {
-        return this.filteringOptions.filterable;
+    public get disableFiltering(): boolean {
+        return this._disableFiltering || this.filteringOptions.filterable === false;
     }
-    public set filterable(value: boolean) {
-        this.filteringOptions = Object.assign({}, this.filteringOptions, { filterable: value });
+    public set disableFiltering(value: boolean) {
+        this._disableFiltering = value;
     }
 
     /**
      * Defines the placeholder value for the combo dropdown search field
+     *
+     * @deprecated in version 18.2.0. Replaced with values in the localization resource strings.
      *
      * ```typescript
      * // get
@@ -158,7 +158,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     @Input()
-    public searchPlaceholder = 'Enter a Search Term';
+    public searchPlaceholder: string;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -176,7 +176,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
-        return this.filteringOptions.filterable ? this._filteredData : this.data;
+        return this.disableFiltering ? this.data : this._filteredData;
     }
     /** @hidden @internal */
     public set filteredData(val: any[] | null) {
@@ -194,6 +194,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     protected _prevInputValue = '';
 
     private _displayText: string;
+    private _disableFiltering = false;
 
     constructor(
         elementRef: ElementRef,
@@ -219,7 +220,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public get displaySearchInput(): boolean {
-        return this.filteringOptions.filterable || this.allowCustomValues;
+        return !this.disableFiltering || this.allowCustomValues;
     }
 
     /**
@@ -459,6 +460,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         return this.isRemote
             ? this.getRemoteSelection(selection, oldSelection)
             : this.concatDisplayText(newSelection);
+    }
+
+    protected getSearchPlaceholderText(): string {
+        return this.searchPlaceholder ||
+            (this.disableFiltering ? this.resourceStrings.igx_combo_addCustomValues_placeholder : this.resourceStrings.igx_combo_filter_search_placeholder);
     }
 
     /** Returns a string that should be populated in the combo's text box */
