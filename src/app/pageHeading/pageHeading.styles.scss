@@ -10,8 +10,11 @@
 }
 
 :host ::ng-deep {
+    --ph-background: var(--ig-primary-800);
+    --ph-foreground: var(--ig-primary-800-contrast);
+
     .hamburger {
-        color: var(--ig-surface-500-contrast);
+        color: var(--ph-foreground);
         margin-right: rem(16px);
 
         [dir='rtl'] & {
@@ -27,7 +30,7 @@
     justify-content: space-between;
     height: rem(90px);
     padding: 0 rem(16px);
-    background: hsla(var(--ig-primary-500));
+    background: var(--ph-background);
     overflow: hidden;
 
     .wrapper {
@@ -36,7 +39,7 @@
     }
 
     .title {
-        color: hsla(var(--ig-primary-500-contrast));
+        color: var(--ph-foreground);
         margin: 0;
         text-transform: capitalize;
         white-space: nowrap;
