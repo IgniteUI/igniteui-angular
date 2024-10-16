@@ -1987,6 +1987,7 @@ describe('IgxQueryBuilder', () => {
 
         it('canCommit should return the correct validity state of currently edited condition.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
             tick(100);
             fix.detectChanges();
 
@@ -2029,12 +2030,33 @@ describe('IgxQueryBuilder', () => {
             tick(100);
             fix.detectChanges();
             expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Click on the 'cancel' button
+            const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
+            UIInteractions.simulateClickEvent(closeButton);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the Query Builder validity state for UNARY condition.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+
+            expect(queryBuilder.canCommit()).toBeTrue();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeTrue();
         }));
     });
 
     describe('API', () => {
         beforeEach(fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
             tick(100);
             fix.detectChanges();
 
@@ -2085,7 +2107,7 @@ describe('IgxQueryBuilder', () => {
             tick(100);
             fix.detectChanges();
 
-            // Apply the changes
+            // Discard the changes
             queryBuilder.discard();
             tick(100);
             fix.detectChanges();
@@ -2097,7 +2119,64 @@ describe('IgxQueryBuilder', () => {
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
         }));
 
-        it(`Should NOT throw errors when an invalid condition is commited through API.`, fakeAsync(() => {
+        it('Should properly commit/discard changes in nested query.', fakeAsync(() => {
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+            tick(50);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Start editing expression in the nested query
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true, 1);
+            tick(50);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            // Discard the changes
+            queryBuilder.discard();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the nested query is collapsed
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+
+            // Start editing expression in the nested query
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true, 1);
+            tick(50);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '1');
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Apply the changes
+            queryBuilder.commit();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the nested query is collapsed
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+
+            // Expand the nested query
+            const toggleBtn = fix.debugElement.query(By.css('.igx-filter-tree__details-button')).nativeElement;
+            toggleBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify edited expressions
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Id', 'Equals', '1', 1);
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'True', undefined, 1);
+        }));
+
+        it('Should NOT throw errors when an invalid condition is committed through API.', fakeAsync(() => {
             spyOn(console, 'error');
             // Double-click the existing chip to enter edit mode.
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
