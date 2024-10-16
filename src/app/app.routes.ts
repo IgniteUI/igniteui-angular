@@ -11,6 +11,7 @@ import { CalendarShowcaseSampleComponent } from './calendar-showcase/calendar-sh
 import { CardSampleComponent } from './card/card.sample';
 import { CardShowcaseSampleComponent } from './card-showcase/card-showcase.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
+import { CarouselShowcaseSampleComponent } from './carousel-showcase/carousel-showcase.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
 import { ChipsShowcaseSampleComponent } from './chips-showcase/chips-showcase.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
@@ -247,6 +248,10 @@ export const appRoutes: Routes = [
     {
         path: 'carousel',
         component: CarouselSampleComponent
+    },
+    {
+        path: 'carousel-showcase',
+        component: CarouselShowcaseSampleComponent
     },
     {
         path: 'combo',

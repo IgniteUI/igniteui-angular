@@ -29,6 +29,11 @@ export class BadgeShowcaseSampleComponent implements OnInit {
                 type: 'select',
                 options: ['default', 'info', 'success', 'warning', 'error']
             }
+        },
+        outlined: {
+            control: {
+                type: 'boolean',
+            }
         }
     };
 
@@ -56,6 +61,10 @@ export class BadgeShowcaseSampleComponent implements OnInit {
 
     public get shape() {
         return this.propertyChangeService.getProperty('shape');
+    }
+
+    public get outlined() {
+        return this.propertyChangeService.getProperty('outlined');
     }
 }
 

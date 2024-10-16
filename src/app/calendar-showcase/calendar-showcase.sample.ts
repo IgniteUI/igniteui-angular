@@ -1,6 +1,5 @@
 import {
     Component,
-    // ViewChild,
     CUSTOM_ELEMENTS_SCHEMA,
     OnInit,
     TemplateRef,
@@ -9,7 +8,6 @@ import {
 import { NgFor, DatePipe, DATE_PIPE_DEFAULT_OPTIONS } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import {
-    // IFormattingOptions,
     IgxButtonDirective,
     IgxButtonGroupComponent,
     IgxDateRangePickerModule,
@@ -31,7 +29,6 @@ import {
 } from "igniteui-angular";
 import { PropertyPanelConfig } from '../properties-panel/properties-panel.component';
 import { PropertyChangeService } from '../properties-panel/property-change.service';
-// import { DateRangeDescriptor, DateRangeType } from 'igniteui-angular';
 
 import { defineComponents, IgcCalendarComponent } from "igniteui-webcomponents";
 
@@ -88,6 +85,7 @@ export class CalendarShowcaseSampleComponent implements OnInit {
             }
         },
         weekStart: {
+            label: 'Week Start',
             control: {
                 type: 'button-group',
                 options: ['monday', 'sunday'],
@@ -102,6 +100,7 @@ export class CalendarShowcaseSampleComponent implements OnInit {
             }
         },
         headerOrientation: {
+            label: 'Header Orientation',
             control: {
                 type: 'button-group',
                 options: ['horizontal', 'vertical'],
@@ -109,6 +108,7 @@ export class CalendarShowcaseSampleComponent implements OnInit {
             }
         },
         viewOrientation: {
+            label: 'View Orientation',
             control: {
                 type: 'button-group',
                 options: ['horizontal', 'vertical'],
@@ -116,24 +116,28 @@ export class CalendarShowcaseSampleComponent implements OnInit {
             }
         },
         hideHeader: {
+            label: 'Hide Header',
             control: {
                 type: 'boolean',
                 defaultValue: false
             }
         },
         hideOutsideDays: {
+            label: 'Hide Outside Days',
             control: {
                 type: 'boolean',
                 defaultValue: false
             }
         },
         showWeekNumbers: {
+            label: 'Show Week Numbers',
             control: {
                 type: 'boolean',
                 defaultValue: false
             }
         },
         monthsViewNumber: {
+            label: 'Number of Months',
             control: {
                 type: 'number',
                 min: 1,
@@ -156,49 +160,49 @@ export class CalendarShowcaseSampleComponent implements OnInit {
         range: 'range'
     };
 
-    public get locale() {
+    protected get locale() {
         return this.propertyChangeService.getProperty('locale');
     }
 
-    public get weekStartWC() {
+    protected get weekStartWC() {
         return this.propertyChangeService.getProperty('weekStart') || 'monday';
     }
 
-    public get weekStartAngular() {
+    protected get weekStartAngular() {
         const weekStart = this.propertyChangeService.getProperty('weekStart') || 'monday';
         return this.weekStartMap[weekStart];
     }
 
-    public get selectionWC() {
+    protected get selectionWC() {
         return this.propertyChangeService.getProperty('selection');
     }
 
-    public get selectionAngular() {
+    protected get selectionAngular() {
         const selection = this.propertyChangeService.getProperty('selection');
         return this.selectionMap[selection];
     }
 
-    public get headerOrientation() {
+    protected get headerOrientation() {
         return this.propertyChangeService.getProperty('headerOrientation');
     }
 
-    public get viewOrientation() {
+    protected get viewOrientation() {
         return this.propertyChangeService.getProperty('viewOrientation');
     }
 
-    public get hideHeader() {
+    protected get hideHeader() {
         return this.propertyChangeService.getProperty('hideHeader');
     }
 
-    public get hideOutsideDays() {
+    protected get hideOutsideDays() {
         return this.propertyChangeService.getProperty('hideOutsideDays');
     }
 
-    public get showWeekNumbers() {
+    protected get showWeekNumbers() {
         return this.propertyChangeService.getProperty('showWeekNumbers');
     }
 
-    public get monthsViewNumber() {
+    protected get monthsViewNumber() {
         return this.propertyChangeService.getProperty('monthsViewNumber');
     }
 
@@ -207,7 +211,7 @@ export class CalendarShowcaseSampleComponent implements OnInit {
         this.propertyChangeService.setCustomControls(this.customControlsTemplate);
     }
 
-    public onSelection(event: Date | Date[]) {
+    protected onSelection(event: Date | Date[]) {
         console.log(`Selected Date(s): ${event}`);
     }
 

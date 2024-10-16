@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -18,6 +18,8 @@ import {
 } from 'igniteui-angular';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import { defineComponents, IgcChipComponent, IgcAvatarComponent, IgcButtonComponent, IgcIconButtonComponent, IgcCircularProgressComponent} from "igniteui-webcomponents";
+import { PropertyPanelConfig } from '../properties-panel/properties-panel.component';
+import { PropertyChangeService } from '../properties-panel/property-change.service';
 
 defineComponents(IgcChipComponent, IgcAvatarComponent, IgcButtonComponent, IgcIconButtonComponent, IgcCircularProgressComponent);
 
@@ -46,32 +48,85 @@ defineComponents(IgcChipComponent, IgcAvatarComponent, IgcButtonComponent, IgcIc
         SizeSelectorComponent
     ]
 })
-export class ChipsShowcaseSampleComponent {
-    public chipTypes = ['default', 'primary', 'info', 'success', 'warning', 'danger'];
+export class ChipsShowcaseSampleComponent implements OnInit {
+    @ViewChild('customControls', { static: true }) public customControlsTemplate!: TemplateRef<any>;
 
-    public isDisabled = false;
+    public panelConfig : PropertyPanelConfig = {
+        variant: {
+            control: {
+                type: 'select',
+                options: ['default', 'primary', 'info', 'success', 'warning', 'danger']
+            }
+        },
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large'],
+                defaultValue: 'large'
+            }
+        },
+        disabled: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        selectable: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        selected: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        removable: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+    }
 
-    public isRemovable = false;
+    constructor(protected propertyChangeService: PropertyChangeService){}
 
-    public isSelectable = false;
+    public ngOnInit() {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+        this.propertyChangeService.setCustomControls(this.customControlsTemplate)
+    }
+
+    protected get variant() {
+        return this.propertyChangeService.getProperty('variant');
+    }
+
+    protected get size() {
+        return this.propertyChangeService.getProperty('size');
+    }
+
+    protected get disabled() {
+        return this.propertyChangeService.getProperty('disabled');
+    }
+
+    protected get removable() {
+        return this.propertyChangeService.getProperty('removable');
+    }
+
+    protected get selectable() {
+        return this.propertyChangeService.getProperty('selectable');
+    }
+
+    protected get selected() {
+        return this.propertyChangeService.getProperty('selected');
+    }
 
     public hasSuffix = false;
-
     public hasPrefix = false;
-
     public hasAvatar = false;
-
     public hasProgressbar = false;
-
     public customIcons = false;
-
-    public isDraggable = false;
-
-    public selected: string;
-
-    public isSelected = false;
-
-    public size: string = 'large';
 
     public removeChip(chip: IgxChipComponent) {
         chip.nativeElement.remove();

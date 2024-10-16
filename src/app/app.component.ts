@@ -740,6 +740,11 @@ export class AppComponent implements OnInit {
             name: 'Card'
         },
         {
+            link: '/carousel-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Carousel'
+        },
+        {
             link: '/chip-showcase',
             icon: 'radio_button_unchecked',
             name: 'Chips'
