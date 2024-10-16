@@ -6,6 +6,13 @@ import { IFilteringExpression } from './filtering-expression.interface';
 import { IExpressionTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 
 export class ExpressionsTreeUtil {
+    /**
+     * Recreates the tree from a given array of entities by applying the correct operands
+     * for each expression and adjusting the search values to be the correct type.
+     * @param tree The expression tree to recreate.
+     * @param entities An array of entities to use for recreating the tree.
+     * @returns The recreated expression tree.
+     */
     public static recreateTreeFromEntities(tree: IExpressionTree, entities: EntityType[]): IExpressionTree {
         const isTree = (entry: IExpressionTree | IFilteringExpression): entry is IExpressionTree => {
             return 'operator' in entry;
@@ -44,6 +51,12 @@ export class ExpressionsTreeUtil {
         return expression.condition;
     }
 
+    /**
+     * Recreates the search value for a given expression.
+     * @param searchValue The search value to recreate.
+     * @param dataType The data type of the field.
+     * @returns The recreated search value.
+     */
     public static recreateSearchValue(searchValue: any, dataType: string): any {
         if (!dataType) {
             return searchValue;
@@ -60,6 +73,13 @@ export class ExpressionsTreeUtil {
         return searchValue;
     }
 
+    /**
+     * Recreates an expression from the given fields by applying the correct operands
+     * and adjusting the search value to be the correct type.
+     * @param expression The expression to recreate.
+     * @param fields An array of fields to use for recreating the expression.
+     * @returns The recreated expression.
+     */
     public static recreateExpression(expression: IFilteringExpression, fields: FieldType[]): IFilteringExpression {
         const field = fields?.find(f => f.field === expression.fieldName);
 
@@ -82,6 +102,9 @@ export class ExpressionsTreeUtil {
 
     /**
      * Returns the filtering logic function for a given dataType and condition (contains, greaterThan, etc.)
+     * @param dataType The data type of the field.
+     * @param name The name of the filtering condition.
+     * @returns The filtering logic function.
      */
     private static generateFilteringCondition(dataType: string, name: string): IFilteringOperation {
         let filters: IgxFilteringOperand;
