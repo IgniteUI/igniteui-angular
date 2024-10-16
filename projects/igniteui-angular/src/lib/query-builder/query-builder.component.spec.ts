@@ -1060,8 +1060,8 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should disable value fields when isNestedQuery condition is selected', fakeAsync(() => {
-            //Run test for all data type fields of the Order entity 
-            for (let i = 0; i <= 3; i++) {                 
+            //Run test for all data type fields of the Order entity
+            for (let i = 0; i <= 3; i++) {
                 QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0); // Click the initial 'Add Or Group' button.
                 tick(100);
                 fix.detectChanges();
@@ -1071,9 +1071,9 @@ describe('IgxQueryBuilder', () => {
                 fix.detectChanges();
 
                 QueryBuilderFunctions.selectColumnInEditModeExpression(fix, i); // Select 'OrderId','OrderName','OrderDate','Delivered' column.
-                
+
                 let InConditionIndex;
-                switch(i){
+                switch (i) {
                     case 0:
                     case 1: InConditionIndex = 10; break;// for string and number
                     case 2: InConditionIndex = 16; break; //for date
@@ -1983,6 +1983,219 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
+        }));
+
+        it('canCommit should return the correct validity state of currently edited condition.', fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Verify the Query Builder validity state while editing a condition.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+        }));
+
+        it('canCommit should return the correct validity state of currently added condition.', fakeAsync(() => {
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Verify the Query Builder validity state while adding a condition.
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Click on the 'cancel' button
+            const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
+            UIInteractions.simulateClickEvent(closeButton);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the Query Builder validity state for UNARY condition.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+
+            expect(queryBuilder.canCommit()).toBeTrue();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeTrue();
+        }));
+    });
+
+    describe('API', () => {
+        beforeEach(fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+        }));
+
+        it(`Should commit the changes in a valid edited condition when the 'commit' method is called.`, fakeAsync(() => {
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Change the current condition
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+
+            // Apply the changes
+            queryBuilder.commit();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify expression is commited
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderName', 'Contains', 'a');
+
+            // Verify event is not fired
+            expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
+        }));
+
+        it(`Should discard the changes in a valid edited condition when the 'discard' method is called.`, fakeAsync(() => {
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Change the current condition
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+
+            // Discard the changes
+            queryBuilder.discard();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify expression is not commited
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderId', 'Greater Than', '3');
+
+            // Verify event is not fired
+            expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
+        }));
+
+        it('Should properly commit/discard changes in nested query.', fakeAsync(() => {
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+            tick(50);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Start editing expression in the nested query
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true, 1);
+            tick(50);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            // Discard the changes
+            queryBuilder.discard();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the nested query is collapsed
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+
+            // Start editing expression in the nested query
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true, 1);
+            tick(50);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '1');
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Apply the changes
+            queryBuilder.commit();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the nested query is collapsed
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+
+            // Expand the nested query
+            const toggleBtn = fix.debugElement.query(By.css('.igx-filter-tree__details-button')).nativeElement;
+            toggleBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify edited expressions
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Id', 'Equals', '1', 1);
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'True', undefined, 1);
+        }));
+
+        it('Should NOT throw errors when an invalid condition is committed through API.', fakeAsync(() => {
+            spyOn(console, 'error');
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Change the current condition
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '');
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            // Apply the changes
+            queryBuilder.commit();
+            tick(100);
+            fix.detectChanges();
+
+            expect(console.error).not.toHaveBeenCalled();
         }));
     });
 
