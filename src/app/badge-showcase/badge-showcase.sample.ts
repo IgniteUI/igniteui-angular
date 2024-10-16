@@ -37,15 +37,6 @@ export class BadgeShowcaseSampleComponent implements OnInit {
     public ngOnInit() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
     }
-
-    // private variantMapping: { [key: string]: { angular: string; webComponent: string } } = {
-    //     default: { angular: 'default', webComponent: 'primary' },
-    //     error: { angular: 'error', webComponent: 'danger' },
-    //     info: { angular: 'info', webComponent: 'info' },
-    //     success: { angular: 'success', webComponent: 'success' },
-    //     warning: { angular: 'warning', webComponent: 'warning' },
-    // };
-
     private variantMap = {
         default: 'primary',
         info: 'info',
@@ -60,7 +51,7 @@ export class BadgeShowcaseSampleComponent implements OnInit {
 
     public get wcVariant() {
         const variant = this.propertyChangeService.getProperty('variant');
-        return this.variantMap[variant];
+        return this.variantMap[variant] || 'primary';
     }
 
     public get shape() {
