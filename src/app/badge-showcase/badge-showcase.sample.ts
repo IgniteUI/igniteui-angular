@@ -38,22 +38,29 @@ export class BadgeShowcaseSampleComponent implements OnInit {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
     }
 
-    private variantMapping: { [key: string]: { angular: string; webComponent: string } } = {
-        default: { angular: 'default', webComponent: 'primary' },
-        error: { angular: 'error', webComponent: 'danger' },
-        info: { angular: 'info', webComponent: 'info' },
-        success: { angular: 'success', webComponent: 'success' },
-        warning: { angular: 'warning', webComponent: 'warning' },
+    // private variantMapping: { [key: string]: { angular: string; webComponent: string } } = {
+    //     default: { angular: 'default', webComponent: 'primary' },
+    //     error: { angular: 'error', webComponent: 'danger' },
+    //     info: { angular: 'info', webComponent: 'info' },
+    //     success: { angular: 'success', webComponent: 'success' },
+    //     warning: { angular: 'warning', webComponent: 'warning' },
+    // };
+
+    private variantMap = {
+        default: 'primary',
+        info: 'info',
+        success: 'success',
+        warning: 'warning',
+        error: 'danger',
     };
 
     public get angularVariant() {
-        const variant = this.propertyChangeService.getProperty('variant') || 'default';
-        return this.variantMapping[variant]?.angular || 'default';
+        return this.propertyChangeService.getProperty('variant');
     }
 
-    public get webComponentVariant() {
-        const variant = this.propertyChangeService.getProperty('variant') || 'default';
-        return this.variantMapping[variant]?.webComponent || 'primary';
+    public get wcVariant() {
+        const variant = this.propertyChangeService.getProperty('variant');
+        return this.variantMap[variant];
     }
 
     public get shape() {

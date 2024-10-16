@@ -57,7 +57,7 @@ export class ButtonGroupShowcaseSampleComponent implements OnInit {
         selection: {
             control: {
                 type: 'select',
-                options: ['single', 'single-required', 'multiple'],
+                options: ['single', 'singleRequired', 'multiple'],
                 defaultValue: 'single'
             }
         },
@@ -71,20 +71,19 @@ export class ButtonGroupShowcaseSampleComponent implements OnInit {
 
     constructor(protected propertyChangeService: PropertyChangeService) {}
 
-    private selectionMapping: { [key: string]: { angular: string; webComponent: string } } = {
-        multiple: { angular: 'multi', webComponent: 'multiple' },
-        singleRequired: { angular: 'singleRequired', webComponent: 'single-required' },
-
+    private selectionMap = {
+        single: 'single',
+        multiple: 'multi',
+        singleRequired: 'single-required'
     };
 
     protected get angularSelection() {
-        const selection = this.propertyChangeService.getProperty('selection') || 'multi';
-        return this.selectionMapping[selection]?.angular || selection;
+        return this.propertyChangeService.getProperty('selection');
     }
 
-    protected get webComponentSelection() {
-        const selection = this.propertyChangeService.getProperty('selection') || 'multiple';
-        return this.selectionMapping[selection]?.webComponent || selection;
+    public get wcSelection() {
+        const selection = this.propertyChangeService.getProperty('selection');
+        return this.selectionMap[selection];
     }
 
     protected get disabled() {
