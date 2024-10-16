@@ -2,14 +2,11 @@
 <div class="wrapper">
     <div class="badges">
         <strong>Angular Badge</strong>
-        <igx-badge value="8" shape="rounded"></igx-badge>
-        <igx-badge value="8" shape="square"></igx-badge>
+        <igx-badge [type]="angularVariant" value="8" [shape]="shape"></igx-badge>
     </div>
 
     <div class="badges">
         <strong>WC Badge</strong>
-        <igc-badge shape="rounded"><span>8</span></igc-badge>
-        <igc-badge shape="square"><span>8</span></igc-badge>
+        <igc-badge [variant]="webComponentVariant" [shape]="shape"><span>8</span></igc-badge>
     </div>
 </div>
-

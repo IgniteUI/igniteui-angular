@@ -1,26 +1,32 @@
-#properties-panel {
-    background: hsla(var(--ig-gray-50));
-    border: 1px solid hsla(var(--ig-gray-300));
-    padding: 1rem;
-    overflow-x: auto;
-}
-
 #date-time {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
-igx-input-group {
-    --ig-size: var(--ig-size-small);
-}
+#properties-panel {
+    padding: .5rem;
 
-.switch-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    igx-input-group {
+        --ig-size: var(--ig-size-small);
+    }
 
-    label {
-        margin: 0;
+    .switch-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        label {
+            margin: 0;
+        }
+    }
+
+    .panel-title {
+        margin-bottom: 2rem;
+    }
+
+
+     > *:not(:last-child) {
+        margin-bottom: 16px;
     }
 }

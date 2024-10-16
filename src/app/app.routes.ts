@@ -7,6 +7,7 @@ import { BadgeShowcaseSampleComponent } from './badge-showcase/badge-showcase.sa
 import { ButtonSampleComponent } from './button/button.sample';
 import { ButtonShowcaseSampleComponent } from './button-showcase/button-showcase.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
+import { CalendarShowcaseSampleComponent } from './calendar-showcase/calendar-showcase.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CardShowcaseSampleComponent } from './card-showcase/card-showcase.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
@@ -21,6 +22,7 @@ import { DialogShowcaseSampleComponent } from './dialog-showcase/dialog-showcase
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
+import { IconButtonShowcaseSampleComponent } from './icon-button-showcase/icon-button-showcase.sample';
 import { InputSampleComponent } from './input/input.sample';
 import { InputsShowcaseSampleComponent } from './inputs-showcase/inputs-showcase.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
@@ -227,6 +229,10 @@ export const appRoutes: Routes = [
         component: CalendarSampleComponent
     },
     {
+        path: 'calendar-showcase',
+        component: CalendarShowcaseSampleComponent
+    },
+    {
         path: 'calendar-views',
         component: CalendarViewsSampleComponent
     },
@@ -313,6 +319,10 @@ export const appRoutes: Routes = [
     {
         path: 'icon',
         component: IconSampleComponent
+    },
+    {
+        path: 'icon-button-showcase',
+        component: IconButtonShowcaseSampleComponent
     },
     {
         path: 'lazyIconModule',

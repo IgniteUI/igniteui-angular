@@ -1,0 +1,81 @@
+<div class="preview sample-min-width">
+    <div class="preview__sample">
+        <div class="calendar-wrapper">
+            <strong>Angular Calendar</strong>
+            <igx-calendar
+                #calendar
+                [selection]="selectionAngular"
+                [locale]="propertyChangeService.getProperty('locale')"
+                [hideOutsideDays]="hideOutsideDays"
+                [monthsViewNumber]="monthsViewNumber"
+                [weekStart]="weekStartAngular"
+                [headerOrientation]="headerOrientation"
+                [orientation]="viewOrientation"
+                [showWeekNumbers]="showWeekNumbers"
+                [hasHeader]="!hideHeader"
+                [formatOptions]="formatOptions"
+                [disabledDates]="disabledDates"
+                [specialDates]="specialDates"
+                (selected)="onSelection($event)"
+                (viewDateChanged)="viewDateChanged($event)"
+                (activeViewChanged)="activeViewChanged($event)">
+            >
+            </igx-calendar>
+        </div>
+
+        <div class="calendar-wrapper">
+            <strong>WC Calendar</strong>
+            <igc-calendar
+                [locale]="locale"
+                [visibleMonths]="monthsViewNumber"
+                [showWeekNumbers]="showWeekNumbers"
+                [selection]="selectionWC"
+                [hideHeader]="hideHeader"
+                [hideOutsideDays]="hideOutsideDays"
+                [headerOrientation]="headerOrientation"
+                [orientation]="viewOrientation"
+                [weekStart]="weekStartWC"
+                [formatOptions]="formatOptions"
+                [disabledDates]="disabledDates"
+                [specialDates]="specialDates"
+            >
+            </igc-calendar>
+        </div>
+    </div>
+
+    <ng-template #customControls>
+        <div class="custom-controls">
+            <label>Special Dates</label>
+            <igx-date-range-picker
+                mode="dialog"
+                [(ngModel)]="specialRange"
+            ></igx-date-range-picker>
+
+            <label>Weekday format</label>
+            <igx-buttongroup selectionMode="singleRequired">
+                <button
+                    igxButton
+                    *ngFor="let option of ['narrow', 'short', 'long']"
+                    value="option"
+                    (click)="setWeekDayFormat(option)"
+                    [selected]="option === formatOptions['weekday']"
+                >
+                    {{option}}
+                </button>
+            </igx-buttongroup>
+
+            <label>Month format</label>
+            <igx-buttongroup selectionMode="singleRequired">
+                <button
+                    igxButton
+                    *ngFor="let option of ['numeric', '2-digit', 'narrow', 'short', 'long']"
+                    value="option"
+                    (click)="setMonthFormat(option)"
+                    [selected]="option === formatOptions['month']"
+                >
+                    {{option}}
+                </button>
+            </igx-buttongroup>
+        </div>
+    </ng-template>
+</div>

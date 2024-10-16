@@ -47,7 +47,7 @@
 
     .content {
         position: relative;
-        overflow-y: scroll;
+        overflow-y: auto;
         perspective: 5000px;
         padding-top: 90px;
         flex: 1;

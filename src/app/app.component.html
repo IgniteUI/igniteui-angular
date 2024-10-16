@@ -68,6 +68,19 @@
         </ng-template>
     </igx-nav-drawer>
 
+    <igx-nav-drawer
+        *ngIf="panelConfig"
+        #paneldrawer
+        [pin]="true"
+        position="right"
+        [isOpen]="panelConfig"
+        id="paneldrawer">
+
+        <ng-template igxDrawer>
+            <app-properties-panel [config]="panelConfig"></app-properties-panel>
+        </ng-template>
+    </igx-nav-drawer>
+
     <div [style.paddingLeft]="drawerState.miniVariant && !drawerState.pin ? '60px' : null" class="content">
         <app-page-header [title]="urlString"></app-page-header>
         <div class="sample-wrapper">
