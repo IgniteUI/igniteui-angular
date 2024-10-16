@@ -32,7 +32,7 @@ import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective } from '
 import { IgxListItemComponent } from '../../../list/list-item.component';
 import { IgxListComponent } from '../../../list/list.component';
 import { IgxSuffixDirective } from '../../../directives/suffix/suffix.directive';
-import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../../../icon/icon.component';
@@ -60,7 +60,7 @@ let NEXT_ID = 0;
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html',
     standalone: true,
-    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, NgIf, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, NgFor, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
+    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private static readonly filterOptimizationThreshold = 2;

@@ -1,5 +1,4 @@
 import { Component, ViewChild, ChangeDetectorRef, ElementRef } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
     IBaseChipEventArgs,
@@ -37,8 +36,6 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
         IgxSuffixDirective,
         IgxSwitchComponent,
         IgxChipsAreaComponent,
-        NgFor,
-        NgIf,
         FormsModule,
         IgxAvatarComponent,
         IgxDropDirective,

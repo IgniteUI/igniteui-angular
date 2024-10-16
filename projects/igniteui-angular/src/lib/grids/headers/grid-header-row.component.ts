@@ -22,7 +22,7 @@ import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from './pipes';
 import { IgxGridTopLevelColumns } from '../common/pipes';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
-import { NgIf, NgTemplateOutlet, NgClass, NgFor, NgStyle } from '@angular/common';
+import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 /**
  *
@@ -37,7 +37,7 @@ import { NgIf, NgTemplateOutlet, NgClass, NgFor, NgStyle } from '@angular/common
     selector: 'igx-grid-header-row',
     templateUrl: './grid-header-row.component.html',
     standalone: true,
-    imports: [NgIf, IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, NgFor, IgxGridHeaderGroupComponent, NgStyle, IgxGridForOfDirective, IgxGridFilteringRowComponent, IgxCheckboxComponent, IgxGridTopLevelColumns, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
+    imports: [IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, IgxGridHeaderGroupComponent, NgStyle, IgxGridForOfDirective, IgxGridFilteringRowComponent, IgxCheckboxComponent, IgxGridTopLevelColumns, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderRowComponent implements DoCheck {
 

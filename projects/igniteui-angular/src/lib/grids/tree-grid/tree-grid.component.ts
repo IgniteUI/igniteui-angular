@@ -23,7 +23,7 @@ import {
     CUSTOM_ELEMENTS_SCHEMA,
     booleanAttribute
 } from '@angular/core';
-import { DOCUMENT, NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
+import { DOCUMENT, NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -134,8 +134,6 @@ let NEXT_ID = 0;
     ],
     standalone: true,
     imports: [
-        NgIf,
-        NgFor,
         NgClass,
         NgStyle,
         NgTemplateOutlet,

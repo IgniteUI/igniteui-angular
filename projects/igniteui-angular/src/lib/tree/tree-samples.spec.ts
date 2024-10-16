@@ -1,25 +1,31 @@
 import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { IgxTreeComponent, IgxTreeExpandIndicatorDirective, IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './public_api';
 import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
-import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconComponent } from '../icon/icon.component';
 
 @Component({
     template: `
     <igx-tree #tree1 class="medium">
-        <igx-tree-node *ngFor="let node of data" [selected]="node.ID === 'ALFKI'" [data]="node">
-            {{ node.CompanyName }}
-            <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
-                {{ child.CompanyName }}
-                <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
-                    {{ leafchild.CompanyName }}
-                </igx-tree-node>
+        @for (node of data; track node) {
+            <igx-tree-node [selected]="node.ID === 'ALFKI'" [data]="node">
+                {{ node.CompanyName }}
+                @for (child of node.ChildCompanies; track child) {
+                    <igx-tree-node [data]="child">
+                        {{ child.CompanyName }}
+                        @for (leafchild of child.ChildCompanies; track leafchild) {
+                            <igx-tree-node [data]="leafchild">
+                                {{ leafchild.CompanyName }}
+                            </igx-tree-node>
+                        }
+                    </igx-tree-node>
+                }
             </igx-tree-node>
-        </igx-tree-node>
+        }
     </igx-tree>
     `,
     standalone: true,
-    imports: [IgxTreeComponent, IgxTreeNodeComponent, NgFor]
+    imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 export class IgxTreeSimpleComponent {
     @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
@@ -29,19 +35,25 @@ export class IgxTreeSimpleComponent {
 @Component({
     template: `
     <igx-tree #tree1 class="medium">
-        <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
-            {{ node.CompanyName }}
-            <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child" [(selected)]="child.selected">
-                {{ child.CompanyName }}
-                <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild" [(selected)]="leafchild.selected">
-                    {{ leafchild.CompanyName }}
-                </igx-tree-node>
+        @for (node of data; track node) {
+            <igx-tree-node [data]="node" [(selected)]="node.selected">
+                {{ node.CompanyName }}
+                @for (child of node.ChildCompanies; track child) {
+                    <igx-tree-node [data]="child" [(selected)]="child.selected">
+                        {{ child.CompanyName }}
+                        @for (leafchild of child.ChildCompanies; track leafchild) {
+                            <igx-tree-node [data]="leafchild" [(selected)]="leafchild.selected">
+                                {{ leafchild.CompanyName }}
+                            </igx-tree-node>
+                        }
+                    </igx-tree-node>
+                }
             </igx-tree-node>
-        </igx-tree-node>
+        }
     </igx-tree>
     `,
     standalone: true,
-    imports: [IgxTreeComponent, IgxTreeNodeComponent, NgFor]
+    imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 export class IgxTreeSelectionSampleComponent {
     @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
@@ -63,43 +75,57 @@ export class IgxTreeSelectionSampleComponent {
 @Component({
     template: `
     <igx-tree #tree1 class="medium">
-        <igx-tree-node *ngFor="let node of data" [data]="node" [active]="node.ID === 'COMMI'">
-            {{ node.CompanyName }}
-            <igx-tree-node [disabled]="isDisabled">Disable Node Level 1</igx-tree-node>
-            <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
-                {{ child.CompanyName }}
-                <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
-                    {{ leafchild.CompanyName }}
-                </igx-tree-node>
-                <igx-tree-node [disabled]="isDisabled">Disable Node Level 2</igx-tree-node>
+        @for (node of data; track node) {
+            <igx-tree-node [data]="node" [active]="node.ID === 'COMMI'">
+                {{ node.CompanyName }}
+                <igx-tree-node [disabled]="isDisabled">Disable Node Level 1</igx-tree-node>
+                @for (child of node.ChildCompanies; track child) {
+                    <igx-tree-node [data]="child">
+                        {{ child.CompanyName }}
+                        @for (leafchild of child.ChildCompanies; track leafchild) {
+                            <igx-tree-node [data]="leafchild">
+                                {{ leafchild.CompanyName }}
+                            </igx-tree-node>
+                        }
+                        <igx-tree-node [disabled]="isDisabled">Disable Node Level 2</igx-tree-node>
+                    </igx-tree-node>
+                }
             </igx-tree-node>
-        </igx-tree-node>
+        }
         <igx-tree-node [disabled]="isDisabled">Disable Node Level 0</igx-tree-node>
-        <igx-tree-node *ngIf="showNodesWithDirective">
-            <a id="link" igxTreeNodeLink href="https://infragistics.com">Link to Infragistics</a>
-            <igx-tree-node *ngFor="let node of [].constructor(3)">
-                <a igxTreeNodeLink href="https://infragistics.com">Link to Infragistics</a>
+        @if (showNodesWithDirective) {
+            <igx-tree-node>
+                <a id="link" igxTreeNodeLink href="https://infragistics.com">Link to Infragistics</a>
+                @for (node of [].constructor(3); track node) {
+                    <igx-tree-node>
+                        <a igxTreeNodeLink href="https://infragistics.com">Link to Infragistics</a>
+                    </igx-tree-node>
+                }
+                <igx-tree-node [disabled]="isDisabled">
+                    <a igxTreeNodeLink href="https://infragistics.com">Link to Infragistics</a>
+                </igx-tree-node>
             </igx-tree-node>
-            <igx-tree-node [disabled]="isDisabled">
-                <a igxTreeNodeLink href="https://infragistics.com">Link to Infragistics</a>
+        }
+        @if (showNodesWithDirective) {
+            <igx-tree-node #parentNode>
+                <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: parentNode }"></ng-template>
+                <igx-tree-node #disabledChild [disabled]="isDisabled">
+                    <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: disabledChild }"></ng-template>
+                </igx-tree-node>
+                @for (node of [].constructor(3); track node) {
+                    <igx-tree-node #childNode>
+                        <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: childNode }"></ng-template>
+                    </igx-tree-node>
+                }
             </igx-tree-node>
-        </igx-tree-node>
-        <igx-tree-node #parentNode *ngIf="showNodesWithDirective">
-            <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: parentNode }"></ng-template>
-            <igx-tree-node #disabledChild [disabled]="isDisabled">
-                <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: disabledChild }"></ng-template>
-            </igx-tree-node>
-            <igx-tree-node #childNode *ngFor="let node of [].constructor(3)">
-                <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: childNode }"></ng-template>
-            </igx-tree-node>
-        </igx-tree-node>
+        }
         <ng-template #nodeTemplate let-node>
             <a [igxTreeNodeLink]="node" href="https://infragistics.com">Link to Infragistics</a>
         </ng-template>
     </igx-tree>
     `,
     standalone: true,
-    imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeNodeLinkDirective, NgTemplateOutlet, NgFor, NgIf]
+    imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeNodeLinkDirective, NgTemplateOutlet]
 })
 export class IgxTreeNavigationComponent {
     @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
@@ -110,22 +136,28 @@ export class IgxTreeNavigationComponent {
 @Component({
     template: `
     <igx-tree #tree1 style="height: 300px; overflow-y: scroll; width: 400px;">
-        <igx-tree-node *ngFor="let node of data" [data]="node" [active]="node.ID === 'FRANS'" [expanded]="true">
-            {{ node.CompanyName }}
-            <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child" [expanded]="true">
-                {{ child.CompanyName }}
-                <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
-                    {{ leafchild.CompanyName }}
-                </igx-tree-node>
+        @for (node of data; track node) {
+            <igx-tree-node [data]="node" [active]="node.ID === 'FRANS'" [expanded]="true">
+                {{ node.CompanyName }}
+                @for (child of node.ChildCompanies; track child) {
+                    <igx-tree-node [data]="child" [expanded]="true">
+                        {{ child.CompanyName }}
+                        @for (leafchild of child.ChildCompanies; track leafchild) {
+                            <igx-tree-node [data]="leafchild">
+                                {{ leafchild.CompanyName }}
+                            </igx-tree-node>
+                        }
+                    </igx-tree-node>
+                }
             </igx-tree-node>
-        </igx-tree-node>
+        }
         <ng-template igxTreeExpandIndicator let-expanded>
             <igx-icon>{{ expanded ? "close_fullscreen": "open_in_full"}}</igx-icon>
         </ng-template>
     </igx-tree>
     `,
     standalone: true,
-    imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeExpandIndicatorDirective, IgxIconComponent, NgFor]
+    imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeExpandIndicatorDirective, IgxIconComponent]
 })
 export class IgxTreeScrollComponent {
     @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;

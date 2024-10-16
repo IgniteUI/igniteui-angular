@@ -11,7 +11,6 @@ import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec'
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
-import { NgFor } from '@angular/common';
 import { IgxAvatarComponent } from '../../avatar/avatar.component';
 import { IColumnResizeEventArgs, IgxColumnComponent } from '../public_api';
 import { Size } from "../common/enums";
@@ -943,7 +942,7 @@ export class GridFeaturesComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(`height="800px"`, ``, ColumnDefinitions.resizableColsComponent),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class NullColumnsComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;

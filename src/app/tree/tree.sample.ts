@@ -1,5 +1,5 @@
 import { useAnimation } from '@angular/animations';
-import { NgFor, NgTemplateOutlet, NgIf, AsyncPipe } from '@angular/common';
+import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -16,7 +16,7 @@ import {
     IgxInputDirective,
     IgxInputGroupComponent,
     IgxLabelDirective,
-    IgxLayoutDirective, 
+    IgxLayoutDirective,
     IgxSwitchComponent,
     IgxTreeNodeLinkDirective,
     IgxTreeExpandIndicatorDirective
@@ -60,14 +60,12 @@ interface CompanyData {
         FormsModule,
         IgxSwitchComponent,
         IgxButtonGroupComponent,
-        IgxTreeComponent, 
+        IgxTreeComponent,
         IgxTreeNodeComponent,
-        NgFor,
         IgxTreeNodeLinkDirective,
         IgxTreeExpandIndicatorDirective,
         NgTemplateOutlet,
         IgxIconComponent,
-        NgIf,
         AsyncPipe,
         SizeSelectorComponent
     ]

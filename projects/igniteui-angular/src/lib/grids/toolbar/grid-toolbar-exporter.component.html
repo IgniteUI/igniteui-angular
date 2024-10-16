@@ -5,31 +5,42 @@
     <span #ref>
         <ng-content></ng-content>
     </span>
-    <span *ngIf="!ref.textContent.trim()">
-        {{ grid?.resourceStrings.igx_grid_toolbar_exporter_button_label }}
-    </span>
+    @if (!ref.textContent.trim()) {
+        <span>
+            {{ grid?.resourceStrings.igx_grid_toolbar_exporter_button_label }}
+        </span>
+    }
     <igx-icon family="default" name="arrow_drop_down"></igx-icon>
 </button>
 
 <div class="igx-grid-toolbar__dropdown" id="btnExport">
     <ul class="igx-grid-toolbar__dd-list" igxToggle #toggleRef="toggle">
-        <li *ngIf="exportExcel" #btnExportExcel id="btnExportExcel"
-            class="igx-grid-toolbar__dd-list-items" igxRipple (click)="exportClicked('excel', toggleRef)">
-            <span #excel>
-                <ng-content select=[excelText],excel-text></ng-content>
-            </span>
-            <excel-text *ngIf="!excel.childNodes.length">
-                {{ grid?.resourceStrings.igx_grid_toolbar_exporter_excel_entry_text}}
-            </excel-text>
-        </li>
+        @if (exportExcel) {
+            <li #btnExportExcel id="btnExportExcel"
+                class="igx-grid-toolbar__dd-list-items" igxRipple (click)="exportClicked('excel', toggleRef)">
+                <span #excel>
+                    <ng-content select=[excelText],excel-text></ng-content>
+                </span>
+                @if (!excel.childNodes.length) {
+                    <excel-text>
+                        {{ grid?.resourceStrings.igx_grid_toolbar_exporter_excel_entry_text}}
+                    </excel-text>
+                }
+            </li>
+        }
 
-        <li *ngIf="exportCSV" #btnExportCsv id="btnExportCsv" class="igx-grid-toolbar__dd-list-items"
-            igxRipple (click)="exportClicked('csv', toggleRef)">
-            <span #csv>
-                <ng-content select=[csvText],csv-text></ng-content>
-            </span>
-            <csv-text *ngIf="!csv.childNodes.length">
-                {{ grid?.resourceStrings.igx_grid_toolbar_exporter_csv_entry_text }}</csv-text>
-        </li>
+        @if (exportCSV) {
+            <li #btnExportCsv id="btnExportCsv" class="igx-grid-toolbar__dd-list-items"
+                igxRipple (click)="exportClicked('csv', toggleRef)">
+                <span #csv>
+                    <ng-content select=[csvText],csv-text></ng-content>
+                </span>
+                @if (!csv.childNodes.length) {
+                    <csv-text>
+                        {{ grid?.resourceStrings.igx_grid_toolbar_exporter_csv_entry_text }}
+                    </csv-text>
+                }
+            </li>
+        }
     </ul>
 </div>

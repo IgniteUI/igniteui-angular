@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
-import { NgFor } from '@angular/common';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
 import { GridSelectionMode, IgxGridComponent, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
@@ -10,7 +9,7 @@ import { GridSelectionMode, IgxGridComponent, IGX_BUTTON_GROUP_DIRECTIVES, IGX_G
     styleUrls: ['grid-auto-size.sample.scss'],
     templateUrl: 'grid-auto-size.sample.html',
     standalone: true,
-    imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES]
+    imports: [IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES]
 })
 
 export class GridAutoSizeSampleComponent implements OnInit {

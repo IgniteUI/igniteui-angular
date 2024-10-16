@@ -7,7 +7,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from "../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
 import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
-import { NgIf } from '@angular/common';
 import { IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent } from '../toolbar/common';
 import { IgxGridToolbarPinningComponent } from '../toolbar/grid-toolbar-pinning.component';
 import { IgxGridToolbarHidingComponent } from '../toolbar/grid-toolbar-hiding.component';
@@ -256,15 +255,23 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 @Component({
     template: `
     <igx-grid [data]="data" [autoGenerate]="true">
-        <igx-grid-toolbar [showProgress]="showProgress" *ngIf="toolbarEnabled">
-            <p *ngIf="customContentEnabled">{{ customContent }}</p>
-            <igx-grid-toolbar-title *ngIf="toolbarTitleEnabled">{{ toolbarTitle }}</igx-grid-toolbar-title>
-            <igx-grid-toolbar-actions *ngIf="toolbarActionsEnabled"></igx-grid-toolbar-actions>
-        </igx-grid-toolbar>
+        @if (toolbarEnabled) {
+            <igx-grid-toolbar [showProgress]="showProgress">
+                @if (customContentEnabled) {
+                    <p>{{ customContent }}</p>
+                }
+                @if (toolbarTitleEnabled) {
+                    <igx-grid-toolbar-title>{{ toolbarTitle }}</igx-grid-toolbar-title>
+                }
+                @if (toolbarActionsEnabled) {
+                    <igx-grid-toolbar-actions></igx-grid-toolbar-actions>
+                }
+            </igx-grid-toolbar>
+        }
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent, NgIf]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent]
 })
 export class DefaultToolbarComponent {
     public toolbarEnabled = true;

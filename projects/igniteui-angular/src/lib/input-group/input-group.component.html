@@ -1,6 +1,10 @@
-<div class="igx-input-group__wrapper" *ngIf="isTypeBox; else bundle">
+@if (isTypeBox) {
+    <div class="igx-input-group__wrapper">
+        <ng-container *ngTemplateOutlet="bundle"></ng-container>
+    </div>
+} @else {
     <ng-container *ngTemplateOutlet="bundle"></ng-container>
-</div>
+}
 
 <div class="igx-input-group__hint" (click)="hintClickHandler($event)">
     <ng-content select="igx-hint, [igxHint]"></ng-content>
@@ -19,40 +23,44 @@
 </ng-template>
 
 <ng-template #uploadButton>
-    <igx-prefix *ngIf="isFileType" class="igx-input-group__upload-button">
-        <button
-            igxButton="contained"
-            type="button"
-            (click)="uploadButtonHandler()"
-            [disabled]="disabled"
-            [ngClass]="{ 'igx-input-group__upload-button': isTypeLine }"
-        >
-            {{ resourceStrings.igx_input_upload_button }}
-        </button>
-    </igx-prefix>
+    @if (isFileType) {
+        <igx-prefix class="igx-input-group__upload-button">
+            <button
+                igxButton="contained"
+                type="button"
+                (click)="uploadButtonHandler()"
+                [disabled]="disabled"
+                [ngClass]="{ 'igx-input-group__upload-button': isTypeLine }"
+            >
+                {{ resourceStrings.igx_input_upload_button }}
+            </button>
+        </igx-prefix>
+    }
 </ng-template>
 
 <ng-template #files>
-    <div
-        *ngIf="isFileType"
-        class="igx-input-group__file-input"
-        [title]="fileNames"
-    >
-        <span>{{ fileNames }}</span>
-    </div>
+    @if (isFileType) {
+        <div
+            class="igx-input-group__file-input"
+            [title]="fileNames"
+        >
+            <span>{{ fileNames }}</span>
+        </div>
+    }
 </ng-template>
 
 <ng-template #clear>
-    <igx-suffix
-        class="igx-input-group__clear-icon"
-        *ngIf="isFileType && isFilled"
-        (click)="clearValueHandler()"
-        (keydown.Enter)="clearValueHandler()"
-        title="clear files"
-        tabindex="0"
-    >
-        <igx-icon family="default" name="input_clear"></igx-icon>
-    </igx-suffix>
+    @if (isFileType && isFilled) {
+        <igx-suffix
+            class="igx-input-group__clear-icon"
+            (click)="clearValueHandler()"
+            (keydown.Enter)="clearValueHandler()"
+            title="clear files"
+            tabindex="0"
+        >
+            <igx-icon family="default" name="input_clear"></igx-icon>
+        </igx-suffix>
+    }
 </ng-template>
 
 <ng-template #suffix>
@@ -84,7 +92,9 @@
             <ng-container *ngTemplateOutlet="suffix"></ng-container>
         </div>
 
-        <div class="igx-input-group__line" *ngIf="hasBorder"></div>
+        @if (hasBorder) {
+            <div class="igx-input-group__line"></div>
+        }
     </div>
 </ng-template>
 
@@ -108,7 +118,9 @@
             <ng-container *ngTemplateOutlet="suffix"></ng-container>
         </div>
 
-        <div class="igx-input-group__line" *ngIf="hasBorder"></div>
+        @if (hasBorder) {
+            <div class="igx-input-group__line"></div>
+        }
     </div>
 </ng-template>
 
@@ -132,21 +144,18 @@
 </ng-template>
 
 <ng-template #bundle>
-    <ng-container [ngSwitch]="theme">
-        <ng-container *ngSwitchCase="'bootstrap'">
+    @switch (theme) {
+        @case ('bootstrap') {
             <ng-container *ngTemplateOutlet="bootstrapBundle"></ng-container>
-        </ng-container>
-
-        <ng-container *ngSwitchCase="'fluent'">
+        }
+        @case ('fluent') {
             <ng-container *ngTemplateOutlet="fluentBundle"></ng-container>
-        </ng-container>
-
-        <ng-container *ngSwitchCase="'indigo'">
+        }
+        @case ('indigo') {
             <ng-container *ngTemplateOutlet="fluentBundle"></ng-container>
-        </ng-container>
-
-        <ng-container *ngSwitchDefault>
+        }
+        @default {
             <ng-container *ngTemplateOutlet="materialBundle"></ng-container>
-        </ng-container>
-    </ng-container>
+        }
+    }
 </ng-template>

@@ -1,6 +1,6 @@
 import { Component, Input, TemplateRef, HostBinding, booleanAttribute } from '@angular/core';
 import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
-import { NgFor, NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 /**
  * @hidden
@@ -9,7 +9,7 @@ import { NgFor, NgClass, NgTemplateOutlet } from '@angular/common';
     selector: 'igx-ticks',
     templateUrl: 'ticks.component.html',
     standalone: true,
-    imports: [NgFor, NgClass, NgTemplateOutlet]
+    imports: [NgClass, NgTemplateOutlet]
 })
 export class IgxTicksComponent {
     @Input()

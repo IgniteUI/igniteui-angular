@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NgFor, JsonPipe } from '@angular/common';
+import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs } from 'igniteui-angular';
 
@@ -15,7 +15,7 @@ import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePi
         }
     ],
     standalone: true,
-    imports: [IgxButtonDirective, IgxRippleDirective, IgxDateRangePickerComponent, IgxPickerToggleComponent, IgxSuffixDirective, IgxIconComponent, IgxDateRangeStartComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxDateRangeEndComponent, FormsModule, IgxLabelDirective, NgFor, IgxRadioComponent, ReactiveFormsModule, JsonPipe]
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxDateRangePickerComponent, IgxPickerToggleComponent, IgxSuffixDirective, IgxIconComponent, IgxDateRangeStartComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxDateRangeEndComponent, FormsModule, IgxLabelDirective, IgxRadioComponent, ReactiveFormsModule, JsonPipe]
 })
 export class DateRangeSampleComponent {
     @ViewChild('dr1', { static: true })

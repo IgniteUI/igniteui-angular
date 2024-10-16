@@ -1,22 +1,22 @@
 import { Component } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { IgxAvatarComponent, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxRippleDirective } from 'igniteui-angular';
 
 @Component({
     template: `
         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
             <igx-list-item [isHeader]="true">History</igx-list-item>
-            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *ngFor="let contact of contacts">
-                <igx-avatar [src]="contact.avatar" igxListThumbnail></igx-avatar>
-                <h4 igxListLineTitle>{{contact.text}}</h4>
-                <p igxListLineSubTitle>{{contact.phone}}</p>
-                <igx-icon igxListAction>phone</igx-icon>
-            </igx-list-item>
+            @for (contact of contacts; track contact) {
+                <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item">
+                    <igx-avatar [src]="contact.avatar" igxListThumbnail></igx-avatar>
+                    <h4 igxListLineTitle>{{contact.text}}</h4>
+                    <p igxListLineSubTitle>{{contact.phone}}</p>
+                    <igx-icon igxListAction>phone</igx-icon>
+                </igx-list-item>
+            }
         </igx-list>
     `,
     standalone: true,
     imports: [
-        NgFor,
         IgxListComponent,
         IgxListItemComponent,
         IgxRippleDirective,
