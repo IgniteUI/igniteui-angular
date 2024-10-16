@@ -1985,9 +1985,8 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
         }));
 
-        it('canCommit should return the correct validity state of curently edited condition.', fakeAsync(() => {
+        it('canCommit should return the correct validity state of currently edited condition.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-            fix.detectChanges();
             tick(100);
             fix.detectChanges();
 
@@ -1997,7 +1996,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             expect(queryBuilder.canCommit()).toBeTrue();
 
-            // Verify the Query Builder validity state while editin a condition.
+            // Verify the Query Builder validity state while editing a condition.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
             expect(queryBuilder.canCommit()).toBeFalse();
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
@@ -2009,7 +2008,7 @@ describe('IgxQueryBuilder', () => {
             expect(queryBuilder.canCommit()).toBeTrue();
         }));
 
-        it('canCommit should return the correct validity state of curently added condition.', fakeAsync(() => {
+        it('canCommit should return the correct validity state of currently added condition.', fakeAsync(() => {
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
@@ -2036,14 +2035,13 @@ describe('IgxQueryBuilder', () => {
     describe('API', () => {
         beforeEach(fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-            fix.detectChanges();
             tick(100);
             fix.detectChanges();
 
             spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
         }));
 
-        it(`Should commit the changes in the edited condition when the 'commit' method is called.`, fakeAsync(() => {
+        it(`Should commit the changes in a valid edited condition when the 'commit' method is called.`, fakeAsync(() => {
             // Double-click the existing chip to enter edit mode.
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
             tick(50);
@@ -2071,7 +2069,7 @@ describe('IgxQueryBuilder', () => {
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
         }));
 
-        it(`Should discard the changes in the edited condition when the 'discard' method is called.`, fakeAsync(() => {
+        it(`Should discard the changes in a valid edited condition when the 'discard' method is called.`, fakeAsync(() => {
             // Double-click the existing chip to enter edit mode.
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
             tick(50);
@@ -2097,6 +2095,28 @@ describe('IgxQueryBuilder', () => {
 
             // Verify event is not fired
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
+        }));
+
+        it(`Should NOT throw errors when an invalid condition is commited through API.`, fakeAsync(() => {
+            spyOn(console, 'error');
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Change the current condition
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '');
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            // Apply the changes
+            queryBuilder.commit();
+            tick(100);
+            fix.detectChanges();
+
+            expect(console.error).not.toHaveBeenCalled();
         }));
     });
 
