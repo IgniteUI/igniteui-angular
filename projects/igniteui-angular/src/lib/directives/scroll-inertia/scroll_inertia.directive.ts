@@ -82,7 +82,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             if (!targetElem) {
                 return;
             }
-            targetElem.removeEventListener('wheel', this.onWheel, );
+            targetElem.removeEventListener('wheel', this.onWheel);
             targetElem.removeEventListener('touchstart', this.onTouchStart);
             targetElem.removeEventListener('touchmove', this.onTouchMove);
             targetElem.removeEventListener('touchend', this.onTouchEnd);
