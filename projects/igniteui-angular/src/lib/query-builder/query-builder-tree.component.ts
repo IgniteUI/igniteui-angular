@@ -558,8 +558,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         } else {
             this.onEntityChangeConfirm();
         }
-
-        this.initExpressionTree(event.newSelection.value, this.selectedReturnFields);
     }
 
     /**
@@ -609,6 +607,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.entitySelect.close();
 
         this._entityNewValue = null;
+
+        this.initExpressionTree(this._selectedEntity.name, this.selectedReturnFields);
     }
 
     /**
@@ -820,7 +820,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
                 ) ||
                 (
-                    innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields.length > 0
+                    innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields?.length > 0
                 ) ||
                 this.selectedField.filters.condition(this.selectedCondition).isUnary
             );
@@ -1248,7 +1248,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     public initExpressionTree(selectedEntityName: string, selectedReturnFields: string[]) {
         console.log("recals", selectedEntityName, selectedReturnFields)
-        this.expressionTree = this.createExpressionTreeFromGroupItem(new ExpressionGroupItem(FilteringLogic.And, this.rootGroup), selectedEntityName, selectedReturnFields);
+        if (!this._expressionTree) {
+            this._expressionTree = this.createExpressionTreeFromGroupItem(new ExpressionGroupItem(FilteringLogic.And, this.rootGroup), selectedEntityName, selectedReturnFields);
+        } else {
+            this._expressionTree.entity = selectedEntityName;
+            this._expressionTree.returnFields = selectedReturnFields;
+        }
     }
 
     public getSearchValueTemplateContext(defaultSearchValueTemplate): any {

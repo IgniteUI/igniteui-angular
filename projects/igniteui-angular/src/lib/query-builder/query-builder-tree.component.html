@@ -63,7 +63,8 @@
     class="igx-query-builder__main"
     (scroll)="onExpressionsScrolled()"
 >
-    <ng-container *ngIf="!rootGroup && this.entities.length > 0 && !this.entities[0].name">
+    <!-- WHY? <ng-container *ngIf="!rootGroup && this.entities.length > 0 && !this.entities[0].name"> -->
+    <ng-container *ngIf="!rootGroup">
         <div class="igx-query-builder__root">
             <div class="igx-query-builder__root-actions">
                 <button type="button"
@@ -522,7 +523,8 @@
         </div>
     </ng-template>
 
-    <ng-container *ngIf="rootGroup && this.entities.length > 0 && this.entities[0].name">
+    <!-- WHY? <ng-container *ngIf="rootGroup && this.entities.length > 0 && this.entities[0].name"> -->
+    <ng-container *ngIf="rootGroup">
         <ng-container
             *ngTemplateOutlet="
                 expressionGroupTemplate;
