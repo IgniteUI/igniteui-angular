@@ -1,33 +1,30 @@
 <section class="sample-content">
     <article class="sample-column">
         <h4 class="sample-title">Angular ButtonGroup</h4>
-
         <igx-buttongroup
-            [selectionMode]="angularSelection"
-            [alignment]="alignment"
-            [disabled]="disabled"
-        >
+        [selectionMode]="angularSelection"
+        [alignment]="alignment"
+        [disabled]="disabled">
             <button
-                    igxButton
-                    *ngFor="let city of cities"
-                    [selected]="city.selected"
-                >
-                    {{ city.label }}
+            igxButton
+            *ngFor="let city of cities"
+            [selected]="city.selected">
+                {{ city.label }}
             </button>
         </igx-buttongroup>
     </article>
 
     <article class="sample-column">
         <h4 class="sample-title">WC ButtonGroup</h4>
-
         <igc-button-group
         [selection]="webComponentSelection"
         [alignment]="alignment"
         [disabled]="disabled">
-            <igc-toggle-button *ngFor="let city of cities"
-                [disabled]="city.disabled"
-                [value]="city.label"
-                [selected]="city.selected">
+            <igc-toggle-button
+            *ngFor="let city of cities"
+            [disabled]="city.disabled"
+            [value]="city.label"
+            [selected]="city.selected">
                 {{ city.label }}
             </igc-toggle-button>
         </igc-button-group>

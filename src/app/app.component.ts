@@ -730,6 +730,11 @@ export class AppComponent implements OnInit {
             name: 'Button Group'
         },
         {
+            link: '/calendar-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Calendar'
+        },
+        {
             link: '/card-showcase',
             icon: 'radio_button_unchecked',
             name: 'Card'

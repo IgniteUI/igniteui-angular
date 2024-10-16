@@ -1,43 +1,11 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { NgFor } from '@angular/common';
-import { ButtonGroupAlignment, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxLayoutDirective } from 'igniteui-angular';
+import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxLayoutDirective } from 'igniteui-angular';
 import { defineComponents, IgcButtonGroupComponent, IgcToggleButtonComponent } from "igniteui-webcomponents";
 import { PropertyPanelConfig } from '../properties-panel/properties-panel.component';
 import { PropertyChangeService } from '../properties-panel/property-change.service';
 
 defineComponents(IgcButtonGroupComponent, IgcToggleButtonComponent);
-interface IButton {
-    ripple?: string;
-    label?: string;
-    disabled?: boolean;
-    togglable?: boolean;
-    selected?: boolean;
-    color?: string;
-    bgcolor?: string;
-    icon?: string;
-}
-
-class Button {
-    public ripple: string;
-    public label: string;
-    public disabled: boolean;
-    public togglable: boolean;
-    public selected: boolean;
-    public color: string;
-    public bgcolor: string;
-    public icon: string;
-
-    constructor(obj?: IButton) {
-        this.ripple = obj.ripple || 'gray';
-        this.label = obj.label;
-        this.selected = obj.selected || false;
-        this.togglable = obj.togglable;
-        this.disabled = obj.disabled || false;
-        this.color = obj.color;
-        this.bgcolor = obj.bgcolor;
-        this.icon = obj.icon;
-    }
-}
 
 @Component({
     selector: 'app-buttongroup-showcase-sample',
@@ -79,12 +47,6 @@ export class ButtonGroupShowcaseSampleComponent implements OnInit {
     }
 
     public panelConfig: PropertyPanelConfig = {
-        disabled: {
-            control: {
-                type: 'boolean',
-                defaultValue: false
-            }
-        },
         alignment: {
             control: {
                 type: 'button-group',
@@ -97,6 +59,12 @@ export class ButtonGroupShowcaseSampleComponent implements OnInit {
                 type: 'select',
                 options: ['single', 'single-required', 'multiple'],
                 defaultValue: 'single'
+            }
+        },
+        disabled: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
             }
         }
     }

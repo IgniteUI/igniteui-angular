@@ -7,6 +7,7 @@ import { BadgeShowcaseSampleComponent } from './badge-showcase/badge-showcase.sa
 import { ButtonSampleComponent } from './button/button.sample';
 import { ButtonShowcaseSampleComponent } from './button-showcase/button-showcase.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
+import { CalendarShowcaseSampleComponent } from './calendar-showcase/calendar-showcase.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CardShowcaseSampleComponent } from './card-showcase/card-showcase.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
@@ -226,6 +227,10 @@ export const appRoutes: Routes = [
     {
         path: 'calendar',
         component: CalendarSampleComponent
+    },
+    {
+        path: 'calendar-showcase',
+        component: CalendarShowcaseSampleComponent
     },
     {
         path: 'calendar-views',

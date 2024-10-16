@@ -87,9 +87,9 @@
                 {{ option }}</igx-select-item>
         </igx-select>
         }
-
-        <br />
-
-        <ng-content></ng-content>
     </div>
+
+    <ng-container *ngIf="customControlsTemplate">
+        <ng-container *ngTemplateOutlet="customControlsTemplate"></ng-container>
+    </ng-container>
 </div>

@@ -2,7 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { IgxAvatarComponent } from 'igniteui-angular';
 import { CommonModule } from '@angular/common';
 import { defineComponents, IgcAvatarComponent } from "igniteui-webcomponents";
-import { PropertyPanelConfig, PropertiesPanelComponent } from '../properties-panel/properties-panel.component';
+import { PropertyPanelConfig } from '../properties-panel/properties-panel.component';
 import { PropertyChangeService } from '../properties-panel/property-change.service';
 
 defineComponents(IgcAvatarComponent);
@@ -13,7 +13,7 @@ defineComponents(IgcAvatarComponent);
     templateUrl: `avatar-showcase.sample.html`,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
-    imports: [CommonModule, IgxAvatarComponent, PropertiesPanelComponent]
+    imports: [CommonModule, IgxAvatarComponent]
 })
 
 export class AvatarShowcaseSampleComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PropertyChangeService } from './property-change.service';
@@ -79,6 +79,7 @@ export class PropertiesPanelComponent implements OnInit {
 
     protected form!: FormGroup;
     protected radioAlignment = RadioGroupAlignment.vertical;
+    protected customControlsTemplate: TemplateRef<any> | null = null;
 
     constructor(private propertyChangeService: PropertyChangeService) { }
 
@@ -86,6 +87,10 @@ export class PropertiesPanelComponent implements OnInit {
         this.form = this.createFormGroup(this.config);
         this.propertyChangeService.emitInitialValues(this.config);
         this.form.valueChanges.subscribe(this.onFormValueChange.bind(this));
+
+        this.propertyChangeService.customControls$.subscribe(template => {
+            this.customControlsTemplate = template;
+          });
     }
 
     protected onFormValueChange(value: any): void {

@@ -6,22 +6,27 @@
 
 #properties-panel {
     padding: .5rem;
-}
 
-igx-input-group {
-    --ig-size: var(--ig-size-small);
-}
-
-.switch-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    label {
-        margin: 0;
+    igx-input-group {
+        --ig-size: var(--ig-size-small);
     }
-}
 
-.panel-title {
-    margin-bottom: 2rem;
+    .switch-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        label {
+            margin: 0;
+        }
+    }
+
+    .panel-title {
+        margin-bottom: 2rem;
+    }
+
+
+     > *:not(:last-child) {
+        margin-bottom: 16px;
+    }
 }
