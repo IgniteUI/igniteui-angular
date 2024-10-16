@@ -157,6 +157,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
     private _expressionTree: IExpressionTree;
     private _fields: FieldType[];
+    private _shouldEmitTreeChange = true;
 
     constructor(protected iconService: IgxIconService) {
         this.registerSVGIcons();
@@ -173,7 +174,9 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * Commits the expression tree in the current state.
      */
     public commit(): void {
+        this._shouldEmitTreeChange = false;
         this.queryTree.commitCurrentState();
+        this._shouldEmitTreeChange = true;
     }
 
     /**
@@ -236,7 +239,9 @@ export class IgxQueryBuilderComponent implements OnDestroy {
 
     public onExpressionTreeChange(tree: IExpressionTree) {
         this._expressionTree = tree;
-        this.expressionTreeChange.emit();
+        if (this._shouldEmitTreeChange) {
+            this.expressionTreeChange.emit();
+        }
     }
 
     private registerSVGIcons(): void {
