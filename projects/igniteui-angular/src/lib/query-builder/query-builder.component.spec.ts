@@ -2179,15 +2179,12 @@ describe('IgxQueryBuilder', () => {
         it('Should NOT throw errors when an invalid condition is committed through API.', fakeAsync(() => {
             spyOn(console, 'error');
             // Double-click the existing chip to enter edit mode.
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [2], true);
             tick(50);
             fix.detectChanges();
 
             // Change the current condition
-            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
-            UIInteractions.clickAndSendInputElementValue(input, '');
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
             expect(queryBuilder.canCommit()).toBeFalse();
 
             // Apply the changes
@@ -2196,6 +2193,76 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             expect(console.error).not.toHaveBeenCalled();
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [2], 'OrderName', 'Null', '');
+            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toEqual(`{
+  "filteringOperands": [
+    {
+      "fieldName": "OrderId",
+      "condition": {
+        "name": "in",
+        "isUnary": false,
+        "isNestedQuery": true,
+        "iconName": "in"
+      },
+      "conditionName": "in",
+      "searchTree": {
+        "filteringOperands": [
+          {
+            "fieldName": "ProductName",
+            "condition": {
+              "name": "contains",
+              "isUnary": false,
+              "iconName": "filter_contains"
+            },
+            "conditionName": "contains",
+            "searchVal": "a"
+          },
+          {
+            "fieldName": "Released",
+            "condition": {
+              "name": "true",
+              "isUnary": true,
+              "iconName": "filter_true"
+            },
+            "conditionName": "true"
+          }
+        ],
+        "operator": 0,
+        "entity": "Products",
+        "returnFields": [
+          "Id"
+        ],
+        "fieldName": null
+      }
+    },
+    {
+      "fieldName": "OrderId",
+      "condition": {
+        "name": "greaterThan",
+        "isUnary": false,
+        "iconName": "filter_greater_than"
+      },
+      "conditionName": "greaterThan",
+      "searchVal": 3,
+      "ignoreCase": true
+    },
+    {
+      "fieldName": "OrderName",
+      "conditionName": "after",
+      "searchVal": null,
+      "searchTree": null
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "OrderId",
+    "OrderName",
+    "OrderDate",
+    "Delivered"
+  ]
+}`);
         }));
     });
 
