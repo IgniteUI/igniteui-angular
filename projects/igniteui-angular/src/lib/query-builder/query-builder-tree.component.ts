@@ -117,6 +117,7 @@ class ExpressionOperandItem extends ExpressionItem {
     }
 }
 
+/** @hidden */
 @Component({
     selector: 'igx-query-builder-tree',
     templateUrl: './query-builder-tree.component.html',
