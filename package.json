@@ -110,7 +110,7 @@
     "eslint": "^8.53.0",
     "fs-extra": "^11.1.1",
     "globby": "^13.2.2",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.0",
     "gulp-cached": "^1.1.1",
     "gulp-concat": "^2.6.1",
     "gulp-shell": "^0.6.5",
