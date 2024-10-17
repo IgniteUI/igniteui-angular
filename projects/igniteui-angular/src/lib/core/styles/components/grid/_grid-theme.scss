@@ -3264,8 +3264,9 @@
                 max-height: 100%;
             }
         }
-        %igx-grid_tr-pivot-row-area {
-            padding-bottom: 0;
+
+        %igx-grid__tr-pivot--row-area {
+            padding-bottom: rem(4px);
         }
     }
 
