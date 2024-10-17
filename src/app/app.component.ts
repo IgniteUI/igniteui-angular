@@ -745,6 +745,11 @@ export class AppComponent implements OnInit {
             name: 'Carousel'
         },
         {
+            link: '/checkbox-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Checkbox'
+        },
+        {
             link: '/chip-showcase',
             icon: 'radio_button_unchecked',
             name: 'Chips'
@@ -785,14 +790,14 @@ export class AppComponent implements OnInit {
             name: 'Input Group'
         },
         {
-            link: '/inputs-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Inputs'
-        },
-        {
             link: '/list-showcase',
             icon: 'radio_button_unchecked',
             name: 'List'
+        },
+        {
+            link: '/radio-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Radio'
         },
         {
             link: '/select-showcase',
@@ -813,6 +818,11 @@ export class AppComponent implements OnInit {
             link: '/stepper-showcase',
             icon: 'radio_button_unchecked',
             name: 'Stepper'
+        },
+        {
+            link: '/switch-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Switch'
         },
         {
             link: '/tabs-showcase',

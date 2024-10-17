@@ -12,6 +12,7 @@ import { CardSampleComponent } from './card/card.sample';
 import { CardShowcaseSampleComponent } from './card-showcase/card-showcase.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
 import { CarouselShowcaseSampleComponent } from './carousel-showcase/carousel-showcase.sample';
+import { CheckboxShowcaseSampleComponent } from './checkbox-showcase/checkbox-showcase.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
 import { ChipsShowcaseSampleComponent } from './chips-showcase/chips-showcase.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
@@ -25,7 +26,6 @@ import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { IconButtonShowcaseSampleComponent } from './icon-button-showcase/icon-button-showcase.sample';
 import { InputSampleComponent } from './input/input.sample';
-import { InputsShowcaseSampleComponent } from './inputs-showcase/inputs-showcase.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
 import { InputGroupShowcaseSampleComponent } from './input-group-showcase/input-group-showcase.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
@@ -42,6 +42,7 @@ import { SliderShowcaseSampleComponent } from './slider-showcase/slider-showcase
 import { SplitterSampleComponent } from './splitter/splitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
 import { SnackbarShowcaseSampleComponent } from './snackbar-showcase/snackbar-showcase.sample';
+import { SwitchShowcaseSampleComponent } from './switch-showcase/switch-showcase.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
 import { TypographySampleComponent } from './styleguide/typography/typography.sample';
@@ -92,6 +93,7 @@ import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { OverlayPresetsSampleComponent } from './overlay/overlay-presets.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { RadioShowcaseSampleComponent } from './radio-showcase/radio-showcase.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
@@ -254,6 +256,10 @@ export const appRoutes: Routes = [
         component: CarouselShowcaseSampleComponent
     },
     {
+        path: 'checkbox-showcase',
+        component: CheckboxShowcaseSampleComponent
+    },
+    {
         path: 'combo',
         component: ComboSampleComponent
     },
@@ -338,10 +344,6 @@ export const appRoutes: Routes = [
         component: InputSampleComponent
     },
     {
-        path: 'inputs-showcase',
-        component: InputsShowcaseSampleComponent
-    },
-    {
         path: 'input-group',
         component: InputGroupSampleComponent
     },
@@ -410,6 +412,10 @@ export const appRoutes: Routes = [
         component: RadioSampleComponent
     },
     {
+        path: 'radio-showcase',
+        component: RadioShowcaseSampleComponent
+    },
+    {
         path: 'rating',
         component: RatingSampleComponent
     },
@@ -444,6 +450,10 @@ export const appRoutes: Routes = [
     {
         path: 'snackbar-showcase',
         component: SnackbarShowcaseSampleComponent
+    },
+    {
+        path: 'switch-showcase',
+        component: SwitchShowcaseSampleComponent
     },
     {
         path: 'colors',
