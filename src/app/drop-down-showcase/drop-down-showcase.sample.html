@@ -12,15 +12,16 @@
 
     <div class="sample-wrapper">
         <strong>WC DropDown</strong>
-        <igc-dropdown id="dropdown2">
+        <igc-dropdown id="dropdownWC">
             <igc-button slot="target">Toggle</igc-button>
             <ng-container *ngFor="let item of items">
                 <ng-container *ngIf="item.header">
                     <igc-dropdown-header>{{ item.field }}</igc-dropdown-header>
                 </ng-container>
-                <igc-dropdown-item 
-                    [disabled]="item.disabled" 
-                    [selected]="item.selected" 
+                <igc-dropdown-item
+                    *ngIf="!item.header"
+                    [disabled]="item.disabled"
+                    [selected]="item.selected"
                     (click)="onSelection(item)">
                     {{ item.field }}
                 </igc-dropdown-item>

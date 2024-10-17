@@ -22,7 +22,6 @@ import { defineComponents, IgcDropdownComponent, IgcButtonComponent} from "ignit
 
 defineComponents(IgcDropdownComponent, IgcButtonComponent);
 
-
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'drop-down-showcase-sample',

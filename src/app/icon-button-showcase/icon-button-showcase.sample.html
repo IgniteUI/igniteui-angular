@@ -4,7 +4,7 @@
         <h4 class="sample-title">WC Icon Button</h4>
     </article>
 
-    <div class="buttons-sample">
+    <div class="buttons-sample" [style.--ig-size]="'var(--ig-size-' + size + ')'">
         <div class="button-sample">
             <button [igxIconButton]="variant" [disabled]="disabled">
                 <igx-icon>favorite</igx-icon>

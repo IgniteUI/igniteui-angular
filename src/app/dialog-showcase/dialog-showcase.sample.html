@@ -4,9 +4,15 @@
         <p class="sample-description">Detailed description to be added</p>
         <br>
         <button igxButton="contained" igxRipple (click)="dialog.open()">Trigger Dialog</button>
-        <igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (leftButtonSelect)="dialog.close()" rightButtonLabel="OK"
-                    (rightButtonSelect)="onDialogOKSelected($event)"
-                    message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
+        <igx-dialog #dialog
+        [title]="title"
+        [closeOnEscape]="!keepOpenOnEscape"
+        [closeOnOutsideSelect]="closeOnOutsideClick"
+        leftButtonLabel="Cancel"
+        (leftButtonSelect)="dialog.close()"
+        rightButtonLabel="OK"
+        (rightButtonSelect)="onDialogOKSelected($event)"
+        message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
         </igx-dialog>
     </article>
 
@@ -14,12 +20,14 @@
         <h4 class="sample-title">WC Dialog</h4>
         <p class="sample-description">Detailed description to be added</p>
         <br>
-        <button igxButton="contained" igxRipple (click)="dialog.open()">Trigger Dialog</button>
-        <igc-dialog #dialog>
-            <span slot="title">Confirmation</span>
+        <button igxButton="contained" igxRipple (click)="dialogWC.show()">Trigger Dialog</button>
+        <igc-dialog #dialogWC
+        [title]="title"
+        [keepOpenOnEscape]="keepOpenOnEscape"
+        [closeOnOutsideClick]="closeOnOutsideClick">
             <span>Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?</span>
-            <igc-button slot="footer" (click)="dialog.close()" variant="flat">Cancel</igc-button>
-            <igc-button slot="footer" (click)="onDialogOKSelected($event)" variant="contained">OK</igc-button>
+            <igc-button slot="footer" (click)="dialogWC.hide()" variant="flat">Cancel</igc-button>
+            <igc-button slot="footer" (click)="dialogWC.hide()" variant="flat">OK</igc-button>
         </igc-dialog>
     </article>
 </section>

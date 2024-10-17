@@ -1,8 +1,8 @@
 <div class="flex-container">
     <div class="flex-item">
         <strong>Angular Expansion Panel</strong>
-        <igx-expansion-panel>
-            <igx-expansion-panel-header>
+        <igx-expansion-panel [collapsed]="!open">
+            <igx-expansion-panel-header [disabled]="disabled" [iconPosition]="indicatorPositionAngular">
                 <igx-expansion-panel-title>
                     The Expendables
                 </igx-expansion-panel-title>
@@ -18,10 +18,10 @@
             </igx-expansion-panel-body>
         </igx-expansion-panel>
     </div>
-    
+
     <div class="flex-item">
         <strong>WC Expansion Panel</strong>
-        <igc-expansion-panel>
+        <igc-expansion-panel [open]="open" [disabled]="disabled" [indicatorPosition]="indicatorPositionWC">
             <span slot="title">The Expendables</span>
             <span slot="subtitle">Action, Adventure, Thriller</span>
             <div>Barney Ross leads the "Expendables", a band of highly skilled

@@ -20,6 +20,12 @@ registerIconFromText("favorite", favorite );
 })
 export class IconButtonShowcaseSampleComponent implements OnInit {
     public panelConfig: PropertyPanelConfig = {
+        size: {
+            control: {
+                type: "button-group",
+                options: ['small', 'medium', 'large'],
+            }
+        },
         variant: {
             control: {
                 type: "button-group",
@@ -39,6 +45,10 @@ export class IconButtonShowcaseSampleComponent implements OnInit {
 
     public ngOnInit() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
+    }
+
+    protected get size() {
+        return this.propertyChangeService.getProperty('size');
     }
 
     protected get variant() {
