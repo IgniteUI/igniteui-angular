@@ -192,10 +192,17 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      * ```
      */
     public select(item: any): void {
-        if (item !== undefined) {
-            const newSelection = this.selectionService.add_items(this.id, item instanceof Array ? item : [item], true);
-            this.setSelection(newSelection);
+        if (item === undefined) {
+            return;
         }
+
+        let validItems = Array.isArray(item) ? item : [item];
+        if (!this.isRemote && this.data?.length) {
+            validItems = validItems.filter(i => this.isItemInData(i));
+        }
+
+        const newSelection = this.selectionService.add_items(this.id, validItems, true);
+        this.setSelection(newSelection, undefined, true, true);
     }
 
     /**
@@ -212,12 +219,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public writeValue(value: any): void {
-        const oldSelection = super.selection;
-        this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
-        this.cdr.markForCheck();
-        this._displayValue = this.createDisplayText(super.selection, oldSelection);
-        this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
-        this.filterValue = this._displayValue?.toString() || '';
+        this._value = value !== undefined ? [value] : [];
+        this.setSelection(new Set(this._value), undefined, false, false);
     }
 
     /** @hidden @internal */
@@ -498,14 +501,20 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return !!searchValue && value.toString().toLowerCase().includes(searchValue.toLowerCase());
     };
 
-    protected setSelection(newSelection: any): void {
+    protected setSelection(newSelection: any, event?: Event, emit: boolean = true, updateModel: boolean = true): void {
         const newValueAsArray = newSelection ? Array.from(newSelection) as IgxComboItemComponent[] : [];
         const oldValueAsArray = Array.from(this.selectionService.get(this.id) || []);
-        const newItems = this.convertKeysToItems(newValueAsArray);
+
+        let validItems = newValueAsArray;
+        if (!this.isRemote && this.data && this.data.length > 0) {
+            validItems = validItems.filter(item => this.isItemInData(item));
+        }
+
+        const newItems = this.convertKeysToItems(validItems);
         const oldItems = this.convertKeysToItems(oldValueAsArray);
-        const displayText = this.createDisplayText(this.convertKeysToItems(newValueAsArray), oldValueAsArray);
+        const displayText = this.createDisplayText(newItems, oldValueAsArray);
         const args: ISimpleComboSelectionChangingEventArgs = {
-            newValue: newValueAsArray[0],
+            newValue: validItems[0],
             oldValue: oldValueAsArray[0],
             newSelection: newItems[0],
             oldSelection: oldItems[0],
@@ -513,23 +522,29 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             owner: this,
             cancel: false
         };
-        if (args.newSelection !== args.oldSelection) {
+
+        if (emit && args.newSelection !== args.oldSelection) {
             this.selectionChanging.emit(args);
         }
+
         // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
-            let argsSelection = this.isValid(args.newValue)
-                ? args.newValue
+            const argsSelection = this.isValid(args.newValue)
+                ? [args.newValue]
                 : [];
-            argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
+
             this.selectionService.select_items(this.id, argsSelection, true);
             this._value = argsSelection;
+
             if (this._updateInput) {
                 this.comboInput.value = this._displayValue = this.searchValue = displayText !== args.displayText
                     ? args.displayText
                     : this.createDisplayText(super.selection, [args.oldValue]);
             }
-            this._onChangeCallback(args.newValue);
+
+            if (updateModel) {
+                this._onChangeCallback(args.newValue);
+            }
             this._updateInput = true;
         } else if (this.isRemote) {
             this.registerRemoteEntries(newValueAsArray, false);
