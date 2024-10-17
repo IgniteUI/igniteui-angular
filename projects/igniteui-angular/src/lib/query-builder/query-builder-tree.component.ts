@@ -220,7 +220,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     * Returns the expression tree.
     */
     public get expressionTree(): IExpressionTree {
-        return this._expressionTree;
+        return this._newEntityExpressionTree ?? this._expressionTree;
     }
 
     /**
@@ -228,6 +228,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
+        if (this._newEntityExpressionTree) {
+            this._newEntityExpressionTree = null;
+        }
+
         if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
             this._expressionTree = expressionTree;
             if (!expressionTree) {
@@ -468,7 +472,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     private destroy$ = new Subject<any>();
     private _parentExpression: ExpressionOperandItem;
-    private _initialExpressionTree: IExpressionTree;
     private _selectedEntity: EntityType;
     private _selectedReturnFields: string | string[];
     private _selectedField: FieldType;
@@ -487,6 +490,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _locale;
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _newEntityExpressionTree: IExpressionTree = null;
+    private _initialState: IExpressionTree = null;
 
     public get level(): number {
         let parent = this.elRef.nativeElement.parentElement;
@@ -544,6 +549,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public set selectedEntity(value: string) {
+        this._selectedEntity = this.entities?.find(el => el.name === value);
+    }
+
+    /**
+     * @hidden @internal
+     */
     public get selectedEntity(): EntityType {
         return this._selectedEntity;
     }
@@ -581,21 +593,27 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden
      */
     public onEntityChangeConfirm() {
+        if (this._parentExpression) {
+            this._newEntityExpressionTree = this.createExpressionTreeFromGroupItem(this.createExpressionGroupItem(this._expressionTree));
+        }
+        
         this._selectedEntity = this._entityNewValue;
         if (!this._selectedEntity.fields) {
             this._selectedEntity.fields = [];
         }
         this.fields = this._entityNewValue ? this._entityNewValue.fields : [];
-
         this._selectedReturnFields = this._entityNewValue.fields?.map(f => f.field);
 
-        if (this._expressionTree) {
-            this._expressionTree.entity = this._selectedEntity.name;
-            this._expressionTree.returnFields = [];
-            this._expressionTree.filteringOperands = [];
+        const exprTree = this._newEntityExpressionTree ?? this._expressionTree;
+        if (exprTree) {
+            exprTree.entity = this._entityNewValue.name;
+            exprTree.returnFields = [];
+            exprTree.filteringOperands = [];
 
             this._editedExpression = null;
-            this.expressionTreeChange.emit(this._expressionTree);
+            if (!this.parentExpression) {
+                this.expressionTreeChange.emit(exprTree);
+            }
 
             this.addAndGroup();
         }
@@ -621,7 +639,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this._selectedReturnFields !== value && oldValue !== value) {
             this._selectedReturnFields = value;
 
-            if (this._expressionTree) {
+            if (this._expressionTree && !this.parentExpression) {
                 this._expressionTree.returnFields = value;
                 this.expressionTreeChange.emit(this._expressionTree);
             }
@@ -771,6 +789,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup, this.selectedEntity?.name, this.selectedReturnFields);
+        this._newEntityExpressionTree = null;
         this.expressionTreeChange.emit(this._expressionTree);
     }
 
@@ -791,23 +810,29 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this.innerQueries) {
             const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
             if (innerQuery) {
-                innerQuery.expressionTree = this._initialExpressionTree;
-
+                
                 if (innerQuery._editedExpression) {
                     innerQuery.cancelOperandEdit();
                 }
+
+                innerQuery.expressionTree = this._initialState;
+                innerQuery.selectedEntity = this._initialState?.entity;
+                innerQuery.selectedReturnFields = this._initialState?.returnFields;
+
             }
         }
 
         if (this._editedExpression) {
             this._editedExpression.inEditMode = false;
 
-            if (!this._editedExpression.expression.fieldName) {
+            if (!this._editedExpression.expression.fieldName && !this._initialState) {
                 this.deleteItem(this._editedExpression);
             }
 
             this._editedExpression = null;
         }
+
+        this._initialState = null;
     }
 
     /**
@@ -815,6 +840,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public operandCanBeCommitted(): boolean {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
+        
         return this.selectedField && this.selectedCondition &&
             (
                 (
@@ -911,9 +937,17 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         expressionItem.inEditMode = true;
         this._editedExpression = expressionItem;
         if (expressionItem.expression.searchTree) {
-            this._initialExpressionTree = expressionItem.expression.searchTree;
+            this._initialState = 
+            {
+                filteringOperands: [],
+                operator: expressionItem.expression.searchTree.operator,
+                fieldName: expressionItem.expression.searchTree.fieldName,
+                entity: expressionItem.expression.searchTree.entity,
+                returnFields: expressionItem.expression.searchTree.returnFields
+            };
+            expressionItem.expression.searchTree.filteringOperands.forEach(o => this._initialState.filteringOperands.push(o));
         } else {
-            this._initialExpressionTree = null;
+            this._initialState = null;
         }
 
         this.cdr.detectChanges();
@@ -1245,16 +1279,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     public onReturnFieldSelectChanging(event: IComboSelectionChangingEventArgs) {
-        this.initExpressionTree(this.selectedEntity.name, event.newSelection)
+        this.initExpressionTree(this.selectedEntity.name, event.newSelection.map(item => item.field))
     }
 
     public initExpressionTree(selectedEntityName: string, selectedReturnFields: string[]) {
-        console.log("recals", selectedEntityName, selectedReturnFields)
         if (!this._expressionTree) {
             this._expressionTree = this.createExpressionTreeFromGroupItem(new ExpressionGroupItem(FilteringLogic.And, this.rootGroup), selectedEntityName, selectedReturnFields);
-        } else {
-            this._expressionTree.entity = selectedEntityName;
-            this._expressionTree.returnFields = selectedReturnFields;
+        }
+
+        if (!this.parentExpression) {
+            this.expressionTreeChange.emit(this._expressionTree);
         }
     }
 
