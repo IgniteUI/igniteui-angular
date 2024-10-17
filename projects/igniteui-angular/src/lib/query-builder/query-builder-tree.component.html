@@ -96,11 +96,11 @@
                 <span igxPrefix class="igx-filter-tree__expression-condition">
                     {{
                         getConditionFriendlyName(
-                            expressionItem.expression.condition.name
+                            expressionItem.expression.condition?.name
                         )
                     }}
                 </span>
-                <span *ngIf="!expressionItem.expression.condition.isUnary">
+                <span *ngIf="!expressionItem.expression.condition?.isUnary">
                     <ng-container *ngIf="expressionItem.expression.searchTree">
                         <strong>{{expressionItem.expression.searchTree.entity}}</strong>&nbsp;/ {{formatReturnFields(expressionItem.expression.searchTree)}}
                     </ng-container>
@@ -131,8 +131,8 @@
                 {{
                     expressionItem.expression.searchTree ?
                         expressionItem.expression.searchTree.returnFields.join(', ') :
-                        expressionItem.expression.condition.isUnary ?
-                            getConditionFriendlyName(expressionItem.expression.condition.name) :
+                        expressionItem.expression.condition?.isUnary ?
+                            getConditionFriendlyName(expressionItem.expression.condition?.name) :
                             expressionItem.expression.searchVal
                 }}
             </div>
