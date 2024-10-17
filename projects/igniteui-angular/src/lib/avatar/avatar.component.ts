@@ -6,7 +6,8 @@ import {
     Input,
     OnInit,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 
 import { mkenum } from '../core/utils';
@@ -53,8 +54,10 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
 @Component({
     selector: 'igx-avatar',
     templateUrl: 'avatar.component.html',
+    styleUrls: ['themes/styles.scss'],
     standalone: true,
-    imports: [IgxIconComponent, NgTemplateOutlet]
+    imports: [IgxIconComponent, NgTemplateOutlet],
+    encapsulation: ViewEncapsulation.None
 })
 export class IgxAvatarComponent implements OnInit {
     /**
