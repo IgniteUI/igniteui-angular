@@ -1,7 +1,7 @@
 import * as path from 'path';
 
-import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { setupTestTree } from '../common/setup.spec';
 
 const version = '18.1.0';
 
@@ -9,36 +9,8 @@ describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
 
-    const configJson = {
-        projects: {
-            testProj: {
-                root: '/',
-                sourceRoot: '/testSrc',
-                architect: {
-                    build: {
-                        options: {
-                            styles: [
-                                "/testSrc/styles.scss"
-                            ] as (string | object)[]
-                        }
-                    }
-                }
-            }
-        },
-        schematics: {
-            '@schematics/angular:component': {
-                prefix: 'appPrefix'
-            }
-        }
-    };
-
     beforeEach(() => {
-        appTree = new UnitTestTree(new EmptyTree());
-        appTree.create('/angular.json', JSON.stringify(configJson));
-        appTree.create('/testSrc/styles.scss', `
-@use "mockStyles.scss";
-@forward something;
-`);
+        appTree = setupTestTree();
     });
 
     const migrationName = 'migration-39';
@@ -121,7 +93,6 @@ describe(`Update to ${version}`, () => {
     });
 
     it('Should replace deprecated `children` property of Columns', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/column-test.component.ts',
             `import { Component } from '@angular/core';
@@ -165,7 +136,6 @@ export class ColumnsTestComponent {
 
 
     it('Should replace deprecated `isFirstPageDisabled`/`isLastPageDisabled` on paginator', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/paginator-test.component.ts',
             `import { Component } from '@angular/core';

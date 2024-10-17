@@ -678,7 +678,8 @@
             margin: rem(16px) 0;
 
             ~ igx-input-group,
-            ~ igx-date-picker {
+            ~ igx-date-picker,
+            ~ igx-time-picker {
                 margin-inline-start: rem(16px);
             }
         }
