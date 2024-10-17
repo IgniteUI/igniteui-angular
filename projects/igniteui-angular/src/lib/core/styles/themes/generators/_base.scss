@@ -92,6 +92,13 @@
         --ig-spacing-block-small: 1;
         --ig-spacing-block-medium: 1;
         --ig-spacing-block-large: 1;
+        --ig-direction: 1;
+
+        [dir='rtl'],
+        [dir='rtl'] &,
+        &[dir='rtl'] {
+            --ig-direction: -1;
+        }
     }
 
     @if not(list.index($exclude, 'palette')) {
