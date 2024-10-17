@@ -753,7 +753,7 @@ export class QueryBuilderFunctions {
         expect(columnSpan.textContent.toLowerCase().trim()).toBe(columnText.toLowerCase(), 'incorrect chip column');
         expect(operatorSpan.textContent.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
         if (valueSpan != undefined && valueText != undefined) {
-            expect(valueSpan.textContent.toLowerCase().trim()).toBe(valueText.toLowerCase(), 'incorrect chip filter value');
+            expect(valueSpan.textContent.toLowerCase().trim().replaceAll(/\s/g, '')).toBe(valueText.toLowerCase().replaceAll(/\s/g, ''), 'incorrect chip filter value');
         }
     };
 

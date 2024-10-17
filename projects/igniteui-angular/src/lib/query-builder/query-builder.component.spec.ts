@@ -1059,45 +1059,6 @@ describe('IgxQueryBuilder', () => {
 }`);
         }));
 
-        it('Should disable value fields when isNestedQuery condition is selected', fakeAsync(() => {
-            //Run test for all data type fields of the Order entity
-            for (let i = 0; i <= 3; i++) {
-                QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0); // Click the initial 'Add Or Group' button.
-                tick(100);
-                fix.detectChanges();
-
-                QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-                tick(100);
-                fix.detectChanges();
-
-                QueryBuilderFunctions.selectColumnInEditModeExpression(fix, i); // Select 'OrderId','OrderName','OrderDate','Delivered' column.
-
-                let InConditionIndex;
-                switch (i) {
-                    case 0:
-                    case 1: InConditionIndex = 10; break;// for string and number
-                    case 2: InConditionIndex = 16; break; //for date
-                    case 3: InConditionIndex = 7; break; // for boolean
-                }
-
-                //Verify 'In' disables value input and renders empty sub query
-                QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex); // Select 'In' operator.
-                QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
-                let nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
-                expect(nestedTree).toBeDefined();
-
-                //Verify 'NotIn' disables value input and renders empty sub query
-                QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex + 1); // Select 'NotIn' operator.
-                QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
-                nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
-                expect(nestedTree).toBeDefined();
-
-                const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
-                closeBtn.click();
-                fix.detectChanges();
-            }
-        }));
-
         it('Should correctly apply an \'not-in\' column condition through UI.', fakeAsync(() => {
             // Verify there is no expression.
             expect(queryBuilder.expressionTree).toBeUndefined();
@@ -1181,6 +1142,45 @@ describe('IgxQueryBuilder', () => {
     "Delivered"
   ]
 }`);
+        }));
+
+        it('Should disable value fields when isNestedQuery condition is selected', fakeAsync(() => {
+            //Run test for all data type fields of the Order entity
+            for (let i = 0; i <= 3; i++) {
+                QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0); // Click the initial 'Add Or Group' button.
+                tick(100);
+                fix.detectChanges();
+
+                QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+                tick(100);
+                fix.detectChanges();
+
+                QueryBuilderFunctions.selectColumnInEditModeExpression(fix, i); // Select 'OrderId','OrderName','OrderDate','Delivered' column.
+
+                let InConditionIndex;
+                switch (i) {
+                    case 0:
+                    case 1: InConditionIndex = 10; break;// for string and number
+                    case 2: InConditionIndex = 16; break; //for date
+                    case 3: InConditionIndex = 7; break; // for boolean
+                }
+
+                //Verify 'In' disables value input and renders empty sub query
+                QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex); // Select 'In' operator.
+                QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
+                let nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
+                expect(nestedTree).toBeDefined();
+
+                //Verify 'NotIn' disables value input and renders empty sub query
+                QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex + 1); // Select 'NotIn' operator.
+                QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
+                nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
+                expect(nestedTree).toBeDefined();
+
+                const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
+                closeBtn.click();
+                fix.detectChanges();
+            }
         }));
 
         it('Should correctly focus the search value input when editing the filtering expression', fakeAsync(() => {
@@ -1685,6 +1685,31 @@ describe('IgxQueryBuilder', () => {
             ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
         }));
 
+        it(`'In' condition 'commit' button should be disabled if there are no return fields in the nested query.`, fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Double-click the parent chip 'Products' to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+            tick(50);
+            fix.detectChanges();
+
+            let commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
+
+            // Deselect all fields
+            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
+            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement);
+
+            // Select all fields
+            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
+            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
+        }));
+
         it('Should collapse nested query when it is committed.', fakeAsync(() => {
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
@@ -1709,6 +1734,29 @@ describe('IgxQueryBuilder', () => {
 
             // Verify that the nested query is collapsed
             expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+        }));
+
+        it(`Should discard the changes in the fields if 'close' button of nested query condition is clicked.`, fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            // Verify parent chip expression
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'OrderId', 'In', 'Products / Id');
+
+            // Double-click the parent chip 'Products' to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Select 'Product Name' fields
+            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [1, 2], 1);
+            const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
+            closeBtn.click();
+            tick(50);
+            fix.detectChanges();
+            // Verify parent chip expression is not changed
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'OrderId', 'In', 'Products / Id');
         }));
 
         it(`Should toggle the nested query on 'expand'/'collapse' button click.`, fakeAsync(() => {
