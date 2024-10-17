@@ -40,6 +40,7 @@ import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
 import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
+import { ExpressionsTreeUtil } from '../../../data-operations/expressions-tree-util';
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]',
@@ -221,13 +222,13 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     /**
      * Gets the minimum height.
-     * 
-     * Setting value in template: 
+     *
+     * Setting value in template:
      * ```ts
-     * [minHeight]="'<number><unit (px|rem|etc..)>'" 
+     * [minHeight]="'<number><unit (px|rem|etc..)>'"
      * ```
-     * 
-     * Example for setting a value: 
+     *
+     * Example for setting a value:
      * ```ts
      * [minHeight]="'700px'"
      * ```
@@ -258,13 +259,13 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     /**
      * Gets the maximum height.
-     * 
-     * Setting value in template: 
+     *
+     * Setting value in template:
      * ```ts
-     * [maxHeight]="'<number><unit (px|rem|etc..)>'" 
+     * [maxHeight]="'<number><unit (px|rem|etc..)>'"
      * ```
-     * 
-     * Example for setting a value: 
+     *
+     * Example for setting a value:
      * ```ts
      * [maxHeight]="'700px'"
      * ```
@@ -570,7 +571,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
 
         for (const operand of gridExpressionsTree.filteringOperands) {
-            if (operand instanceof FilteringExpressionsTree) {
+            if (ExpressionsTreeUtil.isTree(operand)) {
                 const columnExprTree = operand as FilteringExpressionsTree;
                 if (columnExprTree.fieldName === this.column.field) {
                     continue;

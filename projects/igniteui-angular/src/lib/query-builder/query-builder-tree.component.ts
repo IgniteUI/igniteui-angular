@@ -1340,7 +1340,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
 
             for (const expr of expressionTree.filteringOperands) {
-                if (expr instanceof FilteringExpressionsTree) {
+                if (ExpressionsTreeUtil.isTree(expr)) {
                     groupItem.children.push(this.createExpressionGroupItem(expr, groupItem, expressionTree.entity));
                 } else {
                     const filteringExpr = expr as IFilteringExpression;

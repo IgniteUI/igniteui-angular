@@ -83,10 +83,10 @@ export class ExpressionsTreeUtil {
         // In ESF, values are stored as a Set.
         // Those values are converted to an array before returning string in the stringifyCallback
         // now we need to convert those back to Set
-        if (Array.isArray(searchValue)) {
+        if (Array.isArray(searchValue) && !(searchValue instanceof Set)) {
             return new Set(searchValue);
-        } else if (dataType.toLowerCase().includes('date') || dataType.toLowerCase().includes('time')) {
-            return DateTimeUtil.parseIsoDate(searchValue);
+        } else if ((dataType.toLowerCase().includes('date') || dataType.toLowerCase().includes('time')) && !(searchValue instanceof Date)) {
+            return DateTimeUtil.parseIsoDate(searchValue) ?? searchValue;
         }
 
         return searchValue;
@@ -153,7 +153,7 @@ export class ExpressionsTreeUtil {
         return filters.condition(name);
     }
 
-    private static isTree(entry: IExpressionTree | IFilteringExpression): entry is IExpressionTree {
+    public static isTree(entry: IExpressionTree | IFilteringExpression): entry is IExpressionTree {
         return 'operator' in entry;
     }
 

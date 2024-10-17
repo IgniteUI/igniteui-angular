@@ -1835,13 +1835,12 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     public set filteringExpressionsTree(value) {
-        if (value && value instanceof FilteringExpressionsTree) {
-            const val = (value as FilteringExpressionsTree);
-            for (let index = 0; index < val.filteringOperands.length; index++) {
-                if (!(val.filteringOperands[index] instanceof FilteringExpressionsTree)) {
-                    const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, val.filteringOperands[index].fieldName);
-                    newExpressionsTree.filteringOperands.push(val.filteringOperands[index] as IFilteringExpression);
-                    val.filteringOperands[index] = newExpressionsTree;
+        if (value && ExpressionsTreeUtil.isTree(value)) {
+            for (let index = 0; index < value.filteringOperands.length; index++) {
+                if (!(ExpressionsTreeUtil.isTree(value.filteringOperands[index]))) {
+                    const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, value.filteringOperands[index].fieldName);
+                    newExpressionsTree.filteringOperands.push(value.filteringOperands[index]);
+                    value.filteringOperands[index] = newExpressionsTree;
                 }
             }
 
@@ -1890,7 +1889,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             return;
         }
 
-        if (value && value instanceof FilteringExpressionsTree) {
+        if (value && ExpressionsTreeUtil.isTree(value)) {
             value.type = FilteringExpressionsTreeType.Advanced;
             this._advancedFilteringExpressionsTree = ExpressionsTreeUtil.recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
             this.filteringPipeTrigger++;

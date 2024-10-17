@@ -7,6 +7,7 @@ import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
+import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
 
 /* blazorElement */
 /* wcElementTag: igc-grid-toolbar-advanced-filtering */
@@ -63,10 +64,10 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
         const columnNames = [];
         if (!filteringTree) return columnNames;
         filteringTree.filteringOperands.forEach((expr) => {
-            if (expr instanceof FilteringExpressionsTree) {
+            if (ExpressionsTreeUtil.isTree(expr)) {
                 columnNames.push(...this.extractUniqueFieldNamesFromFilterTree(expr));
             } else {
-                columnNames.push((expr as IFilteringExpression).fieldName);
+                columnNames.push(expr.fieldName);
             }
         });
         return [...new Set(columnNames)];

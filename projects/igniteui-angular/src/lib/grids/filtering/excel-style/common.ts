@@ -1,5 +1,6 @@
+import { ExpressionsTreeUtil } from '../../../data-operations/expressions-tree-util';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
+import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 
 /**
  * @hidden @internal
@@ -55,17 +56,16 @@ function generateExpressionsListRecursive(expressions: IFilteringExpressionsTree
         return;
     }
 
-    if (expressions instanceof FilteringExpressionsTree) {
-        const expressionsTree = expressions as FilteringExpressionsTree;
-        for (const operand of expressionsTree.filteringOperands) {
-            generateExpressionsListRecursive(operand, expressionsTree.operator, expressionsUIs);
+    if (ExpressionsTreeUtil.isTree(expressions)) {
+        for (const operand of expressions.filteringOperands) {
+            generateExpressionsListRecursive(operand, expressions.operator, expressionsUIs);
         }
         if (expressionsUIs.length) {
             expressionsUIs[expressionsUIs.length - 1].afterOperator = operator;
         }
     } else {
         const exprUI = new ExpressionUI();
-        exprUI.expression = expressions as IFilteringExpression;
+        exprUI.expression = expressions;
         exprUI.afterOperator = operator;
 
         const prevExprUI = expressionsUIs[expressionsUIs.length - 1];
