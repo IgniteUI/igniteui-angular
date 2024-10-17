@@ -1214,6 +1214,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /** @hidden @internal */
     public handleClosed() {
         this.closed.emit({ owner: this });
+        if(this.comboInput.nativeElement !== this.document.activeElement){
+            this._validateComboState();
+        }
     }
 
     /** @hidden @internal */
@@ -1252,12 +1255,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /** @hidden @internal */
     public onBlur() {
         if (this.collapsed) {
-            this._onTouchedCallback();
-            if (this.ngControl && this.ngControl.invalid) {
-                this.valid = IgxInputState.INVALID;
-            } else {
-                this.valid = IgxInputState.INITIAL;
-            }
+            this._validateComboState();
         }
     }
 
@@ -1284,6 +1282,16 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         }
         this.manageRequiredAsterisk();
     };
+
+    private _validateComboState() {
+        this._onTouchedCallback();
+
+        if (this.ngControl && this.ngControl.invalid) {
+            this.valid = IgxInputState.INVALID;
+        } else {
+            this.valid = IgxInputState.INITIAL;
+        }
+    }
 
     private get isTouchedOrDirty(): boolean {
         return (this.ngControl.control.touched || this.ngControl.control.dirty);
