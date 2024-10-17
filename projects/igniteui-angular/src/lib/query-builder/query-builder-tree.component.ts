@@ -615,7 +615,20 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this.expressionTreeChange.emit(exprTree);
             }
 
-            this.addAndGroup();
+            //this.addAndGroup();
+            
+        //     this.cancelOperandAdd();
+
+        // const groupItem = new ExpressionGroupItem(FilteringLogic.And);
+        //     this.rootGroup = groupItem;
+
+        // //this.addCondition(groupItem);
+        // this.currentGroup = groupItem;
+
+        this.rootGroup = null;
+        this.currentGroup = this.rootGroup;
+
+
         }
 
         this._selectedField = null;
@@ -1400,26 +1413,29 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                         ignoreCase: filteringExpr.ignoreCase
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
-                    if (expressionTree.entity) {
-                        entityName = expressionTree.entity;
-                    }
-                    const entity = this.entities?.find(el => el.name === entityName);
-                    if (entity) {
-                        this.fields = entity.fields;
-                    }
+
                     const field = this.fields?.find(el => el.field === filteringExpr.fieldName);
                     operandItem.fieldLabel = field?.label || field?.header || field?.field;
                     if (this._expandedExpressions.filter(e => e.searchTree == operandItem.expression.searchTree).length > 0) {
                         operandItem.expanded = true;
                     }
                     groupItem.children.push(operandItem);
-                    this._selectedEntity = this.entities?.find(el => el.name === entityName);
-                    this._selectedReturnFields =
-                        !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All')
-                            ? this.fields?.map(f => f.field)
-                            : this.fields?.filter(f => expressionTree.returnFields.indexOf(f.field) >= 0).map(f => f.field);
                 }
             }
+
+            if (expressionTree.entity) {
+                entityName = expressionTree.entity;
+            }
+            const entity = this.entities?.find(el => el.name === entityName);
+            if (entity) {
+                this.fields = entity.fields;
+            }
+            
+            this._selectedEntity = this.entities?.find(el => el.name === entityName);
+            this._selectedReturnFields =
+                !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All')
+                    ? this.fields?.map(f => f.field)
+                    : this.fields?.filter(f => expressionTree.returnFields.indexOf(f.field) >= 0).map(f => f.field);
         }
         return groupItem;
     }
