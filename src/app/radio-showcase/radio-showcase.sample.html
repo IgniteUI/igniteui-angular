@@ -1,0 +1,35 @@
+<section class="wrapper">
+    <article class="sample-column">
+        <h4 class="sample-title">Angular Radio</h4>
+
+        <igx-radio-group name="angGroup" value="Bar" [required]="required" [alignment]="alignment">
+            <igx-radio [checked]="checked"
+            [disabled]="disabled"
+            [invalid]="invalid"
+            [labelPosition]="labelPosition"
+            value="Foo">Foo</igx-radio>
+
+            <igx-radio
+            [disabled]="disabled"
+            [invalid]="invalid"
+            [labelPosition]="labelPosition"
+            value="Bar">Bar</igx-radio>
+        </igx-radio-group>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">WC Radio</h4>
+
+        <igc-radio-group name="wcGroup" value="Bar" [alignment]="alignment">
+            <igc-radio [checked]="checked" [required]="required"
+            [disabled]="disabled" [invalid]="invalid"
+            [labelPosition]="labelPosition"
+            value="Foo">Foo</igc-radio>
+
+            <igc-radio [disabled]="disabled"
+            [invalid]="invalid"
+            [labelPosition]="labelPosition"
+            value="Bar">Bar</igc-radio>
+        </igc-radio-group>
+    </article>
+</section>

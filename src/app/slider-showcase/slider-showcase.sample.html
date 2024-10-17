@@ -1,0 +1,44 @@
+<div class="sample-container">
+<article class="sample-item">
+    <strong>Angular Slider</strong>
+    <igx-slider
+        [value]="value"
+        [disabled]="disabled"
+        [minValue]="minValue"
+        [maxValue]="maxValue"
+        [step]="step"
+        [primaryTickLabels]="!primaryTickLabels"
+        [secondaryTickLabels]="!secondaryTickLabels"
+        [ticksOrientation]="ticksOrientationAngular"
+        [tickLabelsOrientation]="angularTickLabelOrientation"
+        [primaryTicks]="primaryTicks"
+        [secondaryTicks]="secondaryTicks"
+        [lowerBound]="lowerBound"
+        [upperBound]="upperBound"
+        [showTicks]="primaryTicks || secondaryTicks">
+    </igx-slider>
+</article>
+
+<article class="sample-item">
+    <strong>WC Slider</strong>
+    <igc-slider
+    [value]="value"
+    [disabled]="disabled"
+    [min]="minValue"
+    [max]="maxValue"
+    [step]="step"
+    [tickOrientation]="ticksOrientationWC"
+    [tickLabelRotation]="wcTickLabelOrientation"
+    [primaryTicks]="primaryTicks"
+    [secondaryTicks]="secondaryTicks"
+    [lowerBound]="lowerBound"
+    [upperBound]="upperBound"
+    [hidePrimaryLabels]="primaryTickLabels"
+    [hideSecondaryLabels]="secondaryTickLabels"
+    [attr.discrete-track]="step > 1 ? true : null">
+    <!-- <ng-container *ngFor="let label of labels">
+        <igc-slider-label>{{ label }}</igc-slider-label>
+    </ng-container> -->
+    </igc-slider>
+</article>
+</div>

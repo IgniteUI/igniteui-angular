@@ -1,0 +1,11 @@
+.avatars-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.avatars {
+    display: grid;
+    grid-auto-flow: row;
+    justify-items: center;
+    gap: 12px;
+}

@@ -1,0 +1,35 @@
+<div class="sample-content">
+    <section class="sample-wrapper" style="width: 100%">
+        <h4 class="sample-title">Angular Carousel</h4>
+        <igx-carousel #car
+        [pause]="!disablePauseOnInteraction"
+        [loop]="!disableLoop"
+        [indicators]="!hideIndicators"
+        [navigation]="!hideNavigation"
+        [vertical]="vertical"
+        [interval]="interval"
+        [animationType]="animationType"
+        [indicatorsOrientation]="angularIndicatorsOrientation"
+        [maximumIndicatorsCount]="maximumIndicatorsCount">
+            <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
+                <img [src]="slide.image">
+            </igx-slide>
+        </igx-carousel>
+
+        <h4 class="sample-title">WC Carousel</h4>
+        <igc-carousel
+        [disableLoop]="disableLoop"
+        [disablePauseOnInteraction]="disablePauseOnInteraction"
+        [hideIndicators]="hideIndicators"
+        [hideNavigation]="hideNavigation"
+        [vertical]="vertical"
+        [interval]="interval"
+        [animationType]="animationType"
+        [indicatorsOrientation]="wcIndicatorsOrientation"
+        [maximumIndicatorsCount]="maximumIndicatorsCount">
+            <igc-carousel-slide *ngFor="let slide of slides;" [active]="slide.active">
+                <img [src]="slide.image" />
+            </igc-carousel-slide>
+        </igc-carousel>
+    </section>
+</div>

@@ -27,10 +27,16 @@
 .sample-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     height: rem(90px);
     padding: 0 rem(16px);
     background: var(--ph-background);
     overflow: hidden;
+
+    .wrapper {
+        display: flex;
+        align-items: center;
+    }
 
     .title {
         color: var(--ph-foreground);
@@ -39,5 +45,9 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .toggle-properties-panel {
+        color: var(--ph-foreground);
     }
 }

@@ -1,0 +1,22 @@
+<h4 class="sample-title">Angular vs WebComponents Avatar</h4>
+<div class="wrapper" [ngStyle]="{'--ig-size': 'var(--ig-size-' + size + ')'}">
+    <article class="avatars-wrapper">
+        <div class="avatars">
+            <strong>Angular Avatars</strong>
+            <p>Avatar with an image</p>
+            <igx-avatar [src]="src" [shape]="shape"></igx-avatar>
+
+            <p>Avatar with initials</p>
+            <igx-avatar [initials]="initials" [shape]="shape"></igx-avatar>
+        </div>
+
+        <div class="avatars">
+            <strong>WebComponents Avatars</strong>
+            <p>Avatar with an image</p>
+            <igc-avatar [src]="src" [shape]="shape"></igc-avatar>
+
+            <p>Avatar with initials</p>
+            <igc-avatar [initials]="initials" [shape]="shape"></igc-avatar>
+        </div>
+    </article>
+</div>
