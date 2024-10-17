@@ -247,20 +247,10 @@
     %filter-tree__expression-actions {
         display: inline-flex;
         margin: 0 rem(8px);
+        gap: rem(8px);
 
-        igx-icon {
-            cursor: pointer;
-            color: color(null, 'gray', 500);
-            outline-style: none;
-
-            &:hover,
-            &:focus {
-                color: color(null, 'gray', 800);
-            }
-        }
-
-        igx-icon + igx-icon {
-            margin-inline-start: rem(8px);
+        %igx-icon-button-display {
+            --size: #{sizable(rem(20px), rem(24px), rem(32px))};
         }
     }
 
