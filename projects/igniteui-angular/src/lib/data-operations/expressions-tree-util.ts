@@ -14,21 +14,40 @@ export class ExpressionsTreeUtil {
      * @returns The recreated expression tree.
      */
     public static recreateTree(tree: IExpressionTree, entities: EntityType[]): IExpressionTree {
-        const isTree = (entry: IExpressionTree | IFilteringExpression): entry is IExpressionTree => {
-            return 'operator' in entry;
-        }
-
         const entity = entities.find(e => e.name === tree.entity);
 
         for (let i = 0; i < tree.filteringOperands.length; i++) {
             const operand = tree.filteringOperands[i];
-            if (isTree(operand)) {
+            if (this.isTree(operand)) {
                 tree.filteringOperands[i] = this.recreateTree(operand, entities);
             } else {
                 if (operand.searchTree) {
                     operand.searchTree = this.recreateTree(operand.searchTree, entities);
                 }
                 tree.filteringOperands[i] = this.recreateExpression(operand, entity?.fields);
+            }
+        }
+
+        return tree;
+    }
+
+    /**
+     * Recreates the tree from a given array of fields by applying the correct operands.
+     * It is recommended to use `recreateTree` if there will be multiple entities in the tree
+     * with potentially colliding field names.
+     * @param tree The expression tree to recreate.
+     * @param fields An array of fields to use for recreating the tree.
+     */
+    public static recreateTreeFromFields(tree: IExpressionTree, fields: FieldType[]): IExpressionTree {
+        for (let i = 0; i < tree.filteringOperands.length; i++) {
+            const operand = tree.filteringOperands[i];
+            if (this.isTree(operand)) {
+                tree.filteringOperands[i] = this.recreateTreeFromFields(operand, fields);
+            } else {
+                if (operand.searchTree) {
+                    operand.searchTree = this.recreateTreeFromFields(operand.searchTree, fields);
+                }
+                tree.filteringOperands[i] = this.recreateExpression(operand, fields);
             }
         }
 
@@ -132,6 +151,10 @@ export class ExpressionsTreeUtil {
                 break;
         }
         return filters.condition(name);
+    }
+
+    private static isTree(entry: IExpressionTree | IFilteringExpression): entry is IExpressionTree {
+        return 'operator' in entry;
     }
 
     /**
