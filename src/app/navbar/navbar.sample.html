@@ -26,7 +26,7 @@
         <h4 class="sample-title">Title, nav and action icons</h4>
         <div class="navbar-sample">
             <igx-navbar title="Sample App" actionButtonIcon="menu">
-                <igx-icon>search</igx-icon>
+                <igx-icon family="default" name="search"></igx-icon>
                 <igx-icon>favorite</igx-icon>
                 <igx-icon>more_vert</igx-icon>
             </igx-navbar>
@@ -37,7 +37,7 @@
         <h4 class="sample-title">No title</h4>
         <div class="navbar-sample">
             <igx-navbar actionButtonIcon="menu">
-                <igx-icon>search</igx-icon>
+                <igx-icon family="default" name="search"></igx-icon>
                 <igx-icon>favorite</igx-icon>
                 <igx-icon>more_vert</igx-icon>
             </igx-navbar>
@@ -48,7 +48,7 @@
         <h4 class="sample-title">Only action icons</h4>
         <div class="navbar-sample">
             <igx-navbar>
-                <igx-icon>search</igx-icon>
+                <igx-icon family="default" name="search"></igx-icon>
                 <igx-icon>favorite</igx-icon>
                 <igx-icon>more_vert</igx-icon>
             </igx-navbar>
@@ -63,7 +63,7 @@
                     <igx-icon class="bidirectional-icon">arrow_back</igx-icon>
                 </igx-navbar-action>
 
-                <igx-icon>search</igx-icon>
+                <igx-icon family="default" name="search"></igx-icon>
                 <igx-icon>favorite</igx-icon>
                 <igx-icon>more_vert</igx-icon>
             </igx-navbar>
@@ -78,7 +78,7 @@
 
                 <div igxNavbarTitle>IG Title</div>
 
-                <igx-icon>search</igx-icon>
+                <igx-icon family="default" name="search"></igx-icon>
                 <igx-icon>favorite</igx-icon>
                 <igx-icon>more_vert</igx-icon>
             </igx-navbar>
@@ -89,9 +89,15 @@
         <h4 class="sample-title">icon buttons (flat, outlined, contained)</h4>
         <div class="navbar-sample">
             <igx-navbar actionButtonIcon="menu">
-                <button igxIconButton="flat"><igx-icon>search</igx-icon></button>
-                <button igxIconButton="outlined"><igx-icon>favorite</igx-icon></button>
-                <button igxIconButton="contained"><igx-icon>more_vert</igx-icon></button>
+                <button igxIconButton="flat">
+                    <igx-icon family="default" name="search"></igx-icon>
+                </button>
+                <button igxIconButton="outlined">
+                    <igx-icon>favorite</igx-icon>
+                </button>
+                <button igxIconButton="contained">
+                    <igx-icon>more_vert</igx-icon>
+                </button>
             </igx-navbar>
         </div>
     </article>

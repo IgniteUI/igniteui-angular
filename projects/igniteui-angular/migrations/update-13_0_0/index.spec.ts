@@ -1,30 +1,16 @@
 import * as path from 'path';
 
-import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { setupTestTree } from '../common/setup.spec';
 
 const version = '13.0.0';
 
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
-    const configJson = {
-        projects: {
-            testProj: {
-				root: '/',
-                sourceRoot: '/testSrc'
-            }
-        },
-        schematics: {
-            '@schematics/angular:component': {
-                prefix: 'appPrefix'
-            }
-        }
-    };
 
     beforeEach(() => {
-        appTree = new UnitTestTree(new EmptyTree());
-        appTree.create('/angular.json', JSON.stringify(configJson));
+        appTree = setupTestTree();
     });
 
     const migrationName = 'migration-22';
@@ -68,16 +54,28 @@ describe(`Update to ${version}`, () => {
         ).toEqual(expectedContent);
     });
 
-    it('should rename IgxComboComponent selectItems to select', () => {
-        pending('LS must be setup for tests.');
-    });
+    it('should rename IgxComboComponent selectedItems() to selection', async () => {
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        `import { IgxComboComponent } from 'igniteui-angular';
+        export class MyClass {
+            public combo: IgxComboComponent;
+            public ngAfterViewInit() {
+                const items = this.combo.selectedItems();
+            }
+        }`);
 
-    it('should rename IgxComboComponent deselectItems to deselect', () => {
-        pending('LS must be setup for tests.');
-    });
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: true }, appTree);
 
-    it('should rename IgxComboComponent selectedItems() to selected', () => {
-        pending('LS must be setup for tests.');
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+        ).toEqual(
+        `import { IgxComboComponent } from 'igniteui-angular';
+        export class MyClass {
+            public combo: IgxComboComponent;
+            public ngAfterViewInit() {
+                const items = this.combo.selection;
+            }
+        }`);
     });
 
     it('should remove paging and paginationTemplate property and define a igx-paginator component with custom content', async () => {
@@ -187,15 +185,14 @@ export class AppModule {}
     });
 
     it('Should properly rename rowData property to data', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
-        import { IgxGridRow, IgxTreeGridRow, IgxHierarchicalGridRow, IgxChildGridRowComponent, IgxRowDirective } from 'igniteui-angular';
+        import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
             public grid: IgxGridComponent;
-            public tgrid: IgxGridComponent;
-            public hgrid: IgxGridComponent;
+            public tgrid: IgxTreeGridComponent;
+            public hgrid: IgxHierarchicalGridComponent;
             public ngAfterViewInit() {
                 // rowData
                 const rowData = this.grid.getRowByIndex(0).rowData;
@@ -223,12 +220,12 @@ export class AppModule {}
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
         `
-        import { IgxGridRow, IgxTreeGridRow, IgxHierarchicalGridRow, IgxChildGridRowComponent, IgxRowDirective } from 'igniteui-angular';
+        import { IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
         export class MyClass {
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
             public grid: IgxGridComponent;
-            public tgrid: IgxGridComponent;
-            public hgrid: IgxGridComponent;
+            public tgrid: IgxTreeGridComponent;
+            public hgrid: IgxHierarchicalGridComponent;
             public ngAfterViewInit() {
                 // rowData
                 const rowData = this.grid.getRowByIndex(0).data;
@@ -252,7 +249,6 @@ export class AppModule {}
     });
 
     it('Should properly rename columnsCollection property to columns', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
         import { IgxGridComponent } from 'igniteui-angular';
@@ -260,7 +256,7 @@ export class AppModule {}
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
             public grid1: IgxGridComponent;
             public ngAfterViewInit() {
-                const columns = grid1.columnsCollection;
+                const columns = this.grid1.columnsCollection;
             }
         }
         `);
@@ -277,7 +273,7 @@ export class AppModule {}
             @ViewChild(IgxGridComponent, { read: IgxGridComponent })
             public grid1: IgxGridComponent;
             public ngAfterViewInit() {
-                const columns = grid1.columns;
+                const columns = this.grid1.columns;
             }
         }
         `
@@ -285,7 +281,6 @@ export class AppModule {}
     });
 
     it('Should properly rename columnsCollection property to columns - treeGrid', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
         import { IgxTreeGridComponent } from 'igniteui-angular';
@@ -293,7 +288,7 @@ export class AppModule {}
             @ViewChild(IgxTreeGridComponent, { read: IgxTreeGridComponent })
             public tGrid1: IgxTreeGridComponent;
             public ngAfterViewInit() {
-                const columns = this.tGrid1.columns;
+                const columns = this.tGrid1.columnsCollection;
             }
             public soSth() {
                 const editableColumns = this.tGrid1.columnsCollection.filter(c => e.editable);
@@ -313,7 +308,7 @@ export class AppModule {}
             @ViewChild(IgxTreeGridComponent, { read: IgxTreeGridComponent })
             public tGrid1: IgxTreeGridComponent;
             public ngAfterViewInit() {
-                const columns = this.tGrid1.columnsCollection;
+                const columns = this.tGrid1.columns;
             }
             public soSth() {
                 const editableColumns = this.tGrid1.columns.filter(c => e.editable);

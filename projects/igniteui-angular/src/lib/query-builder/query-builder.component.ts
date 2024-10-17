@@ -910,14 +910,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
                 DEFAULT_PIPE_TIME_FORMAT : field.dataType === DataType.DateTime ?
                     DEFAULT_PIPE_DATE_TIME_FORMAT : DEFAULT_PIPE_DATE_FORMAT;
         }
-
-        if (!field.defaultDateTimeFormat) {
-            field.defaultDateTimeFormat = DEFAULT_DATE_TIME_FORMAT;
-        }
-
-        if (!field.defaultTimeFormat) {
-            field.defaultTimeFormat = DEFAULT_TIME_FORMAT;
-        }
     }
 
     private setFilters(field: FieldType) {

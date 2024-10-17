@@ -100,7 +100,15 @@
     }
 
     %igx-combo__checkbox {
-        margin-inline-end: rem(8);
+        margin-inline-end: rem(8px);
+
+        @if $variant == 'material' {
+            margin-inline-end: rem(16px);
+
+            div {
+                padding: 0;
+            }
+        }
     }
 
     %igx-combo__drop-down {

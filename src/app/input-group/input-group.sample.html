@@ -33,7 +33,7 @@
         <div class="form__fields" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
             <igx-input-group type="search">
                 <igx-prefix>
-                    <igx-icon>search</igx-icon>
+                    <igx-icon family="default" name="search"></igx-icon>
                 </igx-prefix>
                 <input
                         name="searchInput"
@@ -109,7 +109,7 @@
                 <span slot="suffix"><igx-icon>face</igx-icon></span>
                 <span slot="helper-text">
                     Web component
-                    <strong *ngIf="inputType === 'line'" style="color: hsla(var(--ig-error-500))">
+                    <strong *ngIf="inputType === 'line'" style="color: var(--ig-error-500)">
                         don't have {{inputType}} type!
                     </strong>
                 </span>
@@ -129,7 +129,7 @@
                 <igx-hint>Upload a file to begin...</igx-hint>
             </igx-input-group>
             <igx-input-group [type]="inputType">
-                <igx-icon igxPrefix>upload</igx-icon>
+                <igx-icon igxPrefix family="default" name="file_upload"></igx-icon>
                 <label igxLabel>Important Documents</label>
                 <input
                         igxInput
@@ -199,7 +199,7 @@
                              [disabled]="isDisabled">
                 <label igxLabel>Date: </label>
                 <igx-picker-toggle igxSuffix>
-                    <igx-icon (click)="requiredDatePicker.open()">date_range</igx-icon>
+                    <igx-icon (click)="requiredDatePicker.open()" family="default" name="date_range"></igx-icon>
                 </igx-picker-toggle>
                 <igx-picker-clear></igx-picker-clear>
                 <igx-hint>Input is shown only if is required is ON</igx-hint>
@@ -227,7 +227,7 @@
                              [disabled]="isDisabled">
                 <label igxLabel>Date: </label>
                 <igx-picker-toggle igxSuffix>
-                    <igx-icon (click)="datePicker.open()">date_range</igx-icon>
+                    <igx-icon (click)="datePicker.open()" family="default" name="date_range"></igx-icon>
                 </igx-picker-toggle>
                 <igx-picker-clear></igx-picker-clear>
                 <igx-hint>Input is shown only if is required is OFF</igx-hint>
@@ -267,7 +267,7 @@
                 <!-- input-search input Always Material -->
                 <igx-input-group class="material-theme">
                     <label igxLabel>Always Material & Use Input type TOKEN</label>
-                    <igx-icon igxPrefix>search</igx-icon>
+                    <igx-icon igxPrefix family="default" name="search"></igx-icon>
                     <input
                             name="inputSearchTest"
                             #input

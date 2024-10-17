@@ -215,9 +215,7 @@
             igc-icon {
                 --component-size: 2;
 
-                padding: rem(6px);
-                width: auto;
-                height: auto;
+                margin-inline: rem(6px);
             }
         }
     }
