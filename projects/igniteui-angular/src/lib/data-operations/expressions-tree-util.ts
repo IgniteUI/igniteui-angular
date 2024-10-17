@@ -13,7 +13,7 @@ export class ExpressionsTreeUtil {
      * @param entities An array of entities to use for recreating the tree.
      * @returns The recreated expression tree.
      */
-    public static recreateTreeFromEntities(tree: IExpressionTree, entities: EntityType[]): IExpressionTree {
+    public static recreateTree(tree: IExpressionTree, entities: EntityType[]): IExpressionTree {
         const isTree = (entry: IExpressionTree | IFilteringExpression): entry is IExpressionTree => {
             return 'operator' in entry;
         }
@@ -23,10 +23,10 @@ export class ExpressionsTreeUtil {
         for (let i = 0; i < tree.filteringOperands.length; i++) {
             const operand = tree.filteringOperands[i];
             if (isTree(operand)) {
-                tree.filteringOperands[i] = this.recreateTreeFromEntities(operand, entities);
+                tree.filteringOperands[i] = this.recreateTree(operand, entities);
             } else {
                 if (operand.searchTree) {
-                    operand.searchTree = this.recreateTreeFromEntities(operand.searchTree, entities);
+                    operand.searchTree = this.recreateTree(operand.searchTree, entities);
                 }
                 tree.filteringOperands[i] = this.recreateExpression(operand, entity?.fields);
             }

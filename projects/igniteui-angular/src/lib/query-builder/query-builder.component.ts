@@ -100,7 +100,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public set expressionTree(expressionTree: IExpressionTree) {
         if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
             if (this.entities && expressionTree) {
-                this._expressionTree = ExpressionsTreeUtil.recreateTreeFromEntities(expressionTree, this.entities);
+                this._expressionTree = ExpressionsTreeUtil.recreateTree(expressionTree, this.entities);
             } else {
                 this._expressionTree = expressionTree;
             }
