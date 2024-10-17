@@ -736,6 +736,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this._editedExpression) {
             this._editedExpression.expression.fieldName = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
+            this._editedExpression.expression.conditionName = this.selectedCondition;
             this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, actualSearchValue);
             this._editedExpression.fieldLabel = this.selectedField.label
                 ? this.selectedField.label
