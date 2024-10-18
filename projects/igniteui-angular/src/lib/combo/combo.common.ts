@@ -1212,7 +1212,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public handleClosed() {
         this.closed.emit({ owner: this });
         if(this.comboInput.nativeElement !== this.document.activeElement){
-            this._validateComboState();
+            this.validateComboState();
         }
     }
 
@@ -1252,7 +1252,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /** @hidden @internal */
     public onBlur() {
         if (this.collapsed) {
-            this._validateComboState();
+            this.validateComboState();
         }
     }
 
@@ -1280,7 +1280,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.manageRequiredAsterisk();
     };
 
-    private _validateComboState() {
+    private validateComboState() {
         this._onTouchedCallback();
 
         if (this.ngControl && this.ngControl.invalid) {
