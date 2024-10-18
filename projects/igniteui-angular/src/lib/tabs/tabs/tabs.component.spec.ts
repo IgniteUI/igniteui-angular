@@ -758,9 +758,6 @@ describe('IgxTabs', () => {
         }));
 
         it('should update focus and selectedIndex correctly in auto mode when navigating with arrow keys', fakeAsync(() => {
-            tabsComp.activation = 'auto';
-            fixture.detectChanges();
-
             expect(tabsComp.selectedIndex).toBe(-1);
 
             headerElements[0].dispatchEvent(KEY_RIGHT_EVENT);
