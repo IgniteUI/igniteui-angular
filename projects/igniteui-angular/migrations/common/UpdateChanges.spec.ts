@@ -34,8 +34,10 @@ describe('UpdateChanges', () => {
         appTree = setupTestTree({
             projects: {
                 testProj: {
+                    projectType: 'application',
                     root: '',
-                    sourceRoot: '/'
+                    sourceRoot: '/',
+                    architect: { build: { options: {} } }
                 }
             },
             schematics: {
