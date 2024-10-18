@@ -213,13 +213,7 @@ export class GridSaveStateComponent implements OnInit {
     @ViewChild('activeTemplate', { static: true })
     public activeTemplate: TemplateRef<any>;
 
-    public onColumnInit(column: IgxColumnComponent) {
-        const key = `${this.gridId}-state`;
-        const state = window.localStorage.getItem(key);
-        if (state) {
-            column.bodyTemplate = this.activeTemplate;
-        }
-      }
+
 
     public reloadPage() {
         window.location.reload();

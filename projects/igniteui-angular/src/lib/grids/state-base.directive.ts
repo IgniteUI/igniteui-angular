@@ -742,7 +742,7 @@ export class IgxGridStateBaseDirective {
     }
 
     private getColumnGroupKey(columnGroup: ColumnType) : string {
-        return columnGroup.childColumns.map(x => x.columnGroup ? x.level + "_" + this.getColumnGroupKey(x) : x.field).join("_");
+        return columnGroup.childColumns.map(x => x.columnGroup ? x.level + "_" + this.getColumnGroupKey(x) : x.field).sort().join("_");
     }
 
     private getFeature(key: string): Feature {
