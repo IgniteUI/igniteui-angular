@@ -135,6 +135,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.collapsed).toBeTruthy();
 
                 const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
+                const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', picker, true);
 
                 tick();
@@ -144,13 +145,20 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
 
-                calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
-                UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendar, true, true);
+                const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(calendarWrapper.contains(document.activeElement))
+                    .withContext('focus should move to calendar for KB nav')
+                    .toBeTrue();
+
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
                 tick(350);
                 fixture.detectChanges();
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
+                expect(inputGroup.nativeElement.contains(document.activeElement))
+                    .withContext('focus should return to the picker input')
+                    .toBeTrue();
             }));
 
             it('should open the calendar with SPACE key', fakeAsync(() => {
@@ -497,6 +505,9 @@ describe('IgxDatePicker', () => {
                 const today = new Date(new Date().setHours(0, 0, 0, 0)).getTime().toString();
                 const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
                 expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
+                expect(wrapper.contains(document.activeElement))
+                    .withContext('focus should move to calendar for KB nav')
+                    .toBeTrue();
             }));
 
             it('should focus today\'s date when an invalid date is selected', fakeAsync(() => {
@@ -510,8 +521,33 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
                 expect(datePicker.collapsed).toBeFalsy();
 
+                const today = new Date(new Date().setHours(0, 0, 0, 0)).getTime().toString();
                 const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
-                expect(wrapper.getAttribute('aria-activedescendant')).not.toEqual('test');
+                expect(wrapper.getAttribute('aria-activedescendant')).toEqual(today);
+                expect(wrapper.contains(document.activeElement))
+                    .withContext('focus should move to calendar for KB nav')
+                    .toBeTrue();
+            }));
+
+            it('should return focus to date picker input after calendar click select', fakeAsync(() => {
+                const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent)).nativeElement;
+
+                datePicker.clear();
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                const today = new Date(new Date().setHours(0, 0, 0, 0));
+                const todayTime = today.getTime().toString();
+                const todayDayItem = fixture.debugElement.query(By.css(`#${CSS.escape(todayTime)}`)).nativeElement;
+
+                todayDayItem.click();
+                tick();
+                fixture.detectChanges();
+                expect(datePicker.value).toEqual(today);
+                expect(inputGroup.contains(document.activeElement))
+                    .withContext('focus should return to the picker input')
+                    .toBeTrue();
             }));
         });
     });
