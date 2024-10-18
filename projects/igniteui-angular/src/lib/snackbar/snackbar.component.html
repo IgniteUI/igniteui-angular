@@ -5,6 +5,8 @@
 <div #customButton class="igx-snackbar__button">
     <ng-content select="[igxButton]"></ng-content>
 </div>
-<button *ngIf="!customButton.children.length && actionText" igxButton (click)="triggerAction()">
-    {{ actionText }}
-</button>
+@if (!customButton.children.length && actionText) {
+    <button igxButton (click)="triggerAction()">
+        {{ actionText }}
+    </button>
+}

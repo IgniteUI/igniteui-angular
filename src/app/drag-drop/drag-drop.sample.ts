@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import { NgIf, NgClass, NgFor, NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 
 import { ShadowGridSampleComponent } from './shadow-dom-grid/shadow-grid-sample';
 import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEventArgs, IDropDroppedEventArgs, IgxButtonDirective, IgxDragDirective, IgxDragHandleDirective, IgxDragIgnoreDirective, IgxDragLocation, IgxDropDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxInsertDropStrategy, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxToggleDirective, NoOpScrollStrategy, OverlaySettings } from 'igniteui-angular';
@@ -10,7 +10,7 @@ import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEv
     styleUrls: ['drag-drop.sample.scss'],
     standalone: true,
     imports: [
-        NgFor, NgIf, NgStyle, NgClass,
+        NgStyle, NgClass,
         IgxDragDirective,  IgxDragIgnoreDirective, IgxDragHandleDirective,  IgxDropDirective,
         IgxIconComponent, IgxButtonDirective, IgxRippleDirective, IgxToggleDirective,
         IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxLabelDirective,

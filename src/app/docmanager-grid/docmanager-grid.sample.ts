@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { defineCustomElements } from 'igniteui-dockmanager/loader';
 
 import { SignalRService } from './signal-r.service';
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 defineCustomElements();
 
 @Component({
@@ -16,7 +16,7 @@ defineCustomElements();
     selector: 'app-grid-docmanager-sample',
     styleUrls: ['docmanager-grid.sample.scss'],
     templateUrl: 'docmanager-grid.sample.html',
-    imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, CommonModule, IgxSelectModule, IgxSwitchModule, IgxIconModule ]
+    imports: [IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, CommonModule, IgxSelectModule, IgxSwitchModule, IgxIconModule]
 })
 
 export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterViewInit, DoCheck {

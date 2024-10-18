@@ -1,4 +1,4 @@
-<ng-container *ngIf="grid.rendered$ | async">
+@if (grid.rendered$ | async) {
     <button
         [title]="grid?.resourceStrings.igx_grid_toolbar_hiding_button_tooltip"
         #btn
@@ -18,4 +18,4 @@
         [hideFilter]="hideFilter" [filterCriteria]="filterCriteria" [columnDisplayOrder]="columnDisplayOrder" [columnsAreaMaxHeight]="columnsAreaMaxHeight"
         [uncheckAllText]="uncheckAllText" [checkAllText]="checkAllText" [indentation]="indentetion">
     </igx-column-actions>
-</ng-container>
+}

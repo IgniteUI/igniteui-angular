@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
-import { getLocaleFirstDayOfWeek, NgIf, NgFor } from "@angular/common";
+import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
@@ -24,7 +24,7 @@ import { IgxIconButtonDirective } from '../../../directives/button/icon-button.d
     selector: 'igx-excel-style-date-expression',
     templateUrl: './excel-style-date-expression.component.html',
     standalone: true,
-    imports: [IgxSelectComponent, IgxPrefixDirective, NgIf, IgxIconComponent, NgFor, IgxSelectItemComponent, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxDateTimeEditorDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
+    imports: [IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxDateTimeEditorDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
 })
 export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultExpressionComponent {
     @ViewChild('input', { read: IgxInputDirective, static: false })

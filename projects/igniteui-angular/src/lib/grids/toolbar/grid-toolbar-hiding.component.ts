@@ -5,7 +5,7 @@ import { BaseToolbarColumnActionsDirective } from './grid-toolbar.base';
 import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 
 /* blazorElement */
@@ -29,7 +29,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
     selector: 'igx-grid-toolbar-hiding',
     templateUrl: './grid-toolbar-hiding.component.html',
     standalone: true,
-    imports: [NgIf, IgxButtonDirective, IgxIconComponent, IgxColumnActionsComponent, IgxColumnHidingDirective, IgxToggleDirective, AsyncPipe]
+    imports: [IgxButtonDirective, IgxIconComponent, IgxColumnActionsComponent, IgxColumnHidingDirective, IgxToggleDirective, AsyncPipe]
 })
 export class IgxGridToolbarHidingComponent extends BaseToolbarColumnActionsDirective {
 

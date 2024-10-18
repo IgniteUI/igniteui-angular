@@ -42,7 +42,6 @@ import {
     PositionSettings,
     VerticalAlignment
 } from './utilities';
-import { NgIf } from '@angular/common';
 import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
@@ -4514,9 +4513,10 @@ export class SimpleBigSizeComponent {
 
 @Component({
     template: `
-            <div igxToggle>
-                <div class='scrollableDiv' *ngIf='visible' style ='position: absolute; width: 200px; height: 200px;
-        overflow-y: scroll; background-color: red;'>
+        <div igxToggle>
+            @if (visible) {
+                <div class='scrollableDiv' style ='position: absolute; width: 200px; height: 200px;
+    overflow-y: scroll; background-color: red;'>
                     <p> AAAAA </p>
                     <p> AAAAA </p>
                     <p> AAAAA </p>
@@ -4527,9 +4527,10 @@ export class SimpleBigSizeComponent {
                     <p> AAAAA </p>
                     <p> AAAAA </p>
                 </div>
-            </div>`,
+            }
+        </div>`,
     standalone: true,
-    imports: [NgIf, IgxToggleDirective]
+    imports: [IgxToggleDirective]
 })
 export class SimpleDynamicWithDirectiveComponent {
     @ViewChild(IgxToggleDirective, { static: true })
@@ -4734,20 +4735,22 @@ export class WidthTestOverlayComponent {
 @Component({
     template: `
     <div igxToggle>
-        <div class='scrollableDiv' *ngIf='visible' style='width:200px; height:200px; overflow-y:scroll;'>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-        </div>
+        @if (visible) {
+            <div class='scrollableDiv' style='width:200px; height:200px; overflow-y:scroll;'>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+            </div>
+        }
     </div>`,
     standalone: true,
-    imports: [NgIf]
+    imports: []
 })
 export class ScrollableComponent {
     @ViewChild(IgxToggleDirective, { static: true })

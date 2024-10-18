@@ -16,7 +16,6 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { NgFor } from '@angular/common';
 import { ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/public_api';
 
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
@@ -1274,13 +1273,15 @@ describe('IgxDropDown ', () => {
     template: `
     <button (click)="toggleDropDown()">Toggle</button>
     <igx-drop-down id="test-id" igxDropDownItemNavigation [maxHeight]="maxHeight"
-    [allowItemsFocus]="true" style="--ig-size: var(--ig-size-medium);">
-        <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header" [selected]="item.selected">
-            {{item.field}}
-        </igx-drop-down-item>
+        [allowItemsFocus]="true" style="--ig-size: var(--ig-size-medium);">
+        @for (item of items; track item) {
+            <igx-drop-down-item [disabled]="item.disabled" [isHeader]="item.header" [selected]="item.selected">
+                {{item.field}}
+            </igx-drop-down-item>
+        }
     </igx-drop-down>`,
     standalone: true,
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, NgFor]
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective]
 })
 class IgxDropDownTestComponent {
 
@@ -1314,18 +1315,22 @@ class IgxDropDownTestComponent {
     template: `
     <button (click)="selectItem5()">Select 5</button>
     <igx-drop-down #dropdown1>
-        <igx-drop-down-item *ngFor="let item of items">
-            {{ item.field }}
-        </igx-drop-down-item>
+        @for (item of items; track item) {
+            <igx-drop-down-item>
+                {{ item.field }}
+            </igx-drop-down-item>
+        }
     </igx-drop-down>
     <igx-drop-down #dropdown2>
-        <igx-drop-down-item *ngFor="let item of items">
-            {{ item.field }}
-        </igx-drop-down-item>
+        @for (item of items; track item) {
+            <igx-drop-down-item>
+                {{ item.field }}
+            </igx-drop-down-item>
+        }
     </igx-drop-down>
     `,
     standalone: true,
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent, NgFor]
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent]
 })
 class DoubleIgxDropDownComponent implements OnInit {
 
@@ -1375,14 +1380,16 @@ class DoubleIgxDropDownComponent implements OnInit {
         </igx-tab-item>
     </igx-tabs>
     <igx-drop-down igxDropDownItemNavigation (selectionChanging)="selectionChanging($event)"
-    (opening)="onToggleOpening()" (opened)="onToggleOpened()"
-    (closing)="onToggleClosing()" (closed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
-        <igx-drop-down-item *ngFor="let item of items">
-            {{ item.field }}
-        </igx-drop-down-item>
+        (opening)="onToggleOpening()" (opened)="onToggleOpened()"
+        (closing)="onToggleClosing()" (closed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
+        @for (item of items; track item) {
+            <igx-drop-down-item>
+                {{ item.field }}
+            </igx-drop-down-item>
+        }
     </igx-drop-down>`,
     standalone: true,
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, NgFor]
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent]
 })
 class IgxDropDownAnchorTestComponent {
     @ViewChild(IgxTabsComponent, { static: true })
@@ -1414,12 +1421,14 @@ class IgxDropDownAnchorTestComponent {
 @Component({
     template: ` <input #inputElement [igxDropDownItemNavigation]="dropdownElement" class='test-input' type='text' value='Focus Me!'/>
     <igx-drop-down #dropdownElement [width]="'400px'" [height]="'400px'" [allowItemsFocus]="true">
-        <igx-drop-down-item *ngFor="let item of items">
-            {{ item.field }}
-        </igx-drop-down-item>
+        @for (item of items; track item) {
+            <igx-drop-down-item>
+                {{ item.field }}
+            </igx-drop-down-item>
+        }
     </igx-drop-down>`,
     standalone: true,
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, NgFor]
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective]
 })
 class InputWithDropDownDirectiveComponent {
     @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
@@ -1438,14 +1447,18 @@ class InputWithDropDownDirectiveComponent {
 @Component({
     template: `
     <igx-drop-down>
-        <igx-drop-down-item-group *ngFor="let parent of data" [label]="parent.name">
-            <igx-drop-down-item *ngFor="let child of parent.children" [value]="child.value">
-                {{ child.name }}
-            </igx-drop-down-item>
-        </igx-drop-down-item-group>
+        @for (parent of data; track parent) {
+            <igx-drop-down-item-group [label]="parent.name">
+                @for (child of parent.children; track child) {
+                    <igx-drop-down-item [value]="child.value">
+                        {{ child.name }}
+                    </igx-drop-down-item>
+                }
+            </igx-drop-down-item-group>
+        }
     </igx-drop-down>`,
     standalone: true,
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, NgFor]
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent]
 })
 class GroupDropDownComponent {
     @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })

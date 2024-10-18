@@ -15,7 +15,6 @@ import {
     IgxDragIgnoreDirective
 } from './drag-drop.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
-import { NgFor } from '@angular/common';
 
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
@@ -2112,22 +2111,26 @@ class TestDragDropStrategiesComponent extends TestDragDropLinkedSingleComponent 
                 <igx-icon igxDragHandle>drag_indicator</igx-icon>
                 <span>Movies list</span>
             </div>
-            <div class="movieListItem" *ngFor="let category of categoriesNotes" igxDrag [ghost]="false">
-                <div>
-                    <igx-icon igxDragHandle>drag_indicator</igx-icon>
-                    <span>{{category.text}}</span>
-                </div>
-                <div class="movieListItem" *ngFor="let note of getCategoryMovies(category.text)" igxDrag [ghost]="false">
+            @for (category of categoriesNotes; track category) {
+                <div class="movieListItem" igxDrag [ghost]="false">
                     <div>
                         <igx-icon igxDragHandle>drag_indicator</igx-icon>
-                        <span>{{note.text}}</span>
+                        <span>{{category.text}}</span>
                     </div>
+                    @for (note of getCategoryMovies(category.text); track note) {
+                        <div class="movieListItem" igxDrag [ghost]="false">
+                            <div>
+                                <igx-icon igxDragHandle>drag_indicator</igx-icon>
+                                <span>{{note.text}}</span>
+                            </div>
+                        </div>
+                    }
                 </div>
-            </div>
+            }
         </div>
     `,
     standalone: true,
-    imports: [NgFor, IgxIconComponent, IgxDragDirective, IgxDragHandleDirective]
+    imports: [IgxIconComponent, IgxDragDirective, IgxDragHandleDirective]
 })
 class TestDragDropNestedComponent extends TestDragDropComponent {
     public categoriesNotes = [

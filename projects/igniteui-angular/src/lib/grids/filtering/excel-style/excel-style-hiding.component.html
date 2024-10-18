@@ -1,8 +1,10 @@
-<div *ngIf="esf.column"
-    class="igx-excel-filter__actions-hide"
-    tabindex="0"
-    (click)="esf.onHideToggle()"
-    role="menuitem">
-    <span>{{ esf.column.hidden ? esf.grid.resourceStrings.igx_grid_excel_show : esf.grid.resourceStrings.igx_grid_excel_hide }}</span>
-    <igx-icon family="default" [name]="esf.column.hidden ? 'show' : 'hide'"></igx-icon>
-</div>
+@if (esf.column) {
+    <div
+        class="igx-excel-filter__actions-hide"
+        tabindex="0"
+        (click)="esf.onHideToggle()"
+        role="menuitem">
+        <span>{{ esf.column.hidden ? esf.grid.resourceStrings.igx_grid_excel_show : esf.grid.resourceStrings.igx_grid_excel_hide }}</span>
+        <igx-icon family="default" [name]="esf.column.hidden ? 'show' : 'hide'"></igx-icon>
+    </div>
+}

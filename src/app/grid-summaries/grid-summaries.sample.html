@@ -4,18 +4,24 @@
 <igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [width]="w" [height]="h"
     [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'" [showSummaryOnCollapse]="true"
     [summaryRowHeight]="rh" [rowSelection]="rowSelection ? 'multiple' : 'none'">
-    <igx-grid-toolbar *ngIf="showToolbar">
-        <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
-        <igx-grid-toolbar-actions>
-            <igx-grid-toolbar-pinning *ngIf="columnPinning"></igx-grid-toolbar-pinning>
-            <igx-grid-toolbar-hiding *ngIf="columnHiding"></igx-grid-toolbar-hiding>
-            <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
-            <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
-                <span excelText>Export to Excel 👌</span>
-                <span csvText>Export to CSV 👍</span>
-            </igx-grid-toolbar-exporter>
-        </igx-grid-toolbar-actions>
-    </igx-grid-toolbar>
+    @if (showToolbar) {
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
+            <igx-grid-toolbar-actions>
+                @if (columnPinning) {
+                    <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                }
+                @if (columnHiding) {
+                    <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                }
+                <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+                <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
+                    <span excelText>Export to Excel 👌</span>
+                    <span csvText>Export to CSV 👍</span>
+                </igx-grid-toolbar-exporter>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
+    }
     <igx-column field="Index" header="Index" [width]="cw">
     </igx-column>
     <igx-column field="ProductID" header="Product ID" [width]="cw" [headerClasses]="'prodId'" [groupable]="groupable">
@@ -55,7 +61,9 @@
     </igx-column>
     <igx-column field="Sum" [hasSummary]="true" [dataType]="'percent'" [summaries]="mySummary">
     </igx-column>
-    <igx-paginator *ngIf="paging"></igx-paginator>
+    @if (paging) {
+        <igx-paginator></igx-paginator>
+    }
 </igx-grid>
 
 <div class="properties-input">

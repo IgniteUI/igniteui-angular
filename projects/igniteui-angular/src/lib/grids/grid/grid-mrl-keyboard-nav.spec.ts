@@ -12,7 +12,6 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
 import { CellType } from '../common/grid.interface';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
-import { NgFor } from '@angular/common';
 import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCETIME = 30;
@@ -2623,15 +2622,19 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [height]="'500px'" (selected)="cellSelected($event)">
-        <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group) {
+            <igx-column-layout [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
+                @for (col of group.columns; track col) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                        [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnLayoutComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnLayoutComponent]
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

@@ -3,86 +3,86 @@
     class="igx-days-view__row"
     [title]="weekNumberHeader.long | titlecase"
 >
-    <div
-        role="columnheader"
-        *ngIf="showWeekNumbers"
-        class="igx-days-view__label igx-days-view__label--week-number"
-    >
-        <span>
-            <i>{{ weekNumberHeader.short | titlecase }}</i>
-        </span>
-    </div>
-    <span
-        role="columnheader"
-        [attr.aria-label]="dayName.long"
-        *ngFor="let dayName of weekHeaderLabels"
-        class="igx-days-view__label"
-    >
-        <span class="igx-days-view__label-inner">
-            {{ dayName.formatted | titlecase }}
-        </span>
-    </span>
-</div>
-
-<div
-    *ngFor="
-        let week of monthWeeks;
-        last as isLast;
-        index as i;
-        trackBy: rowTracker
-    "
-    class="igx-days-view__row"
-    role="row"
->
-    <div
-        *ngIf="showWeekNumbers"
-        class="igx-days-view__date igx-days-view__date--week-number"
-    >
-        <span
-            role="rowheader"
-            class="igx-days-view__date-inner igx-days-view__date-inner--week-number"
+    @if (showWeekNumbers) {
+        <div
+            role="columnheader"
+            class="igx-days-view__label igx-days-view__label--week-number"
         >
-            {{ getWeekNumber(week[0]) }}
+            <span>
+                <i>{{ weekNumberHeader.short | titlecase }}</i>
+            </span>
+        </div>
+    }
+    @for (dayName of weekHeaderLabels; track dayName) {
+        <span
+            role="columnheader"
+            [attr.aria-label]="dayName.long"
+            class="igx-days-view__label"
+        >
+            <span class="igx-days-view__label-inner">
+                {{ dayName.formatted | titlecase }}
+            </span>
         </span>
-    </div>
-
-    <igx-day-item
-        #item
-        *ngFor="let day of week; trackBy: dateTracker"
-        class="igx-days-view__date"
-        role="gridcell"
-        [attr.id]="item.isCurrentMonth && day.timestamp"
-        [attr.aria-selected]="isSelected(day)"
-        [attr.aria-disabled]="isDateDisabled(day.native)"
-        [attr.aria-label]="
-            isFirstInRange(day)
-                ? day.native.toDateString() +
-                  ', ' +
-                  resourceStrings.igx_calendar_range_start
-                : isLastInRange(day)
-                  ? day.native.toDateString() +
-                    ', ' +
-                    resourceStrings.igx_calendar_range_end
-                  : day.native.toDateString()
-        "
-        [date]="day"
-        [viewDate]="viewDate"
-        [selection]="selection"
-        [selected]="isSelected(day)"
-        [isActive]="isActiveDate(day)"
-        [isLastInRange]="isLastInRange(day)"
-        [isFirstInRange]="isFirstInRange(day)"
-        [isWithinRange]="isWithinRange(day.native, true)"
-        [isWithinPreviewRange]="isWithinPreviewRange(day.native)"
-        [disabledDates]="disabledDates"
-        [specialDates]="specialDates"
-        [hideLeadingDays]="hideLeadingDays"
-        [hideTrailingDays]="hideTrailingDays"
-        [attr.tabindex]="-1"
-        (mouseDown)="handleDateClick(item)"
-        (mouseEnter)="changePreviewRange(day.native)"
-        (mouseLeave)="clearPreviewRange()"
-    >
-        {{ formattedDate(day.native) }}
-    </igx-day-item>
+    }
 </div>
+
+@for (
+    week of monthWeeks; track rowTracker(i, week);
+    let isLast = $last; let i = $index
+) {
+    <div
+        class="igx-days-view__row"
+        role="row"
+    >
+        @if (showWeekNumbers) {
+            <div class="igx-days-view__date igx-days-view__date--week-number">
+                <span
+                    role="rowheader"
+                    class="igx-days-view__date-inner igx-days-view__date-inner--week-number"
+                >
+                    {{ getWeekNumber(week[0]) }}
+                </span>
+            </div>
+        }
+        @for (day of week; track dateTracker($index, day)) {
+            <igx-day-item
+                #item
+                class="igx-days-view__date"
+                role="gridcell"
+                [attr.id]="item.isCurrentMonth && day.timestamp"
+                [attr.aria-selected]="isSelected(day)"
+                [attr.aria-disabled]="isDateDisabled(day.native)"
+                [attr.aria-label]="
+                    isFirstInRange(day)
+                        ? day.native.toDateString() +
+                          ', ' +
+                          resourceStrings.igx_calendar_range_start
+                        : isLastInRange(day)
+                          ? day.native.toDateString() +
+                            ', ' +
+                            resourceStrings.igx_calendar_range_end
+                          : day.native.toDateString()
+                "
+                [date]="day"
+                [viewDate]="viewDate"
+                [selection]="selection"
+                [selected]="isSelected(day)"
+                [isActive]="isActiveDate(day)"
+                [isLastInRange]="isLastInRange(day)"
+                [isFirstInRange]="isFirstInRange(day)"
+                [isWithinRange]="isWithinRange(day.native, true)"
+                [isWithinPreviewRange]="isWithinPreviewRange(day.native)"
+                [disabledDates]="disabledDates"
+                [specialDates]="specialDates"
+                [hideLeadingDays]="hideLeadingDays"
+                [hideTrailingDays]="hideTrailingDays"
+                [attr.tabindex]="-1"
+                (mouseDown)="handleDateClick(item)"
+                (mouseEnter)="changePreviewRange(day.native)"
+                (mouseLeave)="clearPreviewRange()"
+            >
+                {{ formattedDate(day.native) }}
+            </igx-day-item>
+        }
+    </div>
+}

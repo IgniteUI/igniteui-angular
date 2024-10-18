@@ -3,7 +3,7 @@ import {
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
     OnInit, AfterViewInit, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute
 } from '@angular/core';
-import { NgIf, NgTemplateOutlet, NgClass, NgFor, NgStyle } from '@angular/common';
+import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -117,9 +117,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     templateUrl: './grid.component.html',
     standalone: true,
     imports: [
-        NgIf,
         NgClass,
-        NgFor,
         NgStyle,
         NgTemplateOutlet,
         IgxGridGroupByAreaComponent,

@@ -1,5 +1,4 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
     IgxDropDownComponent,
@@ -21,7 +20,7 @@ import {
     templateUrl: './overlay-presets.sample.html',
     styleUrls: ['overlay-presets.sample.scss'],
     standalone: true,
-    imports: [NgFor, IgxRadioComponent, FormsModule, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent]
+    imports: [IgxRadioComponent, FormsModule, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class OverlayPresetsSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })

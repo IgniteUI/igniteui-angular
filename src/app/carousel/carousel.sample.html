@@ -13,9 +13,11 @@
             <br>
             <button igxButton="contained" [igxToggleAction]="dropDownAnimation" [igxDropDownItemNavigation]="dropDownAnimation">Animation Type: {{car.animationType}}</button>
             <igx-drop-down #dropDownAnimation (selectionChanging)="onAnimationSelection($event)" >
-                <igx-drop-down-item *ngFor="let item of animationModes">
+                @for (item of animationModes; track item) {
+                    <igx-drop-down-item>
                         {{ item }}
-                </igx-drop-down-item>
+                    </igx-drop-down-item>
+                }
             </igx-drop-down>
             <button igxButton="contained" (click)="pauseCar()">pause</button>
             <button igxButton="contained" (click)="play()">play</button>
@@ -24,13 +26,18 @@
             <button igxButton="contained" (click)="changeOrientation()">changeOrientation</button>
             <div>
                 <igx-carousel #car  [pause]="pause" [loop]="loop" [interval]="interval">
-                    <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
-                        <img [src]="slide.image">
-                    </igx-slide>
+                    @for (slide of slides; track slide) {
+                        <igx-slide [active]="slide.active">
+                            <img [src]="slide.image">
+                        </igx-slide>
+                    }
 
                     <!-- <ng-template igxCarouselIndicator let-slide>
-                            <img *ngIf="!slide.active" [src]="slides[slide.index].image" style="width: 100px;  ">
-                            <img *ngIf="slide.active" [src]="slides[slide.index].image" style="width: 120px;  ">
+                        @if (slide.active) {
+                            <img [src]="slides[slide.index].image" style="width: 120px;  ">
+                        } @else {
+                            <img [src]="slides[slide.index].image" style="width: 100px;  ">
+                        }
                     </ng-template> -->
 
                     <!-- <ng-template igxCarouselNextButton let-disabled>

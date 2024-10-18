@@ -1,4 +1,4 @@
-﻿import { AsyncPipe, NgClass, NgFor, NgForOfContext, NgIf } from '@angular/common';
+﻿import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -1508,23 +1508,25 @@ export class VerticalVirtualComponent extends VirtualComponent {
 
 @Component({
     template: `
-        <div *ngIf='exists' #container [style.width]='width' [style.height]='height'>
-            <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
-                [igxForScrollOrientation]="'vertical'"
-                [igxForContainerSize]='height'
-                [igxForItemSize]='itemSize'>
-                <div [style.display]="'flex'" [style.height]="rowData.height || itemSize || '50px'">
-                    <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
-                    <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
-                    <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>
-                    <div [style.min-width]=cols[3].width>{{rowData['4']}}</div>
-                    <div [style.min-width]=cols[4].width>{{rowData['5']}}</div>
-                </div>
-            </ng-template>
-        </div>
+        @if (exists) {
+            <div #container [style.width]='width' [style.height]='height'>
+                <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
+                    [igxForScrollOrientation]="'vertical'"
+                    [igxForContainerSize]='height'
+                    [igxForItemSize]='itemSize'>
+                    <div [style.display]="'flex'" [style.height]="rowData.height || itemSize || '50px'">
+                        <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
+                        <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
+                        <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>
+                        <div [style.min-width]=cols[3].width>{{rowData['4']}}</div>
+                        <div [style.min-width]=cols[4].width>{{rowData['5']}}</div>
+                    </div>
+                </ng-template>
+            </div>
+        }
     `,
     standalone: true,
-    imports: [TestIgxForOfDirective, IgxForOfDirective, NgIf]
+    imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
     public exists = true;
@@ -1546,7 +1548,8 @@ export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
             </div>
         </ng-template>
     </div>
-        <div *ngIf='exists' #container [style.width]='width' [style.height]='height'>
+    @if (exists) {
+        <div #container [style.width]='width' [style.height]='height'>
             <ng-template #scrollContainer2 igxFor let-rowData [igxForOf]="data"
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
@@ -1560,9 +1563,10 @@ export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
                 </div>
             </ng-template>
         </div>
+    }
     `,
     standalone: true,
-    imports: [IgxForOfDirective, NgIf]
+    imports: [IgxForOfDirective]
 })
 export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
     @ViewChild('scrollContainer2', { read: IgxForOfDirective, static: false })
@@ -1581,19 +1585,21 @@ export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
                 [style.overflow]='"hidden"'
                 [style.float]='"left"'
                 [style.position]='"relative"'>
-                <div *ngFor="let rowData of data" [style.display]="'flex'" [style.height]="'50px'">
-                    <ng-template #childContainer igxForTest let-col [igxForOf]="cols"
-                        [igxForScrollOrientation]="'horizontal'"
-                        [igxForScrollContainer]="parentVirtDir"
-                        [igxForContainerSize]='width'>
+                @for (rowData of data; track rowData) {
+                    <div [style.display]="'flex'" [style.height]="'50px'">
+                        <ng-template #childContainer igxForTest let-col [igxForOf]="cols"
+                            [igxForScrollOrientation]="'horizontal'"
+                            [igxForScrollContainer]="parentVirtDir"
+                            [igxForContainerSize]='width'>
                             <div [style.min-width]='col.width + "px"'>{{rowData[col.field]}}</div>
-                    </ng-template>
-                </div>
+                        </ng-template>
+                    </div>
+                }
             </div>
         </div>
     `,
     standalone: true,
-    imports: [TestIgxForOfDirective, IgxForOfDirective, NgFor]
+    imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class HorizontalVirtualComponent extends VirtualComponent {
     public override width = '800px';

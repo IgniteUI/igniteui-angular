@@ -14,9 +14,11 @@
                 <igx-prefix>
                     <igx-icon>view_list</igx-icon>
                 </igx-prefix>
-                <igx-select-item *ngFor="let item of dataVolumeItems" [value]="item">
-                    {{item}}
-                </igx-select-item>
+                @for (item of dataVolumeItems; track item) {
+                    <igx-select-item [value]="item">
+                        {{item}}
+                    </igx-select-item>
+                }
             </igx-select>
         </div>
         <div class="actionItem">
@@ -26,9 +28,11 @@
                 <igx-prefix>
                     <igx-icon>cell_wifi</igx-icon>
                 </igx-prefix>
-                <igx-select-item *ngFor="let item of frequencyItems" [value]="item">
-                    {{item}}
-                </igx-select-item>
+                @for (item of frequencyItems; track item) {
+                    <igx-select-item [value]="item">
+                        {{item}}
+                    </igx-select-item>
+                }
             </igx-select>
         </div>
         <div igxButton (click)="createGrid()" [disabled]="docLayout.floatingPanes.length >= 5">Add Floating Pane</div>
@@ -49,8 +53,12 @@
                 <ng-template igxCell let-cell="cell" #priceTemplate>
                     <div class="finjs-icons">
                         <span>{{cell.value | currency:'USD':'symbol':'1.4-4'}}</span>
-                        <igx-icon *ngIf="trends.positive(cell.row.data)">trending_up</igx-icon>
-                        <igx-icon *ngIf="trends.negative(cell.row.data)">trending_down</igx-icon>
+                        @if (trends.positive(cell.row.data)) {
+                            <igx-icon>trending_up</igx-icon>
+                        }
+                        @if (trends.negative(cell.row.data)) {
+                            <igx-icon>trending_down</igx-icon>
+                        }
                     </div>
                 </ng-template>
             </igx-column>
@@ -60,10 +68,12 @@
             <igx-column [field]="'changeP'" [width]="'110px'" dataType="percent"
                 [pipeArgs]="columnFormatChangeP" [sortable]="true" [cellClasses]="trendsChange">
             </igx-column>
-            <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width"
-                [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type"
-                [cellClasses]="c.cellClasses" [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
-            </igx-column>
+            @for (c of columns; track c) {
+                <igx-column [field]="c.field" [width]="c.width"
+                    [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type"
+                    [cellClasses]="c.cellClasses" [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
+                </igx-column>
+            }
         </igx-grid>
     </div>
     <div slot="forexMarket" style="height: 100%;">
@@ -81,8 +91,12 @@
                 <ng-template igxCell let-cell="cell">
                     <div class="finjs-icons">
                         <span>{{cell.value | currency:'USD':'symbol':'1.4-4'}}</span>
-                        <igx-icon *ngIf="trends.positive(cell.row.data)">trending_up</igx-icon>
-                        <igx-icon *ngIf="trends.negative(cell.row.data)">trending_down</igx-icon>
+                        @if (trends.positive(cell.row.data)) {
+                            <igx-icon>trending_up</igx-icon>
+                        }
+                        @if (trends.negative(cell.row.data)) {
+                            <igx-icon>trending_down</igx-icon>
+                        }
                     </div>
                 </ng-template>
             </igx-column>
@@ -92,10 +106,12 @@
             <igx-column [field]="'changeP'" [width]="'110px'" dataType="percent"
                 [pipeArgs]="columnFormatChangeP" [sortable]="true" [cellClasses]="trendsChange">
             </igx-column>
-            <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width"
-                [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type"
-                [cellClasses]="c.cellClasses" [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
-            </igx-column>
+            @for (c of columns; track c) {
+                <igx-column [field]="c.field" [width]="c.width"
+                    [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type"
+                    [cellClasses]="c.cellClasses" [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
+                </igx-column>
+            }
         </igx-grid>
     </div>
     <div slot="content4" style="height: 100%;">
@@ -113,8 +129,12 @@
                 <ng-template igxCell let-cell="cell">
                     <div class="finjs-icons">
                         <span>{{cell.value | currency:'USD':'symbol':'1.4-4'}}</span>
-                        <igx-icon *ngIf="trends.positive(cell.row.data)">trending_up</igx-icon>
-                        <igx-icon *ngIf="trends.negative(cell.row.data)">trending_down</igx-icon>
+                        @if (trends.positive(cell.row.data)) {
+                            <igx-icon>trending_up</igx-icon>
+                        }
+                        @if (trends.negative(cell.row.data)) {
+                            <igx-icon>trending_down</igx-icon>
+                        }
                     </div>
                 </ng-template>
             </igx-column>
@@ -124,10 +144,12 @@
             <igx-column [field]="'changeP'" [width]="'110px'" dataType="percent"
                 [pipeArgs]="columnFormatChangeP" [sortable]="true" [cellClasses]="trendsChange">
             </igx-column>
-            <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width"
-                [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type"
-                [cellClasses]="c.cellClasses" [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
-            </igx-column>
+            @for (c of columns; track c) {
+                <igx-column [field]="c.field" [width]="c.width"
+                    [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type"
+                    [cellClasses]="c.cellClasses" [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
+                </igx-column>
+            }
         </igx-grid>
     </div>
     <div slot="etfStockPrices" style="height: 100%;">
@@ -146,8 +168,12 @@
                 <ng-template igxCell let-cell="cell">
                     <div class="finjs-icons">
                         <span>{{cell.value | currency:'USD':'symbol':'1.4-4'}}</span>
-                        <igx-icon *ngIf="trends.positive(cell.row.data)">trending_up</igx-icon>
-                        <igx-icon *ngIf="trends.negative(cell.row.data)">trending_down</igx-icon>
+                        @if (trends.positive(cell.row.data)) {
+                            <igx-icon>trending_up</igx-icon>
+                        }
+                        @if (trends.negative(cell.row.data)) {
+                            <igx-icon>trending_down</igx-icon>
+                        }
                     </div>
                 </ng-template>
             </igx-column>
@@ -157,10 +183,12 @@
             <igx-column [field]="'changeP'" [width]="'110px'" dataType="percent"
                 [pipeArgs]="columnFormatChangeP" [sortable]="true" [cellClasses]="trendsChange">
             </igx-column>
-            <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width"
-                [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type" [cellClasses]="c.cellClasses"
-                [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
-            </igx-column>
+            @for (c of columns; track c) {
+                <igx-column [field]="c.field" [width]="c.width"
+                    [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type" [cellClasses]="c.cellClasses"
+                    [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
+                </igx-column>
+            }
         </igx-grid>
     </div>
     <ng-template #host gridHost>
