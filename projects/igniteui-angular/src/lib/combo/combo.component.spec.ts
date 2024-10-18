@@ -3416,6 +3416,28 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 }));
+
+                fit('should mark the combo as touched and invalid when opened and the user clicks away', fakeAsync(() => {
+                    // Access the NgModel for the testCombo
+                    const ngModel = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
+
+                    // Initially, the combo should not be touched
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                    expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                    expect(ngModel.touched).toBeFalse();
+
+                    combo.open();
+                    fixture.detectChanges();
+
+                    const documentClickEvent = new MouseEvent('click', { bubbles: true });
+                    document.body.dispatchEvent(documentClickEvent);
+                    fixture.detectChanges();
+                    tick();
+
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
+                    expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+                    expect(ngModel.touched).toBeTrue(); // NgModel should now be marked as touched
+                }));
             });
         });
         describe('Display density', () => {
@@ -3627,7 +3649,7 @@ class IgxComboFormComponent {
 @Component({
     template: `
     <form #form="ngForm">
-        <igx-combo #testCombo class="input-container" [placeholder]="'Locations'"
+        <igx-combo #testCombo #testComboNgModel="ngModel" class="input-container" [placeholder]="'Locations'"
             name="anyName" required [(ngModel)]="values"
             [data]="items" [filterable]="filterableFlag"
             [displayKey]="'field'" [valueKey]="'field'"
