@@ -903,11 +903,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.opened.emit({ owner: this });
 
-            // INFO: Commented out during the calendar refactoring as I couldn't
-            // determine why this is needed.
-            // if (this._calendar?.daysView?.selectedDates) {
-            //     return;
-            // }
+            this._calendar.wrapper?.nativeElement?.focus();
 
             if (this._targetViewDate) {
                 this._targetViewDate.setHours(0, 0, 0, 0);
