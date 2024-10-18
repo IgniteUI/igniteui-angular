@@ -25,11 +25,13 @@ import {
     createComponent,
     EnvironmentInjector,
     CUSTOM_ELEMENTS_SCHEMA,
-    booleanAttribute
+    booleanAttribute,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { DOCUMENT, NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common';
 
-import { first} from 'rxjs/operators';
+import { first, take, takeUntil} from 'rxjs/operators';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -67,7 +69,7 @@ import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTempl
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
-import { cloneArray, PlatformUtil } from '../../core/utils';
+import { cloneArray, PlatformUtil, resizeObservable } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -197,7 +199,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit, AfterContentInit,
-    GridType, AfterViewInit {
+    GridType, AfterViewInit, OnChanges {
 
     /**
      * Emitted when the dimension collection is changed via the grid chip area.
@@ -695,6 +697,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     };
     private _sortableColumns = true;
     private _visibleRowDimensions: IPivotDimension[] = [];
+    private _shouldUpdateSizes = false;
 
     /**
     * Gets/Sets the default expand state for all rows.
@@ -1087,6 +1090,16 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
+     * @hidden @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.superCompactMode && !changes.superCompactMode.isFirstChange()) {
+            this._shouldUpdateSizes = true;
+            resizeObservable(this.verticalScrollContainer.displayContainer).pipe(take(1), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
+        }
+    }
+
+    /**
      * Notifies for dimension change.
      */
     public notifyDimensionChange(regenerateColumns = false) {
@@ -1117,6 +1130,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const uniqueVisibleRowDims = this.visibleRowDimensions.filter(dim => !config.rows.find(configRow => configRow.memberName === dim.memberName));
         const rows = (config.rows || []).concat(...uniqueVisibleRowDims);
         return rows.concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
+    }
+
+    protected override get shouldResize(): boolean {
+        if (!this.dataRowList.first?.cells || this.dataRowList.first.cells.length === 0) {
+            return false;
+        }
+        const isSizePropChanged = super.shouldResize;
+        if (isSizePropChanged || this._shouldUpdateSizes) {
+            this._shouldUpdateSizes = false;
+            return true;
+        }
+        return false;
     }
 
     /** @hidden @internal */
