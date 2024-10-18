@@ -1099,9 +1099,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     public ngOnChanges(changes: SimpleChanges) {
-        if (changes.superCompactMode && !this._init) {
+        if (changes.superCompactMode && !changes.superCompactMode.isFirstChange()) {
             this._shouldUpdateSizes = true;
-            //check if sizes are changed
             resizeObservable(this.verticalScrollContainer.displayContainer).pipe(take(1), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
         }
     }
@@ -1140,6 +1139,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected override get shouldResize(): boolean {
+        if (!this.dataRowList.first?.cells || this.dataRowList.first.cells.length === 0) {
+            return false;
+        }
         const isSizePropChanged = super.shouldResize;
         if (isSizePropChanged || this._shouldUpdateSizes) {
             this._shouldUpdateSizes = false;
