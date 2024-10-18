@@ -1219,7 +1219,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public handleClosed() {
         this.closed.emit({ owner: this });
         if(this.comboInput.nativeElement !== this.document.activeElement){
-            this._validateComboState();
+            this.validateComboState();
         }
     }
 
@@ -1259,7 +1259,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     /** @hidden @internal */
     public onBlur() {
         if (this.collapsed) {
-            this._validateComboState();
+            this.validateComboState();
         }
     }
 
@@ -1287,7 +1287,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.manageRequiredAsterisk();
     };
 
-    private _validateComboState() {
+    private validateComboState() {
         this._onTouchedCallback();
 
         if (this.ngControl && this.ngControl.invalid) {
