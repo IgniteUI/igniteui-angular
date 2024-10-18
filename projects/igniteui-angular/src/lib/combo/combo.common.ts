@@ -1218,7 +1218,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     /** @hidden @internal */
     public handleClosed() {
         this.closed.emit({ owner: this });
-        if(this.comboInput.nativeElement !== this.document.activeElement){
+        if(this.comboInput.nativeElement !== document.activeElement){
             this.validateComboState();
         }
     }
