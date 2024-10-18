@@ -77,8 +77,8 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
                 break;
             case this.platform.KEYMAP.ENTER:
             case this.platform.KEYMAP.SPACE:
+                event.preventDefault();
                 if (this.tabs.activation === 'manual') {
-                    event.preventDefault();
                     this.nativeElement.click();
                 }
                 unsupportedKey = true;
