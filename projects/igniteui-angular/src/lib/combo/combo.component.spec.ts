@@ -3603,16 +3603,12 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 }));
-
-                fit('should mark the combo as touched and invalid when opened and the user clicks away', fakeAsync(() => {
+                it('should mark the combo as touched and invalid when opened and the user clicks away', fakeAsync(() => {
                     // Access the NgModel for the testCombo
                     const ngModel = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
-
-                    // Initially, the combo should not be touched
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     expect(ngModel.touched).toBeFalse();
-
                     combo.open();
                     fixture.detectChanges();
 
