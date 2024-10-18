@@ -323,9 +323,9 @@ describe('IgxDateRangePicker', () => {
             if (startIndex === -1) {
                 throw new Error('Start date not found in calendar. Aborting.');
             }
-            UIInteractions.simulateMouseDownEvent(calendarDays[startIndex].firstChild as HTMLElement);
+            UIInteractions.simulateClickAndSelectEvent(calendarDays[startIndex].firstChild as HTMLElement);
             if (endIndex !== -1 && endIndex !== startIndex) { // do not click same date twice
-                UIInteractions.simulateMouseDownEvent(calendarDays[endIndex].firstChild as HTMLElement);
+                UIInteractions.simulateClickAndSelectEvent(calendarDays[endIndex].firstChild as HTMLElement);
             }
             fixture.detectChanges();
             dateRange.close();
