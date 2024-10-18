@@ -11,7 +11,6 @@ All notable changes for each version of this project will be documented in this 
     - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - To streamline the sorting of columns with custom formats, a new `FormattedValuesSortingStrategy` has been introduced. This strategy simplifies the sorting process by allowing direct sorting based on formatted values, eliminating the need to extend the `DefaultSortingStrategy` or implement a custom `ISortingStrategy`. This enhancement improves the ease of handling sorting with custom column formatters.
-
 - `IgxCarousel`
     - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
     - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
@@ -38,6 +37,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxDateTimeEditor`
     - Added a new `defaultFormatType` property (`date` | `time` | `dateTime`) which configures the date-time parts
     according to the target type that the editor mask includes. Defaults to `date`.
+- `IgxCombo`, `IgxSimpleCombo`
+    - Introduced the ability to automatically filter out and exclude values that are not in the data when programmatically setting selected items. This behavior specifically applies when the `combo` is bound to local data, as querying the entire data source to verify value presence is not feasible in remote scenarios.
 
 ### Themes
 - `Palettes`
@@ -100,7 +101,7 @@ For Firefox users, we provide limited scrollbar styling options through the foll
     - **Breaking Change** The deprecated `filterable` property is replaced with `disableFiltering`.
     - The dropdown search field placeholder is now part of the Combo's localization resources. It now also uses two resource values depending on whether filtering is active, e.g. in the default `en` locale it remains `'Enter a Search Term'`, but changes to `'Add Item'` when `disableFiltering` and `allowCustomValues` are set to true. For that reason, the existing `searchPlaceholder` input is also **deprecated** in favor of the resources.
     - **Deprecation** - `filterable` from the `filteringOptions` has been deprecated in favor of `disableFiltering`.
-
+    
 - `IgxBadge`
     - **Breaking Change** The `$border-width` property has been removed from the badge theme.
     - New outlined variant of the badge component has been added. Users can switch to `outlined` by adding the newly created `outlined` property to a badge.
