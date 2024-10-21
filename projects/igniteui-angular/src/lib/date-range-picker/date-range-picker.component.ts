@@ -733,9 +733,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                 this._focusedInput = null;
             }
             if (this.inputDirective) {
-                // this avoids the grid receiving a focus out because the overlay is removed in the same execution
-                // chain causing the browser to focus the body element first
-                setTimeout(() => this.inputDirective.focus());
+                this.inputDirective.focus();
             }
         }
     }
