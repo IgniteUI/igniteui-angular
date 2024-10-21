@@ -107,7 +107,7 @@
 
                     <ng-container *ngIf="!expressionItem.expression.searchTree">
                     {{
-                        isDate(expressionItem.expression.searchVal)
+                        isDate(expressionItem.expression.searchVal) && expressionItem.expression.displayVal === undefined
                             ? getFormatter(expressionItem.expression.fieldName)
                                 ? (expressionItem.expression.searchVal
                                 | fieldFormatter
@@ -122,7 +122,9 @@
                                         )
                                     : undefined
                                     : this.locale)
-                            : expressionItem.expression.searchVal
+                            : expressionItem.expression.displayVal !== undefined ?
+                                expressionItem.expression.displayVal :
+                                expressionItem.expression.searchVal
                     }}
                     </ng-container>
                 </span>
@@ -133,7 +135,9 @@
                         expressionItem.expression.searchTree.returnFields.join(', ') :
                         expressionItem.expression.condition.isUnary ?
                             getConditionFriendlyName(expressionItem.expression.condition.name) :
-                            expressionItem.expression.searchVal
+                            expressionItem.expression.displayVal !== undefined ?
+                                expressionItem.expression.displayVal :
+                                expressionItem.expression.searchVal
                 }}
             </div>
             <div

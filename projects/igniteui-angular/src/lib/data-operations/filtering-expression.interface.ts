@@ -19,4 +19,5 @@ export declare interface IFilteringExpression {
     searchVal?: any;
     searchTree?: IExpressionTree;
     ignoreCase?: boolean;
+    displayVal? : any;
 }

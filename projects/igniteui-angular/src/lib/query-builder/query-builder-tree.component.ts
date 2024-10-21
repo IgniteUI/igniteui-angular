@@ -19,7 +19,7 @@ import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/b
 import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { PlatformUtil } from '../core/utils';
-import { DataType, DataUtil } from '../data-operations/data-util';
+import { DataType } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree, IExpressionTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -423,7 +423,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public searchValue: { value: any } = { value: null };
+    public searchValue: { value: any, displayValue: any } = { value: null, displayValue: undefined };
 
     /**
      * @hidden @internal
@@ -738,7 +738,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._editedExpression.expression.fieldName = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
             this._editedExpression.expression.conditionName = this.selectedCondition;
-            this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, actualSearchValue);
+            this._editedExpression.expression.displayVal = this.searchValue.displayValue;
+            this._editedExpression.expression.searchVal = actualSearchValue;
             this._editedExpression.fieldLabel = this.selectedField.label
                 ? this.selectedField.label
                 : this.selectedField.header
