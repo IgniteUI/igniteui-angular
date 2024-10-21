@@ -135,6 +135,7 @@ describe('IgxDatePicker', () => {
                 spyOn(datePicker.closing, 'emit').and.callThrough();
                 spyOn(datePicker.closed, 'emit').and.callThrough();
                 expect(datePicker.collapsed).toBeTruthy();
+                expect(datePicker.isFocused).toBeFalse();
 
                 const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
                 const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
@@ -151,6 +152,7 @@ describe('IgxDatePicker', () => {
                 expect(calendarWrapper.contains(document.activeElement))
                     .withContext('focus should move to calendar for KB nav')
                     .toBeTrue();
+                expect(datePicker.isFocused).toBeTrue();
 
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
                 tick(350);
@@ -161,6 +163,7 @@ describe('IgxDatePicker', () => {
                 expect(inputGroup.nativeElement.contains(document.activeElement))
                     .withContext('focus should return to the picker input')
                     .toBeTrue();
+                expect(datePicker.isFocused).toBeTrue();
             }));
 
             it('should open the calendar with SPACE key', fakeAsync(() => {
@@ -693,7 +696,8 @@ describe('IgxDatePicker', () => {
                 calendarClose: new EventEmitter<any>()
             };
             const mockComponentRef = {
-                instance: mockComponentInstance
+                instance: mockComponentInstance,
+                location: { nativeElement: undefined }
             } as any;
             mockOverlayEventArgs = {
                 id: mockOverlayId,
