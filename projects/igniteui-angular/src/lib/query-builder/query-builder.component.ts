@@ -167,16 +167,20 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * Returns whether the expression tree can be committed in the current state.
      */
     public canCommit(): boolean {
-        return this.queryTree.canCommitCurrentState();
+        return this.queryTree.canCommitCurrentState() === true;
     }
 
     /**
-     * Commits the expression tree in the current state.
+     * Commits the expression tree in the current state if it is valid. If not throws an exception.
      */
     public commit(): void {
-        this._shouldEmitTreeChange = false;
-        this.queryTree.commitCurrentState();
-        this._shouldEmitTreeChange = true;
+        if (this.canCommit()) {
+            this._shouldEmitTreeChange = false;
+            this.queryTree.commitCurrentState();
+            this._shouldEmitTreeChange = true;
+        } else {
+            throw new Error('Expression tree can\'t be committed in the current state. Use `canCommit` method to check if the current state is valid.');
+        }
     }
 
     /**

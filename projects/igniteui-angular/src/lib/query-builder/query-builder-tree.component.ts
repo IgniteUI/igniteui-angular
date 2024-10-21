@@ -822,7 +822,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
                 ) ||
                 (
-                    innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields.length > 0
+                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields.length > 0
                 ) ||
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
@@ -836,7 +836,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (innerQuery) {
             return innerQuery.canCommitCurrentState();
         } else {
-            return !this._editedExpression || !this.selectedField || this.operandCanBeCommitted() === true;
+            return this.selectedReturnFields?.length > 0 && 
+                (
+                    (!this._editedExpression && !!this.rootGroup) || // no edited expr, root group
+                    (this._editedExpression && !this.selectedField && (this.expressionTree && this.expressionTree.filteringOperands[0] !== this._editedExpression.expression)) || // empty edited expr with at least one other expr
+                    (this._editedExpression && this.operandCanBeCommitted() === true) // valid edited expr
+                );
         }
     }
 
