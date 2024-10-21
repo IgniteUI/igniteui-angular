@@ -1357,6 +1357,27 @@ describe('igxOverlay', () => {
 
             overlay.detachAll();
         }));
+
+        it('Should properly move computed size style to the overlay content container.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleRefComponent);
+            fixture.detectChanges();
+
+            fixture.componentInstance.item.nativeElement.style.setProperty('--ig-size', 'var(--ig-size-small)');
+            fixture.detectChanges();
+            const overlayInstance = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(),
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const firstCallId = overlayInstance.attach(fixture.componentInstance.item, overlaySettings);
+            overlayInstance.show(firstCallId);
+            tick();
+
+            const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+            expect(overlayContent.style.getPropertyValue('--ig-size')).toEqual('1');
+            overlayInstance.detach(firstCallId);
+        }));
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
@@ -3218,7 +3239,7 @@ describe('igxOverlay', () => {
             expect(wrapperElement).toBeDefined();
             const styles = css(wrapperElement);
             expect(styles.findIndex(
-                (e) => e.includes('--background-color: var(--igx-overlay-background-color, hsla(var(--ig-gray-500), 0.54));')))
+                (e) => e.includes('--background-color: var(--igx-overlay-background-color, hsl(from var(--ig-gray-500) h s l/0.54));')))
                 .toBeGreaterThan(-1);
             expect(styles.findIndex(
                 (e) => e.includes('background: var(--background-color);')))
@@ -3244,7 +3265,7 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
             const styles = css(wrapperElement);
-            expect(styles.findIndex((e) => e.includes('--background-color: var(--igx-overlay-background-color, hsla(var(--ig-gray-500), 0.54));'))).toBeGreaterThan(-1);
+            expect(styles.findIndex((e) => e.includes('--background-color: var(--igx-overlay-background-color, hsl(from var(--ig-gray-500) h s l/0.54));'))).toBeGreaterThan(-1);
             expect(styles.findIndex((e) => e.includes('background: var(--background-color);'))).toBeGreaterThan(-1);
 
             fixture.componentInstance.overlay.detachAll();

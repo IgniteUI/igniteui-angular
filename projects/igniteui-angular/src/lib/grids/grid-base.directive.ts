@@ -180,8 +180,6 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
-/*@__PURE__*/IgcTrialWatermark.register();
-
 interface IMatchInfoCache {
     row: any;
     index: number;
@@ -2199,9 +2197,15 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```typescript
      *  this.grid.shouldGenerate = true;
      * ```
-     * @deprecated in version 18.1.0. Use the `autoGenerate` property instead.
+     * @deprecated in version 18.2.0. Column re-creation now relies on `autoGenerate` instead.
      */
-    public shouldGenerate: boolean;
+    public get shouldGenerate(): boolean {
+        return this.autoGenerate;
+    }
+
+    public set shouldGenerate(value: boolean) {
+        this.autoGenerate = value;
+    }
 
     /**
      * Gets/Sets the message displayed when there are no records and the grid is filtered.
@@ -2455,6 +2459,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /* blazorByValueArray */
     /* blazorAlwaysWriteback */
     /* @tsTwoWayProperty (true, "RowSelectionChanging", "Detail.NewSelection", false) */
+    /* blazorPrimitiveValue */
     /**
      * Gets/Sets the current selection state.
      *
@@ -3230,6 +3235,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         return MINIMUM_COLUMN_WIDTH;
     }
 
+    protected get isCustomSetRowHeight(): boolean {
+        return !isNaN(this._rowHeight);
+    }
+
     /**
      * @hidden @internal
      */
@@ -3403,6 +3412,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
+        IgcTrialWatermark.register();
     }
 
     /**
@@ -3617,7 +3627,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.zone.run(() => {
                 // do not trigger reflow if element is detached.
                 if (this.nativeElement.isConnected) {
-                    if (this._gridSize !== this.gridSize) {
+                    if (this.shouldResize) {
                         // resizing occurs due to the change of --ig-size css var
                         this._gridSize = this.gridSize;
                         this.updateDefaultRowHeight();
@@ -5306,6 +5316,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected get isPercentWidth() {
         return this.width && this.width.indexOf('%') !== -1;
+    }
+
+    protected get shouldResize(): boolean {
+        return this._gridSize !== this.gridSize;
     }
 
     /**

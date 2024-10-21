@@ -100,6 +100,13 @@
         }
     }
 
+    %form-group-bundle:hover,
+    %form-group-bundle:focus-within {
+        %igx-select__toggle-button {
+            color: var-get($theme, 'toggle-button-foreground-focus');
+        }
+    }
+
     .igx-input-group--filled {
         %igx-select__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-filled');
