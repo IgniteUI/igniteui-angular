@@ -358,15 +358,12 @@
     %time-picker__header-hour {
         display: flex;
         color: var-get($theme, 'header-hour-text-color');
+        margin: 0;
 
         [dir='rtl'] & {
             flex-direction: row-reverse;
             justify-content: flex-end;
         }
-    }
-
-    %time-picker__header-hour {
-        margin: 0;
     }
 
     %time-picker__buttons {
