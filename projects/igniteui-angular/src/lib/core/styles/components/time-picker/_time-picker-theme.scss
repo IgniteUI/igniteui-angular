@@ -23,7 +23,6 @@
 /// @param {Color} $disabled-item-background [null] - The background color for disabled values .
 /// @param {Color} $header-background [null] - The header background color of a time picker.
 /// @param {Color} $header-hour-text-color [null] - The header hour text color of a time picker.
-/// @param {Color} $header-time-period-color [null] - The header AM/PM text color of a time picker.
 /// @param {Color} $background-color [null] - The time-picker panel background color.
 /// @param {Number} $time-item-size [null] - The height of the time item.
 /// @param {Color} $divider-color [null] - The color for the actions area divider.
@@ -56,7 +55,6 @@
     $disabled-item-background: null,
     $header-background: null,
     $header-hour-text-color: null,
-    $header-time-period-color: null,
     $background-color: null,
     $modal-shadow: null,
     $dropdown-shadow: null,
@@ -83,12 +81,6 @@
 
     @if not($header-hour-text-color) and $header-background {
         $header-hour-text-color: text-contrast($header-background);
-    }
-
-    @if not($header-time-period-color) and $header-background {
-        @if meta.type-of($header-background) == 'color' {
-            $header-time-period-color: rgba(text-contrast($header-background), .8);
-        }
     }
 
     @if not($selected-text-color) and $active-item-background {
@@ -135,7 +127,6 @@
         disabled-item-background: $disabled-item-background,
         header-background: $header-background,
         header-hour-text-color: $header-hour-text-color,
-        header-time-period-color: $header-time-period-color,
         background-color: $background-color,
         modal-shadow: $modal-shadow,
         dropdown-shadow: $dropdown-shadow,
@@ -355,10 +346,6 @@
         }
     }
 
-    %time-picker__header-ampm {
-        color: var-get($theme, 'header-time-period-color');
-    }
-
     %time-picker__header--vertical {
         @if $variant == 'indigo' {
             min-width: rem(136px);
@@ -378,7 +365,6 @@
         }
     }
 
-    %time-picker__header-ampm,
     %time-picker__header-hour {
         margin: 0;
     }
@@ -413,14 +399,8 @@
     header-hour: 'h4',
     selected-time: 'h5'
 )) {
-    $time-period: map.get($categories, 'header-time-period');
     $header-hour: map.get($categories, 'header-hour');
     $selected-time: map.get($categories, 'selected-time');
-
-
-    %time-picker__header-ampm {
-        @include type-style($time-period, false);
-    }
 
     %time-picker__header-hour {
         @include type-style($header-hour, false) {
