@@ -755,6 +755,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         });
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
+            this.calendar.wrapper.nativeElement.focus();
             this.opened.emit({ owner: this });
         });
 
