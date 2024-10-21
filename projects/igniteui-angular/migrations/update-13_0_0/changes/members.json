@@ -19,7 +19,7 @@
             "member": "selectedItems()",
             "replaceWith": "selection",
             "definedIn": [
-                "IgxComboBaseDirective"
+                "IgxComboComponent"
             ]
         },
         {

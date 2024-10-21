@@ -74,10 +74,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const parents: IgcNgElement[] = [];
         let parentConfig: ComponentConfig;
         const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
-        if (componentConfig) {
-            // TODO: configure in advance
-            componentConfig.selector = element.tagName.toLocaleLowerCase();
-        }
+
         const configParents = componentConfig?.parents
             .map(parentType => this.config.find(x => x.component === parentType))
             .filter(x => x.selector);
@@ -95,6 +92,12 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             }
             // select closest of all possible config parents
             let parent = parents[0];
+
+            // Collected parents may include direct Angular HGrids, so only wait for configured parent elements:
+            const configParent = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
+            if (configParent && !customElements.get(configParent.selector)) {
+                await customElements.whenDefined(configParent.selector);
+            }
 
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
             if (parent?.ngElementStrategy) {

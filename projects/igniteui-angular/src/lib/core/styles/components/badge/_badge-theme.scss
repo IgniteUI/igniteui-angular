@@ -17,7 +17,6 @@
 /// @param {Color} $icon-color [null] - The icon color used.
 /// @param {Color} $text-color [null] - The text color used.
 /// @param {Color} $border-color [null] - The border color used.
-/// @param {Number} $border-width [null] - The border width of the badge component.
 /// @param {Color} $background-color [null] - The background color used.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the badge.
 /// @param {Number} $border-radius [null] - The border radius used for badge component.
@@ -37,7 +36,6 @@
 
     $border-color: null,
     $border-radius: null,
-    $border-width: null,
 
     $background-color: null,
     $shadow: null,
@@ -75,7 +73,6 @@
         border-radius: $border-radius,
         background-color: $background-color,
         shadow: $shadow,
-        border-width: $border-width,
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
         )),
@@ -90,15 +87,11 @@
 
     $variant: map.get($theme, '_meta', 'variant');
 
-    $badge-font-weight: normal;
-    $badge-value-padding: rem(4px);
-    $border-type: solid;
-
     %igx-badge-display {
         --size: #{rem(22px)};
         --_badge-size: var(--size);
 
-        display: flex;
+        display: inline-flex;
         justify-content: center;
         align-items: center;
         min-width: var(--_badge-size);
@@ -107,9 +100,6 @@
         background: var-get($theme, 'background-color');
         border-radius: calc(var(--size) / 2);
         box-shadow: var-get($theme, 'shadow');
-        border-width: var-get($theme, 'border-width');
-        border-color: var-get($theme, 'border-color');
-        border-style: $border-type;
         overflow: hidden;
 
         igx-icon {
@@ -118,7 +108,7 @@
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            font-weight: $badge-font-weight;
+            font-weight: 400;
             color: var-get($theme, 'icon-color');
         }
 
@@ -132,13 +122,17 @@
         }
     }
 
+    %igx-badge--outlined {
+        box-shadow: inset 0 0 0 rem(if($variant != 'bootstrap', 2px, 1px)) var-get($theme, 'border-color');
+    }
+
     %igx-badge--square {
         border-radius: var-get($theme, 'border-radius');
     }
 
     %igx-badge-value {
         white-space: nowrap;
-        padding: $badge-value-padding;
+        padding-inline: rem(4px);
     }
 
     %igx-badge--success {

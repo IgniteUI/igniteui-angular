@@ -678,25 +678,25 @@ export class SampleTestData {
 
     public static foodProductDateTimeData = () => ([
         { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date(2015, 9, 1, 11, 37, 22),
-            ReceiveTime: new Date(2015, 10, 1, 8, 37, 11) },
+            ReceiveTime: new Date(2015, 10, 1, 8, 37, 11), ProducedDate: new Date(2014, 9, 1, 11, 37, 22) },
         { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date(2016, 7, 18, 11, 17, 22),
-        ReceiveTime: new Date(2016, 10, 8, 12, 12, 2) },
+        ReceiveTime: new Date(2016, 10, 8, 12, 12, 2), ProducedDate: new Date(2015, 7, 18, 11, 17, 22) },
         { ProductID: 3, ProductName: 'Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date(2021, 4, 11, 7, 47, 1),
-        ReceiveTime: new Date(2021, 4, 29, 14, 7, 12) },
+        ReceiveTime: new Date(2021, 4, 29, 14, 7, 12), ProducedDate: new Date(2020, 4, 11, 7, 47, 1) },
         { ProductID: 4, ProductName: 'Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date(2021, 4, 11, 18, 37, 2),
-        ReceiveTime: new Date(2021, 4, 27, 6, 40, 18) },
+        ReceiveTime: new Date(2021, 4, 27, 6, 40, 18), ProducedDate: new Date(2020, 4, 11, 18, 37, 2) },
         { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date(2019, 3, 17, 5, 5, 15),
-        ReceiveTime: new Date(2019, 3, 31, 12, 47, 42) },
+        ReceiveTime: new Date(2019, 3, 31, 12, 47, 42), ProducedDate: new Date(2018, 3, 17, 5, 5, 15) },
         { ProductID: 6, ProductName: 'Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date(2019, 9, 30, 16, 17, 27),
-        ReceiveTime: new Date(2019, 10, 11, 12, 47, 42) },
+        ReceiveTime: new Date(2019, 10, 11, 12, 47, 42), ProducedDate: new Date(2018, 9, 30, 16, 17, 27) },
         { ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date(2015, 2, 12, 21, 31, 22),
-        ReceiveTime: new Date(2015, 3, 3, 20, 20, 24) },
+        ReceiveTime: new Date(2015, 3, 3, 20, 20, 24), ProducedDate: new Date(2014, 2, 12, 21, 31, 22) },
         { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date(2018, 6, 14, 17, 27, 23),
-        ReceiveTime: new Date(2018, 6, 18, 15, 30, 30) },
+        ReceiveTime: new Date(2018, 6, 18, 15, 30, 30), ProducedDate: new Date(2017, 6, 14, 17, 27, 23) },
         { ProductID: 9, ProductName: 'Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date(2021, 7, 3, 15, 15, 0),
-        ReceiveTime: new Date(2021, 7, 7, 15, 30, 22) },
+        ReceiveTime: new Date(2021, 7, 7, 15, 30, 22), ProducedDate: new Date(2020, 7, 3, 15, 15, 0) },
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date(2021, 7, 3, 15, 15, 0),
-        ReceiveTime: new Date(2021, 7, 11, 14, 30, 0) }
+        ReceiveTime: new Date(2021, 7, 11, 14, 30, 0), ProducedDate: new Date(2020, 7, 3, 15, 15, 0) }
     ]);
 
     public static foodPercentProductData = () => ([
@@ -1902,7 +1902,7 @@ export class SampleTestData {
             Downloads: 254,
             ID: 1,
             ProductName: 'Ignite UI for JavaScript',
-            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 15),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 1),
             ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
             ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
             Released: false,

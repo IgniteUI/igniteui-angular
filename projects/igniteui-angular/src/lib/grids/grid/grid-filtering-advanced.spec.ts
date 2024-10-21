@@ -24,6 +24,8 @@ import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { By } from '@angular/platform-browser';
+import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -1121,7 +1123,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             GridFunctions.clickAdvancedFilteringColumnSelect(fix);
             fix.detectChanges();
             const dropdownItems = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix);
-            expect(dropdownItems.length).toBe(3);
+            expect(dropdownItems.length).toBe(4);
             expect(dropdownItems[0].innerText).toBe('HeaderID');
             expect(dropdownItems[1].innerText).toBe('ProductName');
             expect(dropdownItems[2].innerText).toBe('Another Field');
@@ -2051,6 +2053,113 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(rows.length).toEqual(1, 'Wrong filtered rows count');
         }));
 
+        it('DateTime: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
+            const releaseDateColumn = grid.getColumnByName('ReleaseDate');
+            releaseDateColumn.dataType = 'dateTime';
+            releaseDateColumn.editorOptions = {
+                dateTimeFormat: 'dd-MM-yyyy HH:mm aaaaa'
+            }
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+            const dropdownItems = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix);
+            expect(dropdownItems[4].innerText).toBe('ReleaseDate');
+
+            selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column
+            selectOperatorInEditModeExpression(fix, 0);
+
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseDateColumn.editorOptions.dateTimeFormat);
+            expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
+            expect(dateTimeEditor.locale).toMatch(grid.locale);
+        }));
+
+        it('DateTime: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            const releaseDateColumn = grid.getColumnByName('ReleaseDate');
+            releaseDateColumn.dataType = 'dateTime';
+            releaseDateColumn.pipeArgs = {
+                format: 'dd-MM-yyyy HH:mm aaaaa'
+            }
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 4);
+            selectOperatorInEditModeExpression(fix, 0);
+
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
+            expect(dateTimeEditor.displayFormat.normalize('NFKC')).toMatch(releaseDateColumn.pipeArgs.format);
+        }));
+
+        it('Time: Should set editorOptions.dateTimeFormat prop as inputFormat for the filter value editor', fakeAsync(() => {
+            const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
+            releaseTimeColumn.editorOptions = {
+                dateTimeFormat: 'hh:mm'
+            }
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 6);
+            selectOperatorInEditModeExpression(fix, 0);
+
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.editorOptions.dateTimeFormat);
+        }));
+
+        it('Time: Should set pipeArgs.format as inputFormat for the filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            const releaseTimeColumn = grid.getColumnByName('ReleaseTime');
+            releaseTimeColumn.pipeArgs = {
+                format: 'hh:mm'
+            }
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 6);
+            selectOperatorInEditModeExpression(fix, 0);
+
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch(releaseTimeColumn.pipeArgs.format);
+        }));
+
         it('should handle advanced filtering correctly when grid columns and data are dynamically changed', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridAdvancedFilteringDynamicColumnsComponent);
             grid = fixture.componentInstance.grid;
@@ -2121,6 +2230,34 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Check for error messages in the console
             expect(consoleSpy).not.toHaveBeenCalled();
+        }));
+
+        it('should not trigger accessibility errors when interacting with the edit icon in the advanced filtering expression chip', fakeAsync(() => {
+            // Apply advanced filter through API to generate chips.
+            const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+            tree.filteringOperands.push({
+                fieldName: 'Downloads', searchVal: 1, condition: IgxNumberFilteringOperand.instance().condition('equals')
+            });
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            tick(50);
+            fix.detectChanges();
+
+            // Hover over the first visible expression chip to show edit icon.
+            const expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[0];
+            expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
+            tick(50);
+            fix.detectChanges();
+
+            // Click the edit icon on the hovered and focused edit icon.
+            const editIcon = GridFunctions.getAdvancedFilteringTreeExpressionEditIcon(fix, [0]);
+            tick(50);
+            fix.detectChanges();
+            expect(editIcon.getAttribute('aria-hidden')).toBe('true');
+            expect(editIcon.getAttribute('tabIndex')).toBeFalsy();
         }));
 
         describe('Context Menu - ', () => {
