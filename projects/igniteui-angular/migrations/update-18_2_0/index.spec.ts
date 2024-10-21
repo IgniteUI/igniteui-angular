@@ -67,6 +67,26 @@ describe(`Update to ${version}`, () => {
         expect(tree.readContent('/testSrc/appPrefix/component/grid-test.component.ts')).toEqual(expectedContent);
     });
 
+    it('should remove property `filterable` from Combo component', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-combo [filterable]="false"></igx-combo>
+        <igx-combo filterable="true"></igx-combo>
+        <igx-combo [filterable]="myProp"></igx-combo>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-combo [disableFiltering]="true"></igx-combo>
+        <igx-combo [disableFiltering]="false"></igx-combo>
+        <igx-combo [disableFiltering]="!(myProp)"></igx-combo>
+        `
+        );
+    });
+
     it('should migrate scrollbar theme', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
@@ -85,6 +105,38 @@ describe(`Update to ${version}`, () => {
                 $sb-thumb-bg-color: blue,
                 $sb-track-bg-color: black,
             );`
+        );
+    });
+
+    it('should remove hsla and hsl functions', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `.custom-body {
+            	color: hsla(var(--ig-primary-A100));
+            	background: hsla(var(--ig-gray-100));
+            }
+
+            .custom-header {
+            	color: hsl(var(--ig-secondary-100));
+            	background: hsl(var(--ig-gray-900));
+            }`
+        );
+
+        const tree = await schematicRunner
+            .runSchematic(migrationName, {}, appTree);
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.scss')
+        ).toEqual(
+            `.custom-body {
+            	color: var(--ig-primary-A100);
+            	background: var(--ig-gray-100);
+            }
+
+            .custom-header {
+            	color: var(--ig-secondary-100);
+            	background: var(--ig-gray-900);
+            }`
         );
     });
 

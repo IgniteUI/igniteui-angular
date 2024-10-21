@@ -4,7 +4,7 @@ import {
     OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
     SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
 } from '@angular/core';
-import { NgTemplateOutlet, NgIf } from '@angular/common';
+import { NgTemplateOutlet, NgIf, getLocaleFirstDayOfWeek } from '@angular/common';
 import {
     AbstractControl, ControlValueAccessor, NgControl,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
@@ -180,9 +180,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /**
      * The expected user input format and placeholder.
      *
-     * @remarks
-     * Default is `"'MM/dd/yyyy'"`
-     *
      * @example
      * ```html
      * <igx-date-range-picker inputFormat="dd/MM/yy"></igx-date-range-picker>
@@ -328,6 +325,39 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public get appliedFormat(): string {
         return DateTimeUtil.getLocaleDateFormat(this.locale, this.displayFormat)
             || DateTimeUtil.DEFAULT_INPUT_FORMAT;
+    }
+
+    /**
+     * @example
+     * ```html
+     * <igx-date-range-picker locale="jp"></igx-date-range-picker>
+     * ```
+     */
+    /**
+     * Gets the `locale` of the date-range-picker.
+     * If not set, defaults to application's locale.
+     */
+    @Input()
+    public override get locale(): string {
+        return this._locale;
+    }
+
+    /**
+     * Sets the `locale` of the date-picker.
+     * Expects a valid BCP 47 language tag.
+     */
+    public override set locale(value: string) {
+        this._locale = value;
+        // if value is invalid, set it back to _localeId
+        try {
+            getLocaleFirstDayOfWeek(this._locale);
+        } catch (e) {
+            this._locale = this._localeId;
+        }
+        if (this.hasProjectedInputs) {
+            this.updateInputLocale();
+            this.updateDisplayFormat();
+        }
     }
 
     /** @hidden @internal */
@@ -1033,6 +1063,13 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             if (input.dateTimeEditor.inputFormat !== this.inputFormat) {
                 input.dateTimeEditor.inputFormat = this.inputFormat;
             }
+        });
+    }
+
+    private updateInputLocale(): void {
+        this.projectedInputs.forEach(i => {
+            const input = i as IgxDateRangeInputsBaseComponent;
+            input.dateTimeEditor.locale = this.locale;
         });
     }
 
