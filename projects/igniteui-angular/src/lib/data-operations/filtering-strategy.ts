@@ -1,12 +1,12 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
-import { FilteringExpressionsTree, IExpressionTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
+import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate, formatDate, formatCurrency } from '../core/utils';
 import { ColumnType, GridType } from '../grids/common/grid.interface';
 import { GridColumnDataType } from './data-util';
 import { SortingDirection } from './sorting-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import { IFilteringState } from './filtering-state.interface';
-import { ExpressionsTreeUtil } from './expressions-tree-util';
+import { isTree } from './expressions-tree-util';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
@@ -47,7 +47,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     // protected
     public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType): boolean {
         if (expressions) {
-            if (ExpressionsTreeUtil.isTree(expressions)) {
+            if (isTree(expressions)) {
                 const expressionsTree = expressions;
                 const operator = expressionsTree.operator as FilteringLogic;
                 let matchOperand;

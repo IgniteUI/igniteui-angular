@@ -14,7 +14,7 @@ import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from '../icon/icon.service';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
-import { ExpressionsTreeUtil } from '../data-operations/expressions-tree-util';
+import { recreateTree } from '../data-operations/expressions-tree-util';
 
 /**
  * A component used for operating with complex filters by creating or editing conditions
@@ -100,7 +100,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public set expressionTree(expressionTree: IExpressionTree) {
         if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
             if (this.entities && expressionTree) {
-                this._expressionTree = ExpressionsTreeUtil.recreateTree(expressionTree, this.entities);
+                this._expressionTree = recreateTree(expressionTree, this.entities);
             } else {
                 this._expressionTree = expressionTree;
             }

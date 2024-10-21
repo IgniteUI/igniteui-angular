@@ -20,7 +20,7 @@ import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { fadeIn } from 'igniteui-angular/animations';
-import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
+import { ExpressionsTreeUtil, isTree } from '../../data-operations/expressions-tree-util';
 
 /**
  * @hidden
@@ -197,7 +197,7 @@ export class IgxFilteringService implements OnDestroy {
             const expressionsTreeForColumn = ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, field);
             if (!expressionsTreeForColumn) {
                 throw new Error('Invalid condition or Expression Tree!');
-            } else if (ExpressionsTreeUtil.isTree(expressionsTreeForColumn)) {
+            } else if (isTree(expressionsTreeForColumn)) {
                 this.filter_internal(field, value, expressionsTreeForColumn, filteringIgnoreCase);
             } else {
                 this.filter_internal(field, value, expressionsTreeForColumn.condition, filteringIgnoreCase);
@@ -494,7 +494,7 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         for (const expr of expressionTree.filteringOperands) {
-            if (ExpressionsTreeUtil.isTree(expr)) {
+            if (isTree(expr)) {
                 if (expr.filteringOperands && expr.filteringOperands.length) {
                     return false;
                 }
@@ -564,7 +564,7 @@ export class IgxFilteringService implements OnDestroy {
             return false;
         }
 
-        if (ExpressionsTreeUtil.isTree(expressions)) {
+        if (isTree(expressions)) {
             if (expressions.operator === FilteringLogic.Or) {
                 const andOperatorsCount = this.getChildAndOperatorsCount(expressions);
 
@@ -588,7 +588,7 @@ export class IgxFilteringService implements OnDestroy {
         let operand;
         for (let i = 0; i < expressions.filteringOperands.length; i++) {
             operand = expressions[i];
-            if (operand && ExpressionsTreeUtil.isTree(operand)) {
+            if (operand && isTree(operand)) {
                 if (operand.operator === FilteringLogic.And) {
                     count++;
                 }

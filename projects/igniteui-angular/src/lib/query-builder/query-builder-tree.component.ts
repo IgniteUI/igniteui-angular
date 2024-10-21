@@ -54,7 +54,7 @@ import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
-import { ExpressionsTreeUtil } from '../data-operations/expressions-tree-util';
+import { isTree, recreateTree } from '../data-operations/expressions-tree-util';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -231,7 +231,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public set expressionTree(expressionTree: IExpressionTree) {
         if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
             if (this.entities && expressionTree) {
-                this._expressionTree = ExpressionsTreeUtil.recreateTree(expressionTree, this.entities);
+                this._expressionTree = recreateTree(expressionTree, this.entities);
             } else {
                 this._expressionTree = expressionTree;
             }
@@ -1342,7 +1342,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
 
             for (const expr of expressionTree.filteringOperands) {
-                if (ExpressionsTreeUtil.isTree(expr)) {
+                if (isTree(expr)) {
                     groupItem.children.push(this.createExpressionGroupItem(expr, groupItem, expressionTree.entity));
                 } else {
                     const filteringExpr = expr as IFilteringExpression;

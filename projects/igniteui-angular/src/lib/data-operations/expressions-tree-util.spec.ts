@@ -1,6 +1,6 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { ExpressionsTreeUtil } from './expressions-tree-util';
+import { recreateTree } from './expressions-tree-util';
 import { EntityType } from '../grids/common/grid.interface';
 
 function serialize(value: unknown, pretty = false) {
@@ -94,7 +94,7 @@ describe('Unit testing FilteringUtil', () => {
         });
 
         const serializedTree = serialize(tree, true);
-        const deserializedTree = ExpressionsTreeUtil.recreateTree(JSON.parse(serializedTree), entities);
+        const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
 
         for (let index = 0; index < tree.filteringOperands.length; index++) {
             const op = tree.filteringOperands[index] as IFilteringExpression;
@@ -137,7 +137,7 @@ describe('Unit testing FilteringUtil', () => {
         });
 
         const serializedTree = serialize(tree, true);
-        const deserializedTree = ExpressionsTreeUtil.recreateTree(JSON.parse(serializedTree), entities);
+        const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
         const nestedOperand = firstOperand.searchTree.filteringOperands[0] as IFilteringExpression;
 
@@ -162,7 +162,7 @@ describe('Unit testing FilteringUtil', () => {
         });
 
         const serializedTree = serialize(tree, true);
-        const deserializedTree = ExpressionsTreeUtil.recreateTree(JSON.parse(serializedTree), entities);
+        const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
         expect(firstOperand.condition.logic(100, firstOperand.searchVal)).toBe(true);
@@ -183,7 +183,7 @@ describe('Unit testing FilteringUtil', () => {
         });
 
         const serializedTree = serialize(tree, true);
-        const deserializedTree = ExpressionsTreeUtil.recreateTree(JSON.parse(serializedTree), entities);
+        const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
         expect(firstOperand.condition.logic(false, firstOperand.searchVal)).toBe(true);
@@ -204,7 +204,7 @@ describe('Unit testing FilteringUtil', () => {
         });
 
         const serializedTree = serialize(tree, true);
-        const deserializedTree = ExpressionsTreeUtil.recreateTree(JSON.parse(serializedTree), entities);
+        const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
         expect(firstOperand.condition.logic('potato', firstOperand.searchVal)).toBe(true);
@@ -225,7 +225,7 @@ describe('Unit testing FilteringUtil', () => {
         });
 
         const serializedTree = serialize(tree, true);
-        const deserializedTree = ExpressionsTreeUtil.recreateTree(JSON.parse(serializedTree), entities);
+        const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
         expect(firstOperand.condition.logic(new Date(2022, 2, 3), firstOperand.searchVal)).toBe(true);
@@ -247,7 +247,7 @@ describe('Unit testing FilteringUtil', () => {
         });
 
         const serializedTree = serialize(tree, true);
-        const deserializedTree = ExpressionsTreeUtil.recreateTree(JSON.parse(serializedTree), entities);
+        const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
         expect(firstOperand.condition.logic(currDate, firstOperand.searchVal)).toBe(true);
@@ -268,7 +268,7 @@ describe('Unit testing FilteringUtil', () => {
         });
 
         const serializedTree = serialize(tree, true);
-        const deserializedTree = ExpressionsTreeUtil.recreateTree(JSON.parse(serializedTree), entities);
+        const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
         expect(firstOperand.condition.logic(new Date(2020, 9, 2, 18, 30, 0, 0), firstOperand.searchVal)).toBe(true);
@@ -306,7 +306,7 @@ describe('Unit testing FilteringUtil', () => {
         tree.filteringOperands.push(subTree);
 
         const serializedTree = serialize(tree, true);
-        const deserializedTree = ExpressionsTreeUtil.recreateTree(JSON.parse(serializedTree), entities);
+        const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
         const nestedCondition = (deserializedTree.filteringOperands[1] as IFilteringExpressionsTree).filteringOperands[0] as IFilteringExpression;
 

@@ -179,7 +179,7 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { ExpressionsTreeUtil } from '../data-operations/expressions-tree-util';
+import { isTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 
 interface IMatchInfoCache {
     row: any;
@@ -1835,9 +1835,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     public set filteringExpressionsTree(value) {
-        if (value && ExpressionsTreeUtil.isTree(value)) {
+        if (value && isTree(value)) {
             for (let index = 0; index < value.filteringOperands.length; index++) {
-                if (!(ExpressionsTreeUtil.isTree(value.filteringOperands[index]))) {
+                if (!(isTree(value.filteringOperands[index]))) {
                     const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, value.filteringOperands[index].fieldName);
                     newExpressionsTree.filteringOperands.push(value.filteringOperands[index]);
                     value.filteringOperands[index] = newExpressionsTree;
@@ -1845,7 +1845,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
 
             value.type = FilteringExpressionsTreeType.Regular;
-            this._filteringExpressionsTree = ExpressionsTreeUtil.recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
+            this._filteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
             this.filteringPipeTrigger++;
             this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
@@ -1889,9 +1889,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             return;
         }
 
-        if (value && ExpressionsTreeUtil.isTree(value)) {
+        if (value && isTree(value)) {
             value.type = FilteringExpressionsTreeType.Advanced;
-            this._advancedFilteringExpressionsTree = ExpressionsTreeUtil.recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
+            this._advancedFilteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
             this.filteringPipeTrigger++;
         } else {
             this._advancedFilteringExpressionsTree = null;

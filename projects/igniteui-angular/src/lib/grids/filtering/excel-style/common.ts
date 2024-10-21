@@ -1,4 +1,4 @@
-import { ExpressionsTreeUtil } from '../../../data-operations/expressions-tree-util';
+import { isTree } from '../../../data-operations/expressions-tree-util';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 
@@ -56,7 +56,7 @@ function generateExpressionsListRecursive(expressions: IFilteringExpressionsTree
         return;
     }
 
-    if (ExpressionsTreeUtil.isTree(expressions)) {
+    if (isTree(expressions)) {
         for (const operand of expressions.filteringOperands) {
             generateExpressionsListRecursive(operand, expressions.operator, expressionsUIs);
         }
