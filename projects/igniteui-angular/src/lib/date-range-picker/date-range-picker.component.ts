@@ -385,6 +385,10 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return 'igx-date-range-picker__label';
     }
 
+    protected override get toggleContainer(): HTMLElement | undefined {
+        return this._calendarContainer;
+    }
+
     private get required(): boolean {
         if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
             const error = this._ngControl.control.validator({} as AbstractControl);
@@ -414,6 +418,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _ngControl: NgControl;
     private _statusChanges$: Subscription;
     private _calendar: IgxCalendarComponent;
+    private _calendarContainer?: HTMLElement;
     private _positionSettings: PositionSettings;
     private _focusedInput: IgxDateRangeInputsBaseComponent;
     private _overlaySubFilter:
@@ -750,6 +755,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             }
 
             this._initializeCalendarContainer(e.componentRef.instance);
+            this._calendarContainer = e.componentRef.location.nativeElement;
             this._collapsed = false;
             this.updateCalendar();
         });
@@ -767,6 +773,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this._overlayService.detach(this._overlayId);
             this._collapsed = true;
             this._overlayId = null;
+            this._calendar = null;
+            this._calendarContainer = undefined;
             this.closed.emit({ owner: this });
         });
     }

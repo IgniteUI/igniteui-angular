@@ -468,6 +468,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _ngControl: NgControl = null;
     private _statusChanges$: Subscription;
     private _calendar: IgxCalendarComponent;
+    private _calendarContainer?: HTMLElement;
     private _specialDates: DateRangeDescriptor[] = null;
     private _disabledDates: DateRangeDescriptor[] = null;
     private _overlaySubFilter:
@@ -534,6 +535,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public get pickerResourceStrings(): IDatePickerResourceStrings {
         return Object.assign({}, this._resourceStrings, this.resourceStrings);
+    }
+
+    protected override get toggleContainer(): HTMLElement | undefined {
+        return this._calendarContainer;
     }
 
     /** @hidden @internal */
@@ -900,6 +905,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             }
 
             this._initializeCalendarContainer(e.componentRef.instance);
+            this._calendarContainer = e.componentRef.location.nativeElement;
             this._collapsed = false;
         });
 
@@ -937,6 +943,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._overlayService.detach(this._overlayId);
             this._collapsed = true;
             this._overlayId = null;
+            this._calendar = null;
+            this._calendarContainer = undefined;
         });
     }
 
