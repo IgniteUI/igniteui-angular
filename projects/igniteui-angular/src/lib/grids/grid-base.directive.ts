@@ -6236,11 +6236,21 @@ export abstract class IgxGridBaseDirective implements GridType,
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     /* blazorCSSuppress */
     public endEdit(commit = true, event?: Event): boolean {
+        const document = this.nativeElement?.getRootNode() as Document | ShadowRoot;
+        const focusWithin = this.nativeElement?.contains(document.activeElement);
+
         const success = this.crudService.endEdit(commit, event);
-        // simulate the process of focusing out of the cell so that the active element is cleared 
-        // while this should naturally happen when clicking a button (as a most likely endEdit called)
-        // the intentional focusout ignore during edit mode prevents the expected behavior
-        this.onFocusOut({ target: this.tbody.nativeElement } as unknown as FocusEvent);
+
+        if (focusWithin) {
+            // restore focus for navigation
+            this.navigation.restoreActiveNodeFocus();
+        } else if (this.navigation.activeNode) {
+            // grid already lost focus, clear active node
+            this.navigation.lastActiveNode = this.navigation.activeNode;
+            this.navigation.activeNode = {} as IActiveNode;
+            this.notifyChanges();
+        }
+
         return success;
     }
 
