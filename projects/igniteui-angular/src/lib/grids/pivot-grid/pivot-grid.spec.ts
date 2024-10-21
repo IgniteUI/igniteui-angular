@@ -2379,6 +2379,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.columnGroupStates.size).toBe(1);
             expect(pivotGrid.rowList.first.cells.length).toBe(2);
         });
+
+        it("should position correct the horizontal scrollbar", () => {
+            const scrollBarPosition = fixture.nativeElement.querySelector("igx-horizontal-virtual-helper").getBoundingClientRect();
+            const displayContainerPosition = fixture.nativeElement.querySelector(".igx-grid__tbody-content").getBoundingClientRect()
+            expect(scrollBarPosition.x).toEqual(displayContainerPosition.x);
+        });
     });
 
     describe('IgxPivotGrid APIs #pivotGrid', () => {

@@ -1227,23 +1227,19 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public rowDimensionWidth(dim, ignoreBeforeInit = false ): string {
+    public rowDimensionWidth(dim): string {
         const isAuto = dim.width && dim.width.indexOf('auto') !== -1;
         if (isAuto) {
             return dim.autoWidth ? dim.autoWidth + 'px' : 'fit-content';
         } else {
-            return this.rowDimensionWidthToPixels(dim, ignoreBeforeInit) + 'px';
+            return this.rowDimensionWidthToPixels(dim) + 'px';
         }
     }
 
     /**
      * @hidden @internal
      */
-    public rowDimensionWidthToPixels(dim: IPivotDimension, ignoreBeforeInit = false): number {
-        if (!ignoreBeforeInit && !this.autoGenerate) {
-            return 0;
-        }
-
+    public rowDimensionWidthToPixels(dim: IPivotDimension): number {
         if (!dim?.width) {
             return MINIMUM_COLUMN_WIDTH;
         }
@@ -1275,12 +1271,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /** @hidden @internal */
     public get pivotPinnedWidth() {
-        return !this.autoGenerate ? (this.isPinningToStart ? this.pinnedWidth : this.headerFeaturesWidth) : 0;
+        return this.isPinningToStart ? this.pinnedWidth : this.headerFeaturesWidth;
     }
 
     /** @hidden @internal */
     public get pivotUnpinnedWidth() {
-        return !this.autoGenerate ? this.unpinnedWidth : 0;
+        return this.unpinnedWidth || 0;
     }
 
     /** @hidden @internal */
@@ -1322,7 +1318,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected override getColumnWidthSum(): number {
         let colSum = super.getColumnWidthSum();
-        colSum += this.rowDimensions.map(dim => this.rowDimensionWidthToPixels(dim, true)).reduce((prev, cur) => prev + cur, 0);
+        colSum += this.rowDimensions.map(dim => this.rowDimensionWidthToPixels(dim)).reduce((prev, cur) => prev + cur, 0);
         return colSum;
     }
 
