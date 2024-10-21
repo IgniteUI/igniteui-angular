@@ -14,7 +14,7 @@
                     width="1200px" height="550px" [autoGenerate]="false" [data]="localData" primaryKey="EmployeeID"
                     [rowEditable]="false" [allowFiltering]="true" [allowAdvancedFiltering]="true"
                     [filterMode]="'excelStyleFilter'" cellSelection="multiple"
-                    rowSelection="multiple" (columnInit)="onColumnInit($event)">
+                    rowSelection="multiple">
                     <igx-grid-toolbar>
                         <igx-grid-toolbar-actions>
                             <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -55,19 +55,49 @@
             <ng-container *ngTemplateOutlet="controls; context: getContext(mcGrid)"></ng-container>
             <igx-grid [id]="mcGridId" #mcGrid [igxGridState]="options" height="480px" [data]="localData"
                  [allowFiltering]="true" [moving]="true">
-                <igx-column [resizable]="true" field="EmployeeID" [filterable]="false"></igx-column>
+                <igx-column [resizable]="true" field="EmployeeID" [filterable]="false">
+                    <ng-template igxHeader let-column>
+                        <span>Custom Header Template: {{column.field}}</span>
+                     </ng-template>
+                </igx-column>
                 <igx-column-group [pinned]="false" header="Employee">
-                    <igx-column [sortable]="true" [resizable]="true" field="Country"></igx-column>
+                    <ng-template igxHeader let-column>
+                        <span>Custom Header Template: {{column.header}}</span>
+                     </ng-template>
                     <igx-column-group header="Employee Names" [collapsible]="true">
+                        <ng-template igxHeader let-column>
+                            <span>Custom Header Template: {{column.header}}</span>
+                         </ng-template>
                         <igx-column [pinned]="false" [sortable]="true" [resizable]="true"
-                            field="FirstName" [visibleWhenCollapsed]="true"></igx-column>
-                        <igx-column [sortable]="true" [resizable]="true" field="LastName" [visibleWhenCollapsed]="false"></igx-column>
+                            field="FirstName" [visibleWhenCollapsed]="true">
+                            <ng-template igxHeader let-column>
+                                <span>Custom Header Template: {{column.field}}</span>
+                             </ng-template></igx-column>
+                        <igx-column [sortable]="true" [resizable]="true" field="LastName" [visibleWhenCollapsed]="false">
+                            <ng-template igxHeader let-column>
+                                <span>Custom Header Template: {{column.field}}</span>
+                             </ng-template>
+                        </igx-column>
                     </igx-column-group>
                 </igx-column-group>
                 <igx-column-group header="Additional Information">
+                    <ng-template igxHeader let-column>
+                        <span>Custom Header Template: {{column.header}}</span>
+                     </ng-template>
                     <igx-column-group header="Data">
-                        <igx-column [sortable]="true" [resizable]="true" field="Country"></igx-column>
-                        <igx-column [sortable]="true" [resizable]="true" field="Age"></igx-column>
+                        <ng-template igxHeader let-column>
+                            <span>Custom Header Template: {{column.header}}</span>
+                         </ng-template>
+                        <igx-column [sortable]="true" [resizable]="true" field="Country">
+                            <ng-template igxHeader let-column>
+                                <span>Custom Header Template: {{column.field}}</span>
+                             </ng-template>
+                        </igx-column>
+                        <igx-column [sortable]="true" [resizable]="true" field="Age">
+                            <ng-template igxHeader let-column>
+                                <span>Custom Header Template: {{column.field}}</span>
+                             </ng-template>
+                        </igx-column>
                     </igx-column-group>
                 </igx-column-group>
             </igx-grid>

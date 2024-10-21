@@ -39,6 +39,8 @@ All notable changes for each version of this project will be documented in this 
     according to the target type that the editor mask includes. Defaults to `date`.
 - `IgxTabs`
     - Added `activation` property to control tab selection. In `auto` mode (default), tabs are selected instantly with Arrow or Home/End keys. In `manual` mode, tabs are focused with keys but only selected with Enter or Space.
+- `IgxGridState`
+    -  When possible the state directive nows reuses the column that already exists on the grid when restoring the state, instead of creating new column instances every time. This removes the need to set any complex objects manually back on the column on `columnInit`. The only instance where this is still necessary is when the column (or its children in case of column groups) have no `field` property so there's no way to uniquely identify the matching column.
 
 ### Themes
 - `Palettes`
