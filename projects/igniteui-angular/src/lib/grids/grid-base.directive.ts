@@ -3610,7 +3610,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.zone.run(() => {
                 // do not trigger reflow if element is detached.
                 if (this.nativeElement.isConnected) {
-                    if (this._gridSize !== this.gridSize) {
+                    if (this.shouldResize) {
                         // resizing occurs due to the change of --ig-size css var
                         this._gridSize = this.gridSize;
                         this.updateDefaultRowHeight();
@@ -5300,6 +5300,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected get isPercentWidth() {
         return this.width && this.width.indexOf('%') !== -1;
+    }
+
+    protected get shouldResize(): boolean {
+        return this._gridSize !== this.gridSize;
     }
 
     /**
