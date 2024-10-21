@@ -1,6 +1,20 @@
 import { Component, HostBinding, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { GridSelectionMode, IgxButtonGroupComponent, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxDateSummaryOperand, IgxGridComponent, IgxPaginatorComponent, IgxSummaryResult } from 'igniteui-angular';
+import {
+    GridSelectionMode,
+    IGX_SELECT_DIRECTIVES,
+    IgxButtonDirective,
+    IgxButtonGroupComponent,
+    IgxCellEditorTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxColumnComponent,
+    IgxColumnRequiredValidatorDirective,
+    IgxDateSummaryOperand,
+    IgxGridComponent,
+    IgxPaginatorComponent,
+    IgxSummaryResult,
+    IgxSwitchComponent,
+} from 'igniteui-angular';
 
 import { data, dataWithoutPK } from '../shared/data';
 
@@ -9,7 +23,19 @@ import { data, dataWithoutPK } from '../shared/data';
     templateUrl: 'grid-cellEditing.component.html',
     styleUrl: 'grid-cellEditing.component.scss',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxCellTemplateDirective, IgxPaginatorComponent, FormsModule, IgxCellEditorTemplateDirective]
+    imports: [
+        FormsModule,
+        IGX_SELECT_DIRECTIVES,
+        IgxButtonDirective,
+        IgxButtonGroupComponent,
+        IgxCellEditorTemplateDirective,
+        IgxCellTemplateDirective,
+        IgxColumnComponent,
+        IgxColumnRequiredValidatorDirective,
+        IgxGridComponent,
+        IgxPaginatorComponent,
+        IgxSwitchComponent,
+    ]
 })
 export class GridCellEditingComponent {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
@@ -26,6 +52,7 @@ export class GridCellEditingComponent {
     public data: any;
     public dataWithoutPK: any;
     public size : "large" | "medium" | "small" = "small";
+    public selectionModes = ['none', 'single', 'multiple'];
     public sizes;
     public options = {
         timezone: '+0430',
@@ -39,7 +66,8 @@ export class GridCellEditingComponent {
     };
     public formatOptions = this.options;
 
-    public kk = false;
+    public groupable = false;
+    public exitEditOnBlur = false;
     public pname = 'ProductName';
     public selectionMode;
     public earliest = EarliestSummary;
@@ -220,6 +248,15 @@ export class GridCellEditingComponent {
         } else if (type === 'dataCell'  && args.event.key.toLowerCase() === 'enter') {
             args.cancel = true;
             this.gridWithPK.navigateTo(target.rowIndex + 1, target.visibleColumnIndex, (obj) => obj.target.nativeElement.focus());
+        }
+    }
+
+    public handleFocusOut = (event: FocusEvent) => {
+        if (!this.exitEditOnBlur) return;
+
+        if (!event.relatedTarget || !this.gridWithPK.nativeElement.contains(event.relatedTarget as Node)) {
+          this.gridWithPK.endEdit(true);
+          this.gridWithPK.clearCellSelection();
         }
     }
 }
