@@ -6049,10 +6049,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             return true;
         }
 
-        const activeCell = this.gridAPI.grid.navigation.activeNode;
-        if (activeCell && activeCell.row !== -1) {
-            this.tbody.nativeElement.focus();
-        }
+        this.navigation.restoreActiveNodeFocus();
     }
 
     /**

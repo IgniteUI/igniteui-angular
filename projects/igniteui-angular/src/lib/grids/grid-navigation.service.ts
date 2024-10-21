@@ -339,6 +339,23 @@ export class IgxGridNavigationService {
         return isChanged;
     }
 
+    /** Focus the Grid section (header, body, footer) depending on the current activeNode */
+    public restoreActiveNodeFocus() {
+        if (!this.activeNode || !Object.keys(this.activeNode).length) {
+            return;
+        }
+
+        if (this.activeNode.row >= 0 && this.activeNode.row < this.grid.dataView.length) {
+            this.grid.tbody.nativeElement.focus();
+        }
+        if (this.activeNode.row === -1) {
+            this.grid.theadRow.nativeElement.focus();
+        }
+        if (this.activeNode.row === this.grid.dataView.length) {
+            this.grid.tfoot.nativeElement.focus();
+        }
+    }
+
     protected getNextPosition(rowIndex: number, colIndex: number, key: string, shift: boolean, ctrl: boolean, event: KeyboardEvent) {
         if (!this.isDataRow(rowIndex, true) && (key.indexOf('down') < 0 || key.indexOf('up') < 0) && ctrl) {
             return { rowIndex, colIndex };
