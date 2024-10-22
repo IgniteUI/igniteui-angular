@@ -158,15 +158,34 @@ export class IgxBannerComponent implements IToggleView {
     public get resourceStrings(): IBannerResourceStrings {
         return this._resourceStrings;
     }
+
     /**
-     * Gets whether banner is collapsed
+     * Gets or sets whether the banner is collapsed.
+     *
+     * - When `collapsed` is set to `true`, the banner is hidden (collapsed).
+     * - When `collapsed` is set to `false`, the banner is visible (expanded).
      *
      * ```typescript
+     * // Get
      * const isCollapsed: boolean = banner.collapsed;
+     *
+     * // Set
+     * // Expand the banner
+     * banner.collapsed = false;
+     *
+     * // Collapse the banner
+     * banner.collapsed = true;
      * ```
      */
-    public get collapsed() {
-        return this._expansionPanel.collapsed;
+    @Input()
+    public get collapsed(): boolean {
+        return this._collapsed;
+    }
+
+    public set collapsed(value: boolean) {
+        if (this._collapsed !== value) {
+            this._collapsed = value;
+        }
     }
 
     /**
@@ -199,6 +218,7 @@ export class IgxBannerComponent implements IToggleView {
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
     private _resourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
+    private _collapsed: boolean = true;
 
     constructor(public elementRef: ElementRef<HTMLElement>) { }
 
@@ -217,6 +237,9 @@ export class IgxBannerComponent implements IToggleView {
      * ```
      */
     public open(event?: Event) {
+        if (!this.collapsed) {
+            return;
+        }
         this._bannerEvent = { owner: this, event};
         const openingArgs: BannerCancelEventArgs = {
             owner: this,
@@ -224,10 +247,10 @@ export class IgxBannerComponent implements IToggleView {
             cancel: false
         };
         this.opening.emit(openingArgs);
-        if (openingArgs.cancel) {
-            return;
+        if (!openingArgs.cancel) {
+            this._expansionPanel.open(event);
+            this._collapsed = false;
         }
-        this._expansionPanel.open(event);
     }
 
     /**
@@ -245,6 +268,9 @@ export class IgxBannerComponent implements IToggleView {
      * ```
      */
     public close(event?: Event) {
+        if (this.collapsed) {
+            return;
+        }
         this._bannerEvent = { owner: this, event};
         const closingArgs: BannerCancelEventArgs = {
             owner: this,
@@ -252,10 +278,10 @@ export class IgxBannerComponent implements IToggleView {
             cancel: false
         };
         this.closing.emit(closingArgs);
-        if (closingArgs.cancel) {
-            return;
+        if (!closingArgs.cancel) {
+            this._expansionPanel.close(event);
+            this._collapsed = true;
         }
-        this._expansionPanel.close(event);
     }
 
     /**
