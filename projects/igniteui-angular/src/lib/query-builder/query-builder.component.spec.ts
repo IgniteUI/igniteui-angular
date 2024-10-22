@@ -9,7 +9,7 @@ import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 
-fdescribe('IgxQueryBuilder', () => {
+describe('IgxQueryBuilder', () => {
     configureTestSuite();
     let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
     let queryBuilder: IgxQueryBuilderComponent;
