@@ -3606,23 +3606,28 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 }));
-                it('should mark the combo as touched and invalid when opened and the user clicks away', fakeAsync(() => {
-                    // Access the NgModel for the testCombo
+                it('should mark as touched and invalid when combo is focused, dropdown appears, and user clicks away without selection', fakeAsync(() => {
                     const ngModel = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                     expect(ngModel.touched).toBeFalse();
-                    combo.open();
-                    fixture.detectChanges();
 
+                    combo.open();
+                    input.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    expect(ngModel.touched).toBeTrue();
+                    combo.searchInput.nativeElement.focus();
+                    fixture.detectChanges();
                     const documentClickEvent = new MouseEvent('click', { bubbles: true });
                     document.body.dispatchEvent(documentClickEvent);
                     fixture.detectChanges();
                     tick();
-
+                    document.body.focus();
+                    fixture.detectChanges();
+                    tick();
                     expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
-                    expect(ngModel.touched).toBeTrue(); // NgModel should now be marked as touched
+                    expect(ngModel.touched).toBeTrue();
                 }));
             });
         });
