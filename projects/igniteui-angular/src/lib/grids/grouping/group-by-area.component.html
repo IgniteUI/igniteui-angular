@@ -2,7 +2,7 @@
     <ng-container *ngFor="let expression of chipExpressions; let last = last;">
         <igx-chip
             [id]="expression.fieldName"
-            [title]="(expression.fieldName | igxGroupByMeta:grid).title"
+            [title]="(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).title"
             [displayDensity]="grid.displayDensity"
             [removable]="(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).groupable"
             [draggable]="(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).groupable"
@@ -11,7 +11,7 @@
             (remove)="clearGrouping($event.owner.id)"
             (chipClick)="handleClick(expression.fieldName)"
         >
-            <span>{{ (expression.fieldName | igxGroupByMeta:grid).title }}</span>
+            <span>{{ (expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).title }}</span>
             <igx-icon igxSuffix>{{ expression.dir === 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
         </igx-chip>
 

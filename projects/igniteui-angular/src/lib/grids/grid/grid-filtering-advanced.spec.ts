@@ -3001,6 +3001,40 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 verifyContextMenuVisibility(fix, false);
             }));
 
+            it('Should navigate with Tab/Shift+Tab through chips" "edit", "cancel" and "adding" buttons, fields of a condition in edit mode.', fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+    
+                // Open Advanced Filtering dialog.
+                grid.openAdvancedFilteringDialog();
+                fix.detectChanges();
+
+                // Press 'Enter' on the second chip and verify it is selected.
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, [0]));
+                tick(200);
+                fix.detectChanges();
+
+                let chipActions = fix.debugElement.query(By.css('.igx-filter-tree'));
+                GridFunctions.verifyTabbableElements(chipActions);
+
+                // Press 'Enter' on the edit button.
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', GridFunctions.getAdvancedFilteringTreeExpressionEditIcon(fix, [0]));
+                fix.detectChanges();
+
+                chipActions = fix.debugElement.query(By.css('.igx-filter-tree'));
+                GridFunctions.verifyInEditTabbableElements(chipActions);
+            }));
+
         });
 
     });
