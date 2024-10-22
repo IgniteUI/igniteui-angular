@@ -108,6 +108,62 @@
     <div #reload="tooltip" igxTooltip>Reload the page.</div>
 </div>
 
+<!-- IgxGrid with MRL-->
+<div class="grid__wrapper">
+    <igx-expansion-panel #collapsibleComponent [collapsed]="true">
+        <igx-expansion-panel-header [disabled]="false">
+            <igx-expansion-panel-title>Multi-Row Layouts</igx-expansion-panel-title>
+            <igx-expansion-panel-icon *ngIf="templatedIcon">
+                {{collapsed() ? 'Expand':'Collapse'}}
+            </igx-expansion-panel-icon>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <ng-container *ngTemplateOutlet="controls; context: getContext(mrlGrid)"></ng-container>
+            <igx-grid [id]="mrlGridId" #mrlGrid [igxGridState]="options" height="480px" [data]="localData"
+                 [allowFiltering]="true" [moving]="true">
+                 <igx-column-layout field='group1'>
+                    <ng-template igxHeader let-column>
+                        <span>Custom Header Template: {{column.field}}</span>
+                     </ng-template>
+                    <igx-column [groupable]="true" [rowStart]="1" [colStart]="1" [rowEnd]="4" field="EmployeeID" [width]="'200px'" [resizable]="true">
+                        <ng-template igxHeader let-column>
+                            <span>Custom Header Template: {{column.field}}</span>
+                         </ng-template>
+                    </igx-column>
+                </igx-column-layout>
+                <igx-column-layout field='group2'>
+                    <ng-template igxHeader let-column>
+                        <span>Custom Header Template: {{column.field}}</span>
+                     </ng-template>
+                    <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="FirstName" [width]="'300px'" [resizable]="true">
+                        <ng-template igxHeader let-column>
+                            <span>Custom Header Template: {{column.field}}</span>
+                         </ng-template>
+                    </igx-column>
+                    <igx-column [rowStart]="2" [colStart]="1" field="LastName" [width]="'300px'" [resizable]="true">
+                        <ng-template igxHeader let-column>
+                            <span>Custom Header Template: {{column.field}}</span>
+                         </ng-template>
+                    </igx-column>
+                    <igx-column [rowStart]="2" [colStart]="2" field="Country" [width]="'400px'" [resizable]="true">
+                        <ng-template igxHeader let-column>
+                            <span>Custom Header Template: {{column.field}}</span>
+                         </ng-template>
+                    </igx-column>
+                    <igx-column [rowStart]="3" [colStart]="1" [colEnd]="3" field="Age" [width]="'300px'" [resizable]="true">
+                        <ng-template igxHeader let-column>
+                            <span>Custom Header Template: {{column.field}}</span>
+                         </ng-template>
+                    </igx-column>
+                </igx-column-layout>
+            </igx-grid>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+
+    <div #clear="tooltip" igxTooltip>Clear the state from localStorage.</div>
+    <div #reload="tooltip" igxTooltip>Reload the page.</div>
+</div>
+
 <!-- IgxHierarchicalGrid -->
 <div class="grid__wrapper">
     <igx-expansion-panel #collapsibleComponent [collapsed]="true">
