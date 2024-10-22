@@ -738,6 +738,63 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(displayedRow).toContain('RowMember');
         });
 
+        it('should render correctly when going from all dimensions and values disabled to single column dimension enabled.', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            // disable all
+            pivotGrid.pivotConfiguration.rows.forEach(x => pivotGrid.toggleDimension(x));
+            pivotGrid.pivotConfiguration.columns.forEach(x => pivotGrid.toggleDimension(x));
+            pivotGrid.pivotConfiguration.filters.forEach(x => pivotGrid.toggleDimension(x));
+            pivotGrid.pivotConfiguration.values.forEach(x => pivotGrid.toggleValue(x));
+            fixture.detectChanges();
+
+            // no rows, just empty message
+            expect(pivotGrid.rowList.length).toBe(0);
+            expect(pivotGrid.tbody.nativeElement.textContent).toBe('Pivot grid has no dimensions and values.');
+
+            pivotGrid.toggleDimension(pivotGrid.pivotConfiguration.columns[0]);
+            fixture.detectChanges();
+
+            // 1 row, 3 columns
+            expect(pivotGrid.rowList.length).toBe(1);
+            expect(pivotGrid.columns.length).toBe(3);
+        });
+
+        it('should calculate row headers according to grid size', async() => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            const rowHeightSmall = 32;
+            const rowHeightMedium = 40;
+            const rowHeightLarge = 50;
+
+            pivotGrid.superCompactMode = false;
+            setElementSize(pivotGrid.nativeElement, Size.Large);
+
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(pivotGrid.gridSize).toBe(Size.Large);
+            const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+            let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            let rowHeader = rowHeaders[0].queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
+            expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightLarge);
+
+            setElementSize(pivotGrid.nativeElement, Size.Small);
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(pivotGrid.gridSize).toBe(Size.Small);
+            rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            rowHeader = rowHeaders[0].queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
+            expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightSmall);
+
+            setElementSize(pivotGrid.nativeElement, Size.Medium);
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(pivotGrid.gridSize).toBe(Size.Medium);
+            rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            rowHeader = rowHeaders[0].queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
+            expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightMedium);
+        });
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', async () => {
