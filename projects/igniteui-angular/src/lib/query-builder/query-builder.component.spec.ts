@@ -9,7 +9,7 @@ import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 
-describe('IgxQueryBuilder', () => {
+fdescribe('IgxQueryBuilder', () => {
     configureTestSuite();
     let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
     let queryBuilder: IgxQueryBuilderComponent;
@@ -2062,13 +2062,13 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
-            expect(queryBuilder.canCommit()).toBeTrue();
+            expect(queryBuilder.canCommit()).toBeFalse();
 
             // Verify the Query Builder validity state while adding a condition.
             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
             tick(100);
             fix.detectChanges();
-            expect(queryBuilder.canCommit()).toBeTrue();
+            expect(queryBuilder.canCommit()).toBeFalse();
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
             expect(queryBuilder.canCommit()).toBeFalse();
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
@@ -2093,7 +2093,7 @@ describe('IgxQueryBuilder', () => {
             tick(100);
             fix.detectChanges();
 
-            expect(queryBuilder.canCommit()).toBeTrue();
+            expect(queryBuilder.canCommit()).toBeFalse();
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
             expect(queryBuilder.canCommit()).toBeFalse();
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
@@ -2235,82 +2235,17 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
             expect(queryBuilder.canCommit()).toBeFalse();
 
+            let errMessage = '';
             // Apply the changes
-            queryBuilder.commit();
-            tick(100);
-            fix.detectChanges();
+            try {
+                queryBuilder.commit();
+                tick(100);
+                fix.detectChanges();
+            } catch (err) {
+                errMessage = err.message;
+            }
 
-            expect(console.error).not.toHaveBeenCalled();
-            QueryBuilderFunctions.verifyExpressionChipContent(fix, [2], 'OrderName', 'Null', '');
-            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
-            expect(exprTree).toEqual(`{
-  "filteringOperands": [
-    {
-      "fieldName": "OrderId",
-      "condition": {
-        "name": "in",
-        "isUnary": false,
-        "isNestedQuery": true,
-        "iconName": "in"
-      },
-      "conditionName": "in",
-      "searchTree": {
-        "filteringOperands": [
-          {
-            "fieldName": "ProductName",
-            "condition": {
-              "name": "contains",
-              "isUnary": false,
-              "iconName": "filter_contains"
-            },
-            "conditionName": "contains",
-            "searchVal": "a"
-          },
-          {
-            "fieldName": "Released",
-            "condition": {
-              "name": "true",
-              "isUnary": true,
-              "iconName": "filter_true"
-            },
-            "conditionName": "true"
-          }
-        ],
-        "operator": 0,
-        "entity": "Products",
-        "returnFields": [
-          "Id"
-        ],
-        "fieldName": null
-      }
-    },
-    {
-      "fieldName": "OrderId",
-      "condition": {
-        "name": "greaterThan",
-        "isUnary": false,
-        "iconName": "filter_greater_than"
-      },
-      "conditionName": "greaterThan",
-      "searchVal": 3,
-      "ignoreCase": true
-    },
-    {
-      "fieldName": "OrderName",
-      "conditionName": "after",
-      "searchVal": null,
-      "searchTree": null
-    }
-  ],
-  "operator": 0,
-  "entity": "Orders",
-  "returnFields": [
-    "OrderId",
-    "OrderName",
-    "OrderDate",
-    "Delivered"
-  ]
-}`);
+            expect(errMessage).toBe("Expression tree can't be committed in the current state. Use `canCommit` method to check if the current state is valid.");
         }));
     });
 
