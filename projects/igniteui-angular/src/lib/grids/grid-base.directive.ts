@@ -989,6 +989,11 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
 
+    /* blazorInclude */
+    /** @hidden @internal */
+    @Output()
+    public selectedRowsChange = new EventEmitter<any[]>();
+
     /**
      * Emitted when the expanded state of a row gets changed.
      *
@@ -2458,7 +2463,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /* blazorByValueArray */
     /* blazorAlwaysWriteback */
-    /* @tsTwoWayProperty (true, "RowSelectionChanging", "Detail.NewSelection", false) */
+    /* @tsTwoWayProperty (true, "SelectedRowsChange", "Detail", false) */
     /* blazorPrimitiveValue */
     /**
      * Gets/Sets the current selection state.
@@ -3412,6 +3417,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
+        this.selectionService.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe((args: any[]) => {
+            this.selectedRowsChange.emit(args);
+        });
         IgcTrialWatermark.register();
     }
 
@@ -3627,7 +3635,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.zone.run(() => {
                 // do not trigger reflow if element is detached.
                 if (this.nativeElement.isConnected) {
-                    if (this._gridSize !== this.gridSize) {
+                    if (this.shouldResize) {
                         // resizing occurs due to the change of --ig-size css var
                         this._gridSize = this.gridSize;
                         this.updateDefaultRowHeight();
@@ -5316,6 +5324,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected get isPercentWidth() {
         return this.width && this.width.indexOf('%') !== -1;
+    }
+
+    protected get shouldResize(): boolean {
+        return this._gridSize !== this.gridSize;
     }
 
     /**
