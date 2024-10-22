@@ -1258,9 +1258,15 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** @hidden @internal */
     public onBlur() {
+        this._onTouchedCallback();
         if (this.collapsed) {
             this.validateComboState();
         }
+    }
+
+    /** @hidden @internal */
+    public onFocus(): void {
+        this._onTouchedCallback();
     }
 
     /** @hidden @internal */
@@ -1288,8 +1294,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     };
 
     private validateComboState() {
-        this._onTouchedCallback();
-
         if (this.ngControl && this.ngControl.invalid) {
             this.valid = IgxInputState.INVALID;
         } else {
