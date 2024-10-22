@@ -56,6 +56,8 @@ class IgxUnitTestTree extends UnitTestTree {
             if (!project.containsScriptInfo(scriptInfo)) {
                 // add the file to the configured project to prevent tss from creating an inferred project for floating files
                 scriptInfo.attachToProject(project);
+                // add root in advance for ng LS discovery if two files test.component.ts/html and html is analyzed first
+                project.addMissingFileRoot(scriptInfo.fileName);
             } else {
                 // if using same file, force-reload from host for new content
                 scriptInfo.reloadFromFile(tss.server.asNormalizedPath(entryPath));
