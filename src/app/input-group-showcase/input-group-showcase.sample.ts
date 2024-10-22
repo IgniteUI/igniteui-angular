@@ -1,10 +1,8 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIf, NgFor } from '@angular/common';
-
 import { defineComponents, IgcInputComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
-import { IGX_BUTTON_GROUP_DIRECTIVES, IGX_DATE_PICKER_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IGX_INPUT_GROUP_TYPE, IGX_SELECT_DIRECTIVES, IgxIconComponent, IgxMaskDirective, IgxSwitchComponent, IgxInputGroupType } from 'igniteui-angular';
-import { SizeSelectorComponent } from '../size-selector/size-selector.component';
+import { IGX_INPUT_GROUP_DIRECTIVES, IGX_INPUT_GROUP_TYPE, IgxIconComponent, IgxMaskDirective, IgxInputGroupType } from 'igniteui-angular';
 import { PropertyPanelConfig, PropertyChangeService } from '../properties-panel/property-change.service';
 
 defineComponents(IgcInputComponent, IgcIconComponent);
@@ -25,13 +23,8 @@ registerIconFromText('face', face);
         ReactiveFormsModule,
         NgFor,
         IGX_INPUT_GROUP_DIRECTIVES,
-        IGX_BUTTON_GROUP_DIRECTIVES,
-        IGX_DATE_PICKER_DIRECTIVES,
-        IGX_SELECT_DIRECTIVES,
         IgxMaskDirective,
         IgxIconComponent,
-        IgxSwitchComponent,
-        SizeSelectorComponent,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -50,6 +43,7 @@ export class InputGroupShowcaseSampleComponent implements OnInit {
             }
         },
         inputType: {
+            label: 'Choose Input Type',
             control: {
                 type: 'button-group',
                 options: ['box', 'border'],
