@@ -18,7 +18,7 @@ import { GridSelectionRange } from './common/types';
 import { CustomFilter } from '../test-utils/grid-samples.spec';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { NgFor } from '@angular/common';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxGridDetailTemplateDirective } from './public_api';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 
 /* eslint-disable max-len */
@@ -774,6 +774,43 @@ describe('IgxGridState - input properties #grid', () => {
         gridState = state.getState(true, 'expansion');
         expect(gridState).toBe(expansionState);
     });
+
+    it('should correctly restore mrl column states.', () => {
+        const fix = TestBed.createComponent(IgxGridMRLStateComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const gridColumnState = state.getState(false, 'columns') as IGridState;
+        const group1 = gridColumnState.columns.find(x => x.field === 'group1');
+        expect(group1.columnLayout).toBeTrue();
+
+        const prodId = gridColumnState.columns.find(x => x.field === 'ProductID');
+        expect(prodId.columnLayout).toBeFalsy();
+        expect(prodId.rowStart).toBe(1);
+        expect(prodId.rowEnd).toBe(4);
+        expect(prodId.colStart).toBe(1);
+        expect(prodId.colEnd).toBe(1);
+
+        // apply change
+        group1.pinned = true;
+        prodId.pinned = true;
+
+        state.setState(gridColumnState, 'columns');
+        fix.detectChanges();
+
+        const group1Column = grid.getColumnByName("group1");
+        const prodIdColumn = grid.getColumnByName("ProductID");
+        expect(group1Column.columnLayout).toBeTrue();
+        expect(group1Column.pinned).toBeTrue();
+        expect(prodIdColumn.pinned).toBeTrue();
+        expect(prodIdColumn.columnLayoutChild).toBeTrue();
+        expect(prodIdColumn.parent).toBe(group1Column);
+        expect(prodIdColumn.rowStart).toBe(1);
+        expect(prodIdColumn.rowEnd).toBe(4);
+        expect(prodIdColumn.colStart).toBe(1);
+        expect(prodIdColumn.colEnd).toBe(1);
+    });
 });
 
 class HelperFunctions {
@@ -975,5 +1012,39 @@ export class CollapsibleColumnGroupTestComponent {
     public state: IgxGridStateDirective;
     public data = SampleTestData.contactInfoDataFull();
 }
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" igxGridState primaryKey="ProductID">
+            <igx-column-layout field='group1'>
+                    <igx-column [groupable]="true" [rowStart]="1" [colStart]="1" [colEnd]="1" [rowEnd]="4" field="ProductID" [width]="'200px'" [resizable]="true">
+                    </igx-column>
+                </igx-column-layout>
+                <igx-column-layout field='group2'>
+                    <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="ProductName" [width]="'300px'" [resizable]="true">
+                    </igx-column>
+                    <igx-column [rowStart]="2" [colStart]="1" field="InStock" [width]="'300px'" [resizable]="true">
+                    </igx-column>
+                    <igx-column [rowStart]="2" [colStart]="2" field="UnitsInStock" [width]="'400px'" [resizable]="true">
+                    </igx-column>
+                    <igx-column [rowStart]="3" [colStart]="1" [colEnd]="3" field="OrderDate" [width]="'300px'" [resizable]="true">
+                    </igx-column>
+                </igx-column-layout>
+        </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxGridStateDirective, IgxColumnComponent, IgxColumnLayoutComponent]
+})
+export class IgxGridMRLStateComponent {
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    @ViewChild(IgxGridStateDirective, { static: true })
+    public state: IgxGridStateDirective;
+
+    public data = SampleTestData.foodProductData();
+}
+
+
 /* eslint-enable max-len */
 

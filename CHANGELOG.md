@@ -41,7 +41,7 @@ All notable changes for each version of this project will be documented in this 
     - Added `activation` property to control tab selection. In `auto` mode (default), tabs are selected instantly with Arrow or Home/End keys. In `manual` mode, tabs are focused with keys but only selected with Enter or Space.
 - `IgxGridState`
     -  When possible the state directive nows reuses the column that already exists on the grid when restoring the state, instead of creating new column instances every time. This removes the need to set any complex objects manually back on the column on `columnInit`. The only instance where this is still necessary is when the column (or its children in case of column groups) have no `field` property so there's no way to uniquely identify the matching column.
-
+    - Added support for persisting Multi-Row Layout.
 ### Themes
 - `Palettes`
     - All palette colors have been migrated to the [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors). This means that color consumed as CSS variables no longer need to be wrapped in an `hsl` function. 
