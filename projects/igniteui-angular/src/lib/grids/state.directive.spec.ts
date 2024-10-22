@@ -103,6 +103,7 @@ describe('IgxGridState - input properties #grid', () => {
         const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const productExpression = {
             condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: 'true',
             fieldName: 'InStock',
             ignoreCase: true
         };

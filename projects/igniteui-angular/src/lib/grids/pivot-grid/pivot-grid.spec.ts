@@ -227,6 +227,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             filteringExpressionTree.filteringOperands = [
                 {
                     condition: IgxStringFilteringOperand.instance().condition('equals'),
+                    conditionName: 'equals',
                     fieldName: 'SellerName',
                     searchVal: 'Stanley'
                 }
@@ -2820,6 +2821,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             filterColumnExpTree.filteringOperands = [
                 {
                     condition: IgxStringFilteringOperand.instance().condition('in'),
+                    conditionName: 'in',
                     fieldName: 'City',
                     searchVal: new Set(['Ciudad de la Costa'])
                 }
@@ -2828,6 +2830,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             filterRowExpTree.filteringOperands = [
                 {
                     condition: IgxStringFilteringOperand.instance().condition('in'),
+                    conditionName: 'in',
                     fieldName: 'ProductCategory',
                     searchVal: new Set(['Bikes'])
                 }

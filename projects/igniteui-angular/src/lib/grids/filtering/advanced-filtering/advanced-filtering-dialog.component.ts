@@ -194,6 +194,20 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.closeDialog();
     }
 
+    
+    /**
+     * @hidden @internal
+     */
+    public generateEntity() {
+        const entities = [
+            {
+                name: null, 
+                fields: this.filterableFields
+            }
+        ];
+        return entities;
+    }
+
     private assignResourceStrings() {
         // If grid has custom resource strings set for the advanced filtering,
         // they are passed to the query builder resource strings.
