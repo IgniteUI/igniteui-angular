@@ -7,25 +7,26 @@
                 <igx-snackbar
                     #snackbar
                     [outlet]="outlet"
-                    [actionText]="'Undo'"
-                >Snackbar Message
+                    [actionText]="actionText"
+                    [autoHide]="!keepOpen"
+                    [displayTime]="displayTime"
+                >Angular Snackbar Message
                 </igx-snackbar>
             </div>
             <div igxOverlayOutlet #outlet="overlay-outlet"></div>
         </div>
-        <button igxButton (click)="toggleSnackbar()">Toggle Angular Snackbar</button>
+        <button igxButton (click)="snackbar.toggle(); snackbar2.toggle()">Toggle Snackbars</button>
     </article>
 </div>
 
 <div class="sample-wrapper">
     <article class="sample-column">
-        <button igxButton (click)="snackbar2.toggle()">Toggle WC Snackbar</button>
         <div class="snackbar-sample">
-            <igc-snackbar #snackbar2>
-                Snackbar Message
-                <button slot="action" igxButton="flat">
-                    Undo
-                </button>
+            <igc-snackbar #snackbar2
+            [actionText]="actionText"
+            [keepOpen]="keepOpen"
+            [displayTime]="displayTime">
+                WC Snackbar Message
             </igc-snackbar>
         </div>
     </article>

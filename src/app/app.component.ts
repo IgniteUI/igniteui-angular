@@ -6,8 +6,8 @@ import { PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { NgFor, NgIf } from '@angular/common';
 import { IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective } from '../../projects/igniteui-angular/src/lib/navigation-drawer/navigation-drawer.directives';
-import { PropertiesPanelComponent, PropertyPanelConfig } from './properties-panel/properties-panel.component';
-import { PropertyChangeService } from './properties-panel/property-change.service';
+import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
+import { PropertyChangeService, PropertyPanelConfig } from './properties-panel/property-change.service';
 
 @Component({
     selector: 'app-root',

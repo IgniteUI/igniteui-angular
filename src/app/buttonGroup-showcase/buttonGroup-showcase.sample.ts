@@ -2,8 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxLayoutDirective } from 'igniteui-angular';
 import { defineComponents, IgcButtonGroupComponent, IgcToggleButtonComponent } from "igniteui-webcomponents";
-import { PropertyPanelConfig } from '../properties-panel/properties-panel.component';
-import { PropertyChangeService } from '../properties-panel/property-change.service';
+import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcButtonGroupComponent, IgcToggleButtonComponent);
 

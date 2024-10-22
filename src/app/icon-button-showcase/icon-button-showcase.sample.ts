@@ -1,8 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation, OnInit } from '@angular/core';
 import { IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective } from 'igniteui-angular';
 import { defineComponents, IgcIconButtonComponent, registerIconFromText} from "igniteui-webcomponents";
-import { PropertyPanelConfig } from '../properties-panel/properties-panel.component';
-import { PropertyChangeService } from '../properties-panel/property-change.service';
+import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents( IgcIconButtonComponent);
 

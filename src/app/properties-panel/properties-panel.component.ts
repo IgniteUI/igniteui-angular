@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { PropertyChangeService } from './property-change.service';
+import { PropertyChangeService, PropertyPanelConfig } from './property-change.service';
 import {
     IgxButtonGroupComponent,
     IgxButtonDirective,
@@ -19,35 +19,6 @@ import {
     IgxTimePickerComponent,
     IgxDateTimeEditorModule
 } from 'igniteui-angular';
-
-export type ControlType =
-    'boolean' |
-    'number' |
-    'range' |
-    'radio' |
-    'radio-inline' |
-    'button-group' |
-    'select' |
-    'text' |
-    'date' |
-    'time' |
-    'date-time';
-
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export type PropertyPanelConfig = {
-    [key: string]: {
-        label?: string;
-        control: {
-            type: ControlType,
-            options?: string[];
-            labels?: string[];
-            min?: number;
-            max?: number;
-            step?: number;
-            defaultValue?: any;
-        };
-    };
-}
 
 @Component({
     selector: 'app-properties-panel',

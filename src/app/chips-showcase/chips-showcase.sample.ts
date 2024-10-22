@@ -18,8 +18,7 @@ import {
 } from 'igniteui-angular';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import { defineComponents, IgcChipComponent, IgcAvatarComponent, IgcButtonComponent, IgcIconButtonComponent, IgcCircularProgressComponent} from "igniteui-webcomponents";
-import { PropertyPanelConfig } from '../properties-panel/properties-panel.component';
-import { PropertyChangeService } from '../properties-panel/property-change.service';
+import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcChipComponent, IgcAvatarComponent, IgcButtonComponent, IgcIconButtonComponent, IgcCircularProgressComponent);
 

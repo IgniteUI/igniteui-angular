@@ -2,8 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IgxRadioComponent, IgxRadioGroupDirective, RadioGroupAlignment } from 'igniteui-angular';
 import { defineComponents, IgcRadioComponent, IgcRadioGroupComponent} from "igniteui-webcomponents";
-import { PropertyPanelConfig } from '../properties-panel/properties-panel.component';
-import { PropertyChangeService } from '../properties-panel/property-change.service';
+import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcRadioComponent, IgcRadioGroupComponent);
 

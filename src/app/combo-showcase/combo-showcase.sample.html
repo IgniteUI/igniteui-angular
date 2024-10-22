@@ -6,8 +6,7 @@
         <form class="combo-sample__form" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
             <div class="combo-sample__row combo-sample__row--stretch">
                 <!-- Simple combo -->
-                <igx-combo [allowCustomValues]="true"
-                           name="falsyValueCombo"
+                <igx-combo name="falsyValueCombo"
                            required
                            [data]="uniqueFalsyData"
                            displayKey="field"
@@ -23,8 +22,8 @@
                            value-key="value"
                            outlined="true"
                            [disabled]="isDisabled"
-                           placeholder="WC Combo">
-                    <igx-hint>Select a unique falsy value</igx-hint>
+                           label="WC Combo">
+                    <span slot="helper-text">Select a unique falsy value</span>
                 </igc-combo>
             </div>
         </form>

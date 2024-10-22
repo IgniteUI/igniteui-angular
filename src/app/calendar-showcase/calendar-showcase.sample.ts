@@ -27,8 +27,7 @@ import {
     DateRangeDescriptor,
     DateRangeType,
 } from "igniteui-angular";
-import { PropertyPanelConfig } from '../properties-panel/properties-panel.component';
-import { PropertyChangeService } from '../properties-panel/property-change.service';
+import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 import { defineComponents, IgcCalendarComponent } from "igniteui-webcomponents";
 

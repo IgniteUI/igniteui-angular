@@ -1,7 +1,35 @@
 import { Injectable, TemplateRef } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { PropertyPanelConfig } from './properties-panel.component';
 import { NavigationEnd, Router } from '@angular/router';
+
+export type ControlType =
+    'boolean' |
+    'number' |
+    'range' |
+    'radio' |
+    'radio-inline' |
+    'button-group' |
+    'select' |
+    'text' |
+    'date' |
+    'time' |
+    'date-time';
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type PropertyPanelConfig = {
+    [key: string]: {
+        label?: string;
+        control: {
+            type: ControlType,
+            options?: string[];
+            labels?: string[];
+            min?: number;
+            max?: number;
+            step?: number;
+            defaultValue?: any;
+        };
+    };
+}
 
 @Injectable({
     providedIn: 'root',

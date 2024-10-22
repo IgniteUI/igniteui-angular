@@ -1,6 +1,14 @@
 <div class="sample-stepper-wrapper">
     <strong>Angular Stepper</strong>
-    <igx-stepper #stepper>
+    <igx-stepper #stepper
+    [orientation]="orientation"
+    [stepType]="stepType"
+    [contentTop]="contentTop"
+    [titlePosition]="titlePosition"
+    [linear]="linear"
+    [verticalAnimationType]="verticalAnimation"
+    [horizontalAnimationType]="horizontalAnimation"
+    [animationDuration]="animationDuration">
         <igx-step completed #step [isValid]="form1.form.valid">
             <span igxStepTitle>Step 1</span>
             <span igxStepSubtitle>(completed)</span>
@@ -32,10 +40,10 @@
 
                     <div class="nav-buttons">
                         <button igxButton="contained" (click)="stepper.prev()"
-                            [disabled]="!form1.form.valid && stepper.linear">PREV
+                            [disabled]="!form1.form.valid && stepper.linear">Prev
                         </button>
                         <button igxButton="contained" (click)="stepper.next()"
-                            [disabled]="!form1.form.valid && stepper.linear">NEXT
+                            [disabled]="!form1.form.valid && stepper.linear">Next
                         </button>
                     </div>
                 </form>
@@ -53,10 +61,10 @@
 
                 <div class="nav-buttons">
                     <button igxButton="contained" (click)="stepper.prev()"
-                        [disabled]="!form1.form.valid && stepper.linear">PREV
+                        [disabled]="!form1.form.valid && stepper.linear">Prev
                     </button>
                     <button igxButton="contained" (click)="stepper.next()"
-                        [disabled]="!form1.form.valid && stepper.linear">NEXT
+                        [disabled]="!form1.form.valid && stepper.linear">Next
                     </button>
                 </div>
             </div>
@@ -80,7 +88,15 @@
 
 <div class="sample-stepper-wrapper">
     <strong>WC Stepper</strong>
-    <igc-stepper #stepper2>
+    <igc-stepper #stepper2
+    [orientation]="orientation"
+    [stepType]="stepType"
+    [contentTop]="contentTop"
+    [titlePosition]="titlePosition"
+    [linear]="linear"
+    [verticalAnimation]="verticalAnimation"
+    [horizontalAnimation]="horizontalAnimation"
+    [animationDuration]="animationDuration">
       <igc-step complete>
         <span slot="title">Step1</span>
         <span slot="subtitle">(completed)</span>

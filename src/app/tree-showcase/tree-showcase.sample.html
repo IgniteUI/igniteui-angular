@@ -3,7 +3,11 @@
 <div class="wrapper">
     <div class="tree-container">
         <strong>Angular Tree</strong>
-        <igx-tree [toggleNodeOnClick]="true" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
+        <igx-tree
+        [style.--ig-size]="'var(--ig-size-' + size + ')'"
+        [toggleNodeOnClick]="toggleNodeOnClick"
+        [singleBranchExpand]="singleBranchExpand"
+        [selection]="selectionAngular">
             <igx-tree-node *ngFor="let node of data" [data]="node">
                 {{ node.CompanyName }}
                 <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
@@ -15,10 +19,14 @@
             </igx-tree-node>
         </igx-tree>
     </div>
-    
+
     <div class="tree-container">
         <strong>WC Tree</strong>
-          <igc-tree toggle-node-on-click="true" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
+        <igc-tree
+        [style.--ig-size]="'var(--ig-size-' + size + ')'"
+        [toggleNodeOnClick]="toggleNodeOnClick"
+        [singleBranchExpand]="singleBranchExpand"
+        [selection]="selectionWC">
             <ng-container *ngFor="let node of data">
                 <igc-tree-item [label]="node.CompanyName">
                     <ng-container *ngIf="node.ChildCompanies && node.ChildCompanies.length">

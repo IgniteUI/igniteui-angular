@@ -1,7 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 // eslint-disable-next-line max-len
 import { IgxButtonDirective, IgxOverlayOutletDirective, IgxSnackbarComponent } from 'igniteui-angular';
 import { defineComponents, IgcSnackbarComponent } from 'igniteui-webcomponents';
+import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcSnackbarComponent);
 
@@ -13,14 +14,45 @@ defineComponents(IgcSnackbarComponent);
     standalone: true,
     imports: [IgxSnackbarComponent, IgxOverlayOutletDirective, IgxButtonDirective]
 })
-export class SnackbarShowcaseSampleComponent {
-    @ViewChild('snackbar')
-    private snackbar: IgxSnackbarComponent;
+export class SnackbarShowcaseSampleComponent implements OnInit {
+    public panelConfig : PropertyPanelConfig = {
+        actionText: {
+            label: 'Action Text',
+            control: {
+                type: 'text',
+                defaultValue: 'Undo'
+            }
+        },
+        displayTime: {
+            label: 'Display Time',
+            control: {
+                type: 'number',
+                defaultValue: 4000
+            }
+        },
+        keepOpen: {
+            label: 'Keep Open',
+            control: {
+                type: 'boolean',
+            }
+        }
+    }
 
-    public color: string;
-    public actionName: string;
+    constructor(private propertyChangeService: PropertyChangeService){}
 
-    public toggleSnackbar() {
-        this.snackbar.toggle();
+    public ngOnInit() {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+    }
+
+    protected get actionText() {
+        return this.propertyChangeService.getProperty('actionText');
+    }
+
+    protected get displayTime() {
+        return this.propertyChangeService.getProperty('displayTime');
+    }
+
+    protected get keepOpen() {
+        return this.propertyChangeService.getProperty('keepOpen');
     }
 }
