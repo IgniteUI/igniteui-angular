@@ -15,6 +15,7 @@ import { CarouselShowcaseSampleComponent } from './carousel-showcase/carousel-sh
 import { CheckboxShowcaseSampleComponent } from './checkbox-showcase/checkbox-showcase.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
 import { ChipsShowcaseSampleComponent } from './chips-showcase/chips-showcase.sample';
+import { CircularProgressSampleComponent } from './circular-progress-showcase/circular-progress-showcase.sample'
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { ExpansionPanelShowcaseSampleComponent } from './expansion-panel-showcase/expansion-panel-showcase-sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
@@ -33,6 +34,7 @@ import { ListSampleComponent } from './list/list.sample';
 import { ListShowcaseSampleComponent } from './list-showcase/list-showcase.sample';
 import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
 import { ListPerformanceSampleComponent } from './list-performance/list-performance.sample';
+import { LinearProgressSampleComponent } from './linear-progress-showcase/linear-progress-showcase.sample';
 import { NavbarSampleComponent } from './navbar/navbar.sample';
 import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
@@ -283,6 +285,10 @@ export const appRoutes: Routes = [
         path: 'chip-showcase',
         component: ChipsShowcaseSampleComponent
     },
+    {
+        path: 'circular-progress-showcase',
+        component: CircularProgressSampleComponent
+    },
 	{
         path: 'divider',
         component: DividerComponent
@@ -370,6 +376,10 @@ export const appRoutes: Routes = [
     {
         path: 'listPerformance',
         component: ListPerformanceSampleComponent
+    },
+    {
+        path: 'linear-progress',
+        component: LinearProgressSampleComponent
     },
     {
         path: 'mask',

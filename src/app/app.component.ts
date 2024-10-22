@@ -755,6 +755,11 @@ export class AppComponent implements OnInit {
             name: 'Chips'
         },
         {
+            link: '/circular-progress-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Circular Progress'
+        },
+        {
             link: '/combo-showcase',
             icon: 'radio_button_unchecked',
             name: 'Combo'
@@ -793,6 +798,11 @@ export class AppComponent implements OnInit {
             link: '/list-showcase',
             icon: 'radio_button_unchecked',
             name: 'List'
+        },
+        {
+            link: '/linear-progress',
+            icon: 'radio_button_unchecked',
+            name: 'Linear Progress'
         },
         {
             link: '/radio-showcase',
