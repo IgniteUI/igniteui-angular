@@ -54,6 +54,7 @@ import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
+import { isTree, recreateTree } from '../data-operations/expressions-tree-util';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -229,7 +230,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
         if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
-            this._expressionTree = expressionTree;
+            if (this.entities && expressionTree) {
+                this._expressionTree = recreateTree(expressionTree, this.entities);
+            } else {
+                this._expressionTree = expressionTree;
+            }
             if (!expressionTree) {
                 this._selectedEntity = null;
                 this._selectedReturnFields = [];
@@ -1337,14 +1342,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
 
             for (const expr of expressionTree.filteringOperands) {
-                if (expr instanceof FilteringExpressionsTree) {
+                if (isTree(expr)) {
                     groupItem.children.push(this.createExpressionGroupItem(expr, groupItem, expressionTree.entity));
                 } else {
                     const filteringExpr = expr as IFilteringExpression;
                     const exprCopy: IFilteringExpression = {
                         fieldName: filteringExpr.fieldName,
                         condition: filteringExpr.condition,
-                        conditionName: filteringExpr.condition.name,
+                        conditionName: filteringExpr.condition?.name || filteringExpr.conditionName,
                         searchVal: filteringExpr.searchVal,
                         searchTree: filteringExpr.searchTree, // this.createExpressionGroupItem(filteringExpr.searchTree, groupItem),
                         ignoreCase: filteringExpr.ignoreCase
