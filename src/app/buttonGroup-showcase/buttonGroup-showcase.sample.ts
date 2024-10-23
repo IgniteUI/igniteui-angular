@@ -76,11 +76,11 @@ export class ButtonGroupShowcaseSampleComponent implements OnInit {
         singleRequired: 'single-required'
     };
 
-    protected get angularSelection() {
+    protected get wcSelection() {
         return this.propertyChangeService.getProperty('selection');
     }
 
-    public get wcSelection() {
+    public get angularSelection() {
         const selection = this.propertyChangeService.getProperty('selection');
         return this.selectionMap[selection];
     }
