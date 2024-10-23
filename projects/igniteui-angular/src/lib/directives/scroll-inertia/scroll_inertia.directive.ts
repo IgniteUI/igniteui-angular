@@ -69,10 +69,10 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                 return;
             }
             const targetElem = this.parentElement;
-            targetElem.addEventListener('wheel', this.onWheel.bind(this));
-            targetElem.addEventListener('touchstart', this.onTouchStart.bind(this));
-            targetElem.addEventListener('touchmove', this.onTouchMove.bind(this));
-            targetElem.addEventListener('touchend', this.onTouchEnd.bind(this));
+            targetElem.addEventListener('wheel', this.onWheel.bind(this), { passive: false });
+            targetElem.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: false });
+            targetElem.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: false });
+            targetElem.addEventListener('touchend', this.onTouchEnd.bind(this), { passive: false });
         });
     }
 
