@@ -8,8 +8,6 @@ import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/f
 
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
-import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
-import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/icon.service';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
@@ -184,13 +182,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         this.checkMatch();
     }
 
-    /**
-     * @hidden @internal
-     */
-    public filteringLogic = FilteringLogic.Or;
-
-    protected stringFilters = IgxStringFilteringOperand;
-    protected booleanFilters = IgxBooleanFilteringOperand;
     protected _prevInputValue = '';
 
     private _displayText: string;

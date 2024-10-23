@@ -39,6 +39,8 @@
             #thumbFrom
             type="from"
             [value]="lowerLabel"
+            [min]="minValue"
+            [max]="maxValue"
             [disabled]="disabled"
             [continuous]="continuous"
             [onPan]="onPan"
@@ -46,6 +48,7 @@
             [step]="step"
             [templateRef]="thumbFromTemplateRef"
             [context]="context"
+            [labels]="labels"
             (thumbChange)="onThumbChange()"
             (hoverChange)="onHoverChange($event)"
             [deactiveState]="deactivateThumbLabel"
@@ -65,6 +68,8 @@
         #thumbTo
         type="to"
         [value]="upperLabel"
+        [min]="minValue"
+        [max]="maxValue"
         [disabled]="disabled"
         [continuous]="continuous"
         [onPan]="onPan"
@@ -72,6 +77,7 @@
         [step]="step"
         [templateRef]="thumbToTemplateRef"
         [context]="context"
+        [labels]="labels"
         (thumbChange)="onThumbChange()"
         (hoverChange)="onHoverChange($event)"
         [deactiveState]="deactivateThumbLabel"
