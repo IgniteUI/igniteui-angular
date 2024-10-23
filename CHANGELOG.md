@@ -43,16 +43,16 @@ All notable changes for each version of this project will be documented in this 
     -  When possible the state directive nows reuses the column that already exists on the grid when restoring the state, instead of creating new column instances every time. This removes the need to set any complex objects manually back on the column on `columnInit`. The only instance where this is still necessary is when the column (or its children in case of column groups) have no `field` property so there's no way to uniquely identify the matching column.
     - Added support for persisting Multi-Row Layout.
 ### Themes
-- `Palettes`
+- **Breaking Change** `Palettes`
     - All palette colors have been migrated to the [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors). This means that color consumed as CSS variables no longer need to be wrapped in an `hsl` function. 
 
     Example: 
     ```css
     /* 18.1.x and before: */
-    background: hsl(var(--igx-primary-600));
+    background: hsl(var(--ig-primary-600));
 
     /* 18.2.0+: */
-    background: var(--igx-primary-600);
+    background: var(--ig-primary-600);
     ```
 
     This change also opens up the door for declaring the base (500) variants of each color in CSS from any color, including other CSS variables, whereas before the Sass `palette` function was needed to generate color shades from a base color.
