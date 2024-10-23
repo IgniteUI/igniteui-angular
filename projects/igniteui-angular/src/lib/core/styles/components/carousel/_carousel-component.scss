@@ -21,6 +21,10 @@
             @extend %igx-carousel-indicators--bottom !optional;
         }
     }
+
+    @include b(igx-carousel-label-indicator) {
+        @extend %igx-carousel-label-indicator !optional;
+    }
 }
 
 @mixin _igx-carousel-navigation-partial {
