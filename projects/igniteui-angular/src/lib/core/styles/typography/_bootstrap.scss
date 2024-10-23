@@ -103,7 +103,6 @@
     ));
     @include tabs-typography();
     @include time-picker-typography($categories: (
-        header-time-period: 'subtitle-1',
         header-hour: 'h4',
         selected-time: 'h4'
     ));

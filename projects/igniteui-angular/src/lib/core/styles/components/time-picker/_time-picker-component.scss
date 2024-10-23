@@ -24,10 +24,6 @@
             @extend %time-picker__wrapper !optional;
         }
 
-        @include e(header-ampm) {
-            @extend %time-picker__header-ampm !optional;
-        }
-
         @include e(header-hour){
             @extend %time-picker__header-hour !optional;
         }
