@@ -666,6 +666,7 @@ describe('IgxDateRangePicker', () => {
                 it('should close the calendar with ESC', fakeAsync(() => {
                     spyOn(dateRange.closing, 'emit').and.callThrough();
                     spyOn(dateRange.closed, 'emit').and.callThrough();
+                    dateRange.mode = 'dropdown';
 
                     expect(dateRange.collapsed).toBeTruthy();
                     dateRange.open();
@@ -673,14 +674,24 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
 
-                    calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
-                    UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar, true);
+                    const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                    expect(calendarWrapper.contains(document.activeElement))
+                        .withContext('focus should move to calendar for KB nav')
+                        .toBeTrue();
+                    expect(dateRange.isFocused).toBeTrue();
+
+                    UIInteractions.triggerKeyDownEvtUponElem('Escape', calendarWrapper, true);
                     tick();
                     fixture.detectChanges();
+
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
-                }));
+                    expect(dateRange.inputDirective.nativeElement.contains(document.activeElement))
+                        .withContext('focus should return to the picker input')
+                        .toBeTrue();
+                    expect(dateRange.isFocused).toBeTrue();
+                    }));
 
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.DropDown;
@@ -1118,6 +1129,8 @@ describe('IgxDateRangePicker', () => {
                 it('should close the calendar with ESC', fakeAsync(() => {
                     spyOn(dateRange.closing, 'emit').and.callThrough();
                     spyOn(dateRange.closed, 'emit').and.callThrough();
+                    dateRange.mode = 'dropdown';
+                    startInput.nativeElement.focus();
 
                     expect(dateRange.collapsed).toBeTruthy();
                     dateRange.open();
@@ -1125,13 +1138,23 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
 
-                    calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
-                    UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar, true);
+                    const calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
+                    expect(calendarWrapper.contains(document.activeElement))
+                        .withContext('focus should move to calendar for KB nav')
+                        .toBeTrue();
+                    expect(dateRange.isFocused).toBeTrue();
+
+                    UIInteractions.triggerKeyDownEvtUponElem('Escape', calendarWrapper, true);
                     tick();
                     fixture.detectChanges();
+
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
+                    expect(startInput.nativeElement.contains(document.activeElement))
+                        .withContext('focus should return to the picker input')
+                        .toBeTrue();
+                    expect(dateRange.isFocused).toBeTrue();
                 }));
 
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
