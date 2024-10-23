@@ -13,7 +13,7 @@ import {
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings
 } from '../services/public_api';
-import { Component, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } from '@angular/core';
+import { Component, DebugElement, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
 import { DatePart } from '../directives/date-time-editor/date-time-editor.common';
@@ -120,13 +120,13 @@ describe('IgxDatePicker', () => {
         describe('Keyboard navigation', () => {
             let fixture: ComponentFixture<any>;
             let datePicker: IgxDatePickerComponent;
-            let calendar;
+            let inputGroup: DebugElement;
 
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxDatePickerTestKbrdComponent);
                 fixture.detectChanges();
                 datePicker = fixture.componentInstance.datePicker;
-                calendar = fixture.componentInstance.datePicker.calendar;
+                inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
             }));
 
             it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
@@ -138,7 +138,6 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.isFocused).toBeFalse();
 
                 const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
-                const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', picker, true);
 
                 tick();
@@ -186,6 +185,7 @@ describe('IgxDatePicker', () => {
             }));
 
             it('should close the calendar with ESC', fakeAsync(() => {
+                datePicker.mode = 'dropdown';
                 spyOn(datePicker.closing, 'emit').and.callThrough();
                 spyOn(datePicker.closed, 'emit').and.callThrough();
 
@@ -193,15 +193,26 @@ describe('IgxDatePicker', () => {
                 datePicker.open();
                 tick();
                 fixture.detectChanges();
-                expect(datePicker.collapsed).toBeFalsy();
 
-                calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
-                UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar, true);
+                expect(datePicker.collapsed).toBeFalsy();
+                const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(calendarWrapper.contains(document.activeElement))
+                    .withContext('focus should move to calendar for KB nav')
+                    .toBeTrue();
+                expect(datePicker.isFocused).toBeTrue();
+
+
+                UIInteractions.triggerKeyDownEvtUponElem('Escape', calendarWrapper, true);
                 tick(350);
                 fixture.detectChanges();
+
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
+                expect(inputGroup.nativeElement.contains(document.activeElement))
+                    .withContext('focus should return to the picker input')
+                    .toBeTrue();
+                expect(datePicker.isFocused).toBeTrue();
             }));
         });
 
