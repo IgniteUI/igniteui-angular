@@ -1258,8 +1258,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** @hidden @internal */
     public onBlur() {
-        this._onTouchedCallback();
         if (this.collapsed) {
+            this._onTouchedCallback();
             this.validateComboState();
         }
     }
