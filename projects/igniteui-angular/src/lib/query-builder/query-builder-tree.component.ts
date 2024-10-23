@@ -423,7 +423,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public searchValue: { value: any, displayValue: any } = { value: null, displayValue: undefined };
+    public searchValue: { value: any } = { value: null };
 
     /**
      * @hidden @internal
@@ -738,7 +738,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._editedExpression.expression.fieldName = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
             this._editedExpression.expression.conditionName = this.selectedCondition;
-            this._editedExpression.expression.displayVal = this.searchValue.displayValue;
             this._editedExpression.expression.searchVal = actualSearchValue;
             this._editedExpression.fieldLabel = this.selectedField.label
                 ? this.selectedField.label
@@ -1146,7 +1145,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public getFormatter(field: string) {
-        return this.fields.find(el => el.field === field).formatter;
+        return this.fields.find(el => el.field === field)?.formatter;
     }
 
     /**

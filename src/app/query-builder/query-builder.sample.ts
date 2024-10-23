@@ -47,7 +47,7 @@ export class QueryBuilderComponent implements OnInit {
 
     public ngOnInit(): void {
         this.fieldsEntityA = [
-            { field: 'Id', dataType: 'number' },
+            { field: 'Id', dataType: 'number', formatter: (value: any, rowData: any) => rowData === 'equals' ? value[0].id : value },
             { field: 'Name', dataType: 'string' },
             { field: 'Validated', dataType: 'boolean' },
             { field: 'Date created', dataType: 'date' },
@@ -161,14 +161,10 @@ export class QueryBuilderComponent implements OnInit {
         return tree ? JSON.stringify(tree, null, 2) : 'Please add an expression!';
     }
 
-    public handleChange(ev, selectedField, searchVal) {
-        if (selectedField.field === 'Name') {
-            searchVal.value = ev.newValue[0].id.toString() + ev.newValue[0].field;
-        }
-        if (selectedField.field === 'Id') {
-            searchVal.value = !Number.isNaN(parseFloat(ev.newValue[0])) ? parseFloat(ev.newValue[0]) : 0;
-            searchVal.value = ev.newValue[0];
-            searchVal.displayValue = ev.newValue[0].field;
-        }
-    }
+    // public handleChange(ev, selectedField, searchVal) {
+       // if (selectedField.field === 'Id') {
+        //     searchVal.value = ev.newValue[0];
+        //     selectedField.formatter = (value: any, rowData: any) => rowData === 'equals' ? value[0].id : value;
+        // }
+    // }
 }

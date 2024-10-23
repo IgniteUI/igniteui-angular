@@ -15,8 +15,10 @@
                 @if ((selectedField?.field === 'Id' || selectedField?.field === 'Name') && selectedCondition ===
                 'equals'){
                 <!-- <input type="text" required [(ngModel)]="searchValue.value"/> -->
-                <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value"
+                <!-- <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value"
                     (selectionChanging)="handleChange($event, selectedField, searchValue)" [displayKey]="'field'">
+                </igx-combo> -->
+                <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value" [displayKey]="'field'">
                 </igx-combo>
                 } @else {
                 <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
