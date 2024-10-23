@@ -1251,8 +1251,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public onBlur() {
-        this._onTouchedCallback();
         if (this.collapsed) {
+            this._onTouchedCallback();
             this.validateComboState();
         }
     }
