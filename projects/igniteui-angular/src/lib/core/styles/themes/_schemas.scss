@@ -1,5 +1,30 @@
+@use 'sass:map';
 @use 'igniteui-theming/sass/themes/schemas' as schemas;
 @forward 'igniteui-theming/sass/themes/schemas';
 
 $light-schema: schemas.$light-material-schema;
 $dark-schema: schemas.$dark-material-schema;
+
+@mixin schema-order($schema) {
+    $_meta: map.get($schema, '_meta');
+    $_theme: map.get($_meta, 'theme');
+    $_variant: map.get($_meta, 'variant');
+
+    @debug $_theme;
+
+    @if $_theme == 'material' {
+        @layer fluent, bootstrap, indigo, material;
+    }
+
+    @if $_theme == 'bootstrap' {
+        @layer fluent, material, indigo, bootstrap;
+    }
+
+    @if $_theme == 'indigo' {
+        @layer fluent, material, bootstrap, indigo;
+    }
+
+    @if $_theme == 'fluent' {
+        @layer indigo, material, bootstrap, fluent;
+    }
+}
