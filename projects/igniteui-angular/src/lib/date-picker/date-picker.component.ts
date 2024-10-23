@@ -930,7 +930,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                 return;
             }
             // do not focus the input if clicking outside in dropdown mode
-            if (this.getEditElement() && !(args.event && this.isDropdown)) {
+            const outsideEvent = args.event && (args.event as KeyboardEvent).key !== this.platform.KEYMAP.ESCAPE;
+            if (this.getEditElement() && !(outsideEvent && this.isDropdown)) {
                 this.inputDirective.focus();
             } else {
                 this._onTouchedCallback();

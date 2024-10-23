@@ -727,7 +727,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             return;
         }
 
-        if (this.isDropdown && e?.event && !this.element.nativeElement.contains(e.event.target)) {
+        if (this.isDropdown && e?.event && !this.isFocused) {
             // outside click
             this.updateValidityOnBlur();
         } else {
