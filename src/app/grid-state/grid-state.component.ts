@@ -9,7 +9,8 @@ import { TREEGRID_FLAT_DATA, EMPLOYEE_DATA, employeesData } from './data';
 import { FilteringExpressionsTree, FilteringLogic,
   IgxNumberSummaryOperand, IgxSummaryResult, IGridState, IgxGridStateDirective,
   IgxExpansionPanelComponent, IgxCellHeaderTemplateDirective,
-  IGridStateOptions, GridFeatures, GridColumnDataType, IgxColumnComponent, GridType, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, IgxTooltipDirective, IgxColumnGroupComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, IgxTooltipTargetDirective, IgxIconComponent, IgxSwitchComponent, IgxButtonDirective, IgxCellTemplateDirective } from 'igniteui-angular';
+  IGridStateOptions, GridFeatures, GridColumnDataType, IgxColumnComponent, GridType, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, IgxTooltipDirective, IgxColumnGroupComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, IgxTooltipTargetDirective, IgxIconComponent, IgxSwitchComponent, IgxButtonDirective, IgxCellTemplateDirective,
+  IgxColumnLayoutComponent} from 'igniteui-angular';
 
 class MySummary extends IgxNumberSummaryOperand {
 
@@ -51,7 +52,7 @@ interface GridState {
     styleUrls: ['./grid-state.component.scss'],
     templateUrl: './grid-state.component.html',
     standalone: true,
-    imports: [IgxExpansionPanelComponent, IgxCellHeaderTemplateDirective, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, NgIf, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, NgTemplateOutlet, IgxGridComponent, IgxGridStateDirective, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, IgxTooltipDirective, IgxColumnGroupComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, RouterLink, IgxTooltipTargetDirective, IgxIconComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxCellTemplateDirective]
+    imports: [IgxColumnLayoutComponent, IgxExpansionPanelComponent, IgxCellHeaderTemplateDirective, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, NgIf, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, NgTemplateOutlet, IgxGridComponent, IgxGridStateDirective, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, IgxTooltipDirective, IgxColumnGroupComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, RouterLink, IgxTooltipTargetDirective, IgxIconComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxCellTemplateDirective]
 })
 export class GridSaveStateComponent implements OnInit {
     @ViewChild(IgxExpansionPanelComponent, { static: true })
@@ -67,6 +68,7 @@ export class GridSaveStateComponent implements OnInit {
     public hGridId = 'hGrid1';
     public treeGridId = 'treeGrid1';
     public mcGridId = 'mcGrid1';
+    public mrlGridId = 'mrlGrid1';
     public treeGridHierId = 'treeGridH1';
     public gridState: IGridState;
     public serialize = true;
