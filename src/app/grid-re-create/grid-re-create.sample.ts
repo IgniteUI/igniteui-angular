@@ -18,13 +18,13 @@ export class GridRecreateSampleComponent implements OnInit {
     public create = false;
 
     public ngOnInit(): void {
-    //   new Array(100).fill({}).forEach((_, i) => {
-    //     this.data.push({
-    //       id: i,
-    //       columnA: `A ${i}`,
-    //       columnB: `B ${i}`,
-    //     });
-    //   });
+      new Array(100).fill({}).forEach((_, i) => {
+        this.data.push({
+          id: i,
+          columnA: `A ${i}`,
+          columnB: `B ${i}`,
+        });
+      });
     }
 
 }
