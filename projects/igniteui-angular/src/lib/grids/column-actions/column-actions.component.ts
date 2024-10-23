@@ -9,7 +9,6 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { FormsModule } from '@angular/forms';
 import { IgxInputGroupComponent } from '../../input-group/input-group.component';
-import { NgIf, NgFor } from '@angular/common';
 
 let NEXT_ID = 0;
 /**
@@ -22,7 +21,7 @@ let NEXT_ID = 0;
     selector: 'igx-column-actions',
     templateUrl: './column-actions.component.html',
     standalone: true,
-    imports: [NgIf, IgxInputGroupComponent, FormsModule, IgxInputDirective, NgFor, IgxCheckboxComponent, IgxButtonDirective, IgxRippleDirective, forwardRef(() => IgxColumnActionEnabledPipe), forwardRef(() => IgxFilterActionColumnsPipe), forwardRef(() => IgxSortActionColumnsPipe)]
+    imports: [IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxCheckboxComponent, IgxButtonDirective, IgxRippleDirective, forwardRef(() => IgxColumnActionEnabledPipe), forwardRef(() => IgxFilterActionColumnsPipe), forwardRef(() => IgxSortActionColumnsPipe)]
 })
 export class IgxColumnActionsComponent implements DoCheck {
 

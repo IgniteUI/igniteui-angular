@@ -9,7 +9,6 @@ import { IgxSelectComponent } from '../select/select.component';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { NgIf, NgFor } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxPaginatorToken } from './token';
@@ -44,7 +43,7 @@ export class IgxPaginatorContentDirective {
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
     standalone: true,
-    imports: [NgIf, forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)],
+    imports: [forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)],
     providers: [
         { provide: IgxPaginatorToken, useExisting: IgxPaginatorComponent }
     ]
@@ -361,7 +360,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     selector: 'igx-page-size',
     templateUrl: 'page-size-selector.component.html',
     standalone: true,
-    imports: [IgxSelectComponent, FormsModule, IgxLabelDirective, NgFor, IgxSelectItemComponent]
+    imports: [IgxSelectComponent, FormsModule, IgxLabelDirective, IgxSelectItemComponent]
 })
 export class IgxPageSizeSelectorComponent {
     /**

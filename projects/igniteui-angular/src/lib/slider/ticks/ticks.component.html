@@ -1,10 +1,12 @@
-<div class="igx-slider__ticks-group" *ngFor="let n of [].constructor(ticksLength); let idx=index" [ngClass]="{ 'igx-slider__ticks-group--tall': isPrimary(idx)}">
-    <div class="igx-slider__ticks-tick">
-        <span class="igx-slider__ticks-label" [ngClass]="{ 'igx-slider__tick-label--hidden': !hiddenTickLabels(idx)}">
-            <ng-container *ngTemplateOutlet="tickLabelTemplateRef ? tickLabelTemplateRef : tickLabelDefaultTemplate; context: context(idx)"></ng-container>
-        </span>
+@for (n of [].constructor(ticksLength); track n; let idx = $index) {
+    <div class="igx-slider__ticks-group" [ngClass]="{ 'igx-slider__ticks-group--tall': isPrimary(idx)}">
+        <div class="igx-slider__ticks-tick">
+            <span class="igx-slider__ticks-label" [ngClass]="{ 'igx-slider__tick-label--hidden': !hiddenTickLabels(idx)}">
+                <ng-container *ngTemplateOutlet="tickLabelTemplateRef ? tickLabelTemplateRef : tickLabelDefaultTemplate; context: context(idx)"></ng-container>
+            </span>
+        </div>
     </div>
-</div>
+}
 
 <ng-template #tickLabelDefaultTemplate let-value>
     {{ value }}

@@ -12,14 +12,13 @@ import { IgxComboAPIService } from './combo.api';
 import { IgxSelectionAPIService } from '../core/selection';
 import { rem } from '../core/utils';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { NgIf } from '@angular/common';
 
 /** @hidden */
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html',
     standalone: true,
-    imports: [NgIf, IgxCheckboxComponent]
+    imports: [IgxCheckboxComponent]
 })
 export class IgxComboItemComponent extends IgxDropDownItemComponent {
 

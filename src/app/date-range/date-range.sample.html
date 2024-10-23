@@ -120,10 +120,12 @@
             <div class="range-sample-column">
                 <h5>Reactive form</h5>
                 <div class="radio-container">
-                    <igx-radio *ngFor="let option of updateOnOptions" value="{{option}}" [(ngModel)]="updateOn"
-                        (change)="updateOnChange($event)">
-                        {{option}}
-                    </igx-radio>
+                    @for (option of updateOnOptions; track option) {
+                        <igx-radio value="{{option}}" [(ngModel)]="updateOn"
+                            (change)="updateOnChange($event)">
+                            {{option}}
+                        </igx-radio>
+                    }
                 </div>
                 <form [formGroup]="reactiveForm">
                     <p>Single template with initial value</p>

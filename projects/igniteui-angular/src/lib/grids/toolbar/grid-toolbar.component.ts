@@ -16,7 +16,7 @@ import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid
 import { IgxToolbarToken } from './token';
 import { IgxLinearProgressBarComponent } from '../../progressbar/progressbar.component';
 import { IgxGridToolbarAdvancedFilteringComponent } from './grid-toolbar-advanced-filtering.component';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 /* blazorElement */
 /* mustUseNGParentAnchor */
@@ -39,7 +39,7 @@ import { NgIf, NgTemplateOutlet } from '@angular/common';
     templateUrl: './grid-toolbar.component.html',
     providers: [{ provide: IgxToolbarToken, useExisting: IgxGridToolbarComponent }],
     standalone: true,
-    imports: [NgIf, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, NgTemplateOutlet, IgxLinearProgressBarComponent]
+    imports: [IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, NgTemplateOutlet, IgxLinearProgressBarComponent]
 })
 export class IgxGridToolbarComponent implements OnDestroy {
 

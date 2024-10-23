@@ -23,10 +23,12 @@
         <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
     </ng-container>
     <igx-suffix class="igx-select__toggle-button">
-        <ng-container *ngIf="toggleIconTemplate">
+        @if (toggleIconTemplate) {
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
-        </ng-container>
-        <igx-icon *ngIf="!toggleIconTemplate" family="default" [name]="toggleIcon"></igx-icon>
+        }
+        @if (!toggleIconTemplate) {
+            <igx-icon family="default" [name]="toggleIcon"></igx-icon>
+        }
     </igx-suffix>
     <ng-container ngProjectAs="igx-hint, [igxHint]" >
         <ng-content select="igx-hint, [igxHint]"></ng-content>
@@ -39,9 +41,11 @@
     (closing)="handleClosing($event)"
     (closed)="handleClosed()">
 
-    <div *ngIf="headerTemplate" class="igx-drop-down__select-header">
-        <ng-content *ngTemplateOutlet="headerTemplate"></ng-content>
-    </div>
+    @if (headerTemplate) {
+        <div class="igx-drop-down__select-header">
+            <ng-content *ngTemplateOutlet="headerTemplate"></ng-content>
+        </div>
+    }
 
     <!-- #7436 LMB scrolling closes items container - unselectable attribute is IE specific  -->
     <div #scrollContainer class="igx-drop-down__list-scroll" unselectable="on" [style.maxHeight]="maxHeight"
@@ -49,7 +53,9 @@
         <ng-content select="igx-select-item, igx-select-item-group"></ng-content>
     </div>
 
-    <div *ngIf="footerTemplate" class="igx-drop-down__select-footer">
-        <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
-    </div>
+    @if (footerTemplate) {
+        <div class="igx-drop-down__select-footer">
+            <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+        </div>
+    }
 </div>

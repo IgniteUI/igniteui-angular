@@ -7,8 +7,10 @@
                 <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-column *ngFor="let c of columns" width='auto' [sortable]="true" [filterable]="true" [resizable]="true" [field]="c.field" [header]="c.field">
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column width='auto' [sortable]="true" [filterable]="true" [resizable]="true" [field]="c.field" [header]="c.field">
+            </igx-column>
+        }
     </igx-grid>
     <div class="sample-buttons">
         <button igxButton="contained" (click)="toggleVis()">Show/Hide</button>

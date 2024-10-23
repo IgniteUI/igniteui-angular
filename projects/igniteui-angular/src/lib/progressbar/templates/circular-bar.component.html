@@ -23,11 +23,13 @@
     </ng-template>
 </svg>
 
-<span class="igx-circular-bar__text" *ngIf="textVisibility">
-    <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate;
-            context: context">
-    </ng-container>
-</span>
+@if (textVisibility) {
+    <span class="igx-circular-bar__text">
+        <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate;
+                context: context">
+        </ng-container>
+    </span>
+}
 
 <ng-template #defaultTextTemplate>
     {{textContent ? textContent: valueInPercent + '%'}}

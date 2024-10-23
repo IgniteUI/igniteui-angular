@@ -6,16 +6,20 @@
         Dropdown</button>
     <igx-drop-down #dropdown1 height="260px">
 
-        <igx-drop-down-item *ngFor="let entry of data" [value]="entry.valueKey" [isHeader]="entry.isHeader">
-            {{ entry.valueKey }}
-        </igx-drop-down-item>
+        @for (entry of data; track entry) {
+            <igx-drop-down-item [value]="entry.valueKey" [isHeader]="entry.isHeader">
+                {{ entry.valueKey }}
+            </igx-drop-down-item>
+        }
 
     </igx-drop-down>
     <igx-select #select1 [placeholder]="'Pick One'">
         <label igxLabel>Example</label>
-        <igx-select-item *ngFor="let entry of data; let inx=index" [value]="entry.textKey" [isHeader]="entry.isHeader">
-            {{ entry.textKey }}
-        </igx-select-item>
+        @for (entry of data; track entry; let inx = $index) {
+            <igx-select-item [value]="entry.textKey" [isHeader]="entry.isHeader">
+                {{ entry.textKey }}
+            </igx-select-item>
+        }
     </igx-select>
 </section>
 <section [style.--ig-size]="'var(--ig-size-medium)'">
@@ -26,16 +30,20 @@
         Dropdown</button>
     <igx-drop-down #dropdown2 height="260px">
 
-        <igx-drop-down-item *ngFor="let entry of data" [value]="entry.valueKey" [isHeader]="entry.isHeader">
-            {{ entry.valueKey }}
-        </igx-drop-down-item>
+        @for (entry of data; track entry) {
+            <igx-drop-down-item [value]="entry.valueKey" [isHeader]="entry.isHeader">
+                {{ entry.valueKey }}
+            </igx-drop-down-item>
+        }
 
     </igx-drop-down>
     <igx-select #select1 [placeholder]="'Pick One'">
         <label igxLabel>Example</label>
-        <igx-select-item *ngFor="let entry of data; let inx=index" [value]="entry.textKey" [isHeader]="entry.isHeader">
-            {{ entry.textKey }}
-        </igx-select-item>
+        @for (entry of data; track entry; let inx = $index) {
+            <igx-select-item [value]="entry.textKey" [isHeader]="entry.isHeader">
+                {{ entry.textKey }}
+            </igx-select-item>
+        }
     </igx-select>
 </section>
 <section [style.--ig-size]="'var(--ig-size-small)'">
@@ -46,15 +54,19 @@
         Dropdown</button>
     <igx-drop-down #dropdown3 height="260px">
 
-        <igx-drop-down-item *ngFor="let entry of data" [value]="entry.valueKey" [isHeader]="entry.isHeader">
-            {{ entry.valueKey }}
-        </igx-drop-down-item>
+        @for (entry of data; track entry) {
+            <igx-drop-down-item [value]="entry.valueKey" [isHeader]="entry.isHeader">
+                {{ entry.valueKey }}
+            </igx-drop-down-item>
+        }
 
     </igx-drop-down>
     <igx-select #select1 [placeholder]="'Pick One'">
         <label igxLabel>Example</label>
-        <igx-select-item *ngFor="let entry of data; let inx=index" [value]="entry.textKey" [isHeader]="entry.isHeader">
-            {{ entry.textKey }}
-        </igx-select-item>
+        @for (entry of data; track entry; let inx = $index) {
+            <igx-select-item [value]="entry.textKey" [isHeader]="entry.isHeader">
+                {{ entry.textKey }}
+            </igx-select-item>
+        }
     </igx-select>
 </section>

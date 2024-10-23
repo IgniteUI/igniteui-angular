@@ -20,7 +20,7 @@ import { IBaseEventArgs, mkenum } from '../core/utils';
 import { ChipResourceStringsEN, IChipResourceStrings } from '../core/i18n/chip-resources';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from '../icon/icon.component';
-import { NgClass, NgTemplateOutlet, NgIf, DOCUMENT } from '@angular/common';
+import { NgClass, NgTemplateOutlet, DOCUMENT } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { Size } from '../grids/common/enums';
 
@@ -84,7 +84,7 @@ let CHIP_ID = 0;
     selector: 'igx-chip',
     templateUrl: 'chip.component.html',
     standalone: true,
-    imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, NgIf, IgxIconComponent]
+    imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, IgxIconComponent]
 })
 export class IgxChipComponent implements OnInit, OnDestroy {
 

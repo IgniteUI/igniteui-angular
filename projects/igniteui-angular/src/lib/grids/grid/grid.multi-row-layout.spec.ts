@@ -10,7 +10,6 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ICellPosition } from '../common/events';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
-import { NgFor } from '@angular/common';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 
@@ -1137,15 +1136,19 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px" [rowEditable]='true' [primaryKey]="'ID'">
-        <igx-column-layout *ngFor='let group of colGroups'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group) {
+            <igx-column-layout>
+                @for (col of group.columns; track col) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                    [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1169,21 +1172,25 @@ export class ColumnLayoutTestComponent {
     template: `
     <igx-grid #grid [data]="data" height="500px" [moving]="true">
         <igx-column-group header="General Information">
-        <igx-column field="CompanyName"></igx-column>
+            <igx-column field="CompanyName"></igx-column>
             <igx-column-group header="Person Details">
                 <igx-column field="ContactName"></igx-column>
                 <igx-column field="ContactTitle"></igx-column>
             </igx-column-group>
         </igx-column-group>
-        <igx-column-layout *ngFor='let group of colGroups'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group) {
+            <igx-column-layout>
+                @for (col of group.columns; track col) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                        [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class ColumnLayoutAndGroupsTestComponent extends ColumnLayoutTestComponent {
 

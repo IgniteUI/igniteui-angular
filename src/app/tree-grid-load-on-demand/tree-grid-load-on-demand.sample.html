@@ -23,15 +23,19 @@
                 </igx-grid-toolbar-exporter>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
-            [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true"
-            [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
-            [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [field]="c.field" [dataType]="c.dataType" [header]="c.label"
+                [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true"
+                [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
+                [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+            </igx-column>
+        }
         <!-- <ng-template igxRowLoadingIndicator>
             <igx-icon>loop</igx-icon>
         </ng-template> -->
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-tree-grid>
 
     <div class="topMargin">
@@ -77,10 +81,12 @@
                 </igx-grid-toolbar-exporter>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
-            [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true"
-            [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
-            [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [field]="c.field" [dataType]="c.dataType" [header]="c.label"
+                [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true"
+                [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
+                [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+            </igx-column>
+        }
     </igx-tree-grid>
 </div>

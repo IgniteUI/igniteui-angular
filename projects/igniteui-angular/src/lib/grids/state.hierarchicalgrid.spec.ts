@@ -15,7 +15,6 @@ import { ISortingExpression, SortingDirection } from '../data-operations/sorting
 import { GridSelectionRange } from './common/types';
 import { IgxColumnComponent } from './public_api';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
-import { NgFor } from '@angular/common';
 import { IColumnState, IGridState } from './state-base.directive';
 
 /* eslint-disable max-len */
@@ -637,30 +636,9 @@ class HelperFunctions {
 @Component({
     template: `
     <igx-hierarchical-grid #hGrid [moving]="true" [data]="data" igxGridState [expandChildren]="true" primaryKey="ID"
-     [autoGenerate]="false" [height]="'800px'" [width]="'800px'" [moving]="true" rowSelection="multiple" cellSelection="multiple">
-        <igx-column *ngFor="let c of columns"
-            [width]="c.width"
-            [sortable]="c.sortable"
-            [editable]="c.editable"
-            [sortingIgnoreCase]="c.sortingIgnoreCase"
-            [filteringIgnoreCase]="c.sortingIgnoreCase"
-            [maxWidth]="c.maxWidth"
-            [hasSummary]="c.hasSummary"
-            [filterable]="c.filterable"
-            [searchable]="c.searchable"
-            [resizable]="c.resizable"
-            [headerClasses]="c.headerClasses"
-            [headerGroupClasses]="c.headerGroupClasses"
-            [groupable]="c.groupable"
-            [field]="c.field"
-            [header]="c.header"
-            [dataType]="c.dataType"
-            [pinned]="c.pinned"
-            [hidden]="c.hidden">
-        </igx-column>
-        <igx-paginator [perPage]="5"></igx-paginator>
-        <igx-row-island [moving]="true" [key]="'childData'" [autoGenerate]="false" #rowIsland primaryKey="ID">
-            <igx-column *ngFor="let c of childColumns"
+        [autoGenerate]="false" [height]="'800px'" [width]="'800px'" [moving]="true" rowSelection="multiple" cellSelection="multiple">
+        @for (c of columns; track c) {
+            <igx-column
                 [width]="c.width"
                 [sortable]="c.sortable"
                 [editable]="c.editable"
@@ -680,6 +658,31 @@ class HelperFunctions {
                 [pinned]="c.pinned"
                 [hidden]="c.hidden">
             </igx-column>
+        }
+        <igx-paginator [perPage]="5"></igx-paginator>
+        <igx-row-island [moving]="true" [key]="'childData'" [autoGenerate]="false" #rowIsland primaryKey="ID">
+            @for (c of childColumns; track c) {
+                <igx-column
+                    [width]="c.width"
+                    [sortable]="c.sortable"
+                    [editable]="c.editable"
+                    [sortingIgnoreCase]="c.sortingIgnoreCase"
+                    [filteringIgnoreCase]="c.sortingIgnoreCase"
+                    [maxWidth]="c.maxWidth"
+                    [hasSummary]="c.hasSummary"
+                    [filterable]="c.filterable"
+                    [searchable]="c.searchable"
+                    [resizable]="c.resizable"
+                    [headerClasses]="c.headerClasses"
+                    [headerGroupClasses]="c.headerGroupClasses"
+                    [groupable]="c.groupable"
+                    [field]="c.field"
+                    [header]="c.header"
+                    [dataType]="c.dataType"
+                    [pinned]="c.pinned"
+                    [hidden]="c.hidden">
+                </igx-column>
+            }
             <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2>
                 <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
@@ -687,7 +690,7 @@ class HelperFunctions {
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxRowIslandComponent, IgxGridStateDirective, NgFor]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxRowIslandComponent, IgxGridStateDirective]
 })
 export class IgxHierarchicalGridTestExpandedBaseComponent {
     @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;

@@ -20,7 +20,7 @@ import { IgxGroupAreaDropDirective } from '../grid.directives';
 import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxChipComponent } from '../../chips/chip.component';
-import { NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 
 /**
@@ -33,7 +33,7 @@ import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
     templateUrl: 'group-by-area.component.html',
     providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxTreeGridGroupByAreaComponent }],
     standalone: true,
-    imports: [IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
 })
 export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective implements AfterContentInit, OnDestroy {
     @Input({ transform: booleanAttribute })

@@ -4,7 +4,6 @@ import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { NgIf } from '@angular/common';
 
 /**
  * A component used for presenting Excel style column moving UI.
@@ -13,7 +12,7 @@ import { NgIf } from '@angular/common';
     selector: 'igx-excel-style-moving',
     templateUrl: './excel-style-moving.component.html',
     standalone: true,
-    imports: [NgIf, IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleMovingComponent {
     /**

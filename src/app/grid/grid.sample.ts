@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NgFor, AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { RemoteService } from '../shared/remote.service';
@@ -19,8 +19,6 @@ import { CsvFileTypes, DefaultSortingStrategy, GridSelectionMode, IgxBaseExporte
     ],
     imports: [
         FormsModule,
-        NgFor,
-        NgIf,
         AsyncPipe,
         IGX_GRID_DIRECTIVES,
         IGX_CARD_DIRECTIVES,

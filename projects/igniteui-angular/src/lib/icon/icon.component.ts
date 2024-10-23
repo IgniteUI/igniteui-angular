@@ -14,7 +14,7 @@ import type { IconReference } from "./types";
 import { filter, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SafeHtml } from "@angular/platform-browser";
-import { NgIf, NgTemplateOutlet } from "@angular/common";
+import { NgTemplateOutlet } from "@angular/common";
 import { ThemeService } from "../services/theme/theme.service";
 
 /**
@@ -43,7 +43,7 @@ import { ThemeService } from "../services/theme/theme.service";
     selector: "igx-icon",
     templateUrl: "icon.component.html",
     standalone: true,
-    imports: [NgTemplateOutlet, NgIf],
+    imports: [NgTemplateOutlet],
 })
 export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     private _iconRef: IconReference;

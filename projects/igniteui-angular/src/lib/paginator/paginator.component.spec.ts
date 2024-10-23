@@ -7,7 +7,6 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { first } from 'rxjs/operators';
-import { NgIf } from '@angular/common';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 
 describe('IgxPaginator with default settings', () => {
@@ -285,20 +284,22 @@ describe('IgxPaginator with custom settings', () => {
 @Component({
     template: `
         <igx-paginator #pg [totalRecords]="42">
-            <igx-paginator-content *ngIf="customContent">
-                <div id="numberPager" class="igx-paginator" style="justify-content: center;">
-                    <button type="button" class="customPrev" [disabled]="pg.isFirstPage" (click)="pg.previousPage()" igxButton="flat">
-                        PREV
-                    </button>
-                    <span class="currPage" style="margin-left:10px; margin-right: 10px"> {{pg.page}} </span>
-                    <button type="button" class="customNext" [disabled]="pg.isLastPage" (click)="pg.nextPage()" igxButton="flat">
-                        NEXT
-                    </button>
-                </div>
-            </igx-paginator-content>
+            @if (customContent) {
+                <igx-paginator-content>
+                    <div id="numberPager" class="igx-paginator" style="justify-content: center;">
+                        <button type="button" class="customPrev" [disabled]="pg.isFirstPage" (click)="pg.previousPage()" igxButton="flat">
+                            PREV
+                        </button>
+                        <span class="currPage" style="margin-left:10px; margin-right: 10px"> {{pg.page}} </span>
+                        <button type="button" class="customNext" [disabled]="pg.isLastPage" (click)="pg.nextPage()" igxButton="flat">
+                            NEXT
+                        </button>
+                    </div>
+                </igx-paginator-content>
+            }
         </igx-paginator>`,
     standalone: true,
-    imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, NgIf, IgxButtonDirective]
+    imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, IgxButtonDirective]
 })
 export class DefaultPaginatorComponent {
     @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
