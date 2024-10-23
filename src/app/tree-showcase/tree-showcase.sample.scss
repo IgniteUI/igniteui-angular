@@ -1,0 +1,16 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.tree-container {
+    margin: 16px;
+    max-width: 350px;
+}
+
+strong {
+    color: hsla(var(--ig-secondary-500));
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 24px;
+}

@@ -1,0 +1,34 @@
+.calendar-wrapper {
+    flex-basis: 100px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    strong {
+        display: block;
+        text-align: center;
+        padding: 10px;
+    }
+}
+
+.preview {
+    display: flex;
+    overflow: hidden;
+    height: 100%;
+
+    &__sample {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 2rem;
+        gap: 2rem;
+        overflow: auto;
+        flex-grow: 1;
+    }
+}
+
+.custom-controls {
+    > *:not(label) {
+        display: block;
+        margin-bottom: 16px;
+    }
+}

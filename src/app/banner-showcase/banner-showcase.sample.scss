@@ -1,0 +1,9 @@
+:host,
+.sample-actions {
+    display: flex;
+    gap: 20px;
+}
+
+:host {
+    flex-direction: column;
+}

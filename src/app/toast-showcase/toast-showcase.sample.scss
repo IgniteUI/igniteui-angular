@@ -1,0 +1,19 @@
+.columns-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    column-gap: 16px;
+    margin: 16px;
+}
+
+.column {
+    margin: 16px 0;
+}
+
+.btn-group {
+    display: flex;
+    margin-top: 16px;
+}
+
+button {
+    margin-right: 16px;
+}
