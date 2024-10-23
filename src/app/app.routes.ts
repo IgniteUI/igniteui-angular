@@ -139,6 +139,7 @@ import { GridExportComponent } from './grid-export/grid-export.sample';
 import { DividerComponent } from './divider/divider.component';
 import { MonthPickerSampleComponent } from './month-picker/month-picker.sample';
 import { LabelSampleComponent } from "./label/label.sample";
+import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sample';
 
 export const appRoutes: Routes = [
     {
@@ -482,6 +483,10 @@ export const appRoutes: Routes = [
     {
         path: 'gridRowDrag',
         component: GridRowDraggableComponent
+    },
+    {
+        path: 'gridReCreate',
+        component: GridRecreateSampleComponent
     },
     {
         path: 'gridToolbar',
