@@ -100,7 +100,7 @@
                         )
                     }}
                 </span>
-                <span *ngIf="!expressionItem.expression.condition.isUnary">
+                <span *ngIf="!expressionItem.expression.condition?.isUnary">
                     <ng-container *ngIf="expressionItem.expression.searchTree">
                         <strong>{{expressionItem.expression.searchTree.entity}}</strong>&nbsp;/ {{formatReturnFields(expressionItem.expression.searchTree)}}
                     </ng-container>
@@ -145,7 +145,7 @@
             <div #tooltipRef="tooltip" igxTooltip>
                 @if(expressionItem.expression.searchTree){
                     {{expressionItem.expression.searchTree.returnFields.join(', ')}}
-                } @else if (expressionItem.expression.condition.isUnary) {
+                } @else if (expressionItem.expression.condition?.isUnary) {
                     {{getConditionFriendlyName(expressionItem.expression.condition?.name)}}
                 } @else {
                     @if(getFormatter(expressionItem.expression.fieldName)) {
