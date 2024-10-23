@@ -59,6 +59,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxDateTimeEditor`
     - Added a new `defaultFormatType` property (`date` | `time` | `dateTime`) which configures the date-time parts
     according to the target type that the editor mask includes. Defaults to `date`.
+- `IgxTabs`
+    - Added `activation` property to control tab selection. In `auto` mode (default), tabs are selected instantly with Arrow or Home/End keys. In `manual` mode, tabs are focused with keys but only selected with Enter or Space.
+- `IgxGridState`
+    -  When possible the state directive nows reuses the column that already exists on the grid when restoring the state, instead of creating new column instances every time. This removes the need to set any complex objects manually back on the column on `columnInit`. The only instance where this is still necessary is when the column (or its children in case of column groups) have no `field` property so there's no way to uniquely identify the matching column.
 
 ### Themes
 - `Palettes`
@@ -116,6 +120,11 @@ For Firefox users, we provide limited scrollbar styling options through the foll
 
     - **Behavioral Changes** - the `keyboardSupport` input property now defaults to `false`.
     - **Deprecation** - the `keyboardSupport` input property has been deprecated and will be removed in a future version. Keyboard navigation with `ArrowLeft`, `ArrowRight`, `Home`, and `End` keys will be supported when focusing the indicators' container via ` Tab`/`Shift+Tab`. 
+
+- `IgxCombo`:
+    - **Breaking Change** The deprecated `filterable` property is replaced with `disableFiltering`.
+    - The dropdown search field placeholder is now part of the Combo's localization resources. It now also uses two resource values depending on whether filtering is active, e.g. in the default `en` locale it remains `'Enter a Search Term'`, but changes to `'Add Item'` when `disableFiltering` and `allowCustomValues` are set to true. For that reason, the existing `searchPlaceholder` input is also **deprecated** in favor of the resources.
+    - **Deprecation** - `filterable` from the `filteringOptions` has been deprecated in favor of `disableFiltering`.
 
 - `IgxBadge`
     - **Breaking Change** The `$border-width` property has been removed from the badge theme.

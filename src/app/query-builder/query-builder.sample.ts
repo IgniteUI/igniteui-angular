@@ -14,7 +14,8 @@ import {
     IgxBooleanFilteringOperand,
     IgxDateFilteringOperand,
     IgxTimeFilteringOperand,
-    IgxDateTimeFilteringOperand
+    IgxDateTimeFilteringOperand,
+    IgxComboComponent
 } from 'igniteui-angular';
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
@@ -28,7 +29,7 @@ import { FormsModule } from '@angular/forms';
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
     standalone: true,
-    imports: [FormsModule, IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule, IgxQueryBuilderSearchValueTemplateDirective]
+    imports: [FormsModule, IgxButtonGroupComponent, IgxComboComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule, IgxQueryBuilderSearchValueTemplateDirective]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })
@@ -36,7 +37,7 @@ export class QueryBuilderComponent implements OnInit {
 
     @ViewChild('searchValueTemplate', { read: IgxQueryBuilderSearchValueTemplateDirective, static: true })
     public searchValueTemplate: IgxQueryBuilderSearchValueTemplateDirective;
-
+    public lData: any[];
     public entities: Array<any>;
     public fieldsEntityA: Array<any>;
     public fieldsEntityB: Array<any>;
@@ -46,7 +47,7 @@ export class QueryBuilderComponent implements OnInit {
 
     public ngOnInit(): void {
         this.fieldsEntityA = [
-            { field: 'Id', dataType: 'number' },
+            { field: 'Id', dataType: 'number', formatter: (value: any, rowData: any) => rowData === 'equals' ? value[0].id : value },
             { field: 'Name', dataType: 'string' },
             { field: 'Validated', dataType: 'boolean' },
             { field: 'Date created', dataType: 'date' },
@@ -123,6 +124,7 @@ export class QueryBuilderComponent implements OnInit {
         });
 
         this.expressionTree = tree;
+        this.lData = [{ id: 0, field: 'a' }, { id: 1, field: '1' }]
         // this.onChange();
     }
 
@@ -170,4 +172,11 @@ export class QueryBuilderComponent implements OnInit {
     public discardExpressionTree() {
         this.queryBuilder.discard();
     }
+
+    // public handleChange(ev, selectedField, searchVal) {
+       // if (selectedField.field === 'Id') {
+        //     searchVal.value = ev.newValue[0];
+        //     selectedField.formatter = (value: any, rowData: any) => rowData === 'equals' ? value[0].id : value;
+        // }
+    // }
 }

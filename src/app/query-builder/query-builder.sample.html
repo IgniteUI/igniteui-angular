@@ -2,26 +2,28 @@
     <div class="sample-column">
         <size-selector #sizeSelector></size-selector>
 
-        <igx-query-builder #queryBuilder
-           [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
-            (expressionTreeChange)="handleExpressionTreeChange()"
-            [entities]="this.entities"
+        <igx-query-builder #queryBuilder [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'"
+            (expressionTreeChange)="handleExpressionTreeChange()" [entities]="this.entities"
             [expressionTree]="this.expressionTree">
             <!-- Custom header -->
             <!-- <igx-query-builder-header [title]="'Builder'" [showLegend]="false"><span>Custom Title</span></igx-query-builder-header> -->
 
             <!-- Custom SearchValue template for a given column and condition -->
-            <!-- <ng-template #searchValueTemplate igxQueryBuilderSearchValue 
-                        let-searchValue
-                        let-selectedField = "selectedField" 
-                        let-selectedCondition = "selectedCondition"
-                        let-defaultSearchValueTemplate = "defaultSearchValueTemplate">
-                @if (selectedField?.field === 'Id' && selectedCondition === 'equals'){
-                    <input type="text" required [(ngModel)]="searchValue.value"/>
-                } @else {  
-                    <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
+            <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-searchValue
+                let-selectedField="selectedField" let-selectedCondition="selectedCondition"
+                let-defaultSearchValueTemplate="defaultSearchValueTemplate">
+                @if ((selectedField?.field === 'Id' || selectedField?.field === 'Name') && selectedCondition ===
+                'equals'){
+                <!-- <input type="text" required [(ngModel)]="searchValue.value"/> -->
+                <!-- <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value"
+                    (selectionChanging)="handleChange($event, selectedField, searchValue)" [displayKey]="'field'">
+                </igx-combo> -->
+                <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value" [displayKey]="'field'">
+                </igx-combo>
+                } @else {
+                <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
                 }
-            </ng-template>  -->
+            </ng-template>
         </igx-query-builder>
 
         <!-- <div class="sample-buttons">
