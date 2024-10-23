@@ -1957,7 +1957,7 @@ export class SampleTestData {
             Downloads: 702,
             ID: 6,
             ProductName: 'Some other item with Script',
-            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 1),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 2),
             ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'second', 20),
             ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'second', 20),
             Released: null,
