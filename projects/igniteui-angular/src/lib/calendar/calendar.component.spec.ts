@@ -742,7 +742,7 @@ describe("IgxCalendar - ", () => {
                     // Select 14th
                     const dateElement = weekDays[3].nativeElement.firstChild;
 
-                    dateElement.dispatchEvent(new Event("mousedown"));
+                    dateElement.click();
                     fixture.detectChanges();
 
                     expect(calendar.selected.emit).toHaveBeenCalled();
@@ -770,9 +770,7 @@ describe("IgxCalendar - ", () => {
                     );
                     const target = parentDates[parentDates.length - 1];
 
-                    target.nativeElement.firstChild.dispatchEvent(
-                        new Event("mousedown"),
-                    );
+                    target.nativeElement.firstChild.click();
                     fixture.detectChanges();
 
                     expect(
@@ -800,9 +798,7 @@ describe("IgxCalendar - ", () => {
                         By.css(HelperTestFunctions.INACTIVE_DAYS_CSSCLASS),
                     )[0];
 
-                    target.nativeElement.firstChild.dispatchEvent(
-                        new Event("mousedown"),
-                    );
+                    target.nativeElement.firstChild.click();
                     fixture.detectChanges();
 
                     expect(
@@ -882,7 +878,7 @@ describe("IgxCalendar - ", () => {
                     ).toEqual(0);
 
                     for (const day of weekDays) {
-                        day.nativeElement.firstChild.dispatchEvent(new Event('mousedown'));
+                        day.nativeElement.firstChild.click();
                         fixture.detectChanges();
                     }
 
@@ -895,7 +891,7 @@ describe("IgxCalendar - ", () => {
                     });
 
                     // Deselect last day
-                    weekDays.at(-1).nativeElement.firstChild.dispatchEvent(new Event('mousedown'));
+                    weekDays.at(-1).nativeElement.firstChild.click();
                     fixture.detectChanges();
 
                     expect((calendar.value as Date[]).length).toEqual(6);
@@ -976,7 +972,7 @@ describe("IgxCalendar - ", () => {
                     const firstDay = new Date(2017, 5, 11);
 
                     // Start range selection...
-                    weekDays[0].nativeElement.firstChild.dispatchEvent(new Event('mousedown'));
+                    weekDays[0].nativeElement.firstChild.click();
                     fixture.detectChanges();
 
                     expect(
@@ -991,7 +987,7 @@ describe("IgxCalendar - ", () => {
                     HelperTestFunctions.verifyDateSelected(weekDays[0]);
 
                     // ...and cancel it
-                    weekDays[0].nativeElement.firstChild.dispatchEvent(new Event('mousedown'));
+                    weekDays[0].nativeElement.firstChild.click();
                     fixture.detectChanges();
 
                     expect(
@@ -1001,11 +997,11 @@ describe("IgxCalendar - ", () => {
                     HelperTestFunctions.verifyDateNotSelected(weekDays[0]);
 
                     // Start range selection...
-                    weekDays.at(0).nativeElement.firstChild.dispatchEvent(new Event('mousedown'));
+                    weekDays.at(0).nativeElement.firstChild.click();
                     fixture.detectChanges();
 
                     // ...and complete it
-                    weekDays.at(-1).nativeElement.firstChild.dispatchEvent(new Event('mousedown'));
+                    weekDays.at(-1).nativeElement.firstChild.click();
                     fixture.detectChanges();
 
 
@@ -1454,7 +1450,7 @@ describe("IgxCalendar - ", () => {
                         (d) =>
                             getDate(d).getTime() === new Date(2017, 5, 5).getTime(),
                     )[0];
-                    UIInteractions.simulateMouseEvent('mousedown', fromDate.nativeElement.firstChild);
+                    UIInteractions.simulateClickAndSelectEvent(fromDate.nativeElement.firstChild);
                     fixture.detectChanges();
 
                     const toDate = calendar.daysView.dates.filter(
@@ -1462,7 +1458,7 @@ describe("IgxCalendar - ", () => {
                             getDate(d).getTime() ===
                             new Date(2017, 5, 20).getTime(),
                     )[0];
-                    UIInteractions.simulateMouseEvent('mousedown', toDate.nativeElement.firstChild);
+                    UIInteractions.simulateClickAndSelectEvent(toDate.nativeElement.firstChild);
                     fixture.detectChanges();
 
                     // Check selection
@@ -2147,8 +2143,8 @@ describe("IgxCalendar - ", () => {
                     let calendarValue: Date[];
 
                     // range selection from June 13th to June 15th
-                    UIInteractions.simulateMouseDownEvent(june13th.nativeElement.firstChild);
-                    UIInteractions.simulateMouseDownEvent(june15th.nativeElement.firstChild);
+                    UIInteractions.simulateClickAndSelectEvent(june13th.nativeElement.firstChild);
+                    UIInteractions.simulateClickAndSelectEvent(june15th.nativeElement.firstChild);
                     fixture.detectChanges();
 
                     calendarValue = calendar.value as Date[];
@@ -2161,7 +2157,7 @@ describe("IgxCalendar - ", () => {
                     ).toMatch(new Date(2017, 5, 15).toDateString());
 
                     // extend the range to June 17th (June 13th - June 17th)
-                    UIInteractions.simulateMouseDownEvent(june17th.nativeElement.firstChild, true);
+                    UIInteractions.simulateClickAndSelectEvent(june17th.nativeElement.firstChild, true);
                     fixture.detectChanges();
 
                     calendarValue = calendar.value as Date[];
@@ -2171,7 +2167,7 @@ describe("IgxCalendar - ", () => {
                     ).toMatch(new Date(2017, 5, 17).toDateString());
 
                     // extend the range to June 11th (June 11th - June 17th)
-                    UIInteractions.simulateMouseDownEvent(june11th.nativeElement.firstChild, true);
+                    UIInteractions.simulateClickAndSelectEvent(june11th.nativeElement.firstChild, true);
                     fixture.detectChanges();
 
                     calendarValue = calendar.value as Date[];
@@ -2196,8 +2192,8 @@ describe("IgxCalendar - ", () => {
                     let calendarValue: Date[];
 
                     // range selection from June 13th to June 17th
-                    UIInteractions.simulateMouseDownEvent(june13th.nativeElement.firstChild);
-                    UIInteractions.simulateMouseDownEvent(june17th.nativeElement.firstChild);
+                    UIInteractions.simulateClickAndSelectEvent(june13th.nativeElement.firstChild);
+                    UIInteractions.simulateClickAndSelectEvent(june17th.nativeElement.firstChild);
                     fixture.detectChanges();
 
                     calendarValue = calendar.value as Date[];
@@ -2210,7 +2206,7 @@ describe("IgxCalendar - ", () => {
                     ).toMatch(new Date(2017, 5, 17).toDateString());
 
                     // shorten the range to June 15th (June 13th - June 15th)
-                    UIInteractions.simulateMouseDownEvent(june15th.nativeElement.firstChild, true);
+                    UIInteractions.simulateClickAndSelectEvent(june15th.nativeElement.firstChild, true);
                     fixture.detectChanges();
 
                     calendarValue = calendar.value as Date[];
@@ -2220,7 +2216,7 @@ describe("IgxCalendar - ", () => {
                     ).toMatch(new Date(2017, 5, 15).toDateString());
 
                     // extend the range to June 11th (June 11th - June 15th)
-                    UIInteractions.simulateMouseDownEvent(june11th.nativeElement.firstChild, true);
+                    UIInteractions.simulateClickAndSelectEvent(june11th.nativeElement.firstChild, true);
                     fixture.detectChanges();
 
                     calendarValue = calendar.value as Date[];
@@ -2233,7 +2229,7 @@ describe("IgxCalendar - ", () => {
                     ).toMatch(new Date(2017, 5, 15).toDateString());
 
                     // shorten the range to June 13th (June 13th - June 15th)
-                    UIInteractions.simulateMouseDownEvent(june13th.nativeElement.firstChild, true);
+                    UIInteractions.simulateClickAndSelectEvent(june13th.nativeElement.firstChild, true);
                     fixture.detectChanges();
 
                     calendarValue = calendar.value as Date[];
@@ -2256,13 +2252,13 @@ describe("IgxCalendar - ", () => {
                     const june17th = days[16];
 
                     // select June 13th and June 15th
-                    UIInteractions.simulateMouseDownEvent(june13th.nativeElement.firstChild);
-                    UIInteractions.simulateMouseDownEvent(june15th.nativeElement.firstChild);
+                    UIInteractions.simulateClickAndSelectEvent(june13th.nativeElement.firstChild);
+                    UIInteractions.simulateClickAndSelectEvent(june15th.nativeElement.firstChild);
                     fixture.detectChanges();
                     expect((calendar.value as Date[]).length).toEqual(2);
 
                     // select all dates from June 15th to June 17th
-                    UIInteractions.simulateMouseDownEvent(june17th.nativeElement.firstChild, true);
+                    UIInteractions.simulateClickAndSelectEvent(june17th.nativeElement.firstChild, true);
                     fixture.detectChanges();
                     expect((calendar.value as Date[]).length).toEqual(4);
 
@@ -2278,7 +2274,7 @@ describe("IgxCalendar - ", () => {
                     );
 
                     // select all dates from June 17th (last selected) to June 11th
-                    UIInteractions.simulateMouseDownEvent(june11th.nativeElement.firstChild, true);
+                    UIInteractions.simulateClickAndSelectEvent(june11th.nativeElement.firstChild, true);
                     fixture.detectChanges();
                     expect((calendar.value as Date[]).length).toEqual(7);
 
@@ -2320,8 +2316,8 @@ describe("IgxCalendar - ", () => {
                     expect((calendar.value as Date[]).length).toEqual(7);
 
                     // deselect all dates from June 11th (last clicked) to June 13th
-                    UIInteractions.simulateMouseDownEvent(june11th.nativeElement.firstChild);
-                    UIInteractions.simulateMouseDownEvent(june13th.nativeElement.firstChild, true);
+                    UIInteractions.simulateClickAndSelectEvent(june11th.nativeElement.firstChild);
+                    UIInteractions.simulateClickAndSelectEvent(june13th.nativeElement.firstChild, true);
                     fixture.detectChanges();
                     expect((calendar.value as Date[]).length).toEqual(5);
                     expect(JSON.stringify(calendar.value as Date[])).toEqual(
@@ -2329,8 +2325,8 @@ describe("IgxCalendar - ", () => {
                     );
 
                     // deselect all dates from June 17th (last clicked) to June 15th
-                    UIInteractions.simulateMouseDownEvent(june17th.nativeElement.firstChild);
-                    UIInteractions.simulateMouseDownEvent(june15th.nativeElement.firstChild, true);
+                    UIInteractions.simulateClickAndSelectEvent(june17th.nativeElement.firstChild);
+                    UIInteractions.simulateClickAndSelectEvent(june15th.nativeElement.firstChild, true);
                     fixture.detectChanges();
                     expect((calendar.value as Date[]).length).toEqual(3);
                     expect(JSON.stringify(calendar.value as Date[])).toEqual(

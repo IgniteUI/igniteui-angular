@@ -1558,15 +1558,20 @@ describe('IgxTimePicker', () => {
                 spyOn(timePicker.closing, 'emit').and.callThrough();
                 spyOn(timePicker.closed, 'emit').and.callThrough();
                 expect(timePicker.collapsed).toBeTruthy();
+                expect(timePicker.isFocused).toBeFalse();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', timePickerDebElement, true);
 
-                tick();
+                tick(16);
                 fixture.detectChanges();
 
                 expect(timePicker.collapsed).toBeFalsy();
                 expect(timePicker.opening.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.opened.emit).toHaveBeenCalledTimes(1);
+                expect(hourColumn.nativeElement.contains(document.activeElement))
+                    .withContext('focus should move to hour column for KB nav')
+                    .toBeTrue();
+                expect(timePicker.isFocused).toBeTrue();
 
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', timePickerElement, true, true);
                 tick();
@@ -1574,6 +1579,10 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.collapsed).toBeTruthy();
                 expect(timePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.closed.emit).toHaveBeenCalledTimes(1);
+                expect(inputGroup.nativeElement.contains(document.activeElement))
+                    .withContext('focus should return to the picker input')
+                    .toBeTrue();
+                expect(timePicker.isFocused).toBeTrue();
             }));
 
             it('should open the dropdown with SPACE key', fakeAsync(() => {
