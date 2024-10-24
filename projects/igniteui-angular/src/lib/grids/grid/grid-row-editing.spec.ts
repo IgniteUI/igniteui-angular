@@ -971,6 +971,33 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(targetCell.active).toBeTruthy();
         }));
 
+        it(`Should not detectChanges & emit Grid.keyDown (navigation service) while editing`, () => {
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+
+            fix.detectChanges();
+
+            const keyDonwSpy = spyOn(grid.gridKeydown, 'emit');
+            const detectChangesSpy = spyOn(grid.cdr, 'detectChanges').and.callThrough();
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
+            fix.detectChanges();
+
+            const cellElem = fix.debugElement.query(By.css(CELL_CLASS));
+            const input = cellElem.query(By.css('input'));
+
+            // change first editable cell value
+            UIInteractions.triggerKeyDownEvtUponElem('1', input.nativeElement, true);
+            UIInteractions.setInputElementValue(input, '1');
+
+            UIInteractions.triggerKeyDownEvtUponElem('2', input.nativeElement, true);
+            UIInteractions.setInputElementValue(input, '12');
+            fix.detectChanges();
+
+            expect(targetCell.editValue).toBe(12);
+
+            expect(keyDonwSpy).not.toHaveBeenCalled();
+            expect(detectChangesSpy).toHaveBeenCalledTimes(0);
+        });
     });
 
     describe('Exit row editing', () => {
