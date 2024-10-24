@@ -3606,6 +3606,29 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 }));
+                it('should mark as touched and invalid when combo is focused, dropdown appears, and user clicks away without selection', fakeAsync(() => {
+                    const ngModel = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                    expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                    expect(ngModel.touched).toBeFalse();
+
+                    combo.open();
+                    input.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    expect(ngModel.touched).toBeTrue();
+                    combo.searchInput.nativeElement.focus();
+                    fixture.detectChanges();
+                    const documentClickEvent = new MouseEvent('click', { bubbles: true });
+                    document.body.dispatchEvent(documentClickEvent);
+                    fixture.detectChanges();
+                    tick();
+                    document.body.focus();
+                    fixture.detectChanges();
+                    tick();
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
+                    expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+                    expect(ngModel.touched).toBeTrue();
+                }));
             });
         });
         describe('Display density', () => {
@@ -3787,7 +3810,7 @@ class IgxComboFormComponent {
 @Component({
     template: `
     <form #form="ngForm">
-        <igx-combo #testCombo class="input-container" [placeholder]="'Locations'"
+        <igx-combo #testCombo #testComboNgModel="ngModel" class="input-container" [placeholder]="'Locations'"
             name="anyName" required [(ngModel)]="values"
             [data]="items" [disableFiltering]="disableFilteringFlag"
             [displayKey]="'field'" [valueKey]="'field'"
