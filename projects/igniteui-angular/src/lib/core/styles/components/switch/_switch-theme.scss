@@ -89,7 +89,7 @@
     $track-error-color: null,
     $thumb-on-error-color: null,
     $error-color: null,
-    $error-color-hover: null,
+    $error-color-hover: null
 ) {
     $name: 'igx-switch';
     $switch-schema: ();
@@ -130,51 +130,58 @@
         $border-radius-ripple: map.get($theme, 'border-radius-ripple');
     }
 
-    @return extend($theme, (
-        name: $name,
+    @return extend(
+        $theme,
+        (
+            name: $name,
 
-        thumb-on-color: $thumb-on-color,
-        track-on-color: $track-on-color,
-        track-on-hover-color: $track-on-hover-color,
+            thumb-on-color: $thumb-on-color,
+            track-on-color: $track-on-color,
+            track-on-hover-color: $track-on-hover-color,
 
-        thumb-off-color: $thumb-off-color,
-        track-off-color: $track-off-color,
+            thumb-off-color: $thumb-off-color,
+            track-off-color: $track-off-color,
 
-        track-disabled-color: $track-disabled-color,
-        track-on-disabled-color: $track-on-disabled-color,
-        thumb-disabled-color: $thumb-disabled-color,
-        thumb-on-disabled-color: $thumb-on-disabled-color,
+            track-disabled-color: $track-disabled-color,
+            track-on-disabled-color: $track-on-disabled-color,
+            thumb-disabled-color: $thumb-disabled-color,
+            thumb-on-disabled-color: $thumb-on-disabled-color,
 
-        label-color: $label-color,
-        label-hover-color: $label-hover-color,
-        label-disabled-color: $label-disabled-color,
-        label-invalid-color: $label-invalid-color,
+            label-color: $label-color,
+            label-hover-color: $label-hover-color,
+            label-disabled-color: $label-disabled-color,
+            label-invalid-color: $label-invalid-color,
 
-        resting-shadow: $resting-shadow,
-        hover-shadow: $hover-shadow,
-        disabled-shadow: $disabled-shadow,
+            resting-shadow: $resting-shadow,
+            hover-shadow: $hover-shadow,
+            disabled-shadow: $disabled-shadow,
 
-        border-radius-track: $border-radius-track,
-        border-radius-thumb: $border-radius-thumb,
-        border-radius-ripple: $border-radius-ripple,
-        border-color: $border-color,
-        border-hover-color: $border-hover-color,
-        border-disabled-color: $border-disabled-color,
-        border-on-color: $border-on-color,
-        border-on-hover-color: $border-on-hover-color,
-        focus-outline-color: $focus-outline-color,
-        focus-outline-color-focused: $focus-outline-color-focused,
-        focus-fill-color: $focus-fill-color,
-        focus-fill-hover-color: $focus-fill-hover-color,
-        track-error-color: $track-error-color,
-        thumb-on-error-color: $thumb-on-error-color,
-        error-color: $error-color,
-        error-color-hover: $error-color-hover,
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
-    ));
+            border-radius-track: $border-radius-track,
+            border-radius-thumb: $border-radius-thumb,
+            border-radius-ripple: $border-radius-ripple,
+            border-color: $border-color,
+            border-hover-color: $border-hover-color,
+            border-disabled-color: $border-disabled-color,
+            border-on-color: $border-on-color,
+            border-on-hover-color: $border-on-hover-color,
+            focus-outline-color: $focus-outline-color,
+            focus-outline-color-focused: $focus-outline-color-focused,
+            focus-fill-color: $focus-fill-color,
+            focus-fill-hover-color: $focus-fill-hover-color,
+            track-error-color: $track-error-color,
+            thumb-on-error-color: $thumb-on-error-color,
+            error-color: $error-color,
+            error-color-hover: $error-color-hover,
+            _meta:
+                map.merge(
+                    if($meta, $meta, ()),
+                    (
+                        variant: map.get($schema, '_meta', 'theme'),
+                        theme-variant: map.get($schema, '_meta', 'variant'),
+                    )
+                ),
+        )
+    );
 }
 
 /// @deprecated Use the `css-vars` mixin instead.
@@ -182,87 +189,117 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin switch($theme) {
     @include css-vars($theme);
-    @include scale-in-out($start-scale: .9);
+    @include scale-in-out($start-scale: 0.9);
 
     $variant: map.get($theme, '_meta', 'variant');
     $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
-    $switch-width: map.get((
-        'material': 36px,
-        'fluent': 40px,
-        'bootstrap': 32px,
-        'indigo': 32px
-    ), $variant);
+    $switch-width: map.get(
+        (
+            'material': 36px,
+            'fluent': 40px,
+            'bootstrap': 32px,
+            'indigo': 32px,
+        ),
+        $variant
+    );
 
-    $switch-height: map.get((
-        'material': 14px,
-        'fluent': 20px,
-        'bootstrap': 16px,
-        'indigo': 16px
-    ), $variant);
+    $switch-height: map.get(
+        (
+            'material': 14px,
+            'fluent': 20px,
+            'bootstrap': 16px,
+            'indigo': 16px,
+        ),
+        $variant
+    );
 
-    $switch-thumb-width: map.get((
-        'material': 20px,
-        'fluent': 12px,
-        'bootstrap': 10px,
-        'indigo': 8px
-    ), $variant);
+    $switch-thumb-width: map.get(
+        (
+            'material': 20px,
+            'fluent': 12px,
+            'bootstrap': 10px,
+            'indigo': 8px,
+        ),
+        $variant
+    );
 
-    $switch-on-offset: map.get((
-        'material': 1px,
-        'fluent': 5px,
-        'bootstrap': 4px,
-        'indigo': 7px
-    ), $variant);
+    $switch-on-offset: map.get(
+        (
+            'material': 1px,
+            'fluent': 5px,
+            'bootstrap': 4px,
+            'indigo': 7px,
+        ),
+        $variant
+    );
 
-    $switch-off-offset: map.get((
-        'material': -1px,
-        'fluent': 3px,
-        'bootstrap': math.div($switch-thumb-width, 4),
-        'indigo': math.div($switch-thumb-width, 3),
-    ), $variant);
+    $switch-off-offset: map.get(
+        (
+            'material': -1px,
+            'fluent': 3px,
+            'bootstrap': math.div($switch-thumb-width, 4),
+            'indigo': math.div($switch-thumb-width, 3),
+        ),
+        $variant
+    );
 
-    $ripple-display: map.get((
-        'material': block,
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $ripple-display: map.get(
+        (
+            'material': block,
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
-    $thumb-resting-shadow: map.get((
-        'material': var-get($theme, 'resting-shadow'),
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $thumb-resting-shadow: map.get(
+        (
+            'material': var-get($theme, 'resting-shadow'),
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
-    $thumb-hover-shadow: map.get((
-        'material': var-get($theme, 'hover-shadow'),
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $thumb-hover-shadow: map.get(
+        (
+            'material': var-get($theme, 'hover-shadow'),
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
-    $thumb-disabled-shadow: map.get((
-        'material': var-get($theme, 'disabled-shadow'),
-        'fluent': none,
-        'bootstrap': none,
-        'indigo': none
-    ), $variant);
+    $thumb-disabled-shadow: map.get(
+        (
+            'material': var-get($theme, 'disabled-shadow'),
+            'fluent': none,
+            'bootstrap': none,
+            'indigo': none,
+        ),
+        $variant
+    );
 
     $switch-thumb-height: $switch-thumb-width;
 
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $label-margin: map.get((
-        'material': rem(12px),
-        'fluent': rem(8px),
-        'bootstrap': rem(8px),
-        'indigo': rem(8px)
-    ), $variant);
+    $label-margin: map.get(
+        (
+            'material': rem(12px),
+            'fluent': rem(8px),
+            'bootstrap': rem(8px),
+            'indigo': rem(8px),
+        ),
+        $variant
+    );
 
-    $input-transition: all .2s $ease-in-out-quad;
+    $input-transition: all 0.2s $ease-in-out-quad;
 
     %switch-display {
         position: relative;
@@ -298,7 +335,7 @@
         }
 
         //ripple color
-        --color: #{var-get($theme, 'track-off-color')}
+        --color: #{var-get($theme, 'track-off-color')};
     }
 
     %switch-composite--hover {
@@ -364,19 +401,21 @@
         min-width: rem($switch-thumb-width);
         border-radius: var-get($theme, 'border-radius-thumb');
         transition: $input-transition;
-        transform: translateX(#{rem($switch-off-offset)});
-
-        [dir='rtl'] & {
-            transform: translateX(#{rem(-1 * $switch-off-offset)});
-        }
+        transform: translateX(
+            calc(var(--ig-direction) * #{rem($switch-off-offset)})
+        );
     }
 
     %switch-composite-thumb--x {
-        transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
-
-        [dir='rtl'] & {
-            transform: translateX(-#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
-        }
+        transform: translateX(
+            calc(
+                var(--ig-direction) * #{
+                    rem($switch-width)
+                    - rem($switch-thumb-width)
+                    - rem($switch-on-offset)
+                }
+            )
+        );
     }
 
     %switch-thumb {
@@ -522,7 +561,7 @@
             background: var-get($theme, 'thumb-on-disabled-color');
         }
 
-        @if $variant == 'bootstrap' or $variant == 'fluent'{
+        @if $variant == 'bootstrap' or $variant == 'fluent' {
             %switch-composite--x {
                 border-color: var-get($theme, 'track-on-disabled-color');
             }
@@ -537,11 +576,11 @@
 
     %switch-ripple--focused {
         background: color($color: 'gray', $variant: 600);
-        transition: background .2s $ease-out-quad;
-        opacity: .12;
+        transition: background 0.2s $ease-out-quad;
+        opacity: 0.12;
 
         @if $theme-variant == 'dark' {
-            opacity: .24;
+            opacity: 0.24;
         }
     }
 
@@ -597,11 +636,11 @@
         &::after {
             position: absolute;
             content: '';
-            opacity: .06;
+            opacity: 0.06;
             inset: 0;
 
             @if $theme-variant == 'dark' {
-                opacity: .12;
+                opacity: 0.12;
             }
         }
     }
@@ -632,10 +671,10 @@
 
     %switch-ripple--pressed {
         &::after {
-            opacity: .12;
+            opacity: 0.12;
 
             @if $theme-variant == 'dark' {
-                opacity: .24;
+                opacity: 0.24;
             }
         }
     }
@@ -646,7 +685,9 @@
 /// @group typography
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 @mixin switch-typography(
-    $categories: (label: 'subtitle-1')
+    $categories: (
+        label: 'subtitle-1',
+    )
 ) {
     $label: map.get($categories, 'label');
 
