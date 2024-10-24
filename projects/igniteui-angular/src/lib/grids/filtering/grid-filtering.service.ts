@@ -1,6 +1,6 @@
 import {
     Injectable,
-    OnDestroy,
+    OnDestroy
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -14,12 +14,13 @@ import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { IgxIconService } from '../../icon/icon.service';
-import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { fadeIn } from 'igniteui-angular/animations';
+import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
+import { registerFilteringSVGIcons } from '../../icon/filtering-icons';
 import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
 
 /**
@@ -55,7 +56,7 @@ export class IgxFilteringService implements OnDestroy {
 
     constructor(
         private iconService: IgxIconService,
-        protected _overlayService: IgxOverlayService,
+        protected _overlayService: IgxOverlayService
     ) { }
 
     public ngOnDestroy(): void {
@@ -319,10 +320,8 @@ export class IgxFilteringService implements OnDestroy {
      * Register filtering SVG icons in the icon service.
      */
     public registerSVGIcons(): void {
-        const editorIcons = editor as any[];
-        editorIcons.forEach(icon => {
-            this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
-        });
+        registerFilteringSVGIcons(this.iconService);
+
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }
