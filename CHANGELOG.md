@@ -46,16 +46,16 @@ All notable changes for each version of this project will be documented in this 
     - Added a new `collapsed` input property, enabling control over the initial state of the banner, allowing it to be either collapsed (hidden) or expanded (visible) upon rendering.
 
 ### Themes
-- `Palettes`
+- **Breaking Change** `Palettes`
     - All palette colors have been migrated to the [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors). This means that color consumed as CSS variables no longer need to be wrapped in an `hsl` function. 
 
     Example: 
     ```css
     /* 18.1.x and before: */
-    background: hsl(var(--igx-primary-600));
+    background: hsl(var(--ig-primary-600));
 
     /* 18.2.0+: */
-    background: var(--igx-primary-600);
+    background: var(--ig-primary-600);
     ```
 
     This change also opens up the door for declaring the base (500) variants of each color in CSS from any color, including other CSS variables, whereas before the Sass `palette` function was needed to generate color shades from a base color.
