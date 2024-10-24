@@ -256,6 +256,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     protected _minValue: Date | string;
     protected _maxValue: Date | string;
     protected _weekStart: WEEKDAYS | number;
+    protected abstract get toggleContainer(): HTMLElement | undefined;
 
     /**
      * Gets the picker's pop-up state.
@@ -272,6 +273,18 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     /** @hidden @internal */
     public get isDropdown(): boolean {
         return this.mode === PickerInteractionMode.DropDown;
+    }
+
+    /**
+     * Returns if there's focus within the picker's element OR popup container
+     * @hidden @internal
+     */
+    public get isFocused(): boolean {
+        const document = this.element.nativeElement?.getRootNode() as Document | ShadowRoot;
+        if (!document?.activeElement) return false;
+
+        return this.element.nativeElement.contains(document.activeElement)
+            || !this.collapsed && this.toggleContainer.contains(document.activeElement);
     }
 
     protected _destroy$ = new Subject<void>();
