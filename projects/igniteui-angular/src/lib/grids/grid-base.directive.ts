@@ -3605,19 +3605,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
-        fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
-            if (!this.crudService.cell &&
-                !!this.navigation.activeNode &&
-                ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
-                    this.navigation.activeNode.row < this.dataView.length)
-                    || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                    || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
-                !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
-                this.navigation.lastActiveNode = this.navigation.activeNode;
-                this.navigation.activeNode = {} as IActiveNode;
-                this.notifyChanges();
-            }
-        });
+        fromEvent(this.nativeElement, 'focusout')
+            .pipe(filter(() => !!this.navigation.activeNode), destructor)
+            .subscribe(event => this.onFocusOut(event));
         this.rowAddedNotifier.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.rowDeletedNotifier.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
@@ -6067,10 +6057,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             return true;
         }
 
-        const activeCell = this.gridAPI.grid.navigation.activeNode;
-        if (activeCell && activeCell.row !== -1) {
-            this.tbody.nativeElement.focus();
-        }
+        this.navigation.restoreActiveNodeFocus();
     }
 
     /**
@@ -6257,7 +6244,22 @@ export abstract class IgxGridBaseDirective implements GridType,
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     /* blazorCSSuppress */
     public endEdit(commit = true, event?: Event): boolean {
-        return this.crudService.endEdit(commit, event);
+        const document = this.nativeElement?.getRootNode() as Document | ShadowRoot;
+        const focusWithin = this.nativeElement?.contains(document.activeElement);
+
+        const success = this.crudService.endEdit(commit, event);
+
+        if (focusWithin) {
+            // restore focus for navigation
+            this.navigation.restoreActiveNodeFocus();
+        } else if (this.navigation.activeNode) {
+            // grid already lost focus, clear active node
+            this.navigation.lastActiveNode = this.navigation.activeNode;
+            this.navigation.activeNode = {} as IActiveNode;
+            this.notifyChanges();
+        }
+
+        return success;
     }
 
     /**
@@ -6766,6 +6768,23 @@ export abstract class IgxGridBaseDirective implements GridType,
             // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
             this.notifyChanges(true);
         });
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected onFocusOut(event: FocusEvent) {
+        if (!this.crudService.cell &&
+            !!this.navigation.activeNode &&
+            ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
+                this.navigation.activeNode.row < this.dataView.length)
+                || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
+                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
+            !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
+            this.navigation.lastActiveNode = this.navigation.activeNode;
+            this.navigation.activeNode = {} as IActiveNode;
+            this.notifyChanges();
+        }
     }
 
     /**
