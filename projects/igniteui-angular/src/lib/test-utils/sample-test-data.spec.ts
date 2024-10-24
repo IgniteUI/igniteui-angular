@@ -1985,6 +1985,28 @@ export class SampleTestData {
             Released: undefined,
             AnotherField: 'custom',
             Revenue: 50000
+        },
+        {
+            Downloads: 1000,
+            ID: 9,
+            ProductName: null,
+            ReleaseDate: SampleTestData.today,
+            ReleaseDateTime: SampleTestData.todayFullDate,
+            ReleaseTime: SampleTestData.todayFullDate,
+            Released: undefined,
+            AnotherField: 'custom_1',
+            Revenue: 50000
+        },
+        {
+            Downloads: 1000,
+            ID: 10,
+            ProductName: null,
+            ReleaseDate: SampleTestData.today,
+            ReleaseDateTime: SampleTestData.todayFullDate,
+            ReleaseTime: SampleTestData.todayFullDate,
+            Released: undefined,
+            AnotherField: 'custom_A',
+            Revenue: 50000
         }
     ]);
 
