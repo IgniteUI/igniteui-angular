@@ -33,7 +33,8 @@ describe('igxBanner', () => {
                 IgxBannerOneButtonComponent,
                 IgxBannerSampleComponent,
                 IgxBannerCustomTemplateComponent,
-                SimpleBannerEventsComponent
+                SimpleBannerEventsComponent,
+                IgxBannerInitializedOpenComponent
             ]
         }).compileComponents();
     }));
@@ -395,6 +396,36 @@ describe('igxBanner', () => {
             expect(banner.closing.emit).toHaveBeenCalledTimes(2);
             expect(banner.closed.emit).toHaveBeenCalledTimes(1);
         }));
+
+        it('Should toggle banner state when collapsed property changes', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
+            fixture.detectChanges();
+            const banner = fixture.componentInstance.banner;
+
+            banner.collapsed = true;
+            tick();
+            fixture.detectChanges();
+
+            expect(banner.collapsed).toBeTrue();
+
+            banner.collapsed = false;
+            tick();
+            fixture.detectChanges();
+            expect(banner.collapsed).toBeFalse();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('block');
+
+            banner.collapsed = true;
+            tick();
+            fixture.detectChanges();
+            expect(banner.collapsed).toBeTrue();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('');
+
+            banner.collapsed = false;
+            tick();
+            fixture.detectChanges();
+            expect(banner.collapsed).toBeFalse();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('block');
+        }));
     });
 
     describe('Rendering tests: ', () => {
@@ -484,6 +515,16 @@ describe('igxBanner', () => {
             expect(panel).not.toBeNull();
             expect(panel.attributes.getNamedItem('role').nodeValue).toEqual('status');
             expect(panel.attributes.getNamedItem('aria-live').nodeValue).toEqual('polite');
+        }));
+
+        it('Should initialize banner as open when collapsed is set to false', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
+            fixture.detectChanges();
+            const banner = fixture.componentInstance.banner;
+
+            expect(banner.collapsed).toBeFalse();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('block');
+            expect(banner.elementRef.nativeElement.querySelector('.' + CSS_CLASS_BANNER)).not.toBeNull();
         }));
     });
 
@@ -605,4 +646,20 @@ export class SimpleBannerEventsComponent {
     public handleClosing(event: any) {
         event.cancel = this.cancelFlag;
     }
+}
+
+@Component({
+    template: `
+        <div>
+            <igx-banner [collapsed]="false">
+                Banner initialized as open.
+            </igx-banner>
+        </div>
+    `,
+    standalone: true,
+    imports: [IgxBannerComponent]
+})
+export class IgxBannerInitializedOpenComponent {
+    @ViewChild(IgxBannerComponent, { static: true })
+    public banner: IgxBannerComponent;
 }
