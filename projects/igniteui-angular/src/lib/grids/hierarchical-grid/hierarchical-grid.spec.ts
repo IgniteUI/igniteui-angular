@@ -638,6 +638,35 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
             expect(hierarchicalGrid.columnInit.emit).toHaveBeenCalled();
         });
+
+        it('should throw a warning when primaryKey is set to a non-existing column field', () => {
+            spyOn(console, 'warn');
+            hierarchicalGrid.primaryKey = 'testField';
+            fixture.componentInstance.rowIsland.primaryKey = 'testField-rowIsland';
+            fixture.componentInstance.rowIsland2.primaryKey = 'testField-rowIsland2';
+            fixture.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledWith(
+                `Primary key column "${hierarchicalGrid.primaryKey}" is not defined. Set \`primaryKey\` to a valid column.`
+            );
+
+            let row1 = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row1.expander);
+            fixture.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledWith(
+                `Primary key column "${fixture.componentInstance.rowIsland.primaryKey}" is not defined. Set \`primaryKey\` to a valid column.`
+            );
+
+            const secondLevelGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
+            row1 = secondLevelGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row1.expander);
+            fixture.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledWith(
+                `Primary key column "${fixture.componentInstance.rowIsland2.primaryKey}" is not defined. Set \`primaryKey\` to a valid column.`
+            );
+        });
     });
 
     describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
