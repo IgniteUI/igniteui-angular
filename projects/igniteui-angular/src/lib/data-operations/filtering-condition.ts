@@ -24,7 +24,7 @@ export class IgxFilteringOperand {
             isUnary: false,
             iconName: 'is-in',
             hidden: true,
-            logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
+            logic: (target: any, searchVal: Set<any>, ignoreCase: boolean) => this.findValueInSet(target, searchVal, ignoreCase)
         }];
     }
 
@@ -60,8 +60,9 @@ export class IgxFilteringOperand {
     /**
      * @hidden
      */
-    protected findValueInSet(target: any, searchVal: Set<any>) {
-        return searchVal.has(target);
+    protected findValueInSet(target: any, searchVal: Set<any>, ignoreCase?: boolean) {
+        searchVal = new Set(Array.from(searchVal).map((item) => IgxStringFilteringOperand.applyIgnoreCase(item, ignoreCase)));
+        return searchVal.has(IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase));
     }
 }
 
