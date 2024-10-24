@@ -415,6 +415,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return this._dateMaxValue;
     }
 
+    protected override get toggleContainer(): HTMLElement | undefined {
+        return this.toggleRef?.element;
+    }
+
     private get required(): boolean {
         if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
             // Run the validation with empty object to check if required is enabled.

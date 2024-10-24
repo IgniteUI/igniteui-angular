@@ -73,7 +73,7 @@
         [hideLeadingDays]="hideLeadingDays"
         [hideTrailingDays]="hideTrailingDays"
         [attr.tabindex]="-1"
-        (mouseDown)="handleDateClick(item)"
+        (click)="handleDateClick(item)"
         (mouseEnter)="changePreviewRange(day.native)"
         (mouseLeave)="clearPreviewRange()"
     >

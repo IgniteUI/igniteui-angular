@@ -1218,6 +1218,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     /** @hidden @internal */
     public handleClosed() {
         this.closed.emit({ owner: this });
+        if(this.comboInput.nativeElement !== document.activeElement){
+            this.validateComboState();
+        }
     }
 
     /** @hidden @internal */
@@ -1257,12 +1260,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public onBlur() {
         if (this.collapsed) {
             this._onTouchedCallback();
-            if (this.ngControl && this.ngControl.invalid) {
-                this.valid = IgxInputState.INVALID;
-            } else {
-                this.valid = IgxInputState.INITIAL;
-            }
+            this.validateComboState();
         }
+    }
+
+    /** @hidden @internal */
+    public onFocus(): void {
+        this._onTouchedCallback();
     }
 
     /** @hidden @internal */
@@ -1288,6 +1292,14 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         }
         this.manageRequiredAsterisk();
     };
+
+    private validateComboState() {
+        if (this.ngControl && this.ngControl.invalid) {
+            this.valid = IgxInputState.INVALID;
+        } else {
+            this.valid = IgxInputState.INITIAL;
+        }
+    }
 
     private get isTouchedOrDirty(): boolean {
         return (this.ngControl.control.touched || this.ngControl.control.dirty);

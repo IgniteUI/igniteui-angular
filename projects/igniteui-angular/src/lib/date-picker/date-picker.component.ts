@@ -468,6 +468,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _ngControl: NgControl = null;
     private _statusChanges$: Subscription;
     private _calendar: IgxCalendarComponent;
+    private _calendarContainer?: HTMLElement;
     private _specialDates: DateRangeDescriptor[] = null;
     private _disabledDates: DateRangeDescriptor[] = null;
     private _overlaySubFilter:
@@ -534,6 +535,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public get pickerResourceStrings(): IDatePickerResourceStrings {
         return Object.assign({}, this._resourceStrings, this.resourceStrings);
+    }
+
+    protected override get toggleContainer(): HTMLElement | undefined {
+        return this._calendarContainer;
     }
 
     /** @hidden @internal */
@@ -900,17 +905,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             }
 
             this._initializeCalendarContainer(e.componentRef.instance);
+            this._calendarContainer = e.componentRef.location.nativeElement;
             this._collapsed = false;
         });
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.opened.emit({ owner: this });
 
-            // INFO: Commented out during the calendar refactoring as I couldn't
-            // determine why this is needed.
-            // if (this._calendar?.daysView?.selectedDates) {
-            //     return;
-            // }
+            this._calendar.wrapper?.nativeElement?.focus();
 
             if (this._targetViewDate) {
                 this._targetViewDate.setHours(0, 0, 0, 0);
@@ -928,7 +930,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                 return;
             }
             // do not focus the input if clicking outside in dropdown mode
-            if (this.getEditElement() && !(args.event && this.isDropdown)) {
+            const outsideEvent = args.event && (args.event as KeyboardEvent).key !== this.platform.KEYMAP.ESCAPE;
+            if (this.getEditElement() && !(outsideEvent && this.isDropdown)) {
                 this.inputDirective.focus();
             } else {
                 this._onTouchedCallback();
@@ -941,6 +944,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._overlayService.detach(this._overlayId);
             this._collapsed = true;
             this._overlayId = null;
+            this._calendar = null;
+            this._calendarContainer = undefined;
         });
     }
 
