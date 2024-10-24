@@ -16,12 +16,13 @@ import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
-import { GridType, IGX_GRID_BASE, IPinningConfig } from './common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE, IPinningConfig } from './common/grid.interface';
 import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
 import { cloneArray, cloneValue } from '../core/utils';
+import { IgxColumnLayoutComponent } from './columns/column-layout.component';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -92,7 +93,18 @@ export interface IColumnState {
     resizable: boolean;
     searchable: boolean;
     columnGroup: boolean;
-    parent: any;
+    // mrl props
+    columnLayout?: boolean;
+    rowStart?: number,
+    rowEnd?: number,
+    colStart?: number;
+    colEnd?: number,
+    /**
+     * @deprecated
+     */
+    parent?: any;
+    key: string;
+    parentKey: string;
     disableHiding: boolean;
     disablePinning: boolean;
     collapsible?: boolean;
@@ -205,8 +217,14 @@ export class IgxGridStateBaseDirective {
                     resizable: c.resizable,
                     searchable: c.searchable,
                     selectable: c.selectable,
-                    parent: c.parent ? c.parent.header : null,
+                    key: c.columnGroup ? this.getColumnGroupKey(c) : c.field,
+                    parentKey: c.parent ? this.getColumnGroupKey(c.parent) : undefined,
                     columnGroup: c.columnGroup,
+                    columnLayout: c.columnLayout || undefined,
+                    rowStart: c.parent?.columnLayout ? c.rowStart : undefined,
+                    rowEnd: c.parent?.columnLayout ? c.rowEnd : undefined,
+                    colStart: c.parent?.columnLayout ? c.colStart : undefined,
+                    colEnd: c.parent?.columnLayout ? c.colEnd : undefined,
                     disableHiding: c.disableHiding,
                     disablePinning: c.disablePinning,
                     collapsible: c.columnGroup ? c.collapsible : undefined,
@@ -219,31 +237,48 @@ export class IgxGridStateBaseDirective {
                 const newColumns = [];
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
+                    const hasColumnLayouts = colState.columnLayout;
                     delete colState.columnGroup;
+                    delete colState.columnLayout;
                     if (hasColumnGroup) {
-                        const ref1 = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
-                        Object.assign(ref1.instance, colState);
-                        ref1.instance.grid = context.currGrid;
-                        if (ref1.instance.parent) {
-                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref1.instance.parent  && e.columnGroup);
-                            columnGroup.children.reset([...columnGroup.children.toArray(), ref1.instance]);
-                            ref1.instance.parent = columnGroup;
+                        let ref1: IgxColumnGroupComponent = context.currGrid.columns.find(x => x.columnGroup && (colState.key ? this.getColumnGroupKey(x) === colState.key : x.header === colState.header)) as IgxColumnGroupComponent;
+                        if (!ref1) {
+                            const component = hasColumnLayouts ?
+                            createComponent(IgxColumnLayoutComponent, { environmentInjector: this.envInjector, elementInjector: this.injector }) :
+                            createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
+                            ref1 = component.instance;
+                            component.changeDetectorRef.detectChanges();
+                        } else {
+                            ref1.children.reset([]);
                         }
-                        ref1.changeDetectorRef.detectChanges();
-                        newColumns.push(ref1.instance);
+                        Object.assign(ref1, colState);
+                        ref1.grid = context.currGrid;
+                        if (colState.parent || colState.parentKey) {
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref1.parent));
+                            columnGroup.children.reset([...columnGroup.children.toArray(), ref1]);
+                            ref1.parent = columnGroup;
+                        }
+                        ref1.cdr.detectChanges();
+                        newColumns.push(ref1);
                     } else {
-                        const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector});
-                        Object.assign(ref.instance, colState);
-                        ref.instance.grid = context.currGrid;
-                        if (ref.instance.parent) {
-                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref.instance.parent && e.columnGroup);
+                        let ref: IgxColumnComponent = context.currGrid.columns.find(x => !x.columnGroup && x.field === colState.field) as IgxColumnComponent;
+                        if (!ref) {
+                            const component = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector});
+                            ref = component.instance;
+                            component.changeDetectorRef.detectChanges();
+                        }
+
+                        Object.assign(ref, colState);
+                        ref.grid = context.currGrid;
+                        if (colState.parent || colState.parentKey) {
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e =>  e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref.parent));
                             if (columnGroup) {
-                                ref.instance.parent = columnGroup;
-                                columnGroup.children.reset([...columnGroup.children.toArray(), ref.instance]);
+                                ref.parent = columnGroup;
+                                columnGroup.children.reset([...columnGroup.children.toArray(), ref]);
                             }
                         }
-                        ref.changeDetectorRef.detectChanges();
-                        newColumns.push(ref.instance);
+                        ref.cdr.detectChanges();
+                        newColumns.push(ref);
                     }
                 });
                 context.currGrid.updateColumns(newColumns);
@@ -720,6 +755,10 @@ export class IgxGridStateBaseDirective {
             return Array.from(val);
         }
         return val;
+    }
+
+    private getColumnGroupKey(columnGroup: ColumnType) : string {
+        return columnGroup.childColumns.map(x => x.columnGroup ? x.level + "_" + this.getColumnGroupKey(x) : x.field).sort().join("_");
     }
 
     private getFeature(key: string): Feature {
