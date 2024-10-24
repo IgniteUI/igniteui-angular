@@ -1985,10 +1985,57 @@ export class SampleTestData {
             Released: undefined,
             AnotherField: 'custom',
             Revenue: 50000
+        }
+    ]);
+
+    public static excelFilteringDataDuplicateValues = () => ([
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: 'Ignite UI for JavaScript',
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 1),
+            ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
+            ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
+            Released: false,
+            AnotherField: 'a',
+            Revenue: 100000
+        },
+        {
+            Downloads: 702,
+            ID: 2,
+            ProductName: 'Some other item with Script',
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 1),
+            ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'second', 20),
+            ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'second', 20),
+            Released: null,
+            AnotherField: 'Custom',
+            Revenue: 60000
+        },
+        {
+            Downloads: 0,
+            ID: 3,
+            ProductName: null,
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1),
+            ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', +10),
+            ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', +10),
+            Released: true,
+            AnotherField: 'custoM',
+            Revenue: 10000
         },
         {
             Downloads: 1000,
-            ID: 9,
+            ID: 4,
+            ProductName: null,
+            ReleaseDate: SampleTestData.today,
+            ReleaseDateTime: SampleTestData.todayFullDate,
+            ReleaseTime: SampleTestData.todayFullDate,
+            Released: undefined,
+            AnotherField: 'custom',
+            Revenue: 50000
+        },
+        {
+            Downloads: 1000,
+            ID: 5,
             ProductName: null,
             ReleaseDate: SampleTestData.today,
             ReleaseDateTime: SampleTestData.todayFullDate,
@@ -1999,7 +2046,7 @@ export class SampleTestData {
         },
         {
             Downloads: 1000,
-            ID: 10,
+            ID: 6,
             ProductName: null,
             ReleaseDate: SampleTestData.today,
             ReleaseDateTime: SampleTestData.todayFullDate,

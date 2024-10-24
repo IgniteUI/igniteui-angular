@@ -347,10 +347,10 @@ export class GridFunctions {
         const dateItem6 = GridFunctions.generateICalendarDate(grid.data[6].ReleaseDate,
             today.getFullYear(), today.getMonth());
 
-        let thisMonthCountItems = 3;
+        let thisMonthCountItems = 1;
         let nextMonthCountItems = 1;
         let lastMonthCountItems = 1;
-        let thisYearCountItems = 8;
+        let thisYearCountItems = 6;
         let nextYearCountItems = 0;
         let lastYearCountItems = 0;
 

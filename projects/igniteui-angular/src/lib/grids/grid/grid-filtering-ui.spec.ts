@@ -119,12 +119,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // iterate over unary conditions
             GridFunctions.openFilterDDAndSelectCondition(fix, 6);
 
-            expect(grid.rowList.length).toEqual(6);
+            expect(grid.rowList.length).toEqual(4);
             verifyFilterRowUI(input, close, reset, false);
 
             GridFunctions.openFilterDDAndSelectCondition(fix, 0);
 
-            expect(grid.rowList.length).toEqual(6);
+            expect(grid.rowList.length).toEqual(4);
             verifyFilterRowUI(input, close, reset, false);
         }));
 
@@ -163,7 +163,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.typeValueInFilterRowInput('script', fix, input);
 
             verifyFilterRowUI(input, close, reset, false);
-            expect(grid.rowList.length).toEqual(8);
+            expect(grid.rowList.length).toEqual(6);
         }));
 
         // UI tests number column
@@ -200,7 +200,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // not empty
             GridFunctions.openFilterDDAndSelectCondition(fix, 7);
 
-            expect(grid.rowList.length).toEqual(8);
+            expect(grid.rowList.length).toEqual(7);
             verifyFilterRowUI(input, close, reset, false);
 
             // changing from unary to not unary condition when input is empty - filtering should keep its state
@@ -208,7 +208,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.openFilterDDAndSelectCondition(fix, 0);
 
             input = filterUIRow.query(By.directive(IgxInputDirective));
-            expect(grid.rowList.length).toEqual(8);
+            expect(grid.rowList.length).toEqual(7);
             verifyFilterRowUI(input, close, reset, false);
         }));
 
@@ -225,7 +225,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.openFilterDDAndSelectCondition(fix, 1);
             GridFunctions.typeValueInFilterRowInput(100, fix, input);
 
-            expect(grid.rowList.length).toEqual(8);
+            expect(grid.rowList.length).toEqual(7);
             verifyFilterRowUI(input, close, reset, false);
 
             // less than
@@ -237,7 +237,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.openFilterDDAndSelectCondition(fix, 4);
             GridFunctions.typeValueInFilterRowInput(254, fix, input);
 
-            expect(grid.rowList.length).toEqual(5);
+            expect(grid.rowList.length).toEqual(3);
             verifyFilterRowUI(input, close, reset, false);
         }));
 
@@ -276,7 +276,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // not null condition
             GridFunctions.openFilterDDAndSelectCondition(fix, 6);
 
-            expect(grid.rowList.length).toEqual(8);
+            expect(grid.rowList.length).toEqual(6);
             verifyFilterRowUI(input, close, reset, false);
         }));
 
@@ -326,11 +326,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Today condition
             GridFunctions.openFilterDDAndSelectCondition(fix, 4);
 
-            expect(grid.rowList.length).toEqual(3);
+            expect(grid.rowList.length).toEqual(1);
             verifyFilterRowUI(input, close, reset, false);
             verifyFilterUIPosition(filterUIRow, grid);
 
-            expect(grid.rowList.length).toEqual(3);
+            expect(grid.rowList.length).toEqual(1);
 
             // This Month condition
             GridFunctions.openFilterDDAndSelectCondition(fix, 6);
@@ -1400,7 +1400,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             let filterChip = filterUIRow.query(By.directive(IgxChipComponent));
             expect(filterChip).toBeTruthy();
             expect(filterChip.componentInstance.selected).toBeTruthy();
-            expect(grid.rowList.length).toEqual(6);
+            expect(grid.rowList.length).toEqual(4);
             verifyFilterRowUI(input, close, reset, false);
 
             // select not unary conditions
@@ -1408,7 +1408,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(filterChip).toBeTruthy();
             expect(filterChip.componentInstance.selected).toBeTruthy();
-            expect(grid.rowList.length).toEqual(6);
+            expect(grid.rowList.length).toEqual(4);
             verifyFilterRowUI(input, close, reset, false);
 
             // submit the input with empty value
@@ -2228,7 +2228,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             expect(grid.filteringRow.expression.condition.name).toEqual('equals');
-            expect(grid.rowList.length).toEqual(3);
+            expect(grid.rowList.length).toEqual(1);
 
             // This Month condition
             const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
@@ -2268,7 +2268,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // const cells = GridFunctions.getColumnCells(fix, 'Downloads');
             const rows = GridFunctions.getRows(fix);
-            expect(rows.length).toEqual(4);
+            expect(rows.length).toEqual(2);
         }));
 
         it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy with rowData', fakeAsync(() => {
@@ -2909,11 +2909,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Today condition
             GridFunctions.openFilterDDAndSelectCondition(fix, 4);
 
-            expect(grid.rowList.length).toEqual(3);
+            expect(grid.rowList.length).toEqual(1);
             verifyFilterRowUI(input, close, reset, false);
             verifyFilterUIPosition(filterUIRow, grid);
 
-            expect(grid.rowList.length).toEqual(3);
+            expect(grid.rowList.length).toEqual(1);
 
             // This Month condition
             GridFunctions.openFilterDDAndSelectCondition(fix, 6);
@@ -2957,7 +2957,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick();
             fix.detectChanges();
 
-            expect(grid.rowList.length).toEqual(3);
+            expect(grid.rowList.length).toEqual(1);
         }));
 
     });
@@ -3640,7 +3640,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            expect(grid.filteredData.length).toEqual(7);
+            expect(grid.filteredData.length).toEqual(5);
         }));
 
         it('Should not be able to exit custom dialog when press tab on apply button', fakeAsync(() => {
@@ -4592,7 +4592,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick();
             fix.detectChanges();
 
-            expect(grid.rowList.length).toBe(8);
+            expect(grid.rowList.length).toBe(6);
             const operands =
                 (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
                     .filteringOperands as IFilteringExpression[];
@@ -4669,7 +4669,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             toggleExcelStyleFilteringItems(fix, true, 3);
 
-            expect(grid.rowList.length).toBe(7);
+            expect(grid.rowList.length).toBe(5);
 
             GridFunctions.clickExcelFilterIcon(fix, 'Released');
             tick(100);
@@ -5052,7 +5052,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cellText = pipe.transform(filteredDate, column.pipeArgs.format, column.pipeArgs.timezone);
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
             expect(cell.innerText).toMatch(cellText);
-            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.filteredData.length).toEqual(1);
         }));
 
         it('Should take pipeArgs weekStart property as calendar\'s default.', fakeAsync(() => {
@@ -5134,7 +5134,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cellText = pipe.transform(filteredDate, column.pipeArgs.format, column.pipeArgs.timezone);
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
             expect(cell.innerText).toMatch(cellText);
-            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.filteredData.length).toEqual(1);
         }));
 
         it('Should filter grid with miliseconds dates through custom date filter dialog', fakeAsync(() => {
@@ -5181,7 +5181,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cellText = pipe.transform(filteredDate, column.pipeArgs.format, column.pipeArgs.timezone);
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
             expect(cell.innerText).toMatch(cellText);
-            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.filteredData.length).toEqual(1);
         }));
 
         it('DateTime: Should use editorOptions.dateTimeFormat as inputFormat to the filter editor in the custom filtering dialog', fakeAsync(() => {
@@ -5348,7 +5348,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cellText = pipe.transform(filteredDate, column.pipeArgs.format, column.pipeArgs.timezone);
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
             expect(cell.innerText).toMatch(cellText);
-            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.filteredData.length).toEqual(1);
         }));
 
         it('Should filter grid through custom date filter dialog when using pipeArgs and formatter for the column', fakeAsync(() => {
@@ -5399,7 +5399,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cellText = column.formatter(filteredDate, null);
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
             expect(cell.innerText).toMatch(cellText);
-            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.filteredData.length).toEqual(1);
         }));
 
         it('Should correctly update \'SelectAll\' based on checkboxes.', fakeAsync(() => {
@@ -5604,7 +5604,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cell1 = GridFunctions.getRowCells(fix, 0)[4].nativeElement;
             const cell2 = GridFunctions.getRowCells(fix, 3)[4].nativeElement;
             expect(cell1.textContent.toString()).toEqual(cell2.textContent.toString());
-            expect(rows.length).toBe(8, 'incorrect number of rows');
+            expect(rows.length).toBe(6, 'incorrect number of rows');
 
             //Check if checkboxes have correct state on ESF menu reopening
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
@@ -5736,7 +5736,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', 'a', 'Custom', 'custom_1', 'custom_A'],
+                ['Select All', 'a', 'Custom'],
                 [true, true, true]);
         }));
 
@@ -5750,7 +5750,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', 'a', 'Custom', 'custoM', 'custom', 'custom_1', 'custom_A'],
+                ['Select All', 'a', 'Custom', 'custoM', 'custom'],
                 [true, true, true, true, true]);
         }));
 
@@ -5829,6 +5829,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should filter grid correctly with case insensitive duplicates', fakeAsync(() => {
+            grid.data = SampleTestData.excelFilteringDataDuplicateValues();
+            fix.detectChanges();
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
 
@@ -6191,7 +6193,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             await wait(100);
 
-            expect(grid.filteredData.length).toEqual(7);
+            expect(grid.filteredData.length).toEqual(5);
         });
 
         it('Should display the custom resource strings when specified in the search list for boolean column.', async () => {
