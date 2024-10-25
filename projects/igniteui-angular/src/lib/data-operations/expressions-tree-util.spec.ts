@@ -2,6 +2,7 @@ import { FilteringLogic, IFilteringExpression } from './filtering-expression.int
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { recreateTree } from './expressions-tree-util';
 import { EntityType } from '../grids/common/grid.interface';
+import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 
 function serialize(value: unknown, pretty = false) {
     return pretty ? JSON.stringify(value, undefined, ' ') : JSON.stringify(value)
@@ -36,8 +37,7 @@ describe('Unit testing FilteringUtil', () => {
         // boolean
         tree.filteringOperands.push({
             fieldName: 'Validated',
-            conditionName: 'false',
-            searchVal: false
+            conditionName: 'false'
         });
 
         // string
@@ -71,26 +71,22 @@ describe('Unit testing FilteringUtil', () => {
         // misc
         tree.filteringOperands.push({
             fieldName: 'Id',
-            conditionName: 'in',
-            searchVal: null
+            conditionName: 'in'
         });
 
         tree.filteringOperands.push({
             fieldName: 'Id',
-            conditionName: 'notIn',
-            searchVal: null
+            conditionName: 'notIn'
         });
 
         tree.filteringOperands.push({
             fieldName: 'Id',
-            conditionName: 'null',
-            searchVal: null
+            conditionName: 'null'
         });
 
         tree.filteringOperands.push({
             fieldName: 'Id',
-            conditionName: 'notNull',
-            searchVal: null
+            conditionName: 'notNull'
         });
 
         const serializedTree = serialize(tree, true);
@@ -165,7 +161,7 @@ describe('Unit testing FilteringUtil', () => {
         const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
-        expect(firstOperand.condition.logic(100, firstOperand.searchVal)).toBe(true);
+        expect(firstOperand.condition).toBe(IgxNumberFilteringOperand.instance().condition('equals'));
     });
 
     it('Boolean search values should deserialize correctly', () => {
@@ -186,7 +182,8 @@ describe('Unit testing FilteringUtil', () => {
         const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
-        expect(firstOperand.condition.logic(false, firstOperand.searchVal)).toBe(true);
+        expect(firstOperand.condition.logic(100, firstOperand.searchVal)).toBe(true);
+        expect(firstOperand.condition).toBe(IgxBooleanFilteringOperand.instance().condition('false'));
     });
 
     it('String search values should deserialize correctly', () => {
@@ -208,6 +205,7 @@ describe('Unit testing FilteringUtil', () => {
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
         expect(firstOperand.condition.logic('potato', firstOperand.searchVal)).toBe(true);
+        expect(firstOperand.condition).toBe(IgxStringFilteringOperand.instance().condition('equals'));
     });
 
     it('Date search values should deserialize correctly', () => {
@@ -229,6 +227,7 @@ describe('Unit testing FilteringUtil', () => {
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
         expect(firstOperand.condition.logic(new Date(2022, 2, 3), firstOperand.searchVal)).toBe(true);
+        expect(firstOperand.condition).toBe(IgxDateFilteringOperand.instance().condition('equals'));
     });
 
     it('DateTime search values should deserialize correctly', () => {
@@ -251,6 +250,7 @@ describe('Unit testing FilteringUtil', () => {
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
         expect(firstOperand.condition.logic(currDate, firstOperand.searchVal)).toBe(true);
+        expect(firstOperand.condition).toBe(IgxDateTimeFilteringOperand.instance().condition('equals'));
     });
 
     it('Time search values should deserialize correctly', () => {
@@ -272,6 +272,7 @@ describe('Unit testing FilteringUtil', () => {
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
         expect(firstOperand.condition.logic(new Date(2020, 9, 2, 18, 30, 0, 0), firstOperand.searchVal)).toBe(true);
+        expect(firstOperand.condition).toBe(IgxTimeFilteringOperand.instance().condition('at'));
     });
 
     it('Nested tree should deserialize correctly', () => {
