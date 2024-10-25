@@ -186,6 +186,12 @@
         --tree-size: var(--component-size);
         flex-direction: column;
 
+        %cbx-composite-wrapper {
+            @if $variant == 'material' {
+                padding: 0;
+            }
+        }
+
         @if $variant == 'indigo' {
             border-radius: rem(4px);
         }
@@ -240,9 +246,7 @@
         }
 
         igx-icon {
-            @if $variant == 'indigo' {
-                --component-size: 2;
-            }
+            --component-size: #{if($variant == 'indigo', 2, 3)};
         }
 
         [dir='rtl'] & {

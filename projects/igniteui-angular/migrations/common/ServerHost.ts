@@ -15,7 +15,7 @@ export class ServerHost implements ts.server.ServerHost {
     /** Cached because Angular schematics encapsulation's customRequire doesn't provide `resolve` */
     private nativeRequire = createRequire(__filename);
 
-    constructor(private host: Tree) {
+    constructor(public host: Tree) {
         this.args = ts.sys.args;
         this.newLine = ts.sys.newLine;
         this.useCaseSensitiveFileNames = ts.sys.useCaseSensitiveFileNames;

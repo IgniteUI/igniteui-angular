@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, HostBinding, Input } from '@angular/core';
+import { booleanAttribute, Component, HostBinding, Input } from '@angular/core';
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
@@ -172,6 +172,19 @@ export class IgxBadgeComponent {
      */
     @HostBinding('attr.aria-label')
     public label = 'badge';
+
+    /**
+     * Sets/gets whether the badge is outlined.
+     * Default value is `false`.
+     *
+     * @example
+     * ```html
+     * <igx-badge outlined></igx-badge>
+     * ```
+     */
+    @Input({transform: booleanAttribute})
+    @HostBinding('class.igx-badge--outlined')
+    public outlined = false;
 
     /**
      * Defines a human-readable, accessor, author-localized description for

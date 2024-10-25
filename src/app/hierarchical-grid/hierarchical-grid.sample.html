@@ -31,8 +31,8 @@
         <igx-grid-footer>Footer</igx-grid-footer>
         <igx-column width="150px" [filterable]="false">
             <ng-template igxCell let-cell="cell" let-val>
-                <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)" family="imx-icons"
-                    name="{{cell.row.pinned ? 'unpin-left' : 'pin-left'}}">
+                <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)" family="default"
+                    name="{{cell.row.pinned ? 'unpin' : 'pin'}}">
                 </igx-icon>
             </ng-template>
         </igx-column>
@@ -42,16 +42,16 @@
             <igx-column field="ProductName" [hasSummary]="true"></igx-column>
         </igx-column-group>
         <ng-template igxHeaderCollapsedIndicator>
-            <igx-icon role="button">add</igx-icon>
+            <igx-icon role="button" family="default" name="add"></igx-icon>
         </ng-template>
         <ng-template igxHeaderExpandedIndicator>
-            <igx-icon role="button">remove</igx-icon>
+            <igx-icon role="button" family="default" name="horizontal_rule"></igx-icon>
         </ng-template>
         <ng-template igxRowExpandedIndicator>
-            <igx-icon role="button">remove</igx-icon>
+            <igx-icon role="button" family="default" name="horizontal_rule"></igx-icon>
         </ng-template>
         <ng-template igxRowCollapsedIndicator>
-            <igx-icon role="button">add</igx-icon>
+            <igx-icon role="button" family="default" name="add"></igx-icon>
         </ng-template>
         <igx-row-island [rowDraggable]="true" [height]="'400px'" [showExpandAll]="true" [key]="'childData'"
             [autoGenerate]="false" [allowFiltering]='true' [rowSelection]='selectionMode' [rowEditable]="true"

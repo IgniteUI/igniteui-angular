@@ -23,7 +23,7 @@
     &__section {
         flex-direction: column;
         padding: 16px;
-        border: 1px dashed hsla(var(--ig-gray-300));
+        border: 1px dashed var(--ig-gray-300);
     }
 
     &__form {
@@ -51,6 +51,6 @@
 .custom-combo-header {
     text-align: center;
     padding: 8px 16px;
-    background: hsla(var(--ig-gray-100));
+    background: var(--ig-gray-100);
 }
 

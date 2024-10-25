@@ -342,6 +342,8 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`filteringIgnoreCase`|boolean|Ignore capitalization of strings when filtering is applied. Defaults to _true_.|
 |`sortingIgnoreCase`|boolean|Ignore capitalization of strings when sorting is applied. Defaults to _true_.|
 |`dataType`|GridColumnDataType|One of string, number, boolean or Date. When filtering is enabled the filter UI conditions are based on the `dataType` of the column. Defaults to `string` if it is not provided. With `autoGenerate` enabled the grid will try to resolve the correct data type for each column based on the data source.|
+|`editorOptions`|IColumnEditorOptions|Allows to pass optional parameters to control properties of the default column editors.|
+|`pipeArgs`|IFieldPipeArgs|Pass optional parameters for DatePipe and/or DecimalPipe to format the display value for date and numeric columns.|
 |`pinned`|boolean|Set column to be pinned or not|
 |`searchable`|boolean|Determines whether the column is included in the search. If set to false, the cell values for this column will not be included in the results of the search API of the grid (defaults to true)|
 |`groupable`|boolean| Determines whether the column may be grouped via the UI.|

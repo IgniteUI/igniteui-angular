@@ -336,6 +336,27 @@
         igx-avatar {
             --ig-size: #{if($variant == 'indigo', 2, 1)};
         }
+
+        @if $variant == 'material' {
+            %cbx-composite-wrapper {
+                padding: 0;
+            }
+
+            %cbx-label-pos--after {
+                margin-inline-start: rem(12px);
+            }
+
+            %cbx-label-pos--before {
+                margin-inline-end: rem(12px);
+            }
+
+            %cbx-label-pos--before,
+            %cbx-label-pos--after {
+                &:empty {
+                    margin: 0;
+                }
+            }
+        }
     }
 
     %igx-list--empty {

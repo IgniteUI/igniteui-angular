@@ -6,8 +6,8 @@
         line-height: 20px;
         margin: 0;
         padding: 16px;
-        background: hsla(var(--ig-gray-50));
-        border-left: 4px solid hsla(var(--ig-warn-500));
+        background: var(--ig-gray-50);
+        border-left: 4px solid var(--ig-warn-500);
     }
 
     .no-bm {
@@ -15,7 +15,7 @@
     }
 
     .attention {
-        color: hsla(var(--ig-warn-700));
+        color: var(--ig-warn-700);
     }
 
     &__column-buttons {
@@ -34,7 +34,7 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-    border: 2px dashed hsla(var(--ig-primary-500));
+    border: 2px dashed var(--ig-primary-500);
     padding: 16px;
 }
 
@@ -44,7 +44,7 @@
     max-width: 900px;
     margin: 0 auto;
     padding: 16px;
-    border: 1px dashed hsla(var(--ig-gray-300));
+    border: 1px dashed var(--ig-gray-300);
 }
 
 .form__fields {

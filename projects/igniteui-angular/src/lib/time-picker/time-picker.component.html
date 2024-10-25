@@ -2,7 +2,7 @@
     <input [displayValuePipe]="formatter ? displayValue : null" igxInput [igxDateTimeEditor]="inputFormat"
         type="text" [readonly]="!isDropdown || readOnly" [minValue]="minValue" [maxValue]="maxValue"
         [locale]="locale" [spinDelta]="itemsDelta" [spinLoop]="spinLoop" [placeholder]="placeholder"
-        [disabled]="disabled" [displayFormat]="displayFormat"
+        [disabled]="disabled" [displayFormat]="displayFormat" defaultFormatType="time"
         [igxTextSelection]="isDropdown && !readOnly" role="combobox" aria-haspopup="dialog"
         [attr.aria-expanded]="!toggleDirective.collapsed" [attr.aria-labelledby]="label?.id"
         (click)="!isDropdown && toggle()"/>
