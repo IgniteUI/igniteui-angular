@@ -903,6 +903,18 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         }
     }
 
+    /**
+     * @hidden @internal
+     */
+    public onConditionChange() {
+        if (this.selectedCondition && this.selectedField) {
+            const condition = this.selectedField.filters.condition(this.selectedCondition);
+            if (condition.isUnary) {
+                this.searchValue = null;
+            }
+        }
+    }
+
     private setFormat(field: FieldType) {
         if (!field.pipeArgs) {
             field.pipeArgs = { digitsInfo: DEFAULT_PIPE_DIGITS_INFO };

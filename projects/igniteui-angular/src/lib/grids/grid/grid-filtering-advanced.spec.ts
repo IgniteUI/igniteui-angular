@@ -2842,6 +2842,50 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Verify context menu is closed.
                 verifyContextMenuVisibility(fix, false);
             }));
+
+            it('Should clear the value input when a condition that does not support a value is selected.', fakeAsync(() => {
+                // Set up an initial filter condition with a value, such as 'contains'.
+                const tree = new FilteringExpressionsTree(FilteringLogic.And);
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName',
+                    searchVal: 'test',
+                    condition: IgxStringFilteringOperand.instance().condition('contains')
+                });
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open the Advanced Filtering dialog.
+                grid.openAdvancedFilteringDialog();
+                tick(100);
+                fix.detectChanges();
+
+                // Select the initial filter condition chip by double-clicking to enter edit mode.
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0], true);
+                tick(200);
+                fix.detectChanges();
+
+                // Retrieve the input field containing the search value and verify its initial value.
+                const searchValueInput = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+                expect(searchValueInput.value).toBe('test');
+
+                // Change the filter condition to one that does not support a value, such as 'Empty'.
+                selectOperatorInEditModeExpression(fix, 6); // 6 represents the 'Empty' condition
+                tick(100);
+                fix.detectChanges();
+
+                // Capture the displayed text of the selected condition and isolate the word "Empty".
+                const selectedConditionText = GridFunctions.getAdvancedFilteringOperatorSelect(fix)
+                    .querySelector('.igx-drop-down__item--selected').textContent.trim();
+
+                // Split text content and find "Empty"
+                const extractedCondition = selectedConditionText.split(' ').find(word => word === 'Empty');
+
+                // Verify that the extracted condition is "Empty".
+                expect(extractedCondition).toBe('Empty');
+
+                // Confirm that the input field has been cleared, as expected for 'Empty' condition types.
+                expect(searchValueInput.value).toBe('');
+            }));
         });
 
         describe('Keyboard Navigation/Interaction - ', () => {
@@ -3014,7 +3058,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 });
                 grid.advancedFilteringExpressionsTree = tree;
                 fix.detectChanges();
-    
+
                 // Open Advanced Filtering dialog.
                 grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
@@ -3195,7 +3239,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tree.filteringOperands.push({
                 fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains')
             });
-            
+
             grid.advancedFilteringExpressionsTree = tree;
             fix.detectChanges();
 
