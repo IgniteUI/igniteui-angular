@@ -664,9 +664,9 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 2: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
                 case 4: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 5: expect(element).toHaveClass('igx-filter-tree__details-button'); break;
@@ -723,9 +723,9 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 2: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
                 case 4: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 5: expect(element).toHaveClass('igx-chip'); break;
