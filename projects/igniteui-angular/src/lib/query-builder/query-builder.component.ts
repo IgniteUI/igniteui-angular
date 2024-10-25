@@ -900,6 +900,18 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden @internal
+     */
+    public onConditionChange() {
+        if (this.selectedCondition && this.selectedField) {
+            const condition = this.selectedField.filters.condition(this.selectedCondition);
+            if (condition.isUnary) {
+                this.searchValue = null; // Reset the value when a unary condition is selected
+            }
+        }
+    }
+
     private setFormat(field: FieldType) {
         if (!field.pipeArgs) {
             field.pipeArgs = { digitsInfo: DEFAULT_PIPE_DIGITS_INFO };
