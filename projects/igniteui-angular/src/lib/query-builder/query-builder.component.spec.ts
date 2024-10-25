@@ -1485,7 +1485,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
-            
+
             // Verify all inputs
             QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Orders', 'OrderId, OrderName, OrderDate, Delivered', '', '', '');
         }));
@@ -1980,6 +1980,67 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
+        }));
+
+        it('Should be able to commit nested query without where condition.', fakeAsync(() => {
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+
+            // Enter values in the nested query
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 1); // Select 'Products' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "fieldName": "OrderId",
+      "condition": {
+        "name": "in",
+        "isUnary": false,
+        "isNestedQuery": true,
+        "iconName": "in"
+      },
+      "conditionName": "in",
+      "ignoreCase": true,
+      "searchVal": null,
+      "searchTree": {
+        "filteringOperands": [],
+        "operator": 0,
+        "entity": "Products",
+        "returnFields": [
+          "Id",
+          "ProductName",
+          "OrderId",
+          "Released"
+        ]
+      }
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "OrderId",
+    "OrderName",
+    "OrderDate",
+    "Delivered"
+  ]
+}`);
         }));
     });
 
