@@ -624,11 +624,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this._selectedReturnFields !== value && oldValue !== value) {
             this._selectedReturnFields = value;
 
-            if (this._expressionTree) {
+            if (this._expressionTree && !this.parentExpression) {
                 this._expressionTree.returnFields = value;
-                if (!this.parentExpression) {
-                    this.expressionTreeChange.emit(this._expressionTree);
-                }
+                this.expressionTreeChange.emit(this._expressionTree);
             }
 
         }
@@ -756,6 +754,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0]
             if (innerQuery && this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery) {
                 this._editedExpression.expression.searchTree = this.getExpressionTreeCopy(innerQuery.expressionTree);
+                this._editedExpression.expression.searchTree.returnFields = innerQuery.selectedReturnFields;
             } else {
                 this._editedExpression.expression.searchTree = null;
             }
