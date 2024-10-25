@@ -3058,7 +3058,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 });
                 grid.advancedFilteringExpressionsTree = tree;
                 fix.detectChanges();
-
                 // Open Advanced Filtering dialog.
                 grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
@@ -3239,7 +3238,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tree.filteringOperands.push({
                 fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains')
             });
-
             grid.advancedFilteringExpressionsTree = tree;
             fix.detectChanges();
 
