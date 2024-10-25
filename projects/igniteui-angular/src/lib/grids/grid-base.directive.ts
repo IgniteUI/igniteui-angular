@@ -3605,9 +3605,17 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
-        fromEvent(this.nativeElement, 'focusout')
-            .pipe(filter(() => !!this.navigation.activeNode), destructor)
-            .subscribe(event => this.onFocusOut(event));
+        fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
+            const activeNode = this.navigation.activeNode;
+            if (!this.crudService.cell && !!activeNode &&
+                ((event.target === this.tbody.nativeElement && activeNode.row >= 0 &&
+                    activeNode.row < this.dataView.length)
+                    || (event.target === this.theadRow.nativeElement && activeNode.row === -1)
+                    || (event.target === this.tfoot.nativeElement && activeNode.row === this.dataView.length)) &&
+                !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
+                this.clearActiveNode();
+            }
+        });
         this.rowAddedNotifier.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.rowDeletedNotifier.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
@@ -6254,9 +6262,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.navigation.restoreActiveNodeFocus();
         } else if (this.navigation.activeNode) {
             // grid already lost focus, clear active node
-            this.navigation.lastActiveNode = this.navigation.activeNode;
-            this.navigation.activeNode = {} as IActiveNode;
-            this.notifyChanges();
+            this.clearActiveNode();
         }
 
         return success;
@@ -6768,23 +6774,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
             this.notifyChanges(true);
         });
-    }
-
-    /**
-     * @hidden @internal
-     */
-    protected onFocusOut(event: FocusEvent) {
-        if (!this.crudService.cell &&
-            !!this.navigation.activeNode &&
-            ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
-                this.navigation.activeNode.row < this.dataView.length)
-                || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
-            !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
-            this.navigation.lastActiveNode = this.navigation.activeNode;
-            this.navigation.activeNode = {} as IActiveNode;
-            this.notifyChanges();
-        }
     }
 
     /**
@@ -7860,5 +7849,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (!oldData || !oldData.length) return true;
         if (!newData || !newData.length) return false;
         return Object.keys(oldData[0]).join() !== Object.keys(newData[0]).join();
+    }
+
+    /**
+     * Clears the current navigation service active node
+     */
+    private clearActiveNode() {
+        this.navigation.lastActiveNode = this.navigation.activeNode;
+        this.navigation.activeNode = {} as IActiveNode;
+        this.notifyChanges();
     }
 }
