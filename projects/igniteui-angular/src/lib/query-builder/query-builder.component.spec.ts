@@ -1545,6 +1545,38 @@ describe('IgxQueryBuilder', () => {
             });
         }));
 
+        it(`"commit" button should be enabled/disabled properly when editing an expression.`, fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Double-click the 'OrderId' chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Verify "commit" button is enabled
+            let commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
+            // Delete the value
+            let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '');
+            tick(100);
+            fix.detectChanges();
+            // Verify "commit" button is disabled
+            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement);
+            // Enter some value
+            input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '5');
+            tick(100);
+            fix.detectChanges();
+            // Verify "commit" button is enabled
+            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
+        }));
+
         it(`Parent "commit" button should be disabled if a child condition is edited.`, fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();

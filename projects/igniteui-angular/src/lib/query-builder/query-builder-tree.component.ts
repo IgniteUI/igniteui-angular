@@ -818,7 +818,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return this.selectedField && this.selectedCondition &&
             (
                 (
-                    (!!this.searchValue.value || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) &&
+                    ((!Array.isArray(this.searchValue.value) && !!this.searchValue.value) || (Array.isArray(this.searchValue.value) && this.searchValue.value.length !== 0)) &&
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
                 ) ||
                 (
@@ -836,7 +836,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (innerQuery) {
             return this.selectedReturnFields?.length > 0 && innerQuery.canCommitCurrentState();
         } else {
-            return this.selectedReturnFields?.length > 0 && 
+            return this.selectedReturnFields?.length > 0 &&
                 (
                     (!this._editedExpression && !!this.rootGroup) || // no edited expr, root group
                     (this._editedExpression && !this.selectedField && (this.expressionTree && this.expressionTree.filteringOperands[0] !== this._editedExpression.expression)) || // empty edited expr with at least one other expr
