@@ -72,7 +72,7 @@ function recreateSearchValue(searchValue: any, dataType: string): any {
     // In ESF, values are stored as a Set.
     // Those values are converted to an array before returning string in the stringifyCallback
     // now we need to convert those back to Set
-    if (Array.isArray(searchValue) && !(searchValue instanceof Set)) {
+    if (Array.isArray(searchValue)) {
         return new Set(searchValue);
     } else if ((dataType.toLowerCase().includes('date') || dataType.toLowerCase().includes('time')) && !(searchValue instanceof Date)) {
         return DateTimeUtil.parseIsoDate(searchValue) ?? searchValue;
@@ -87,7 +87,7 @@ function recreateSearchValue(searchValue: any, dataType: string): any {
  * @param name The name of the filtering condition.
  * @returns The filtering logic function.
  */
-function generateFilteringCondition(dataType: string, name: string): IFilteringOperation {
+function getFilteringCondition(dataType: string, name: string): IFilteringOperation {
     let filters: IgxFilteringOperand;
     switch (dataType) {
         case GridColumnDataType.Boolean:
@@ -125,7 +125,7 @@ function generateFilteringCondition(dataType: string, name: string): IFilteringO
  */
 function recreateOperatorFromDataType(expression: IFilteringExpression, dataType: string): IFilteringOperation {
     if (!expression.condition?.logic) {
-        return generateFilteringCondition(dataType, expression.conditionName || expression.condition?.name);
+        return getFilteringCondition(dataType, expression.conditionName || expression.condition?.name);
     }
 
     return expression.condition;
