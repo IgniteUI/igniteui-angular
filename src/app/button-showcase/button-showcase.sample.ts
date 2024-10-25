@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation, OnInit, inject } from '@angular/core';
 import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective } from 'igniteui-angular';
 import { defineComponents, IgcButtonComponent, IgcIconButtonComponent, registerIconFromText} from "igniteui-webcomponents";
 import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
@@ -18,6 +18,7 @@ registerIconFromText("favorite", favorite );
     imports: [IgxButtonDirective, IgxIconComponent, IgxButtonGroupComponent, IgxIconButtonDirective, IgxRippleDirective]
 })
 export class ButtonShowcaseSampleComponent implements OnInit {
+    private propertyChangeService = inject(PropertyChangeService);
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
@@ -39,8 +40,6 @@ export class ButtonShowcaseSampleComponent implements OnInit {
             }
         }
     }
-
-    constructor(protected propertyChangeService: PropertyChangeService) {}
 
     public ngOnInit(): void {
         this.propertyChangeService.setPanelConfig(this.panelConfig);

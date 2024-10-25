@@ -1,6 +1,7 @@
 import {
     Component,
     CUSTOM_ELEMENTS_SCHEMA,
+    inject,
     OnInit,
     TemplateRef,
     ViewChild,
@@ -74,6 +75,8 @@ export class CalendarShowcaseSampleComponent implements OnInit {
         year: "numeric",
     };
 
+    private propertyChangeService = inject(PropertyChangeService);
+
     public panelConfig: PropertyPanelConfig = {
         locale: {
             label: 'Change Locale',
@@ -145,8 +148,6 @@ export class CalendarShowcaseSampleComponent implements OnInit {
             }
         }
     }
-
-    constructor(protected propertyChangeService: PropertyChangeService) { }
 
     private weekStartMap = {
         monday: 1,

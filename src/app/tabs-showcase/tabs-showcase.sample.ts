@@ -1,7 +1,8 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ViewEncapsulation} from '@angular/core';
 import { NgFor } from '@angular/common';
 import { IgxAvatarComponent, IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxPrefixDirective, IgxRippleDirective, IgxSuffixDirective, IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular';
 import { defineComponents, IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent } from 'igniteui-webcomponents';
+import { PropertyPanelConfig, PropertyChangeService } from '../properties-panel/property-change.service';
 
 defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
 
@@ -14,7 +15,37 @@ defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
     standalone: true,
     imports: [IgxButtonDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxRippleDirective, IgxIconComponent, IgxTabHeaderIconDirective, IgxIconButtonDirective, IgxTabHeaderLabelDirective, IgxTabContentComponent, IgxListComponent, NgFor, IgxListItemComponent, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective, IgxPrefixDirective, IgxSuffixDirective]
 })
-export class TabsShowcaseSampleComponent {
+export class TabsShowcaseSampleComponent implements OnInit {
+    private propertyChangeService = inject(PropertyChangeService);
+    public panelConfig: PropertyPanelConfig = {
+        alignment: {
+            control: {
+                type: 'select',
+                options: ['start', 'end', 'center', 'justify'],
+                defaultValue: 'start'
+            }
+        },
+        activation: {
+            control: {
+                type: 'button-group',
+                options: ['manual', 'auto'],
+                defaultValue: 'auto'
+            }
+        }
+    }
+
+    public ngOnInit(): void {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+    }
+
+    protected get alignment() {
+        return this.propertyChangeService.getProperty('alignment') || 'start';
+    }
+
+    protected get activation() {
+        return this.propertyChangeService.getProperty('activation') || 'auto';
+    }
+
     public contacts: any[] = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,

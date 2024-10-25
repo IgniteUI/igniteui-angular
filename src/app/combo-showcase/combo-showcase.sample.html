@@ -1,28 +1,42 @@
 <div class="combo-sample">
     <section class="combo-sample__section">
         <h1 class="combo-sample__title">Angular and WC combo next to each other</h1>
-        <size-selector #sizeSelector></size-selector>
-        <igx-switch (click)="isDisabled = !isDisabled">{{isDisabled? 'Enable' : 'Disable'}}</igx-switch>
-        <form class="combo-sample__form" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
+        <form class="combo-sample__form" [style.--ig-size]="'var(--ig-size-' + size + ')'">
             <div class="combo-sample__row combo-sample__row--stretch">
                 <!-- Simple combo -->
-                <igx-combo name="falsyValueCombo"
-                           required
-                           [data]="uniqueFalsyData"
-                           displayKey="field"
-                           valueKey="value"
-                           type="border"
-                           [disabled]="isDisabled">
+                <igx-combo  [name]="name"
+                            [required]="required"
+                            [disabled]="disabled"
+                            [showSearchCaseIcon]="caseSensitiveIcon"
+                            [filterable]="!disableFiltering"
+                            [groupSortingDirection]="groupSortingAngular"
+                            [placeholder]="placeholder"
+                            [searchPlaceholder]="placeholderSearch"
+                            [filteringOptions]="filteringOptions"
+                            type="border"
+                            [disabled]="disabled"
+                            [data]="items"
+                            [displayKey]="valueKeyVar"
+                            [valueKey]="valueKeyVar"
+                            [groupKey]="valueKeyVar ? 'region' : ''" >
                     <label igxLabel>Angular Combo</label>
                     <igx-hint>Select a unique falsy value</igx-hint>
                 </igx-combo>
-                <igc-combo required
-                           [data]="uniqueFalsyData"
-                           display-key="field"
-                           value-key="value"
-                           outlined="true"
-                           [disabled]="isDisabled"
-                           label="WC Combo">
+                <igc-combo  [name]="name"
+                            [required]="required"
+                            [disabled]="disabled"
+                            [caseSensitiveIcon]="caseSensitiveIcon"
+                            [disableFiltering]="disableFiltering"
+                            [groupSorting]="groupSorting"
+                            [placeholder]="placeholder"
+                            [placeholderSearch]="placeholderSearch"
+                            outlined="true"
+                            [disabled]="disabled"
+                            label="WC Combo"
+                            [data]="items"
+                            [displayKey]="valueKeyVar"
+                            [valueKey]="valueKeyVar"
+                            [groupKey]="valueKeyVar ? 'region' : ''" >
                     <span slot="helper-text">Select a unique falsy value</span>
                 </igc-combo>
             </div>

@@ -2,8 +2,8 @@
     <div class="sample-wrapper">
         <strong>Angular Tabs</strong>
         <igx-tabs
-            #tabsNew
-            [selectedIndex]="3"
+            [tabAlignment]="alignment"
+            [activation]="activation"
         >
             <igx-tab-item>
                 <igx-tab-header igxRipple>
@@ -62,7 +62,9 @@
 
     <div class="sample-wrapper">
         <strong>WC Tabs</strong>
-        <igc-tabs>
+        <igc-tabs
+        [alignment]="alignment"
+        [activation]="activation">
             <igc-tab panel="first">
                 <igx-icon>folder</igx-icon>
                 Tab 1

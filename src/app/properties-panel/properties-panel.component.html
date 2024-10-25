@@ -2,7 +2,7 @@
     <h5 class="panel-title">Properties Panel</h5>
     <div *ngFor="let key of getConfigKeys()">
         @if (getControlType(key) !== 'boolean') {
-        <label>
+        <label class="property-label">
             {{ config[key]?.label || (key | titlecase) }}
         </label>
         }

@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxLayoutDirective } from 'igniteui-angular';
 import { defineComponents, IgcButtonGroupComponent, IgcToggleButtonComponent } from "igniteui-webcomponents";
@@ -16,32 +16,10 @@ defineComponents(IgcButtonGroupComponent, IgcToggleButtonComponent);
 
 export class ButtonGroupShowcaseSampleComponent implements OnInit {
     public cities = [];
+    private propertyChangeService = inject(PropertyChangeService);
 
     public ngOnInit(): void {
-        this.cities = [
-            {
-                disabled: false,
-                label: 'Sofia',
-                selected: true,
-                togglable: false
-            },
-            {
-                disabled: false,
-                label: 'London',
-                selected: false
-            },
-            {
-                disabled: false,
-                label: 'New York',
-                selected: false
-            },
-            {
-                disabled: true,
-                label: 'Tokyo',
-                selected: false
-            }
-        ];
-
+        this.cities = ['Sofia', 'London', 'New York', 'Tokyo'];
         this.propertyChangeService.setPanelConfig(this.panelConfig);
     }
 
@@ -67,8 +45,6 @@ export class ButtonGroupShowcaseSampleComponent implements OnInit {
             }
         }
     }
-
-    constructor(protected propertyChangeService: PropertyChangeService) {}
 
     private selectionMap = {
         single: 'single',

@@ -7,9 +7,8 @@
         [disabled]="disabled">
             <button
             igxButton
-            *ngFor="let city of cities"
-            [selected]="city.selected">
-                {{ city.label }}
+            *ngFor="let city of cities">
+                {{ city }}
             </button>
         </igx-buttongroup>
     </article>
@@ -22,10 +21,8 @@
         [disabled]="disabled">
             <igc-toggle-button
             *ngFor="let city of cities"
-            [disabled]="city.disabled"
-            [value]="city.label"
-            [selected]="city.selected">
-                {{ city.label }}
+            [value]="city">
+                {{ city }}
             </igc-toggle-button>
         </igc-button-group>
     </article>

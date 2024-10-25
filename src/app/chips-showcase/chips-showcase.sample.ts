@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -49,6 +49,7 @@ defineComponents(IgcChipComponent, IgcAvatarComponent, IgcButtonComponent, IgcIc
 })
 export class ChipsShowcaseSampleComponent implements OnInit {
     @ViewChild('customControls', { static: true }) public customControlsTemplate!: TemplateRef<any>;
+    private propertyChangeService = inject(PropertyChangeService);
 
     public panelConfig : PropertyPanelConfig = {
         variant: {
@@ -89,8 +90,6 @@ export class ChipsShowcaseSampleComponent implements OnInit {
             }
         },
     }
-
-    constructor(protected propertyChangeService: PropertyChangeService){}
 
     public ngOnInit() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);

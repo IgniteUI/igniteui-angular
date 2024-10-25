@@ -1,4 +1,4 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular';
 import { IgcCircularProgressComponent, defineComponents } from 'igniteui-webcomponents';
 import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
@@ -15,6 +15,7 @@ defineComponents(IgcCircularProgressComponent);
 })
 
 export class CircularProgressSampleComponent implements OnInit {
+    private propertyChangeService = inject(PropertyChangeService);
     public panelConfig: PropertyPanelConfig = {
         indeterminate: {
             control: {
@@ -72,8 +73,6 @@ export class CircularProgressSampleComponent implements OnInit {
     protected get variant() {
         return this.propertyChangeService.getProperty('variant');
     }
-
-    constructor(private propertyChangeService: PropertyChangeService) { }
 
     public ngOnInit() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);

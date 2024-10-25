@@ -705,6 +705,11 @@ export class AppComponent implements OnInit {
 
     public WcCompareLinks = [
         {
+            link: '/accordion-showcase',
+            icon: 'radio_button_unchecked',
+            name: 'Accordion'
+        },
+        {
             link: '/avatar-showcase',
             icon: 'radio_button_unchecked',
             name: 'Avatar'

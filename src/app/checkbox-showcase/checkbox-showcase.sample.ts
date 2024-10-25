@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular';
 import { defineComponents, IgcCheckboxComponent} from "igniteui-webcomponents";
 import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
@@ -14,6 +14,7 @@ defineComponents(IgcCheckboxComponent);
     imports: [IgxCheckboxComponent]
 })
 export class CheckboxShowcaseSampleComponent implements OnInit {
+    private propertyChangeService = inject(PropertyChangeService);
     public panelConfig : PropertyPanelConfig = {
         indeterminate: {
             control: {
@@ -46,6 +47,7 @@ export class CheckboxShowcaseSampleComponent implements OnInit {
             }
         },
         labelPosition: {
+            label: 'Label Position',
             control: {
                 type: 'button-group',
                 options: ['before', 'after'],
@@ -63,8 +65,6 @@ export class CheckboxShowcaseSampleComponent implements OnInit {
             }
         },
     }
-
-    constructor(private propertyChangeService : PropertyChangeService) {}
 
     public ngOnInit() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);

@@ -43,7 +43,7 @@ export class InputGroupShowcaseSampleComponent implements OnInit {
             }
         },
         inputType: {
-            label: 'Choose Input Type',
+            label: 'Choose Input Type (Material only)',
             control: {
                 type: 'button-group',
                 options: ['box', 'border'],

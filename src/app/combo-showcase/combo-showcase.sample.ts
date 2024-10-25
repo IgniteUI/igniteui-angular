@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxButtonGroupComponent,
@@ -14,9 +14,11 @@ import {
     IgxPrefixDirective,
     IgxSimpleComboComponent,
     IgxSwitchComponent,
+    SortingDirection,
 } from 'igniteui-angular';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
-import { defineComponents, IgcComboComponent} from "igniteui-webcomponents";
+import { defineComponents, IgcComboComponent } from "igniteui-webcomponents";
+import { PropertyPanelConfig, PropertyChangeService } from '../properties-panel/property-change.service';
 
 defineComponents(IgcComboComponent);
 
@@ -45,19 +47,161 @@ defineComponents(IgcComboComponent);
         SizeSelectorComponent,
     ]
 })
-export class ComboShowcaseSampleComponent {
-    public isDisabled = false;
-    public uniqueFalsyData: any[];
+export class ComboShowcaseSampleComponent implements OnInit {
+    protected items: any[] = [];
+    public valueKeyVar = 'field';
+
+    public panelConfig: PropertyPanelConfig = {
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large'],
+            }
+        },
+        placeholderSearch: {
+            label: 'Search Placeholder',
+            control: {
+                type: 'text',
+                defaultValue: 'Enter a Search Term'
+            }
+        },
+        placeholder: {
+            control: {
+                type: 'text'
+            }
+        },
+        name: {
+            control: {
+                type: 'text'
+            }
+        },
+        groupSorting: {
+            label: 'Group Sorting Direction',
+            control: {
+                type: 'button-group',
+                options: ['asc', 'desc', 'none'],
+                defaultValue: 'asc'
+            }
+        },
+        caseSensitiveIcon: {
+            label: 'Case Sensitive Icon',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        disableFiltering: {
+            label: 'Disable Filtering',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        required: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        disabled: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+    }
 
     constructor(
-        public cdr: ChangeDetectorRef) {
-        this.uniqueFalsyData = [
-            { field: 'null', value: null },
-            { field: 'true', value: true },
-            { field: 'false', value: false },
-            { field: 'empty', value: '' },
-            { field: 'undefined', value: undefined },
-            { field: 'NaN', value: NaN }
-        ];
+        private propertyChangeService: PropertyChangeService) {
+        const division = {
+            'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
+            'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
+            'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
+            'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
+            'East North Central 01': ['Illinois', 'Indiana'],
+            'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
+            'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
+            'South Atlantic 01': ['Delaware', 'Florida', 'Georgia', 'Maryland'],
+            'South Atlantic 02': ['North Carolina', 'South Carolina', 'Virginia'],
+            'South Atlantic 03': ['District of Columbia', 'West Virginia'],
+            'East South Central 01': ['Alabama', 'Kentucky'],
+            'East South Central 02': ['Mississippi', 'Tennessee'],
+            'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
+            Mountain: ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            'Pacific 01': ['Alaska', 'California'],
+            'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
+        };
+
+        const keys = Object.keys(division);
+        for (const key of keys) {
+            division[key].map((e) => {
+                this.items.push({
+                    field: e,
+                    region: key.substring(0, key.length - 3)
+                });
+            });
+        }
+    }
+
+    public ngOnInit() {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+    }
+
+    protected get size() {
+        return this.propertyChangeService.getProperty('size');
+    }
+
+    protected get placeholderSearch() {
+        return this.propertyChangeService.getProperty('placeholderSearch');
+    }
+
+    protected get placeholder() {
+        return this.propertyChangeService.getProperty('placeholder');
+    }
+
+    protected get name() {
+        return this.propertyChangeService.getProperty('name');
+    }
+
+    protected get groupSorting() {
+        return this.propertyChangeService.getProperty('groupSorting');
+    }
+
+    protected get groupSortingAngular() {
+        const sortingValue = this.propertyChangeService.getProperty('groupSorting');
+
+        switch (sortingValue) {
+            case 'asc':
+                return SortingDirection.Asc;
+            case 'desc':
+                return SortingDirection.Desc;
+            case 'none':
+                return SortingDirection.None;
+            default:
+                return SortingDirection.Asc;
+        }
+    }
+
+    protected get caseSensitiveIcon() {
+        return this.propertyChangeService.getProperty('caseSensitiveIcon');
+    }
+
+    protected get disableFiltering() {
+        return this.propertyChangeService.getProperty('disableFiltering');
+    }
+
+    protected get filteringOptions() {
+        return {
+            filterable: !this.disableFiltering,
+            caseSensitive: this.caseSensitiveIcon
+        };
+    }
+
+    protected get required() {
+        return this.propertyChangeService.getProperty('required');
+    }
+
+    protected get disabled() {
+        return this.propertyChangeService.getProperty('disabled');
     }
 }

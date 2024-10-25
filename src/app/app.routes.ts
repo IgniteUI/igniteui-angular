@@ -150,6 +150,7 @@ import { TreeSampleComponent } from './tree/tree.sample';
 import { TreeShowcaseSampleComponent } from './tree-showcase/tree-showcase.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 import { AccordionSampleComponent } from './accordion/accordion.sample';
+import { AccordionShowcaseSampleComponent } from './accordion-showcase/accordion-showcase.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
@@ -180,6 +181,10 @@ export const appRoutes: Routes = [
     {
         path: 'accordion',
         component: AccordionSampleComponent
+    },
+    {
+        path: 'accordion-showcase',
+        component: AccordionShowcaseSampleComponent
     },
     {
         path: 'action-strip',
