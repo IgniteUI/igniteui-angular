@@ -8,14 +8,14 @@ import { RemoteNWindService } from './remote-nwind.service';
 import {
     ButtonGroupAlignment,
     ConnectedPositioningStrategy,
-    ElasticPositionStrategy, 
+    ElasticPositionStrategy,
     GlobalPositionStrategy,
     HorizontalAlignment,
     IChangeCheckboxEventArgs,
     IComboFilteringOptions,
     IComboSearchInputEventArgs,
     IComboSelectionChangingEventArgs,
-    IForOfState, 
+    IForOfState,
     ISimpleComboSelectionChangingEventArgs,
     IgxButtonDirective,
     IgxButtonGroupComponent,
@@ -100,7 +100,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
-    public filterableFlag = true;
+    public disableFilteringFlag = false;
     public customValuesFlag = true;
     public autoFocusSearch = true;
     public items: any[] = [];

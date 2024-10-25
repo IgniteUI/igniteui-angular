@@ -34,8 +34,10 @@ describe('UpdateChanges', () => {
         appTree = setupTestTree({
             projects: {
                 testProj: {
+                    projectType: 'application',
                     root: '',
-                    sourceRoot: '/'
+                    sourceRoot: '/',
+                    architect: { build: { options: {} } }
                 }
             },
             schematics: {
@@ -854,7 +856,9 @@ export class AppModule { }`);
             appTree.overwrite('/angular.json', JSON.stringify({
                 projects: {
                     testProj: {
-                        sourceRoot: '/src'
+                        projectType: 'application',
+                        sourceRoot: '/src',
+                        architect: { build: { options: {} } }
                     }
                 }
             }));
@@ -882,15 +886,18 @@ export class AppModule { }`);
                 projects: {
                     testProj: {
                         projectType: 'application',
-                        sourceRoot: 'src-one'
+                        sourceRoot: 'src-one',
+                        architect: { build: { options: {} } }
                     },
                     test2Proj: {
                         projectType: 'application',
-                        sourceRoot: '/src-two'
+                        sourceRoot: '/src-two',
+                        architect: { build: { options: {} } }
                     },
                     libProj: {
                         projectType: 'library',
-                        sourceRoot: 'src-lib'
+                        sourceRoot: 'src-lib',
+                        architect: { build: { options: {} } }
                     }
                 }
             };

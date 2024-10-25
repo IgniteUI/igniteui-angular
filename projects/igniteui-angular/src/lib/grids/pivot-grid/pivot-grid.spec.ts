@@ -760,6 +760,43 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.columns.length).toBe(3);
         });
 
+        it('should calculate row headers according to grid size', async() => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            const rowHeightSmall = 32;
+            const rowHeightMedium = 40;
+            const rowHeightLarge = 50;
+
+            pivotGrid.superCompactMode = false;
+            setElementSize(pivotGrid.nativeElement, Size.Large);
+
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(pivotGrid.gridSize).toBe(Size.Large);
+            const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+            let rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            let rowHeader = rowHeaders[0].queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
+            expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightLarge);
+
+            setElementSize(pivotGrid.nativeElement, Size.Small);
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(pivotGrid.gridSize).toBe(Size.Small);
+            rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            rowHeader = rowHeaders[0].queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
+            expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightSmall);
+
+            setElementSize(pivotGrid.nativeElement, Size.Medium);
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(pivotGrid.gridSize).toBe(Size.Medium);
+            rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            rowHeader = rowHeaders[0].queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
+            expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightMedium);
+        });
+
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', async () => {
@@ -2379,6 +2416,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             expect(pivotGrid.columnGroupStates.size).toBe(1);
             expect(pivotGrid.rowList.first.cells.length).toBe(2);
+        });
+
+        it("should position correct the horizontal scrollbar", () => {
+            const scrollBarPosition = fixture.nativeElement.querySelector("igx-horizontal-virtual-helper").getBoundingClientRect();
+            const displayContainerPosition = fixture.nativeElement.querySelector(".igx-grid__tbody-content").getBoundingClientRect()
+            expect(scrollBarPosition.x).toEqual(displayContainerPosition.x);
         });
     });
 

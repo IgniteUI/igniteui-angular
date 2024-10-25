@@ -96,7 +96,7 @@
                 <span igxPrefix class="igx-filter-tree__expression-condition">
                     {{
                         getConditionFriendlyName(
-                            expressionItem.expression.condition.name
+                            expressionItem.expression.condition?.name
                         )
                     }}
                 </span>
@@ -106,35 +106,59 @@
                     </ng-container>
 
                     <ng-container *ngIf="!expressionItem.expression.searchTree">
-                    {{
-                        isDate(expressionItem.expression.searchVal)
-                            ? getFormatter(expressionItem.expression.fieldName)
-                                ? (expressionItem.expression.searchVal
-                                | fieldFormatter
-                                    : getFormatter(
-                                            expressionItem.expression.fieldName
-                                        )
-                                    : undefined)
-                                : (expressionItem.expression.searchVal
-                                | date
-                                    : getFormat(
-                                            expressionItem.expression.fieldName
-                                        )
-                                    : undefined
-                                    : this.locale)
-                            : expressionItem.expression.searchVal
-                    }}
+                        @if(isDate(expressionItem.expression.searchVal)) {
+                            @if(getFormatter(expressionItem.expression.fieldName)) {
+                               {{
+                                    expressionItem.expression.searchVal
+                                    | fieldFormatter
+                                        : getFormatter(
+                                                expressionItem.expression.fieldName
+                                            )
+                                        : undefined
+                               }}
+                            } @else {
+                                {{
+                                    expressionItem.expression.searchVal
+                                    | date
+                                        : getFormat(
+                                                expressionItem.expression.fieldName
+                                            )
+                                        : undefined
+                                        : this.locale
+                                }}
+                            }
+                        } @else {
+                            @if(getFormatter(expressionItem.expression.fieldName)) {
+                                {{
+                                    expressionItem.expression.searchVal
+                                        | fieldFormatter
+                                        : getFormatter(expressionItem.expression.fieldName)
+                                        : (expressionItem.expression.conditionName ||  expressionItem.expression.condition?.name)
+                                }}
+                            } @else {
+                                {{ expressionItem.expression.searchVal }}
+                            }
+                        }
                     </ng-container>
                 </span>
             </igx-chip>
             <div #tooltipRef="tooltip" igxTooltip>
-                {{
-                    expressionItem.expression.searchTree ?
-                        expressionItem.expression.searchTree.returnFields.join(', ') :
-                        expressionItem.expression.condition.isUnary ?
-                            getConditionFriendlyName(expressionItem.expression.condition.name) :
+                @if(expressionItem.expression.searchTree){
+                    {{expressionItem.expression.searchTree.returnFields.join(', ')}}
+                } @else if (expressionItem.expression.condition.isUnary) {
+                    {{getConditionFriendlyName(expressionItem.expression.condition?.name)}}
+                } @else {
+                    @if(getFormatter(expressionItem.expression.fieldName)) {
+                        {{
                             expressionItem.expression.searchVal
-                }}
+                                | fieldFormatter
+                                : getFormatter(expressionItem.expression.fieldName)
+                                : (expressionItem.expression.conditionName || expressionItem.expression.condition?.name)
+                        }}
+                    } @else {
+                        {{ expressionItem.expression.searchVal }}
+                    }
+                }
             </div>
             <div
                 class="igx-filter-tree__expression-actions"
