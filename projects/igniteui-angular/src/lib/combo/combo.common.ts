@@ -108,8 +108,11 @@ export const enum DataTypes {
 export interface IComboFilteringOptions {
     /** Defines filtering case-sensitivity */
     caseSensitive?: boolean;
-    /** Defines whether filtering is allowed */
-    filterable: boolean;
+    /**
+     * Defines whether filtering is allowed
+     * @deprecated in version 18.2.0. Use the `disableFiltering` property instead.
+    */
+    filterable?: boolean;
     /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
     filteringKey?: string;
 }
@@ -971,7 +974,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _overlaySettings: OverlaySettings;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
     private _filteringOptions: IComboFilteringOptions;
-    private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false, filterable: true };
+    private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false };
 
     public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
@@ -1211,6 +1214,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /** @hidden @internal */
     public handleClosed() {
         this.closed.emit({ owner: this });
+        if(this.comboInput.nativeElement !== this.document.activeElement){
+            this.validateComboState();
+        }
     }
 
     /** @hidden @internal */
@@ -1250,12 +1256,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public onBlur() {
         if (this.collapsed) {
             this._onTouchedCallback();
-            if (this.ngControl && this.ngControl.invalid) {
-                this.valid = IgxInputState.INVALID;
-            } else {
-                this.valid = IgxInputState.INITIAL;
-            }
+            this.validateComboState();
         }
+    }
+
+    /** @hidden @internal */
+    public onFocus(): void {
+        this._onTouchedCallback();
     }
 
     /** @hidden @internal */
@@ -1281,6 +1288,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         }
         this.manageRequiredAsterisk();
     };
+
+    private validateComboState() {
+        if (this.ngControl && this.ngControl.invalid) {
+            this.valid = IgxInputState.INVALID;
+        } else {
+            this.valid = IgxInputState.INITIAL;
+        }
+    }
 
     private get isTouchedOrDirty(): boolean {
         return (this.ngControl.control.touched || this.ngControl.control.dirty);

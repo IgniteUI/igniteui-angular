@@ -67,6 +67,26 @@ describe(`Update to ${version}`, () => {
         expect(tree.readContent('/testSrc/appPrefix/component/grid-test.component.ts')).toEqual(expectedContent);
     });
 
+    it('should remove property `filterable` from Combo component', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-combo [filterable]="false"></igx-combo>
+        <igx-combo filterable="true"></igx-combo>
+        <igx-combo [filterable]="myProp"></igx-combo>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-combo [disableFiltering]="true"></igx-combo>
+        <igx-combo [disableFiltering]="false"></igx-combo>
+        <igx-combo [disableFiltering]="!(myProp)"></igx-combo>
+        `
+        );
+    });
+
     it('should migrate scrollbar theme', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
