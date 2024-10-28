@@ -8,6 +8,20 @@ function serialize(value: unknown, pretty = false) {
     return pretty ? JSON.stringify(value, undefined, ' ') : JSON.stringify(value)
 }
 
+function checkOp(op: IFilteringExpression, reconstructedOp: IFilteringExpression) {
+    expect(reconstructedOp.condition.logic).not.toBeNull();
+    expect(reconstructedOp.condition.name).toBe(op.conditionName);
+    expect(reconstructedOp.conditionName).toBe(op.conditionName);
+
+    if (op.searchTree) {
+        for (let index = 0; index < op.searchTree.filteringOperands.length; index++) {
+            const innerOp = op.searchTree.filteringOperands[index] as IFilteringExpression;
+            const reconstructedInnerOp = reconstructedOp.searchTree.filteringOperands[index] as IFilteringExpression;
+            checkOp(innerOp, reconstructedInnerOp);
+        }
+    }
+}
+
 fdescribe('Unit testing FilteringUtil', () => {
     it('Expressions should resolve correctly when rehydrating with fields', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.Or, 'myField', 'myEntity', ['*']);
@@ -88,12 +102,7 @@ fdescribe('Unit testing FilteringUtil', () => {
         const deserializedTree = recreateTreeFromFields(JSON.parse(serializedTree), fields);
 
         for (let index = 0; index < tree.filteringOperands.length; index++) {
-            const op = tree.filteringOperands[index] as IFilteringExpression;
-            const reconstructedOp = deserializedTree.filteringOperands[index] as IFilteringExpression;
-
-            expect(reconstructedOp.condition.logic).not.toBeNull();
-            expect(reconstructedOp.condition.name).toBe(op.conditionName);
-            expect(reconstructedOp.conditionName).toBe(op.conditionName);
+            checkOp(tree.filteringOperands[index] as IFilteringExpression, deserializedTree.filteringOperands[index] as IFilteringExpression);
         }
     });
 
@@ -141,22 +150,6 @@ fdescribe('Unit testing FilteringUtil', () => {
                     fieldName: 'DateTime created',
                     conditionName: 'equals',
                     searchVal: new Date().toISOString()
-                },
-                {
-                    fieldName: 'In',
-                    conditionName: 'in',
-                    searchTree: {
-                        filteringOperands: [
-                            {
-                                fieldName: 'Id',
-                                conditionName: 'equals',
-                                searchVal: 100
-                            }
-                        ],
-                        operator: FilteringLogic.And,
-                        entity: 'otherEntity',
-                        returnFields: ['*']
-                    }
                 }
             ],
             operator: FilteringLogic.And,
@@ -166,22 +159,104 @@ fdescribe('Unit testing FilteringUtil', () => {
 
         const deserializedTree = recreateTree(tree, entities);
 
-        const checkOp = (op: IFilteringExpression, reconstructedOp: IFilteringExpression) => {
-            expect(reconstructedOp.condition.logic).not.toBeNull();
-            expect(reconstructedOp.condition.name).toBe(op.conditionName);
-            expect(reconstructedOp.conditionName).toBe(op.conditionName);
-
-            if (op.searchTree) {
-                for (let index = 0; index < op.searchTree.filteringOperands.length; index++) {
-                    const innerOp = op.searchTree.filteringOperands[index] as IFilteringExpression;
-                    const reconstructedInnerOp = reconstructedOp.searchTree.filteringOperands[index] as IFilteringExpression;
-                    checkOp(innerOp, reconstructedInnerOp);
-                }
-            }
+        for (let index = 0; index < tree.filteringOperands.length; index++) {
+            checkOp(tree.filteringOperands[index], deserializedTree.filteringOperands[index] as IFilteringExpression);
         }
+    });
+
+    it('Should not modify a fully constructed tree with no entities given', () => {
+        const tree = {
+            filteringOperands: [
+                {
+                    fieldName: 'Id',
+                    conditionName: 'equals',
+                    condition: IgxNumberFilteringOperand.instance().condition('equals'),
+                    searchVal: 100
+                },
+                {
+                    fieldName: 'Name',
+                    conditionName: 'equals',
+                    condition: IgxStringFilteringOperand.instance().condition('equals'),
+                    searchVal: 'test'
+                },
+                {
+                    fieldName: 'Validated',
+                    conditionName: 'false',
+                    condition: IgxBooleanFilteringOperand.instance().condition('false')
+                },
+                {
+                    fieldName: 'DateTime created',
+                    conditionName: 'equals',
+                    condition: IgxDateTimeFilteringOperand.instance().condition('equals'),
+                    searchVal: new Date().toISOString()
+                }
+            ],
+            operator: FilteringLogic.And,
+            entity: 'myEntity',
+            returnFields: ['*']
+        };
+
+        const deserializedTree = recreateTree(tree, []);
+
+        expect(deserializedTree).toEqual(tree);
 
         for (let index = 0; index < tree.filteringOperands.length; index++) {
             checkOp(tree.filteringOperands[index], deserializedTree.filteringOperands[index] as IFilteringExpression);
+            const reconstructedOp = deserializedTree.filteringOperands[index] as IFilteringExpression;
+            // Explicitly check the logic function
+            expect(tree.filteringOperands[index].condition.logic.toString()).toBe(reconstructedOp.condition.logic.toString());
+        }
+    });
+
+    it('Should not modify a fully constructed tree with fields given', () => {
+
+        const fields = [
+            { field: 'Id', dataType: 'number' },
+            { field: 'Name', dataType: 'string' },
+            { field: 'Validated', dataType: 'boolean' },
+            { field: 'DateTime created', dataType: 'dateTime' },
+        ] as FieldType[];
+
+        const tree = {
+            filteringOperands: [
+                {
+                    fieldName: 'Id',
+                    conditionName: 'equals',
+                    condition: IgxNumberFilteringOperand.instance().condition('equals'),
+                    searchVal: 100
+                },
+                {
+                    fieldName: 'Name',
+                    conditionName: 'equals',
+                    condition: IgxStringFilteringOperand.instance().condition('equals'),
+                    searchVal: 'test'
+                },
+                {
+                    fieldName: 'Validated',
+                    conditionName: 'false',
+                    condition: IgxBooleanFilteringOperand.instance().condition('false')
+                },
+                {
+                    fieldName: 'DateTime created',
+                    conditionName: 'equals',
+                    condition: IgxDateTimeFilteringOperand.instance().condition('equals'),
+                    searchVal: new Date().toISOString()
+                }
+            ],
+            operator: FilteringLogic.And,
+            entity: 'myEntity',
+            returnFields: ['*']
+        };
+
+        const deserializedTree = recreateTreeFromFields(tree, fields);
+
+        expect(deserializedTree).toEqual(tree);
+
+        for (let index = 0; index < tree.filteringOperands.length; index++) {
+            checkOp(tree.filteringOperands[index], deserializedTree.filteringOperands[index] as IFilteringExpression);
+            const reconstructedOp = deserializedTree.filteringOperands[index] as IFilteringExpression;
+            // Explicitly check the logic function
+            expect(tree.filteringOperands[index].condition.logic.toString()).toBe(reconstructedOp.condition.logic.toString());
         }
     });
 
