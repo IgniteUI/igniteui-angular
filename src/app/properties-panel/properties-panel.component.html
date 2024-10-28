@@ -89,7 +89,7 @@
         }
     </div>
 
-    <ng-container *ngIf="customControlsTemplate">
-        <ng-container *ngTemplateOutlet="customControlsTemplate"></ng-container>
+    <ng-container *ngIf="propertyChangeService.customControls$ | async">
+        <ng-container *ngTemplateOutlet="propertyChangeService.customControls$ | async"></ng-container>
     </ng-container>
 </div>

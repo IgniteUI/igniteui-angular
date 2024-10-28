@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective, IgxToggleActionDirective } from 'igniteui-angular';
 import { PropertyChangeService } from '../properties-panel/property-change.service';
@@ -13,11 +13,6 @@ import { PropertyChangeService } from '../properties-panel/property-change.servi
 export class PageHeaderComponent {
     @Input()
     public title: string;
-    public panelConfig: any;
 
-    constructor(protected propertyChangeService: PropertyChangeService) {
-        this.propertyChangeService.panelConfig$.subscribe(config => {
-            this.panelConfig = config;
-        });
-    }
+    protected propertyChangeService = inject(PropertyChangeService);
 }

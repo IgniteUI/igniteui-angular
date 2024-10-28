@@ -69,15 +69,15 @@
     </igx-nav-drawer>
 
     <igx-nav-drawer
-        *ngIf="panelConfig"
+        *ngIf="propertyChangeService.panelConfig$ | async"
         #paneldrawer
         [pin]="true"
         position="right"
-        [isOpen]="panelConfig"
+        [isOpen]="propertyChangeService.panelConfig$ | async"
         id="paneldrawer">
 
         <ng-template igxDrawer>
-            <app-properties-panel [config]="panelConfig"></app-properties-panel>
+            <app-properties-panel [config]="propertyChangeService.panelConfig$ | async"></app-properties-panel>
         </ng-template>
     </igx-nav-drawer>
 

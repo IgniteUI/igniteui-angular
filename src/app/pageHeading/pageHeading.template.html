@@ -11,7 +11,7 @@
             {{ title }}
         </h5>
     </div>
-    <button *ngIf="panelConfig"
+    <button *ngIf="propertyChangeService.panelConfig$ | async"
             igxIconButton="flat"
             igxRipple
             [igxRippleCentered]="true"
