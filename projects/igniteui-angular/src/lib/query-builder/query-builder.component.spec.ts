@@ -701,7 +701,7 @@ describe('IgxQueryBuilder', () => {
       },
       "conditionName": null,
       "ignoreCase": true,
-      "searchVal": "5",
+      "searchVal": 5,
       "searchTree": null
     }
   ],
@@ -754,7 +754,7 @@ describe('IgxQueryBuilder', () => {
       },
       "conditionName": null,
       "ignoreCase": true,
-      "searchVal": "5",
+      "searchVal": 5,
       "searchTree": null
     }
   ],
@@ -2138,7 +2138,7 @@ describe('IgxQueryBuilder', () => {
         "iconName": "filter_greater_than"
       },
       "conditionName": "greaterThan",
-      "searchVal": "5",
+      "searchVal": 5,
       "searchTree": null,
       "ignoreCase": true
     }
