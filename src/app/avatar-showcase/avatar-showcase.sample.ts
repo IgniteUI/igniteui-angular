@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { IgxAvatarComponent } from 'igniteui-angular';
 import { CommonModule } from '@angular/common';
 import { defineComponents, IgcAvatarComponent } from "igniteui-webcomponents";
@@ -15,8 +15,9 @@ defineComponents(IgcAvatarComponent);
     imports: [CommonModule, IgxAvatarComponent]
 })
 
-export class AvatarShowcaseSampleComponent implements OnInit {
+export class AvatarShowcaseSampleComponent {
     private propertyChangeService = inject(PropertyChangeService);
+
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
@@ -47,7 +48,7 @@ export class AvatarShowcaseSampleComponent implements OnInit {
         }
     }
 
-    public ngOnInit() {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
     }
 

@@ -65,7 +65,9 @@ defineComponents(IgcCalendarComponent);
     ],
 })
 export class CalendarShowcaseSampleComponent implements OnInit {
-    @ViewChild('customControls', { static: true }) public customControlsTemplate!: TemplateRef<any>;
+    @ViewChild('customControls', { static: true })
+    public customControlsTemplate!: TemplateRef<any>;
+
     private _today = new Date();
 
     private _formatOptions: IFormattingOptions = {
@@ -160,6 +162,14 @@ export class CalendarShowcaseSampleComponent implements OnInit {
         range: 'range'
     };
 
+    constructor() {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+    }
+
+    public ngOnInit(): void {
+        this.propertyChangeService.setCustomControls(this.customControlsTemplate);
+    }
+
     protected get locale() {
         return this.propertyChangeService.getProperty('locale');
     }
@@ -204,11 +214,6 @@ export class CalendarShowcaseSampleComponent implements OnInit {
 
     protected get monthsViewNumber() {
         return this.propertyChangeService.getProperty('monthsViewNumber');
-    }
-
-    public ngOnInit(): void {
-        this.propertyChangeService.setPanelConfig(this.panelConfig);
-        this.propertyChangeService.setCustomControls(this.customControlsTemplate);
     }
 
     protected onSelection(event: Date | Date[]) {

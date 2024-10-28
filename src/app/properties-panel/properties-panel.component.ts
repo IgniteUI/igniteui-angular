@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, TemplateRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PropertyChangeService, PropertyPanelConfig } from './property-change.service';
@@ -45,18 +45,45 @@ import {
     ]
 })
 
-export class PropertiesPanelComponent implements OnInit {
-    @Input() public config!: PropertyPanelConfig;
+export class PropertiesPanelComponent {
+    protected config: PropertyPanelConfig;
+    protected customControls: TemplateRef<any>;
 
     protected form!: FormGroup;
     protected radioAlignment = RadioGroupAlignment.vertical;
-
     protected propertyChangeService = inject(PropertyChangeService);
+    private destroyRef = inject(DestroyRef);
+    private cdRef = inject(ChangeDetectorRef);
 
-    public ngOnInit(): void {
-        this.form = this.createFormGroup(this.config);
-        this.propertyChangeService.emitInitialValues(this.config);
-        this.form.valueChanges.subscribe(this.onFormValueChange.bind(this));
+    constructor() {
+        let subscription: any;
+
+        const panelSubscription = this.propertyChangeService.panelConfig.subscribe((config) => {
+            this.config = config;
+
+            if (this.form) {
+                subscription.unsubscribe();
+            }
+
+            this.form = this.createFormGroup(config);
+            subscription = this.form.valueChanges.subscribe(this.onFormValueChange.bind(this));
+        });
+
+        const customControlsSubscription = this.propertyChangeService.customControlsSource.subscribe(
+            (template: TemplateRef<any>) => {
+                if (template) {
+                    this.customControls = template;
+                    this.cdRef.detectChanges();
+                } else {
+                    this.customControls = undefined;
+                }
+            }
+        )
+
+        this.destroyRef.onDestroy(() => {
+            panelSubscription.unsubscribe();
+            customControlsSubscription.unsubscribe();
+        });
     }
 
     protected onFormValueChange(value: any): void {

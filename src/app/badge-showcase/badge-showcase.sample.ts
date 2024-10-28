@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
 import { IgxBadgeComponent } from 'igniteui-angular';
 import { defineComponents, IgcBadgeComponent } from "igniteui-webcomponents";
 import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
@@ -14,8 +14,9 @@ defineComponents(IgcBadgeComponent);
     imports: [IgxBadgeComponent]
 })
 
-export class BadgeShowcaseSampleComponent implements OnInit {
+export class BadgeShowcaseSampleComponent {
     private propertyChangeService = inject(PropertyChangeService);
+
     public panelConfig: PropertyPanelConfig = {
         shape: {
             control: {
@@ -27,19 +28,22 @@ export class BadgeShowcaseSampleComponent implements OnInit {
         variant: {
             control: {
                 type: 'select',
-                options: ['default', 'info', 'success', 'warning', 'error']
+                options: ['default', 'info', 'success', 'warning', 'error'],
+                defaultValue: 'default'
             }
         },
         outlined: {
             control: {
                 type: 'boolean',
+                defaultValue: false
             }
         }
     };
 
-    public ngOnInit() {
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
     }
+
     private variantMap = {
         default: 'primary',
         info: 'info',

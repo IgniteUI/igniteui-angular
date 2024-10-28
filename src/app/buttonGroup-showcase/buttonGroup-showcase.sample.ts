@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxLayoutDirective } from 'igniteui-angular';
 import { defineComponents, IgcButtonGroupComponent, IgcToggleButtonComponent } from "igniteui-webcomponents";
@@ -14,14 +14,9 @@ defineComponents(IgcButtonGroupComponent, IgcToggleButtonComponent);
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent, NgFor, IgxLayoutDirective]
 })
 
-export class ButtonGroupShowcaseSampleComponent implements OnInit {
-    public cities = [];
+export class ButtonGroupShowcaseSampleComponent {
+    public cities = ['Sofia', 'London', 'New York', 'Tokyo'];
     private propertyChangeService = inject(PropertyChangeService);
-
-    public ngOnInit(): void {
-        this.cities = ['Sofia', 'London', 'New York', 'Tokyo'];
-        this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
     public panelConfig: PropertyPanelConfig = {
         alignment: {
@@ -44,6 +39,10 @@ export class ButtonGroupShowcaseSampleComponent implements OnInit {
                 defaultValue: false
             }
         }
+    }
+
+    constructor() {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
     }
 
     private selectionMap = {

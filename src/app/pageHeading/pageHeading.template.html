@@ -1,3 +1,5 @@
+@let config = (propertyChangeService.panelConfig$ | async | keyvalue)?.length > 0;
+
 <div class="sample-header">
     <div class="wrapper">
         <button igxIconButton="flat"
@@ -11,7 +13,7 @@
             {{ title }}
         </h5>
     </div>
-    <button *ngIf="propertyChangeService.panelConfig$ | async"
+    <button *ngIf="config"
             igxIconButton="flat"
             igxRipple
             [igxRippleCentered]="true"

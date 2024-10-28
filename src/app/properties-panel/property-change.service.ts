@@ -1,6 +1,6 @@
 import { Injectable, TemplateRef } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivationStart, Router } from '@angular/router';
 
 export type ControlType =
     'boolean' |
@@ -35,21 +35,37 @@ export type PropertyPanelConfig = {
     providedIn: 'root',
 })
 export class PropertyChangeService {
-    private propertyChanges = new BehaviorSubject<PropertyPanelConfig>({});
-    public propertyChanges$ = this.propertyChanges.asObservable();
+    public propertyChanges = new BehaviorSubject<PropertyPanelConfig>({});
 
     public panelConfig = new BehaviorSubject<PropertyPanelConfig>({});
     public panelConfig$ = this.panelConfig.asObservable();
 
-    private customControlsSource = new BehaviorSubject<TemplateRef<any> | null>(null);
+    public customControlsSource = new BehaviorSubject<TemplateRef<any> | null>(null);
     public customControls$ = this.customControlsSource.asObservable();
 
-    public emitInitialValues(config: PropertyPanelConfig): void {
-        this.panelConfig.next(config);
-        Object.keys(config).forEach((key) => {
-            const defaultValue = config[key]?.control?.defaultValue;
-            if (defaultValue !== undefined && defaultValue !== null) {
-                this.updateProperty(key, defaultValue);
+    constructor(private router: Router) {
+        this.router.events.subscribe(event => {
+            if (event instanceof ActivationStart) {
+                this.clearPanelConfig();
+                this.clearCustomControls();
+            }
+        });
+
+        this.panelConfig.subscribe((config) => {
+            if (config) {
+                const properties = {};
+
+                Object.keys(config).forEach((key) => {
+                    const defaultValue = config[key]?.control?.defaultValue;
+
+                    if (defaultValue !== undefined && defaultValue !== null) {
+                        properties[key] = defaultValue;
+                    }
+                });
+
+                if (Object.entries(properties).length !== 0) {
+                    this.propertyChanges.next(properties);
+                }
             }
         });
     }
@@ -70,7 +86,7 @@ export class PropertyChangeService {
     }
 
     public clearPanelConfig(): void {
-        this.panelConfig.next(null);
+        this.panelConfig.next({});
     }
 
     public setCustomControls(controls: TemplateRef<any>): void {
@@ -80,14 +96,4 @@ export class PropertyChangeService {
     public clearCustomControls(): void {
         this.customControlsSource.next(null);
     }
-
-    constructor(private router: Router) {
-        this.router.events.subscribe(event => {
-            if (event instanceof NavigationEnd) {
-                this.clearPanelConfig();
-                this.clearCustomControls();
-            }
-        });
-    }
 }
-
