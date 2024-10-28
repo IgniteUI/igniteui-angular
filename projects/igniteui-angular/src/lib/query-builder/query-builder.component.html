@@ -147,32 +147,31 @@
                     expressionItem.hovered
                 "
             >
-                <span tabindex="0"
+                <button
+                    igxIconButton="flat"
+                    aria-labelledby="edit-expression"
                     (keydown)="invokeClick($event)"
-                    (click)="enterExpressionEdit(expressionItem)">
-                    <igx-icon
-                        family="default"
-                        name="edit"                        
-                    >
-                    </igx-icon>
-                </span>
-                <span tabindex="0"
+                    (click)="enterExpressionEdit(expressionItem)"
+                >
+                    <igx-icon id="edit-expression">edit</igx-icon>
+                </button>
+
+                <button
+                    igxIconButton="flat"
+                    aria-labelledby="add-expression"
                     (keydown)="invokeClick($event)"
-                    (click)="enterExpressionAdd(expressionItem)">
-                    <igx-icon
-                        family="default"
-                        name="add"                        
-                        *ngIf="
-                            !expressionItem.inAddMode &&
-                            (expressionItem.parent !== currentGroup ||
-                                expressionItem !==
-                                    currentGroup.children[
-                                        currentGroup.children.length - 1
-                                    ])
-                        "
-                    >
-                    </igx-icon>
-                </span>
+                    (click)="enterExpressionAdd(expressionItem)"
+                    *ngIf="
+                        !expressionItem.inAddMode &&
+                        (expressionItem.parent !== currentGroup ||
+                            expressionItem !==
+                                currentGroup.children[
+                                    currentGroup.children.length - 1
+                                ])
+                    "
+                >
+                    <igx-icon id="add-expression">add</igx-icon>
+                </button>
             </div>
         </div>
 
