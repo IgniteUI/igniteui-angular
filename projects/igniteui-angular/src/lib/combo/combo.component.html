@@ -13,8 +13,7 @@
             role="combobox" aria-haspopup="listbox"
             [attr.aria-expanded]="!dropdown.collapsed" [attr.aria-controls]="dropdown.listId"
             [attr.aria-labelledby]="ariaLabelledBy || label?.id || placeholder"
-            (blur)="onBlur()"
-            (focus)="onFocus()" />
+            (blur)="onBlur()"/>
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
