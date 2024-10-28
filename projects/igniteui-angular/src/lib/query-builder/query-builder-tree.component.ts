@@ -619,9 +619,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public set selectedReturnFields(value: string[]) {
-        const oldValue = this._selectedReturnFields;
-
-        if (this._selectedReturnFields !== value && oldValue !== value) {
+        if (this._selectedReturnFields !== value) {
             this._selectedReturnFields = value;
 
             if (this._expressionTree && !this.parentExpression) {
