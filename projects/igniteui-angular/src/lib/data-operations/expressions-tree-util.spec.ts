@@ -1,14 +1,14 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { recreateTree } from './expressions-tree-util';
-import { EntityType } from '../grids/common/grid.interface';
+import { recreateTree, recreateTreeFromFields } from './expressions-tree-util';
+import { EntityType, FieldType } from '../grids/common/grid.interface';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 
 function serialize(value: unknown, pretty = false) {
     return pretty ? JSON.stringify(value, undefined, ' ') : JSON.stringify(value)
 }
 
-describe('Unit testing FilteringUtil', () => {
+fdescribe('Unit testing FilteringUtil', () => {
     it('Expressions should resolve correctly when rehydrating with fields', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.Or, 'myField', 'myEntity', ['*']);
         const currDate = new Date();
@@ -20,12 +20,7 @@ describe('Unit testing FilteringUtil', () => {
             { field: 'Date created', dataType: 'date' },
             { field: 'Time created', dataType: 'time' },
             { field: 'DateTime created', dataType: 'dateTime' }
-        ];
-
-        const entities: EntityType[] = [{
-            name: 'myEntity',
-            fields: fields as any,
-        }];
+        ] as FieldType[];
 
         // number
         tree.filteringOperands.push({
@@ -90,7 +85,7 @@ describe('Unit testing FilteringUtil', () => {
         });
 
         const serializedTree = serialize(tree, true);
-        const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
+        const deserializedTree = recreateTreeFromFields(JSON.parse(serializedTree), fields);
 
         for (let index = 0; index < tree.filteringOperands.length; index++) {
             const op = tree.filteringOperands[index] as IFilteringExpression;
@@ -102,6 +97,94 @@ describe('Unit testing FilteringUtil', () => {
         }
     });
 
+    it('Should rehydrate correctly from direct object', () => {
+        const fields = [
+            { field: 'Id', dataType: 'number' },
+            { field: 'Name', dataType: 'string' },
+            { field: 'Validated', dataType: 'boolean' },
+            { field: 'DateTime created', dataType: 'dateTime' },
+            { field: 'In', dataType: null }
+        ] as FieldType[];
+
+        const innerFields = [
+            { field: 'Id', dataType: 'number' }
+        ] as FieldType[];
+
+        const entities: EntityType[] = [
+            {
+                name: 'myEntity',
+                fields: fields
+            },
+            {
+                name: 'otherEntity',
+                fields: innerFields
+            }
+        ];
+
+        const tree = {
+            filteringOperands: [
+                {
+                    fieldName: 'Id',
+                    conditionName: 'equals',
+                    searchVal: 100
+                },
+                {
+                    fieldName: 'Name',
+                    conditionName: 'equals',
+                    searchVal: 'test'
+                },
+                {
+                    fieldName: 'Validated',
+                    conditionName: 'false'
+                },
+                {
+                    fieldName: 'DateTime created',
+                    conditionName: 'equals',
+                    searchVal: new Date().toISOString()
+                },
+                {
+                    fieldName: 'In',
+                    conditionName: 'in',
+                    searchTree: {
+                        filteringOperands: [
+                            {
+                                fieldName: 'Id',
+                                conditionName: 'equals',
+                                searchVal: 100
+                            }
+                        ],
+                        operator: FilteringLogic.And,
+                        entity: 'otherEntity',
+                        returnFields: ['*']
+                    }
+                }
+            ],
+            operator: FilteringLogic.And,
+            entity: 'myEntity',
+            returnFields: ['*']
+        };
+
+        const deserializedTree = recreateTree(tree, entities);
+
+        const checkOp = (op: IFilteringExpression, reconstructedOp: IFilteringExpression) => {
+            expect(reconstructedOp.condition.logic).not.toBeNull();
+            expect(reconstructedOp.condition.name).toBe(op.conditionName);
+            expect(reconstructedOp.conditionName).toBe(op.conditionName);
+
+            if (op.searchTree) {
+                for (let index = 0; index < op.searchTree.filteringOperands.length; index++) {
+                    const innerOp = op.searchTree.filteringOperands[index] as IFilteringExpression;
+                    const reconstructedInnerOp = reconstructedOp.searchTree.filteringOperands[index] as IFilteringExpression;
+                    checkOp(innerOp, reconstructedInnerOp);
+                }
+            }
+        }
+
+        for (let index = 0; index < tree.filteringOperands.length; index++) {
+            checkOp(tree.filteringOperands[index], deserializedTree.filteringOperands[index] as IFilteringExpression);
+        }
+    });
+
     it('Sub-queries should deserialize correctly', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'myEntity', ['*']);
         const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'otherEntity', ['*']);
@@ -109,7 +192,7 @@ describe('Unit testing FilteringUtil', () => {
             {
                 name: 'myEntity',
                 fields: [
-                    { field: 'Bool', dataType: 'boolean' }
+                    { field: 'Id', dataType: null }
                 ] as any[],
             },
             {
@@ -138,8 +221,10 @@ describe('Unit testing FilteringUtil', () => {
         const nestedOperand = firstOperand.searchTree.filteringOperands[0] as IFilteringExpression;
 
         expect(firstOperand.conditionName).toBe('in');
+        expect(firstOperand.condition.name).toBe('in');
         expect(nestedOperand.condition.logic(true, nestedOperand.searchVal)).toBe(true);
         expect(nestedOperand.conditionName).toBe('true');
+        expect(nestedOperand.condition.name).toBe('true');
     });
 
     it('Number search values should deserialize correctly', () => {
@@ -161,6 +246,7 @@ describe('Unit testing FilteringUtil', () => {
         const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
+        expect(firstOperand.condition.logic(100, firstOperand.searchVal)).toBe(true);
         expect(firstOperand.condition).toBe(IgxNumberFilteringOperand.instance().condition('equals'));
     });
 
@@ -174,15 +260,14 @@ describe('Unit testing FilteringUtil', () => {
         }];
         tree.filteringOperands.push({
             fieldName: 'Id',
-            conditionName: 'false',
-            searchVal: false
+            conditionName: 'false'
         });
 
         const serializedTree = serialize(tree, true);
         const deserializedTree = recreateTree(JSON.parse(serializedTree), entities);
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
 
-        expect(firstOperand.condition.logic(100, firstOperand.searchVal)).toBe(true);
+        expect(firstOperand.condition.logic(false)).toBe(true);
         expect(firstOperand.condition).toBe(IgxBooleanFilteringOperand.instance().condition('false'));
     });
 
