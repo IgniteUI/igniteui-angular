@@ -47,7 +47,7 @@ export class QueryBuilderComponent implements OnInit {
 
     public ngOnInit(): void {
         this.fieldsEntityA = [
-            { field: 'Id', dataType: 'number', formatter: (value: any, rowData: any) => rowData === 'equals' ? value[0].id : value },
+            { field: 'Id', dataType: 'number', formatter: (value: any, rowData: any) => rowData === 'equals' ? `${value.map((v: { id: any; }) => v.id)}` : value },
             { field: 'Name', dataType: 'string' },
             { field: 'Validated', dataType: 'boolean' },
             { field: 'Date created', dataType: 'date' },
@@ -159,6 +159,18 @@ export class QueryBuilderComponent implements OnInit {
             // this.onChange();
         }
         return tree ? JSON.stringify(tree, null, 2) : 'Please add an expression!';
+    }
+
+    public canCommitExpressionTree() {
+        console.log(this.queryBuilder.canCommit());
+    }
+
+    public commitExpressionTree() {
+        this.queryBuilder.commit();
+    }
+
+    public discardExpressionTree() {
+        this.queryBuilder.discard();
     }
 
     // public handleChange(ev, selectedField, searchVal) {
