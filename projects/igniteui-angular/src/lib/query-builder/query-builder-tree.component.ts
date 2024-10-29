@@ -892,7 +892,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._editedExpression.inEditMode = false;
         }
 
-        if (this.parentExpression) {
+        if (this.parentExpression && !this.parentExpression.inEditMode) {
             this.inEditModeChange.emit(this.parentExpression);
         }
 
@@ -1227,7 +1227,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public getExpressionTreeCopy(expressionTree: IExpressionTree): IExpressionTree {
+    public getExpressionTreeCopy(expressionTree: IExpressionTree, shouldAssignInnerQueryExprTree?: boolean): IExpressionTree {
         if (!expressionTree) {
             return null;
         }
@@ -1242,7 +1242,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         };
         expressionTree.filteringOperands.forEach(o => o instanceof  FilteringExpressionsTree ? exprTreeCopy.filteringOperands.push(this.getExpressionTreeCopy(o)) : exprTreeCopy.filteringOperands.push(o));
 
-        if (!this.innerQueryNewExpressionTree) {
+        if (!this.innerQueryNewExpressionTree && shouldAssignInnerQueryExprTree) {
             this.innerQueryNewExpressionTree = exprTreeCopy;
         }
 
@@ -1364,7 +1364,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                         condition: filteringExpr.condition,
                         conditionName: filteringExpr.condition.name,
                         searchVal: filteringExpr.searchVal,
-                        searchTree: this.getExpressionTreeCopy(filteringExpr.searchTree),
+                        searchTree: filteringExpr.searchTree,
                         ignoreCase: filteringExpr.ignoreCase
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);

@@ -411,7 +411,7 @@
                 [entities]="entities"
                 [queryBuilder]="this.queryBuilder"
                 [parentExpression]="expressionItem"
-                [expressionTree]="innerQueryNewExpressionTree ?? getExpressionTreeCopy(expressionItem.expression.searchTree)"
+                [expressionTree]="expressionItem.inEditMode ? (innerQueryNewExpressionTree ?? getExpressionTreeCopy(expressionItem.expression.searchTree, true)) : expressionItem.expression.searchTree"
                 (inEditModeChange)="onInEditModeChanged($event)"
                 [searchValueTemplate]="searchValueTemplate">
             </igx-query-builder-tree>
