@@ -264,10 +264,14 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     }
 
     public onExpressionTreeChange(tree: IExpressionTree) {
-        this._expressionTree = tree;
+        if (tree && this.entities && JSON.stringify(tree) !== JSON.stringify(this._expressionTree)) {
+            this._expressionTree = recreateTree(tree, this.entities);
+        } else {
+            this._expressionTree = tree;
+        }
         if (this._shouldEmitTreeChange) {
-        this.expressionTreeChange.emit();
-    }
+            this.expressionTreeChange.emit();
+        }
     }
 
     private registerSVGIcons(): void {
