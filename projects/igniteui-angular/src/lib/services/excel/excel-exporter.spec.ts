@@ -134,6 +134,19 @@ describe('Excel Exporter', () => {
         await wrapper.verifyDataFilesContent(actualData.contactsDataSkippedColumnContent);
     });
 
+    it('should not fail when data contains null characters (#14944).', async () => {
+        options.columnWidth = 50;
+        const wrapper = await getExportedData([
+            'Terrance\u0000Orta',
+            'Richard Mahoney\x00LongerName',
+            'Donna\0Price',
+            'Lisa Landers',
+            'Dorothy H. Spencer'
+        ], options);
+
+        await wrapper.verifyDataFilesContent(actualData.noHeadersStringDataWithNullChars);
+    });
+
     const getExportedData = (data: any[], exportOptions: IgxExcelExporterOptions) => {
         const result = new Promise<ZipWrapper>((resolve) => {
             exporter.exportEnded.pipe(first()).subscribe((value) => {

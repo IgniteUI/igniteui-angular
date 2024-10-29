@@ -68,7 +68,9 @@ export class ExportUtilities {
                               .replace(/</g, '&lt;')
                               .replace(/>/g, '&gt;')
                               .replace(/"/g, '&quot;')
-                              .replace(/'/g, '&apos;');
+                              .replace(/'/g, '&apos;')
+                              // Bug #14944 - Replace the not supported null character (\u0000, \x00) with a space
+                              .replace(/\0/g, '&#32;');
         }
     }
 }
