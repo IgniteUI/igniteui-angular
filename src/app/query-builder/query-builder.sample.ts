@@ -161,6 +161,18 @@ export class QueryBuilderComponent implements OnInit {
         return tree ? JSON.stringify(tree, null, 2) : 'Please add an expression!';
     }
 
+    public canCommitExpressionTree() {
+        console.log(this.queryBuilder.canCommit());
+    }
+
+    public commitExpressionTree() {
+        this.queryBuilder.commit();
+    }
+
+    public discardExpressionTree() {
+        this.queryBuilder.discard();
+    }
+
     // public handleChange(ev, selectedField, searchVal) {
        // if (selectedField.field === 'Id') {
         //     searchVal.value = ev.newValue[0];
