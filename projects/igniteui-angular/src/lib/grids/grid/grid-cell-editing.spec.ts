@@ -1277,7 +1277,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.gridAPI.crudService.cell).toBeNull();
         });
 
-        it('should clean active state when endEdit on focusout of the grid', async () => {
+        it('should clean active state when endEdit on focusout of the grid', () => {
             const handleFocusOut = ($event: FocusEvent) => {
                 if (!$event.relatedTarget || !grid.nativeElement.contains($event.relatedTarget as Node)) {
                     grid.endEdit(true);
