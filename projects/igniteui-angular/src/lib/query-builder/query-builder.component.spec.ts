@@ -2182,6 +2182,9 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true, 1);
             tick(50);
             fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true, 1);
+            tick(50);
+            fix.detectChanges();
             expect(queryBuilder.canCommit()).toBeTrue();
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
             expect(queryBuilder.canCommit()).toBeFalse();
