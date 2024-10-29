@@ -17,7 +17,6 @@ import { first, takeUntil } from 'rxjs/operators';
 import { Subject, fromEvent } from 'rxjs';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from '../public_api';
-import { getDiffieHellman } from 'crypto';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -1280,7 +1279,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it('should clean active state when endEdit on focusout of the grid', async () => {
             const handleFocusOut = ($event: FocusEvent) => {
-                console.log('triggered');
                 if (!$event.relatedTarget || !grid.nativeElement.contains($event.relatedTarget as Node)) {
                     grid.endEdit(true);
                     grid.clearCellSelection();
