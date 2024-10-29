@@ -9,6 +9,15 @@
                 "selector": "igx-query-builder",
                 "type": "component"
             }
+        },
+        {
+            "name": "filterable",
+            "replaceWith": "disableFiltering",
+            "valueTransform": "filterable_to_disableFiltering",
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
         }
     ]
 }

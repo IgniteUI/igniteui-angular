@@ -1,5 +1,5 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxComboComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective, IgxStringFilteringOperand } from 'igniteui-angular';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,6 +8,7 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './query-builder-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
+import { NgTemplateOutlet } from '@angular/common';
 
 describe('IgxQueryBuilder', () => {
     configureTestSuite();
@@ -20,6 +21,7 @@ describe('IgxQueryBuilder', () => {
                 IgxQueryBuilderComponent,
                 IgxQueryBuilderSampleTestComponent,
                 IgxQueryBuilderCustomTemplateSampleTestComponent,
+                IgxComboComponent
             ]
         }).compileComponents();
     }));
@@ -95,84 +97,6 @@ describe('IgxQueryBuilder', () => {
                 ControlsFunction.verifyButtonIsDisabled(button as HTMLElement, false);
             }
         });
-
-        it('Should render custom header properly.', () => {
-            const fixture = TestBed.createComponent(IgxQueryBuilderCustomTemplateSampleTestComponent);
-            fixture.detectChanges();
-
-            expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe(' Custom Title ');
-            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fixture)).toBeNull();
-            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fixture)).toBeNull();
-
-            fixture.componentInstance.showLegend = true;
-            fixture.detectChanges();
-            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fixture).textContent).toBe('and');
-            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fixture).textContent).toBe('or');
-        });
-
-        it('Should render custom input template properly.', fakeAsync(() => {
-            const fixture = TestBed.createComponent(IgxQueryBuilderCustomTemplateSampleTestComponent);
-            fixture.detectChanges();
-
-            //Select chip
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [0]);
-            tick(200);
-            fixture.detectChanges();
-
-            //Open edit mode
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fixture, [0], 'edit');
-            tick(200);
-            fixture.detectChanges();
-
-            const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fixture, false, 0);
-            const input = editModeContainer.querySelector('input.custom-class') as HTMLInputElement;
-            const selectedField = editModeContainer.querySelector('p.selectedField') as HTMLInputElement;
-            const selectedCondition = editModeContainer.querySelector('p.selectedCondition') as HTMLInputElement;
-
-            expect(input).toBeDefined();
-            expect(input.value).toBe('3');
-            expect(selectedField).toBeDefined();
-            expect(selectedField.innerText).toBe('OrderId');
-            expect(selectedCondition).toBeDefined();
-            expect(selectedCondition.innerText).toBe('greaterThan');
-
-            //Edit input value
-            UIInteractions.clickAndSendInputElementValue(input, '5');
-            tick(100);
-            fixture.detectChanges();
-
-            // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fixture);
-            tick(100);
-            fixture.detectChanges();
-
-            //Verify that expressionTree is correct
-            const exprTree = JSON.stringify(fixture.componentInstance.queryBuilder.expressionTree, null, 2);
-            expect(exprTree).toBe(`{
-  "filteringOperands": [
-    {
-      "fieldName": "OrderId",
-      "condition": {
-        "name": "greaterThan",
-        "isUnary": false,
-        "iconName": "filter_greater_than"
-      },
-      "conditionName": "greaterThan",
-      "searchVal": 5,
-      "searchTree": null,
-      "ignoreCase": true
-    }
-  ],
-  "operator": 0,
-  "entity": "Orders",
-  "returnFields": [
-    "OrderId",
-    "OrderName",
-    "OrderDate",
-    "Delivered"
-  ]
-}`);
-        }));
     });
 
     describe('Interactions', () => {
@@ -1621,6 +1545,38 @@ describe('IgxQueryBuilder', () => {
             });
         }));
 
+        it(`"commit" button should be enabled/disabled properly when editing an expression.`, fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Double-click the 'OrderId' chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Verify "commit" button is enabled
+            let commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
+            // Delete the value
+            let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '');
+            tick(100);
+            fix.detectChanges();
+            // Verify "commit" button is disabled
+            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement);
+            // Enter some value
+            input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '5');
+            tick(100);
+            fix.detectChanges();
+            // Verify "commit" button is enabled
+            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
+        }));
+
         it(`Parent "commit" button should be disabled if a child condition is edited.`, fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
@@ -2032,6 +1988,221 @@ describe('IgxQueryBuilder', () => {
 
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
         }));
+
+        it('canCommit should return the correct validity state of currently edited condition.', fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Verify the Query Builder validity state while editing a condition.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+        }));
+
+        it('canCommit should return the correct validity state of currently added condition.', fakeAsync(() => {
+            // Click the initial 'Add Or Group' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            // Verify the Query Builder validity state while adding a condition.
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Click on the 'cancel' button
+            const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
+            UIInteractions.simulateClickEvent(closeButton);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the Query Builder validity state for UNARY condition.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeTrue();
+        }));
+    });
+
+    describe('API', () => {
+        beforeEach(fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
+        }));
+
+        it(`Should commit the changes in a valid edited condition when the 'commit' method is called.`, fakeAsync(() => {
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Change the current condition
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+
+            // Apply the changes
+            queryBuilder.commit();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify expression is commited
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderName', 'Contains', 'a');
+
+            // Verify event is not fired
+            expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
+        }));
+
+        it(`Should discard the changes in a valid edited condition when the 'discard' method is called.`, fakeAsync(() => {
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Change the current condition
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'a');
+            tick(100);
+            fix.detectChanges();
+
+            // Discard the changes
+            queryBuilder.discard();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify expression is not commited
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderId', 'Greater Than', '3');
+
+            // Verify event is not fired
+            expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
+        }));
+
+        it('Should properly commit/discard changes in nested query.', fakeAsync(() => {
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+            tick(50);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Start editing expression in the nested query
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true, 1);
+            tick(50);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            // Discard the changes
+            queryBuilder.discard();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the nested query is collapsed
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+
+            // Start editing expression in the nested query
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true, 1);
+            tick(50);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '1');
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Apply the changes
+            queryBuilder.commit();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the nested query is collapsed
+            expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+
+            // Expand the nested query
+            const toggleBtn = fix.debugElement.query(By.css('.igx-filter-tree__details-button')).nativeElement;
+            toggleBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify edited expressions
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Id', 'Equals', '1', 1);
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'True', undefined, 1);
+        }));
+
+        it('Should NOT throw errors when an invalid condition is committed through API.', fakeAsync(() => {
+            spyOn(console, 'error');
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [2], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Change the current condition
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            let errMessage = '';
+            // Apply the changes
+            try {
+                queryBuilder.commit();
+                tick(100);
+                fix.detectChanges();
+            } catch (err) {
+                errMessage = err.message;
+            }
+
+            expect(errMessage).toBe("Expression tree can't be committed in the current state. Use `canCommit` method to check if the current state is valid.");
+        }));
     });
 
     describe('Keyboard navigation', () => {
@@ -2147,6 +2318,135 @@ describe('IgxQueryBuilder', () => {
             const removeIcon2 = ControlsFunction.getChipRemoveButton(chip2 as HTMLElement);
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', removeIcon2);
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 1, 1);
+        }));
+    });
+
+    describe('Templates', () => {
+        let fixture: ComponentFixture<IgxQueryBuilderCustomTemplateSampleTestComponent>;
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxQueryBuilderCustomTemplateSampleTestComponent);
+            fixture.detectChanges();
+            queryBuilder = fixture.componentInstance.queryBuilder;
+        }));
+
+        it('Should render custom header properly.', () => {
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe(' Custom Title ');
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fixture)).toBeNull();
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fixture)).toBeNull();
+
+            fixture.componentInstance.showLegend = true;
+            fixture.detectChanges();
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fixture).textContent).toBe('and');
+            expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fixture).textContent).toBe('or');
+        });
+
+        it('Should render custom input template properly.', fakeAsync(() => {
+            //Select chip
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [0]);
+            tick(200);
+            fixture.detectChanges();
+
+            //Open edit mode
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fixture, [0], 'edit');
+            tick(200);
+            fixture.detectChanges();
+
+            const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fixture, false);
+            const input = editModeContainer.querySelector('input.custom-class') as HTMLInputElement;
+            const selectedField = editModeContainer.querySelector('p.selectedField') as HTMLInputElement;
+            const selectedCondition = editModeContainer.querySelector('p.selectedCondition') as HTMLInputElement;
+
+            expect(input).toBeDefined();
+            expect(input.value).toBe('3');
+            expect(selectedField).toBeDefined();
+            expect(selectedField.innerText).toBe('OrderId');
+            expect(selectedCondition).toBeDefined();
+            expect(selectedCondition.innerText).toBe('greaterThan');
+
+            //Edit input value
+            UIInteractions.clickAndSendInputElementValue(input, '5');
+            tick(100);
+            fixture.detectChanges();
+
+            // Commit the populated expression.
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fixture);
+            tick(100);
+            fixture.detectChanges();
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fixture.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "fieldName": "OrderId",
+      "condition": {
+        "name": "greaterThan",
+        "isUnary": false,
+        "iconName": "filter_greater_than"
+      },
+      "conditionName": "greaterThan",
+      "searchVal": 5,
+      "searchTree": null,
+      "ignoreCase": true
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "OrderId",
+    "OrderName",
+    "OrderDate",
+    "Delivered"
+  ]
+}`);
+        }));
+
+        it('Should apply field formatter properly.', fakeAsync(() => {
+            // Add new expression
+            const btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fixture, 0)[0] as HTMLElement;
+            btn.click();
+            fixture.detectChanges();
+
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'OrderId' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 0); // Select 'Equals' operator.
+
+            // Verify combo template is displayed
+            let editModeContainer = Array.from(QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fixture).querySelectorAll('.igx-filter-tree__inputs'))[1];
+            let combo = editModeContainer.querySelector('.igx-combo');
+            expect(combo).toBeDefined();
+
+            // Open the combo
+            (combo.querySelector('igx-input-group') as HTMLElement).click();
+            tick();
+            fixture.detectChanges();
+            // Select item
+            const outlet = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`))
+                .filter(item => (item as HTMLElement).checkVisibility())[0] as HTMLElement;
+
+            const comboItem = outlet.querySelectorAll(`.igx-drop-down__item`)[0] as HTMLElement;
+            comboItem.click();
+            tick();
+            fixture.detectChanges();
+
+            // Commit the expression
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fixture);
+            fixture.detectChanges();
+            // Verify chips
+            QueryBuilderFunctions.verifyExpressionChipContent(fixture, [0], 'OrderId', 'Greater Than', '3');
+            QueryBuilderFunctions.verifyExpressionChipContent(fixture, [1], 'OrderId', 'Equals', '0');
+
+            // Enter edit mode
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fixture, [1], true);
+            tick(50);
+            fixture.detectChanges();
+            // Verify inputs values
+            editModeContainer = Array.from(QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fixture).querySelectorAll('.igx-filter-tree__inputs'))[1];
+            const selects = Array.from(editModeContainer.querySelectorAll('igx-select'));
+            combo = editModeContainer.querySelector('.igx-combo');
+            expect(selects[0].querySelector('input').value).toBe('OrderId');
+            expect(selects[1].querySelector('input').value).toBe('Equals');
+            expect(combo.querySelector('input').value).toBe('A');
         }));
     });
 
@@ -2316,9 +2616,17 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
                         let-selectedField = "selectedField"
                         let-selectedCondition = "selectedCondition"
                         let-defaultSearchValueTemplate = "defaultSearchValueTemplate">
-            <input type="text" class="custom-class" required [(ngModel)]="searchValue.value"/>
-            <p class="selectedField">{{selectedField.field}}</p>
-            <p class="selectedCondition">{{selectedCondition}}</p>
+            @if (selectedField?.field === 'OrderId' && selectedCondition === 'greaterThan'){
+                <input type="text" class="custom-class" required [(ngModel)]="searchValue.value"/>
+                <p class="selectedField">{{selectedField.field}}</p>
+                <p class="selectedCondition">{{selectedCondition}}</p>
+            } @else if (selectedField?.field === 'OrderId' && selectedCondition === 'equals') {
+                <igx-combo [data]="comboData" [(ngModel)]="searchValue.value"
+                    (selectionChanging)="handleChange($event, selectedField, searchValue)" [displayKey]="'field'">
+                </igx-combo>
+            } @else {
+                <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
+            }
         </ng-template>
      </igx-query-builder>
     `,
@@ -2327,6 +2635,8 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
         IgxQueryBuilderComponent,
         IgxQueryBuilderHeaderComponent,
         IgxQueryBuilderSearchValueTemplateDirective,
+        IgxComboComponent,
+        NgTemplateOutlet,
         FormsModule
     ]
 })
@@ -2337,6 +2647,7 @@ export class IgxQueryBuilderCustomTemplateSampleTestComponent implements OnInit 
     public entities: Array<any>;
     public showLegend = false;
     public expressionTree: IExpressionTree;
+    public comboData: any[];
 
 
     public ngOnInit(): void {
@@ -2352,5 +2663,17 @@ export class IgxQueryBuilderCustomTemplateSampleTestComponent implements OnInit 
         });
 
         this.expressionTree = tree;
+
+        this.comboData = [
+            { id: 0, field: 'A' },
+            { id: 1, field: 'B' }
+        ];
+    }
+
+    public handleChange(ev, selectedField, searchVal) {
+        if (selectedField.field === 'OrderId') {
+            searchVal.value = ev.newValue[0];
+            selectedField.formatter = (value: any, rowData: any) => rowData === 'equals' ? value[0].id : value;
+        }
     }
 }

@@ -804,7 +804,7 @@ describe('igxCombo', () => {
             combo.comboInput = {
                 value: '',
             } as any;
-            combo.filteringOptions.filterable = true;
+            combo.disableFiltering = false;
             const matchSpy = spyOn<any>(combo, 'checkMatch').and.callThrough();
             spyOn(combo.searchInputUpdate, 'emit');
 
@@ -828,7 +828,7 @@ describe('igxCombo', () => {
             expect(combo.searchInputUpdate.emit).toHaveBeenCalledTimes(2);
             expect(combo.searchInputUpdate.emit).toHaveBeenCalledWith(args);
 
-            combo.filteringOptions.filterable = false;
+            combo.disableFiltering = true;
             combo.handleInputChange();
             expect(matchSpy).toHaveBeenCalledTimes(4);
             expect(combo.searchInputUpdate.emit).toHaveBeenCalledTimes(2);
@@ -847,7 +847,7 @@ describe('igxCombo', () => {
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             combo.data = data;
-            combo.filteringOptions.filterable = true;
+            combo.disableFiltering = false;
             combo.searchInputUpdate.subscribe((e) => {
                 e.cancel = true;
             });
@@ -1075,8 +1075,7 @@ describe('igxCombo', () => {
                 expect(combo.itemsMaxHeight).toEqual(320);
                 expect(combo.itemHeight).toEqual(32);
                 expect(combo.placeholder).toEqual('Location');
-                expect(combo.searchPlaceholder).toEqual('Enter a Search Term');
-                expect(combo.filteringOptions.filterable).toEqual(true);
+                expect(combo.disableFiltering).toEqual(false);
                 expect(combo.allowCustomValues).toEqual(false);
                 expect(combo.cssClass).toEqual(CSS_CLASS_COMBO);
                 expect(combo.type).toEqual('box');
@@ -1144,13 +1143,16 @@ describe('igxCombo', () => {
                 expect(combo.placeholder).toEqual('Location');
                 expect(combo.comboInput.nativeElement.placeholder).toEqual('Location');
 
-                expect(combo.searchPlaceholder).toEqual('Enter a Search Term');
                 expect(combo.searchInput.nativeElement.placeholder).toEqual('Enter a Search Term');
 
                 combo.searchPlaceholder = 'Filter';
                 fixture.detectChanges();
                 expect(combo.searchPlaceholder).toEqual('Filter');
                 expect(combo.searchInput.nativeElement.placeholder).toEqual('Filter');
+
+                combo.disableFiltering = true;
+                fixture.detectChanges();
+                expect(combo.searchPlaceholder).toEqual('Filter');
 
                 combo.placeholder = 'States';
                 fixture.detectChanges();
@@ -1271,9 +1273,9 @@ describe('igxCombo', () => {
                 expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                 expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
             });
-            it(`should not render search input if both 'allowCustomValues' and 'filterable' are false`, () => {
+            it(`should not render search input if 'allowCustomValues' is false and 'disableFiltering' is true`, () => {
                 combo.allowCustomValues = false;
-                combo.filteringOptions.filterable = false;
+                combo.disableFiltering = true;
                 expect(combo.displaySearchInput).toBeFalsy();
                 combo.toggle();
                 fixture.detectChanges();
@@ -2855,7 +2857,7 @@ describe('igxCombo', () => {
                 combo.filterFunction = comboIgnoreDiacriticsFilter;
                 combo.displayKey = null;
                 combo.valueKey = null;
-                combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: undefined };
+                combo.filteringOptions = { caseSensitive: false, filteringKey: undefined };
                 combo.data = ['José', 'Óscar', 'Ángel', 'Germán', 'Niño', 'México', 'Méxícó', 'Mexico', 'Köln', 'München'];
                 combo.toggle();
                 fixture.detectChanges();
@@ -3130,7 +3132,7 @@ describe('igxCombo', () => {
                 combo.close(); // Filter is cleared on close
                 tick();
                 fixture.detectChanges();
-                combo.filteringOptions.filterable = false; // Filtering is disabled
+                combo.disableFiltering = true; // Filtering is disabled
                 fixture.detectChanges();
                 combo.open(); // All items are visible since filtering is disabled
                 tick();
@@ -3145,7 +3147,7 @@ describe('igxCombo', () => {
                 combo.close(); // Filter is cleared on close
                 tick();
                 fixture.detectChanges();
-                combo.filteringOptions.filterable = true; // Filtering is re-enabled
+                combo.disableFiltering = false; // Filtering is re-enabled
                 fixture.detectChanges();
                 combo.open(); // Filter is cleared on open
                 tick();
@@ -3154,13 +3156,14 @@ describe('igxCombo', () => {
             }));
             it(`should properly display "Add Item" button when filtering is off`, () => {
                 combo.allowCustomValues = true;
-                combo.filteringOptions.filterable = false;
+                combo.disableFiltering = true;
                 fixture.detectChanges();
                 expect(combo.isAddButtonVisible()).toEqual(false);
 
                 combo.toggle();
                 fixture.detectChanges();
                 expect(combo.collapsed).toEqual(false);
+                expect(combo.searchInput.nativeElement.placeholder).toEqual('Add Item');
                 const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
                 UIInteractions.triggerInputEvent(searchInput, combo.data[2].field);
                 fixture.detectChanges();
@@ -3210,7 +3213,7 @@ describe('igxCombo', () => {
                 combo.close();
                 tick();
                 fixture.detectChanges();
-                combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+                combo.filteringOptions = { caseSensitive: false, filteringKey: combo.groupKey };
                 combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
                     if (!collection) return [];
                     if (!searchValue) return collection;
@@ -3248,7 +3251,7 @@ describe('igxCombo', () => {
                 combo.close();
                 tick();
                 fixture.detectChanges();
-                combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+                combo.filteringOptions = { caseSensitive: false, filteringKey: combo.groupKey };
                 combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
                     if (!collection) return [];
                     if (!searchValue) return collection;
@@ -3285,7 +3288,7 @@ describe('igxCombo', () => {
                 combo.close();
                 tick();
                 fixture.detectChanges();
-                combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+                combo.filteringOptions = { caseSensitive: false, filteringKey: combo.groupKey };
                 combo.open();
                 tick();
                 fixture.detectChanges();
@@ -3301,7 +3304,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.dropdown.items.length).toEqual(0);
 
-                combo.filteringOptions = Object.assign({}, combo.filteringOptions, { filterable: false });
+                combo.disableFiltering = true;
                 fixture.detectChanges();
                 expect(combo.dropdown.items.length).toBeGreaterThan(0);
             }));
@@ -3629,7 +3632,7 @@ describe('igxCombo', () => {
 @Component({
     template: `
     <igx-combo #combo [placeholder]="'Location'" [data]='items'
-        [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
+        [disableFiltering]='false' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
         (selectionChanging)="selectionChanging($event)" [style.--ig-size]="'var(--ig-size-' + size + ')'">
         <ng-template igxComboItem let-display let-key="valueKey">
             <div class="state-card--simple">
@@ -3712,7 +3715,7 @@ class IgxComboSampleComponent {
         </p>
         <p>
             <igx-combo #comboReactive formControlName="townCombo"
-                class="input-container" [filterable]="true" placeholder="Location(s)"
+                class="input-container" [disableFiltering]="false" placeholder="Location(s)"
                 [data]="items" [displayKey]="'field'" [groupKey]="'region'">
                 <label igxLabel>Town</label>
             </igx-combo>
@@ -3786,7 +3789,7 @@ class IgxComboFormComponent {
     <form #form="ngForm">
         <igx-combo #testCombo class="input-container" [placeholder]="'Locations'"
             name="anyName" required [(ngModel)]="values"
-            [data]="items" [filterable]="filterableFlag"
+            [data]="items" [disableFiltering]="disableFilteringFlag"
             [displayKey]="'field'" [valueKey]="'field'"
             [groupKey]="'field' ? 'region' : ''" [width]="'100%'">
             <label igxLabel>Combo Label</label>
@@ -3887,7 +3890,7 @@ export class IgxComboBindingTestComponent {
         <igx-combo #combo placeholder="Location(s)"
             [data]="citiesData"
             [allowCustomValues]="true"
-            [filterable]="true">
+            [disableFiltering]="false">
         </igx-combo>
     </div>
     `,

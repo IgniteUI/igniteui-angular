@@ -740,7 +740,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._editedExpression.expression.fieldName = this.selectedField.field;
             this._editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
             this._editedExpression.expression.conditionName = this.selectedCondition;
-            this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, actualSearchValue);
+            this._editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, actualSearchValue) || actualSearchValue;
             this._editedExpression.fieldLabel = this.selectedField.label
                 ? this.selectedField.label
                 : this.selectedField.header
@@ -749,20 +749,22 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0]
             if (innerQuery && this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery) {
-                if (!this._editedExpression.expression.searchTree) {
+                if (!this._editedExpression.expression.searchTree && innerQuery.expressionTree) {
                     this._editedExpression.expression.searchTree = new FilteringExpressionsTree(innerQuery.expressionTree.operator);
                 }
 
-                this._editedExpression.expression.searchTree.entity = innerQuery.selectedEntity.name;
-                this._editedExpression.expression.searchTree.returnFields = innerQuery.selectedReturnFields;
-                this._editedExpression.expression.searchTree.filteringOperands = innerQuery.expressionTree.filteringOperands;
-                this._editedExpression.expression.searchTree.operator = innerQuery.expressionTree.operator;
-                this._editedExpression.expression.searchTree.fieldName = innerQuery.expressionTree.fieldName;
+                if (this._editedExpression.expression.searchTree) {
+                    this._editedExpression.expression.searchTree.entity = innerQuery.selectedEntity.name;
+                    this._editedExpression.expression.searchTree.returnFields = innerQuery.selectedReturnFields;
+                    this._editedExpression.expression.searchTree.filteringOperands = innerQuery.expressionTree?.filteringOperands;
+                    this._editedExpression.expression.searchTree.operator = innerQuery.expressionTree?.operator;
+                    this._editedExpression.expression.searchTree.fieldName = innerQuery.expressionTree?.fieldName;
+                }
             } else {
                 this._editedExpression.expression.searchTree = null;
             }
 
-            if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
+            if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary) {
                 this._editedExpression.expression.searchVal = null;
             }
 
@@ -818,14 +820,50 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return this.selectedField && this.selectedCondition &&
             (
                 (
-                    (!!this.searchValue.value || (!!this.searchValueTemplate && !!this._editedExpression.expression.searchVal)) &&
+                    ((!Array.isArray(this.searchValue.value) && !!this.searchValue.value) || (Array.isArray(this.searchValue.value) && this.searchValue.value.length !== 0)) &&
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
                 ) ||
                 (
-                    innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields.length > 0
+                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields.length > 0
                 ) ||
-                this.selectedField.filters.condition(this.selectedCondition).isUnary
+                this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public canCommitCurrentState(): boolean {
+        const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
+        if (innerQuery) {
+            return this.selectedReturnFields?.length > 0 && innerQuery.canCommitCurrentState();
+        } else {
+            return this.selectedReturnFields?.length > 0 &&
+                (
+                    (!this._editedExpression && !!this.rootGroup) || // no edited expr, root group
+                    (this._editedExpression && !this.selectedField && (this.expressionTree && this.expressionTree.filteringOperands[0] !== this._editedExpression.expression)) || // empty edited expr with at least one other expr
+                    (this._editedExpression && this.operandCanBeCommitted() === true) // valid edited expr
+                );
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public commitCurrentState(): void {
+        const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
+        if (innerQuery) {
+            innerQuery.commitCurrentState();
+        }
+
+        if (this._editedExpression) {
+            if (this.selectedField) {
+                this.commitOperandEdit();
+            } else {
+                this.deleteItem(this._editedExpression);
+                this._editedExpression = null;
+            }
+        }
     }
 
     /**
@@ -933,7 +971,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
-        } else if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
+        } else if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary) {
             this.conditionSelect.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
@@ -1147,7 +1185,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public getFormatter(field: string) {
-        return this.fields.find(el => el.field === field).formatter;
+        return this.fields.find(el => el.field === field)?.formatter;
     }
 
     /**
@@ -1337,6 +1375,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         let groupItem: ExpressionGroupItem;
         if (expressionTree) {
             groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
+            if (!expressionTree.filteringOperands) {
+                return groupItem;
+            }
 
             for (const expr of expressionTree.filteringOperands) {
                 if (isTree(expr)) {

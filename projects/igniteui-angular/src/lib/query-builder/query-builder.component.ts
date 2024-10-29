@@ -23,7 +23,7 @@ import { recreateTree } from '../data-operations/expressions-tree-util';
  *
  * @example
  * ```html
- * <igx-query-builder [fields]="this.fields">
+ * <igx-query-builder [entities]="this.entities">
  * </igx-query-builder>
  * ```
  */
@@ -179,9 +179,37 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     private _expressionTree: IExpressionTree;
     private _fields: FieldType[];
     private _entities: EntityType[];
+    private _shouldEmitTreeChange = true;
 
     constructor(protected iconService: IgxIconService) {
         this.registerSVGIcons();
+    }
+
+    /**
+     * Returns whether the expression tree can be committed in the current state.
+     */
+    public canCommit(): boolean {
+        return this.queryTree.canCommitCurrentState() === true;
+    }
+
+    /**
+     * Commits the expression tree in the current state if it is valid. If not throws an exception.
+     */
+    public commit(): void {
+        if (this.canCommit()) {
+            this._shouldEmitTreeChange = false;
+            this.queryTree.commitCurrentState();
+            this._shouldEmitTreeChange = true;
+        } else {
+            throw new Error('Expression tree can\'t be committed in the current state. Use `canCommit` method to check if the current state is valid.');
+        }
+    }
+
+    /**
+     * Discards all unsaved changes to the expression tree.
+     */
+    public discard(): void {
+        this.queryTree.cancelOperandEdit();
     }
 
     /**
@@ -237,7 +265,9 @@ export class IgxQueryBuilderComponent implements OnDestroy {
 
     public onExpressionTreeChange(tree: IExpressionTree) {
         this._expressionTree = tree;
+        if (this._shouldEmitTreeChange) {
         this.expressionTreeChange.emit();
+    }
     }
 
     private registerSVGIcons(): void {
