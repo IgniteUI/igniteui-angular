@@ -1,15 +1,10 @@
 import { Directive, Optional, Input, Host, ViewContainerRef, Inject, createComponent, EnvironmentInjector, Injector } from '@angular/core';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { IExpressionTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IPagingState } from '../data-operations/paging-state.interface';
 import { GridColumnDataType } from '../data-operations/data-util';
-import {
-    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
-    IgxStringFilteringOperand, IFilteringOperation, IgxDateTimeFilteringOperand
-} from '../data-operations/filtering-condition';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
@@ -22,6 +17,7 @@ import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.in
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
 import { cloneArray, cloneValue } from '../core/utils';
+import { recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -158,9 +154,9 @@ export class IgxGridStateBaseDirective {
                 }
                 return { filtering: filteringState };
             },
-            restoreFeatureState: (context: IgxGridStateBaseDirective, state: FilteringExpressionsTree): void => {
+            restoreFeatureState: (context: IgxGridStateBaseDirective, state: IFilteringExpressionsTree): void => {
                 const filterTree = context.createExpressionsTreeFromObject(state);
-                context.currGrid.filteringExpressionsTree = filterTree as FilteringExpressionsTree;
+                context.currGrid.filteringExpressionsTree = filterTree as IFilteringExpressionsTree;
             }
         },
         advancedFiltering: {
@@ -178,9 +174,9 @@ export class IgxGridStateBaseDirective {
                 }
                 return { advancedFiltering };
             },
-            restoreFeatureState: (context: IgxGridStateBaseDirective, state: FilteringExpressionsTree): void => {
+            restoreFeatureState: (context: IgxGridStateBaseDirective, state: IFilteringExpressionsTree): void => {
                 const filterTree = context.createExpressionsTreeFromObject(state);
-                context.currGrid.advancedFilteringExpressionsTree = filterTree as FilteringExpressionsTree;
+                context.currGrid.advancedFilteringExpressionsTree = filterTree as IFilteringExpressionsTree;
             }
         },
         columns: {
@@ -590,7 +586,7 @@ export class IgxGridStateBaseDirective {
                 }
                 // restore complex filters
                 if (dim.filter) {
-                    dim.filter = this.createExpressionsTreeFromObject(dim.filter as FilteringExpressionsTree);
+                    dim.filter = this.createExpressionsTreeFromObject(dim.filter) as IFilteringExpressionsTree;
                 }
             }
         }
@@ -641,78 +637,14 @@ export class IgxGridStateBaseDirective {
     }
 
     /**
-     * This method builds a FilteringExpressionsTree from a provided object.
+     * This method builds a rehydrated IExpressionTree from a provided object.
      */
-    private createExpressionsTreeFromObject(exprTreeObject: FilteringExpressionsTree): FilteringExpressionsTree {
+    private createExpressionsTreeFromObject(exprTreeObject: IExpressionTree): IExpressionTree {
         if (!exprTreeObject || !exprTreeObject.filteringOperands) {
             return null;
         }
 
-        const expressionsTree = new FilteringExpressionsTree(exprTreeObject.operator, exprTreeObject.fieldName);
-
-        for (const item of exprTreeObject.filteringOperands) {
-            // Check if item is an expressions tree or a single expression.
-            if ((item as FilteringExpressionsTree).filteringOperands) {
-                const subTree = this.createExpressionsTreeFromObject((item as FilteringExpressionsTree));
-                expressionsTree.filteringOperands.push(subTree);
-            } else {
-                const expr = item as IFilteringExpression;
-                let dataType: string;
-                if (this.currGrid instanceof IgxPivotGridComponent) {
-                    dataType = this.currGrid.allDimensions.find(x => x.memberName === expr.fieldName).dataType;
-                } else if (this.currGrid.columns.length > 0) {
-                    dataType = this.currGrid.columns.find(c => c.field === expr.fieldName).dataType;
-                } else if (this.state.columns) {
-                    dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;
-                } else {
-                    return null;
-                }
-                // when ESF, values are stored in Set.
-                // First those values are converted to an array before returning string in the stringifyCallback
-                // now we need to convert those back to Set
-                if (Array.isArray(expr.searchVal)) {
-                    expr.searchVal = new Set(expr.searchVal);
-                } else {
-                    expr.searchVal = expr.searchVal && (dataType === 'date' || dataType === 'dateTime') ? new Date(Date.parse(expr.searchVal.toString())) : expr.searchVal;
-                }
-
-                const condition = this.generateFilteringCondition(dataType, expr.condition.name) ||
-                                this.currGrid.columns.find(c => c.field === expr.fieldName).filters.condition(expr.condition.name);
-
-                if (condition) {
-                    expr.condition = condition;
-                    expressionsTree.filteringOperands.push(expr);
-                }
-            }
-        }
-
-        return expressionsTree;
-    }
-
-    /**
-     * Returns the filtering logic function for a given dataType and condition (contains, greaterThan, etc.)
-     */
-    private generateFilteringCondition(dataType: string, name: string): IFilteringOperation {
-        let filters;
-        switch (dataType) {
-            case GridColumnDataType.Boolean:
-                filters = IgxBooleanFilteringOperand.instance();
-                break;
-            case GridColumnDataType.Number:
-                filters = IgxNumberFilteringOperand.instance();
-                break;
-            case GridColumnDataType.Date:
-                filters = IgxDateFilteringOperand.instance();
-                break;
-            case GridColumnDataType.DateTime:
-                filters = IgxDateTimeFilteringOperand.instance();
-                break;
-            case GridColumnDataType.String:
-            default:
-                filters = IgxStringFilteringOperand.instance();
-                break;
-        }
-        return filters.condition(name);
+        return recreateTreeFromFields(exprTreeObject, this.currGrid.columns) as IExpressionTree;
     }
 
     protected stringifyCallback(key: string, val: any) {
