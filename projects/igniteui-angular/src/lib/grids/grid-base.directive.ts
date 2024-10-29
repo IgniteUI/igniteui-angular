@@ -6565,6 +6565,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             .filter((c) => c.pinned);
         this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
         this._columns = newColumns;
+        if (this._columns) {
+            this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
+        }
         this.resetCaches();
     }
 

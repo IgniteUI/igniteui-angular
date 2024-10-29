@@ -54,10 +54,26 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public showEntityChangeDialog = true;
 
     /**
-     * Gets/sets the entities.
+     * Returns the entities.
+     * @hidden
+     */
+    public get entities(): EntityType[] {
+        return this._entities;
+    }
+
+    /**
+     * Sets the entities.
+     * @hidden
      */
     @Input()
-    public entities: EntityType[];
+    public set entities(entities: EntityType[]) {
+        this._entities = entities;
+        if (JSON.stringify(entities) !== JSON.stringify(this._entities)) {
+            if (this.entities && this.expressionTree) {
+                this._expressionTree = recreateTree(this._expressionTree, this._entities);
+            }
+        }
+    }
 
     /**
      * Returns the fields.
@@ -162,6 +178,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
     private _expressionTree: IExpressionTree;
     private _fields: FieldType[];
+    private _entities: EntityType[];
 
     constructor(protected iconService: IgxIconService) {
         this.registerSVGIcons();
