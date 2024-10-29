@@ -1277,7 +1277,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.gridAPI.crudService.cell).toBeNull();
         });
 
-        it('should clean active state when endEdit on focusout of the grid', () => {
+        it('should clean active state when endEdit on focusout of the grid', async () => {
             const handleFocusOut = ($event: FocusEvent) => {
                 if (!$event.relatedTarget || !grid.nativeElement.contains($event.relatedTarget as Node)) {
                     grid.endEdit(true);
@@ -1290,14 +1290,16 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
+            await wait(16 /* igxFocus raf */);
             expect(cell.editMode).toBe(true);
 
             const editTemplate = cellDom.query(By.css('input'));
+            expect(document.activeElement).toBe(editTemplate.nativeElement);
 
             UIInteractions.clickAndSendInputElementValue(editTemplate, 'Edit Cell');
             fixture.detectChanges();
 
-            grid.nativeElement.dispatchEvent(new FocusEvent('focusout', { relatedTarget: null }));
+            editTemplate.nativeElement.blur();
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(false);
