@@ -1,8 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent, IgxLayoutDirective } from 'igniteui-angular';
 import { defineComponents, IgcButtonGroupComponent, IgcToggleButtonComponent } from "igniteui-webcomponents";
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcButtonGroupComponent, IgcToggleButtonComponent);
 
@@ -16,7 +16,6 @@ defineComponents(IgcButtonGroupComponent, IgcToggleButtonComponent);
 
 export class ButtonGroupShowcaseSampleComponent {
     public cities = ['Sofia', 'London', 'New York', 'Tokyo'];
-    private propertyChangeService = inject(PropertyChangeService);
 
     public panelConfig: PropertyPanelConfig = {
         alignment: {
@@ -41,8 +40,14 @@ export class ButtonGroupShowcaseSampleComponent {
         }
     }
 
-    constructor() {
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     private selectionMap = {
@@ -51,20 +56,8 @@ export class ButtonGroupShowcaseSampleComponent {
         singleRequired: 'single-required'
     };
 
-    protected get wcSelection() {
-        return this.propertyChangeService.getProperty('selection');
-    }
-
     public get angularSelection() {
         const selection = this.propertyChangeService.getProperty('selection');
         return this.selectionMap[selection];
-    }
-
-    protected get disabled() {
-        return this.propertyChangeService.getProperty('disabled')
-    }
-
-    protected get alignment() {
-        return this.propertyChangeService.getProperty('alignment')
     }
 }

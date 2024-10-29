@@ -1,8 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxAvatarComponent } from 'igniteui-angular';
 import { CommonModule } from '@angular/common';
 import { defineComponents, IgcAvatarComponent } from "igniteui-webcomponents";
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcAvatarComponent);
 
@@ -16,8 +16,6 @@ defineComponents(IgcAvatarComponent);
 })
 
 export class AvatarShowcaseSampleComponent {
-    private propertyChangeService = inject(PropertyChangeService);
-
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
@@ -43,28 +41,18 @@ export class AvatarShowcaseSampleComponent {
         initials: {
             control: {
                 type: 'text',
-                defaultValue: 'RK'
+                defaultValue: 'DY'
             }
         }
     }
 
-    constructor() {
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get src() {
-        return this.propertyChangeService.getProperty('src');
-    }
-
-    protected get shape() {
-        return this.propertyChangeService.getProperty('shape');
-    }
-
-    protected get initials() {
-        return this.propertyChangeService.getProperty('initials');
-    }
-
-    protected get size() {
-        return this.propertyChangeService.getProperty('size');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 }

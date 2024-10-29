@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxSwitchComponent } from 'igniteui-angular';
 import { defineComponents, IgcSwitchComponent} from "igniteui-webcomponents";
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcSwitchComponent);
 
@@ -13,7 +13,7 @@ defineComponents(IgcSwitchComponent);
     standalone: true,
     imports: [IgxSwitchComponent]
 })
-export class SwitchShowcaseSampleComponent implements OnInit {
+export class SwitchShowcaseSampleComponent {
     public panelConfig : PropertyPanelConfig = {
         required: {
             control: {
@@ -58,38 +58,13 @@ export class SwitchShowcaseSampleComponent implements OnInit {
         },
     }
 
-    constructor(private propertyChangeService : PropertyChangeService) {}
+    public properties: Properties;
 
-    public ngOnInit() {
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get required() {
-        return this.propertyChangeService.getProperty('required');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
-
-    protected get disabled() {
-        return this.propertyChangeService.getProperty('disabled');
-    }
-
-    protected get invalid() {
-        return this.propertyChangeService.getProperty('invalid');
-    }
-
-    protected get checked() {
-        return this.propertyChangeService.getProperty('checked');
-    }
-
-    protected get labelPosition() {
-        return this.propertyChangeService.getProperty('labelPosition');
-    }
-
-    protected get name() {
-        return this.propertyChangeService.getProperty('name');
-    }
-
-    protected get value() {
-        return this.propertyChangeService.getProperty('value');
-    }
-
 }

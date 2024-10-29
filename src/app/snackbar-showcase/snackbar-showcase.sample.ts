@@ -1,8 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 // eslint-disable-next-line max-len
 import { IgxButtonDirective, IgxOverlayOutletDirective, IgxSnackbarComponent } from 'igniteui-angular';
 import { defineComponents, IgcSnackbarComponent } from 'igniteui-webcomponents';
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcSnackbarComponent);
 
@@ -14,7 +14,7 @@ defineComponents(IgcSnackbarComponent);
     standalone: true,
     imports: [IgxSnackbarComponent, IgxOverlayOutletDirective, IgxButtonDirective]
 })
-export class SnackbarShowcaseSampleComponent implements OnInit {
+export class SnackbarShowcaseSampleComponent {
     public panelConfig : PropertyPanelConfig = {
         actionText: {
             label: 'Action Text',
@@ -38,21 +38,13 @@ export class SnackbarShowcaseSampleComponent implements OnInit {
         }
     }
 
-    constructor(private propertyChangeService: PropertyChangeService){}
+    public properties: Properties;
 
-    public ngOnInit() {
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get actionText() {
-        return this.propertyChangeService.getProperty('actionText');
-    }
-
-    protected get displayTime() {
-        return this.propertyChangeService.getProperty('displayTime');
-    }
-
-    protected get keepOpen() {
-        return this.propertyChangeService.getProperty('keepOpen');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 }

@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxButtonDirective, IgxDialogActionsDirective, IgxDialogComponent, IgxDialogTitleDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSwitchComponent } from 'igniteui-angular';
 import { defineComponents, IgcDialogComponent, IgcButtonComponent} from "igniteui-webcomponents";
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcDialogComponent, IgcButtonComponent);
 
@@ -13,7 +13,7 @@ defineComponents(IgcDialogComponent, IgcButtonComponent);
     standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxSwitchComponent, IgxDialogComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
-export class DialogShowcaseSampleComponent implements OnInit {
+export class DialogShowcaseSampleComponent {
     public panelConfig : PropertyPanelConfig = {
         keepOpenOnEscape: {
             label: 'Keep Open on Escape',
@@ -35,22 +35,14 @@ export class DialogShowcaseSampleComponent implements OnInit {
         }
     }
 
-    constructor(private propertyChangeService: PropertyChangeService){}
+    public properties: Properties;
 
-    public ngOnInit() {
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get keepOpenOnEscape() {
-        return this.propertyChangeService.getProperty('keepOpenOnEscape');
-    }
-
-    protected get closeOnOutsideClick() {
-        return this.propertyChangeService.getProperty('closeOnOutsideClick');
-    }
-
-    protected get title() {
-        return this.propertyChangeService.getProperty('title');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     protected onDialogOKSelected(args) {

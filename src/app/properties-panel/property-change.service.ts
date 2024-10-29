@@ -31,6 +31,10 @@ export type PropertyPanelConfig = {
     };
 }
 
+export type Properties = {
+    [K in keyof PropertyPanelConfig]: any;
+};
+
 @Injectable({
     providedIn: 'root',
 })

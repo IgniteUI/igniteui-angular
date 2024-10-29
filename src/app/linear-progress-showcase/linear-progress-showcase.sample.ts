@@ -1,7 +1,7 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxLinearProgressBarComponent } from 'igniteui-angular';
 import { IgcLinearProgressComponent, defineComponents } from 'igniteui-webcomponents';
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcLinearProgressComponent);
 
@@ -14,7 +14,7 @@ defineComponents(IgcLinearProgressComponent);
     imports: [IgxLinearProgressBarComponent]
 })
 
-export class LinearProgressSampleComponent implements OnInit {
+export class LinearProgressSampleComponent {
     public panelConfig: PropertyPanelConfig = {
         striped: {
             control: {
@@ -57,29 +57,14 @@ export class LinearProgressSampleComponent implements OnInit {
         }
     }
 
-    protected get striped() {
-        return this.propertyChangeService.getProperty('striped');
-    }
+    public properties: Properties;
 
-    protected get indeterminate() {
-        return this.propertyChangeService.getProperty('indeterminate');
-    }
+    constructor(private propertyChangeService: PropertyChangeService) {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-    protected get hideLabel() {
-        return this.propertyChangeService.getProperty('hideLabel');
-    }
-
-    protected get value() {
-        const value = this.propertyChangeService.getProperty('value');
-        return value !== undefined ? value : 66;
-    }
-
-    protected get animationDuration() {
-        return this.propertyChangeService.getProperty('animationDuration');
-    }
-
-    protected get variantWC() {
-        return this.propertyChangeService.getProperty('variant');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     protected get variantAngular() {
@@ -93,11 +78,5 @@ export class LinearProgressSampleComponent implements OnInit {
             default:
                 return variantValue;
         }
-    }
-
-    constructor(private propertyChangeService: PropertyChangeService) { }
-
-    public ngOnInit() {
-        this.propertyChangeService.setPanelConfig(this.panelConfig);
     }
 }

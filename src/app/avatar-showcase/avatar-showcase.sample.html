@@ -1,21 +1,21 @@
-<div class="wrapper" [ngStyle]="{'--ig-size': 'var(--ig-size-' + size + ')'}">
+<div class="wrapper" [ngStyle]="{'--ig-size': 'var(--ig-size-' + properties.size + ')'}">
     <article class="avatars-wrapper">
         <div class="avatars">
             <h3 class="sample-title">Angular Avatars</h3>
             <p>Avatar with an image</p>
-            <igx-avatar [src]="src" [shape]="shape"></igx-avatar>
+            <igx-avatar [src]="properties.src" [shape]="properties.shape"></igx-avatar>
 
             <p>Avatar with initials</p>
-            <igx-avatar [initials]="initials" [shape]="shape"></igx-avatar>
+            <igx-avatar [initials]="properties.initials" [shape]="properties.shape"></igx-avatar>
         </div>
 
         <div class="avatars">
             <h3 class="sample-title">WebComponents Avatars</h3>
             <p>Avatar with an image</p>
-            <igc-avatar [src]="src" [shape]="shape"></igc-avatar>
+            <igc-avatar [src]="properties.src" [shape]="properties.shape"></igc-avatar>
 
             <p>Avatar with initials</p>
-            <igc-avatar [initials]="initials" [shape]="shape"></igc-avatar>
+            <igc-avatar [initials]="properties.initials" [shape]="properties.shape"></igc-avatar>
         </div>
     </article>
 </div>

@@ -2,15 +2,15 @@
     <section class="sample-wrapper" style="width: 100%">
         <h4 class="sample-title">Angular Carousel</h4>
         <igx-carousel #car
-        [pause]="!disablePauseOnInteraction"
-        [loop]="!disableLoop"
-        [indicators]="!hideIndicators"
-        [navigation]="!hideNavigation"
-        [vertical]="vertical"
-        [interval]="interval"
-        [animationType]="animationType"
+        [pause]="!properties.disablePauseOnInteraction"
+        [loop]="!properties.disableLoop"
+        [indicators]="!properties.hideIndicators"
+        [navigation]="!properties.hideNavigation"
+        [vertical]="properties.vertical"
+        [interval]="properties.interval"
+        [animationType]="properties.animationType"
         [indicatorsOrientation]="angularIndicatorsOrientation"
-        [maximumIndicatorsCount]="maximumIndicatorsCount">
+        [maximumIndicatorsCount]="properties.maximumIndicatorsCount">
             <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
                 <img [src]="slide.image">
             </igx-slide>
@@ -18,15 +18,15 @@
 
         <h4 class="sample-title">WC Carousel</h4>
         <igc-carousel
-        [disableLoop]="disableLoop"
-        [disablePauseOnInteraction]="disablePauseOnInteraction"
-        [hideIndicators]="hideIndicators"
-        [hideNavigation]="hideNavigation"
-        [vertical]="vertical"
-        [interval]="interval"
-        [animationType]="animationType"
-        [indicatorsOrientation]="wcIndicatorsOrientation"
-        [maximumIndicatorsCount]="maximumIndicatorsCount">
+        [disableLoop]="properties.disableLoop"
+        [disablePauseOnInteraction]="properties.disablePauseOnInteraction"
+        [hideIndicators]="properties.hideIndicators"
+        [hideNavigation]="properties.hideNavigation"
+        [vertical]="properties.vertical"
+        [interval]="properties.interval"
+        [animationType]="properties.animationType"
+        [indicatorsOrientation]="properties.indicatorsOrientation"
+        [maximumIndicatorsCount]="properties.maximumIndicatorsCount">
             <igc-carousel-slide *ngFor="let slide of slides;" [active]="slide.active">
                 <img [src]="slide.image" />
             </igc-carousel-slide>

@@ -1,9 +1,9 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxButtonDirective, IgxButtonGroupComponent, IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, IgxSuffixDirective, IgxSwitchComponent, IgxStepActiveIndicatorDirective, IgxIconComponent, IgxStepComponent, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubtitleDirective, IgxStepContentDirective, IgxAvatarComponent, IgxBadgeComponent, IgxTimePickerComponent, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective, IgxStepperComponent, IgxStepperOrientation, IgxStepperTitlePosition, IgxStepType } from 'igniteui-angular';
 import { defineComponents, IgcStepperComponent, IgcButtonComponent, IgcInputComponent } from 'igniteui-webcomponents';
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcStepperComponent, IgcButtonComponent, IgcInputComponent);
 
@@ -14,7 +14,7 @@ defineComponents(IgcStepperComponent, IgcButtonComponent, IgcInputComponent);
     standalone: true,
     imports: [IgxButtonDirective, IgxButtonGroupComponent, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxSwitchComponent, IgxStepperComponent, IgxStepActiveIndicatorDirective, IgxIconComponent, IgxStepComponent, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubtitleDirective, IgxStepContentDirective, NgIf, IgxAvatarComponent, IgxBadgeComponent, IgxTimePickerComponent, ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective]
 })
-export class IgxStepperShowcaseSampleComponent implements OnInit {
+export class IgxStepperShowcaseSampleComponent {
     public panelConfig: PropertyPanelConfig = {
         orientation: {
             control: {
@@ -77,14 +77,14 @@ export class IgxStepperShowcaseSampleComponent implements OnInit {
         }
     }
 
-    constructor(private propertyChangeService: PropertyChangeService){}
+    public properties: Properties;
 
-    public ngOnInit() {
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get contentTop(): boolean {
-        return this.propertyChangeService.getProperty('contentTop');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     protected get stepType(): IgxStepType {
@@ -118,21 +118,5 @@ export class IgxStepperShowcaseSampleComponent implements OnInit {
         return orientationValue === 'horizontal'
             ? IgxStepperOrientation.Horizontal
             : IgxStepperOrientation.Vertical;
-    }
-
-    protected get animationDuration(): number {
-        return this.propertyChangeService.getProperty('animationDuration');
-    }
-
-    protected get linear(): boolean {
-        return this.propertyChangeService.getProperty('linear');
-    }
-
-    protected get verticalAnimation() {
-        return this.propertyChangeService.getProperty('verticalAnimation');
-    }
-
-    protected get horizontalAnimation() {
-        return this.propertyChangeService.getProperty('horizontalAnimation');
     }
 }

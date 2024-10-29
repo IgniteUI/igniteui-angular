@@ -3,8 +3,8 @@
         <h4 class="sample-title">Angular ButtonGroup</h4>
         <igx-buttongroup
         [selectionMode]="angularSelection"
-        [alignment]="alignment"
-        [disabled]="disabled">
+        [alignment]="properties.alignment"
+        [disabled]="properties.disabled">
             <button
             igxButton
             *ngFor="let city of cities">
@@ -16,9 +16,9 @@
     <article class="sample-column">
         <h4 class="sample-title">WC ButtonGroup</h4>
         <igc-button-group
-        [selection]="wcSelection"
-        [alignment]="alignment"
-        [disabled]="disabled">
+        [selection]="properties.selection"
+        [alignment]="properties.alignment"
+        [disabled]="properties.disabled">
             <igc-toggle-button
             *ngFor="let city of cities"
             [value]="city">

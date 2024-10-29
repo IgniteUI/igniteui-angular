@@ -1,7 +1,6 @@
 import {
     Component,
     CUSTOM_ELEMENTS_SCHEMA,
-    inject,
     OnInit,
     TemplateRef,
     ViewChild,
@@ -28,7 +27,7 @@ import {
     DateRangeDescriptor,
     DateRangeType,
 } from "igniteui-angular";
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 import { defineComponents, IgcCalendarComponent } from "igniteui-webcomponents";
 
@@ -76,8 +75,6 @@ export class CalendarShowcaseSampleComponent implements OnInit {
         weekday: "narrow",
         year: "numeric",
     };
-
-    private propertyChangeService = inject(PropertyChangeService);
 
     public panelConfig: PropertyPanelConfig = {
         locale: {
@@ -162,20 +159,18 @@ export class CalendarShowcaseSampleComponent implements OnInit {
         range: 'range'
     };
 
-    constructor() {
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     public ngOnInit(): void {
         this.propertyChangeService.setCustomControls(this.customControlsTemplate);
-    }
-
-    protected get locale() {
-        return this.propertyChangeService.getProperty('locale');
-    }
-
-    protected get weekStartWC() {
-        return this.propertyChangeService.getProperty('weekStart') || 'monday';
     }
 
     protected get weekStartAngular() {
@@ -183,37 +178,9 @@ export class CalendarShowcaseSampleComponent implements OnInit {
         return this.weekStartMap[weekStart];
     }
 
-    protected get selectionWC() {
-        return this.propertyChangeService.getProperty('selection');
-    }
-
     protected get selectionAngular() {
         const selection = this.propertyChangeService.getProperty('selection');
         return this.selectionMap[selection];
-    }
-
-    protected get headerOrientation() {
-        return this.propertyChangeService.getProperty('headerOrientation');
-    }
-
-    protected get viewOrientation() {
-        return this.propertyChangeService.getProperty('viewOrientation');
-    }
-
-    protected get hideHeader() {
-        return this.propertyChangeService.getProperty('hideHeader');
-    }
-
-    protected get hideOutsideDays() {
-        return this.propertyChangeService.getProperty('hideOutsideDays');
-    }
-
-    protected get showWeekNumbers() {
-        return this.propertyChangeService.getProperty('showWeekNumbers');
-    }
-
-    protected get monthsViewNumber() {
-        return this.propertyChangeService.getProperty('monthsViewNumber');
     }
 
     protected onSelection(event: Date | Date[]) {

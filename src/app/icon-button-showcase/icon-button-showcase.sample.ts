@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective } from 'igniteui-angular';
 import { defineComponents, IgcIconButtonComponent, registerIconFromText} from "igniteui-webcomponents";
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents( IgcIconButtonComponent);
 
@@ -13,11 +13,10 @@ registerIconFromText("favorite", favorite );
     styleUrls: ['icon-button-showcase.sample.scss'],
     templateUrl: 'icon-button-showcase.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [IgxIconComponent, IgxIconButtonDirective, IgxRippleDirective]
 })
-export class IconButtonShowcaseSampleComponent implements OnInit {
+export class IconButtonShowcaseSampleComponent {
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
@@ -40,21 +39,13 @@ export class IconButtonShowcaseSampleComponent implements OnInit {
         }
     }
 
-    constructor(protected propertyChangeService: PropertyChangeService) {}
+    public properties: Properties;
 
-    public ngOnInit() {
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get size() {
-        return this.propertyChangeService.getProperty('size');
-    }
-
-    protected get variant() {
-        return this.propertyChangeService.getProperty('variant');
-    }
-
-    protected get disabled() {
-        return this.propertyChangeService.getProperty('disabled');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 }

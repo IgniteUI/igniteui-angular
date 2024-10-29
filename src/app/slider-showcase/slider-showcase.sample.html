@@ -2,43 +2,40 @@
 <article class="sample-item">
     <strong>Angular Slider</strong>
     <igx-slider
-        [value]="value"
-        [disabled]="disabled"
-        [minValue]="minValue"
-        [maxValue]="maxValue"
-        [step]="step"
-        [primaryTickLabels]="!primaryTickLabels"
-        [secondaryTickLabels]="!secondaryTickLabels"
+        [value]="properties.value"
+        [disabled]="properties.disabled"
+        [minValue]="properties.minValue"
+        [maxValue]="properties.maxValue"
+        [step]="properties.step"
+        [primaryTickLabels]="!properties.primaryTickLabels"
+        [secondaryTickLabels]="!properties.secondaryTickLabels"
         [ticksOrientation]="ticksOrientationAngular"
         [tickLabelsOrientation]="angularTickLabelOrientation"
-        [primaryTicks]="primaryTicks"
-        [secondaryTicks]="secondaryTicks"
-        [lowerBound]="lowerBound"
-        [upperBound]="upperBound"
-        [showTicks]="primaryTicks || secondaryTicks">
+        [primaryTicks]="properties.primaryTicks"
+        [secondaryTicks]="properties.secondaryTicks"
+        [lowerBound]="properties.lowerBound"
+        [upperBound]="properties.upperBound"
+        [showTicks]="properties.primaryTicks || properties.secondaryTicks">
     </igx-slider>
 </article>
 
 <article class="sample-item">
     <strong>WC Slider</strong>
     <igc-slider
-    [value]="value"
-    [disabled]="disabled"
-    [min]="minValue"
-    [max]="maxValue"
-    [step]="step"
-    [tickOrientation]="ticksOrientationWC"
-    [tickLabelRotation]="wcTickLabelOrientation"
-    [primaryTicks]="primaryTicks"
-    [secondaryTicks]="secondaryTicks"
-    [lowerBound]="lowerBound"
-    [upperBound]="upperBound"
-    [hidePrimaryLabels]="primaryTickLabels"
-    [hideSecondaryLabels]="secondaryTickLabels"
-    [attr.discrete-track]="step > 1 ? true : null">
-    <!-- <ng-container *ngFor="let label of labels">
-        <igc-slider-label>{{ label }}</igc-slider-label>
-    </ng-container> -->
+    [value]="properties.value"
+    [disabled]="properties.disabled"
+    [min]="properties.minValue"
+    [max]="properties.maxValue"
+    [step]="properties.step"
+    [tickOrientation]="properties.ticksOrientation"
+    [tickLabelRotation]="properties.tickLabelOrientation"
+    [primaryTicks]="properties.primaryTicks"
+    [secondaryTicks]="properties.secondaryTicks"
+    [lowerBound]="properties.lowerBound"
+    [upperBound]="properties.upperBound"
+    [hidePrimaryLabels]="properties.primaryTickLabels"
+    [hideSecondaryLabels]="properties.secondaryTickLabels"
+    [attr.discrete-track]="properties.step > 1 ? true : null">
     </igc-slider>
 </article>
 </div>

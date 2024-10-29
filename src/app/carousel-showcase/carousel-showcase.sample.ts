@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { IgxButtonDirective, IgxCarouselComponent, IgxCarouselIndicatorDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxSlideComponent, IgxSwitchComponent, IgxToggleActionDirective } from 'igniteui-angular';
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 import {
     IgcButtonComponent,
     IgcCarouselComponent,
@@ -52,7 +52,7 @@ import {
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [IgxSwitchComponent, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective, NgIf]
 })
-export class CarouselShowcaseSampleComponent implements OnInit {
+export class CarouselShowcaseSampleComponent {
     public panelConfig: PropertyPanelConfig = {
         disableLoop: {
             label: 'Disable Loop',
@@ -115,32 +115,15 @@ export class CarouselShowcaseSampleComponent implements OnInit {
         }
     }
 
-    protected get disableLoop(){
-        return this.propertyChangeService.getProperty('disableLoop');
-    }
+    public properties: Properties;
 
-    protected get disablePauseOnInteraction(){
-        return this.propertyChangeService.getProperty('disablePauseOnInteraction');
-    }
+    constructor(private propertyChangeService: PropertyChangeService) {
+        this.addNewSlide();
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-    protected get hideIndicators(){
-        return this.propertyChangeService.getProperty('hideIndicators');
-    }
-
-    protected get hideNavigation(){
-        return this.propertyChangeService.getProperty('hideNavigation');
-    }
-
-    protected get vertical(){
-        return this.propertyChangeService.getProperty('vertical');
-    }
-
-    protected get interval(){
-        return this.propertyChangeService.getProperty('interval');
-    }
-
-    protected get animationType(){
-        return this.propertyChangeService.getProperty('animationType');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     private indicatorsOrientationMap = {
@@ -153,23 +136,7 @@ export class CarouselShowcaseSampleComponent implements OnInit {
         return this.indicatorsOrientationMap[orientation] || 'bottom';
     }
 
-    protected get wcIndicatorsOrientation() {
-        return this.propertyChangeService.getProperty('indicatorsOrientation');
-    }
-
-    protected get maximumIndicatorsCount() {
-        return this.propertyChangeService.getProperty('maximumIndicatorsCount');
-    }
-
     public slides = [];
-
-    constructor(protected propertyChangeService: PropertyChangeService) {
-        this.addNewSlide();
-    }
-
-    public ngOnInit() {
-        this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
     public addNewSlide() {
         this.slides.push(

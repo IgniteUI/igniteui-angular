@@ -3,12 +3,12 @@
     <igx-stepper #stepper
     [orientation]="orientation"
     [stepType]="stepType"
-    [contentTop]="contentTop"
+    [contentTop]="properties.contentTop"
     [titlePosition]="titlePosition"
-    [linear]="linear"
-    [verticalAnimationType]="verticalAnimation"
-    [horizontalAnimationType]="horizontalAnimation"
-    [animationDuration]="animationDuration">
+    [linear]="properties.linear"
+    [verticalAnimationType]="properties.verticalAnimation"
+    [horizontalAnimationType]="properties.horizontalAnimation"
+    [animationDuration]="properties.animationDuration">
         <igx-step completed #step [isValid]="form1.form.valid">
             <span igxStepTitle>Step 1</span>
             <span igxStepSubtitle>(completed)</span>
@@ -91,12 +91,12 @@
     <igc-stepper #stepper2
     [orientation]="orientation"
     [stepType]="stepType"
-    [contentTop]="contentTop"
+    [contentTop]="properties.contentTop"
     [titlePosition]="titlePosition"
-    [linear]="linear"
-    [verticalAnimation]="verticalAnimation"
-    [horizontalAnimation]="horizontalAnimation"
-    [animationDuration]="animationDuration">
+    [linear]="properties.linear"
+    [verticalAnimation]="properties.verticalAnimation"
+    [horizontalAnimation]="properties.horizontalAnimation"
+    [animationDuration]="properties.animationDuration">
       <igc-step complete>
         <span slot="title">Step1</span>
         <span slot="subtitle">(completed)</span>

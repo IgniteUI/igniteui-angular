@@ -11,7 +11,7 @@
         --ig-size: var(--ig-size-small);
     }
 
-    property-label {
+    .property-label {
         display: inline-block;
         margin-bottom: .5rem;
     }
@@ -25,6 +25,7 @@
     .panel-title {
         margin-bottom: 2rem;
     }
+
 
      > *:not(:last-child) {
         margin-bottom: 1rem;

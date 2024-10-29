@@ -6,6 +6,8 @@
 .avatars {
     display: grid;
     grid-auto-flow: row;
+    grid-template-rows: subgrid;
+    grid-row: span 5;
     justify-items: center;
     gap: 12px;
 }

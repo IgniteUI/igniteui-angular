@@ -3,12 +3,12 @@
         <div class="preview__sample">
             <h6>Angular Chip</h6>
             <igx-chip #me
-                [variant]="variant"
-                [style.--ig-size]="'var(--ig-size-' + size + ')'"
-                [disabled]="disabled"
-                [selectable]="selectable"
-                [removable]="removable"
-                [selected]="selected"
+                [variant]="properties.variant"
+                [style.--ig-size]="'var(--ig-size-' + properties.size + ')'"
+                [disabled]="properties.disabled"
+                [selectable]="properties.selectable"
+                [removable]="properties.removable"
+                [selected]="properties.selected"
                 [removeIcon]="customIcons ? myRemoveIcon : null"
                 [selectIcon]="customIcons ? mySelectIcon : null"
                 (remove)="removeChip(me)">
@@ -21,12 +21,12 @@
 
             <h6>WC Chip</h6>
             <igc-chip #wc
-                [variant]="variant"
-                [style.--ig-size]="'var(--ig-size-' + size + ')'"
-                [disabled]="disabled"
-                [selectable]="selectable"
-                [removable]="removable"
-                [selected]="selected">
+                [variant]="properties.variant"
+                [style.--ig-size]="'var(--ig-size-' + properties.size + ')'"
+                [disabled]="properties.disabled"
+                [selectable]="properties.selectable"
+                [removable]="properties.removable"
+                [selected]="properties.selected">
                 <igc-avatar *ngIf="hasAvatar" class="chip-area-avatar" slot="prefix" initials="MP" shape="circle"></igc-avatar>
                 <span *ngIf="hasPrefix" slot="prefix"><igx-icon>face</igx-icon></span>
                 <span *ngIf="customIcons" slot="select"><igx-icon family="fa-solid" name="fa-check-circle"></igx-icon></span>
@@ -47,15 +47,15 @@
 
         <ng-template #customControls>
             <div class="custom-controls">
-                <igx-switch *ngIf="removable" id="customIcons" [(ngModel)]="customIcons">
+                <igx-switch *ngIf="properties.removable" id="customIcons" [(ngModel)]="customIcons">
                     <label for="customIcons">Custom Icons</label>
                 </igx-switch>
 
-                <igx-switch id="addPrefix"  [(ngModel)]="hasPrefix">
+                <igx-switch id="addPrefix" [(ngModel)]="hasPrefix">
                     <label for="addPrefix">Add prefix</label>
                 </igx-switch>
 
-                <igx-switch id="addSuffix"  [(ngModel)]="hasSuffix">
+                <igx-switch id="addSuffix" [(ngModel)]="hasSuffix">
                     <label for="addSuffix">Add suffix</label>
                 </igx-switch>
 

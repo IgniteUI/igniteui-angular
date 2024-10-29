@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation, inject } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation } from '@angular/core';
 import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective } from 'igniteui-angular';
 import { defineComponents, IgcButtonComponent, IgcIconButtonComponent, registerIconFromText} from "igniteui-webcomponents";
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcButtonComponent, IgcIconButtonComponent);
 
@@ -18,7 +18,6 @@ registerIconFromText("favorite", favorite );
     imports: [IgxButtonDirective, IgxIconComponent, IgxButtonGroupComponent, IgxIconButtonDirective, IgxRippleDirective]
 })
 export class ButtonShowcaseSampleComponent {
-    private propertyChangeService = inject(PropertyChangeService);
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
@@ -41,19 +40,13 @@ export class ButtonShowcaseSampleComponent {
         }
     }
 
-    constructor() {
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get size() {
-        return this.propertyChangeService.getProperty('size');
-    }
-
-    protected get variant() {
-        return this.propertyChangeService.getProperty('variant');
-    }
-
-    protected get disabled() {
-        return this.propertyChangeService.getProperty('disabled');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 }

@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxButtonGroupComponent,
@@ -18,7 +18,7 @@ import {
 } from 'igniteui-angular';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import { defineComponents, IgcComboComponent } from "igniteui-webcomponents";
-import { PropertyPanelConfig, PropertyChangeService } from '../properties-panel/property-change.service';
+import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
 
 defineComponents(IgcComboComponent);
 
@@ -47,7 +47,7 @@ defineComponents(IgcComboComponent);
         SizeSelectorComponent,
     ]
 })
-export class ComboShowcaseSampleComponent implements OnInit {
+export class ComboShowcaseSampleComponent {
     protected items: any[] = [];
     public valueKeyVar = 'field';
 
@@ -111,6 +111,8 @@ export class ComboShowcaseSampleComponent implements OnInit {
         },
     }
 
+    public properties: Properties;
+
     constructor(
         private propertyChangeService: PropertyChangeService) {
         const division = {
@@ -141,30 +143,12 @@ export class ComboShowcaseSampleComponent implements OnInit {
                 });
             });
         }
-    }
 
-    public ngOnInit() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get size() {
-        return this.propertyChangeService.getProperty('size');
-    }
-
-    protected get placeholderSearch() {
-        return this.propertyChangeService.getProperty('placeholderSearch');
-    }
-
-    protected get placeholder() {
-        return this.propertyChangeService.getProperty('placeholder');
-    }
-
-    protected get name() {
-        return this.propertyChangeService.getProperty('name');
-    }
-
-    protected get groupSorting() {
-        return this.propertyChangeService.getProperty('groupSorting');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     protected get groupSortingAngular() {
@@ -182,26 +166,10 @@ export class ComboShowcaseSampleComponent implements OnInit {
         }
     }
 
-    protected get caseSensitiveIcon() {
-        return this.propertyChangeService.getProperty('caseSensitiveIcon');
-    }
-
-    protected get disableFiltering() {
-        return this.propertyChangeService.getProperty('disableFiltering');
-    }
-
     protected get filteringOptions() {
         return {
-            filterable: !this.disableFiltering,
-            caseSensitive: this.caseSensitiveIcon
+            filterable: !this.properties.disableFiltering,
+            caseSensitive: this.properties.caseSensitiveIcon
         };
-    }
-
-    protected get required() {
-        return this.propertyChangeService.getProperty('required');
-    }
-
-    protected get disabled() {
-        return this.propertyChangeService.getProperty('disabled');
     }
 }

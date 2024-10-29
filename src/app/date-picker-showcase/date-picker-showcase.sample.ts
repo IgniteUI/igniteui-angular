@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { DateRangeDescriptor, DateRangeType, IgxButtonDirective, IgxDatePickerComponent, IgxIconComponent, IgxLabelDirective, IgxPickerActionsDirective, IgxRippleDirective, IgxSuffixDirective, PickerInteractionMode } from 'igniteui-angular';
 import { defineComponents, IgcDatePickerComponent, IgcButtonComponent, IgcIconComponent, registerIconFromText } from "igniteui-webcomponents";
-import { PropertyPanelConfig, PropertyChangeService } from '../properties-panel/property-change.service';
+import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
 
 defineComponents(IgcDatePickerComponent, IgcButtonComponent, IgcIconComponent);
 
@@ -17,7 +17,7 @@ registerIconFromText('alarm', alarm);
     imports: [IgxDatePickerComponent, IgxLabelDirective, IgxSuffixDirective, IgxIconComponent, IgxPickerActionsDirective, IgxButtonDirective, IgxRippleDirective]
 })
 
-export class DatePickerShowcaseSampleComponent implements OnInit {
+export class DatePickerShowcaseSampleComponent {
     public date1 = new Date();
     public date2 = new Date(new Date(this.date1.getFullYear(), this.date1.getMonth(), this.date1.getDate() + 1));
     public date3 = new Date(new Date(this.date2.getFullYear(), this.date2.getMonth(), this.date2.getDate() + 1));
@@ -30,8 +30,6 @@ export class DatePickerShowcaseSampleComponent implements OnInit {
 
     public disabledDates: DateRangeDescriptor[] = [{ type: DateRangeType.Specific, dateRange: [this.date1, this.date2, this.date3] }];
     public specialDates: DateRangeDescriptor[] = [{ type: DateRangeType.Specific, dateRange: [this.date5, this.date6, this.date7] }];
-
-    private propertyChangeService = inject(PropertyChangeService);
 
     public panelConfig: PropertyPanelConfig = {
         mode: {
@@ -78,40 +76,18 @@ export class DatePickerShowcaseSampleComponent implements OnInit {
         }
     }
 
-    public ngOnInit() {
-        this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
+    public properties: Properties;
 
-    protected get mode() {
-        return this.propertyChangeService.getProperty('mode');
+    constructor(private propertyChangeService: PropertyChangeService) {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     protected get modeAngular() {
         const modeValue = this.propertyChangeService.getProperty('mode');
         return modeValue === 'dropdown' ? PickerInteractionMode.DropDown : PickerInteractionMode.Dialog;
-    }
-
-    protected get required() {
-        return this.propertyChangeService.getProperty('required');
-    }
-
-    protected get disabled() {
-        return this.propertyChangeService.getProperty('disabled');
-    }
-
-    protected get value() {
-        return this.propertyChangeService.getProperty('value');
-    }
-
-    protected get placeholder() {
-        return this.propertyChangeService.getProperty('placeholder');
-    }
-
-    protected get displayFormat() {
-        return this.propertyChangeService.getProperty('displayFormat');
-    }
-
-    protected get inputFormat() {
-        return this.propertyChangeService.getProperty('inputFormat');
     }
 }

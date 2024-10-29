@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TicksOrientation, IgxSliderComponent, TickLabelsOrientation } from 'igniteui-angular';
 import { defineComponents, IgcSliderComponent, IgcSliderLabelComponent } from 'igniteui-webcomponents';
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcSliderComponent, IgcSliderLabelComponent);
 
@@ -13,52 +13,60 @@ defineComponents(IgcSliderComponent, IgcSliderLabelComponent);
     standalone: true,
     imports: [IgxSliderComponent]
 })
-export class SliderShowcaseSampleComponent implements OnInit {
+export class SliderShowcaseSampleComponent {
     public panelConfig : PropertyPanelConfig = {
         value: {
             control: {
-                type: 'number'
+                type: 'number',
+                defaultValue: 0
             }
         },
         minValue: {
             label: 'Min Value',
             control: {
-                type: 'number'
+                type: 'number',
+                defaultValue: 0
             }
         },
         maxValue: {
             label: 'Max Value',
             control: {
-                type: 'number'
+                type: 'number',
+                defaultValue: 100
             }
         },
         step: {
             control: {
-                type: 'number'
+                type: 'number',
+                defaultValue: 1
             }
         },
         lowerBound: {
             label: 'Lower Bound',
             control: {
-                type: 'number'
+                type: 'number',
+                defaultValue: 0
             }
         },
         upperBound: {
             label: 'Upper Bound',
             control: {
-                type: 'number'
+                type: 'number',
+                defaultValue: 100
             }
         },
         primaryTicks: {
             label: 'Primary Ticks',
             control: {
-                type: 'number'
+                type: 'number',
+                defaultValue: 0
             }
         },
         secondaryTicks: {
             label: 'Secondary Ticks',
             control: {
-                type: 'number'
+                type: 'number',
+                defaultValue: 0
             }
         },
         ticksOrientation: {
@@ -80,27 +88,34 @@ export class SliderShowcaseSampleComponent implements OnInit {
         },
         disabled: {
             control: {
-                type: 'boolean'
+                type: 'boolean',
+                defaultValue: false
             }
         },
         primaryTickLabels: {
             label: 'Hide Primary Tick Labels',
             control: {
-                type: 'boolean'
+                type: 'boolean',
+                defaultValue: false
             }
         },
         secondaryTickLabels: {
             label: 'Hide Secondary Tick Labels',
             control: {
-                type: 'boolean'
+                type: 'boolean',
+                defaultValue: false
             }
         }
     }
 
-    constructor(protected propertyChangeService: PropertyChangeService) {}
+    public properties: Properties;
 
-    public ngOnInit() {
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     private ticksOrientationMap = {
@@ -120,60 +135,8 @@ export class SliderShowcaseSampleComponent implements OnInit {
         return this.tickLabelOrientationMap[orientation] ?? TickLabelsOrientation.Horizontal;
     }
 
-    protected get wcTickLabelOrientation(): number {
-        return this.propertyChangeService.getProperty('tickLabelOrientation');
-    }
-
-    protected get value(): number {
-        return this.propertyChangeService.getProperty('value') || 0;
-    }
-
-    protected get disabled(): boolean {
-        return !!this.propertyChangeService.getProperty('disabled');
-    }
-
-    protected get minValue(): number {
-        return this.propertyChangeService.getProperty('minValue') || 0;
-    }
-
-    protected get maxValue(): number {
-        return this.propertyChangeService.getProperty('maxValue') || 100;
-    }
-
-    protected get step(): number {
-        return this.propertyChangeService.getProperty('step') || 1;
-    }
-
-    protected get lowerBound(): number {
-        return this.propertyChangeService.getProperty('lowerBound') || 0;
-    }
-
-    protected get upperBound(): number {
-        return this.propertyChangeService.getProperty('upperBound') || 100;
-    }
-
-    protected get primaryTicks(): number {
-        return this.propertyChangeService.getProperty('primaryTicks') || 0;
-    }
-
-    protected get secondaryTicks(): number {
-        return this.propertyChangeService.getProperty('secondaryTicks') || 0;
-    }
-
     protected get ticksOrientationAngular(): TicksOrientation {
         const orientation = this.propertyChangeService.getProperty('ticksOrientation');
         return this.ticksOrientationMap[orientation] || TicksOrientation.Bottom;
-    }
-
-    protected get ticksOrientationWC(): string {
-        return this.propertyChangeService.getProperty('ticksOrientation');
-    }
-
-    protected get primaryTickLabels(): boolean {
-        return !!this.propertyChangeService.getProperty('primaryTickLabels');
-    }
-
-    protected get secondaryTickLabels(): boolean {
-        return !!this.propertyChangeService.getProperty('secondaryTickLabels');
     }
 }

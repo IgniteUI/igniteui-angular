@@ -4,14 +4,14 @@
         <h4 class="sample-title">WC Icon Button</h4>
     </article>
 
-    <div class="buttons-sample" [style.--ig-size]="'var(--ig-size-' + size + ')'">
+    <div class="buttons-sample" [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
         <div class="button-sample">
-            <button [igxIconButton]="variant" [disabled]="disabled">
+            <button [igxIconButton]="properties.variant" [disabled]="properties.disabled">
                 <igx-icon>favorite</igx-icon>
             </button>
         </div>
         <div class="button-sample">
-            <igc-icon-button name="favorite" [variant]="variant" [disabled]="disabled">
+            <igc-icon-button name="favorite" [variant]="properties.variant" [disabled]="properties.disabled">
             </igc-icon-button>
         </div>
     </div>

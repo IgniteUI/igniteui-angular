@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelHeaderComponent, IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from 'igniteui-angular';
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 import { defineComponents, IgcExpansionPanelComponent} from "igniteui-webcomponents";
 
 defineComponents(IgcExpansionPanelComponent);
@@ -15,7 +15,7 @@ defineComponents(IgcExpansionPanelComponent);
     standalone: true,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, NgIf, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent]
 })
-export class ExpansionPanelShowcaseSampleComponent implements OnInit {
+export class ExpansionPanelShowcaseSampleComponent {
     public panelConfig: PropertyPanelConfig = {
         indicatorPosition: {
             label: 'Indicator Position',
@@ -38,28 +38,20 @@ export class ExpansionPanelShowcaseSampleComponent implements OnInit {
         }
     }
 
-    constructor(public propertyChangeService: PropertyChangeService) {}
+    public properties: Properties;
 
-    public ngOnInit() {
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get open(){
-        return this.propertyChangeService.getProperty('open');
-    }
-
-    protected get disabled(){
-        return this.propertyChangeService.getProperty('disabled');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     private indicatorPositionMap = {
         start: 'left',
         end: 'right'
     };
-
-    protected get indicatorPositionWC(){
-        return this.propertyChangeService.getProperty('indicatorPosition');
-    }
 
     protected get indicatorPositionAngular(){
         const position = this.propertyChangeService.getProperty('indicatorPosition');

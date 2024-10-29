@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxBadgeComponent } from 'igniteui-angular';
 import { defineComponents, IgcBadgeComponent } from "igniteui-webcomponents";
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcBadgeComponent);
 
@@ -15,8 +15,6 @@ defineComponents(IgcBadgeComponent);
 })
 
 export class BadgeShowcaseSampleComponent {
-    private propertyChangeService = inject(PropertyChangeService);
-
     public panelConfig: PropertyPanelConfig = {
         shape: {
             control: {
@@ -40,8 +38,14 @@ export class BadgeShowcaseSampleComponent {
         }
     };
 
-    constructor() {
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     private variantMap = {
@@ -52,21 +56,9 @@ export class BadgeShowcaseSampleComponent {
         error: 'danger',
     };
 
-    public get angularVariant() {
-        return this.propertyChangeService.getProperty('variant');
-    }
-
     public get wcVariant() {
         const variant = this.propertyChangeService.getProperty('variant');
         return this.variantMap[variant] || 'primary';
-    }
-
-    public get shape() {
-        return this.propertyChangeService.getProperty('shape');
-    }
-
-    public get outlined() {
-        return this.propertyChangeService.getProperty('outlined');
     }
 }
 

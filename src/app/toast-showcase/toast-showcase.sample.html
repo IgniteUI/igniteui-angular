@@ -18,14 +18,14 @@
 
 <igx-toast #toast
 [outlet]="outlet"
-[autoHide]="!keepOpen"
-[displayTime]="displayTime">
+[autoHide]="!properties.keepOpen"
+[displayTime]="properties.displayTime">
     Angular Toast will self-destruct in 4 seconds.
 </igx-toast>
 
 <igc-toast #toastWC
 position="middle"
-[keepOpen]="keepOpen"
-[displayTime]="displayTime">
+[keepOpen]="properties.keepOpen"
+[displayTime]="properties.displayTime">
     WC Toast will self-destruct in 4 seconds.
 </igc-toast>

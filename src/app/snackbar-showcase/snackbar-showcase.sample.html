@@ -7,9 +7,9 @@
                 <igx-snackbar
                     #snackbar
                     [outlet]="outlet"
-                    [actionText]="actionText"
-                    [autoHide]="!keepOpen"
-                    [displayTime]="displayTime"
+                    [actionText]="properties.actionText"
+                    [autoHide]="!properties.keepOpen"
+                    [displayTime]="properties.displayTime"
                 >Angular Snackbar Message
                 </igx-snackbar>
             </div>
@@ -23,9 +23,9 @@
     <article class="sample-column">
         <div class="snackbar-sample">
             <igc-snackbar #snackbar2
-            [actionText]="actionText"
-            [keepOpen]="keepOpen"
-            [displayTime]="displayTime">
+            [actionText]="properties.actionText"
+            [keepOpen]="properties.keepOpen"
+            [displayTime]="properties.displayTime">
                 WC Snackbar Message
             </igc-snackbar>
         </div>

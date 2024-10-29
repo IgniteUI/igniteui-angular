@@ -4,12 +4,12 @@
             #dpAng
             [mode]="modeAngular"
             type="box"
-            [value]="value"
-            [displayFormat]="displayFormat"
-            [inputFormat]="inputFormat"
-            [required]="required"
-            [disabled]="disabled"
-            [placeholder]="placeholder"
+            [value]="properties.value"
+            [displayFormat]="properties.displayFormat"
+            [inputFormat]="properties.inputFormat"
+            [required]="properties.required"
+            [disabled]="properties.disabled"
+            [placeholder]="properties.placeholder"
             showWeekNumbers="true"
             headerOrientation="vertical">
                 <label igxLabel>Select a Date</label>
@@ -27,13 +27,13 @@
             <igc-date-picker
             #dpWC
             label="Select a Date"
-            [mode]="mode"
-            [value]="value"
-            [displayFormat]="displayFormat"
-            [inputFormat]="inputFormat"
-            [required]="required"
-            [disabled]="disabled"
-            [placeholder]="placeholder"
+            [mode]="properties.mode"
+            [value]="properties.value"
+            [displayFormat]="properties.displayFormat"
+            [inputFormat]="properties.inputFormat"
+            [required]="properties.required"
+            [disabled]="properties.disabled"
+            [placeholder]="properties.placeholder"
             show-week-numbers="true"
             header-orientation="vertical">
                 <span (click)="dpWC.show()" slot="suffix"><igc-icon name="alarm"></igc-icon></span>

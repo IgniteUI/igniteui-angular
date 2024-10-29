@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -18,7 +18,7 @@ import {
 } from 'igniteui-angular';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import { defineComponents, IgcChipComponent, IgcAvatarComponent, IgcButtonComponent, IgcIconButtonComponent, IgcCircularProgressComponent} from "igniteui-webcomponents";
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcChipComponent, IgcAvatarComponent, IgcButtonComponent, IgcIconButtonComponent, IgcCircularProgressComponent);
 
@@ -49,7 +49,6 @@ defineComponents(IgcChipComponent, IgcAvatarComponent, IgcButtonComponent, IgcIc
 })
 export class ChipsShowcaseSampleComponent implements OnInit {
     @ViewChild('customControls', { static: true }) public customControlsTemplate!: TemplateRef<any>;
-    private propertyChangeService = inject(PropertyChangeService);
 
     public panelConfig : PropertyPanelConfig = {
         variant: {
@@ -91,33 +90,18 @@ export class ChipsShowcaseSampleComponent implements OnInit {
         },
     }
 
-    public ngOnInit() {
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
+    }
+
+    public ngOnInit() {
         this.propertyChangeService.setCustomControls(this.customControlsTemplate)
-    }
-
-    protected get variant() {
-        return this.propertyChangeService.getProperty('variant');
-    }
-
-    protected get size() {
-        return this.propertyChangeService.getProperty('size');
-    }
-
-    protected get disabled() {
-        return this.propertyChangeService.getProperty('disabled');
-    }
-
-    protected get removable() {
-        return this.propertyChangeService.getProperty('removable');
-    }
-
-    protected get selectable() {
-        return this.propertyChangeService.getProperty('selectable');
-    }
-
-    protected get selected() {
-        return this.propertyChangeService.getProperty('selected');
     }
 
     public hasSuffix = false;

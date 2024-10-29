@@ -1,9 +1,9 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIf, NgFor } from '@angular/common';
 import { defineComponents, IgcInputComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
 import { IGX_INPUT_GROUP_DIRECTIVES, IGX_INPUT_GROUP_TYPE, IgxIconComponent, IgxMaskDirective, IgxInputGroupType } from 'igniteui-angular';
-import { PropertyPanelConfig, PropertyChangeService } from '../properties-panel/property-change.service';
+import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
 
 defineComponents(IgcInputComponent, IgcIconComponent);
 
@@ -28,7 +28,7 @@ registerIconFromText('face', face);
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class InputGroupShowcaseSampleComponent implements OnInit {
+export class InputGroupShowcaseSampleComponent {
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
@@ -64,20 +64,22 @@ export class InputGroupShowcaseSampleComponent implements OnInit {
         },
     }
 
-    protected get size() {
-        return this.propertyChangeService.getProperty('size');
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
-    protected get type() {
-        return this.propertyChangeService.getProperty('type');
-    }
+    public inputType: IgxInputGroupType = 'box';
 
     protected get inputTypeWC() {
         const inputTypeValue = this.propertyChangeService.getProperty('inputType');
         return inputTypeValue === 'border' ? true : false;
     }
-
-    public inputType: IgxInputGroupType = 'box';
 
     protected get inputTypeAngular() {
         const inputTypeValue = this.propertyChangeService.getProperty('inputType');
@@ -89,19 +91,5 @@ export class InputGroupShowcaseSampleComponent implements OnInit {
         }
 
         return this.inputType;
-    }
-
-    protected get required() {
-        return this.propertyChangeService.getProperty('required');
-    }
-
-    protected get disabled() {
-        return this.propertyChangeService.getProperty('disabled');
-    }
-
-    constructor(private propertyChangeService: PropertyChangeService) { }
-
-    public ngOnInit(): void {
-        this.propertyChangeService.setPanelConfig(this.panelConfig);
     }
 }

@@ -1,8 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IgxRadioComponent, IgxRadioGroupDirective, RadioGroupAlignment } from 'igniteui-angular';
 import { defineComponents, IgcRadioComponent, IgcRadioGroupComponent} from "igniteui-webcomponents";
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcRadioComponent, IgcRadioGroupComponent);
 
@@ -14,7 +14,7 @@ defineComponents(IgcRadioComponent, IgcRadioGroupComponent);
     standalone: true,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, CommonModule]
 })
-export class RadioShowcaseSampleComponent implements OnInit {
+export class RadioShowcaseSampleComponent {
     public panelConfig : PropertyPanelConfig = {
         alignment: {
             control: {
@@ -56,10 +56,14 @@ export class RadioShowcaseSampleComponent implements OnInit {
         },
     }
 
-    constructor(private propertyChangeService : PropertyChangeService) {}
+    public properties: Properties;
 
-    public ngOnInit() {
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     private alignmentMap = {
@@ -70,25 +74,5 @@ export class RadioShowcaseSampleComponent implements OnInit {
     public get alignment(): RadioGroupAlignment {
         const alignment = this.propertyChangeService.getProperty('alignment');
         return this.alignmentMap[alignment] || RadioGroupAlignment.vertical;
-    }
-
-    protected get required() {
-        return this.propertyChangeService.getProperty('required');
-    }
-
-    protected get disabled() {
-        return this.propertyChangeService.getProperty('disabled');
-    }
-
-    protected get invalid() {
-        return this.propertyChangeService.getProperty('invalid');
-    }
-
-    protected get checked() {
-        return this.propertyChangeService.getProperty('checked');
-    }
-
-    protected get labelPosition() {
-        return this.propertyChangeService.getProperty('labelPosition');
     }
 }

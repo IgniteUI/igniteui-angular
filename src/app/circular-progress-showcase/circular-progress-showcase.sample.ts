@@ -1,7 +1,7 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular';
 import { IgcCircularProgressComponent, defineComponents } from 'igniteui-webcomponents';
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcCircularProgressComponent);
 
@@ -14,8 +14,7 @@ defineComponents(IgcCircularProgressComponent);
     imports: [IgxCircularProgressBarComponent]
 })
 
-export class CircularProgressSampleComponent implements OnInit {
-    private propertyChangeService = inject(PropertyChangeService);
+export class CircularProgressSampleComponent {
     public panelConfig: PropertyPanelConfig = {
         indeterminate: {
             control: {
@@ -53,28 +52,13 @@ export class CircularProgressSampleComponent implements OnInit {
         }
     }
 
-    protected get indeterminate() {
-        return this.propertyChangeService.getProperty('indeterminate');
-    }
+    public properties: Properties;
 
-    protected get hideLabel() {
-        return this.propertyChangeService.getProperty('hideLabel');
-    }
-
-    protected get value() {
-        const value = this.propertyChangeService.getProperty('value');
-        return value !== undefined ? value : 66;
-    }
-
-    protected get animationDuration() {
-        return this.propertyChangeService.getProperty('animationDuration');
-    }
-
-    protected get variant() {
-        return this.propertyChangeService.getProperty('variant');
-    }
-
-    public ngOnInit() {
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 }

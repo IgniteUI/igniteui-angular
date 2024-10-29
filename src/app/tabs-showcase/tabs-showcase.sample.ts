@@ -1,8 +1,8 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation} from '@angular/core';
 import { NgFor } from '@angular/common';
 import { IgxAvatarComponent, IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxPrefixDirective, IgxRippleDirective, IgxSuffixDirective, IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular';
 import { defineComponents, IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent } from 'igniteui-webcomponents';
-import { PropertyPanelConfig, PropertyChangeService } from '../properties-panel/property-change.service';
+import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
 
 defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
 
@@ -15,8 +15,7 @@ defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
     standalone: true,
     imports: [IgxButtonDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxRippleDirective, IgxIconComponent, IgxTabHeaderIconDirective, IgxIconButtonDirective, IgxTabHeaderLabelDirective, IgxTabContentComponent, IgxListComponent, NgFor, IgxListItemComponent, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective, IgxPrefixDirective, IgxSuffixDirective]
 })
-export class TabsShowcaseSampleComponent implements OnInit {
-    private propertyChangeService = inject(PropertyChangeService);
+export class TabsShowcaseSampleComponent {
     public panelConfig: PropertyPanelConfig = {
         alignment: {
             control: {
@@ -34,16 +33,14 @@ export class TabsShowcaseSampleComponent implements OnInit {
         }
     }
 
-    public ngOnInit(): void {
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get alignment() {
-        return this.propertyChangeService.getProperty('alignment') || 'start';
-    }
-
-    protected get activation() {
-        return this.propertyChangeService.getProperty('activation') || 'auto';
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     public contacts: any[] = [{

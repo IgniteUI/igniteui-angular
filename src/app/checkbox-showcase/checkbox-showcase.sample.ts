@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular';
 import { defineComponents, IgcCheckboxComponent} from "igniteui-webcomponents";
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcCheckboxComponent);
 
@@ -13,8 +13,7 @@ defineComponents(IgcCheckboxComponent);
     standalone: true,
     imports: [IgxCheckboxComponent]
 })
-export class CheckboxShowcaseSampleComponent implements OnInit {
-    private propertyChangeService = inject(PropertyChangeService);
+export class CheckboxShowcaseSampleComponent {
     public panelConfig : PropertyPanelConfig = {
         indeterminate: {
             control: {
@@ -66,40 +65,13 @@ export class CheckboxShowcaseSampleComponent implements OnInit {
         },
     }
 
-    public ngOnInit() {
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get indeterminate() {
-        return this.propertyChangeService.getProperty('indeterminate');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
-
-    protected get required() {
-        return this.propertyChangeService.getProperty('required');
-    }
-
-    protected get disabled() {
-        return this.propertyChangeService.getProperty('disabled');
-    }
-
-    protected get invalid() {
-        return this.propertyChangeService.getProperty('invalid');
-    }
-
-    protected get checked() {
-        return this.propertyChangeService.getProperty('checked');
-    }
-
-    protected get labelPosition() {
-        return this.propertyChangeService.getProperty('labelPosition');
-    }
-
-    protected get name() {
-        return this.propertyChangeService.getProperty('name');
-    }
-
-    protected get value() {
-        return this.propertyChangeService.getProperty('value');
-    }
-
 }

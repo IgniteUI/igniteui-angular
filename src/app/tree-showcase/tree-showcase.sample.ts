@@ -1,10 +1,10 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { cloneDeep } from 'lodash-es';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 import { IgxTreeComponent, IgxTreeNodeComponent, IgxTreeSelectionType } from 'igniteui-angular';
 import { defineComponents, IgcTreeComponent, IgcTreeItemComponent } from 'igniteui-webcomponents';
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcTreeComponent, IgcTreeItemComponent);
 
@@ -22,7 +22,7 @@ interface CompanyData {
     standalone: true,
     imports: [NgFor, NgIf, IgxTreeComponent, IgxTreeNodeComponent]
 })
-export class TreeShowcaseSampleComponent implements OnInit {
+export class TreeShowcaseSampleComponent {
     public data: CompanyData[];
     public panelConfig: PropertyPanelConfig = {
         size: {
@@ -54,15 +54,18 @@ export class TreeShowcaseSampleComponent implements OnInit {
         }
     }
 
-    constructor(private cdr: ChangeDetectorRef, private propertyChangeService: PropertyChangeService) {
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.data = cloneDeep(HIERARCHICAL_SAMPLE_DATA);
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
     public angSelection = IgxTreeSelectionType.None;
-
-    public ngOnInit() {
-        this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
     private mapData(data: any[]) {
         data.forEach(x => {
@@ -71,18 +74,6 @@ export class TreeShowcaseSampleComponent implements OnInit {
                 this.mapData(x.ChildCompanies);
             }
         });
-    }
-
-    protected get size(){
-        return this.propertyChangeService.getProperty('size');
-    }
-
-    protected get singleBranchExpand() {
-        return this.propertyChangeService.getProperty('singleBranchExpand');
-    }
-
-    protected get toggleNodeOnClick() {
-        return this.propertyChangeService.getProperty('toggleNodeOnClick');
     }
 
     private selectionMap = {
@@ -94,9 +85,5 @@ export class TreeShowcaseSampleComponent implements OnInit {
     protected get selectionAngular() : IgxTreeSelectionType {
         const selection = this.propertyChangeService.getProperty('selection');
         return this.selectionMap[selection];
-    }
-
-    protected get selectionWC() {
-        return this.propertyChangeService.getProperty('selection');
     }
 }

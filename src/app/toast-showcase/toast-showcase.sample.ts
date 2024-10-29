@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxButtonDirective, IgxOverlayOutletDirective, IgxRippleDirective, IgxToastComponent } from 'igniteui-angular';
 import { defineComponents, IgcToastComponent } from 'igniteui-webcomponents';
-import { PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcToastComponent);
 
@@ -13,7 +13,7 @@ defineComponents(IgcToastComponent);
     standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxOverlayOutletDirective, IgxToastComponent]
 })
-export class ToastShowcaseSampleComponent implements OnInit {
+export class ToastShowcaseSampleComponent {
     public panelConfig : PropertyPanelConfig = {
         displayTime: {
             label: 'Display Time',
@@ -30,17 +30,13 @@ export class ToastShowcaseSampleComponent implements OnInit {
         }
     }
 
-    constructor(private propertyChangeService: PropertyChangeService){}
+    public properties: Properties;
 
-    public ngOnInit() {
+    constructor(private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
-    }
 
-    protected get displayTime() {
-        return this.propertyChangeService.getProperty('displayTime');
-    }
-
-    protected get keepOpen() {
-        return this.propertyChangeService.getProperty('keepOpen');
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 }
