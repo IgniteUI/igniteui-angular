@@ -44,7 +44,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
-import { IgxComboComponent } from "../combo/combo.component";
+import { IComboSelectionChangingEventArgs, IgxComboComponent } from "../combo/combo.component";
 import { IgxLabelDirective } from '../input-group/public_api';
 import { IgxComboHeaderDirective } from '../combo/public_api';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from "../checkbox/checkbox.component";
@@ -586,6 +586,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden
      */
     public onEntityChangeConfirm() {
+        if (this._parentExpression) {
+            this._expressionTree = this.createExpressionTreeFromGroupItem(this.createExpressionGroupItem(this._expressionTree));
+        }
+
         this._selectedEntity = this._entityNewValue;
         if (!this._selectedEntity.fields) {
             this._selectedEntity.fields = [];
@@ -594,12 +598,17 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this._selectedReturnFields = this._entityNewValue.fields?.map(f => f.field);
 
         if (this._expressionTree) {
+            this._expressionTree.entity = this._entityNewValue.name;
+            this._expressionTree.returnFields = [];
+            this._expressionTree.filteringOperands = [];
+
             this._editedExpression = null;
             if (!this.parentExpression) {
                 this.expressionTreeChange.emit(this._expressionTree);
             }
 
-            this.addAndGroup();
+            this.rootGroup = null;
+            this.currentGroup = this.rootGroup;
         }
 
         this._selectedField = null;
@@ -611,6 +620,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._entityNewValue = null;
         this.innerQueryNewExpressionTree = null;
+
+        this.initExpressionTree(this._selectedEntity.name, this.selectedReturnFields);
     }
 
     /**
@@ -1294,6 +1305,20 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    public onReturnFieldSelectChanging(event: IComboSelectionChangingEventArgs) {
+        this.initExpressionTree(this.selectedEntity.name, event.newSelection.map(item => item.field))
+    }
+
+    public initExpressionTree(selectedEntityName: string, selectedReturnFields: string[]) {
+        if (!this._expressionTree) {
+            this._expressionTree = this.createExpressionTreeFromGroupItem(new ExpressionGroupItem(FilteringLogic.And, this.rootGroup), selectedEntityName, selectedReturnFields);
+        }
+
+        if (!this.parentExpression) {
+            this.expressionTreeChange.emit(this._expressionTree);
+        }
+    }
+
     public getSearchValueTemplateContext(defaultSearchValueTemplate): any {
         const ctx = {
             $implicit: this.searchValue,
@@ -1405,26 +1430,29 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                         ignoreCase: filteringExpr.ignoreCase
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
-                    if (expressionTree.entity) {
-                        entityName = expressionTree.entity;
-                    }
-                    const entity = this.entities?.find(el => el.name === entityName);
-                    if (entity) {
-                        this.fields = entity.fields;
-                    }
                     const field = this.fields?.find(el => el.field === filteringExpr.fieldName);
                     operandItem.fieldLabel = field?.label || field?.header || field?.field;
                     if (this._expandedExpressions.filter(e => e.searchTree == operandItem.expression.searchTree).length > 0) {
                         operandItem.expanded = true;
                     }
                     groupItem.children.push(operandItem);
-                    this._selectedEntity = this.entities?.find(el => el.name === entityName);
-                    this._selectedReturnFields =
-                        !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All')
-                            ? this.fields?.map(f => f.field)
-                            : this.fields?.filter(f => expressionTree.returnFields.indexOf(f.field) >= 0).map(f => f.field);
                 }
             }
+
+            
+            if (expressionTree.entity) {
+                entityName = expressionTree.entity;
+            }
+            const entity = this.entities?.find(el => el.name === entityName);
+            if (entity) {
+                this.fields = entity.fields;
+            }
+
+            this._selectedEntity = this.entities?.find(el => el.name === entityName);
+            this._selectedReturnFields =
+                !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All')
+                    ? this.fields?.map(f => f.field)
+                    : this.fields?.filter(f => expressionTree.returnFields.indexOf(f.field) >= 0).map(f => f.field);
         }
         return groupItem;
     }
@@ -1499,7 +1527,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (!expressionItem.parent) {
             this.rootGroup = null;
             this.currentGroup = null;
-            this._expressionTree = null;
+            //this._expressionTree = null;
             return;
         }
 

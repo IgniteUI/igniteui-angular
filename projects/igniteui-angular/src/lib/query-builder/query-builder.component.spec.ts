@@ -50,35 +50,34 @@ describe('IgxQueryBuilder', () => {
             const bodyElement = queryTreeElement.children[0];
             expect(bodyElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_BODY);
             expect(bodyElement.children.length).toEqual(2);
-            expect(bodyElement.children[0]).toHaveClass('igx-query-builder__root');
 
-            const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
-            // initial add "'and'/'or' group " buttons should be displayed
-            expect(actionArea.querySelectorAll(':scope > button').length).toEqual(2);
-            // empty filtering tree message should be displayed
-            expect(bodyElement.children[0].children[1]).toHaveClass('igx-filter-empty');
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true);
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '');
         });
 
-        it('Should render Query Builder with initially set expression tree properly.', () => {
+        it('Should render Query Builder with initially set expression tree properly.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
             fix.detectChanges();
 
             const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
             const bodyElement = queryTreeElement.children[0];
             expect(bodyElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_BODY);
-            expect(bodyElement.children.length).toEqual(2);
+            expect(bodyElement.children.length).toEqual(3);
             // initial add "'and'/'or' group " buttons and empty filtering tree message should NOT be displayed
             expect(bodyElement.querySelectorAll(':scope > button').length).toEqual(0);
-            expect(bodyElement.children[0]).toHaveClass('igx-filter-tree');
+            expect(bodyElement.children[1]).toHaveClass('igx-filter-tree');
 
             // Verify the operator line of the root group is an 'And' line.
             QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
             // all inputs should be displayed correctly
-            const queryTreeExpressionContainer = bodyElement.children[0].children[1];
+            const selectFromContainer = bodyElement.children[0];
+            expect(selectFromContainer).toHaveClass('igx-filter-tree__inputs');
+            expect(selectFromContainer.children[0].tagName).toEqual('IGX-SELECT');
+            expect(selectFromContainer.children[1].tagName).toEqual('IGX-COMBO');
+            const queryTreeExpressionContainer = bodyElement.children[1].children[1];
             expect(queryTreeExpressionContainer).toHaveClass('igx-filter-tree__expression');
-            expect(queryTreeExpressionContainer.children[0]).toHaveClass('igx-filter-tree__inputs');
-            expect(queryTreeExpressionContainer.children[0].children[0].tagName).toEqual('IGX-SELECT');
-            expect(queryTreeExpressionContainer.children[0].children[1].tagName).toEqual('IGX-COMBO');
 
             const expressionItems = queryTreeExpressionContainer.querySelectorAll(':scope > .igx-filter-tree__expression-item');
             expect(expressionItems.length).toEqual(queryBuilder.expressionTree.filteringOperands.length);
@@ -96,11 +95,15 @@ describe('IgxQueryBuilder', () => {
             for (const button of buttons) {
                 ControlsFunction.verifyButtonIsDisabled(button as HTMLElement, false);
             }
-        });
+        }));
     });
 
     describe('Interactions', () => {
         it('Should correctly initialize a newly added \'And\' group.', fakeAsync(() => {
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+            
             // Click the initial 'Add And Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
@@ -113,10 +116,10 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
 
             // Verify the enabled/disabled state of each input of the expression in edit mode.
-            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false, false, false, false, false);
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, false, false, false);
 
             // Verify the edit inputs are empty.
-            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '', '', '', '');
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Orders', 'OrderId, OrderName, OrderDate, Delivered', '', '', '');
 
             // Verify adding buttons are disabled.
             const buttons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
@@ -126,6 +129,10 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should correctly initialize a newly added \'Or\' group.', fakeAsync(() => {
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();
+
             // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
             tick(100);
@@ -1169,6 +1176,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
+
             // Verify actions container is not visible. (This container contains the 'edit' and the 'add' buttons.)
             expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
                 .toBeNull('actions container is visible');
@@ -1270,6 +1278,10 @@ describe('IgxQueryBuilder', () => {
 
         it('Should select/deselect all child conditions and groups when clicking a group\'s operator line.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            
             const childGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, undefined);
             childGroup.filteringOperands.push({
                 fieldName: 'OrderNameName',
@@ -1479,6 +1491,10 @@ describe('IgxQueryBuilder', () => {
             tick(100);
             fix.detectChanges();
 
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
             // Verify all inputs
             QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Orders', 'OrderId, OrderName, OrderDate, Delivered', '', '', '');
         }));
@@ -1528,6 +1544,8 @@ describe('IgxQueryBuilder', () => {
 
         it(`Should display 'expand'/'collapse' button properly.`, fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
             fix.detectChanges();
 
             const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
@@ -1718,6 +1736,8 @@ describe('IgxQueryBuilder', () => {
         it(`Should toggle the nested query on 'expand'/'collapse' button click.`, fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
 
             expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
 
@@ -1741,7 +1761,9 @@ describe('IgxQueryBuilder', () => {
         it('Should create an "and"/"or" group on context menu button click and delete conditions on "delete filters" click.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             // Verify group types initially
             QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 0);
 
@@ -1788,7 +1810,9 @@ describe('IgxQueryBuilder', () => {
         it('Ungroup button of the root group\'s context menu should be disabled.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             // Click root group's operator line.
             const rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
             rootOperatorLine.click();
@@ -1806,7 +1830,9 @@ describe('IgxQueryBuilder', () => {
         it('Should remove a group from the expr tree when clicking "delete" from the context menu.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
             //create group
@@ -1833,7 +1859,9 @@ describe('IgxQueryBuilder', () => {
         it('Should be able to open edit mode when condition is selected, close the edited condition on "close" button click and not commit it.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             //Select chip
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
             tick(200);
@@ -1872,7 +1900,9 @@ describe('IgxQueryBuilder', () => {
         it('Selecting/deselecting multiple conditions should display/hide the (create group)/(delete filters) context menu properly.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fix, false);
 
             //select 1
@@ -1911,7 +1941,9 @@ describe('IgxQueryBuilder', () => {
         it(`Should show/hide the group's context menu when clicking its operator line and should close the context menu when clicking its close button.`, fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             const rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
 
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fix, false);
@@ -1945,7 +1977,9 @@ describe('IgxQueryBuilder', () => {
         it('Should be able to group, change And/Or and un-group conditions.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
             QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 0);
 
@@ -1992,7 +2026,9 @@ describe('IgxQueryBuilder', () => {
         it('Should not make bug where existing inner query is leaking to a newly created one', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
 
             // Add new 'expression'.
@@ -2046,46 +2082,105 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('canCommit should return the correct validity state of currently added condition.', fakeAsync(() => {
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
-            expect(queryBuilder.canCommit()).toBeFalse();
-
             // Verify the Query Builder validity state while adding a condition.
             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
             tick(100);
             fix.detectChanges();
-            expect(queryBuilder.canCommit()).toBeFalse();
+            expect(queryBuilder.canCommit()).withContext('Entity selected').toBeTrue();
+
+            // Click the 'Add condition' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            expect(queryBuilder.canCommit()).withContext('Add condition clicked').toBeTrue();
+
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
-            expect(queryBuilder.canCommit()).toBeFalse();
+            expect(queryBuilder.canCommit()).withContext('Column selected').toBeFalse();
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
-            expect(queryBuilder.canCommit()).toBeFalse();
+            expect(queryBuilder.canCommit()).withContext('Operator contains selected').toBeFalse();
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'a');
             tick(100);
             fix.detectChanges();
-            expect(queryBuilder.canCommit()).toBeTrue();
+            expect(queryBuilder.canCommit()).withContext('Search value filled').toBeTrue();
 
             // Click on the 'cancel' button
             const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
             UIInteractions.simulateClickEvent(closeButton);
             tick(100);
             fix.detectChanges();
+            expect(queryBuilder.canCommit()).withContext('Entity remains selected').toBeTrue();
 
             // Verify the Query Builder validity state for UNARY condition.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
+            expect(queryBuilder.canCommit()).withContext('Add condition clicked again').toBeTrue();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
+            expect(queryBuilder.canCommit()).withContext('Column selected again').toBeFalse();
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
+            expect(queryBuilder.canCommit()).withContext('Unary operator selected').toBeTrue();
+        }));
+
+        
+        it('Should be able to commit nested query without where condition.', fakeAsync(() => {            
             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            tick(100);
+            fix.detectChanges();            
+            
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0); // Click the initial 'Add Or Group' button.
             tick(100);
             fix.detectChanges();
 
-            expect(queryBuilder.canCommit()).toBeFalse();
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
-            expect(queryBuilder.canCommit()).toBeFalse();
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
-            expect(queryBuilder.canCommit()).toBeTrue();
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+
+            // Enter values in the nested query
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 1); // Select 'Products' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            //Verify that expressionTree is correct
+            const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+            expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "fieldName": "OrderId",
+      "condition": {
+        "name": "in",
+        "isUnary": false,
+        "isNestedQuery": true,
+        "iconName": "in"
+      },
+      "conditionName": "in",
+      "ignoreCase": true,
+      "searchVal": null,
+      "searchTree": {
+        "filteringOperands": [],
+        "operator": 0,
+        "entity": "Products",
+        "returnFields": [
+          "Id",
+          "ProductName",
+          "OrderId",
+          "Released"
+        ]
+      }
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "OrderId",
+    "OrderName",
+    "OrderDate",
+    "Delivered"
+  ]
+}`);
         }));
     });
 
@@ -2244,14 +2339,18 @@ describe('IgxQueryBuilder', () => {
         it('Should navigate with Tab/Shift+Tab through entity and fields inputs, chips, their respective delete icons and the operator lines.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             QueryBuilderFunctions.verifyQueryBuilderTabbableElements(fix);
         }));
 
         it('Should navigate with Tab/Shift+Tab through chips" "edit", "cancel" and "adding" buttons, fields of a condition in edit mode.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chip.nativeElement, 200);
@@ -2273,7 +2372,9 @@ describe('IgxQueryBuilder', () => {
             //!Both Enter and Space should work
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
@@ -2301,7 +2402,9 @@ describe('IgxQueryBuilder', () => {
             //!Both Enter and Space should work
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             const line = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[0];
             const chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
@@ -2338,7 +2441,9 @@ describe('IgxQueryBuilder', () => {
             //!Both Enter and Space should work
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
-
+            tick(100);
+            fix.detectChanges();
+            
             // Verify the there are three chip expressions.
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
@@ -2546,6 +2651,10 @@ describe('IgxQueryBuilder', () => {
             expect(dialogOutlet.querySelector('.igx-query-builder-dialog').children[1].textContent.trim()).toBe('My do not show this dialog again');
             expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[0].textContent.trim()).toBe('My Cancel');
             expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[1].textContent.trim()).toBe('My Confirm');
+
+            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
