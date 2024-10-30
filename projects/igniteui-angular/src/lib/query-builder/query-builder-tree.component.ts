@@ -1654,8 +1654,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
-        this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
-        this.currentGroup = this.rootGroup;
+        if(this.isAdvancedFiltering()){
+            this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
+            this.currentGroup = this.rootGroup;
+        }
     }
 }
 
