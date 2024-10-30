@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
@@ -1633,7 +1633,7 @@ describe('igxCombo', () => {
 
                 // Scroll selected items out of view
                 combo.virtualScrollContainer.scrollTo(40);
-                await wait();
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 combo.select([combo.data[0][valueKey], combo.data[1][valueKey]]);
                 Object.assign(expectedResults, {
