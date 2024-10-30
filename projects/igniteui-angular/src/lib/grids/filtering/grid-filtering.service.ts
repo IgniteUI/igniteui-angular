@@ -146,7 +146,7 @@ export class IgxFilteringService implements OnDestroy {
         this.isFiltering = true;
 
         let expressionsTree;
-        if (expressions instanceof FilteringExpressionsTree) {
+        if ('operator' in expressions) {
             expressionsTree = expressions;
         } else {
             expressionsTree = this.createSimpleFilteringTree(field, expressions);
@@ -529,9 +529,9 @@ export class IgxFilteringService implements OnDestroy {
         insertAtIndex = -1,
         createNewTree = false): FilteringExpressionsTree {
 
-        let expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
-            conditionOrExpressionsTree as IFilteringExpressionsTree : null;
-        const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+        let expressionsTree = 'operator' in conditionOrExpressionsTree ?
+            conditionOrExpressionsTree : null;
+        const condition = 'operator' in conditionOrExpressionsTree ?
             null : conditionOrExpressionsTree as IFilteringOperation;
 
         let newExpressionsTree = filteringState as FilteringExpressionsTree;
