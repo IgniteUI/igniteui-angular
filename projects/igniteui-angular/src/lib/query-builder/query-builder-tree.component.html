@@ -7,7 +7,7 @@
 </ng-template>
 
 <ng-template #selectFromTemplate>
-    <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && this.entities.length > 0 && this.entities[0].name) ? 'flex' : 'none'">
+    <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && !this.isAdvancedFiltering()) ? 'flex' : 'none'">
         <igx-select #entitySelect
             type="box"
             (selectionChanging)="onEntitySelectChanging($event)"

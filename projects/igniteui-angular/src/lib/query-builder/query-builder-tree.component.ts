@@ -190,7 +190,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     * Returns the fields.
     */
     public get fields(): FieldType[] {
-        if (!this._fields && this.entities?.length === 1 && !this.entities[0]?.name) {
+        if (!this._fields && this.isAdvancedFiltering()) {
             this._fields = this.entities[0].fields;
         }
 
@@ -204,7 +204,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public set fields(fields: FieldType[]) {
         this._fields = fields;
 
-        if (!this._fields && this.entities?.length === 1 && !this.entities[0]?.name) {
+        if (!this._fields && this.isAdvancedFiltering()) {
             this._fields = this.entities[0].fields;
         }
 
@@ -509,6 +509,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
         scrollStrategy: new CloseScrollStrategy()
     };
+
+    /** @hidden */
+    protected isAdvancedFiltering(): boolean {
+        return this.entities?.length === 1 && !this.entities[0]?.name;
+    }
 
     constructor(public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
