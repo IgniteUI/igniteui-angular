@@ -530,10 +530,10 @@ export class QueryBuilderFunctions {
     public static verifyEditModeQueryExpressionInputStates(fix,
         entitySelectEnabled: boolean,
         fieldComboEnabled: boolean,
-        columnSelectEnabled: boolean,
-        operatorSelectEnabled: boolean,
-        valueInputEnabled: boolean,
-        commitButtonEnabled: boolean,
+        columnSelectEnabled: boolean = null,
+        operatorSelectEnabled: boolean = null,
+        valueInputEnabled: boolean = null,
+        commitButtonEnabled: boolean = null,
         level = 0) {
         // Verify the entity select state.
         const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('igx-input-group');
@@ -544,7 +544,9 @@ export class QueryBuilderFunctions {
         expect(!fieldInputGroup.classList.contains('igx-input-group--disabled')).toBe(fieldComboEnabled,
             'incorrect fields combo state');
 
-        QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, columnSelectEnabled, operatorSelectEnabled, valueInputEnabled, commitButtonEnabled, level);
+        if(columnSelectEnabled || operatorSelectEnabled ||  valueInputEnabled || commitButtonEnabled){
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, columnSelectEnabled, operatorSelectEnabled, valueInputEnabled, commitButtonEnabled, level);
+        }
     };
 
     public static verifyEditModeExpressionInputStates(fix,
@@ -581,15 +583,18 @@ export class QueryBuilderFunctions {
     public static verifyQueryEditModeExpressionInputValues(fix,
         entityText: string,
         fieldsText: string,
-        columnText: string,
-        operatorText: string,
-        valueText: string,
+        columnText: string = null,
+        operatorText: string = null,
+        valueText: string = null,
         level = 0) {
         const entityInput = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('input');
         const fieldInput = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, level).querySelector('input');
-        QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, columnText, operatorText, valueText, level);
         expect(entityInput.value).toBe(entityText);
         expect(fieldInput.value).toBe(fieldsText);
+
+        if(columnText ||  operatorText ||  valueText){
+            QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, columnText, operatorText, valueText, level);
+        }
     };
 
     public static verifyEditModeExpressionInputValues(fix,
