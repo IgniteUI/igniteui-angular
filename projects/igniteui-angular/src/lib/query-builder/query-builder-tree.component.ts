@@ -926,7 +926,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._editedExpression.inEditMode = false;
         }
 
-        if (this.parentExpression && !this.parentExpression.inEditMode) {
+        if (this.parentExpression) {
             this.inEditModeChange.emit(this.parentExpression);
         }
 
@@ -952,12 +952,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.returnFieldSelectOverlaySettings.target = this.selectedReturnFieldsCombo.getEditElement();
         this.returnFieldSelectOverlaySettings.excludeFromOutsideClick = [this.selectedReturnFieldsCombo.getEditElement() as HTMLElement];
         this.returnFieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
-        this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
-        this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
-        this.fieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
-        this.conditionSelectOverlaySettings.target = this.conditionSelect.element;
-        this.conditionSelectOverlaySettings.excludeFromOutsideClick = [this.conditionSelect.element as HTMLElement];
-        this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+
+        if (this.fieldSelect) {
+            this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
+            this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
+            this.fieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        }
+        if (this.conditionSelect) {
+            this.conditionSelectOverlaySettings.target = this.conditionSelect.element;
+            this.conditionSelectOverlaySettings.excludeFromOutsideClick = [this.conditionSelect.element as HTMLElement];
+            this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        }
+
 
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
