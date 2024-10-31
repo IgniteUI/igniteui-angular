@@ -52,13 +52,44 @@ import { IgxDialogComponent } from "../dialog/dialog.component";
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
-import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
+import { IgxFieldValidatorDirective, IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
 const DEFAULT_PIPE_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
+
+export interface IFieldValidator {
+    type: string,
+    value?: any
+}
+
+export class IgxFieldValidators {
+    public static Required(): IFieldValidator {
+        return {type: 'required'};
+    }
+
+    public static Min(min: number): IFieldValidator {
+        return {type: 'min', value: min};
+    }
+
+    public static Max(max: number): IFieldValidator {
+        return {type: 'max', value: max};
+    }
+
+    public static MinLength(length: number): IFieldValidator {
+        return {type: 'minlength', value: length};
+    }
+
+    public static MaxLength(length: number): IFieldValidator {
+        return {type: 'maxlength', value: length};
+    }
+
+    public static Pattern(pattern: string | RegExp): IFieldValidator {
+        return {type: 'pattern', value: pattern};
+    }
+}
 
 @Pipe({
     name: 'fieldFormatter',
@@ -149,6 +180,7 @@ class ExpressionOperandItem extends ExpressionItem {
         IgxOverlayOutletDirective,
         DatePipe,
         IgxFieldFormatterPipe,
+        IgxFieldValidatorDirective,
         IgxIconButtonDirective,
         IgxToggleActionDirective,
         IgxComboComponent,
@@ -812,7 +844,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public operandCanBeCommitted(): boolean {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
-        
+
         return this.selectedField && this.selectedCondition &&
             (
                 (
@@ -1266,7 +1298,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             return null;
         }
 
-        const exprTreeCopy = 
+        const exprTreeCopy =
         {
             filteringOperands: [],
             operator: expressionTree.operator,

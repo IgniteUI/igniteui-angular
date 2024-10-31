@@ -291,6 +291,8 @@
                     <input
                         #searchValueInput
                         igxInput
+                        igxFieldValidators
+                        [validators]="selectedField?.validators"
                         [disabled]="
                             !selectedField ||
                             !selectedCondition ||
