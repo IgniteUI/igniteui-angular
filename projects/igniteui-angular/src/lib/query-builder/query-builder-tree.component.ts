@@ -942,7 +942,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._editedExpression.inEditMode = false;
         }
 
-        if (this.parentExpression && !this.parentExpression.inEditMode) {
+        if (this.parentExpression) {
             this.inEditModeChange.emit(this.parentExpression);
         }
 
@@ -968,12 +968,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.returnFieldSelectOverlaySettings.target = this.selectedReturnFieldsCombo.getEditElement();
         this.returnFieldSelectOverlaySettings.excludeFromOutsideClick = [this.selectedReturnFieldsCombo.getEditElement() as HTMLElement];
         this.returnFieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
-        this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
-        this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
-        this.fieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
-        this.conditionSelectOverlaySettings.target = this.conditionSelect.element;
-        this.conditionSelectOverlaySettings.excludeFromOutsideClick = [this.conditionSelect.element as HTMLElement];
-        this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+
+        if (this.fieldSelect) {
+            this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
+            this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
+            this.fieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        }
+        if (this.conditionSelect) {
+            this.conditionSelectOverlaySettings.target = this.conditionSelect.element;
+            this.conditionSelectOverlaySettings.excludeFromOutsideClick = [this.conditionSelect.element as HTMLElement];
+            this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        }
+
 
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
@@ -1654,8 +1660,22 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
-        this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
-        this.currentGroup = this.rootGroup;
+
+        // Ignore values of 'parent' and 'hovered' properties for the comparison
+        const parentPropReplacer = function replacer(key, value) {
+            if (key === "parent" || key === "hovered") {
+                return undefined;
+            } else {
+                return value;
+            }
+        };
+        
+        // Skip root being recreated if the same
+        const newRootGroup = this.createExpressionGroupItem(this.expressionTree);
+        if (JSON.stringify(this.rootGroup, parentPropReplacer) !== JSON.stringify(newRootGroup, parentPropReplacer)) {
+            this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
+            this.currentGroup = this.rootGroup;
+        }
 
         if (this.rootGroup?.children?.length == 0) {
             this.rootGroup = null;
