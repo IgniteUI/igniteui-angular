@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
@@ -1532,7 +1532,7 @@ describe('igxCombo', () => {
 
                 productIndex = 42;
                 combo.virtualScrollContainer.scrollTo(productIndex);
-                await wait();
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 verifyComboData();
                 // index is at bottom
@@ -1541,7 +1541,7 @@ describe('igxCombo', () => {
 
                 productIndex = 485;
                 combo.virtualScrollContainer.scrollTo(productIndex);
-                await wait(30);
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 verifyComboData();
                 expect(combo.virtualizationState.startIndex + combo.virtualizationState.chunkSize - 1)
@@ -1549,13 +1549,13 @@ describe('igxCombo', () => {
 
                 productIndex = 873;
                 combo.virtualScrollContainer.scrollTo(productIndex);
-                await wait();
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 verifyComboData();
 
                 productIndex = 649;
                 combo.virtualScrollContainer.scrollTo(productIndex);
-                await wait();
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 verifyComboData();
             });
@@ -1578,7 +1578,7 @@ describe('igxCombo', () => {
 
                 // Scroll selected items out of view
                 combo.virtualScrollContainer.scrollTo(40);
-                await wait();
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 combo.handleClearItems(spyObj);
                 expect(combo.selection).toEqual([]);
@@ -1604,7 +1604,7 @@ describe('igxCombo', () => {
 
                 // scroll to second selected item
                 combo.virtualScrollContainer.scrollTo(19);
-                await wait(30);
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
 
                 const secondItem = combo.data[combo.data.length - 1];
@@ -1633,7 +1633,7 @@ describe('igxCombo', () => {
 
                 // Scroll selected items out of view
                 combo.virtualScrollContainer.scrollTo(40);
-                await wait();
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 combo.select([combo.data[0][valueKey], combo.data[1][valueKey]]);
                 Object.assign(expectedResults, {
@@ -1969,14 +1969,14 @@ describe('igxCombo', () => {
                     expect(scrollbar.scrollTop).toEqual(0);
                     // Scroll to bottom;
                     UIInteractions.triggerEventHandlerKeyDown('End', dropdownContent);
-                    await wait(30);
+                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                     fixture.detectChanges();
                     // Content was scrolled to bottom
                     expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
 
                     // Scroll to top
                     UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
-                    await wait(30);
+                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                     fixture.detectChanges();
                     const dropdownContainer: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                     firstVisibleItem = dropdownContainer.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}` + ':first-child');
@@ -2013,14 +2013,14 @@ describe('igxCombo', () => {
                     expect(scrollbar.scrollTop).toEqual(0);
                     // Scroll to bottom;
                     UIInteractions.triggerEventHandlerKeyDown('End', dropdownContent);
-                    await wait();
+                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                     fixture.detectChanges();
                     // Content was scrolled to bottom
                     expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
 
                     // Scroll to top
                     UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
-                    await wait(30);
+                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                     fixture.detectChanges();
                     const dropdownContainer: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                     firstVisibleItem = dropdownContainer.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}` + ':first-child');
@@ -2116,7 +2116,7 @@ describe('igxCombo', () => {
                 expect(scrollbar.scrollTop).toEqual(0);
 
                 combo.virtualScrollContainer.scrollTo(16);
-                await wait(30);
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 let selectedItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
                 selectedItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2126,13 +2126,13 @@ describe('igxCombo', () => {
 
                 const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
                 UIInteractions.triggerEventHandlerKeyDown('End', dropdownContent);
-                await wait(30);
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 // Content was scrolled to bottom
                 expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
 
                 combo.virtualScrollContainer.scrollTo(5);
-                await wait(30);
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 selectedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_SELECTED}`));
                 expect(selectedItem.nativeElement.textContent).toEqual(selectedItemText);
