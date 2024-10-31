@@ -153,15 +153,15 @@
     $picker-buttons-padding: map.get((
         'material': rem(8px),
         'fluent': rem(8px),
-        'bootstrap': rem(16px),
+        'bootstrap': rem(8px),
         'indigo': rem(8px) rem(16px),
     ), $variant);
 
     $picker-header-padding: map.get((
-        'material': rem(24px) rem(16px),
+        'material': rem(16px) rem(24px),
         'fluent': rem(16px),
         'bootstrap': rem(16px),
-        'indigo': rem(16px) rem(24px) ,
+        'indigo': rem(16px),
     ), $variant);
 
     %time-picker-display {
@@ -278,7 +278,7 @@
     }
 
     %time-picker__item {
-        width: if($variant == 'indigo', rem(46px), rem(54px));
+        width: rem(46px);
         padding: rem(5px) rem(10px);
         border-radius: var-get($theme, 'active-item-border-radius');
         height: var-get($theme, 'time-item-size');
