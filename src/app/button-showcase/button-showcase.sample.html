@@ -6,10 +6,30 @@
 
     <div class="buttons-sample" [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
         <div class="button-sample">
-            <button [igxButton]="properties.variant" [disabled]="properties.disabled">Button</button>
+            <button [igxButton]="properties.variant" [disabled]="properties.disabled">
+                <igx-icon *ngIf="hasPrefix">face</igx-icon>
+                <span>Button</span>
+                <igx-icon *ngIf="hasSuffix">face</igx-icon>
+            </button>
         </div>
         <div class="button-sample">
-            <igc-button [variant]="properties.variant" [disabled]="properties.disabled">Button</igc-button>
+            <igc-button [variant]="properties.variant" [disabled]="properties.disabled">
+                <span *ngIf="hasPrefix" slot="prefix"><igc-icon name="face"></igc-icon></span>
+                Button
+                <span *ngIf="hasSuffix" slot="suffix"><igc-icon name="face"></igc-icon></span>
+            </igc-button>
         </div>
     </div>
+
+    <ng-template #customControls>
+        <div class="custom-controls">
+            <igx-switch id="addPrefix" [(ngModel)]="hasPrefix">
+                <label for="addPrefix">Add prefix</label>
+            </igx-switch>
+
+            <igx-switch id="addSuffix" [(ngModel)]="hasSuffix">
+                <label for="addSuffix">Add suffix</label>
+            </igx-switch>
+        </div>
+    </ng-template>
 </div>

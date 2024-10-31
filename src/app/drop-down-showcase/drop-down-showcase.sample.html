@@ -2,10 +2,14 @@
     <div class="sample-wrapper">
         <strong>Angular DropDown</strong>
         <button igxButton="contained" #button (click)="toggleDropDown()" [igxDropDownItemNavigation]="dropdown1">Toggle</button>
-        <igx-drop-down #dropdown1 (selectionChanging)="onSelection($event)" (opening)="onOpening()">
-            <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header"
-                                [selected]="item.selected">
-                    {{ item.field }}
+        <igx-drop-down #dropdown1>
+            <igx-drop-down-item *ngFor="let item of items"
+            [disabled]="item.disabled"
+            [isHeader]="item.header"
+            [selected]="item.selected">
+                <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
+                {{ item.field }}
+                <igx-icon *ngIf="!item.header" igxSuffix>location_on</igx-icon>
             </igx-drop-down-item>
         </igx-drop-down>
     </div>
@@ -23,7 +27,9 @@
                     [disabled]="item.disabled"
                     [selected]="item.selected"
                     (click)="onSelection(item)">
+                    <igx-icon *ngIf="!item.header" slot="prefix">location_city</igx-icon>
                     {{ item.field }}
+                    <igx-icon *ngIf="!item.header" slot="suffix">location_on</igx-icon>
                 </igc-dropdown-item>
             </ng-container>
         </igc-dropdown>

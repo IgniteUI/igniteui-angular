@@ -52,12 +52,59 @@
                 </span>
             </igc-card-content>
             <igc-card-actions>
-              <igc-button slot="start" variant="flat">Read More</igc-button>
-              <igc-icon-button slot="end" variant="flat" name="favorite"></igc-icon-button>
-              <igc-icon-button slot="end" variant="flat" name="bookmark"></igc-icon-button>
-              <igc-icon-button slot="end" variant="flat" name="share"></igc-icon-button>
+                <igc-button slot="start" variant="flat">Read More</igc-button>
+                <igc-icon-button *ngFor="let icon of cards[0].icons;" [name]="icon" slot="end" variant="flat">
+                </igc-icon-button>
             </igc-card-actions>
           </igc-card>
     </article>
     <!--New York City Card End-->
+
+    <article class="card">
+        <igx-card [horizontal]="true">
+            <igx-card-actions layout="justify">
+                <button *ngFor="let icon of cards[1].icons;" igxIconButton="flat" igxRipple [igxRippleCentered]="true">
+                    <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
+                </button>
+            </igx-card-actions>
+
+            <igx-divider [middle]="true" [vertical]="true"></igx-divider>
+
+            <div style="display: flex; flex-flow: column nowrap; flex: 1 1 100%">
+                <igx-card-header>
+                    <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
+                    <h5 igxCardHeaderSubtitle>{{cards[1].subtitle}}</h5>
+                </igx-card-header>
+
+                <igx-card-content>
+                    <p>New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean.</p>
+                </igx-card-content>
+            </div>
+
+            <igx-card-media width="120px">
+                <img [src]="cards[1].imageUrl">
+            </igx-card-media>
+        </igx-card>
+    </article>
+
+    <article class="card">
+        <igc-card style="flex-direction: row">
+            <igc-card-actions orientation="vertical">
+                <igc-icon-button *ngFor="let icon of cards[1].icons;" [name]="icon" variant="flat">
+                </igc-icon-button>
+            </igc-card-actions>
+            <div>
+              <igc-card-header>
+                <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
+                <h5 igxCardHeaderSubtitle>{{cards[1].subtitle}}</h5>
+              </igc-card-header>
+              <igc-card-content>
+                New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean.
+              </igc-card-content>
+            </div>
+            <igc-card-media style="max-width: 120px">
+                <img [src]="cards[1].imageUrl"/>
+            </igc-card-media>
+          </igc-card>
+    </article>
 </div>
