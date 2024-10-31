@@ -1627,7 +1627,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
-        const newRootGroup = this.createExpressionGroupItem(this.expressionTree);
 
         // Ignore values of 'parent' and 'hovered' properties for the comparison
         const parentPropReplacer = function replacer(key, value) {
@@ -1639,7 +1638,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         };
         
         // Skip root being recreated if the same
-        if (JSON.stringify(this.rootGroup, parentPropReplacer) !== JSON.stringify(newRootGroup, parentPropReplacer)) { // TODO: fix - not working for inner query STATE, add test
+        const newRootGroup = this.createExpressionGroupItem(this.expressionTree);
+        if (JSON.stringify(this.rootGroup, parentPropReplacer) !== JSON.stringify(newRootGroup, parentPropReplacer)) {
             this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
             this.currentGroup = this.rootGroup;
         }
