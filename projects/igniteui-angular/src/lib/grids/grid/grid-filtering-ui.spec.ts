@@ -6492,31 +6492,31 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Select column
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Scroll the search list to the bottom.
             let scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
             scrollbar.scrollTop = 3000;
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Select another column
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Update scrollbar
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
-            // Get the display container and its parent and verify if the display contaier is at start
+            // Get the display container and its parent and verify that the display container is at start
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
             const parentContainerRect = displayContainer.parentElement.getBoundingClientRect();
-
+            
             expect(displayContainerRect.top - parentContainerRect.top <= 1).toBe(true, 'search scrollbar did not reset');
         });
     });
