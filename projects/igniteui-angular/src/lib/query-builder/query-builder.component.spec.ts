@@ -2044,12 +2044,10 @@ describe('IgxQueryBuilder', () => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;            
             const bodyElement = queryBuilderElement.children[1].children[0];
             const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
-            expect(actionArea).toBeDefined('action area is missing');
-            expect(actionArea).not.toBeNull('action area is missing');
-            expect(actionArea.querySelectorAll(':scope > button').length).toEqual(2);
-            expect(bodyElement.children[0].children[1].children[6]).toHaveClass('igx-query-builder-tree');
-            expect(bodyElement.children[0].children[1].children[6].children.length).toEqual(3);
-            const tree = bodyElement.children[0].children[1].children[6].querySelector('.igx-filter-tree__expression');
+            expect(actionArea).toBeNull();
+            expect(bodyElement.children[1].children[1].children[5]).toHaveClass('igx-query-builder-tree');
+            expect(bodyElement.children[1].children[1].children[5].children.length).toEqual(3);
+            const tree = bodyElement.children[1].children[1].children[5].querySelector('.igx-filter-tree__expression');
             expect(tree).toBeNull();
         }));
 

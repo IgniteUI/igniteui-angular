@@ -852,8 +852,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         } else {
             return this.selectedReturnFields?.length > 0 &&
                 (
-                    (!this._editedExpression && !!this.rootGroup) || // no edited expr, root group
-                    (this._editedExpression && !this.selectedField && (this.expressionTree && this.expressionTree.filteringOperands[0] !== this._editedExpression.expression)) || // empty edited expr with at least one other expr
+                    (!this._editedExpression) || // no edited expr
+                    (this._editedExpression && !this.selectedField) || // empty edited expr
                     (this._editedExpression && this.operandCanBeCommitted() === true) // valid edited expr
                 );
         }
