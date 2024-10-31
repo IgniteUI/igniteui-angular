@@ -2087,6 +2087,35 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
             expect(queryBuilder.canCommit()).toBeTrue();
         }));
+
+        it(`Should be able to enter edit mode from condition in an inner query.`, fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Expand the nested query
+            const toggleBtn = fix.debugElement.query(By.css('.igx-filter-tree__details-button')).nativeElement;
+            toggleBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Double-click the child chip 'Released' to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true, 1);
+            tick(50);
+            fix.detectChanges();
+
+            // Verify both parent and child commit buttons are enabled
+            let parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            let childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
+
+            ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement);
+            ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement, false);
+
+            // Verify inputs values on both levels
+            QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'OrderId', 'In', '', 0);
+            QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Released', 'True', '', 1);
+        }));
     });
 
     describe('API', () => {
