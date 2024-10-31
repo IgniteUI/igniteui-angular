@@ -828,7 +828,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public operandCanBeCommitted(): boolean {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
-        
+
         return this.selectedField && this.selectedCondition &&
             (
                 (
@@ -836,7 +836,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
                 ) ||
                 (
-                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields.length > 0
+                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields?.length > 0
                 ) ||
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
@@ -1282,7 +1282,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             return null;
         }
 
-        const exprTreeCopy = 
+        const exprTreeCopy =
         {
             filteringOperands: [],
             operator: expressionTree.operator,
@@ -1290,7 +1290,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             entity: expressionTree.entity,
             returnFields: expressionTree.returnFields
         };
-        expressionTree.filteringOperands.forEach(o => o instanceof  FilteringExpressionsTree ? exprTreeCopy.filteringOperands.push(this.getExpressionTreeCopy(o)) : exprTreeCopy.filteringOperands.push(o));
+        expressionTree.filteringOperands.forEach(o => o instanceof FilteringExpressionsTree ? exprTreeCopy.filteringOperands.push(this.getExpressionTreeCopy(o)) : exprTreeCopy.filteringOperands.push(o));
 
         if (!this.innerQueryNewExpressionTree && shouldAssignInnerQueryExprTree) {
             this.innerQueryNewExpressionTree = exprTreeCopy;
@@ -1444,7 +1444,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 }
             }
 
-            
+
             if (expressionTree.entity) {
                 entityName = expressionTree.entity;
             }
@@ -1654,9 +1654,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
-        if(this.isAdvancedFiltering()){
-            this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
-            this.currentGroup = this.rootGroup;
+        this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
+        this.currentGroup = this.rootGroup;
+
+        if (this.rootGroup?.children?.length == 0) {
+            this.rootGroup = null;
+            this.currentGroup = null;
         }
     }
 }
