@@ -1989,6 +1989,38 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
         }));
 
+        it('Should not make bug where existing inner query is leaking to a newly created one', fakeAsync(() => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+
+            let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+
+            // Add new 'expression'.
+            const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[0];
+            const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
+            (buttons[0] as HTMLElement).click();
+            tick();
+            fix.detectChanges();
+
+            // Add condition with 'in' operator to open inner query
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderName' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'Contains' operator.
+            tick(100);
+            fix.detectChanges();
+            
+            //New empty inner query should be displayed
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;            
+            const bodyElement = queryBuilderElement.children[1].children[0];
+            const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
+            expect(actionArea).toBeDefined('action area is missing');
+            expect(actionArea).not.toBeNull('action area is missing');
+            expect(actionArea.querySelectorAll(':scope > button').length).toEqual(2);
+            expect(bodyElement.children[0].children[1].children[6]).toHaveClass('igx-query-builder-tree');
+            expect(bodyElement.children[0].children[1].children[6].children.length).toEqual(3);
+            const tree = bodyElement.children[0].children[1].children[6].querySelector('.igx-filter-tree__expression');
+            expect(tree).toBeNull();
+        }));
+
         it('canCommit should return the correct validity state of currently edited condition.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
@@ -2148,6 +2180,9 @@ describe('IgxQueryBuilder', () => {
 
             // Start editing expression in the nested query
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true, 1);
+            tick(50);
+            fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true, 1);
             tick(50);
             fix.detectChanges();
             expect(queryBuilder.canCommit()).toBeTrue();
