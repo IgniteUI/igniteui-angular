@@ -669,9 +669,9 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 2: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
                 case 4: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 5: expect(element).toHaveClass('igx-filter-tree__details-button'); break;
@@ -728,9 +728,9 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 2: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
                 case 4: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 5: expect(element).toHaveClass('igx-chip'); break;
@@ -853,16 +853,17 @@ export class QueryBuilderFunctions {
     }
 
     public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
+        // Enter values in the nested query
+        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
+        tick(100);
+        fix.detectChanges();
+
         // Click the initial 'Add Or Group' button.
         QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, groupType, level);
         tick(100);
         fix.detectChanges();
 
-        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false, false, false, false, false, level);
-        // Enter values in the nested query
-        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
-        tick(100);
-        fix.detectChanges();
+        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, false, false, false, false, level);
 
         QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, false, false, false, level);
 
