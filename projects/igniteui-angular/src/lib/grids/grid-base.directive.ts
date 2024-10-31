@@ -4543,7 +4543,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
-            totalWidth += parseInt(cols[i].calcWidth, 10) || 0;
+            totalWidth += parseFloat(cols[i].calcWidth) || 0;
         }
         this._totalWidth = totalWidth;
         return totalWidth;
@@ -5428,9 +5428,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
         computedWidth -= this.featureColumnsWidth();
 
-        const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
+        const columnWidth = !Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth));
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth);
 
         return columnWidth + 'px';
     }
