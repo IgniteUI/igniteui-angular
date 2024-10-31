@@ -440,7 +440,14 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @WatchChanges()
     @Input()
-    public primaryKey: string;
+    public get primaryKey(): string {
+        return this._primaryKey;
+    }
+
+    public set primaryKey(value: string) {
+        this._primaryKey = value;
+        this.checkPrimaryKeyColumn();
+    }
 
     /* blazorSuppress */
     /**
@@ -3132,6 +3139,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this.verticalScrollContainer.getScrollNativeSize();
     }
 
+    private _primaryKey: string;
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
@@ -6642,6 +6650,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
+        this.checkPrimaryKeyColumn();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
@@ -6753,6 +6762,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (added || removed) {
                 this.onColumnsAddedOrRemoved();
             }
+            this.checkPrimaryKeyColumn();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected checkPrimaryKeyColumn() {
+        if (this.primaryKey && this.columns.length > 0 && !this.columns.find(c => c.field === this.primaryKey)) {
+            console.warn(`Primary key column "${this.primaryKey}" is not defined. Set \`primaryKey\` to a valid column.`);
         }
     }
 
