@@ -530,10 +530,10 @@ export class QueryBuilderFunctions {
     public static verifyEditModeQueryExpressionInputStates(fix,
         entitySelectEnabled: boolean,
         fieldComboEnabled: boolean,
-        columnSelectEnabled: boolean,
-        operatorSelectEnabled: boolean,
-        valueInputEnabled: boolean,
-        commitButtonEnabled: boolean,
+        columnSelectEnabled: boolean = null,
+        operatorSelectEnabled: boolean = null,
+        valueInputEnabled: boolean = null,
+        commitButtonEnabled: boolean = null,
         level = 0) {
         // Verify the entity select state.
         const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('igx-input-group');
@@ -544,7 +544,9 @@ export class QueryBuilderFunctions {
         expect(!fieldInputGroup.classList.contains('igx-input-group--disabled')).toBe(fieldComboEnabled,
             'incorrect fields combo state');
 
-        QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, columnSelectEnabled, operatorSelectEnabled, valueInputEnabled, commitButtonEnabled, level);
+        if(columnSelectEnabled || operatorSelectEnabled ||  valueInputEnabled || commitButtonEnabled){
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, columnSelectEnabled, operatorSelectEnabled, valueInputEnabled, commitButtonEnabled, level);
+        }
     };
 
     public static verifyEditModeExpressionInputStates(fix,
@@ -581,15 +583,18 @@ export class QueryBuilderFunctions {
     public static verifyQueryEditModeExpressionInputValues(fix,
         entityText: string,
         fieldsText: string,
-        columnText: string,
-        operatorText: string,
-        valueText: string,
+        columnText: string = null,
+        operatorText: string = null,
+        valueText: string = null,
         level = 0) {
         const entityInput = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('input');
         const fieldInput = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, level).querySelector('input');
-        QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, columnText, operatorText, valueText, level);
         expect(entityInput.value).toBe(entityText);
         expect(fieldInput.value).toBe(fieldsText);
+
+        if(columnText ||  operatorText ||  valueText){
+            QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, columnText, operatorText, valueText, level);
+        }
     };
 
     public static verifyEditModeExpressionInputValues(fix,
@@ -664,9 +669,9 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 2: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
                 case 4: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 5: expect(element).toHaveClass('igx-filter-tree__details-button'); break;
@@ -723,9 +728,9 @@ export class QueryBuilderFunctions {
         let i = 0;
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
-                case 0: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-input-group__input'); break;
+                case 2: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
                 case 4: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 5: expect(element).toHaveClass('igx-chip'); break;
@@ -848,16 +853,17 @@ export class QueryBuilderFunctions {
     }
 
     public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
+        // Enter values in the nested query
+        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
+        tick(100);
+        fix.detectChanges();
+
         // Click the initial 'Add Or Group' button.
         QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, groupType, level);
         tick(100);
         fix.detectChanges();
 
-        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false, false, false, false, false, level);
-        // Enter values in the nested query
-        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
-        tick(100);
-        fix.detectChanges();
+        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, false, false, false, false, level);
 
         QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, false, false, false, level);
 
