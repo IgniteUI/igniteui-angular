@@ -228,7 +228,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
-        console.log('set');
         this._expressionTree = expressionTree;
         if (!expressionTree) {
             this._selectedEntity = null;
