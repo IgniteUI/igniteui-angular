@@ -440,7 +440,14 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @WatchChanges()
     @Input()
-    public primaryKey: string;
+    public get primaryKey(): string {
+        return this._primaryKey;
+    }
+
+    public set primaryKey(value: string) {
+        this._primaryKey = value;
+        this.checkPrimaryKeyColumn();
+    }
 
     /* blazorSuppress */
     /**
@@ -988,6 +995,11 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
+
+    /* blazorInclude */
+    /** @hidden @internal */
+    @Output()
+    public selectedRowsChange = new EventEmitter<any[]>();
 
     /**
      * Emitted when the expanded state of a row gets changed.
@@ -2455,7 +2467,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /* blazorByValueArray */
     /* blazorAlwaysWriteback */
-    /* @tsTwoWayProperty (true, "RowSelectionChanging", "Detail.NewSelection", false) */
+    /* @tsTwoWayProperty (true, "SelectedRowsChange", "Detail", false) */
     /* blazorPrimitiveValue */
     /**
      * Gets/Sets the current selection state.
@@ -3124,6 +3136,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this.verticalScrollContainer.getScrollNativeSize();
     }
 
+    private _primaryKey: string;
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
@@ -3409,6 +3422,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
+        this.selectionService.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe((args: any[]) => {
+            this.selectedRowsChange.emit(args);
+        });
         IgcTrialWatermark.register();
     }
 
@@ -3595,16 +3611,14 @@ export abstract class IgxGridBaseDirective implements GridType,
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
-            if (!this.crudService.cell &&
-                !!this.navigation.activeNode &&
-                ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
-                    this.navigation.activeNode.row < this.dataView.length)
-                    || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                    || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
+            const activeNode = this.navigation.activeNode;
+            if (!this.crudService.cell && !!activeNode &&
+                ((event.target === this.tbody.nativeElement && activeNode.row >= 0 &&
+                    activeNode.row < this.dataView.length)
+                    || (event.target === this.theadRow.nativeElement && activeNode.row === -1)
+                    || (event.target === this.tfoot.nativeElement && activeNode.row === this.dataView.length)) &&
                 !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
-                this.navigation.lastActiveNode = this.navigation.activeNode;
-                this.navigation.activeNode = {} as IActiveNode;
-                this.notifyChanges();
+                this.clearActiveNode();
             }
         });
         this.rowAddedNotifier.pipe(destructor).subscribe(args => this.refreshGridState(args));
@@ -3624,7 +3638,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.zone.run(() => {
                 // do not trigger reflow if element is detached.
                 if (this.nativeElement.isConnected) {
-                    if (this._gridSize !== this.gridSize) {
+                    if (this.shouldResize) {
                         // resizing occurs due to the change of --ig-size css var
                         this._gridSize = this.gridSize;
                         this.updateDefaultRowHeight();
@@ -5315,6 +5329,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this.width && this.width.indexOf('%') !== -1;
     }
 
+    protected get shouldResize(): boolean {
+        return this._gridSize !== this.gridSize;
+    }
+
     /**
      * @hidden @internal
      */
@@ -6052,10 +6070,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             return true;
         }
 
-        const activeCell = this.gridAPI.grid.navigation.activeNode;
-        if (activeCell && activeCell.row !== -1) {
-            this.tbody.nativeElement.focus();
-        }
+        this.navigation.restoreActiveNodeFocus();
     }
 
     /**
@@ -6242,7 +6257,20 @@ export abstract class IgxGridBaseDirective implements GridType,
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     /* blazorCSSuppress */
     public endEdit(commit = true, event?: Event): boolean {
-        return this.crudService.endEdit(commit, event);
+        const document = this.nativeElement?.getRootNode() as Document | ShadowRoot;
+        const focusWithin = this.nativeElement?.contains(document.activeElement);
+
+        const success = this.crudService.endEdit(commit, event);
+
+        if (focusWithin) {
+            // restore focus for navigation
+            this.navigation.restoreActiveNodeFocus();
+        } else if (this.navigation.activeNode) {
+            // grid already lost focus, clear active node
+            this.clearActiveNode();
+        }
+
+        return success;
     }
 
     /**
@@ -6627,6 +6655,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
+        this.checkPrimaryKeyColumn();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
@@ -6738,6 +6767,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (added || removed) {
                 this.onColumnsAddedOrRemoved();
             }
+            this.checkPrimaryKeyColumn();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected checkPrimaryKeyColumn() {
+        if (this.primaryKey && this.columns.length > 0 && !this.columns.find(c => c.field === this.primaryKey)) {
+            console.warn(`Primary key column "${this.primaryKey}" is not defined. Set \`primaryKey\` to a valid column.`);
         }
     }
 
@@ -7812,5 +7851,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (!oldData || !oldData.length) return true;
         if (!newData || !newData.length) return false;
         return Object.keys(oldData[0]).join() !== Object.keys(newData[0]).join();
+    }
+
+    /**
+     * Clears the current navigation service active node
+     */
+    private clearActiveNode() {
+        this.navigation.lastActiveNode = this.navigation.activeNode;
+        this.navigation.activeNode = {} as IActiveNode;
+        this.notifyChanges();
     }
 }
