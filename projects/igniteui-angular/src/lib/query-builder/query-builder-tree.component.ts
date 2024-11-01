@@ -950,7 +950,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.fields = this.selectedEntity ? this.selectedEntity.fields : null;
         this.selectedField =
             expressionItem.expression.fieldName ?
-                this.fields.find(field => field.field === expressionItem.expression.fieldName)
+                this.fields?.find(field => field.field === expressionItem.expression.fieldName)
                 : null;
         this.selectedCondition =
             expressionItem.expression.condition ?
@@ -1197,14 +1197,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public getFormatter(field: string) {
-        return this.fields.find(el => el.field === field)?.formatter;
+        return this.fields?.find(el => el.field === field)?.formatter;
     }
 
     /**
      * @hidden @internal
      */
     public getFormat(field: string) {
-        return this.fields.find(el => el.field === field).pipeArgs.format;
+        return this.fields?.find(el => el.field === field).pipeArgs.format;
     }
 
     /**
@@ -1264,7 +1264,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         const returnFields = innerTree.returnFields;
         let text = returnFields.join(', ');
         const innerTreeEntity = this.entities?.find(el => el.name === innerTree.entity);
-        if (returnFields.length === innerTreeEntity.fields.length) {
+        if (returnFields.length === innerTreeEntity?.fields.length) {
             text = this.resourceStrings.igx_query_builder_all_fields;
         } else {
             text = returnFields.join(', ');
