@@ -830,29 +830,7 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static addChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
-        // Click the initial 'Add Or Group' button.
-        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, groupType, level);
-        tick(100);
-        fix.detectChanges();
-
-        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
-        tick(100);
-        fix.detectChanges();
-
-        QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1, level); // Select 'ProductName' column.
-        QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, level); // Select 'Contains' operator.
-        const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, level).querySelector('input');
-        UIInteractions.clickAndSendInputElementValue(input, 'a');
-        tick(100);
-        fix.detectChanges();
-
-        //Commit the populated expression.
-        QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, level);
-        fix.detectChanges();
-    }
-
-    public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
+     public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
         // Enter values in the nested query
         QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
         tick(100);
@@ -906,6 +884,18 @@ export class QueryBuilderFunctions {
         const orButton = contextMenus[1].queryAll(By.css('.igx-button'))[operatorButton];
         orButton.nativeElement.click();
         tick();
+        fix.detectChanges();
+    }
+
+    public static selectEntityAndClickInitialAddGroup(fix: ComponentFixture<any>, entityIndex: number, groupIndex: number) {
+        // Select 'Orders' entity
+        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex); 
+        tick(100);
+        fix.detectChanges();
+
+        // Click the initial 'Add Or Group' button.
+        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, groupIndex);
+        tick(100);
         fix.detectChanges();
     }
 }
