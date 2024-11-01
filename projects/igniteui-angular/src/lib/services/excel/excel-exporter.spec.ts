@@ -144,6 +144,8 @@ describe('Excel Exporter', () => {
             'Dorothy H. Spencer'
         ], options);
 
+        wrapper.verifyStructure();
+        await wrapper.verifyTemplateFilesContent();
         await wrapper.verifyDataFilesContent(actualData.noHeadersStringDataWithNullChars);
     });
 

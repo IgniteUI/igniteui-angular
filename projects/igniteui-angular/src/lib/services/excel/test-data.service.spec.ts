@@ -1937,8 +1937,8 @@ export class FileContentData {
     }
 
     public get noHeadersStringDataWithNullChars() {
-        this._sharedStringsData = `count="6" uniqueCount="6"><si><t>Column1</t></si><si><t>Terrance\&#32;Orta</t></si>` +
-            `<si><t>Richard Mahoney\&#32;LongerName</t></si><si><t>Donna\&#32;Price</t></si><si><t>Lisa Landers</t></si><si><t>` +
+        this._sharedStringsData = `count="6" uniqueCount="6"><si><t>Column1</t></si><si><t>TerranceOrta</t></si>` +
+            `<si><t>Richard MahoneyLongerName</t></si><si><t>DonnaPrice</t></si><si><t>Lisa Landers</t></si><si><t>` +
             `Dorothy H. Spencer</t></si>`;
 
         this._tableData = `ref="A1:A6" totalsRowShown="0"><autoFilter ref="A1:A6"/><tableColumns count="1">` +
