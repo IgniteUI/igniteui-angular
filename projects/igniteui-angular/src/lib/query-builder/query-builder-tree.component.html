@@ -459,7 +459,9 @@
             </div>
         </div>
 
-        <ng-container *ngIf="(!expressionItem.inEditMode && expressionItem.expression.searchTree) || (expressionItem.inEditMode && selectedField?.filters?.condition(selectedCondition)?.isNestedQuery)">
+        <ng-container *ngIf="
+            (!expressionItem.inEditMode && expressionItem.expression.searchTree && expressionItem.expression.searchTree.filteringOperands?.length > 0) ||
+            (expressionItem.inEditMode && selectedField?.filters?.condition(selectedCondition)?.isNestedQuery)">
             <igx-query-builder-tree
                 [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
                 [entities]="entities"
