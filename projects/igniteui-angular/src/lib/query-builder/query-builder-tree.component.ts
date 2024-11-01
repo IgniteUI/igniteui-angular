@@ -228,6 +228,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
+        console.log('set');
         this._expressionTree = expressionTree;
         if (!expressionTree) {
             this._selectedEntity = null;
@@ -1461,7 +1462,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             this._selectedEntity = this.entities?.find(el => el.name === entityName);
             this._selectedReturnFields =
-                !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All')
+                !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All') || expressionTree.returnFields.length === 0
                     ? this.fields?.map(f => f.field)
                     : this.fields?.filter(f => expressionTree.returnFields.indexOf(f.field) >= 0).map(f => f.field);
         }
