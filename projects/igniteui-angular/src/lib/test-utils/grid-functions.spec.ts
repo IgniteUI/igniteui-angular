@@ -2048,7 +2048,7 @@ export class GridFunctions {
                     }
                 }
                 const expectedWidth = Math.max(parseFloat(cell.column.calcWidth) * cell.column.gridColumnSpan, sum);
-                expect(cellElem.clientWidth - expectedWidth).toBeLessThan(1);
+                expect(cellElem.getBoundingClientRect().width - expectedWidth).toBeLessThan(1);
                 // check height
                 const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
                 expect(cellElem.offsetHeight).toBe(expectedHeight);

@@ -29,7 +29,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * @memberof IgxColumnGroupComponent
      */
     public override get width(): any {
-        const width = this.getFilledChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);
+        const width = this.getFilledChildColumnSizes(this.children).reduce((acc, val) => acc + parseFloat(val), 0);
         return width;
     }
 
@@ -47,7 +47,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
 
         if (this.headerGroup && this.headerGroup.hasLastPinnedChildColumn) {
             const headerStyles = this.grid.document.defaultView.getComputedStyle(this.headerGroup.nativeElement.children[0]);
-            borderWidth = parseInt(headerStyles.borderRightWidth, 10);
+            borderWidth = parseFloat(headerStyles.borderRightWidth);
         }
 
         return super.getCalcWidth() + borderWidth;
