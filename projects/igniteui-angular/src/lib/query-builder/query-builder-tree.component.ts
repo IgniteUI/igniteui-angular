@@ -1662,8 +1662,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.cancelOperandEdit();
 
         // Ignore values of 'parent' and 'hovered' properties for the comparison
-        const parentPropReplacer = function replacer(key, value) {
-            if (key === "parent" || key === "hovered") {
+        const propsReplacer = function replacer(key, value) {
+            if (key === "parent" || key === "hovered" || key === "ignoreCase" || key === "inEditMode") {
                 return undefined;
             } else {
                 return value;
@@ -1672,7 +1672,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         
         // Skip root being recreated if the same
         const newRootGroup = this.createExpressionGroupItem(this.expressionTree);
-        if (JSON.stringify(this.rootGroup, parentPropReplacer) !== JSON.stringify(newRootGroup, parentPropReplacer)) {
+        if (JSON.stringify(this.rootGroup, propsReplacer) !== JSON.stringify(newRootGroup, propsReplacer)) {
             this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
             this.currentGroup = this.rootGroup;
         }
