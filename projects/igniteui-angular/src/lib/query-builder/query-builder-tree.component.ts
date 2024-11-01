@@ -54,6 +54,7 @@ import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
+import { isTree } from '../data-operations/expressions-tree-util';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -1296,7 +1297,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             entity: expressionTree.entity,
             returnFields: expressionTree.returnFields
         };
-        expressionTree.filteringOperands.forEach(o => o instanceof FilteringExpressionsTree ? exprTreeCopy.filteringOperands.push(this.getExpressionTreeCopy(o)) : exprTreeCopy.filteringOperands.push(o));
+        expressionTree.filteringOperands.forEach(o => isTree(o) ? exprTreeCopy.filteringOperands.push(this.getExpressionTreeCopy(o)) : exprTreeCopy.filteringOperands.push(o));
 
         if (!this.innerQueryNewExpressionTree && shouldAssignInnerQueryExprTree) {
             this.innerQueryNewExpressionTree = exprTreeCopy;
@@ -1428,7 +1429,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             }
 
             for (const expr of expressionTree.filteringOperands) {
-                if (expr instanceof FilteringExpressionsTree) {
+                if (isTree(expr)) {
                     groupItem.children.push(this.createExpressionGroupItem(expr, groupItem, expressionTree.entity));
                 } else {
                     const filteringExpr = expr as IFilteringExpression;
@@ -1669,7 +1670,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 return value;
             }
         };
-        
+
         // Skip root being recreated if the same
         const newRootGroup = this.createExpressionGroupItem(this.expressionTree);
         if (JSON.stringify(this.rootGroup, parentPropReplacer) !== JSON.stringify(newRootGroup, parentPropReplacer)) {
