@@ -34,6 +34,8 @@ describe('IgxQueryBuilder', () => {
 
     describe('Basic', () => {
         it('Should render empty Query Builder properly.', fakeAsync(() => {
+            tick(100);
+            fix.detectChanges();
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
             expect(queryBuilderElement).toBeDefined();
             expect(queryBuilderElement.children.length).toEqual(2);
@@ -2478,6 +2480,11 @@ describe('IgxQueryBuilder', () => {
             });
             fix.detectChanges();
 
+            // Select 'Orders' entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
             expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' My advanced filter ');
             expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fix) as HTMLElement).innerText).toBe('My and');
             expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fix) as HTMLElement).innerText).toBe('My or');
@@ -2487,6 +2494,7 @@ describe('IgxQueryBuilder', () => {
                 .toBe('My or group');
             expect((QueryBuilderFunctions.getQueryBuilderEmptyPrompt(fix) as HTMLElement).innerText).toBe('My initial text');
 
+            // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
@@ -2498,11 +2506,9 @@ describe('IgxQueryBuilder', () => {
             expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[2] as HTMLElement).querySelector('span').innerText)
                 .toBe('My or group');
 
-            // Populate edit inputs.
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products'.
 
             // Show changing entity alert dialog
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
             tick(100);
             fix.detectChanges();
             const dialogOutlet = document.querySelector('.igx-dialog__window');
@@ -2514,6 +2520,13 @@ describe('IgxQueryBuilder', () => {
             expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[0].textContent.trim()).toBe('My Cancel');
             expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[1].textContent.trim()).toBe('My Confirm');
 
+            const confirmButton = Array.from(dialogOutlet.querySelectorAll('button'))[1];
+            confirmButton.click();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
@@ -2543,11 +2556,13 @@ describe('IgxQueryBuilder', () => {
 
             // Close context menu.
             QueryBuilderFunctions.clickQueryBuilderContextMenuCloseButton(fix);
+            tick(100);
             fix.detectChanges();
 
             // Add another expression to root group.
             let btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
             btn.click();
+            tick(100);
             fix.detectChanges();
 
             // Populate edit inputs.

@@ -530,10 +530,10 @@ export class QueryBuilderFunctions {
     public static verifyEditModeQueryExpressionInputStates(fix,
         entitySelectEnabled: boolean,
         fieldComboEnabled: boolean,
-        columnSelectEnabled: boolean = null,
-        operatorSelectEnabled: boolean = null,
-        valueInputEnabled: boolean = null,
-        commitButtonEnabled: boolean = null,
+        columnSelectEnabled?: boolean,
+        operatorSelectEnabled?: boolean,
+        valueInputEnabled?: boolean,
+        commitButtonEnabled?: boolean,
         level = 0) {
         // Verify the entity select state.
         const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('igx-input-group');
@@ -583,9 +583,9 @@ export class QueryBuilderFunctions {
     public static verifyQueryEditModeExpressionInputValues(fix,
         entityText: string,
         fieldsText: string,
-        columnText: string = null,
-        operatorText: string = null,
-        valueText: string = null,
+        columnText?: string,
+        operatorText?: string,
+        valueText?: string,
         level = 0) {
         const entityInput = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, level).querySelector('input');
         const fieldInput = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, level).querySelector('input');
@@ -888,7 +888,6 @@ export class QueryBuilderFunctions {
     }
 
     public static selectEntityAndClickInitialAddGroup(fix: ComponentFixture<any>, entityIndex: number, groupIndex: number) {
-        // Select 'Orders' entity
         QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex); 
         tick(100);
         fix.detectChanges();
