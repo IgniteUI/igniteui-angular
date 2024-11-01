@@ -956,6 +956,7 @@ export interface GridType extends IGridDataBindable {
      * Represents the paging of the grid. It can be either 'Local' or 'Remote'
      * - Local: Default value; The grid will paginate the data source based on the page
      */
+    /* mustCoerceToInt */
     pagingMode: GridPagingMode;
     /** The paging state for the grid; Used to configure how paging should be applied - which is the current page, records per page */
     /** @hidden */
@@ -1465,7 +1466,9 @@ export interface IgxGridPaginatorTemplateContext {
  * An interface describing settings for row/column pinning position.
  */
 export interface IPinningConfig {
+    /* mustCoerceToInt */
     columns?: ColumnPinningPosition;
+    /* mustCoerceToInt */
     rows?: RowPinningPosition;
 }
 
