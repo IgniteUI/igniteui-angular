@@ -277,7 +277,7 @@ describe('IgxQueryBuilder', () => {
 
             // adding buttons should be enabled, 'end group' button should be disabled
             addingButtons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
-            expect(addingButtons.length).toBe(3);
+            expect(addingButtons.length).toBe(4);
             for (let i = 0; i < addingButtons.length; i++) {
                 if (i === 3) {
                     ControlsFunction.verifyButtonIsDisabled(addingButtons[i] as HTMLElement);
