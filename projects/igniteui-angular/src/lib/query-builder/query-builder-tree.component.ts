@@ -1655,21 +1655,21 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-
     private init() {
         this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
 
-        // Ignore values of 'parent' and 'hovered' properties for the comparison
+        // Ignore values of certain properties for the comparison
+        const propsToIgnore = ['parent', 'hovered', 'ignoreCase', 'inEditMode', 'inAddMode'];
         const propsReplacer = function replacer(key, value) {
-            if (key === "parent" || key === "hovered" || key === "ignoreCase" || key === "inEditMode") {
+            if (propsToIgnore.indexOf(key) >= 0) {
                 return undefined;
             } else {
                 return value;
             }
         };
-        
+
         // Skip root being recreated if the same
         const newRootGroup = this.createExpressionGroupItem(this.expressionTree);
         if (JSON.stringify(this.rootGroup, propsReplacer) !== JSON.stringify(newRootGroup, propsReplacer)) {
