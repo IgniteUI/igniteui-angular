@@ -33,7 +33,7 @@ describe('IgxQueryBuilder', () => {
     }));
 
     describe('Basic', () => {
-        it('Should render empty Query Builder properly.', () => {
+        it('Should render empty Query Builder properly.', fakeAsync(() => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
             expect(queryBuilderElement).toBeDefined();
             expect(queryBuilderElement.children.length).toEqual(2);
@@ -51,9 +51,25 @@ describe('IgxQueryBuilder', () => {
             expect(bodyElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_BODY);
             expect(bodyElement.children.length).toEqual(2);
 
-            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true);
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false);
             QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '');
-        });
+
+            // Select 'Orders' entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); 
+            tick(100);
+            fix.detectChanges();
+
+            expect(bodyElement.children[1]).toHaveClass('igx-query-builder__root');
+
+            const actionArea = bodyElement.children[1].querySelector('.igx-query-builder__root-actions');
+            // initial add "'and'/'or' group " buttons should be displayed
+            expect(actionArea.querySelectorAll(':scope > button').length).toEqual(2);
+            // empty filtering tree message should be displayed
+            expect(bodyElement.children[1].children[1]).toHaveClass('igx-filter-empty');
+
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true);
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released');
+        }));
 
         it('Should render Query Builder with initially set expression tree properly.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
