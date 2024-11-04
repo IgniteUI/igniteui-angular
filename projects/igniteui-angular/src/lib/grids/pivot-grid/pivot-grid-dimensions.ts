@@ -128,7 +128,6 @@ export class IgxPivotDateDimension implements IPivotDimension {
     constructor(inBaseDimension: IPivotDimension = null, inOptions: IPivotDateDimensionOptions = {}) {
         this._baseDimension = inBaseDimension;
         this._options = inOptions;
-        this.enabled = inBaseDimension?.enabled;
         if (this.baseDimension && this.options) {
             this.initialize(this.baseDimension, this.options);
         }
@@ -140,6 +139,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
         this.dataType = GridColumnDataType.Date;
         inBaseDimension.dataType = GridColumnDataType.Date;
 
+        this.enabled = inBaseDimension.enabled;
         this.displayName = inBaseDimension.displayName || this.resourceStrings.igx_grid_pivot_date_dimension_total;
 
         const baseDimension = options.fullDate ? inBaseDimension : null;

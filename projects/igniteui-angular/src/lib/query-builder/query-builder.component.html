@@ -8,7 +8,7 @@
 
 <igx-query-builder-header
     *ngIf="!headerContent"
-    [title]="this.resourceStrings.igx_query_builder_title"
+    [resourceStrings]="this.resourceStrings"
 >
 </igx-query-builder-header>
 
@@ -147,18 +147,18 @@
                     expressionItem.hovered
                 "
             >
-                <igx-icon
-                    family="default"
-                    name="edit"
-                    tabindex="0"
+                <button
+                    igxIconButton="flat"
+                    aria-labelledby="edit-expression"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionEdit(expressionItem)"
                 >
-                </igx-icon>
-                <igx-icon
-                    family="default"
-                    name="add"
-                    tabindex="0"
+                    <igx-icon id="edit-expression">edit</igx-icon>
+                </button>
+
+                <button
+                    igxIconButton="flat"
+                    aria-labelledby="add-expression"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionAdd(expressionItem)"
                     *ngIf="
@@ -170,7 +170,8 @@
                                 ])
                     "
                 >
-                </igx-icon>
+                    <igx-icon id="add-expression">add</igx-icon>
+                </button>
             </div>
         </div>
 

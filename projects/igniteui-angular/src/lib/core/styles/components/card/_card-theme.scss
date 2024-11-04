@@ -135,6 +135,10 @@
         &:hover {
             box-shadow: none;
         }
+
+        igx-avatar {
+            --ig-size: #{if($variant == 'indigo', 3, 1)};
+        }
     }
 
     %igx-card--elevated {
@@ -194,10 +198,6 @@
         @if $variant == 'indigo' {
             margin-inline-end: rem(8px);
             margin-block: auto;
-
-            igx-avatar {
-                --ig-size: 3;
-            }
         }
 
         &:empty {

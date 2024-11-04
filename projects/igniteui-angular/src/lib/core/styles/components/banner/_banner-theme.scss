@@ -146,6 +146,11 @@
         flex-wrap: wrap;
         align-self: flex-end;
         gap: rem(8px);
+
+        > a {
+            display: inline-flex;
+            align-items: center;
+        }
     }
 }
 

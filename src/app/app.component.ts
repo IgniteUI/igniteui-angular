@@ -662,6 +662,11 @@ export class AppComponent implements OnInit {
             link: '/virtualForDirective',
             icon: 'view_column',
             name: 'Virtual-For Directive'
+        },
+        {
+            link: '/labelDirective',
+            icon: 'label',
+            name: 'Label Directive'
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 

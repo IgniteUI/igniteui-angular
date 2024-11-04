@@ -1,6 +1,7 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
+import { IColumnExportingEventArgs } from '../exporter-common/base-export-service';
 import { ZipWrapper } from './zip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -115,6 +116,22 @@ describe('Excel Exporter', () => {
         } catch (ex) {
             expect((ex as Error).message).toBe('Invalid value for row height!');
         }
+    });
+
+    it('should export data successfully when \'columnExporting\' is canceled.', async () => {
+        options.columnWidth = 50;
+
+        exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
+            if (args.field === 'phone') {
+                args.cancel = true;
+            }
+        });
+
+        const wrapper = await getExportedData(SampleTestData.contactsData(), options);
+
+        wrapper.verifyStructure();
+        await wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyDataFilesContent(actualData.contactsDataSkippedColumnContent);
     });
 
     const getExportedData = (data: any[], exportOptions: IgxExcelExporterOptions) => {

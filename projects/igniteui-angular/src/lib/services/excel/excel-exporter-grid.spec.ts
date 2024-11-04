@@ -913,6 +913,21 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithSkippedColumns);
         });
+
+        it('should export hierarchical grid with all child rows canceled.', async () => {
+            exporter.rowExporting.subscribe((args: IRowExportingEventArgs) => {
+                if (args.owner?.key === "Albums" ||
+                    args.owner?.key === "Songs" ||
+                    args.owner?.key === "Tours" ||
+                    args.owner?.key === "TourData") {
+                        args.cancel = true;
+                    }
+            });
+
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithSkippedRows);
+        });
     });
 
     describe('', () => {

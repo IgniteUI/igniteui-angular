@@ -350,7 +350,7 @@
         }
 
         @if $bootstrap-theme {
-            border: rem(1px) solid transparent;
+            padding-block: rem(12px);
             border-start-start-radius: var-get($theme, 'border-radius');
             border-start-end-radius: var-get($theme, 'border-radius');
         }

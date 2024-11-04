@@ -663,6 +663,17 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(0);
             expect(gridBody.nativeElement.innerText).toMatch(grid.emptyGridMessage);
         }));
+
+        it('should apply correct rowHeight when set as input', () => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            const grid = fixture.componentInstance.grid;
+            grid.rowHeight = 75;
+            fixture.detectChanges();
+
+            const cell = fixture.debugElement.query(By.css(TBODY_CLASS)).query(By.css('.igx-grid__td')).nativeElement;
+            const expectedCellHeight = 76; // rowHeight + 1px border
+            expect(cell.offsetHeight).toEqual(expectedCellHeight);
+        });
     });
 
     describe('IgxGrid - virtualization tests', () => {
