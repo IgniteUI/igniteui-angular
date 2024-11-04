@@ -24,6 +24,12 @@
       "remove": true,
       "owner": "badge-theme",
       "type":"property"
+    },
+    {
+      "name": "$header-time-period-color",
+      "remove": true,
+      "owner": "time-picker-theme",
+      "type":"property"
     }
   ]
 }
