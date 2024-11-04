@@ -908,10 +908,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      */
     public onConditionChange() {
         if (this.selectedCondition && this.selectedField) {
-            const condition = this.selectedField.filters.condition(this.selectedCondition);
-            if (condition.isUnary) {
-                this.searchValue = null;
-            }
+            this.searchValue = null;
         }
     }
 
