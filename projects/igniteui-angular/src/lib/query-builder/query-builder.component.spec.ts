@@ -2172,6 +2172,44 @@ describe('IgxQueryBuilder', () => {
             // Verify edited expressions
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Id', 'Equals', '1', 1);
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'True', undefined, 1);
+
+            // close chip
+            toggleBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+             // Double-click the existing chip to enter edit mode.
+             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+             tick(50);
+             fix.detectChanges();
+
+             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1, 1); 
+             tick(100);
+             fix.detectChanges();
+
+            // Confirm the change
+            const dialogOutlet: HTMLElement = fix.debugElement.queryAll(By.css(`.igx-dialog`))[0].nativeElement;
+            const confirmButton = Array.from(dialogOutlet.querySelectorAll('button'))[1];
+            expect(confirmButton.innerText).toEqual('Confirm');
+            confirmButton.click();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Discard the changes
+            queryBuilder.discard();
+            tick(100);
+            fix.detectChanges();
+
+            // Expand the nested query
+            const toggleBtn2 = fix.debugElement.query(By.css('.igx-filter-tree__details-button')).nativeElement;
+            toggleBtn2.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify edited expressions
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Id', 'Equals', '1', 1);
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'True', undefined, 1);
         }));
 
         it('Should NOT throw errors when an invalid condition is committed through API.', fakeAsync(() => {
@@ -2260,8 +2298,6 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
         }));
 
-        //Should select/deselect all child conditions and groups when pressing \'Enter\' on  a group\'s operator line.
-        //Should open the group"s context menu when pressing "Enter"/"space"  on its operator line.
         it('Should select/deselect all child conditions/groups and open/close group context menu when pressing "Enter"/"space" on its operator line.', fakeAsync(() => {
             //!Both Enter and Space should work
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
