@@ -34,7 +34,9 @@ describe('IgxQueryBuilder', () => {
     }));
 
     describe('Basic', () => {
-        it('Should render empty Query Builder properly.', () => {
+        it('Should render empty Query Builder properly.', fakeAsync(() => {
+            tick(100);
+            fix.detectChanges();
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
             expect(queryBuilderElement).toBeDefined();
             expect(queryBuilderElement.children.length).toEqual(2);
@@ -52,9 +54,25 @@ describe('IgxQueryBuilder', () => {
             expect(bodyElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_BODY);
             expect(bodyElement.children.length).toEqual(2);
 
-            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true);
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false);
             QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '');
-        });
+
+            // Select 'Orders' entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            expect(bodyElement.children[1]).toHaveClass('igx-query-builder__root');
+
+            const actionArea = bodyElement.children[1].querySelector('.igx-query-builder__root-actions');
+            // initial add "'and'/'or' group " buttons should be displayed
+            expect(actionArea.querySelectorAll(':scope > button').length).toEqual(2);
+            // empty filtering tree message should be displayed
+            expect(bodyElement.children[1].children[1]).toHaveClass('igx-filter-empty');
+
+            QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true);
+            QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released');
+        }));
 
         it('Should render Query Builder with initially set expression tree properly.', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
@@ -130,14 +148,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should correctly initialize a newly added \'Or\' group.', fakeAsync(() => {
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-            tick(100);
-            fix.detectChanges();
-
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 1);
 
             // Verify there is a new root group, which is empty.
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 0, 0);
@@ -160,16 +171,9 @@ describe('IgxQueryBuilder', () => {
 
         it(`Should discard newly added group when clicking on the 'cancel' button of its initial condition.`, fakeAsync(() => {
             spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-            tick(100);
-            fix.detectChanges();
+            expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
 
-            expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(1);
-
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 1);
 
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(1);
 
@@ -274,7 +278,7 @@ describe('IgxQueryBuilder', () => {
 
             // adding buttons should be enabled, 'end group' button should be disabled
             addingButtons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
-            expect(addingButtons.length).toBe(3);
+            expect(addingButtons.length).toBe(4);
             for (let i = 0; i < addingButtons.length; i++) {
                 if (i === 3) {
                     ControlsFunction.verifyButtonIsDisabled(addingButtons[i] as HTMLElement);
@@ -392,14 +396,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should discard the added group when clicking its operator line without having a single expression.', fakeAsync(() => {
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-            tick(100);
-            fix.detectChanges();
-
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 1);
 
             let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
             expect(group).not.toBeNull('There is no root group.');
@@ -418,14 +415,7 @@ describe('IgxQueryBuilder', () => {
             expect(fix.componentInstance.queryBuilder.expressionTree).toBeUndefined();
             // Select an entity
             // TO DO: refactor the methods when entity and fields drop-downs are in the correct overlay
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
-            tick(100);
-            fix.detectChanges();
-
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 1);
 
             // Verify the enabled/disabled state of each input of the expression in edit mode.
             expect(fix.componentInstance.queryBuilder.expressionTree).toBeDefined();
@@ -487,16 +477,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Value input should be disabled for unary operator.', fakeAsync(() => {
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 1);
-            tick(100);
-            fix.detectChanges();
-
-            // Select an entity
-            // TO DO: refactor the methods when entity and fields drop-downs are in the correct overlay
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 1);
 
             //Select Column
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
@@ -508,15 +489,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Fields dropdown should contain proper fields based on the entity.', fakeAsync(() => {
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
-
-            // Select an entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
 
             // Open fields dropdown and verify the items.
             QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
@@ -535,15 +508,8 @@ describe('IgxQueryBuilder', () => {
 
         it('Column dropdown should contain proper fields based on the entity.', fakeAsync(() => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
 
-            // Select an entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             // Open columns dropdown and verify the items.
             QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
@@ -557,15 +523,8 @@ describe('IgxQueryBuilder', () => {
 
         it('Operator dropdown should contain operators based on the column\'s datatype (\'string\' or \'number\' or \'date\').', fakeAsync(() => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
 
-            // Select an entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             // Select 'string' type column ('OrderName').
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
@@ -611,15 +570,8 @@ describe('IgxQueryBuilder', () => {
 
         it('Operator dropdown should contain operators based on the column\'s datatype (\'boolean\').', fakeAsync(() => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
-            // Select an entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
-            tick(100);
-            fix.detectChanges();
 
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
 
             // Select 'boolean' type column ('Released').
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
@@ -635,14 +587,7 @@ describe('IgxQueryBuilder', () => {
             // Verify there is no expression.
             expect(queryBuilder.expressionTree).toBeUndefined();
 
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products' entity
-            tick(100);
-            fix.detectChanges();
-
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
@@ -667,7 +612,7 @@ describe('IgxQueryBuilder', () => {
         "isUnary": false,
         "iconName": "filter_starts_with"
       },
-      "conditionName": null,
+      "conditionName": "startsWith",
       "ignoreCase": true,
       "searchVal": "a",
       "searchTree": null
@@ -685,14 +630,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should correctly apply a \'Greater Than\' with \'number\' column condition through UI.', fakeAsync(() => {
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products' entity
-            tick(100);
-            fix.detectChanges();
-
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'Id' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator
@@ -717,7 +655,7 @@ describe('IgxQueryBuilder', () => {
         "isUnary": false,
         "iconName": "filter_greater_than"
       },
-      "conditionName": null,
+      "conditionName": "greaterThan",
       "ignoreCase": true,
       "searchVal": 5,
       "searchTree": null
@@ -735,14 +673,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should correctly apply a \'Equals\' with \'number\' column condition through UI.', fakeAsync(() => {
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products' entity
-            tick(100);
-            fix.detectChanges();
-
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'Id' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator
@@ -767,7 +698,7 @@ describe('IgxQueryBuilder', () => {
         "isUnary": false,
         "iconName": "filter_equal"
       },
-      "conditionName": null,
+      "conditionName": "equals",
       "ignoreCase": true,
       "searchVal": 5,
       "searchTree": null
@@ -785,15 +716,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should correctly apply a \'boolean\' column condition through UI.', fakeAsync(() => {
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products' entity
-            tick(100);
-            fix.detectChanges();
-
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
-
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3); // Select 'Released' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1); // Select 'True' operator.
 
@@ -812,7 +735,7 @@ describe('IgxQueryBuilder', () => {
         "isUnary": true,
         "iconName": "filter_true"
       },
-      "conditionName": null,
+      "conditionName": "true",
       "ignoreCase": true,
       "searchVal": null,
       "searchTree": null
@@ -830,14 +753,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should correctly apply a \'date\' column condition through UI with unary operator.', fakeAsync(() => {
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-            tick(100);
-            fix.detectChanges();
-
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'OrderDate' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 9); // Select 'This Year' operator.
@@ -858,7 +774,7 @@ describe('IgxQueryBuilder', () => {
         "isUnary": true,
         "iconName": "filter_this_year"
       },
-      "conditionName": null,
+      "conditionName": "thisYear",
       "ignoreCase": true,
       "searchVal": null,
       "searchTree": null
@@ -876,14 +792,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should correctly apply a \'date\' column condition through UI with value from calendar.', fakeAsync(() => {
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-            tick(100);
-            fix.detectChanges();
-
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'OrderDate' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
@@ -895,7 +804,7 @@ describe('IgxQueryBuilder', () => {
             // Click on 'today' item in calendar.
             const calendar = QueryBuilderFunctions.getQueryBuilderCalendar(fix);
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            todayItem.firstChild.dispatchEvent(new Event('mousedown'));
+            todayItem.firstChild.click();
             tick(100);
             fix.detectChanges();
 
@@ -905,14 +814,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should correctly apply an \'in\' column condition through UI.', fakeAsync(() => {
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
-
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
             tick(100);
@@ -991,14 +893,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should correctly apply an \'not-in\' column condition through UI.', fakeAsync(() => {
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-            tick(100);
-            fix.detectChanges();
-
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11); // Select 'Not-In' operator.
@@ -1032,7 +927,7 @@ describe('IgxQueryBuilder', () => {
         "isNestedQuery": true,
         "iconName": "not-in"
       },
-      "conditionName": null,
+      "conditionName": "notIn",
       "ignoreCase": true,
       "searchVal": null,
       "searchTree": {
@@ -1044,7 +939,7 @@ describe('IgxQueryBuilder', () => {
               "isUnary": false,
               "iconName": "filter_contains"
             },
-            "conditionName": null,
+            "conditionName": "contains",
             "ignoreCase": true,
             "searchVal": "a",
             "searchTree": null
@@ -1075,13 +970,7 @@ describe('IgxQueryBuilder', () => {
         it('Should disable value fields when isNestedQuery condition is selected', fakeAsync(() => {
             //Run test for all data type fields of the Order entity
             for (let i = 0; i <= 3; i++) {
-                QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0); // Click the initial 'Add Or Group' button.
-                tick(100);
-                fix.detectChanges();
-
-                QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-                tick(100);
-                fix.detectChanges();
+                QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
                 QueryBuilderFunctions.selectColumnInEditModeExpression(fix, i); // Select 'OrderId','OrderName','OrderDate','Delivered' column.
 
@@ -1274,11 +1163,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should select/deselect all child conditions and groups when clicking a group\'s operator line.', fakeAsync(() => {
-            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-            fix.detectChanges();
-            tick(100);
-            fix.detectChanges();
-
+            const tree = QueryBuilderFunctions.generateExpressionTree();
             const childGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, undefined);
             childGroup.filteringOperands.push({
                 fieldName: 'OrderNameName',
@@ -1286,10 +1171,13 @@ describe('IgxQueryBuilder', () => {
                 conditionName: 'contains',
                 searchVal: 'a'
             });
-            queryBuilder.expressionTree.filteringOperands.push(childGroup);
+            tree.filteringOperands.push(childGroup);
+
+            queryBuilder.expressionTree = tree;
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
+
             // Click root group's operator line and verify that the root group and all of its children become selected.
             let rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
             rootOperatorLine.click();
@@ -1324,15 +1212,7 @@ describe('IgxQueryBuilder', () => {
             const dialogOutlet = document.querySelector('.igx-dialog__window');
             expect(dialog).toBeDefined();
 
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
-
-            // Select entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
 
             // Alert dialog should not be opened if there is no previous selection
             expect(dialog.checkVisibility()).toBeFalse();
@@ -1373,15 +1253,7 @@ describe('IgxQueryBuilder', () => {
             const dialogOutlet = document.querySelector('.igx-dialog__window');
             expect(dialog).toBeDefined();
 
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
-
-            // Select entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
 
             // Alert dialog should not be opened if there is no previous selection
             expect(dialog.checkVisibility()).toBeFalse();
@@ -1426,15 +1298,7 @@ describe('IgxQueryBuilder', () => {
             const dialog = queryTreeElement.querySelector('igx-dialog');
             expect(dialog).toBeDefined();
 
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
-
-            // Select entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
 
             // Alert dialog should not be opened if there is no previous selection
             expect(dialog.checkVisibility()).toBeFalse();
@@ -1449,15 +1313,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should reset all inputs when the entity is changed.', fakeAsync(() => {
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
-
-            // Select entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
 
             //Select Column
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
@@ -1497,15 +1353,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should NOT reset all inputs when the entity is not changed.', fakeAsync(() => {
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
-
-            // Select entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
 
             //Select Column
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
@@ -1682,19 +1530,12 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should collapse nested query when it is committed.', fakeAsync(() => {
-            // Click the initial 'Add Or Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
-            tick(100);
-            fix.detectChanges();
-
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
-            QueryBuilderFunctions.addChildGroup(fix, 0, 1);
+            QueryBuilderFunctions.addAndValidateChildGroup(fix, 0, 1);
 
             // Verify that the nested query is expanded
             expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
@@ -2012,6 +1853,9 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 1);
 
             //Un-group OR group
+            QueryBuilderFunctions.clickQueryBuilderTreeGroupOperatorLine(fix, [0]);
+            tick(200);
+            fix.detectChanges();
             const unGroupButton = QueryBuilderFunctions.getQueryBuilderGroupContextMenuButton(contextMenu, 'UnGroup');
             unGroupButton.nativeElement.click();
             tick(200);
@@ -2026,15 +1870,8 @@ describe('IgxQueryBuilder', () => {
             tick(100);
             fix.detectChanges();
 
-            const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
-
             // Add new 'expression'.
-            const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[0];
-            const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
-            (buttons[0] as HTMLElement).click();
-            tick();
             fix.detectChanges();
-
             // Add condition with 'in' operator to open inner query
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderName' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'Contains' operator.
@@ -2117,28 +1954,11 @@ describe('IgxQueryBuilder', () => {
             expect(queryBuilder.canCommit()).withContext('Unary operator selected').toBeTrue();
         }));
 
-
         it('Should be able to commit nested query without where condition.', fakeAsync(() => {
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-            tick(100);
-            fix.detectChanges();
-
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0); // Click the initial 'Add Or Group' button.
-            tick(100);
-            fix.detectChanges();
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
-
-            // Enter values in the nested query
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 1); // Select 'Products' entity
-            tick(100);
             fix.detectChanges();
-
-            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
-            fix.detectChanges();
-
             //Verify that expressionTree is correct
             const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
             expect(exprTree).toBe(`{
@@ -2532,6 +2352,44 @@ describe('IgxQueryBuilder', () => {
             // Verify edited expressions
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Id', 'Equals', '1', 1);
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'True', undefined, 1);
+
+            // close chip
+            toggleBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+            tick(50);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1, 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Confirm the change
+            const dialogOutlet: HTMLElement = fix.debugElement.queryAll(By.css(`.igx-dialog`))[0].nativeElement;
+            const confirmButton = Array.from(dialogOutlet.querySelectorAll('button'))[1];
+            expect(confirmButton.innerText).toEqual('Confirm');
+            confirmButton.click();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Discard the changes
+            queryBuilder.discard();
+            tick(100);
+            fix.detectChanges();
+
+            // Expand the nested query
+            const toggleBtn2 = fix.debugElement.query(By.css('.igx-filter-tree__details-button')).nativeElement;
+            toggleBtn2.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify edited expressions
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Id', 'Equals', '1', 1);
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'True', undefined, 1);
         }));
 
         it('Should NOT throw errors when an invalid condition is committed through API.', fakeAsync(() => {
@@ -2620,8 +2478,6 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
         }));
 
-        //Should select/deselect all child conditions and groups when pressing \'Enter\' on  a group\'s operator line.
-        //Should open the group"s context menu when pressing "Enter"/"space"  on its operator line.
         it('Should select/deselect all child conditions/groups and open/close group context menu when pressing "Enter"/"space" on its operator line.', fakeAsync(() => {
             //!Both Enter and Space should work
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
@@ -2840,6 +2696,11 @@ describe('IgxQueryBuilder', () => {
             });
             fix.detectChanges();
 
+            // Select 'Orders' entity
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            tick(100);
+            fix.detectChanges();
+
             expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' My advanced filter ');
             expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fix) as HTMLElement).innerText).toBe('My and');
             expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fix) as HTMLElement).innerText).toBe('My or');
@@ -2849,6 +2710,7 @@ describe('IgxQueryBuilder', () => {
                 .toBe('My or group');
             expect((QueryBuilderFunctions.getQueryBuilderEmptyPrompt(fix) as HTMLElement).innerText).toBe('My initial text');
 
+            // Click the initial 'Add Or Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
@@ -2860,11 +2722,9 @@ describe('IgxQueryBuilder', () => {
             expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[2] as HTMLElement).querySelector('span').innerText)
                 .toBe('My or group');
 
-            // Populate edit inputs.
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products'.
 
             // Show changing entity alert dialog
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
             tick(100);
             fix.detectChanges();
             const dialogOutlet = document.querySelector('.igx-dialog__window');
@@ -2876,6 +2736,13 @@ describe('IgxQueryBuilder', () => {
             expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[0].textContent.trim()).toBe('My Cancel');
             expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[1].textContent.trim()).toBe('My Confirm');
 
+            const confirmButton = Array.from(dialogOutlet.querySelectorAll('button'))[1];
+            confirmButton.click();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
@@ -2905,11 +2772,13 @@ describe('IgxQueryBuilder', () => {
 
             // Close context menu.
             QueryBuilderFunctions.clickQueryBuilderContextMenuCloseButton(fix);
+            tick(100);
             fix.detectChanges();
 
             // Add another expression to root group.
             let btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
             btn.click();
+            tick(100);
             fix.detectChanges();
 
             // Populate edit inputs.

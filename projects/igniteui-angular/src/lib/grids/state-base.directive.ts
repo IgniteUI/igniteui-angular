@@ -22,6 +22,7 @@ import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.in
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
 import { cloneArray, cloneValue } from '../core/utils';
+import { IgxColumnLayoutComponent } from './columns/column-layout.component';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -92,6 +93,12 @@ export interface IColumnState {
     resizable: boolean;
     searchable: boolean;
     columnGroup: boolean;
+    // mrl props
+    columnLayout?: boolean;
+    rowStart?: number,
+    rowEnd?: number,
+    colStart?: number;
+    colEnd?: number,
     /**
      * @deprecated
      */
@@ -213,6 +220,11 @@ export class IgxGridStateBaseDirective {
                     key: c.columnGroup ? this.getColumnGroupKey(c) : c.field,
                     parentKey: c.parent ? this.getColumnGroupKey(c.parent) : undefined,
                     columnGroup: c.columnGroup,
+                    columnLayout: c.columnLayout || undefined,
+                    rowStart: c.parent?.columnLayout ? c.rowStart : undefined,
+                    rowEnd: c.parent?.columnLayout ? c.rowEnd : undefined,
+                    colStart: c.parent?.columnLayout ? c.colStart : undefined,
+                    colEnd: c.parent?.columnLayout ? c.colEnd : undefined,
                     disableHiding: c.disableHiding,
                     disablePinning: c.disablePinning,
                     collapsible: c.columnGroup ? c.collapsible : undefined,
@@ -225,11 +237,15 @@ export class IgxGridStateBaseDirective {
                 const newColumns = [];
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
+                    const hasColumnLayouts = colState.columnLayout;
                     delete colState.columnGroup;
+                    delete colState.columnLayout;
                     if (hasColumnGroup) {
                         let ref1: IgxColumnGroupComponent = context.currGrid.columns.find(x => x.columnGroup && (colState.key ? this.getColumnGroupKey(x) === colState.key : x.header === colState.header)) as IgxColumnGroupComponent;
                         if (!ref1) {
-                            const component = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
+                            const component = hasColumnLayouts ?
+                            createComponent(IgxColumnLayoutComponent, { environmentInjector: this.envInjector, elementInjector: this.injector }) :
+                            createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
                             ref1 = component.instance;
                             component.changeDetectorRef.detectChanges();
                         } else {

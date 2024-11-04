@@ -993,7 +993,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.fields = this.selectedEntity ? this.selectedEntity.fields : null;
         this.selectedField =
             expressionItem.expression.fieldName ?
-                this.fields.find(field => field.field === expressionItem.expression.fieldName)
+                this.fields?.find(field => field.field === expressionItem.expression.fieldName)
                 : null;
         this.selectedCondition =
             expressionItem.expression.condition ?
@@ -1240,14 +1240,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public getFormatter(field: string) {
-        return this.fields.find(el => el.field === field)?.formatter;
+        return this.fields?.find(el => el.field === field)?.formatter;
     }
 
     /**
      * @hidden @internal
      */
     public getFormat(field: string) {
-        return this.fields.find(el => el.field === field).pipeArgs.format;
+        return this.fields?.find(el => el.field === field).pipeArgs.format;
     }
 
     /**
@@ -1307,7 +1307,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         const returnFields = innerTree.returnFields;
         let text = returnFields.join(', ');
         const innerTreeEntity = this.entities?.find(el => el.name === innerTree.entity);
-        if (returnFields.length === innerTreeEntity.fields.length) {
+        if (returnFields.length === innerTreeEntity?.fields.length) {
             text = this.resourceStrings.igx_query_builder_all_fields;
         } else {
             text = returnFields.join(', ');
@@ -1504,7 +1504,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             this._selectedEntity = this.entities?.find(el => el.name === entityName);
             this._selectedReturnFields =
-                !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All')
+                !expressionTree.returnFields || expressionTree.returnFields.includes('*') || expressionTree.returnFields.includes('All') || expressionTree.returnFields.length === 0
                     ? this.fields?.map(f => f.field)
                     : this.fields?.filter(f => expressionTree.returnFields.indexOf(f.field) >= 0).map(f => f.field);
         }
@@ -1698,15 +1698,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-
     private init() {
         this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
 
-        // Ignore values of 'parent' and 'hovered' properties for the comparison
-        const parentPropReplacer = function replacer(key, value) {
-            if (key === "parent" || key === "hovered") {
+        // Ignore values of certain properties for the comparison
+        const propsToIgnore = ['parent', 'hovered', 'ignoreCase', 'inEditMode', 'inAddMode'];
+        const propsReplacer = function replacer(key, value) {
+            if (propsToIgnore.indexOf(key) >= 0) {
                 return undefined;
             } else {
                 return value;
@@ -1715,7 +1715,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         // Skip root being recreated if the same
         const newRootGroup = this.createExpressionGroupItem(this.expressionTree);
-        if (JSON.stringify(this.rootGroup, parentPropReplacer) !== JSON.stringify(newRootGroup, parentPropReplacer)) {
+        if (JSON.stringify(this.rootGroup, propsReplacer) !== JSON.stringify(newRootGroup, propsReplacer)) {
             this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
             this.currentGroup = this.rootGroup;
         }
