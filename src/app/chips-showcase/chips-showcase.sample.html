@@ -28,20 +28,20 @@
                 [removable]="properties.removable"
                 [selected]="properties.selected">
                 <igc-avatar *ngIf="hasAvatar" class="chip-area-avatar" slot="prefix" initials="MP" shape="circle"></igc-avatar>
-                <span *ngIf="hasPrefix" slot="prefix"><igx-icon>face</igx-icon></span>
-                <span *ngIf="customIcons" slot="select"><igx-icon family="fa-solid" name="fa-check-circle"></igx-icon></span>
+                <span *ngIf="hasPrefix" slot="prefix"><igc-icon name="face"></igc-icon></span>
+                <span *ngIf="customIcons" slot="select"><igc-icon name="check_circle"></igc-icon></span>
                 Chip component
-                <span *ngIf="hasSuffix" slot="suffix"><igx-icon>face</igx-icon></span>
+                <span *ngIf="hasSuffix" slot="suffix"><igc-icon name="face"></igc-icon></span>
                 <igc-circular-progress *ngIf="hasProgressbar" class="circular-sample" slot="suffix" [indeterminate]="true"></igc-circular-progress>
-                <span *ngIf="customIcons" slot="remove"><igx-icon family="fa-solid" name="fa-trash-alt"></igx-icon></span>
+                <span *ngIf="customIcons" slot="remove"><igc-icon name="delete"></igc-icon></span>
             </igc-chip>
 
             <ng-template #mySelectIcon >
-                <igx-icon family="fa-solid" name="fa-check-circle"></igx-icon>
+                <igx-icon>check_circle</igx-icon>
             </ng-template>
 
             <ng-template #myRemoveIcon>
-                <igx-icon family="fa-solid" name="fa-trash-alt"></igx-icon>
+                <igx-icon>delete</igx-icon>
             </ng-template>
         </div>
 

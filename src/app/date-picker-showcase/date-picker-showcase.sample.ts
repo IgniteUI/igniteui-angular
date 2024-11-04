@@ -32,6 +32,13 @@ export class DatePickerShowcaseSampleComponent {
     public specialDates: DateRangeDescriptor[] = [{ type: DateRangeType.Specific, dateRange: [this.date5, this.date6, this.date7] }];
 
     public panelConfig: PropertyPanelConfig = {
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large'],
+                defaultValue: 'medium',
+            }
+        },
         mode: {
             control: {
                 type: 'button-group',

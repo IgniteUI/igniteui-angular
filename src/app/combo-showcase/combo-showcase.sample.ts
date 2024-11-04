@@ -168,7 +168,6 @@ export class ComboShowcaseSampleComponent {
 
     protected get filteringOptions() {
         return {
-            filterable: !this.properties.disableFiltering,
             caseSensitive: this.properties.caseSensitiveIcon
         };
     }

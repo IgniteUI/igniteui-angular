@@ -14,9 +14,9 @@
         </div>
         <div class="button-sample">
             <igc-button [variant]="properties.variant" [disabled]="properties.disabled">
-                <span *ngIf="hasPrefix" slot="prefix"><igc-icon name="face"></igc-icon></span>
+                <igc-icon *ngIf="hasPrefix" slot="prefix" name="face"></igc-icon>
                 Button
-                <span *ngIf="hasSuffix" slot="suffix"><igc-icon name="face"></igc-icon></span>
+                <igc-icon *ngIf="hasSuffix" slot="suffix" name="face"></igc-icon>
             </igc-button>
         </div>
     </div>

@@ -70,7 +70,7 @@
 
             <igx-divider [middle]="true" [vertical]="true"></igx-divider>
 
-            <div style="display: flex; flex-flow: column nowrap; flex: 1 1 100%">
+            <div style="flex-direction: row">
                 <igx-card-header>
                     <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
                     <h5 igxCardHeaderSubtitle>{{cards[1].subtitle}}</h5>
@@ -81,7 +81,7 @@
                 </igx-card-content>
             </div>
 
-            <igx-card-media width="120px">
+            <igx-card-media>
                 <img [src]="cards[1].imageUrl">
             </igx-card-media>
         </igx-card>
@@ -102,7 +102,7 @@
                 New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean.
               </igc-card-content>
             </div>
-            <igc-card-media style="max-width: 120px">
+            <igc-card-media>
                 <img [src]="cards[1].imageUrl"/>
             </igc-card-media>
           </igc-card>

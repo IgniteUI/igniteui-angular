@@ -34,8 +34,9 @@
         <!-- Boolean Switch -->
         @if (getControlType(key) === 'boolean') {
         <div class="switch-container">
-            <igx-switch [formControlName]="key"></igx-switch>
-            <label>{{ config[key]?.label || (key | titlecase) }}</label>
+            <igx-switch [formControlName]="key">
+                <label>{{ config[key]?.label || (key | titlecase) }}</label>
+            </igx-switch>
         </div>
         }
 
