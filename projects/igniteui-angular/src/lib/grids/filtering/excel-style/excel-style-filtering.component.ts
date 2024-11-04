@@ -221,13 +221,13 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     /**
      * Gets the minimum height.
-     * 
-     * Setting value in template: 
+     *
+     * Setting value in template:
      * ```ts
-     * [minHeight]="'<number><unit (px|rem|etc..)>'" 
+     * [minHeight]="'<number><unit (px|rem|etc..)>'"
      * ```
-     * 
-     * Example for setting a value: 
+     *
+     * Example for setting a value:
      * ```ts
      * [minHeight]="'700px'"
      * ```
@@ -268,13 +268,13 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     /**
      * Gets the maximum height.
-     * 
-     * Setting value in template: 
+     *
+     * Setting value in template:
      * ```ts
-     * [maxHeight]="'<number><unit (px|rem|etc..)>'" 
+     * [maxHeight]="'<number><unit (px|rem|etc..)>'"
      * ```
-     * 
-     * Example for setting a value: 
+     *
+     * Example for setting a value:
      * ```ts
      * [maxHeight]="'700px'"
      * ```
@@ -555,6 +555,11 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     private renderValues() {
         this.filterValues = this.generateFilterValues();
         this.generateListData();
+        this.expressionsList.forEach(expr => {
+            if (expr.expression.condition.name === 'in' && this.column.dataType === GridColumnDataType.String) {
+                this.modifyExpression(expr);
+            }
+        });
     }
 
     private generateFilterValues() {
@@ -583,6 +588,16 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const filterValues = new Set<any>(this.expressionsList.reduce(processExpression, []));
 
         return filterValues;
+    }
+
+    private modifyExpression(expr: ExpressionUI) {
+        const lowerCaseFilterValues = new Set(Array.from(expr.expression.searchVal).map((value: string) => value.toLowerCase()));
+
+        this.grid.data.forEach(item => {
+            if (lowerCaseFilterValues.has(item[this.column.field]?.toLowerCase())) {
+                expr.expression.searchVal.add(item[this.column.field]);
+            }
+        });
     }
 
     private generateListData() {
