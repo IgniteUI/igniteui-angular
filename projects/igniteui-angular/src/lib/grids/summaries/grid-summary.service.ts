@@ -116,16 +116,38 @@ export class IgxGridSummaryService {
             rowSummaries = new Map<string, IgxSummaryResult[]>();
             this.summaryCacheMap.set(rowID, rowSummaries);
         }
+
         if (!this.hasSummarizedColumns || !data) {
             return rowSummaries;
         }
+
         this.grid.columns.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
-                const summaryResult = column.summaries.operate(data.map(r => resolveNestedPath(r, column.field)),
-                    data, column.field, groupRecord, this.grid.locale, column.pipeArgs);
+                let summaryResult = column.disabledSummaries.length
+                    ? this.getCachedSummary(column.field, column.disabledSummaries) || null
+                    : null;
+
+                if (!summaryResult) {
+                    summaryResult = column.summaries.operate(
+                        data.map(r => resolveNestedPath(r, column.field)),
+                        data,
+                        column.field,
+                        groupRecord,
+                        this.grid.locale,
+                        column.pipeArgs
+                    );
+
+                    if (column.disabledSummaries.length) {
+                        summaryResult = summaryResult.filter(
+                            result => !column.disabledSummaries.includes(result.key)
+                        );
+                        this.cacheSummary(column.field, summaryResult, column.disabledSummaries);
+                    }
+                }
                 rowSummaries.set(column.field, summaryResult);
             }
         });
+
         return rowSummaries;
     }
 
@@ -243,5 +265,18 @@ export class IgxGridSummaryService {
                 });
             });
         }
+    }
+
+    private cacheSummary(field: string, summaryResult: IgxSummaryResult[], disabledSummaries: string[] = []) {
+        if (!this.summaryCacheMap.has(field)) {
+            this.summaryCacheMap.set(field, new Map<string, IgxSummaryResult[]>());
+        }
+        const cacheKey = JSON.stringify(disabledSummaries);
+        this.summaryCacheMap.get(field).set(cacheKey, summaryResult);
+    }
+
+    private getCachedSummary(field: string, disabledSummaries: string[] = []): IgxSummaryResult[] | undefined {
+        const cacheKey = JSON.stringify(disabledSummaries);
+        return this.summaryCacheMap.get(field)?.get(cacheKey);
     }
 }

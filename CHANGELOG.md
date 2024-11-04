@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 19.0.0
+### New Features
+- `IgxColumn`
+    - Introduced the `disabledSummaries` property, allowing users to specify which summaries should be disabled for a given column. This property accepts an array of strings corresponding to the summary keys, enabling selective control over both default summaries (e.g., 'Count', 'Min') and any custom summaries created by the user.
+
 ## 18.2.0
 ### General
 - `IFilteringExpressionsTree`, `FilteringExpressionsTree`
