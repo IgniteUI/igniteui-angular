@@ -57,7 +57,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '');
 
             // Select 'Orders' entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); 
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -121,7 +121,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
             tick(100);
             fix.detectChanges();
-            
+
             // Click the initial 'Add And Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
@@ -173,7 +173,7 @@ describe('IgxQueryBuilder', () => {
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
 
             QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 1);
-            
+
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(1);
 
             // Verify there is a new root group, which is empty.
@@ -523,7 +523,7 @@ describe('IgxQueryBuilder', () => {
         it('Operator dropdown should contain operators based on the column\'s datatype (\'string\' or \'number\' or \'date\').', fakeAsync(() => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
 
-            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);            
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             // Select 'string' type column ('OrderName').
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
@@ -585,7 +585,7 @@ describe('IgxQueryBuilder', () => {
         it('Should correctly apply a \'string\' column condition through UI.', fakeAsync(() => {
             // Verify there is no expression.
             expect(queryBuilder.expressionTree).toBeUndefined();
-            
+
             QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 0, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
@@ -1162,11 +1162,7 @@ describe('IgxQueryBuilder', () => {
         }));
 
         it('Should select/deselect all child conditions and groups when clicking a group\'s operator line.', fakeAsync(() => {
-            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-            fix.detectChanges();
-            tick(100);
-            fix.detectChanges();
-            
+            const tree = QueryBuilderFunctions.generateExpressionTree();
             const childGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, undefined);
             childGroup.filteringOperands.push({
                 fieldName: 'OrderNameName',
@@ -1174,10 +1170,13 @@ describe('IgxQueryBuilder', () => {
                 conditionName: 'contains',
                 searchVal: 'a'
             });
-            queryBuilder.expressionTree.filteringOperands.push(childGroup);
+            tree.filteringOperands.push(childGroup);
+
+            queryBuilder.expressionTree = tree;
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
+
             // Click root group's operator line and verify that the root group and all of its children become selected.
             let rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
             rootOperatorLine.click();
@@ -1601,7 +1600,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             // Verify group types initially
             QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 0);
 
@@ -1650,7 +1649,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             // Click root group's operator line.
             const rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
             rootOperatorLine.click();
@@ -1670,7 +1669,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
             //create group
@@ -1699,7 +1698,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             //Select chip
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
             tick(200);
@@ -1740,7 +1739,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fix, false);
 
             //select 1
@@ -1781,7 +1780,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             const rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
 
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fix, false);
@@ -1817,7 +1816,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
             QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 0);
 
@@ -1869,7 +1868,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
 
             // Add new 'expression'.
@@ -1884,9 +1883,9 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'Contains' operator.
             tick(100);
             fix.detectChanges();
-            
+
             //New empty inner query should be displayed
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;            
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
             const bodyElement = queryBuilderElement.children[1].children[0];
             const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
             expect(actionArea).toBeNull();
@@ -1961,8 +1960,8 @@ describe('IgxQueryBuilder', () => {
             expect(queryBuilder.canCommit()).withContext('Unary operator selected').toBeTrue();
         }));
 
-        
-        it('Should be able to commit nested query without where condition.', fakeAsync(() => {            
+
+        it('Should be able to commit nested query without where condition.', fakeAsync(() => {
             QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
@@ -2178,14 +2177,14 @@ describe('IgxQueryBuilder', () => {
             tick(100);
             fix.detectChanges();
 
-             // Double-click the existing chip to enter edit mode.
-             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
-             tick(50);
-             fix.detectChanges();
+            // Double-click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+            tick(50);
+            fix.detectChanges();
 
-             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1, 1); 
-             tick(100);
-             fix.detectChanges();
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1, 1);
+            tick(100);
+            fix.detectChanges();
 
             // Confirm the change
             const dialogOutlet: HTMLElement = fix.debugElement.queryAll(By.css(`.igx-dialog`))[0].nativeElement;
@@ -2243,7 +2242,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             QueryBuilderFunctions.verifyQueryBuilderTabbableElements(fix);
         }));
 
@@ -2252,7 +2251,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chip.nativeElement, 200);
@@ -2276,7 +2275,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
@@ -2304,7 +2303,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             const line = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[0];
             const chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
@@ -2343,7 +2342,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             // Verify the there are three chip expressions.
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
