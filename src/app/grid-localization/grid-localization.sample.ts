@@ -28,7 +28,6 @@ import { IResourceStrings, GridResourceStringsEN, IgxColumnComponent, IgxGridCom
     selector: 'app-grid-localization',
     styleUrls: ['./grid-localization.sample.scss'],
     templateUrl: 'grid-localization.sample.html',
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent]
 })
 

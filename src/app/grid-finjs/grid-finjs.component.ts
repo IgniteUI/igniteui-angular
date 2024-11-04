@@ -46,7 +46,6 @@ const GROUPING_EXPRESSIONS: IGroupingExpression[] = [{
     selector: 'app-finjs-grid',
     styleUrls: ['./grid-finjs.component.scss'],
     templateUrl: './grid-finjs.component.html',
-    standalone: true,
     imports: [NgIf, FormsModule, NgFor, CurrencyPipe, IGX_GRID_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxFocusDirective, IgxIconComponent, IgxRippleDirective, IgxIconButtonDirective]
 })
 export class GridFinJSComponent {

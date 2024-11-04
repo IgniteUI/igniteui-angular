@@ -9,7 +9,6 @@ import { IColumnToggledEventArgs, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
     selector: 'app-grid-column-actions-sample',
     styleUrls: ['grid-column-actions.sample.scss'],
     templateUrl: 'grid-column-actions.sample.html',
-    standalone: true,
     imports: [IgxColumnGroupingDirective, NgFor, IGX_GRID_DIRECTIVES]
 })
 export class GridColumnActionsSampleComponent implements OnInit {

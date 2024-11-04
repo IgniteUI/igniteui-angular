@@ -11,21 +11,20 @@ import { IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective, IgxNavDrawerM
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    standalone: true,
-	imports: [
-		IgxNavigationDrawerComponent,
-		IgxNavDrawerTemplateDirective,
-		IgxNavDrawerItemDirective,
-		NgFor,
-		RouterLinkActive,
-		RouterLink,
-		IgxIconComponent,
-		NgIf,
-		IgxNavDrawerMiniTemplateDirective,
-		PageHeaderComponent,
-		RouterOutlet,
-		IgxRippleDirective,
-	],
+    imports: [
+        IgxNavigationDrawerComponent,
+        IgxNavDrawerTemplateDirective,
+        IgxNavDrawerItemDirective,
+        NgFor,
+        RouterLinkActive,
+        RouterLink,
+        IgxIconComponent,
+        NgIf,
+        IgxNavDrawerMiniTemplateDirective,
+        PageHeaderComponent,
+        RouterOutlet,
+        IgxRippleDirective,
+    ]
 })
 export class AppComponent implements OnInit {
     @HostBinding('attr.id')

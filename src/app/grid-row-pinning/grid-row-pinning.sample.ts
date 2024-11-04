@@ -28,7 +28,6 @@ import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.compo
     providers: [
         IgxIconService
     ],
-    standalone: true,
     imports: [NgFor, IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxGridComponent, IgxTreeGridComponent, IgxIconComponent, GridSearchBoxComponent, IgxSwitchComponent, IgxButtonDirective]
 })
 

@@ -76,7 +76,6 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-child-grid-row',
     templateUrl: './child-grid-row.component.html',
-    standalone: true,
     imports: [NgClass]
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
@@ -314,7 +313,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxForOfScrollSyncService,
         IgxRowIslandAPIService
     ],
-    standalone: true,
     imports: [
         NgIf,
         NgClass,
@@ -351,7 +349,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxGridHierarchicalPipe,
         IgxGridHierarchicalPagingPipe,
         IgxStringReplacePipe
-],
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirective

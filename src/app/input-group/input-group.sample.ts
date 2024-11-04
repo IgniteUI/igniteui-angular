@@ -21,7 +21,6 @@ interface Selection {
     styleUrls: ['input-group.sample.scss'],
     templateUrl: 'input-group.sample.html',
     providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'box' }],
-    standalone: true,
     imports: [
         FormsModule,
         NgIf,

@@ -5,7 +5,6 @@ import { GridSelectionMode, IgxActionStripComponent, IgxButtonDirective, IgxButt
 @Component({
     selector: 'app-grid-mrl-sample',
     templateUrl: 'grid-mrl.sample.html',
-    standalone: true,
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective]
 })
 export class GridMRLSampleComponent {

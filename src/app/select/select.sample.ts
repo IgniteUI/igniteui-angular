@@ -12,7 +12,6 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
     selector: 'app-select-sample',
     styleUrls: ['./select.sample.scss'],
     templateUrl: './select.sample.html',
-    standalone: true,
     imports: [
         IgxButtonDirective,
         IgxSelectComponent,

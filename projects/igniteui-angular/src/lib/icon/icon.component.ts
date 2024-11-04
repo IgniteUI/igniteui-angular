@@ -42,8 +42,7 @@ import { ThemeService } from "../services/theme/theme.service";
 @Component({
     selector: "igx-icon",
     templateUrl: "icon.component.html",
-    standalone: true,
-    imports: [NgTemplateOutlet, NgIf],
+    imports: [NgTemplateOutlet, NgIf]
 })
 export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     private _iconRef: IconReference;

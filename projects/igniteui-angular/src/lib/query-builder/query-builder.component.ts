@@ -115,7 +115,6 @@ class ExpressionOperandItem extends ExpressionItem {
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
-    standalone: true,
     imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective]
 })
 export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {

@@ -23,7 +23,6 @@ import { NgClass } from '@angular/common';
 @Component({
     selector: 'igx-thumb',
     templateUrl: 'thumb-slider.component.html',
-    standalone: true,
     imports: [NgClass]
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {

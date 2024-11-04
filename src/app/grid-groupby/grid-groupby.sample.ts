@@ -8,7 +8,6 @@ import { DefaultSortingStrategy, GridSummaryCalculationMode, GridSummaryPosition
     selector: 'app-grid-sample',
     styleUrls: ['grid-groupby.sample.scss'],
     templateUrl: 'grid-groupby.sample.html',
-    standalone: true,
     imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupBySampleComponent implements OnInit {

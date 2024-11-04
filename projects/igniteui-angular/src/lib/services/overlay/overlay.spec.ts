@@ -4528,7 +4528,6 @@ export class SimpleBigSizeComponent {
                     <p> AAAAA </p>
                 </div>
             </div>`,
-    standalone: true,
     imports: [NgIf, IgxToggleDirective]
 })
 export class SimpleDynamicWithDirectiveComponent {
@@ -4746,7 +4745,6 @@ export class WidthTestOverlayComponent {
             <p>AAAAA</p>
         </div>
     </div>`,
-    standalone: true,
     imports: [NgIf]
 })
 export class ScrollableComponent {

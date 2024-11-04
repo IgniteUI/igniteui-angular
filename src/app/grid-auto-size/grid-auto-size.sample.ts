@@ -9,7 +9,6 @@ import { GridSelectionMode, IgxGridComponent, IGX_BUTTON_GROUP_DIRECTIVES, IGX_G
     selector: 'app-grid-column-moving-sample',
     styleUrls: ['grid-auto-size.sample.scss'],
     templateUrl: 'grid-auto-size.sample.html',
-    standalone: true,
     imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES]
 })
 

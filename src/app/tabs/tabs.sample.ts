@@ -7,7 +7,6 @@ import { IgxAvatarComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxGri
     styleUrls: ['tabs.sample.scss'],
     templateUrl: 'tabs.sample.html',
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [IgxButtonDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxRippleDirective, IgxIconComponent, IgxTabHeaderIconDirective, IgxIconButtonDirective, IgxTabHeaderLabelDirective, IgxTabContentComponent, IgxListComponent, NgFor, IgxListItemComponent, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective, IgxButtonGroupComponent, IgxPrefixDirective, IgxSuffixDirective, IgxGridComponent]
 })
 export class TabsSampleComponent implements OnInit {

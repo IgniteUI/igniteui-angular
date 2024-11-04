@@ -12,11 +12,10 @@ defineCustomElements();
 @Component({
     encapsulation: ViewEncapsulation.None,
     providers: [],
-    standalone: true,
     selector: 'app-grid-docmanager-sample',
     styleUrls: ['docmanager-grid.sample.scss'],
     templateUrl: 'docmanager-grid.sample.html',
-    imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, CommonModule, IgxSelectModule, IgxSwitchModule, IgxIconModule ]
+    imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, CommonModule, IgxSelectModule, IgxSwitchModule, IgxIconModule]
 })
 
 export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterViewInit, DoCheck {

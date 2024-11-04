@@ -4,7 +4,6 @@ import { IgxGridComponent, GridSelectionMode, IgxButtonGroupComponent, IgxGridTo
 @Component({
     selector: 'app-grid-mrl-custom-navigation-sample',
     templateUrl: 'grid-mrl-custom-navigation.sample.html',
-    standalone: true,
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconModule]
 })
 export class GridMRLCustomNavigationSampleComponent {

@@ -58,21 +58,20 @@ let NEXT_ID = 0;
  * ```
  */
 @Component({
-	providers: [
-		{
-			multi: true,
-			provide: NG_VALUE_ACCESSOR,
-			useExisting: IgxCalendarComponent,
-		},
+    providers: [
+        {
+            multi: true,
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: IgxCalendarComponent,
+        },
         {
             multi: false,
             provide: KeyboardNavigationService,
         },
-	],
-	selector: 'igx-calendar',
-	templateUrl: 'calendar.component.html',
-	standalone: true,
-	imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollPageDirective, NgStyle, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar],
+    ],
+    selector: 'igx-calendar',
+    templateUrl: 'calendar.component.html',
+    imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollPageDirective, NgStyle, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
 })
 export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit, OnDestroy {
     /**

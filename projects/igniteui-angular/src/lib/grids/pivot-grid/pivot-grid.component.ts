@@ -158,7 +158,6 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         IgxForOfSyncService,
         IgxForOfScrollSyncService
     ],
-    standalone: true,
     imports: [
         NgIf,
         NgFor,

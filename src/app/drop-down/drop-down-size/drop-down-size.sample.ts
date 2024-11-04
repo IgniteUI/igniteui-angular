@@ -12,7 +12,6 @@ const data = Array.apply(null, { length: 57 }).map((e, i) => ({
     selector: 'app-display-density',
     templateUrl: 'drop-down-size.sample.html',
     styleUrls: ['drop-down-size.sample.scss'],
-    standalone: true,
     imports: [IgxComboComponent, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxSelectComponent, IgxLabelDirective, IgxSelectItemComponent]
 })
 export class DropDownSizeSampleComponent {

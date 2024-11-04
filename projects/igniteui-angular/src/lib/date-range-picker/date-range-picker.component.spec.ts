@@ -1566,7 +1566,6 @@ export class DateRangeTestComponent implements OnInit {
     <igx-date-range-picker [mode]="mode" [disabled]="disabled" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-range-picker>
     `,
-    standalone: true,
     imports: [IgxDateRangePickerComponent]
 })
 export class DateRangeDefaultComponent extends DateRangeTestComponent {
@@ -1593,7 +1592,6 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
         </igx-date-range-end>
     </igx-date-range-picker>
     `,
-    standalone: true,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,
@@ -1624,7 +1622,6 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
             <input igxInput [(ngModel)]="range.end" igxDateTimeEditor>
         </igx-date-range-end>
     </igx-date-range-picker>`,
-    standalone: true,
     imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule]
 })
 export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestComponent {
@@ -1638,7 +1635,6 @@ export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestCompone
         <label igxLabel>Select Date</label>
     </igx-date-range-picker>
     `,
-    standalone: true,
     imports: [IgxDateRangePickerComponent, IgxLabelDirective]
 })
 export class DateRangeCustomComponent extends DateRangeTestComponent {
@@ -1694,7 +1690,6 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         </igx-date-range-end>
     </igx-date-range-picker>
     `,
-    standalone: true,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,
@@ -1715,7 +1710,6 @@ export class DateRangeTemplatesComponent extends DateRangeTestComponent {
 @Component({
     template: `<igx-date-range-picker [disabled]="(disabled$ | async) === true"></igx-date-range-picker>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [IgxDateRangePickerComponent, AsyncPipe]
 })
 export class DateRangeDisabledComponent extends DateRangeTestComponent {
@@ -1738,7 +1732,6 @@ export class DateRangeDisabledComponent extends DateRangeTestComponent {
         </igx-date-range-end>
     </igx-date-range-picker>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, IgxDateTimeEditorDirective, AsyncPipe]
 })
 export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledComponent { }
@@ -1758,7 +1751,6 @@ export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledCompon
             </igx-date-range-end>
         </igx-date-range-picker>
     </form>`,
-    standalone: true,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,

@@ -1467,7 +1467,6 @@ describe('IgxDatePicker', () => {
     template: `
     <igx-date-picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-picker>`,
-    standalone: true,
     imports: [IgxDatePickerComponent]
 })
 export class IgxDatePickerTestComponent {
@@ -1482,7 +1481,6 @@ export class IgxDatePickerTestComponent {
     template: `
         <igx-date-picker [(ngModel)]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue" [required]="isRequired">
         </igx-date-picker>`,
-    standalone: true,
     imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerNgModelComponent {
@@ -1500,7 +1498,6 @@ export class IgxDatePickerNgModelComponent {
             <label igxLabel>Select a Date</label>
         </igx-date-picker>
     `,
-    standalone: true,
     imports: [IgxDatePickerComponent, IgxLabelDirective]
 })
 export class IgxDatePickerTestKbrdComponent {
@@ -1519,7 +1516,6 @@ export class IgxDatePickerTestKbrdComponent {
         <igx-suffix>Suffix</igx-suffix>
         <igx-hint>Hint</igx-hint>
     </igx-date-picker>`,
-    standalone: true,
     imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxLabelDirective, IgxSuffixDirective, IgxHintDirective, NgIf]
 })
 export class IgxDatePickerWithProjectionsComponent {
@@ -1537,7 +1533,6 @@ export class IgxDatePickerWithProjectionsComponent {
         <igx-date-picker name="datePicker" id="datePicker" [(ngModel)]="date" [required]="true"></igx-date-picker>
     </form>
     `,
-    standalone: true,
     imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerInFormComponent {
@@ -1560,7 +1555,6 @@ export class IgxDatePickerInFormComponent {
         </div>
     </form>
     `,
-    standalone: true,
     imports: [IgxDatePickerComponent, ReactiveFormsModule, IgxLabelDirective]
 })
 export class IgxDatePickerReactiveFormComponent {

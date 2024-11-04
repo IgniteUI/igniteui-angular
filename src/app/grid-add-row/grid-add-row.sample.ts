@@ -7,7 +7,6 @@ import { IRowDataCancelableEventArgs, IRowDataEventArgs, IgxActionStripComponent
     selector: 'app-grid-add-row',
     styleUrls: ['grid-add-row.sample.scss'],
     templateUrl: `grid-add-row.sample.html`,
-    standalone: true,
     imports: [IgxGridComponent, NgFor, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, NgIf, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective]
 })
 export class GridAddRowSampleComponent implements OnInit {

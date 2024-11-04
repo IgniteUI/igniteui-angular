@@ -918,7 +918,6 @@ class HelperFunctions {
             <span>Custom Content: {{cell.value}}</span>
         </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective, NgFor]
 })
 export class IgxGridStateComponent {
@@ -949,7 +948,6 @@ export class IgxGridStateComponent {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxGridStateWithOptionsComponent {
@@ -979,7 +977,6 @@ export class IgxGridStateWithOptionsComponent {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxGridStateDirective, IgxGridDetailTemplateDirective, IgxPaginatorComponent]
 })
 export class IgxGridStateWithDetailsComponent {
@@ -1002,7 +999,6 @@ export class IgxGridStateWithDetailsComponent {
                 </igx-column-group>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridStateDirective, NgFor]
 })
 export class CollapsibleColumnGroupTestComponent {
@@ -1032,7 +1028,6 @@ export class CollapsibleColumnGroupTestComponent {
                 </igx-column-layout>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxGridStateDirective, IgxColumnComponent, IgxColumnLayoutComponent]
 })
 export class IgxGridMRLStateComponent {

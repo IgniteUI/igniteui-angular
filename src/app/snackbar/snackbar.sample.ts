@@ -8,7 +8,6 @@ import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
     selector: 'app-snackbar-sample',
     styleUrls: ['snackbar.sample.css'],
     templateUrl: 'snackbar.sample.html',
-    standalone: true,
     imports: [IgxSnackbarComponent, IgxOverlayOutletDirective, IgxButtonDirective]
 })
 export class SnackbarSampleComponent implements OnInit {

@@ -67,7 +67,6 @@ const SingleInputDatesConcatenationString = ' - ';
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateRangePickerComponent, multi: true },
         { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }
     ],
-    standalone: true,
     imports: [
         NgIf,
         NgTemplateOutlet,

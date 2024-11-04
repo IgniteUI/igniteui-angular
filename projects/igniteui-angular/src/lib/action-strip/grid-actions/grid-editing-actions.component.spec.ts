@@ -400,7 +400,6 @@ describe('igxGridEditingActions #grid ', () => {
         </igx-action-strip>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, NgFor]
 })
 class IgxActionStripTestingComponent implements OnInit {
@@ -481,7 +480,6 @@ class IgxActionStripTestingComponent implements OnInit {
         </igx-action-strip>
     </igx-grid>
     `,
-    standalone: true,
     selector: 'igx-action-strip-pin-edit-component',
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, NgFor]
 })
@@ -501,7 +499,6 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
         </igx-action-strip>
     </igx-grid>
     `,
-    standalone: true,
     selector: 'igx-action-strip-edit-menu-component',
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, NgFor]
 })
@@ -522,7 +519,6 @@ class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
         </igx-action-strip>
     </igx-grid>
     `,
-    standalone: true,
     selector: 'igx-action-strip-one-row-component',
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, NgFor]
 })
@@ -542,7 +538,6 @@ class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
         </igx-action-strip>
     </igx-grid>
     `,
-    standalone: true,
     selector: 'igx-action-strip-menu-one-row-component',
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, NgFor]
 })

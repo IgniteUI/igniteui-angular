@@ -18,7 +18,6 @@ import { IgxIconComponent } from '../icon/icon.component';
         </igx-tree-node>
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, NgFor]
 })
 export class IgxTreeSimpleComponent {
@@ -40,7 +39,6 @@ export class IgxTreeSimpleComponent {
         </igx-tree-node>
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, NgFor]
 })
 export class IgxTreeSelectionSampleComponent {
@@ -98,7 +96,6 @@ export class IgxTreeSelectionSampleComponent {
         </ng-template>
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeNodeLinkDirective, NgTemplateOutlet, NgFor, NgIf]
 })
 export class IgxTreeNavigationComponent {
@@ -124,7 +121,6 @@ export class IgxTreeNavigationComponent {
         </ng-template>
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeExpandIndicatorDirective, IgxIconComponent, NgFor]
 })
 export class IgxTreeScrollComponent {

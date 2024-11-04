@@ -2665,7 +2665,6 @@ class AllDataAvgSummary extends IgxSummaryOperand {
         </igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 

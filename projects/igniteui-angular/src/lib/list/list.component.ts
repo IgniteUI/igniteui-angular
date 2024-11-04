@@ -151,7 +151,6 @@ export class IgxListLineSubTitleDirective {
     selector: 'igx-list',
     templateUrl: 'list.component.html',
     providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
-    standalone: true,
     imports: [NgIf, NgTemplateOutlet]
 })
 export class IgxListComponent extends IgxListBaseDirective {

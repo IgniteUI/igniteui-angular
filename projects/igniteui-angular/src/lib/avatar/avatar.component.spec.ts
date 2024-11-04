@@ -163,7 +163,6 @@ describe('Avatar', () => {
 
 @Component({
     template: `<igx-avatar>TEST</igx-avatar>`,
-    standalone: true,
     imports: [IgxAvatarComponent]
 })
 class InitAvatarComponent {
@@ -173,7 +172,6 @@ class InitAvatarComponent {
 @Component({
     template: `
     <igx-avatar [initials]="initials" size="small"></igx-avatar>`,
-    standalone: true,
     imports: [IgxAvatarComponent]
 })
 class AvatarWithAttribsComponent {
@@ -184,7 +182,6 @@ class AvatarWithAttribsComponent {
 
 @Component({
     template: `<igx-avatar icon="person"></igx-avatar>`,
-    standalone: true,
     imports: [IgxAvatarComponent]
 })
 class InitIconAvatarComponent {
@@ -193,7 +190,6 @@ class InitIconAvatarComponent {
 
 @Component({
     template: `<igx-avatar [src]="source"></igx-avatar>`,
-    standalone: true,
     imports: [IgxAvatarComponent]
 })
 class InitImageAvatarComponent {

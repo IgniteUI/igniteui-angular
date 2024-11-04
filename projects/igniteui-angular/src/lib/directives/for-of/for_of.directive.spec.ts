@@ -1386,7 +1386,6 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
             <ng-template igxForTest [igxForOf]="data"></ng-template>
         </span>
     `,
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class EmptyVirtualComponent {
@@ -1415,7 +1414,6 @@ export class EmptyVirtualComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class VirtualComponent {
@@ -1488,7 +1486,6 @@ export class VirtualComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     selector: 'igx-vertical-virtual',
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
@@ -1523,7 +1520,6 @@ export class VerticalVirtualComponent extends VirtualComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective, NgIf]
 })
 export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
@@ -1561,7 +1557,6 @@ export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     imports: [IgxForOfDirective, NgIf]
 })
 export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
@@ -1592,7 +1587,6 @@ export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
             </div>
         </div>
     `,
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective, NgFor]
 })
 export class HorizontalVirtualComponent extends VirtualComponent {
@@ -1616,7 +1610,6 @@ export class HorizontalVirtualComponent extends VirtualComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class VirtualVariableSizeComponent {
@@ -1652,7 +1645,6 @@ export class VirtualVariableSizeComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     selector: 'igx-vertical-virtual-no-data',
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
@@ -1715,7 +1707,6 @@ export class LocalService {
         </div>
     `,
     providers: [LocalService],
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
@@ -1761,7 +1752,6 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         </div>
     `,
     providers: [LocalService],
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
@@ -1817,7 +1807,6 @@ export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
         flex: 0 0 60px;
         border-right: 1px solid #888;
     }`],
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 
@@ -1861,7 +1850,6 @@ export class NoWidthAndHeightComponent {
         </ng-template>
     </div>
     `,
-    standalone: true,
     imports: [IgxForOfDirective, NgClass]
 })
 export class LocalVariablesComponent {
@@ -1894,7 +1882,6 @@ export class CustomSlicePipe implements PipeTransform {
         </div>
     </div>
     `,
-    standalone: true,
     imports: [IgxForOfDirective, CustomSlicePipe, NgClass]
 })
 export class LocalVariablesAsComponent {

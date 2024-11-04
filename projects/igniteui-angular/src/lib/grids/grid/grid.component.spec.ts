@@ -2921,7 +2921,6 @@ describe('IgxGrid Component Tests #grid', () => {
             </igx-column>
         </igx-grid>
     </div>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class IgxGridTestComponent {
@@ -2995,7 +2994,6 @@ export class IgxGridTestComponent {
         </igx-column>
         <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgFor, NgIf]
 })
 export class IgxGridDefaultRenderingComponent {
@@ -3076,9 +3074,7 @@ export class IgxGridDefaultRenderingComponent {
       ></igx-column>
     </igx-grid>
     </div>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
-
 })
 export class IgxGridColumnHeaderAutoSizeComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -3109,9 +3105,7 @@ export class IgxGridColumnHeaderAutoSizeComponent {
       ></igx-column>
       </igx-column-group>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
-
 })
 export class IgxGridColumnHeaderInGroupAutoSizeComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -3123,7 +3117,6 @@ export class IgxGridColumnHeaderInGroupAutoSizeComponent {
         <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
@@ -3145,7 +3138,6 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
             </igx-grid-footer>
         </igx-grid>
         </div>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxGridFooterComponent]
 })
 export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
@@ -3158,7 +3150,6 @@ export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
                 <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
             </igx-grid>
         </div>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
@@ -3212,7 +3203,6 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
                 <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
             </igx-grid>
         </div>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
@@ -3227,7 +3217,6 @@ export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContCo
             <igx-column field="Name"></igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
@@ -3248,7 +3237,6 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
         </igx-grid>
         </div>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridEmptyMessage100PercentComponent extends IgxGridTestComponent {
@@ -3300,7 +3288,6 @@ export class LocalService {
         </igx-grid>
     `,
     providers: [LocalService],
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, AsyncPipe]
 })
 export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewInit {
@@ -3340,7 +3327,6 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         </ng-template>
     `,
     providers: [LocalService],
-    standalone: true,
     imports: [IgxGridComponent, AsyncPipe]
 })
 export class IgxGridRemoteOnDemandComponent {
@@ -3378,7 +3364,6 @@ export class IgxGridRemoteOnDemandComponent {
         <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hasSummary]="true">
         </igx-column><igx-column field="UnitsInStock" [formatter]="formatNum" [dataType]="'number'" [hasSummary]="true">
         </igx-column>`),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridFormattingComponent extends BasicGridComponent {
@@ -3486,7 +3471,6 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
     </igx-tabs>
   </div>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxTabsComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabItemComponent, IgxPaginatorComponent, NgFor]
 })
 export class IgxGridInsideIgxTabsComponent {
@@ -3537,7 +3521,6 @@ export class IgxGridInsideIgxTabsComponent {
             </igx-paginator>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, NgIf, AsyncPipe]
 })
 export class IgxGridWithCustomPaginationTemplateComponent {
@@ -3551,7 +3534,6 @@ export class IgxGridWithCustomPaginationTemplateComponent {
         [autoGenerate]="autoGenerate" [style.--ig-size]="1" [groupingExpressions]="groupingExpressions">
         <igx-column *ngFor="let column of columns" [field]="column.field" [header]="column.field" [width]="column.width"></igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
@@ -3604,7 +3586,6 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxGridNoDataComponent {

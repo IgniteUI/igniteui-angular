@@ -1301,7 +1301,6 @@ describe('igxExpansionPanel', () => {
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     `,
-    standalone: true,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxGridComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelGridComponent {
@@ -1350,7 +1349,6 @@ export class IgxExpansionPanelGridComponent {
         </igx-expansion-panel>
     </div>
     `,
-    standalone: true,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxListComponent, IgxListItemComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelListComponent {
@@ -1378,7 +1376,6 @@ export class IgxExpansionPanelListComponent {
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     `,
-    standalone: true,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, NgIf]
 })
 export class IgxExpansionPanelSampleComponent {
@@ -1417,7 +1414,6 @@ export class IgxExpansionPanelSampleComponent {
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     `,
-    standalone: true,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelImageComponent {
@@ -1447,7 +1443,6 @@ export class IgxExpansionPanelImageComponent {
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     `,
-    standalone: true,
     imports: [IGX_EXPANSION_PANEL_DIRECTIVES]
 })
 export class IgxExpansionPanelTooltipComponent {

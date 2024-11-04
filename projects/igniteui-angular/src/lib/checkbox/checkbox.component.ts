@@ -59,13 +59,12 @@ let nextId = 0;
 @Component({
     selector: 'igx-checkbox',
     providers: [{
-        provide: EDITOR_PROVIDER,
-        useExisting: IgxCheckboxComponent,
-        multi: true
-    }],
+            provide: EDITOR_PROVIDER,
+            useExisting: IgxCheckboxComponent,
+            multi: true
+        }],
     preserveWhitespaces: false,
     templateUrl: 'checkbox.component.html',
-    standalone: true,
     imports: [IgxRippleDirective]
 })
 export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, ControlValueAccessor {

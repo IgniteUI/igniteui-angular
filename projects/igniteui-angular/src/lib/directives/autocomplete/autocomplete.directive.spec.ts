@@ -953,7 +953,6 @@ export class IgxAutocompletePipeStartsWith implements PipeTransform {
             {{town}}
         </igx-drop-down-item>
     </igx-drop-down>`,
-    standalone: true,
     imports: [
         FormsModule,
         IgxInputGroupComponent,
@@ -1003,7 +1002,6 @@ class AutocompleteComponent {
             {{town}}
         </igx-drop-down-item>
     </igx-drop-down>`,
-    standalone: true,
     imports: [
         FormsModule,
         IgxAutocompleteDirective,
@@ -1039,7 +1037,6 @@ class AutocompleteInputComponent extends AutocompleteComponent {
         <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
     </form>
     `,
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         IgxInputGroupComponent,

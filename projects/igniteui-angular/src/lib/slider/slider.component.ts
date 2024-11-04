@@ -39,7 +39,6 @@ let NEXT_ID = 0;
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: 'igx-slider',
     templateUrl: 'slider.component.html',
-    standalone: true,
     imports: [NgIf, IgxTicksComponent, IgxThumbLabelComponent, IgxSliderThumbComponent, IgxTickLabelsPipe]
 })
 export class IgxSliderComponent implements

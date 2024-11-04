@@ -62,7 +62,6 @@ class User {
     selector: 'app-action-strip-sample',
     styleUrls: ['action-strip.sample.scss'],
     templateUrl: `action-strip.sample.html`,
-    standalone: true,
     imports: [
         NgIf,
         NgFor,

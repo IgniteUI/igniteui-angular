@@ -5,7 +5,6 @@ import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxButton
     selector: 'app-grid-column-groups-sample',
     styleUrls: ['grid-column-groups.sample.scss'],
     templateUrl: 'grid-column-groups.sample.html',
-    standalone: true,
     imports: [IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxButtonDirective, IgxButtonGroupComponent]
 })
 export class GridColumnGroupsSampleComponent {

@@ -308,7 +308,6 @@ describe('IgxHighlight', () => {
         {{html}}
     </div>
     `,
-    standalone: true,
     imports: [IgxTextHighlightDirective]
 })
 class HighlightLoremIpsumComponent {

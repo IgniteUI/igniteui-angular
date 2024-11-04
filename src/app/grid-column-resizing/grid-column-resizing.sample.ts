@@ -7,7 +7,6 @@ import { IgxButtonDirective, IgxColumnComponent, IgxGridComponent } from 'ignite
     selector: 'app-grid-column-resizing-sample',
     styleUrls: ['grid-column-resizing.sample.scss'],
     templateUrl: 'grid-column-resizing.sample.html',
-    standalone: true,
     imports: [IgxGridComponent, NgFor, IgxColumnComponent, IgxButtonDirective]
 })
 export class GridColumnResizingSampleComponent implements OnInit {

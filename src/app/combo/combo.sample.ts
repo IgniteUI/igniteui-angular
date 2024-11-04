@@ -45,7 +45,6 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
     selector: 'combo-sample',
     templateUrl: './combo.sample.html',
     styleUrls: ['combo.sample.scss'],
-    standalone: true,
     imports: [
         IgxInputGroupComponent,
         IgxInputDirective,

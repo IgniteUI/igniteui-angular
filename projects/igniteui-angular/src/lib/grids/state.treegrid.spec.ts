@@ -375,7 +375,6 @@ class HelperFunctions {
         <igx-paginator [perPage]="5"></igx-paginator>
     </igx-tree-grid>
     `,
-    standalone: true,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective, NgFor]
 })
 export class IgxTreeGridTreeDataTestComponent {

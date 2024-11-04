@@ -8,7 +8,6 @@ import { IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGr
     selector: 'app-grid-sample',
     styleUrls: ['grid-master-detail.sample.scss'],
     templateUrl: 'grid-master-detail.sample.html',
-    standalone: true,
     imports: [IgxButtonDirective, IgxGridComponent, IgxGridStateDirective, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxGridDetailTemplateDirective]
 })
 export class GridMasterDetailSampleComponent implements OnInit {

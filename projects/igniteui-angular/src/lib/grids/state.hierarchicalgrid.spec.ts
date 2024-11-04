@@ -686,7 +686,6 @@ class HelperFunctions {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxRowIslandComponent, IgxGridStateDirective, NgFor]
 })
 export class IgxHierarchicalGridTestExpandedBaseComponent {

@@ -10,7 +10,6 @@ import { ColumnPinningPosition, GridSelectionMode, IPinningConfig, IgxButtonDire
     selector: 'app-grid-column-pinning-sample',
     styleUrls: ['grid-column-pinning.sample.scss'],
     templateUrl: 'grid-column-pinning.sample.html',
-    standalone: true,
     imports: [IgxButtonDirective, IgxGridComponent, NgIf, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, NgFor, IgxColumnComponent, IgxSwitchComponent, FormsModule]
 })
 export class GridColumnPinningSampleComponent implements OnInit {

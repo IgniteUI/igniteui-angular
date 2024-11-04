@@ -112,7 +112,6 @@ describe('igxGridPinningActions #grid ', () => {
         </igx-action-strip>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, NgFor]
 })
 class IgxActionStripTestingComponent implements OnInit {
@@ -187,7 +186,6 @@ class IgxActionStripTestingComponent implements OnInit {
         </igx-action-strip>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, NgFor]
 })
 class IgxActionStripPinMenuComponent extends IgxActionStripTestingComponent {
