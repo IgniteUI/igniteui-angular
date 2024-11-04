@@ -1,5 +1,6 @@
-import { Directive, ElementRef, Input, OnChanges, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, Host, Input, OnChanges, Optional, Self, TemplateRef } from '@angular/core';
 import { IFieldValidator } from './query-builder-tree.component';
+import { IgxDatePickerComponent, IgxDateTimeEditorDirective, IgxTimePickerComponent } from 'igniteui-angular';
 
 /**
  * Defines the custom template that will be used for the search value input of condition in edit mode
@@ -29,20 +30,37 @@ export class IgxQueryBuilderSearchValueTemplateDirective {
     standalone: true
 })
 export class IgxFieldValidatorDirective implements OnChanges {
-    constructor(private element: ElementRef) { }
+    private picker: any;
+    constructor(private element: ElementRef,
+        @Host() @Self() @Optional() private datePicker : IgxDatePickerComponent,
+        @Host() @Self() @Optional() private timePicker : IgxTimePickerComponent,
+        @Host() @Self() @Optional() private dateTimePicker : IgxDateTimeEditorDirective
+    ) {
+        this.picker = this.datePicker || this.timePicker || this.dateTimePicker;
+    }
 
     @Input()
     public validators: IFieldValidator[] = [];
 
     public ngOnChanges() {
         if (this.validators) {
-            this.validators.forEach(validator => {
-                if (validator.type === 'required') {
-                    this.element.nativeElement.required = true;
-                } else {
-                    this.element.nativeElement.setAttribute(validator.type, validator.value);
-                }
-            });
+            if(this.picker) {
+                this.validators.forEach(validator => {
+                    if (validator.type === 'mindate') {
+                        this.picker.minValue = validator.value;
+                    } else if (validator.type === 'maxdate') {
+                        this.picker.maxValue = validator.value;
+                    }
+                });
+            } else {
+                this.validators.forEach(validator => {
+                    if (validator.type === 'required') {
+                        this.element.nativeElement.required = true;
+                    } else if (!validator.type.includes('date')) {
+                        this.element.nativeElement.setAttribute(validator.type, validator.value);
+                    }
+                });
+            }
         }
     }
 }

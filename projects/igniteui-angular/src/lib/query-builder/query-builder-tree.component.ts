@@ -86,6 +86,14 @@ export class IgxFieldValidators {
         return {type: 'maxlength', value: length};
     }
 
+    public static MinDate(date: Date): IFieldValidator {
+        return {type: 'mindate', value: date};
+    }
+
+    public static MaxDate(date: Date): IFieldValidator {
+        return {type: 'maxdate', value: date};
+    }
+
     public static Pattern(pattern: string | RegExp): IFieldValidator {
         return {type: 'pattern', value: pattern};
     }
@@ -331,6 +339,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('searchValueInput', { read: ElementRef })
     private searchValueInput: ElementRef;
+
+    @ViewChild('searchValueInput', { read: IgxInputDirective })
+    private valueInput: IgxInputDirective;
 
     @ViewChild('picker')
     private picker: IgxDatePickerComponent | IgxTimePickerComponent;
@@ -860,12 +871,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public operandCanBeCommitted(): boolean {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
-
         return this.selectedField && this.selectedCondition &&
             (
                 (
                     ((!Array.isArray(this.searchValue.value) && !!this.searchValue.value) || (Array.isArray(this.searchValue.value) && this.searchValue.value.length !== 0)) &&
-                    !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
+                    !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery) &&
+                    (!!this.valueInput && ((this._editedExpression.inAddMode && this.valueInput?.nativeElement.validity.valid)) || (this._editedExpression.inEditMode && (this.valueInput?.nativeElement.validity.valid || !(this.valueInput as any)?.isTouchedOrDirty)))
                 ) ||
                 (
                     this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields?.length > 0
@@ -1701,7 +1712,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 return value;
             }
         };
-        
+
         // Skip root being recreated if the same
         const newRootGroup = this.createExpressionGroupItem(this.expressionTree);
         if (JSON.stringify(this.rootGroup, parentPropReplacer) !== JSON.stringify(newRootGroup, parentPropReplacer)) {

@@ -37,7 +37,7 @@
             <ng-template igxComboHeader>
                 <div
                     class="igx-drop-down__item igx-drop-down__item--query-builder"
-                    (click)="onSelectAllClicked($event)"                
+                    (click)="onSelectAllClicked($event)"
                     [ngClass]="{'igx-drop-down__item--selected': this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length}"
                 >
                     <igx-checkbox
@@ -366,6 +366,8 @@
                 <igx-date-picker
                     #picker
                     *ngIf="selectedField && selectedField.dataType === 'date'"
+                    igxFieldValidators
+                    [validators]="selectedField?.validators"
                     [(value)]="searchValue.value"
                     (keydown)="openPicker($event)"
                     (click)="picker.open()"
@@ -393,6 +395,8 @@
                 <igx-time-picker
                     #picker
                     *ngIf="selectedField && selectedField.dataType === 'time'"
+                    igxFieldValidators
+                    [validators]="selectedField?.validators"
                     [(value)]="searchValue.value"
                     (click)="picker.open()"
                     (keydown)="openPicker($event)"
@@ -427,6 +431,8 @@
                     <input
                         #input
                         igxInput
+                        igxFieldValidators
+                        [validators]="selectedField?.validators"
                         tabindex="0"
                         [(ngModel)]="searchValue.value"
                         [disabled]="
@@ -508,7 +514,7 @@
                 (click)="onGroupClick(expressionItem)"
             ></div>
 
-            <div class="igx-filter-tree__expression">            
+            <div class="igx-filter-tree__expression">
                 <ng-container *ngFor="let expr of expressionItem?.children">
                     <ng-container
                         *ngTemplateOutlet="

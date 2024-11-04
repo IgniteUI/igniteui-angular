@@ -9,6 +9,7 @@ import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
+import { IgxFieldValidators } from './query-builder-tree.component';
 
 describe('IgxQueryBuilder', () => {
     configureTestSuite();
@@ -103,7 +104,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
             tick(100);
             fix.detectChanges();
-            
+
             // Click the initial 'Add And Group' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
             tick(100);
@@ -633,7 +634,7 @@ describe('IgxQueryBuilder', () => {
         it('Should correctly apply a \'string\' column condition through UI.', fakeAsync(() => {
             // Verify there is no expression.
             expect(queryBuilder.expressionTree).toBeUndefined();
-            
+
             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0); // Select 'Products' entity
             tick(100);
             fix.detectChanges();
@@ -1277,7 +1278,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             const childGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, undefined);
             childGroup.filteringOperands.push({
                 fieldName: 'OrderNameName',
@@ -1759,7 +1760,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             // Verify group types initially
             QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 0);
 
@@ -1808,7 +1809,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             // Click root group's operator line.
             const rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
             rootOperatorLine.click();
@@ -1828,7 +1829,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
             //create group
@@ -1857,7 +1858,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             //Select chip
             QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
             tick(200);
@@ -1898,7 +1899,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fix, false);
 
             //select 1
@@ -1939,7 +1940,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             const rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
 
             QueryBuilderFunctions.verifyGroupContextMenuVisibility(fix, false);
@@ -1975,7 +1976,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
             QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 0);
 
@@ -2024,8 +2025,8 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
-            let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+
+            const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
 
             // Add new 'expression'.
             const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[0];
@@ -2039,9 +2040,9 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'Contains' operator.
             tick(100);
             fix.detectChanges();
-            
+
             //New empty inner query should be displayed
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;            
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
             const bodyElement = queryBuilderElement.children[1].children[0];
             const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
             expect(actionArea).toBeNull();
@@ -2116,12 +2117,12 @@ describe('IgxQueryBuilder', () => {
             expect(queryBuilder.canCommit()).withContext('Unary operator selected').toBeTrue();
         }));
 
-        
-        it('Should be able to commit nested query without where condition.', fakeAsync(() => {            
+
+        it('Should be able to commit nested query without where condition.', fakeAsync(() => {
             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
             tick(100);
-            fix.detectChanges();            
-            
+            fix.detectChanges();
+
             QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0); // Click the initial 'Add Or Group' button.
             tick(100);
             fix.detectChanges();
@@ -2195,8 +2196,8 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Verify both parent and child commit buttons are enabled
-            let parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
-            let childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
+            const parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            const childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
 
             ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement);
             ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement, false);
@@ -2204,6 +2205,204 @@ describe('IgxQueryBuilder', () => {
             // Verify inputs values on both levels
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'OrderId', 'In', '', 0);
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Released', 'True', '', 1);
+        }));
+
+        it(`Should apply 'string' column validators properly and calculate 'canCommit' base on it.`, fakeAsync(() => {
+            queryBuilder.entities[0].fields[1].validators = [IgxFieldValidators.Required()];
+            queryBuilder.entities[1].fields[1].validators = [IgxFieldValidators.Required()];
+            fix.detectChanges();
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Expand the nested query
+            const toggleBtn = fix.debugElement.query(By.css('.igx-filter-tree__details-button')).nativeElement;
+            toggleBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Start editing 'ProductNames'
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true, 1);
+            tick(50);
+            fix.detectChanges();
+
+            // Change the current condition
+            let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
+            // Verify validators are applied
+            expect(input.required).toBeTrue();
+            expect(input).not.toHaveClass('ng-dirty');
+
+            // Verify input validity and 'canCommit value'
+            UIInteractions.clickAndSendInputElementValue(input, '');
+            tick(100);
+            fix.detectChanges();
+            expect(input.validity.valid).toBeFalse();
+            expect(input).toHaveClass('ng-dirty');
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            UIInteractions.clickAndSendInputElementValue(input, 'asd');
+            tick(100);
+            fix.detectChanges();
+            expect(input.validity.valid).toBeTrue();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            // Discard the changes
+            queryBuilder.discard();
+            tick(100);
+            fix.detectChanges();
+
+            // Start adding new expression
+            const btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
+            btn.click();
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            // Verify validators are applied
+            expect(input.required).toBeTrue();
+            expect(input).not.toHaveClass('ng-dirty');
+
+            // Verify input validity and 'canCommit value'
+            UIInteractions.clickAndSendInputElementValue(input, '');
+            tick(100);
+            fix.detectChanges();
+            expect(input.validity.valid).toBeFalse();
+            expect(input).toHaveClass('ng-dirty');
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            UIInteractions.clickAndSendInputElementValue(input, 'asd');
+            tick(100);
+            fix.detectChanges();
+            expect(input.validity.valid).toBeTrue();
+            expect(queryBuilder.canCommit()).toBeTrue();
+        }));
+
+        it(`Should apply 'number' column validators properly and calculate 'canCommit' base on it.`, fakeAsync(() => {
+            queryBuilder.entities[1].fields[0].validators = [IgxFieldValidators.Min(3), IgxFieldValidators.Max(50)];
+            fix.detectChanges();
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Start editing 'OrderId'
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], true);
+            tick(50);
+            fix.detectChanges();
+
+            // Change the current condition
+            let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            // Verify validators are applied
+            expect(input.min).toBe('3');
+            expect(input.max).toBe('50');
+            expect(input).not.toHaveClass('ng-dirty');
+
+            // Verify input validity and 'canCommit value'
+            UIInteractions.clickAndSendInputElementValue(input, '2');
+            tick(100);
+            fix.detectChanges();
+            expect(input.validity.valid).toBeFalse();
+            expect(input).toHaveClass('ng-dirty');
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            UIInteractions.clickAndSendInputElementValue(input, '10');
+            tick(100);
+            fix.detectChanges();
+            expect(input.validity.valid).toBeTrue();
+            expect(queryBuilder.canCommit()).toBeTrue();
+
+            UIInteractions.clickAndSendInputElementValue(input, '55');
+            tick(100);
+            fix.detectChanges();
+            expect(input.validity.valid).toBeFalse();
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            // Discard the change
+            queryBuilder.discard();
+            tick(100);
+            fix.detectChanges();
+
+            // Start adding new expression
+            const btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
+            btn.click();
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
+            input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            // Verify validators are applied
+            expect(input.min).toBe('3');
+            expect(input.max).toBe('50');
+            expect(input).not.toHaveClass('ng-dirty');
+
+            // Verify input validity and 'canCommit value'
+            UIInteractions.clickAndSendInputElementValue(input, '2');
+            tick(100);
+            fix.detectChanges();
+            expect(input.validity.valid).toBeFalse();
+            expect(input).toHaveClass('ng-dirty');
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            UIInteractions.clickAndSendInputElementValue(input, '60');
+            tick(100);
+            fix.detectChanges();
+            expect(input.validity.valid).toBeFalse();
+            expect(queryBuilder.canCommit()).toBeFalse();
+
+            UIInteractions.clickAndSendInputElementValue(input, '40');
+            tick(100);
+            fix.detectChanges();
+            expect(input.validity.valid).toBeTrue();
+            expect(queryBuilder.canCommit()).toBeTrue();
+        }));
+
+        it(`Should apply 'date' column validators properly.`, fakeAsync(() => {
+            queryBuilder.entities[1].fields[2].validators = [IgxFieldValidators.MinDate(new Date(2024, 11, 4)), IgxFieldValidators.MaxDate(new Date(2024, 11, 7))];
+            fix.detectChanges();
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Start editing 'OrderDate'
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [2], true);
+            tick(50);
+            fix.detectChanges();
+            // Verify validators are applied
+            let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, true) as HTMLElement;
+            input.click();
+            fix.detectChanges();
+
+            // Click on 'today' item in calendar.
+            let calendar = QueryBuilderFunctions.getQueryBuilderCalendar(fix) as HTMLElement;
+            let enabledDays = Array.from(calendar.querySelectorAll('igx-day-item')).filter(day => !day.classList.contains('igx-days-view__date--disabled'));
+            expect(enabledDays.length).toBe(4);
+
+            // Discard the change
+            queryBuilder.discard();
+            tick(100);
+            fix.detectChanges();
+
+            // Start adding new 'OrderDate' expression
+            const btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
+            btn.click();
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2);
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
+            input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, true) as HTMLElement;
+            input.click();
+            fix.detectChanges();
+
+            // Click on 'today' item in calendar.
+            calendar = QueryBuilderFunctions.getQueryBuilderCalendar(fix) as HTMLElement;
+            enabledDays = Array.from(calendar.querySelectorAll('igx-day-item')).filter(day => !day.classList.contains('igx-days-view__date--disabled'));
+            expect(enabledDays.length).toBe(4);
         }));
     });
 
@@ -2366,7 +2565,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             QueryBuilderFunctions.verifyQueryBuilderTabbableElements(fix);
         }));
 
@@ -2375,7 +2574,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
             QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chip.nativeElement, 200);
@@ -2399,7 +2598,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
             QueryBuilderFunctions.verifyChipSelectedState(chip.nativeElement, false);
@@ -2429,7 +2628,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             const line = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS}`))[0];
             const chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
@@ -2468,7 +2667,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
-            
+
             // Verify the there are three chip expressions.
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
