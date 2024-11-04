@@ -408,6 +408,7 @@
     %time-picker__item--selected {
         @include type-style($selected-time) {
             margin-top: 0;
+            margin-bottom: 0;
         }
     }
 }
