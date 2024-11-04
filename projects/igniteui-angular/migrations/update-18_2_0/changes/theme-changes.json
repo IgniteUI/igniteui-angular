@@ -18,6 +18,12 @@
       "replaceWith": "$sb-track-bg-color",
       "owner": "scrollbar-theme",
       "type": "property"
+    },
+    {
+      "name": "$border-width",
+      "remove": true,
+      "owner": "badge-theme",
+      "type":"property"
     }
   ]
 }

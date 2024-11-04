@@ -24,6 +24,8 @@ export interface IgxTimePickerBase {
     showAmPmList: boolean;
     minDateValue: Date;
     maxDateValue: Date;
+    /** @hidden @internal */
+    appliedFormat: string;
     nextHour(delta: number);
     nextMinute(delta: number);
     nextSeconds(delta: number);

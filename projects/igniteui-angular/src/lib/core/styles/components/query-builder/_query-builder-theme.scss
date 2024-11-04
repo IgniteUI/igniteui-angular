@@ -9,6 +9,7 @@
 /// @param {Color} background [null] - The background color of the filtering row.
 /// @param {Color} header-background [null] - The background color of the query builder header.
 /// @param {Color} header-foreground [null] - The foreground color of the query builder header.
+/// @param {Color} header-border [null] - The border color of the query builder header.
 /// @param {Map} background-and [null] - The background color of advanced filtering "AND" condition.
 /// @param {Map} background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
 /// @param {Map} background-or [null] - The background color of advanced filtering "OR" condition.
@@ -24,6 +25,7 @@
     $background: null,
     $header-background: null,
     $header-foreground: null,
+    $header-border: null,
     $background-and: null,
     $background-and--focus: null,
     $background-or: null,
@@ -53,6 +55,7 @@
         background: $background,
         header-background: $header-background,
         header-foreground: $header-foreground,
+        header-border: $header-border,
         background-and: $background-and,
         background-and--focus: $background-and--focus,
         background-or: $background-or,
@@ -77,6 +80,7 @@
     @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'variant');
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: not($bootstrap-theme);
 
@@ -105,16 +109,22 @@
     }
 
     %advanced-filter__header {
+        @if $variant != 'indigo' {
+            @include type-style('h6');
+        } @else {
+            @include type-style('h5');
+
+            border-top-left-radius: border-radius(rem(10px));
+            border-top-right-radius: border-radius(rem(10px));
+        }
+
         display: flex;
         align-items: center;
         background-color: var-get($theme, 'header-background');
         color: var-get($theme, 'header-foreground');
         user-select: none;
-
-        h4,
-        .ig-typography__h6 {
-            margin-bottom: 0;
-        }
+        margin-bottom: 0;
+        border-block-end: rem(1px) solid var-get($theme, 'header-border');
     }
 
     %advanced-filter__main {
@@ -247,20 +257,10 @@
     %filter-tree__expression-actions {
         display: inline-flex;
         margin: 0 rem(8px);
+        gap: rem(8px);
 
-        igx-icon {
-            cursor: pointer;
-            color: color(null, 'gray', 500);
-            outline-style: none;
-
-            &:hover,
-            &:focus {
-                color: color(null, 'gray', 800);
-            }
-        }
-
-        igx-icon + igx-icon {
-            margin-inline-start: rem(8px);
+        %igx-icon-button-display {
+            --size: #{sizable(rem(20px), rem(24px), if($variant != 'indigo', rem(32px), rem(28px)))};
         }
     }
 
@@ -341,6 +341,10 @@
         display: inline-flex;
         align-items: center;
         font-size: rem(12px);
+
+        @if $variant == 'indigo' {
+            font-weight: 400;
+        }
 
         &::before {
             content: '';
@@ -444,7 +448,15 @@
     }
 
     %filter-empty__title {
-        color: color(null, 'gray', 500);
+        @if $variant == 'indigo' {
+            @if $theme-variant == 'light' {
+                color: color(null, 'gray', 600);
+            } @else {
+                color: contrast-color(null, 'gray', 50, .6);
+            }
+        } @else {
+            color: color(null, 'gray', 600);
+        }
     }
 
     %advanced-filter--inline {

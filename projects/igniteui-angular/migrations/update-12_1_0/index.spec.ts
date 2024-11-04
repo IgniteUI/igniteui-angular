@@ -1,38 +1,22 @@
 import * as path from 'path';
 
-import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { setupTestTree } from '../common/setup.spec';
 
 const version = '12.1.0';
 
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
-    const configJson = {
-        projects: {
-            testProj: {
-                root: '/',
-                sourceRoot: '/testSrc'
-            }
-        },
-        schematics: {
-            '@schematics/angular:component': {
-                prefix: 'appPrefix'
-            }
-        }
-    };
-
     const migrationName = 'migration-21';
     const lineBreaksAndSpaceRegex = /\s/g;
 
     beforeEach(() => {
-        appTree = new UnitTestTree(new EmptyTree());
-        appTree.create('/angular.json', JSON.stringify(configJson));
+        appTree = setupTestTree();
     });
 
     // IgxOverlayService
     it('should update overlay events subscriptions', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/service/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
@@ -70,7 +54,6 @@ export class SimpleComponent implements OnInit {
     });
 
     it('should update banner event subscriptions in .ts file', async () => {
-        pending('ts language service tests do not pass');
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
@@ -131,7 +114,6 @@ export class TestComponent implements OnInit {
     });
 
     it('should update expansion panel event subscriptions in .ts file', async () => {
-        pending('ts language service tests do not pass');
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
@@ -182,7 +164,6 @@ export class TestComponent implements OnInit {
     });
 
     it('should update mask event subscriptions .ts file', async () => {
-        pending('ts language service tests do not pass');
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
@@ -206,7 +187,7 @@ export class TestComponent implements OnInit {
     public mask: IgxMaskDirective
 
     public ngOnInit() {
-        this.mask.valueChanged;
+        this.mask.valueChanged.subscribe();
     }
 }`);
     });
@@ -404,10 +385,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxDropDown
-    it('should update IgxDropDown event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update dropdown event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -435,10 +412,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxToggleDirective
-    it('should update IgxToggleDirective event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update dropdown event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -467,10 +440,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxCombo
-    it('should update IgxCombo event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update combo event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -503,10 +472,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxSelect
-    it('should update IgxSelect event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update select event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -533,10 +498,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxAutocomplete
-    it('should update IgxAutocomplete event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update autocomplete event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -557,10 +518,6 @@ export class TestComponent implements OnInit {
     });
 
     // IgxDialog
-    it('should update IgxDialog event subscriptions', () => {
-        pending('ts language service tests do not pass');
-    });
-
     it('should update dialog event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `

@@ -111,7 +111,11 @@
         igx-icon,
         igc-button,
         [igxButton] {
-            --component-size: var(--ig-size, 2) !important;
+            --component-size: var(--ig-size, var(--ig-size-large));
+
+            @if $variant == 'indigo' {
+                --component-size: var(--ig-size, var(--ig-size-medium));
+            }
         }
     }
 
@@ -146,6 +150,11 @@
         flex-wrap: wrap;
         align-self: flex-end;
         gap: rem(8px);
+
+        > a {
+            display: inline-flex;
+            align-items: center;
+        }
     }
 }
 

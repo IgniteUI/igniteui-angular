@@ -135,7 +135,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      * ```
      */
     @Input()
-    public displayFormat: string;
+    public set displayFormat(value: string) {
+        this._displayFormat = value;
+        this.updateDefaultFormat();
+    }
+
+    public get displayFormat(): string {
+        return this._displayFormat || this.inputFormat;
+    }
 
     /**
      * Expected user input format (and placeholder).
@@ -178,6 +185,18 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     /**
+     * Specify the default input format type. Defaults to `date`, which includes
+     * only date parts for editing. Other valid options are `time` and `dateTime`.
+     *
+     * @example
+     * ```html
+     * <input igxDateTimeEditor [defaultFormatType]="'dateTime'">
+     * ```
+     */
+    @Input()
+    public defaultFormatType: 'date' | 'time' | 'dateTime' = 'date';
+
+    /**
      * Delta values used to increment or decrement each editor date part on spin actions.
      * All values default to `1`.
      *
@@ -212,6 +231,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     public validationFailed = new EventEmitter<IgxDateTimeEditorEventArgs>();
 
     private _inputFormat: string;
+    private _displayFormat: string;
     private _oldValue: Date;
     private _dateValue: Date;
     private _onClear: boolean;
@@ -310,12 +330,12 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['locale'] && !changes['locale'].firstChange) {
+        if (changes['locale'] && !changes['locale'].firstChange ||
+            changes['defaultFormatType'] && !changes['defaultFormatType'].firstChange
+        ) {
             this.updateDefaultFormat();
-            if (!this._inputFormat) {
-                this.setMask(this.inputFormat);
-                this.updateMask();
-            }
+            this.setMask(this.inputFormat);
+            this.updateMask();
         }
         if (changes['inputFormat'] && !changes['inputFormat'].firstChange) {
             this.updateMask();
@@ -501,7 +521,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     protected override setPlaceholder(_value: string): void { }
 
     private updateDefaultFormat(): void {
-        this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
+        this._defaultInputFormat = DateTimeUtil.getNumericInputFormat(this.locale, this._displayFormat)
+                                || DateTimeUtil.getDefaultInputFormat(this.locale, this.defaultFormatType);
+        this.setMask(this.inputFormat);
     }
 
     private updateMask(): void {
@@ -533,7 +555,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         const oldFormat = this._inputDateParts?.map(p => p.format).join('');
         this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
         inputFormat = this._inputDateParts.map(p => p.format).join('');
-        const mask = (inputFormat || DateTimeUtil.DEFAULT_INPUT_FORMAT)
+        const mask = (inputFormat || this._defaultInputFormat)
         .replace(new RegExp(/(?=[^at])[\w]/, 'g'), '0');
         this.mask = mask.replaceAll(/(a{1,2})|tt/g, match => 'L'.repeat(match.length === 1 ? 1 : 2));
         const placeholder = this.nativeElement.placeholder;

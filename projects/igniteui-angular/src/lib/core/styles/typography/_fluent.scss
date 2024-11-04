@@ -99,7 +99,9 @@
     @include switch-typography($categories: (
         label: 'body-2'
     ));
-    @include tabs-typography();
+    @include tabs-typography($categories: (
+        label: 'body-2'
+    ));
     @include time-picker-typography();
     @include stepper-typography();
     @include toast-typography($categories: (

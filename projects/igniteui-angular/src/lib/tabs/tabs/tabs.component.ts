@@ -8,6 +8,7 @@ import { IgxTabsDirective } from '../tabs.directive';
 import { NgClass, NgFor, NgTemplateOutlet, NgIf } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxIconButtonDirective } from '../../directives/button/icon-button.directive';
 
 export const IgxTabsAlignment = /*@__PURE__*/mkenum({
     start: 'start',
@@ -63,7 +64,7 @@ let NEXT_TAB_ID = 0;
     templateUrl: 'tabs.component.html',
     providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }],
     standalone: true,
-    imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgFor, NgTemplateOutlet, NgIf]
+    imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgFor, NgTemplateOutlet, NgIf, IgxIconButtonDirective]
 })
 
 export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit, OnDestroy {
@@ -83,6 +84,15 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
             this.realignSelectedIndicator();
         });
     }
+
+    /**
+     * Determines the tab activation.
+     * When set to auto, the tab is instantly selected while navigating with the Left/Right Arrows, Home or End keys and the corresponding panel is displayed.
+     * When set to manual, the tab is only focused. The selection happens after pressing Space or Enter.
+     * Defaults is auto.
+     */
+    @Input()
+    public activation: 'auto' | 'manual' = 'auto';
 
     /** @hidden */
     @ViewChild('headerContainer', { static: true })
@@ -345,4 +355,3 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         return this.dir.rtl ? this.itemsWrapper.nativeElement.offsetWidth - element.offsetLeft - element.offsetWidth : element.offsetLeft;
     }
 }
-

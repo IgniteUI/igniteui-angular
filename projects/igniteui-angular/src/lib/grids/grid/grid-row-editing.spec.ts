@@ -971,6 +971,33 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(targetCell.active).toBeTruthy();
         }));
 
+        it(`Should not detectChanges & emit Grid.keyDown (navigation service) while editing`, () => {
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+
+            fix.detectChanges();
+
+            const keyDonwSpy = spyOn(grid.gridKeydown, 'emit');
+            const detectChangesSpy = spyOn(grid.cdr, 'detectChanges').and.callThrough();
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
+            fix.detectChanges();
+
+            const cellElem = fix.debugElement.query(By.css(CELL_CLASS));
+            const input = cellElem.query(By.css('input'));
+
+            // change first editable cell value
+            UIInteractions.triggerKeyDownEvtUponElem('1', input.nativeElement, true);
+            UIInteractions.setInputElementValue(input, '1');
+
+            UIInteractions.triggerKeyDownEvtUponElem('2', input.nativeElement, true);
+            UIInteractions.setInputElementValue(input, '12');
+            fix.detectChanges();
+
+            expect(targetCell.editValue).toBe(12);
+
+            expect(keyDonwSpy).not.toHaveBeenCalled();
+            expect(detectChangesSpy).toHaveBeenCalledTimes(0);
+        });
     });
 
     describe('Exit row editing', () => {
@@ -2217,7 +2244,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const gridContent = GridFunctions.getGridContent(fix);
 
             const grid = fix.componentInstance.grid;
-            let cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+            const cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
             spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
             fix.detectChanges();
@@ -2227,12 +2254,15 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fix.detectChanges();
 
-            cellElem = grid.gridAPI.get_cell_by_index(0, 'ReorderLevel');
             expect(parseInt(GridFunctions.getRowEditingBannerText(fix), 10)).toEqual(1);
 
             fix.componentInstance.buttons.last.element.nativeElement.click();
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(1);
+
+            fix.detectChanges();
+            expect(cellElem.active).toBeTruthy();
+            expect(grid.nativeElement.contains(document.activeElement)).toBeTrue();
         });
 
         it('Empty template', () => {

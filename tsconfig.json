@@ -12,6 +12,7 @@
       "forceConsistentCasingInFileNames": true,
       "esModuleInterop": true,
       "target": "ES2022",
+      "skipLibCheck": true,
       "typeRoots": [
         "node_modules/@types"
       ],

@@ -18,7 +18,8 @@ import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     NestedColGroupsGridComponent, StegosaurusGridComponent,
     OneColPerGroupGridComponent, NestedColumnGroupsGridComponent,
     DynamicGridComponent, NestedColGroupsWithTemplatesGridComponent,
-    DynamicColGroupsGridComponent } from '../../test-utils/grid-mch-sample.spec';
+    DynamicColGroupsGridComponent,
+    ColumnGroupHiddenInTemplateComponent} from '../../test-utils/grid-mch-sample.spec';
 import { CellType } from '../common/grid.interface';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';
@@ -47,7 +48,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NestedColumnGroupsGridComponent,
                 DynamicGridComponent,
                 NestedColGroupsWithTemplatesGridComponent,
-                DynamicColGroupsGridComponent
+                DynamicColGroupsGridComponent,
+                ColumnGroupHiddenInTemplateComponent
             ]
         })
         .compileComponents();
@@ -391,6 +393,20 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             expect(generalHeader.nativeElement.firstElementChild.title).toBe('General Information Title');
             expect(addressHeader.nativeElement.firstElementChild.title).toBe('Address Information');
+        });
+
+        it('should hide column group when hidden property is set to true in the template - parent and child level', () => {
+            fixture = TestBed.createComponent(ColumnGroupHiddenInTemplateComponent);
+            fixture.detectChanges();
+
+            grid = fixture.componentInstance.grid;
+            const generalGroup = grid.columnList.find(c => c.header === 'General Information');
+            const locationGroup = grid.columnList.find(c => c.header === 'Location');
+            expect(generalGroup.hidden).toBe(true);
+            expect(locationGroup.hidden).toBe(true);
+
+            expect(GridFunctions.getColumnHeaders(fixture).length).toEqual(6);
+            expect(GridFunctions.getColumnGroupHeaders(fixture).length).toEqual(2);
         });
     });
 

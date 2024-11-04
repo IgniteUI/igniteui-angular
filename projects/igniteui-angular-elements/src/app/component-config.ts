@@ -9,7 +9,7 @@ export interface ContentQueryMeta {
 }
 export interface ComponentConfig {
     component: Type<any>,
-    selector?: string;
+    selector: string;
     parents: Type<any>[],
     contentQueries: ContentQueryMeta[];
     additionalProperties: PropertyInfo[];

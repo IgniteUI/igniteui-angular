@@ -8,6 +8,7 @@ import { iconReferences } from './icon.references'
 import { IconFamily, IconMeta, FamilyMeta } from "./types";
 import type { IconType, IconReference } from './types';
 import { IgxTheme } from "../services/theme/theme.service";
+import { IndigoIcons } from "./icons.indigo";
 
 /**
  * Event emitted when a SVG icon is loaded through
@@ -71,6 +72,10 @@ export class IgxIconService {
 
         if (this._platformUtil?.isBrowser) {
             this._domParser = new DOMParser();
+
+            for (const [name, svg] of IndigoIcons) {
+                this.addSvgIconFromText(name, svg.value, `internal_${svg.fontSet}`, true);
+            }
         }
     }
 

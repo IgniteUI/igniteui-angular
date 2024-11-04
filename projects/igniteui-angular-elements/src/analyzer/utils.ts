@@ -96,6 +96,21 @@ export function asString(x?: ts.Symbol) {
     return x ? x.escapedName.toString() : '';
 }
 
+/** Get the properties of the `@Component({ ...properties })` decorator object param */
+function getDecoratorProps(component: ts.ClassDeclaration): ts.NodeArray<ts.ObjectLiteralElementLike> | null {
+    const expression = getDecorators(component)?.find(x => getDecoratorName(x) === 'Component')?.expression;
+
+    if (!expression || !ts.isCallExpression(expression))
+        return null;
+
+    const args = [...expression.arguments];
+
+    if (!ts.isObjectLiteralExpression(args[0]))
+        return null;
+
+    const literal = args[0];
+    return literal?.properties;
+}
 
 /**
  * Looks through the component decorator for providers that match the existing class to a different type/token, such as:
@@ -113,18 +128,8 @@ export function asString(x?: ts.Symbol) {
  * @returns Alternative type/token the component is provided as OR null
  */
 export function getProvidedAs(component: ts.ClassDeclaration, type: ts.InterfaceType) {
-    const expression = getDecorators(component)?.find(x => getDecoratorName(x) === 'Component')?.expression;
-
-    if (!expression || !ts.isCallExpression(expression))
-        return null;
-
-    const args = [...expression.arguments];
-
-    if (!ts.isObjectLiteralExpression(args[0]))
-        return null;
-
-    const literal = args[0];
-    const providers = literal?.properties.find(x => x.name?.getText() === 'providers');
+    const properties = getDecoratorProps(component);
+    const providers = properties?.find(x => x.name?.getText() === 'providers');
     if (!(providers && ts.isPropertyAssignment(providers) && ts.isArrayLiteralExpression(providers.initializer)))
         return null;
 
@@ -139,6 +144,21 @@ export function getProvidedAs(component: ts.ClassDeclaration, type: ts.Interface
 
     return null;
 
+}
+
+/**
+ * Get the selector from the component decorator
+ * @param component The component node
+ * @param replace Find and replace pair
+ * @returns The transformed selector as OR null
+ */
+export function getSelector(component: ts.ClassDeclaration, replace: [string, string]) {
+    const properties = getDecoratorProps(component);
+    const selector = properties?.find(x => x.name?.getText() === 'selector');
+    if (!(selector && ts.isPropertyAssignment(selector) && ts.isStringLiteral(selector.initializer)))
+        return null;
+
+    return selector.initializer.text.replace(replace[0], replace[1]);
 }
 
 

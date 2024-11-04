@@ -33,7 +33,7 @@ export class IgxGridSelectionService {
     /**
      * @hidden @internal
      */
-    public selectedRowsChange = new Subject<void>();
+    public selectedRowsChange = new Subject<any[]>();
 
     /**
      * Toggled when a pointerdown event is triggered inside the grid body (cells).
@@ -426,13 +426,20 @@ export class IgxGridSelectionService {
         const selectedRows = this.getSelectedRowsData();
         const removedRec = this.isFilteringApplied() ?
             this.allData.filter(row => this.isRowSelected(this.getRecordKey(row))) : selectedRows;
-        const newSelection = this.isFilteringApplied() ? selectedRows.filter(x => !removedRec.includes(x)) : [];
+        let newSelection;
+        if (this.grid.primaryKey) {
+            newSelection = this.isFilteringApplied() ? selectedRows.filter(x => {
+                return !removedRec.some(item => item[this.grid.primaryKey] === x[this.grid.primaryKey]);
+            }) : [];
+        } else {
+            newSelection = this.isFilteringApplied() ? selectedRows.filter(x => !removedRec.includes(x)) : [];
+        }
         this.emitRowSelectionEvent(newSelection, [], removedRec, event, selectedRows);
     }
 
     /** Select all rows, if filtering is applied select only from filtered data. */
     public selectAllRows(event?) {
-        const addedRows = this.allData.filter((row) => !this.isRowSelected(this.getRecordKey(row)));
+        const addedRows = this.allData.filter((row) => !this.rowSelection.has(this.getRecordKey(row)));
         const selectedRows = this.getSelectedRowsData();
         const newSelection = this.rowSelection.size ? selectedRows.concat(addedRows) : addedRows;
         this.indeterminateRows.clear();
@@ -554,14 +561,14 @@ export class IgxGridSelectionService {
         }
         rowIDs.forEach(rowID => this.rowSelection.add(rowID));
         this.clearHeaderCBState();
-        this.selectedRowsChange.next();
+        this.selectedRowsChange.next(rowIDs);
     }
 
     /** Deselect specified rows. No event is emitted. */
     public deselectRowsWithNoEvent(rowIDs: any[]): void {
         this.clearHeaderCBState();
         rowIDs.forEach(rowID => this.rowSelection.delete(rowID));
-        this.selectedRowsChange.next();
+        this.selectedRowsChange.next(this.getSelectedRows());
     }
 
     public isRowSelected(rowID): boolean {
@@ -609,10 +616,8 @@ export class IgxGridSelectionService {
         if (this.allRowsSelected !== undefined && !newSelection) {
             return this.allRowsSelected;
         }
-        const selectedData = new Set(newSelection ? newSelection : [...this.rowSelection]);
-        const allData = this.getRowIDs(this.allData);
-        const unSelectedRows = allData.filter(row => !selectedData.has(row));
-        return this.allRowsSelected = this.allData.length > 0 && unSelectedRows.length === 0;
+        const selectedData = new Set(this.getRowIDs(newSelection || this.rowSelection));
+        return this.allRowsSelected = this.allData.length > 0 && this.allData.every(row => selectedData.has(this.getRecordKey(row)));
     }
 
     public hasSomeRowSelected(): boolean {
@@ -632,13 +637,16 @@ export class IgxGridSelectionService {
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
         }
+        
         const args: IRowSelectionEventArgs = {
             owner: this.grid,
             oldSelection: currSelection,
             newSelection,
-            added, removed,
-            event, cancel: false,
-            allRowsSelected: this.areAllRowSelected(newSelection.map(r =>  this.getRecordKey(r)))
+            added,
+            removed,
+            event,
+            cancel: false,
+            allRowsSelected: this.areAllRowSelected(newSelection)
         };
 
         this.grid.rowSelectionChanging.emit(args);
@@ -681,7 +689,7 @@ export class IgxGridSelectionService {
         this.rowSelection.clear();
         this.indeterminateRows.clear();
         this.clearHeaderCBState();
-        this.selectedRowsChange.next();
+        this.selectedRowsChange.next([]);
     }
 
     /** Returns all data in the grid, with applied filtering and sorting and without deleted rows. */

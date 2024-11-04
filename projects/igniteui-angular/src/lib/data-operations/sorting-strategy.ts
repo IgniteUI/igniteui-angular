@@ -132,3 +132,60 @@ export class GroupMemberCountSortingStrategy implements ISortingStrategy {
         return reverse * (firstItemValuesLength - secondItemValuesLength);
     }
 }
+
+export class FormattedValuesSortingStrategy extends DefaultSortingStrategy {
+    protected static override _instance: FormattedValuesSortingStrategy = null;
+
+    constructor() {
+        super();
+    }
+
+    public static override instance(): FormattedValuesSortingStrategy {
+        return this._instance || (this._instance = new this());
+    }
+
+    public override sort(
+        data: any[],
+        fieldName: string,
+        dir: SortingDirection,
+        ignoreCase: boolean,
+        valueResolver: (obj: any, key: string, isDate?: boolean) => any,
+        isDate?: boolean,
+        isTime?: boolean,
+        grid?: GridType
+    ) {
+        const key = fieldName;
+        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
+        const cmpFunc = (obj1: any, obj2: any) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, isDate, isTime, grid);
+        return this.arraySort(data, cmpFunc);
+    }
+
+    protected override compareObjects(
+        obj1: any,
+        obj2: any,
+        key: string,
+        reverse: number,
+        ignoreCase: boolean,
+        valueResolver: (obj: any, key: string, isDate?: boolean, isTime?: boolean) => any,
+        isDate: boolean,
+        isTime: boolean,
+        grid?: GridType
+    ) {
+        let a = valueResolver.call(this, obj1, key, isDate, isTime);
+        let b = valueResolver.call(this, obj2, key, isDate, isTime);
+
+        if (grid) {
+            const col = grid.getColumnByName(key);
+            if (col && col.formatter) {
+                a = col.formatter(a);
+                b = col.formatter(b);
+            }
+        }
+
+        if (ignoreCase) {
+            a = a && a.toLowerCase ? a.toLowerCase() : a;
+            b = b && b.toLowerCase ? b.toLowerCase() : b;
+        }
+        return reverse * this.compareValues(a, b);
+    }
+}

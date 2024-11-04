@@ -24,12 +24,11 @@ import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
 import { AnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
-import { IgxStep, IgxStepper, IgxStepperOrientation, IgxStepType, IGX_STEPPER_COMPONENT, IGX_STEP_COMPONENT } from '../stepper.common';
+import { IgxStep, IgxStepper, IgxStepperOrientation, IgxStepType, IGX_STEPPER_COMPONENT, IGX_STEP_COMPONENT, HorizontalAnimationType } from '../stepper.common';
 import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.directive';
 import { IgxStepperService } from '../stepper.service';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
-import { HorizontalAnimationType } from '../../carousel/enums';
 
 let NEXT_ID = 0;
 

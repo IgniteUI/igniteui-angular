@@ -32,7 +32,7 @@
 @use '../components/tree/tree-theme' as *;
 @use '../components/label/label-theme' as *;
 
-@mixin typography() {
+@mixin typography($type-scale) {
     @include badge-typography($categories: (
         text: 'button',
     ));
@@ -102,7 +102,9 @@
     @include switch-typography($categories: (
         label: 'body-2'
     ));
-    @include tabs-typography();
+    @include tabs-typography($categories: (
+        label: 'subtitle-2',
+    ));
     @include time-picker-typography($categories: (
         header-time-period: 'subtitle-1',
         header-hour: 'h5',

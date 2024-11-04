@@ -6,6 +6,7 @@ import { IComboResourceStrings } from 'igniteui-angular';
  */
 export const ComboResourceStringsNL = {
     igx_combo_empty_message: 'De lijst is leeg',
+    igx_combo_filter_search_placeholder: 'Typ een zoekterm',
     igx_combo_addCustomValues_placeholder: 'Item toevoegen',
     igx_combo_clearItems_placeholder: 'Selectie wissen'
 } satisfies MakeRequired<IComboResourceStrings>;

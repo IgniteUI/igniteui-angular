@@ -19,16 +19,18 @@ describe('Badge', () => {
         }).compileComponents();
     }));
 
-    it('Initializes badge ', () => {
+    it('Initializes outlined badge of type error', () => {
         const fixture = TestBed.createComponent(InitBadgeComponent);
         fixture.detectChanges();
         const badge = fixture.componentInstance.badge;
 
         expect(badge.value).toBeTruthy();
         expect(badge.type).toBeTruthy();
+        expect(badge.outlined).toBeTruthy();
 
         expect(fixture.debugElement.query(By.css('.igx-badge'))).toBeTruthy();
         expect(fixture.debugElement.query(By.css('.igx-badge--error'))).toBeTruthy();
+        expect(fixture.debugElement.query(By.css('.igx-badge--outlined'))).toBeTruthy();
 
         expect(badge.value).toMatch('22');
         expect(badge.type).toMatch('error');
@@ -57,9 +59,11 @@ describe('Badge', () => {
 
         expect(badge.value).toMatch('');
         expect(badge.icon).toBeFalsy();
+        expect(badge.outlined).toBeFalsy();
 
         expect(fixture.debugElement.query(By.css('.igx-badge'))).toBeTruthy();
         expect(fixture.debugElement.query(By.css('.igx-badge--icon'))).toBeFalsy();
+        expect(fixture.debugElement.query(By.css('.igx-badge--outlined'))).toBeFalsy();
     });
 
     it('Initializes badge with icon', () => {
@@ -89,7 +93,7 @@ describe('Badge', () => {
 });
 
 @Component({
-    template: `<igx-badge type="error" value="22"></igx-badge>`,
+    template: `<igx-badge type="error" value="22" outlined></igx-badge>`,
     standalone: true,
     imports: [IgxBadgeComponent]
 })
