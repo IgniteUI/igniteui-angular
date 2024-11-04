@@ -1864,14 +1864,21 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
         }));
 
-        it('Should not make bug where existing inner query is leaking to a newly created one', fakeAsync(() => {
+        it('Should not make bug where existing inner query is leaking to a newly created one,', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
             tick(100);
             fix.detectChanges();
 
+            const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+
             // Add new 'expression'.
+            const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[0];
+            const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
+            (buttons[0] as HTMLElement).click();
+            tick();
             fix.detectChanges();
+
             // Add condition with 'in' operator to open inner query
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderName' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'Contains' operator.
@@ -1958,6 +1965,15 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+
+            // Enter values in the nested query
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 1); // Select 'Products' entity
+            tick(100);
+            fix.detectChanges();
+
+            QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
             //Verify that expressionTree is correct
             const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
