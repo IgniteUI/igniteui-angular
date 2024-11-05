@@ -168,20 +168,35 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return `igx-query-builder-tree--level-${this.level}`;
     }
 
+    /**
+     * Sets/gets the entities.
+     */
     @Input()
     public entities: EntityType[];
 
+    /**
+     * Sets/gets the parent query builder component.
+     */
     @Input()
     public queryBuilder: IgxQueryBuilderComponent;
 
+    /**
+     * Sets/gets the search value template.
+     */
     @Input()
     public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueTemplateDirective> = null;
 
+    /**
+    * Returns the parent expression operand.
+    */
     @Input()
     public get parentExpression(): ExpressionOperandItem {
         return this._parentExpression;
     }
 
+    /**
+     * Sets the parent expression operand.
+     */
     public set parentExpression(value: ExpressionOperandItem) {
         this._parentExpression = value;
     }
@@ -282,6 +297,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Output()
     public expressionTreeChange = new EventEmitter<IExpressionTree>();
 
+    /**
+     * Event fired if a nested query builder tree is being edited.
+     */
     @Output()
     public inEditModeChange = new EventEmitter<ExpressionOperandItem>();
 
@@ -1683,4 +1701,3 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 }
-
