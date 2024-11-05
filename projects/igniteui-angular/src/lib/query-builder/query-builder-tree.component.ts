@@ -515,6 +515,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return this.entities?.length === 1 && !this.entities[0]?.name;
     }
 
+    /** @hidden */
+    protected isSearchValueInputDisabled(): boolean {
+        return !this.selectedField ||
+                !this.selectedCondition ||
+                (this.selectedField &&
+                    (this.selectedField.filters.condition(this.selectedCondition).isUnary ||
+                    this.selectedField.filters.condition(this.selectedCondition).isNestedQuery));
+    }
+
     constructor(public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
         protected el: ElementRef,
@@ -772,7 +781,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             }
             this.innerQueryNewExpressionTree = null;
 
-            if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary) {
+            if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary || this.selectedField.filters.condition(this.selectedCondition)?.isNestedQuery) {
                 this._editedExpression.expression.searchVal = null;
             }
 

@@ -21,7 +21,7 @@
                 <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value" [displayKey]="'field'">
                 </igx-combo>
                 } @else {
-                <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
+                <ng-container *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
                 }
             </ng-template>
         </igx-query-builder>

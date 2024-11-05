@@ -345,13 +345,7 @@
                     <input
                         #searchValueInput
                         igxInput
-                        [disabled]="
-                            !selectedField ||
-                            !selectedCondition ||
-                            (selectedField &&
-                                (selectedField.filters.condition(selectedCondition).isUnary ||
-                                selectedField.filters.condition(selectedCondition).isNestedQuery))
-                        "
+                        [disabled]="isSearchValueInputDisabled()"
                         [type]="
                             selectedField && selectedField.dataType === 'number'
                                 ? 'number'
@@ -369,13 +363,7 @@
                     (click)="picker.open()"
                     type="box"
                     [readOnly]="true"
-                    [disabled]="
-                        !selectedField ||
-                        !selectedCondition ||
-                        (selectedField &&
-                            (selectedField.filters.condition(selectedCondition).isUnary ||
-                            selectedField.filters.condition(selectedCondition).isNestedQuery))
-                    "
+                    [disabled]="isSearchValueInputDisabled()"
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
                     [formatter]="selectedField.formatter"
@@ -396,13 +384,7 @@
                     (keydown)="openPicker($event)"
                     type="box"
                     [readOnly]="true"
-                    [disabled]="
-                        !selectedField ||
-                        !selectedCondition ||
-                        (selectedField &&
-                            (selectedField.filters.condition(selectedCondition).isUnary ||
-                            selectedField.filters.condition(selectedCondition).isNestedQuery))
-                    "
+                    [disabled]="isSearchValueInputDisabled()"
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
                     [formatter]="selectedField.formatter"
@@ -427,13 +409,7 @@
                         igxInput
                         tabindex="0"
                         [(ngModel)]="searchValue.value"
-                        [disabled]="
-                            !selectedField ||
-                            !selectedCondition ||
-                            (selectedField &&
-                                (selectedField.filters.condition(selectedCondition).isUnary ||
-                                selectedField.filters.condition(selectedCondition).isNestedQuery))
-                        "
+                        [disabled]="isSearchValueInputDisabled()"
                         [locale]="this.locale"
                         [igxDateTimeEditor]="selectedField.editorOptions?.dateTimeFormat"
                         [defaultFormatType]="selectedField.dataType"
