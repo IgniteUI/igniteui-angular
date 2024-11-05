@@ -611,8 +611,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column.
             selectOperatorInEditModeExpression(fix, 9); // Select 'This Year' operator.
+            tick(100);
+            fix.detectChanges();
+
             verifyEditModeExpressionInputStates(fix, true, true, false, true); // Third input should be disabled for unary operators.
-            const input = GridFunctions.getAdvancedFilteringValueInput(fix, true);
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix);
             input.click();
             fix.detectChanges();
 
