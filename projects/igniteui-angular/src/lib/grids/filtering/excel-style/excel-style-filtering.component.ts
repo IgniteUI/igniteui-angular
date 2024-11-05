@@ -556,7 +556,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.filterValues = this.generateFilterValues();
         this.generateListData();
         this.expressionsList.forEach(expr => {
-            if (expr.expression.condition.name === 'in' && this.column.dataType === GridColumnDataType.String) {
+            if (this.column.dataType === GridColumnDataType.String && this.column.filteringIgnoreCase && expr.expression.searchVal) {
                 this.modifyExpression(expr);
             }
         });
