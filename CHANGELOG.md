@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 18.3.0
+## 19.1.0
 ### New Features
 - `IgxQueryBuilder`
     - Introduced ability to create nested queries by specifying IN/NOT IN operators.

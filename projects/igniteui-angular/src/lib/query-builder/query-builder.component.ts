@@ -61,7 +61,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     /**
      * Returns the fields.
      * @hidden
-     * @deprecated in version 18.3.0. Use the `entities` property instead.
+     * @deprecated in version 19.1.0. Use the `entities` property instead.
      */
     public get fields(): FieldType[] {
         return this._fields;
@@ -70,7 +70,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     /**
      * Sets the fields.
      * @hidden
-     * @deprecated in version 18.3.0. Use the `entities` property instead.
+     * @deprecated in version 19.1.0. Use the `entities` property instead.
      */
     @Input()
     public set fields(fields: FieldType[]) {
