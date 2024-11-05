@@ -179,16 +179,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             return;
         }
         const selection = this.selectionService.get(this._id);
+        this.selectionService.clear(this._id);
         this._id = value;
         if (selection) {
             this.selectionService.set(this._id, selection);
-        }
-        if (this.dropdown?.open) {
-            this.dropdown.close();
-        }
-        if (this.inputGroup?.isFocused) {
-            this.inputGroup.element.nativeElement.blur();
-            this.inputGroup.isFocused = false;
         }
     }
 
