@@ -1208,7 +1208,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.searchValue = '';
         if (!e.event) {
             this.comboInput?.nativeElement.focus();
-        } else if (this.comboInput?.nativeElement !== this.document.activeElement) {
+        } else {
             this._onTouchedCallback();
             this.updateValidity();
         }
