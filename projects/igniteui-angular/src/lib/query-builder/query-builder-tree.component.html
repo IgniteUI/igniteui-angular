@@ -351,11 +351,10 @@
 
                 <igx-input-group
                     *ngIf="!isSearchValueInputDisabled() &&
-                        (!selectedField ||
-                        (selectedField.dataType !== 'date' &&
+                            selectedField.dataType !== 'date' &&
                             selectedField.dataType !== 'time' &&
-                            selectedField.dataType !== 'dateTime'))
-                    "
+                            selectedField.dataType !== 'dateTime'
+                        "
                     type="box"
                 >
                     <label igxLabel>{{this.resourceStrings.igx_query_builder_value_placeholder}}</label>
@@ -373,7 +372,7 @@
 
                 <igx-date-picker
                     #picker
-                    *ngIf="!isSearchValueInputDisabled() && selectedField && selectedField.dataType === 'date'"
+                    *ngIf="!isSearchValueInputDisabled() && selectedField.dataType === 'date'"
                     [(value)]="searchValue.value"
                     (keydown)="openPicker($event)"
                     (click)="picker.open()"
@@ -393,7 +392,7 @@
 
                 <igx-time-picker
                     #picker
-                    *ngIf="!isSearchValueInputDisabled() && selectedField && selectedField.dataType === 'time'"
+                    *ngIf="!isSearchValueInputDisabled() && selectedField.dataType === 'time'"
                     [(value)]="searchValue.value"
                     (click)="picker.open()"
                     (keydown)="openPicker($event)"
@@ -414,7 +413,7 @@
                 <igx-input-group
                     #inputGroup
                     type="box"
-                    *ngIf="!isSearchValueInputDisabled() && selectedField && selectedField.dataType === 'dateTime'"
+                    *ngIf="!isSearchValueInputDisabled() && selectedField.dataType === 'dateTime'"
                     type="box"
                 >
                     <label igxLabel>{{this.resourceStrings.igx_query_builder_datetime_placeholder}}</label>
