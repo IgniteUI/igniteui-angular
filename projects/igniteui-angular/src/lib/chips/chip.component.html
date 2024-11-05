@@ -36,7 +36,7 @@
             (pointerdown)="onRemoveMouseDown($event)"
             (mousedown)="onRemoveMouseDown($event)"
             (click)="onRemoveClick($event)"
-            (touchmove)="onRemoveTouchMove()"
+            (touchmove.passive)="onRemoveTouchMove()"
             (touchend)="onRemoveTouchEnd($event)">
             <ng-container *ngTemplateOutlet="removeButtonTemplate"></ng-container>
         </div>
