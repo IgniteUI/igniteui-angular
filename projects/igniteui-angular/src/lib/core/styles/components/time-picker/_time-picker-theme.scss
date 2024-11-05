@@ -402,6 +402,7 @@
     %time-picker__header-hour {
         @include type-style($header-hour, false) {
             margin-top: 0;
+            margin-bottom: 0;
         }
     }
 
