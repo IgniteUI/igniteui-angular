@@ -1206,7 +1206,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.searchValue = '';
         if (!e.event) {
             this.comboInput?.nativeElement.focus();
-        } else if (this.comboInput?.nativeElement !== document.activeElement) {
+        } else {
             this._onTouchedCallback();
             this.updateValidity();
         }
