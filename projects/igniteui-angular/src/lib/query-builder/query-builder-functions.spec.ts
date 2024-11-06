@@ -828,6 +828,8 @@ export class QueryBuilderFunctions {
         QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, dropdownItemIndex);
         tick();
         fix.detectChanges();
+        tick(100);
+        fix.detectChanges();
     }
 
      public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
