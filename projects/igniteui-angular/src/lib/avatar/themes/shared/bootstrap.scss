@@ -1,0 +1,20 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use '../light/themes' as *;
+
+$theme: $bootstrap;
+
+.igx-avatar {
+    &::after {
+        position: absolute;
+        content: '';
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        opacity: .5;
+    }
+
+    &:focus::after {
+        box-shadow: 0 0 0 rem(3px) var-get($theme, 'background');
+    }
+}

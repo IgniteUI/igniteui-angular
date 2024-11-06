@@ -6,11 +6,14 @@ import {
     Input,
     OnInit,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    inject
 } from '@angular/core';
 
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
+import { ThemeService, ThemedComponent } from '../services/theme/theme.service';
+import styles from './themes/themes.css';
 
 let NEXT_ID = 0;
 export const IgxAvatarSize = /*@__PURE__*/mkenum({
@@ -56,7 +59,10 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
     standalone: true,
     imports: [IgxIconComponent, NgTemplateOutlet]
 })
-export class IgxAvatarComponent implements OnInit {
+export class IgxAvatarComponent implements OnInit, ThemedComponent {
+    public elementRef = inject(ElementRef);
+    public themeService = inject(ThemeService);
+
     /**
      * Returns the `aria-label` attribute of the avatar.
      *
@@ -326,8 +332,6 @@ export class IgxAvatarComponent implements OnInit {
         }
     }
 
-    constructor(public elementRef: ElementRef) { }
-
     /**
      * Returns the css url of the image.
      *
@@ -341,6 +345,7 @@ export class IgxAvatarComponent implements OnInit {
     /** @hidden @internal */
     public ngOnInit() {
         this.roleDescription = this.getRole();
+        this.themeService.adoptStyles(IgxAvatarComponent, styles);
     }
 
     /** @hidden @internal */

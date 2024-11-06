@@ -1,6 +1,14 @@
 @use '../../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities' as *;
 @use '../../../styles/variables' as *;
 
+.test-100 {
+    color: color($palette, primary, 100);
+}
+
+.test-200 {
+    color: color($palette, primary, 200);
+}
+
 .sample-wrapper {
     display: grid;
     grid-template-columns: 1fr;

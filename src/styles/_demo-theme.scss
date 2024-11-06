@@ -21,6 +21,28 @@ body {
     $schema: $schema,
 );
 
+
+.avatar-theme {
+    @include css-vars(avatar-theme(
+        $schema: $light-bootstrap-schema,
+        $color: blue
+    ));
+}
+
+
+.custom-palette {
+    @include palette(palette(
+        $primary: green,
+        $secondary: green,
+        $surface: white,
+        $info: #1377d5,
+        $success: #4eb862,
+        $warn: #faa419,
+        $error: #ff134a,
+        $variant: 'material',
+    ));
+}
+
 .dock {
     @include css-vars(dock-manager-theme());
 }

@@ -1,0 +1,7 @@
+@layer theme {
+  .igx-avatar {
+    --color: pink;
+
+    outline: 1px solid red;
+  }
+}

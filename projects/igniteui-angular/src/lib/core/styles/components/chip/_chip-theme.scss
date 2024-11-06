@@ -385,7 +385,7 @@
         }
 
         @if $variant == 'indigo' {
-            %igx-icon-display {
+            igx-icon {
                 --size: #{sizable(rem(14px), rem(14px), rem(16px))}
             }
         }
