@@ -23,12 +23,12 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
     /**
      * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.find` instead.
      */
-    find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
+    find?: (fieldName: string) => IFilteringExpressionsTree | IFilteringExpression;
 
     /**
      * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.findIndex` instead.
      */
-    findIndex(fieldName: string): number;
+    findIndex?: (fieldName: string) => number;
 }
 
 /* marshalByValue */
