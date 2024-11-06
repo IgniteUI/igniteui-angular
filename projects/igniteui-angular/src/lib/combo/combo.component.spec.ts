@@ -3615,7 +3615,7 @@ describe('igxCombo', () => {
                     combo.open();
                     input.triggerEventHandler('focus', {});
                     fixture.detectChanges();
-                    expect(ngModel.touched).toBeTrue();
+                    expect(ngModel.touched).toBeFalse();
                     combo.searchInput.nativeElement.focus();
                     fixture.detectChanges();
                     const documentClickEvent = new MouseEvent('click', { bubbles: true });
