@@ -208,20 +208,35 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return `igx-query-builder-tree--level-${this.level}`;
     }
 
+    /**
+     * Sets/gets the entities.
+     */
     @Input()
     public entities: EntityType[];
 
+    /**
+     * Sets/gets the parent query builder component.
+     */
     @Input()
     public queryBuilder: IgxQueryBuilderComponent;
 
+    /**
+     * Sets/gets the search value template.
+     */
     @Input()
     public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueTemplateDirective> = null;
 
+    /**
+    * Returns the parent expression operand.
+    */
     @Input()
     public get parentExpression(): ExpressionOperandItem {
         return this._parentExpression;
     }
 
+    /**
+     * Sets the parent expression operand.
+     */
     public set parentExpression(value: ExpressionOperandItem) {
         this._parentExpression = value;
     }
@@ -322,6 +337,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Output()
     public expressionTreeChange = new EventEmitter<IExpressionTree>();
 
+    /**
+     * Event fired if a nested query builder tree is being edited.
+     */
     @Output()
     public inEditModeChange = new EventEmitter<ExpressionOperandItem>();
 
@@ -556,6 +574,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /** @hidden */
     protected isAdvancedFiltering(): boolean {
         return this.entities?.length === 1 && !this.entities[0]?.name;
+    }
+
+    /** @hidden */
+    protected isSearchValueInputDisabled(): boolean {
+        return !this.selectedField ||
+                !this.selectedCondition ||
+                (this.selectedField &&
+                    (this.selectedField.filters.condition(this.selectedCondition).isUnary ||
+                    this.selectedField.filters.condition(this.selectedCondition).isNestedQuery));
     }
 
     constructor(public cdr: ChangeDetectorRef,
@@ -815,7 +842,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             }
             this.innerQueryNewExpressionTree = null;
 
-            if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary) {
+            if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary || this.selectedField.filters.condition(this.selectedCondition)?.isNestedQuery) {
                 this._editedExpression.expression.searchVal = null;
             }
 
@@ -1726,4 +1753,3 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 }
-
