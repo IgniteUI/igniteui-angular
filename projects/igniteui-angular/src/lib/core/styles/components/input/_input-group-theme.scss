@@ -1262,6 +1262,7 @@
 
     %form-group-textarea--disabled {
         color: var-get($theme, 'disabled-text-color') !important;
+        cursor: default;
 
         &::placeholder {
             color: var-get($theme, 'disabled-placeholder-color');

@@ -70,8 +70,8 @@
     ));
     @include expansion-panel-typography($categories: (
         title: 'h5',
-        description: 'body-2',
-        body: 'body-1'
+        description: 'subtitle-2',
+        body: 'body-2'
     ));
     @include excel-filtering-typography();
     @include icon-button-typography();

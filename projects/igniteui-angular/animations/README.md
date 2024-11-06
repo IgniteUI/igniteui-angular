@@ -2,17 +2,17 @@
 
 Ignite UI for Angular includes over 100+ pre-built animations. They are split in 7 groups:
 
-  - [Fade](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/animations/fade/README.md)
-  - [Flip](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/animations/flip/README.md)
-  - [Miscellaneous](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/animations/misc/README.md)
+  - [Fade](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/animations/src/fade/README.md)
+  - [Flip](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/animations/src/flip/README.md)
+  - [Miscellaneous](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/animations/src/misc/README.md)
     - Blink
     - Heartbeat
     - Pulsate
     - Shake
-  - [Rotate](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/animations/rotate/README.md)
-  - [Scale](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/animations/scale/README.md)
-  - [Slide](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/animations/slide/README.md)
-  - [Swing](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/animations/swing/README.md)
+  - [Rotate](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/animations/src/rotate/README.md)
+  - [Scale](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/animations/src/scale/README.md)
+  - [Slide](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/animations/src/slide/README.md)
+  - [Swing](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/animations/src/swing/README.md)
 
 Each group accepts a different set of parameters, allowing you to modify the behavior of any of the included animations. Each animation is an [`AnimationReferenceMetadata`](https://angular.io/api/animations/AnimationReferenceMetadata) object as produced by the [`animation`](https://angular.io/api/animations/animation) function provided by Angular.
 

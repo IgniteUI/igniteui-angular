@@ -258,8 +258,10 @@ export class IgxCellCrudState {
         let activeElement;
         if (cellNode) {
             const document = cellNode.getRootNode() as Document | ShadowRoot;
-            activeElement = document.activeElement as HTMLElement;
-            activeElement.blur();
+            if (cellNode.contains(document.activeElement)) {
+                activeElement = document.activeElement as HTMLElement;
+                this.grid.tbody.nativeElement.focus();
+            }
         }
 
         const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);

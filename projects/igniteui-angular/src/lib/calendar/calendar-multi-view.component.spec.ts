@@ -152,7 +152,7 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             let dateEls = HelperTestFunctions.getMonthViewDates(fixture, 0);
-            UIInteractions.simulateMouseDownEvent(dateEls[15].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(dateEls[15].firstChild);
             fixture.detectChanges();
 
             expect(calendar.selected.emit).toHaveBeenCalledTimes(1);
@@ -161,7 +161,7 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(0);
 
             dateEls = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(dateEls[21].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(dateEls[21].firstChild);
             fixture.detectChanges();
 
             expect(calendar.selected.emit).toHaveBeenCalledTimes(2);
@@ -170,7 +170,7 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(0);
 
             dateEls = HelperTestFunctions.getMonthViewDates(fixture, 2);
-            UIInteractions.simulateMouseDownEvent(dateEls[19].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(dateEls[19].firstChild);
             fixture.detectChanges();
 
             expect(calendar.selected.emit).toHaveBeenCalledTimes(3);
@@ -212,7 +212,8 @@ describe('Multi-View Calendar - ', () => {
 
         it('Verify navigation with arrow up', () => {
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[10].firstChild);
+            UIInteractions.simulateMouseDownEvent(secondMonthDates[10].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[10].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document.activeElement);
@@ -248,7 +249,8 @@ describe('Multi-View Calendar - ', () => {
 
         it('Verify navigation with arrow down', () => {
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(monthDates[22].firstChild);
+            UIInteractions.simulateMouseDownEvent(monthDates[22].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(monthDates[22].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', document.activeElement);
@@ -283,7 +285,8 @@ describe('Multi-View Calendar - ', () => {
 
         it('Verify navigation with arrow left', () => {
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[1].firstChild);
+            UIInteractions.simulateMouseDownEvent(secondMonthDates[1].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[1].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
@@ -313,7 +316,8 @@ describe('Multi-View Calendar - ', () => {
 
         it('Verify navigation with arrow right', () => {
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(monthDates[20].firstChild);
+            UIInteractions.simulateMouseDownEvent(monthDates[20].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(monthDates[20].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
@@ -341,7 +345,8 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[27].firstChild);
+            UIInteractions.simulateMouseDownEvent(secondMonthDates[27].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[27].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document.activeElement);
@@ -369,7 +374,8 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[16].firstChild);
+            UIInteractions.simulateMouseDownEvent(secondMonthDates[16].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[16].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', document.activeElement);
@@ -394,7 +400,8 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[25].firstChild);
+            UIInteractions.simulateMouseDownEvent(secondMonthDates[25].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[25].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
@@ -422,7 +429,8 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(monthDates[17].firstChild);
+            UIInteractions.simulateMouseDownEvent(monthDates[17].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(monthDates[17].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
@@ -446,7 +454,8 @@ describe('Multi-View Calendar - ', () => {
 
         it('Verify navigation with pageUp', () => {
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(monthDates[16].firstChild);
+            UIInteractions.simulateMouseDownEvent(monthDates[16].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(monthDates[16].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('PageUp', document.activeElement);
@@ -466,7 +475,8 @@ describe('Multi-View Calendar - ', () => {
 
         it('Verify navigation with pageDown', () => {
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(monthDates[17].firstChild);
+            UIInteractions.simulateMouseDownEvent(monthDates[17].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(monthDates[17].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement);
@@ -486,7 +496,8 @@ describe('Multi-View Calendar - ', () => {
 
         it('Verify navigation with Shift plus pageUp', () => {
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(monthDates[16].firstChild);
+            UIInteractions.simulateMouseDownEvent(monthDates[16].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(monthDates[16].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('PageUp', document.activeElement, true, false, true);
@@ -506,7 +517,8 @@ describe('Multi-View Calendar - ', () => {
 
         it('Verify navigation with Shift plus pageDown', fakeAsync(() => {
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(monthDates[16].firstChild);
+            UIInteractions.simulateMouseDownEvent(monthDates[16].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(monthDates[16].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement, true, false, true);
@@ -526,7 +538,8 @@ describe('Multi-View Calendar - ', () => {
 
         it('Verify navigation with Home and End keys', () => {
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(monthDates[16].firstChild);
+            UIInteractions.simulateMouseDownEvent(monthDates[16].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(monthDates[16].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('Home', document.activeElement, true);
@@ -546,7 +559,8 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             const monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(monthDates[3].firstChild);
+            UIInteractions.simulateMouseDownEvent(monthDates[3].firstChild); // TODO: Use pointerdown for focus & remove
+            UIInteractions.simulateClickAndSelectEvent(monthDates[3].firstChild);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('Home', document.activeElement, true);
@@ -716,7 +730,7 @@ describe('Multi-View Calendar - ', () => {
             const fistMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
 
-            UIInteractions.simulateMouseDownEvent(fistMonthDates[29].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(fistMonthDates[29].firstChild);
             fixture.detectChanges();
 
             expect(calendar.selected.emit).toHaveBeenCalledTimes(1);
@@ -729,13 +743,13 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0);
 
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[2].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[2].firstChild);
             fixture.detectChanges();
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[3].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[3].firstChild);
             fixture.detectChanges();
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[28].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[28].firstChild);
             fixture.detectChanges();
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[29].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[29].firstChild);
             fixture.detectChanges();
 
             expect(calendar.selected.emit).toHaveBeenCalledTimes(5);
@@ -752,7 +766,7 @@ describe('Multi-View Calendar - ', () => {
             const octoberFourth = new Date('2019-10-4');
             const octoberThird = new Date('2019-10-3');
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[2].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[2].firstChild);
             fixture.detectChanges();
 
             calendar.selectDate(octoberFourth);
@@ -762,7 +776,7 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(2);
 
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[3].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[3].firstChild);
             fixture.detectChanges();
 
             expect(calendar.selected.emit).toHaveBeenCalledTimes(2);
@@ -786,15 +800,15 @@ describe('Multi-View Calendar - ', () => {
             const october27th = octoberDates[26];
             const november3rd = novemberDates[2];
 
-            UIInteractions.simulateMouseDownEvent(october27th.firstChild);
-            UIInteractions.simulateMouseDownEvent(november3rd.firstChild, true);
+            UIInteractions.simulateClickAndSelectEvent(october27th.firstChild);
+            UIInteractions.simulateClickAndSelectEvent(november3rd.firstChild, true);
             fixture.detectChanges();
 
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(5);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(3);
 
 
-            UIInteractions.simulateMouseDownEvent(october27th.firstChild, true);
+            UIInteractions.simulateClickAndSelectEvent(october27th.firstChild, true);
             fixture.detectChanges();
 
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(1);
@@ -869,13 +883,13 @@ describe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [septemberDate, octoberDate]);
 
             const inactiveDaysOctober = HelperTestFunctions.getInactiveDays(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(inactiveDaysOctober[8].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(inactiveDaysOctober[8].firstChild);
             fixture.detectChanges();
 
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [novemberDate, decemberDate]);
 
             const inactiveDaysNovember = HelperTestFunctions.getInactiveDays(fixture, 0);
-            UIInteractions.simulateMouseDownEvent(inactiveDaysNovember[0].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(inactiveDaysNovember[0].firstChild);
             fixture.detectChanges();
 
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [octoberDate, novemberDate]);
@@ -959,12 +973,12 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[0].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[0].firstChild);
             fixture.detectChanges();
 
             expect(calendar.selected.emit).toHaveBeenCalledTimes(1);
 
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[30].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[30].firstChild);
             fixture.detectChanges();
             expect(calendar.selected.emit).toHaveBeenCalledTimes(2);
 
@@ -994,13 +1008,13 @@ describe('Multi-View Calendar - ', () => {
 
         it('Should be able to select/deselect dates in multi mode', () => {
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[16].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[16].firstChild);
 
             fixture.detectChanges();
             expect(calendar.value[0].getTime()).toEqual(new Date(2019, 9, 10).getTime());
             expect(calendar.daysView.value[0].getTime()).toEqual(new Date(2019, 9, 10).getTime());
 
-            UIInteractions.simulateMouseDownEvent(secondMonthDates[17].firstChild);
+            UIInteractions.simulateClickAndSelectEvent(secondMonthDates[17].firstChild);
 
             fixture.detectChanges();
             expect(calendar.value[0].getTime()).toEqual(new Date(2019, 9, 10).getTime());

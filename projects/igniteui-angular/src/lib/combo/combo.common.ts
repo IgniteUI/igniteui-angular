@@ -166,16 +166,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             return;
         }
         const selection = this.selectionService.get(this._id);
+        this.selectionService.clear(this._id);
         this._id = value;
         if (selection) {
             this.selectionService.set(this._id, selection);
-        }
-        if (this.dropdown?.open) {
-            this.dropdown.close();
-        }
-        if (this.inputGroup?.isFocused) {
-            this.inputGroup.element.nativeElement.blur();
-            this.inputGroup.isFocused = false;
         }
     }
 
@@ -1200,6 +1194,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.searchValue = '';
         if (!e.event) {
             this.comboInput?.nativeElement.focus();
+        } else {
+            this._onTouchedCallback();
+            this.updateValidity();
         }
     }
 
@@ -1245,11 +1242,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public onBlur() {
         if (this.collapsed) {
             this._onTouchedCallback();
-            if (this.ngControl && this.ngControl.invalid) {
-                this.valid = IgxInputState.INVALID;
-            } else {
-                this.valid = IgxInputState.INITIAL;
-            }
+            this.updateValidity();
         }
     }
 
@@ -1276,6 +1269,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         }
         this.manageRequiredAsterisk();
     };
+
+    private updateValidity() {
+        if (this.ngControl && this.ngControl.invalid) {
+            this.valid = IgxInputState.INVALID;
+        } else {
+            this.valid = IgxInputState.INITIAL;
+        }
+    }
 
     private get isTouchedOrDirty(): boolean {
         return (this.ngControl.control.touched || this.ngControl.control.dirty);

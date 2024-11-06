@@ -2,16 +2,30 @@
 
 # Current Milestone
 
-## Milestone 34, (Due by Sep, 2024)
+## Milestone 35, (Due by Nov, 2024)
 
-1. Indigo Theme Calendar Improvements [#14407](https://github.com/IgniteUI/igniteui-angular/issues/14407)
-2. Provide a set of properties to be settable to default grid CRUD editors without the need for templates [#14009](https://github.com/IgniteUI/igniteui-angular/issues/14009)
+1. Angular 19 support
+2. Query Builder component update [#14979](https://github.com/IgniteUI/igniteui-angular/issues/14979)
 
 ## Going down the road
 
-1. Scheduler component [#8097](https://github.com/IgniteUI/igniteui-angular/issues/8097)
+1. Tile Manager - new component [#239](https://github.com/IgniteUI/igniteui-angular/issues/239)
 
 # Previous Milestone
+
+## Milestone 34, version 18.2 (Released Oct 25th, 2024)
+
+1. **[DONE]** Indigo Theme Calendar Improvements [#14407](https://github.com/IgniteUI/igniteui-angular/issues/14407)
+2. **[DONE]** Provide a set of properties to be settable to default grid CRUD editors without the need for templates [#14009](https://github.com/IgniteUI/igniteui-angular/issues/14009)
+3. **[DONE]** Add Multi-row layout support to igxGridState [#14907](https://github.com/IgniteUI/igniteui-angular/issues/14907)
+4. **[DONE]** Re-use column instances for state persistence [#14896](https://github.com/IgniteUI/igniteui-angular/issues/14896)
+5. **[DONE]** Tabs: add manual activation through keyboard navigation [#14839](https://github.com/IgniteUI/igniteui-angular/issues/14839)
+6. **[DONE]** Carousel Component update [#14627](https://github.com/IgniteUI/igniteui-angular/issues/14627)
+7. **[DONE]** Grids: provide a more straightforward approach to sort by formatted values [#14442](https://github.com/IgniteUI/igniteui-angular/issues/14442)
+8. **[DONE]** IgxSimpleCombo: Combo gets cleared when entering a valid value and press tab [#14085](https://github.com/IgniteUI/igniteui-angular/issues/14085)
+9. **[DONE]** Ability to format igxGrid export to excel summary values [#14626](https://github.com/IgniteUI/igniteui-angular/issues/14626)
+10. **[DONE]** All palette colors migrated to [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors)
+
 
 ## Milestone 33, version 18.1 (Released Jul 22nd, 2024)
 

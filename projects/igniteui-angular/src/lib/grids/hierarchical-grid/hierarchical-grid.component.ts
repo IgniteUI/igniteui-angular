@@ -1139,6 +1139,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     protected override setupColumns() {
         if (this.parentIsland && this.parentIsland.childColumns.length > 0 && !this.autoGenerate) {
             this.createColumnsList(this.parentIsland.childColumns.toArray());
+            super.checkPrimaryKeyColumn();
         } else {
             super.setupColumns();
         }

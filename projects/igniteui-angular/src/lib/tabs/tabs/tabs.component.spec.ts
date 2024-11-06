@@ -584,6 +584,10 @@ describe('IgxTabs', () => {
         }));
 
         it('should focus next/previous tab when pressing right/left arrow', fakeAsync(() => {
+            tabsComp.activation = 'manual';
+            tick();
+            fixture.detectChanges();
+
             headerElements[0].click();
             tick(200);
             fixture.detectChanges();
@@ -621,6 +625,10 @@ describe('IgxTabs', () => {
         }));
 
         it('should focus first/last tab when pressing home/end button', fakeAsync(() => {
+            tabsComp.activation = 'manual';
+            tick();
+            fixture.detectChanges();
+
             headerElements[0].click();
             tick(200);
             fixture.detectChanges();
@@ -640,6 +648,10 @@ describe('IgxTabs', () => {
         }));
 
         it('should select focused tabs on enter/space', fakeAsync(() => {
+            tabsComp.activation = 'manual';
+            tick();
+            fixture.detectChanges();
+
             headerElements[0].click();
             tick(200);
             fixture.detectChanges();
@@ -731,6 +743,98 @@ describe('IgxTabs', () => {
             expect(tabItems[1].selected).toBe(false);
         }));
 
+        it('should set auto activation mode by default and change selectedIndex on arrow keys', fakeAsync(() => {
+            expect(tabsComp.activation).toBe('auto');
+
+            headerElements[0].dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(1);
+
+            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(2);
+        }));
+
+        it('should update focus and selectedIndex correctly in auto mode when navigating with arrow keys', fakeAsync(() => {
+            expect(tabsComp.selectedIndex).toBe(-1);
+
+            headerElements[0].dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(1);
+            expect(document.activeElement).toBe(headerElements[1]);
+
+            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(2);
+            expect(document.activeElement).toBe(headerElements[2]);
+
+            headerElements[2].dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(1);
+            expect(document.activeElement).toBe(headerElements[1]);
+
+            headerElements[1].dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(headerElements[0]);
+        }));
+
+        it('should not change selectedIndex when using arrow keys in manual mode', fakeAsync(() => {
+            tabsComp.activation = 'manual';
+            fixture.detectChanges();
+
+            headerElements[0].click();
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+
+            headerElements[0].dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(headerElements[1]);
+
+            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(headerElements[2]);
+        }));
+
+        it('should select focused tab on Enter or Space in manual mode', fakeAsync(() => {
+            tabsComp.activation = 'manual';
+            fixture.detectChanges();
+
+            headerElements[0].click();
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+
+            headerElements[0].dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(headerElements[1]);
+
+            headerElements[1].dispatchEvent(KEY_ENTER_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(1);
+
+            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            headerElements[2].dispatchEvent(KEY_SPACE_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(2);
+        }));
     });
 
     describe('Tabs-only Mode With Initial Selection Set on TabItems Tests', () => {
@@ -993,6 +1097,10 @@ describe('IgxTabs', () => {
 
             it('Validate the events are not fired when navigating between tabs with arrow keys before pressing enter/space key.',
                 fakeAsync(() => {
+                    tabs.activation = 'manual';
+                    tick();
+                    fixture.detectChanges();
+
                     tick(100);
                     headers[0].focus();
 
@@ -1057,6 +1165,10 @@ describe('IgxTabs', () => {
 
             it('Validate the events are not fired when navigating between tabs with home/end before pressing enter/space key.',
                 fakeAsync(() => {
+                    tabs.activation = 'manual';
+                    tick();
+                    fixture.detectChanges();
+
                     tick(100);
                     headers[0].focus();
 

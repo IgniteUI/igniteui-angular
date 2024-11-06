@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './public_api';
 import { BasicGridSearchComponent } from '../../test-utils/grid-base-components.spec';
@@ -14,12 +14,14 @@ import { GridColumnDataType } from '../../data-operations/data-util';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { firstValueFrom } from 'rxjs';
 
 describe('IgxGrid - search API #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const HIGHLIGHT_CSS_CLASS = '.igx-highlight';
     const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
-    let fix; let component; let grid: IgxGridComponent; let fixNativeElement;
+    let fix: ComponentFixture<any>;
+    let component; let grid: IgxGridComponent; let fixNativeElement;
 
     configureTestSuite();
 
@@ -1091,7 +1093,7 @@ describe('IgxGrid - search API #grid', () => {
             fix.detectChanges();
 
             (grid as any).scrollTo(9, 0);
-            await wait(16);
+            await firstValueFrom(grid.verticalScrollContainer.chunkLoad);
             fix.detectChanges();
             const row = grid.gridAPI.get_row_by_index(9);
             const spans = row.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);

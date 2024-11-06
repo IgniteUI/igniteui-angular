@@ -9,6 +9,7 @@ import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 import { CellType } from '../public_api';
+import { firstValueFrom } from 'rxjs';
 
 const DEBOUNCETIME = 30;
 
@@ -420,7 +421,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 5; i < 9; i++) {
                 let cell = treeGrid.gridAPI.get_cell_by_index(i, 'ID');
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-                await wait(DEBOUNCETIME);
+                await firstValueFrom(treeGrid.verticalScrollContainer.chunkLoad);
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 cell = treeGrid.gridAPI.get_cell_by_index(i + 1, 'ID');
@@ -430,7 +431,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 9; i > 0; i--) {
                 let cell = treeGrid.gridAPI.get_cell_by_index(i, 'ID');
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-                await wait(DEBOUNCETIME);
+                if (i <= 4)
+                    await firstValueFrom(treeGrid.verticalScrollContainer.chunkLoad);
+                else 
+                    await wait();
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 cell = treeGrid.gridAPI.get_cell_by_index(i - 1, 'ID');

@@ -3,7 +3,7 @@
 <div class="density-chooser">
     <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
 </div>
-<igx-grid (cellEdit)='cellEdit($event)' #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" width="1500px" height="550px" [rowSelection]="selectionMode">
+<igx-grid (focusout)="handleFocusOut($event)" (cellEdit)='cellEdit($event)' #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" width="1500px" height="550px" [rowSelection]="selectionMode">
     <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hidden]="orderDateHidden" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [editable]="true" [resizable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>
                     {{val | date}}
@@ -24,7 +24,7 @@
     </igx-column> -->
     <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" [editable]="true" [dataType]="'number'" [hasSummary]="false">
     </igx-column>
-    <igx-column field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
+    <igx-column field="ProductName" width="200px" [groupable]="groupable" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
     </igx-column>
     <igx-column required field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="false">
       </igx-column>
@@ -32,16 +32,37 @@
     </igx-column>
     <igx-paginator></igx-paginator>
 </igx-grid>
-<input igxButton="contained" id="updBtn" type="button" (click)="updRecord()" value="Update cell/record">
-<button igxButton="contained" (click)="addRow()">Add Row</button>
-<button igxButton="contained" (click)="updateCell()">Update Cell</button>
-<button igxButton="contained" (click)="pin()">Pin/Unpin</button>
-<button igxButton="contained" (click)="hideColumn()">Hide/Show OrderDate</button>
-<button igxButton="contained" (click)="updateSpecificRow()">Update Row by ID</button>
-<button igxButton="contained" (click)="enDisSummaries()">Enable/DisableSummaries</button>
-<button igxButton="contained" (click)="kk = !kk">groupable</button>
-<button igxButton="contained" (click)="changeFormatOptions()">Change formatting</button>
-<input type="text" [(ngModel)]="pname">
+<div class="sample-actions">
+    <input igxButton="contained" id="updBtn" type="button" (click)="updRecord()" value="Update cell/record">
+    <button igxButton="contained" (click)="addRow()">Add Row</button>
+    <button igxButton="contained" (click)="updateCell()">Update Cell</button>
+    <button igxButton="contained" (click)="pin()">Pin/Unpin</button>
+    <button igxButton="contained" (click)="hideColumn()">Hide/Show OrderDate</button>
+    <button igxButton="contained" (click)="updateSpecificRow()">Update Row by ID</button>
+    <button igxButton="contained" (click)="enDisSummaries()">Enable/DisableSummaries</button>
+    <button igxButton="contained" (click)="groupable = !groupable">groupable</button>
+    <button igxButton="contained" (click)="changeFormatOptions()">Change formatting</button>
+    <input type="text" [(ngModel)]="pname">
+</div>
+<!-- TODO: Props panel -->
+<div class="sample-actions">
+    <igx-switch [(ngModel)]="exitEditOnBlur">Exit Edit On Blur</igx-switch>
+
+    <igx-select [(ngModel)]="grid1.cellSelection" type="border">
+        <label igxLabel>Cell Selection</label>
+        @for (item of selectionModes; track item) {
+            <igx-select-item [value]="item">{{ item }}</igx-select-item>
+        }
+    </igx-select>
+
+    <igx-select [(ngModel)]="grid1.rowSelection" type="border">
+        <label igxLabel>Row Selection</label>
+        @for (item of selectionModes; track item) {
+            <igx-select-item [value]="item">{{ item }}</igx-select-item>
+        }
+    </igx-select>
+</div>
+
 <h4 class="sample-title">Grid without PK</h4>
 <igx-grid (cellEdit)='cellEdit($event)' #grid [data]="dataWithoutPK" class="grid-size" width="800px" height="550px" [moving]="true" [rowSelection]="selectionMode">
     <igx-column [pinned]="true">
