@@ -1204,6 +1204,47 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyChildrenSelection(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement, false);
         }));
 
+        it('Should remove all empty groups when clicking `delete` on a group\'s operator line\'s context menu.', fakeAsync(() => {
+            const rootTree = new FilteringExpressionsTree(FilteringLogic.And);
+            rootTree.filteringOperands.push({
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+            });
+            const firstTree = new FilteringExpressionsTree(FilteringLogic.And);
+            const secondTree = new FilteringExpressionsTree(FilteringLogic.Or);
+            const thirdTree = new FilteringExpressionsTree(FilteringLogic.And);
+            thirdTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            thirdTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 's', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            secondTree.filteringOperands.push(thirdTree);
+            firstTree.filteringOperands.push(secondTree);
+            rootTree.filteringOperands.push(firstTree);
+            queryBuilder.expressionTree = rootTree;
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            // Click group's outer operator line.
+            QueryBuilderFunctions.clickQueryBuilderTreeGroupOperatorLine(fix, [0]);
+            tick();
+            fix.detectChanges();
+
+            // Click on `delete` in the context menu.
+            let deleteBtn = document.querySelector('.igx-filter-contextual-menu__delete-btn') as HTMLElement;;
+            deleteBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify tree layout and remaining chip content
+            let rootGroup =  QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+            expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup as HTMLElement).length).toBe(1);
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Downloads', 'Greater Than', '100');
+        }));
+
         it('Should display an alert dialog when the entity is changed and showEntityChangeDialog is true.', fakeAsync(() => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
             const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`);
