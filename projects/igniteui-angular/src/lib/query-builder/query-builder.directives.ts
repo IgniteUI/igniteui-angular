@@ -32,9 +32,9 @@ export class IgxQueryBuilderSearchValueTemplateDirective {
 export class IgxFieldValidatorDirective implements OnChanges {
     private picker: any;
     constructor(private element: ElementRef,
-        @Host() @Self() @Optional() private datePicker : IgxDatePickerComponent,
-        @Host() @Self() @Optional() private timePicker : IgxTimePickerComponent,
-        @Host() @Self() @Optional() private dateTimePicker : IgxDateTimeEditorDirective
+        @Host() @Self() @Optional() private datePicker: IgxDatePickerComponent,
+        @Host() @Self() @Optional() private timePicker: IgxTimePickerComponent,
+        @Host() @Self() @Optional() private dateTimePicker: IgxDateTimeEditorDirective
     ) {
         this.picker = this.datePicker || this.timePicker || this.dateTimePicker;
     }
@@ -43,24 +43,19 @@ export class IgxFieldValidatorDirective implements OnChanges {
     public validators: IFieldValidator[] = [];
 
     public ngOnChanges() {
-        if (this.validators) {
-            if(this.picker) {
-                this.validators.forEach(validator => {
-                    if (validator.type === 'mindate') {
-                        this.picker.minValue = validator.value;
-                    } else if (validator.type === 'maxdate') {
-                        this.picker.maxValue = validator.value;
-                    }
-                });
-            } else {
-                this.validators.forEach(validator => {
-                    if (validator.type === 'required') {
-                        this.element.nativeElement.required = true;
-                    } else if (!validator.type.includes('date')) {
-                        this.element.nativeElement.setAttribute(validator.type, validator.value);
-                    }
-                });
+        if (!this.validators)
+            return;
+
+        this.validators.forEach(validator => {
+            if (this.picker && validator.type === 'mindate') {
+                this.picker.minValue = validator.value;
+            } else if (this.picker && validator.type === 'maxdate') {
+                this.picker.maxValue = validator.value;
+            } else if (!this.picker && !validator.type.includes('date')) {
+                this.element.nativeElement.setAttribute(validator.type, validator.value);
+            } else if (validator.type === 'required') {
+                this.element.nativeElement.required = true;
             }
-        }
+        });
     }
 }
