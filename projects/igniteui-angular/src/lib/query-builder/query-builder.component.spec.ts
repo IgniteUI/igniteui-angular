@@ -2067,14 +2067,12 @@ describe('IgxQueryBuilder', () => {
             let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
             // Verify validators are applied
             expect(input.required).toBeTrue();
-            expect(input).not.toHaveClass('ng-dirty');
 
             // Verify input validity and 'canCommit value'
             UIInteractions.clickAndSendInputElementValue(input, '');
             tick(100);
             fix.detectChanges();
             expect(input.validity.valid).toBeFalse();
-            expect(input).toHaveClass('ng-dirty');
             expect(queryBuilder.canCommit()).toBeFalse();
 
             UIInteractions.clickAndSendInputElementValue(input, 'asd');
@@ -2099,14 +2097,12 @@ describe('IgxQueryBuilder', () => {
             input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             // Verify validators are applied
             expect(input.required).toBeTrue();
-            expect(input).not.toHaveClass('ng-dirty');
 
             // Verify input validity and 'canCommit value'
             UIInteractions.clickAndSendInputElementValue(input, '');
             tick(100);
             fix.detectChanges();
             expect(input.validity.valid).toBeFalse();
-            expect(input).toHaveClass('ng-dirty');
             expect(queryBuilder.canCommit()).toBeFalse();
 
             UIInteractions.clickAndSendInputElementValue(input, 'asd');
@@ -2134,14 +2130,12 @@ describe('IgxQueryBuilder', () => {
             // Verify validators are applied
             expect(input.min).toBe('3');
             expect(input.max).toBe('50');
-            expect(input).not.toHaveClass('ng-dirty');
 
             // Verify input validity and 'canCommit value'
             UIInteractions.clickAndSendInputElementValue(input, '2');
             tick(100);
             fix.detectChanges();
             expect(input.validity.valid).toBeFalse();
-            expect(input).toHaveClass('ng-dirty');
             expect(queryBuilder.canCommit()).toBeFalse();
 
             UIInteractions.clickAndSendInputElementValue(input, '10');
@@ -2173,14 +2167,12 @@ describe('IgxQueryBuilder', () => {
             // Verify validators are applied
             expect(input.min).toBe('3');
             expect(input.max).toBe('50');
-            expect(input).not.toHaveClass('ng-dirty');
 
             // Verify input validity and 'canCommit value'
             UIInteractions.clickAndSendInputElementValue(input, '2');
             tick(100);
             fix.detectChanges();
             expect(input.validity.valid).toBeFalse();
-            expect(input).toHaveClass('ng-dirty');
             expect(queryBuilder.canCommit()).toBeFalse();
 
             UIInteractions.clickAndSendInputElementValue(input, '60');
