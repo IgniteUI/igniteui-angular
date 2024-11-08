@@ -41,7 +41,12 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     @Output() public resize = new Subject<any>();
 
     private _left: number;
+    private _ratio: number = 1;
     private _destroy = new Subject<boolean>();
+
+    public get ratio(): number {
+        return this._ratio;
+    }
 
     constructor(
         public element: ElementRef<HTMLElement>,
@@ -56,7 +61,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
                 .pipe(
                     takeUntil(this._destroy),
                     takeUntil<MouseEvent>(this.resizeEnd),
-                    map((event) => event.clientX - offset),
+                    map((event) => (event.clientX - offset) / (this._ratio)),
                 ))
         )
             .subscribe((pos) => {
@@ -113,8 +118,12 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     public onMousedown(event: MouseEvent) {
         event.preventDefault();
         const parent = this.element.nativeElement.parentElement.parentElement;
-
-        this.left = this._left = event.clientX - parent.getBoundingClientRect().left;
+        const parentRectWidth = parent.getBoundingClientRect().width;
+        const parentComputedWidth = parseFloat(window.getComputedStyle(parent).width);
+        if (parentRectWidth && parentComputedWidth && parentRectWidth / parentComputedWidth !== 1) {
+            this._ratio = parentRectWidth / parentComputedWidth;
+        }
+        this.left = this._left = (event.clientX - parent.getBoundingClientRect().left) / (this._ratio);
         this.top = (event.target as HTMLElement).getBoundingClientRect().top - parent.getBoundingClientRect().top;
 
         this.resizeStart.next(event);
