@@ -1969,11 +1969,13 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
+    /* mustCoerceToInt */
     @Input()
     public get pagingMode() {
         return this._pagingMode;
     }
 
+    /* mustCoerceToInt */
     public set pagingMode(val: GridPagingMode) {
         this._pagingMode = val;
         this.pipeTrigger++;
