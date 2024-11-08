@@ -20,6 +20,7 @@ export interface IDimensionsChange {
     /** The new list of dimensions. */
     dimensions: IPivotDimension[],
     /** The dimension list type - Row, Column or Filter. */
+    /* mustCoerceToInt */
     dimensionCollectionType: PivotDimensionType
 }
 
