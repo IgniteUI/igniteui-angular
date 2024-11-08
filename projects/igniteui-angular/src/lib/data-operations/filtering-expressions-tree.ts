@@ -10,6 +10,7 @@ export enum FilteringExpressionsTreeType {
 
 export declare interface IExpressionTree {
     filteringOperands: (IExpressionTree | IFilteringExpression)[];
+    /* mustCoerceToInt */
     operator: FilteringLogic;
     fieldName?: string;
 }
@@ -18,6 +19,7 @@ export declare interface IExpressionTree {
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpressionTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
     /* alternateName: treeType */
+    /* mustCoerceToInt */
     type?: FilteringExpressionsTreeType;
 
     /**
