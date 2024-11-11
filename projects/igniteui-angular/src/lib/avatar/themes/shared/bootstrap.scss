@@ -5,16 +5,18 @@
 $theme: $bootstrap;
 
 .igx-avatar {
-    &::after {
-        position: absolute;
-        content: '';
-        width: 100%;
-        height: 100%;
-        border-radius: inherit;
-        opacity: .5;
-    }
+    @container style(--ig-theme: bootstrap) {
+        &::after {
+            position: absolute;
+            content: '';
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            opacity: .5;
+        }
 
-    &:focus::after {
-        box-shadow: 0 0 0 rem(3px) var-get($theme, 'background');
+        &:focus::after {
+            box-shadow: 0 0 0 rem(3px) var-get($theme, 'background');
+        }
     }
 }

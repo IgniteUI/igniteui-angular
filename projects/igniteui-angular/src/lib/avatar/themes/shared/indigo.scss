@@ -1,5 +1,7 @@
 .igx-avatar {
-    igx-icon {
-        --ig-size: 1;
+    @container style(--ig-theme: indigo) {
+        igx-icon {
+            --ig-size: 1;
+        }
     }
 }

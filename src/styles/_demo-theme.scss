@@ -23,9 +23,11 @@ body {
 
 
 .avatar-theme {
+    --ig-theme: bootstrap;
+    @include palette($light-bootstrap-palette);
+
     @include css-vars(avatar-theme(
         $schema: $light-bootstrap-schema,
-        $color: blue
     ));
 }
 

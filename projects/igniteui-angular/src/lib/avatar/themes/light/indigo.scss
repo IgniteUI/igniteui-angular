@@ -5,5 +5,7 @@
 $theme: $indigo;
 
 igx-avatar {
+    --ig-theme: indigo;
+
     @include css-vars-from-theme(diff($base, $theme), 'igx-avatar');
 }
