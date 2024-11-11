@@ -12,7 +12,6 @@
     "@typescript-eslint"
   ],
   "rules": {
-    "@typescript-eslint/indent": "error",
     "@typescript-eslint/naming-convention": [
       "error",
       {
