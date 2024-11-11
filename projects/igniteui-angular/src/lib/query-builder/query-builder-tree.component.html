@@ -333,28 +333,12 @@
 
             <ng-template #defaultSearchValueTemplate>
                 <igx-input-group
-                    *ngIf="isSearchValueInputDisabled()"
-                    type="box"
-                >
-                    <label igxLabel>{{this.resourceStrings.igx_query_builder_value_placeholder}}</label>
-                    <input
-                        igxInput
-                        [disabled]="true"
-                        [type]="
-                            selectedField && selectedField.dataType === 'number'
-                                ? 'number'
-                                : 'text'
-                        "
-                        value=""
-                    />
-                </igx-input-group>
-
-                <igx-input-group
-                    *ngIf="!isSearchValueInputDisabled() &&
-                            selectedField.dataType !== 'date' &&
+                    *ngIf="
+                        !selectedField ||
+                        (selectedField.dataType !== 'date' &&
                             selectedField.dataType !== 'time' &&
-                            selectedField.dataType !== 'dateTime'
-                        "
+                            selectedField.dataType !== 'dateTime')
+                    "
                     type="box"
                 >
                     <label igxLabel>{{this.resourceStrings.igx_query_builder_value_placeholder}}</label>
@@ -381,7 +365,7 @@
 
                 <igx-date-picker
                     #picker
-                    *ngIf="!isSearchValueInputDisabled() && selectedField.dataType === 'date'"
+                    *ngIf="selectedField && selectedField.dataType === 'date'"
                     igxFieldValidators
                     [validators]="selectedField?.validators"
                     [(value)]="searchValue.value"
@@ -389,6 +373,7 @@
                     (click)="picker.open()"
                     type="box"
                     [readOnly]="true"
+                    [disabled]="isSearchValueInputDisabled()"
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
                     [formatter]="selectedField.formatter"
@@ -403,7 +388,7 @@
 
                 <igx-time-picker
                     #picker
-                    *ngIf="!isSearchValueInputDisabled() && selectedField.dataType === 'time'"
+                    *ngIf="selectedField && selectedField.dataType === 'time'"
                     igxFieldValidators
                     [validators]="selectedField?.validators"
                     [(value)]="searchValue.value"
@@ -411,6 +396,7 @@
                     (keydown)="openPicker($event)"
                     type="box"
                     [readOnly]="true"
+                    [disabled]="isSearchValueInputDisabled()"
                     [locale]="this.locale"
                     [outlet]="pickerOutlet"
                     [formatter]="selectedField.formatter"
@@ -426,7 +412,7 @@
                 <igx-input-group
                     #inputGroup
                     type="box"
-                    *ngIf="!isSearchValueInputDisabled() && selectedField.dataType === 'dateTime'"
+                    *ngIf="selectedField && selectedField.dataType === 'dateTime'"
                     type="box"
                 >
                     <label igxLabel>{{this.resourceStrings.igx_query_builder_datetime_placeholder}}</label>
@@ -437,6 +423,7 @@
                         [validators]="selectedField?.validators"
                         tabindex="0"
                         [(ngModel)]="searchValue.value"
+                        [disabled]="isSearchValueInputDisabled()"
                         [locale]="this.locale"
                         [igxDateTimeEditor]="selectedField.editorOptions?.dateTimeFormat"
                         [defaultFormatType]="selectedField.dataType"
