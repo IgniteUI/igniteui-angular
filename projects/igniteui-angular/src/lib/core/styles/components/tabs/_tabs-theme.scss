@@ -252,20 +252,6 @@
         flex: 0 0 auto;
         background: var-get($theme, 'item-background');
         z-index: 1;
-
-        @if $indigo-theme {
-            [igxIconButton='flat'].igx-button--focused {
-                box-shadow: none;
-
-                &::after {
-                    border: rem(3px) solid var(--nav-btn-border-color);
-
-                    @if $theme-variant == 'dark' {
-                        border-color: contrast-color($color: 'gray', $variant: 50, $opacity: .2);
-                    }
-                }
-            }
-        }
     }
 
     %tabs-header-content {
