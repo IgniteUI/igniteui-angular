@@ -1857,7 +1857,11 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
 
             value.type = FilteringExpressionsTreeType.Regular;
-            this._filteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
+            if (value && this.columns) {
+                this._filteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
+            } else {
+                this._filteringExpressionsTree = value;
+            }
             this.filteringPipeTrigger++;
             this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
@@ -6593,7 +6597,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             .filter((c) => c.pinned);
         this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
         this._columns = newColumns;
-        if (this._columns) {
+        if (this._columns && this._filteringExpressionsTree) {
             this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
         }
         this.resetCaches();
@@ -6657,6 +6661,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.autogenerateColumns();
         } else {
             this._columns = this.getColumnList();
+            if (this._columns && this._filteringExpressionsTree) {
+                this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
+            }
         }
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
