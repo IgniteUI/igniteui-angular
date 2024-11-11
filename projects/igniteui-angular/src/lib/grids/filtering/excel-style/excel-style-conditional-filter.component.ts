@@ -41,7 +41,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     public subMenu: IgxDropDownComponent;
 
     protected get filterNumber() {
-        return this.esf.expressionsList.length;
+        return this.esf.expressionsList.filter(e => e.expression.fieldName === this.esf.column.field && e.expression.condition).length;
     }
 
     private shouldOpenSubMenu = true;

@@ -46,6 +46,7 @@ import { NgClass, NgIf, NgFor } from '@angular/common';
 export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public expressionsList = new Array<ExpressionUI>();
+
     @Input()
     public column: ColumnType;
 
@@ -218,6 +219,10 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
             eventArgs.stopPropagation();
             eventArgs.preventDefault();
         }
+    }
+
+    public getExpressionsList(column: string) {
+        return this.expressionsList.filter(e => e.expression.fieldName === column);
     }
 
     private createCondition(conditionName: string) {
