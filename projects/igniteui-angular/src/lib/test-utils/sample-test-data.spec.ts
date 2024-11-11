@@ -4759,8 +4759,6 @@ export class SampleTestData {
     }
 }
 
-/* eslint-enable @typescript-eslint/quotes */
-
 export class DataParent {
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
     public nextDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 0, 0, 0);
