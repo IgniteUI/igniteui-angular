@@ -67,12 +67,12 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     @Input()
     public set entities(entities: EntityType[]) {
-        this._entities = entities;
-        if (JSON.stringify(entities) !== JSON.stringify(this._entities)) {
-            if (this.entities && this.expressionTree) {
-                this._expressionTree = recreateTree(this._expressionTree, this._entities);
+        if (entities !== this._entities) {
+            if (entities && this.expressionTree) {
+                this._expressionTree = recreateTree(this._expressionTree, entities);
             }
         }
+        this._entities = entities;
     }
 
     /**
@@ -114,7 +114,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
-        if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
+        if (expressionTree !== this._expressionTree) {
             if (this.entities && expressionTree) {
                 this._expressionTree = recreateTree(expressionTree, this.entities);
             } else {
@@ -264,7 +264,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     }
 
     public onExpressionTreeChange(tree: IExpressionTree) {
-        if (tree && this.entities && JSON.stringify(tree) !== JSON.stringify(this._expressionTree)) {
+        if (tree && this.entities && tree !== this._expressionTree) {
             this._expressionTree = recreateTree(tree, this.entities);
         } else {
             this._expressionTree = tree;

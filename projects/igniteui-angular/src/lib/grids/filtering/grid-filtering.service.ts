@@ -146,7 +146,7 @@ export class IgxFilteringService implements OnDestroy {
         this.isFiltering = true;
 
         let expressionsTree;
-        if ('operator' in expressions) {
+        if (expressions && 'operator' in expressions) {
             expressionsTree = expressions;
         } else {
             expressionsTree = this.createSimpleFilteringTree(field, expressions);
