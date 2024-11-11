@@ -87,7 +87,7 @@
     @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'variant');
-    $bootstrap-theme: map.get($theme, variant) == 'bootstrap';
+    $bootstrap-theme: map.get($theme, '_meta', 'variant') == 'bootstrap';
 
     $dialog-min-width: map.get((
         material: rem(280px),
