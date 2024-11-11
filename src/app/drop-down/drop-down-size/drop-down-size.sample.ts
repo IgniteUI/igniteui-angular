@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { IgxButtonDirective, IgxComboComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxLabelDirective, IgxSelectComponent, IgxSelectItemComponent, IgxToggleActionDirective } from 'igniteui-angular';
 
+// eslint-disable-next-line prefer-spread
 const data = Array.apply(null, { length: 57 }).map((e, i) => ({
     valueKey: i,
     textKey: `Option ${i + 1}`,

@@ -1112,7 +1112,7 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
     </igx-grid>`,
     imports: [NgFor, IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent]
 })
-export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridComponent {
+export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridComponent implements OnInit  {
     public override data = [];
     public columns = [];
 

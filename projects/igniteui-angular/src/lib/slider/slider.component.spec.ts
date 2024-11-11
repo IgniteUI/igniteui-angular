@@ -439,7 +439,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
             await wait();
 
-            let activeThumb = fixture.debugElement.query(By.css(THUMB_TO_PRESSED_CLASS));
+            const activeThumb = fixture.debugElement.query(By.css(THUMB_TO_PRESSED_CLASS));
             expect(activeThumb).not.toBeNull();
             expect(sliderInstance.value).toBeGreaterThan(sliderInstance.minValue);
 
