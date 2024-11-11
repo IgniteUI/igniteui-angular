@@ -180,7 +180,7 @@
         flex-flow: row nowrap;
         justify-content: flex-end;
         padding: $dialog-actions-padding;
-        gap: if($variant == 'indigo', rem(16px), rem(8px));
+        gap: if($variant == 'indigo-design', rem(16px), rem(8px));
 
         @if $bootstrap-theme {
             border-top: rem(1px) solid var-get($theme, 'border-color');
