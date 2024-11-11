@@ -465,10 +465,10 @@ export class TreeGridFunctions {
 
 
     public static moveGridCellWithTab =
-        (fix, cell: IgxGridCellComponent | CellType) => new Promise<void>(async resolve => {
+        (fix, cell: IgxGridCellComponent | CellType) => async resolve => {
             UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
-        });
+        };
 }

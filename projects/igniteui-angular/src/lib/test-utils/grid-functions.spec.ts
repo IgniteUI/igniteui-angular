@@ -231,14 +231,14 @@ export class GridFunctions {
         return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
     }
 
-    public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => new Promise<void>(async (resolve) => {
+    public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => async (resolve) => {
         const icon = row.element.nativeElement.querySelector('igx-icon');
         UIInteractions.simulateClickAndSelectEvent(icon.parentElement);
         await wait(debounceTime);
         fix.detectChanges();
 
         resolve();
-    });
+    };
 
     public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxRowDirective) {
         const rowDE = fix.debugElement.queryAll(By.directive(IgxRowDirective)).find(el => el.componentInstance === row);
@@ -2206,7 +2206,7 @@ export class GridSummaryFunctions {
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =
-        (fix, startCell, endCell, ctrl = false, shift = false) => new Promise<void>(async resolve => {
+        (fix, startCell, endCell, ctrl = false, shift = false) => async resolve => {
             UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
             fix.detectChanges();
             await wait();
@@ -2217,7 +2217,7 @@ export class GridSelectionFunctions {
             await wait();
             fix.detectChanges();
             resolve();
-        });
+        };
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
         UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
@@ -2229,7 +2229,7 @@ export class GridSelectionFunctions {
     }
 
     public static selectCellsRangeWithShiftKey =
-        (fix, startCell, endCell) => new Promise<void>(async resolve => {
+        (fix, startCell, endCell) => async resolve => {
             UIInteractions.simulateClickAndSelectEvent(startCell);
             await wait();
             fix.detectChanges();
@@ -2239,7 +2239,7 @@ export class GridSelectionFunctions {
             fix.detectChanges();
             resolve();
             resolve();
-        });
+        };
 
     public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
         UIInteractions.simulateClickAndSelectEvent(startCell);
