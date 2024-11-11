@@ -119,8 +119,8 @@
             <igx-column width="100px" field="Discontinued" header="Discontinued" [dataType]="'boolean'" [editable]="true">
             </igx-column>
             @if (customTemplate) {
-                <ng-template igxRowEdit>
-                    <div class='igx-banner'>
+                <ng-template igxRowEdit let-endEdit>
+                    <div class="igx-banner">
                         <div class="igx-banner__message">
                             <!--<div class="igx-banner__illustration">-->
                             <!--<igx-icon name="edit"></igx-icon>-->
@@ -129,10 +129,10 @@
                         </div>
                         <div class="igx-banner__actions">
                             <div class="igx-banner__row">
-                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.crudService.endEdit()">Cancel</button>
+                                <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
                                 <button igxButton igxRowEditTabStop (click)="console.log(gridRowEditTransaction.transactions)">Log
                                     Changes</button>
-                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.crudService.endEdit(true)">Apply</button>
+                                <button igxButton igxRowEditTabStop (click)="endEdit(true)">Apply</button>
                             </div>
                         </div>
                     </div>

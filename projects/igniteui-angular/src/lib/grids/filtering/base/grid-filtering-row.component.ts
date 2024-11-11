@@ -514,11 +514,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         requestAnimationFrame(() => {
             const focusedElement = document.activeElement;
 
-            if (focusedElement.classList.contains('igx-chip__remove') || focusedElement.tagName === 'IGX-DAY-ITEM') {
+            if (focusedElement.classList.contains('igx-chip__remove')) {
                 return;
             }
 
-            if (!(focusedElement && this.editorsContain(focusedElement))
+            if (!(focusedElement && this.editorFocused(focusedElement))
                 && this.dropDownConditions.collapsed) {
                 this.commitInput();
             }
@@ -608,7 +608,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     public onChipPointerdown(args, chip: IgxChipComponent) {
         const activeElement = document.activeElement;
         this._cancelChipClick = chip.selected
-            && activeElement && this.editorsContain(activeElement);
+            && activeElement && this.editorFocused(activeElement);
     }
 
     public onChipClick(args, item: ExpressionUI) {
@@ -869,11 +869,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.filteringService.filterInternal(this.column.field);
     }
 
-    private editorsContain(child: Element): boolean {
+    private editorFocused(activeElement: Element): boolean {
         // if the first check is false and the second is undefined this will return undefined
         // make sure it always returns boolean
-        return !!(this.inputGroup && this.inputGroup.nativeElement.contains(child)
-            || this.picker && this.picker.element.nativeElement.contains(child));
+        return !!(this.inputGroup && this.inputGroup.nativeElement.contains(activeElement)
+            || this.picker && this.picker.isFocused);
     }
 
     private get isColumnFiltered() {

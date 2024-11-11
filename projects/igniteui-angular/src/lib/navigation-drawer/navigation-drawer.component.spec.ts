@@ -202,7 +202,7 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.navDrawer.hasAnimateWidth).toBeTruthy();
-            expect(fixture.debugElement.query((x) => x.nativeNode.nodeName === 'ASIDE').nativeElement.classList)
+            expect(fixture.debugElement.query(By.css('.igx-nav-drawer__aside')).nativeElement.classList)
                 .toContain('igx-nav-drawer__aside--mini');
         }).catch((reason) => Promise.reject(reason));
     }));
@@ -261,7 +261,7 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.navDrawer.pin).toBeTruthy();
-            expect(fixture.debugElement.query((x) => x.nativeNode.nodeName === 'ASIDE').nativeElement.classList)
+            expect(fixture.debugElement.query(By.css('.igx-nav-drawer__aside')).nativeElement.classList)
                 .toContain('igx-nav-drawer__aside--pinned');
 
             expect(fixture.componentInstance.navDrawer.enableGestures).toBe(false);
@@ -290,7 +290,7 @@ describe('Navigation Drawer', () => {
                 fixture.detectChanges();
                 const windowHeight = window.innerHeight;
                 const container = fixture.debugElement.query(By.css('div')).nativeElement;
-                const navdrawer = fixture.debugElement.query(By.css('igx-nav-drawer > aside')).nativeElement;
+                const navdrawer = fixture.debugElement.query(By.css('igx-nav-drawer > .igx-nav-drawer__aside')).nativeElement;
 
                 fixture.componentInstance.pin = false;
                 fixture.detectChanges();
@@ -483,7 +483,7 @@ describe('Navigation Drawer', () => {
         fixture.detectChanges();
 
         // const comp: DebugElement = fixture.debugElement.query(By.component(IgxNavbarComponent));
-        const asideElem = fixture.debugElement.query(By.css('igx-nav-drawer > aside')).nativeElement;
+        const asideElem = fixture.debugElement.query(By.css('igx-nav-drawer > .igx-nav-drawer__aside')).nativeElement;
 
         const computedStyle = window.getComputedStyle(asideElem);
         let asideWidth = computedStyle.getPropertyValue('width');
