@@ -42,10 +42,10 @@ export class CarouselSampleComponent {
     }
 
     public changeOrientation() {
-        if (this.car.indicatorsOrientation === CarouselIndicatorsOrientation.top) {
-            this.car.indicatorsOrientation = CarouselIndicatorsOrientation.bottom;
+        if (this.car.indicatorsOrientation === CarouselIndicatorsOrientation.start) {
+            this.car.indicatorsOrientation = CarouselIndicatorsOrientation.end;
         } else {
-            this.car.indicatorsOrientation = CarouselIndicatorsOrientation.top;
+            this.car.indicatorsOrientation = CarouselIndicatorsOrientation.start;
         }
     }
 

@@ -238,19 +238,19 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public maximumIndicatorsCount = 5;
+    @Input() public maximumIndicatorsCount = 10;
 
     /**
-     * Gets/sets the display mode of carousel indicators. It can be top or bottom.
-     * Default value is `bottom`.
+     * Gets/sets the display mode of carousel indicators. It can be `start` or `end`.
+     * Default value is `end`.
      * ```html
-     * <igx-carousel indicatorsOrientation='top'>
+     * <igx-carousel indicatorsOrientation="start">
      * <igx-carousel>
      * ```
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public indicatorsOrientation: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom;
+    @Input() public indicatorsOrientation: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.end;
 
     /**
      * Gets/sets the animation type of carousel.

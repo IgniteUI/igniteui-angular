@@ -1,0 +1,19 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "top",
+            "replaceWith": "start",
+            "definedIn": [
+                "CarouselIndicatorsOrientation"
+            ]
+        },
+        {
+            "member": "bottom",
+            "replaceWith": "end",
+            "definedIn": [
+                "CarouselIndicatorsOrientation"
+            ]
+        }
+    ]
+}

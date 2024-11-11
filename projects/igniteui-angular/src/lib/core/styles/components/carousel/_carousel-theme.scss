@@ -319,11 +319,11 @@
         }
     }
 
-    %igx-carousel-indicators--bottom {
+    %igx-carousel-indicators--end {
         bottom: 0;
     }
 
-    %igx-carousel-indicators--top {
+    %igx-carousel-indicators--start {
         top: 0;
     }
 
@@ -561,17 +561,17 @@
                 transform: rotate(90deg);
             }
         }
-    
+
         %igx-carousel-arrow--prev {
             inset-block-start: 0;
             margin-block-start: rem(16px);
         }
-    
+
         %igx-carousel-arrow--next {
             inset-block-end: 0;
             margin-block-end: rem(16px);
         }
-    
+
         %igx-carousel-indicators {
             inset-inline-end: 0;
             inset-inline-start: unset;
@@ -589,7 +589,7 @@
             padding: rem(4px) rem(6px);
         }
 
-        %igx-carousel-indicators--top {
+        %igx-carousel-indicators--start {
             inset-inline-end: unset;
             inset-inline-start: 0;
             margin-inline-start: rem(16px);
@@ -601,13 +601,13 @@
                 margin-inline-end: rem(16px);
                 padding: rem(6px);
             }
-        
+
             %igx-carousel-label-indicator {
                 padding: rem(4px) rem(6px);
                 margin-inline-end: rem(16px);
             }
-        
-            %igx-carousel-indicators--top {
+
+            %igx-carousel-indicators--start {
                 margin-inline-start: rem(16px);
             }
         }

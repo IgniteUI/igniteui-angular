@@ -1,0 +1,14 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "indicatorsOrientation",
+            "replaceWith": "indicatorsOrientation",
+            "valueTransform": "rename_indicators_orientation",
+            "owner": {
+                "selector": "igx-carousel",
+                "type": "component"
+            }
+        }
+    ]
+}

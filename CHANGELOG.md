@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 19.0.0
+### General
+- `IgxCarousel`
+    - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
+    - **Breaking Changes** - `CarouselIndicatorsOrientation` enum members rename - `top` to `start` and `bottom` to `end`. Example: `CarouselIndicatorsOrientation.end`. Automatic migrations are available and will be applied on `ng update`.
+
 ## 18.2.0
 ### General
 - `IFilteringExpressionsTree`, `FilteringExpressionsTree`

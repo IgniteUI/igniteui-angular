@@ -23,7 +23,7 @@
             <button igxButton="contained" (click)="changeSlidesRemove()">Change slides remove</button>
             <button igxButton="contained" (click)="changeOrientation()">changeOrientation</button>
             <div>
-                <igx-carousel #car  [pause]="pause" [loop]="loop" [interval]="interval">
+                <igx-carousel #car  [pause]="pause" [loop]="loop" [interval]="interval" [indicatorsOrientation]="'start'">
                     <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
                         <img [src]="slide.image">
                     </igx-slide>
