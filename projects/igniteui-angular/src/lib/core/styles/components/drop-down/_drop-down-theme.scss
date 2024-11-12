@@ -404,16 +404,16 @@
     }
 }
 
-/// Adds typography styles for the igx-list component.
-/// Uses the 'caption' and 'subtitle-2'
+/// Adds typography styles for the igx-drop-down component.
+/// Uses the 'overline', 'body-2', 'subtitle-1'
 /// categories from the typographic scale.
 /// @group typography
-/// @param {Map} $categories [(header: 'overline', item: 'body-2', select-item: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @param {Map} $categories [(header: 'overline', item: 'body-2', select-item: 'body-2')] - The categories from the typographic scale used for type styles.
 @mixin drop-down-typography(
     $categories: (
         header: 'overline',
         item: 'body-2',
-        select-item: 'subtitle-1'
+        select-item: 'body-2'
     )
 ) {
     $header: map.get($categories, 'header');
@@ -429,6 +429,12 @@
 
     %igx-drop-down__item {
         @include type-style($item) {
+            margin: 0;
+        }
+    }
+
+    %igx-drop-down__item--selected {
+        @include type-style($select-item) {
             margin: 0;
         }
     }
