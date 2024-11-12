@@ -60,6 +60,7 @@ const QueryBuilderResourceStringsCS_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Vyhledávání',
     igx_query_builder_select_all: 'Vybrat vše',
     igx_query_builder_select_entity: 'Vyberte entitu',
+    igx_query_builder_select_return_field: 'Select return field',
     igx_query_builder_select_return_fields: 'Vyberte pole pro vrácení',
     igx_query_builder_dialog_title: 'Potvrzení',
     igx_query_builder_dialog_message: 'Změnou entity ztratíte svá aktuální nastavení. Opravdu to chcete udělat?',

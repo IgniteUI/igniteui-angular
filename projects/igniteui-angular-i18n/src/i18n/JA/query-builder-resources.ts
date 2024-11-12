@@ -60,6 +60,7 @@ const QueryBuilderResourceStringsJA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: '検索',
     igx_query_builder_select_all: 'すべて選択',
     igx_query_builder_select_entity: 'エンティティの選択',
+    igx_query_builder_select_return_field: 'Select return field',
     igx_query_builder_select_return_fields: '返却フィールドの選択',
     igx_query_builder_dialog_title: '確認',
     igx_query_builder_dialog_message: 'エンティティを変更すると、現在の設定は失われます。続行しますか？',

@@ -305,9 +305,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('entitySelect', { read: IgxSelectComponent })
     protected entitySelect: IgxSelectComponent;
+    
+    @ViewChild('returnFieldsCombo', { read: IgxComboComponent })
+    private returnFieldsCombo: IgxComboComponent;
 
-    @ViewChild('selectedReturnFieldsCombo', { read: IgxComboComponent })
-    private selectedReturnFieldsCombo: IgxComboComponent;
+    @ViewChild('returnFieldSelect', { read: IgxSelectComponent })
+    protected returnFieldSelect: IgxSelectComponent;
 
     @ViewChild('fieldSelect', { read: IgxSelectComponent })
     private fieldSelect: IgxSelectComponent;
@@ -627,7 +630,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._selectedEntity.fields = [];
         }
         this.fields = this._entityNewValue ? this._entityNewValue.fields : [];
-        this._selectedReturnFields = this._entityNewValue.fields?.map(f => f.field);
+
+        if (this.parentExpression) {
+            this._selectedReturnFields = [];
+        } else {
+            this._selectedReturnFields = this._entityNewValue.fields?.map(f => f.field);
+        }
 
         if (this._expressionTree) {
             this._expressionTree.entity = this._entityNewValue.name;
@@ -667,7 +675,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this._expressionTree.returnFields = value;
                 this.expressionTreeChange.emit(this._expressionTree);
             }
-
         }
     }
 
@@ -992,10 +999,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.entitySelectOverlaySettings.target = this.entitySelect.element;
         this.entitySelectOverlaySettings.excludeFromOutsideClick = [this.entitySelect.element as HTMLElement];
         this.entitySelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
-        this.returnFieldSelectOverlaySettings.target = this.selectedReturnFieldsCombo.getEditElement();
-        this.returnFieldSelectOverlaySettings.excludeFromOutsideClick = [this.selectedReturnFieldsCombo.getEditElement() as HTMLElement];
-        this.returnFieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
 
+        if (this.returnFieldSelect) {
+            this.returnFieldSelectOverlaySettings.target = this.returnFieldSelect.element;
+            this.returnFieldSelectOverlaySettings.excludeFromOutsideClick = [this.returnFieldSelect.element as HTMLElement];
+            this.returnFieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        }
         if (this.fieldSelect) {
             this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
             this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
@@ -1006,7 +1015,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.conditionSelectOverlaySettings.excludeFromOutsideClick = [this.conditionSelect.element as HTMLElement];
             this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         }
-
 
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
@@ -1353,14 +1361,22 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             (this._selectedReturnFields.length > 0 && this._selectedReturnFields.length < this._selectedEntity.fields.length) ||
             this._selectedReturnFields.length == this._selectedEntity.fields.length
         ) {
-            this.selectedReturnFieldsCombo.deselectAllItems();
+            this.returnFieldsCombo.deselectAllItems();
         } else {
-            this.selectedReturnFieldsCombo.selectAllItems();
+            this.returnFieldsCombo.selectAllItems();
         }
     }
 
-    public onReturnFieldSelectChanging(event: IComboSelectionChangingEventArgs) {
-        this.initExpressionTree(this.selectedEntity.name, event.newSelection.map(item => item.field))
+    public onReturnFieldSelectChanging(event: IComboSelectionChangingEventArgs | ISelectionEventArgs) {
+        let newSelection;
+        if (event.newSelection instanceof Array) {
+            newSelection = event.newSelection.map(item => item.field)
+        } else {
+            newSelection = [event.newSelection.value];
+            this._selectedReturnFields = newSelection;
+        }
+
+        this.initExpressionTree(this.selectedEntity.name, newSelection);
     }
 
     public initExpressionTree(selectedEntityName: string, selectedReturnFields: string[]) {

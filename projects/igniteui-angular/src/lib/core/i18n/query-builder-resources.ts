@@ -58,6 +58,7 @@ export interface IQueryBuilderResourceStrings {
     igx_query_builder_search?: string;
     igx_query_builder_select_all?: string;
     igx_query_builder_select_entity?: string;
+    igx_query_builder_select_return_field?: string;
     igx_query_builder_select_return_fields?: string;
     igx_query_builder_dialog_title?: string;
     igx_query_builder_dialog_message?: string;
@@ -126,6 +127,7 @@ export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
     igx_query_builder_search: 'Search',
     igx_query_builder_select_all: 'Select All',
     igx_query_builder_select_entity: 'Select entity',
+    igx_query_builder_select_return_field: 'Select return field',
     igx_query_builder_select_return_fields: 'Select return fields',
     igx_query_builder_dialog_title: 'Confirmation',
     igx_query_builder_dialog_message: 'By changing the entity, you will lose your current settings. Are you sure you want to do that?',

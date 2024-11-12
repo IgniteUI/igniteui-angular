@@ -60,6 +60,7 @@ const QueryBuilderResourceStringsTR_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Arama',
     igx_query_builder_select_all: 'Tümünü seç',
     igx_query_builder_select_entity: 'Varlık seç',
+    igx_query_builder_select_return_field: 'Select return field',
     igx_query_builder_select_return_fields: 'Dönüş alanlarını seç',
     igx_query_builder_dialog_title: 'Onay',
     igx_query_builder_dialog_message: 'Varlığı değiştirdiğinizde mevcut ayarlarınızı kaybedersiniz. Devam etmek istiyor musunuz?',

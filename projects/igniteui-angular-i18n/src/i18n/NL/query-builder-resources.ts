@@ -60,6 +60,7 @@ const QueryBuilderResourceStringsNL_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Zoeken',
     igx_query_builder_select_all: 'Alles selecteren',
     igx_query_builder_select_entity: 'Entiteit selecteren',
+    igx_query_builder_select_return_field: 'Select return field',
     igx_query_builder_select_return_fields: 'Retourvelden selecteren',
     igx_query_builder_dialog_title: 'Bevestiging',
     igx_query_builder_dialog_message: 'Door de entiteit te wijzigen, verliest u uw huidige instellingen. Weet u zeker dat u wilt doorgaan?',
