@@ -1758,8 +1758,8 @@ describe('igxCombo', () => {
                     combo.virtualScrollContainer.scrollTo(51);
                     await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                     fixture.detectChanges();
-                    let items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
-                    let lastItem = items[items.length - 1].componentInstance;
+                    const items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
+                    const lastItem = items[items.length - 1].componentInstance;
                     expect(lastItem).toBeDefined();
                     lastItem.clicked(mockClick);
                     fixture.detectChanges();
