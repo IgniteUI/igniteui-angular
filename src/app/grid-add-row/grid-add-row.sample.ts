@@ -44,7 +44,6 @@ export class GridAddRowSampleComponent implements OnInit {
         ];
 
         this.dataFull = [
-            /* eslint-disable max-len */
             { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative'},
             { ID: 'ANATR', CompanyName: 'Ana Trujillo Emparedados y helados', ContactName: 'Ana Trujillo', ContactTitle: 'Owner'},
             { ID: 'ANTON', CompanyName: 'Antonio Moreno Taquería', ContactName: 'Antonio Moreno', ContactTitle: 'Owner'},
@@ -75,7 +74,6 @@ export class GridAddRowSampleComponent implements OnInit {
         ];
 
         this.data = [];
-        /* eslint-enable max-len */
     }
 
     public add() {

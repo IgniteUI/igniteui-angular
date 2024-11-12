@@ -399,7 +399,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
      * @hidden
      * @internal
      */
-    // eslint-disable-next-line max-len
     @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true })
     private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
 

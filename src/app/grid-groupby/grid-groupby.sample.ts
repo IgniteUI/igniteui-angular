@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';

@@ -158,7 +158,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
      * <igx-input-group [type]="'search'">
      * ```
      */
-    @Input('type')
+    @Input()
     public set type(value: IgxInputGroupType) {
         this._type = value;
     }

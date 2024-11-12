@@ -8,7 +8,6 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
 
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-select-sample',
     styleUrls: ['./select.sample.scss'],
     templateUrl: './select.sample.html',

@@ -41,7 +41,6 @@ export class GridCellStylingSampleComponent implements OnInit {
 
     public selectedRowCondition = (row: RowType) => row.cells.some(s => s.active);
 
-    // eslint-disable-next-line @typescript-eslint/member-ordering
     public rowClasses = {
         pinnedClass: this.rowCondition,
         selected: this.selectedRowCondition

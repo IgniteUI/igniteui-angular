@@ -225,7 +225,6 @@ export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterVi
         this.liveData = event.checked;
     }
 
-    /* eslint-disable @typescript-eslint/member-ordering */
     /** Grid CellStyles and CellClasses */
     private negative = (rowData: any): boolean => rowData['changeP'] < 0;
     private positive = (rowData: any): boolean => rowData['changeP'] > 0;
@@ -277,6 +276,6 @@ export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterVi
         this.cdr.detectChanges();
     }
 
-    /* eslint-enable @typescript-eslint/member-ordering */
+
 }
 

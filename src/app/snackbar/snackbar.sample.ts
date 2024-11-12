@@ -1,6 +1,5 @@
 import { useAnimation } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
-// eslint-disable-next-line max-len
 import { HorizontalAlignment, IgxButtonDirective, IgxOverlayOutletDirective, IgxSnackbarComponent, PositionSettings, VerticalAlignment } from 'igniteui-angular';
 import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
 

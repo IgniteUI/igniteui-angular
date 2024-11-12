@@ -23,7 +23,6 @@ import {
 
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'drop-down-sample',
     templateUrl: './drop-down.sample.html',
     styleUrls: ['drop-down.sample.scss'],

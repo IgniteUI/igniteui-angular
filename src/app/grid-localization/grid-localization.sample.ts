@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { registerLocaleData, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';

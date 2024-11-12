@@ -80,15 +80,12 @@ describe('IgxDateRangePicker', () => {
             };
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
             mockInjector = jasmine.createSpyObj('Injector', {
                 get: mockNgControl
             });
             mockAnimationBuilder = {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 build: (a: AnimationMetadata | AnimationMetadata[]) => ({
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     create: (e: any, opt?: AnimationOptions) => ({
                         onDone: (fn: any) => { },
                         onStart: (fn: any) => { },
@@ -122,9 +119,7 @@ describe('IgxDateRangePicker', () => {
                 documentElement: document.documentElement,
                 createElement: () => mockElement,
                 appendChild: () => { },
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
             };
             mockNgZone = {};

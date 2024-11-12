@@ -156,7 +156,6 @@ export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
     public evenRowCondition = (row) => row.index % 2 === 0;
     public oddRowCondition = (row) => row.index % 2 !== 0;
 
-    // eslint-disable-next-line @typescript-eslint/member-ordering
     public rowClasses = {
         eventRow: this.evenRowCondition,
         oddRow: this.oddRowCondition

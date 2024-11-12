@@ -35,7 +35,7 @@ describe('IgxGrid - Clipboard #grid', () => {
         const eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(1);
         expect(eventData).
-            // eslint-disable-next-line max-len
+             
             toEqual('ProductNameHeader\tDownloads\tReleased\r\n** Ignite UI for JavaScript **\t254\tfalse\r\n** NetAdvantage **\t127\ttrue\r\n');
     });
 

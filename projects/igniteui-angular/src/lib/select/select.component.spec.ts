@@ -2950,7 +2950,6 @@ class IgxSelectReactiveFormComponent {
     public onSubmitReactive() { }
 
     public removeValidators(form: UntypedFormGroup) {
-        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
             form.get(key).clearValidators();
             form.get(key).updateValueAndValidity();
@@ -2958,7 +2957,6 @@ class IgxSelectReactiveFormComponent {
     }
 
     public addValidators(form: UntypedFormGroup) {
-        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
             form.get(key).setValidators(this.validationType[key]);
             form.get(key).updateValueAndValidity();

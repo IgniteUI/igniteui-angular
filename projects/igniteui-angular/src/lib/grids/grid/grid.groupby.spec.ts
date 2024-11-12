@@ -2377,7 +2377,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(dataRows.length).toEqual(6);
     }));
 
-    // eslint-disable-next-line max-len
+     
     it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;

@@ -27,7 +27,6 @@ import {
 import { IAnimationParams } from 'igniteui-angular/animations';
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-sample',
     styleUrls: ['overlay.sample.css'],
     templateUrl: './overlay.sample.html',
@@ -392,7 +391,7 @@ export class OverlaySampleComponent implements OnInit {
 
     private removeSelectedClass(type: string) {
         const items = document.getElementsByClassName(type);
-        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+
         for (let index = 0; index < items.length; index++) {
             const element = items[index];
             element.classList.remove('selected');

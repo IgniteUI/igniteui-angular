@@ -75,7 +75,6 @@ export class GridFinJSComponent {
     private strongPositive = (rowData: any): boolean => rowData['Change(%)'] >= 1;
     private strongNegative = (rowData: any): boolean => rowData['Change(%)'] <= -1;
 
-    // eslint-disable-next-line @typescript-eslint/member-ordering
     public trends = {
         changeNeg: this.changeNegative,
         changePos: this.changePositive,
@@ -84,7 +83,6 @@ export class GridFinJSComponent {
         strongNegative: this.strongNegative,
         strongPositive: this.strongPositive
     };
-    // eslint-disable-next-line @typescript-eslint/member-ordering
     public trendsChange = {
         changeNeg2: this.changeNegative,
         changePos2: this.changePositive,

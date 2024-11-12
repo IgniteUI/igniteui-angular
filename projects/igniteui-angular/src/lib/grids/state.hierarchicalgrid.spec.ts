@@ -18,7 +18,6 @@ import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { NgFor } from '@angular/common';
 import { IColumnState, IGridState } from './state-base.directive';
 
-/* eslint-disable max-len */
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
@@ -704,7 +703,6 @@ export class IgxHierarchicalGridTestExpandedBaseComponent {
     };
 
     public columns: any[] = [
-        /* eslint-disable max-len */
         { field: 'ID', header: 'ID', width: '150px', dataType: 'number', pinned: true, sortable: true, filterable: true, groupable: false, hasSummary: false, hidden: false, maxWidth: '300px', searchable: false, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: 'testCss', headerGroupClasses: '', resizable: true },
         { field: 'ProductName', header: 'Product Name', width: '150px', dataType: 'string', pinned: false, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: '', headerGroupClasses: '', resizable: true }
     ];
@@ -715,7 +713,6 @@ export class IgxHierarchicalGridTestExpandedBaseComponent {
         { field: 'Col1', header: 'Col 1', width: '140px', dataType: 'boolean', pinned: false, sortable: false, filterable: true, groupable: false, hasSummary: true, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: true },
         { field: 'Col2', header: 'Col 2', width: '110px', dataType: 'date', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
         { field: 'Col3', header: 'Col 3', width: '110px', dataType: 'date', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
-        /* eslint-enable max-len */
     ];
 
     constructor() {
@@ -740,4 +737,3 @@ export const generateDataUneven = (count: number, level: number, parentID: strin
     }
     return prods;
 };
-/* eslint-enable max-len */

@@ -280,7 +280,6 @@ describe('IgxForOf directive -', () => {
 
         it('should apply the changes when itemSize is changed.', () => {
             const firstRecChildren = displayContainer.children[0].children;
-            // eslint-disable-next-line @typescript-eslint/prefer-for-of
             for (let i = 0; i < firstRecChildren.length; i++) {
                 expect(firstRecChildren[i].clientHeight)
                     .toBe(parseInt(fix.componentInstance.parentVirtDir.igxForItemSize, 10));
@@ -288,7 +287,6 @@ describe('IgxForOf directive -', () => {
 
             fix.componentInstance.itemSize = '100px';
             fix.detectChanges();
-            // eslint-disable-next-line @typescript-eslint/prefer-for-of
             for (let i = 0; i < firstRecChildren.length; i++) {
                 expect(firstRecChildren[i].clientHeight)
                     .toBe(parseInt(fix.componentInstance.parentVirtDir.igxForItemSize, 10));
