@@ -123,7 +123,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         if (parentRectWidth && parentComputedWidth && parentRectWidth / parentComputedWidth !== 1) {
             this._ratio = parentRectWidth / parentComputedWidth;
         }
-        this.left = this._left = (event.clientX - parent.getBoundingClientRect().left) / (this._ratio);
+        this.left = this._left = (event.clientX - parent.getBoundingClientRect().left) / this._ratio;
         this.top = (event.target as HTMLElement).getBoundingClientRect().top - parent.getBoundingClientRect().top;
 
         this.resizeStart.next(event);
