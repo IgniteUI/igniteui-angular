@@ -31,3 +31,12 @@
     font-size: 20px;
     font-weight: 900;
 }
+
+.sample-list {
+    padding: 16px;
+    background: var(--ig-gray-50);
+}
+
+.igx-list__item-base {
+    position: relative;
+}
