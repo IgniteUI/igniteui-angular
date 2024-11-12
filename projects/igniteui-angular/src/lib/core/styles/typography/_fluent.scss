@@ -61,7 +61,10 @@
     ));
     @include column-actions-typography();
     @include date-range-typography();
-    @include dialog-typography();
+    @include dialog-typography($categories: (
+        title: 'h6',
+        content: 'body-2'
+    ));
     @include dock-manager-typography();
     @include drop-down-typography($categories: (
         header: 'subtitle-2',
