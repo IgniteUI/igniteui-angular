@@ -708,7 +708,7 @@ export class IgxGridStateBaseDirective {
                 if (Array.isArray(expr.searchVal)) {
                     expr.searchVal = new Set(expr.searchVal);
                 } else {
-                    expr.searchVal = expr.searchVal && (dataType === 'date' || dataType === 'dateTime') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
+                    expr.searchVal = expr.searchVal && (dataType === 'date' || dataType === 'dateTime') ? new Date(Date.parse(expr.searchVal.toString())) : expr.searchVal;
                 }
 
                 const condition = this.generateFilteringCondition(dataType, expr.condition.name) ||

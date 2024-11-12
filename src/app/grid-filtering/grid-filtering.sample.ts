@@ -19,7 +19,7 @@ export class GridFilteringComponent implements OnInit {
     protected get sizeStyle() {
         return `var(--ig-size-${this.size})`;
     }
-    
+
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
 
@@ -77,6 +77,7 @@ export class GridFilteringComponent implements OnInit {
         tree.filteringOperands.push({
             fieldName: 'ID',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'a',
             ignoreCase: true
         });
@@ -84,12 +85,14 @@ export class GridFilteringComponent implements OnInit {
         orTree.filteringOperands.push({
             fieldName: 'ID',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'b',
             ignoreCase: true
         });
         orTree.filteringOperands.push({
             fieldName: 'CompanyName',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'c',
             ignoreCase: true
         });
@@ -97,6 +100,7 @@ export class GridFilteringComponent implements OnInit {
         tree.filteringOperands.push({
             fieldName: 'CompanyName',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             searchVal: 'd',
             ignoreCase: true
         });

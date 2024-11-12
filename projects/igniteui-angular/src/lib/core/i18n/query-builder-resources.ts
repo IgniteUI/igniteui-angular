@@ -1,6 +1,7 @@
 export interface IQueryBuilderResourceStrings {
     igx_query_builder_date_placeholder?: string;
     igx_query_builder_time_placeholder?: string;
+    igx_query_builder_datetime_placeholder?: string;
     igx_query_builder_filter_operator_and?: string;
     igx_query_builder_filter_operator_or?: string;
     igx_query_builder_filter_contains?: string;
@@ -13,6 +14,8 @@ export interface IQueryBuilderResourceStrings {
     igx_query_builder_filter_notEmpty?: string;
     igx_query_builder_filter_null?: string;
     igx_query_builder_filter_notNull?: string;
+    igx_query_builder_filter_in?: string;
+    igx_query_builder_filter_notIn?: string;
     igx_query_builder_filter_before?: string;
     igx_query_builder_filter_after?: string;
     igx_query_builder_filter_at?: string;
@@ -50,11 +53,23 @@ export interface IQueryBuilderResourceStrings {
     igx_query_builder_column_placeholder?: string;
     igx_query_builder_condition_placeholder?: string;
     igx_query_builder_value_placeholder?: string;
+    igx_query_builder_all_fields?: string;
+    igx_query_builder_details?: string;
+    igx_query_builder_search?: string;
+    igx_query_builder_select_all?: string;
+    igx_query_builder_select_entity?: string;
+    igx_query_builder_select_return_fields?: string;
+    igx_query_builder_dialog_title?: string;
+    igx_query_builder_dialog_message?: string;
+    igx_query_builder_dialog_checkbox_text?: string;
+    igx_query_builder_dialog_cancel?: string;
+    igx_query_builder_dialog_confirm?: string;
 }
 
 export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
-    igx_query_builder_date_placeholder: 'Pick up date',
-    igx_query_builder_time_placeholder: 'Pick up time',
+    igx_query_builder_date_placeholder: 'Select date',
+    igx_query_builder_time_placeholder: 'Select time',
+    igx_query_builder_datetime_placeholder: 'Select date & time',
     igx_query_builder_filter_operator_and: 'And',
     igx_query_builder_filter_operator_or: 'Or',
     igx_query_builder_filter_contains: 'Contains',
@@ -67,6 +82,8 @@ export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
     igx_query_builder_filter_notEmpty: 'Not Empty',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Not Null',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Not In',
     igx_query_builder_filter_before: 'Before',
     igx_query_builder_filter_after: 'After',
     igx_query_builder_filter_at: 'At',
@@ -104,4 +121,15 @@ export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
     igx_query_builder_column_placeholder: 'Select column',
     igx_query_builder_condition_placeholder: 'Select filter',
     igx_query_builder_value_placeholder: 'Value',
+    igx_query_builder_all_fields: 'All fields',
+    igx_query_builder_details: 'Details',
+    igx_query_builder_search: 'Search',
+    igx_query_builder_select_all: 'Select All',
+    igx_query_builder_select_entity: 'Select entity',
+    igx_query_builder_select_return_fields: 'Select return fields',
+    igx_query_builder_dialog_title: 'Confirmation',
+    igx_query_builder_dialog_message: 'By changing the entity, you will lose your current settings. Are you sure you want to do that?',
+    igx_query_builder_dialog_checkbox_text: 'Do not show this dialog again',
+    igx_query_builder_dialog_cancel: 'Cancel',
+    igx_query_builder_dialog_confirm: 'Confirm',
 };

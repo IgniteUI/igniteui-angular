@@ -101,6 +101,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'Age');
         const productExpression = {
             condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            conditionName: 'greaterThan',
             fieldName: 'Age',
             ignoreCase: true,
             searchVal: 35

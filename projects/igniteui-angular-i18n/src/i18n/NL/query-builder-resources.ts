@@ -3,6 +3,7 @@ import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 const QueryBuilderResourceStringsNL_: ExpandRequire<IQueryBuilderResourceStrings> = {
     igx_query_builder_date_placeholder: 'Ophaaldatum',
     igx_query_builder_time_placeholder: 'Ophaaltijd',
+    igx_query_builder_datetime_placeholder: 'Datum en tijd selecteren',
     igx_query_builder_filter_operator_and: 'En',
     igx_query_builder_filter_operator_or: 'Of',
     igx_query_builder_filter_contains: 'Bevat',
@@ -15,6 +16,8 @@ const QueryBuilderResourceStringsNL_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Niet leeg',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Niet null',
+    igx_query_builder_filter_in: 'In',
+    igx_query_builder_filter_notIn: 'Niet In',
     igx_query_builder_filter_before: 'Voor',
     igx_query_builder_filter_after: 'Na',
     igx_query_builder_filter_at: 'Op',
@@ -52,6 +55,17 @@ const QueryBuilderResourceStringsNL_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Selecteer kolom',
     igx_query_builder_condition_placeholder: 'Selecteer filter',
     igx_query_builder_value_placeholder: 'Waarde',
+    igx_query_builder_all_fields: 'Alle velden',
+    igx_query_builder_details: 'Details',
+    igx_query_builder_search: 'Zoeken',
+    igx_query_builder_select_all: 'Alles selecteren',
+    igx_query_builder_select_entity: 'Entiteit selecteren',
+    igx_query_builder_select_return_fields: 'Retourvelden selecteren',
+    igx_query_builder_dialog_title: 'Bevestiging',
+    igx_query_builder_dialog_message: 'Door de entiteit te wijzigen, verliest u uw huidige instellingen. Weet u zeker dat u wilt doorgaan?',
+    igx_query_builder_dialog_checkbox_text: 'Deze dialoog niet meer weergeven',
+    igx_query_builder_dialog_cancel: 'Annuleren',
+    igx_query_builder_dialog_confirm: 'Bevestigen',
 };
 
 /**

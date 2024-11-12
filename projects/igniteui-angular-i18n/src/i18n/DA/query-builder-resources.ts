@@ -3,6 +3,7 @@ import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 const QueryBuilderResourceStringsDA_: ExpandRequire<IQueryBuilderResourceStrings> = {
     igx_query_builder_date_placeholder: 'Afhentningsdato',
     igx_query_builder_time_placeholder: 'Afhentningstidspunkt',
+    igx_query_builder_datetime_placeholder: 'Vælg dato og tid',
     igx_query_builder_filter_operator_and: 'Og',
     igx_query_builder_filter_operator_or: 'Eller',
     igx_query_builder_filter_contains: 'Indeholder',
@@ -15,6 +16,8 @@ const QueryBuilderResourceStringsDA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_notEmpty: 'Ikke tom',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: 'Ikke Null',
+    igx_query_builder_filter_in: 'I',
+    igx_query_builder_filter_notIn: 'Ikke i',
     igx_query_builder_filter_before: 'Før',
     igx_query_builder_filter_after: 'Efter',
     igx_query_builder_filter_at: 'På',
@@ -52,6 +55,17 @@ const QueryBuilderResourceStringsDA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_column_placeholder: 'Vælg kolonne',
     igx_query_builder_condition_placeholder: 'Vælg filter',
     igx_query_builder_value_placeholder: 'Værdi',
+    igx_query_builder_all_fields: 'Alle felter',
+    igx_query_builder_details: 'Detaljer',
+    igx_query_builder_search: 'Søg',
+    igx_query_builder_select_all: 'Vælg alle',
+    igx_query_builder_select_entity: 'Vælg objekt',
+    igx_query_builder_select_return_fields: 'Vælg returfelter',
+    igx_query_builder_dialog_title: 'Bekræftelse',
+    igx_query_builder_dialog_message: 'Ved at ændre objektet mister du dine nuværende indstillinger. Er du sikker på, at du vil fortsætte?',
+    igx_query_builder_dialog_checkbox_text: 'Vis ikke denne dialogboks igen',
+    igx_query_builder_dialog_cancel: 'Annuller',
+    igx_query_builder_dialog_confirm: 'Bekræft',
 };
 
 /**

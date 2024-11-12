@@ -2,6 +2,31 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 19.1.0
+### New Features
+- `IgxQueryBuilder`
+    - Introduced ability to create nested queries by specifying IN/NOT IN operators.
+    - Added the `entities` property that accepts an array of `EntityType` objects describing an entity with its name and an array of fields. The `fields` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
+    - Added the `canCommit`, `commit` and `discard` public methods that allows the user to save/discard the current state of the expression tree.
+    - Added option to template the search value input:
+    ```
+    <ng-template igxQueryBuilderSearchValue 
+                let-searchValue
+                let-selectedField = "selectedField" 
+                let-selectedCondition = "selectedCondition"
+                let-defaultSearchValueTemplate = "defaultSearchValueTemplate">
+        @if (selectedField?.field === 'Id' && selectedCondition === 'equals'){
+            <input type="text" required [(ngModel)]="searchValue.value"/>
+        } @else {  
+            <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
+        }
+    </ng-template> 
+    ```
+- `IFilteringExpression`
+    - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
+- `IFilteringOperation`
+    - A new optional property called `isNestedQuery` has been introduced. It's used to indicate whether the condition leads to a nested query creation.
+
 ## 18.2.0
 ### General
 - `IFilteringExpressionsTree`, `FilteringExpressionsTree`

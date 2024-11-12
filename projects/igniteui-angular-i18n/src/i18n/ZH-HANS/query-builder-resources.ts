@@ -3,6 +3,7 @@ import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 const QueryBuilderResourceStringsZHHANS_: ExpandRequire<IQueryBuilderResourceStrings> = {
     igx_query_builder_date_placeholder: '选择日期',
     igx_query_builder_time_placeholder: '取车时间',
+    igx_query_builder_datetime_placeholder: '选择日期和时间',
     igx_query_builder_filter_operator_and: '和',
     igx_query_builder_filter_operator_or: '或',
     igx_query_builder_filter_contains: '包含',
@@ -15,6 +16,8 @@ const QueryBuilderResourceStringsZHHANS_: ExpandRequire<IQueryBuilderResourceStr
     igx_query_builder_filter_notEmpty: '非空',
     igx_query_builder_filter_null: 'Null',
     igx_query_builder_filter_notNull: '非 Null',
+    igx_query_builder_filter_in: '在',
+    igx_query_builder_filter_notIn: '不在',
     igx_query_builder_filter_before: '之前',
     igx_query_builder_filter_after: '之后',
     igx_query_builder_filter_at: '在',
@@ -52,6 +55,17 @@ const QueryBuilderResourceStringsZHHANS_: ExpandRequire<IQueryBuilderResourceStr
     igx_query_builder_column_placeholder: '选择列',
     igx_query_builder_condition_placeholder: '选择筛选器',
     igx_query_builder_value_placeholder: '数值',
+    igx_query_builder_all_fields: '所有字段',
+    igx_query_builder_details: '详细信息',
+    igx_query_builder_search: '搜索',
+    igx_query_builder_select_all: '全选',
+    igx_query_builder_select_entity: '选择实体',
+    igx_query_builder_select_return_fields: '选择返回字段',
+    igx_query_builder_dialog_title: '确认',
+    igx_query_builder_dialog_message: '通过更改实体，您将丢失当前设置。确定要继续？',
+    igx_query_builder_dialog_checkbox_text: '不再显示此对话框',
+    igx_query_builder_dialog_cancel: '取消',
+    igx_query_builder_dialog_confirm: '确认',
 };
 
 /**
