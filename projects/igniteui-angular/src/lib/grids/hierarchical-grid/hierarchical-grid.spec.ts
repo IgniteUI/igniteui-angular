@@ -639,7 +639,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(hierarchicalGrid.columnInit.emit).toHaveBeenCalled();
         });
 
-        it('should throw a warning when primaryKey is set to a non-existing column field', () => {
+        it('should throw a warning when primaryKey is set to a non-existing data field', () => {
             spyOn(console, 'warn');
             hierarchicalGrid.primaryKey = 'testField';
             fixture.componentInstance.rowIsland.primaryKey = 'testField-rowIsland';

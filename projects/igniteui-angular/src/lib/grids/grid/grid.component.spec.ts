@@ -674,10 +674,10 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(cell.offsetHeight).toEqual(expectedCellHeight);
         });
 
-        it('should throw a warning when primaryKey is set to a non-existing column field', () => {
+        it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            const warnSpy = spyOn(console, 'warn');
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
-            const warnSpy = spyOn(console, 'warn');
             grid.primaryKey = 'testField';
             fixture.detectChanges();
 
@@ -687,18 +687,14 @@ describe('IgxGrid Component Tests #grid', () => {
             );
             warnSpy.calls.reset();
 
-            // update columns to include the 'testField'
-            fixture.componentInstance.columns = [
-                { field: 'index', header: 'index', dataType: 'number', width: null, hasSummary: false },
-                { field: 'value', header: 'value', dataType: 'number', width: null, hasSummary: false },
-                { field: 'testField', header: 'testField', dataType: 'number', width: null, hasSummary: false }
-            ];
+            // update data to include the 'testField'
+            fixture.componentInstance.data = [{ index: 1, value: 1, testField: 1 }];
             fixture.detectChanges();
 
             expect(console.warn).toHaveBeenCalledTimes(0);
 
             // remove the 'testField' runtime
-            fixture.componentInstance.columns.pop();
+            fixture.componentInstance.data = [{ index: 1, value: 1 }];
             fixture.componentInstance.columns = [...fixture.componentInstance.columns];
             fixture.detectChanges();
 
