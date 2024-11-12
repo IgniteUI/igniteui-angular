@@ -66,7 +66,11 @@
         content: 'body-2'
     ));
     @include dock-manager-typography();
-    @include drop-down-typography();
+    @include drop-down-typography($categories: (
+        header: 'subtitle-2',
+        item: 'body-2',
+        select-item: 'body-2'
+    ));
     @include expansion-panel-typography($categories: (
         title: 'subtitle-1',
         description: 'body-2',
