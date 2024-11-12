@@ -572,16 +572,6 @@
         }
     }
 
-    .ig-typography {
-        %tabs-header-item-inner {
-            > [igxtabheaderlabel] {
-                @if $variant == 'indigo' {
-                    text-transform: uppercase;
-                }
-            }
-        }
-    }
-
     %tabs-header-active-indicator {
         position: absolute;
         bottom: 0;
@@ -666,6 +656,7 @@
         @include type-style($label) {
             margin-top: 0;
             margin-bottom: 0;
+            @content;
         }
     }
 }
