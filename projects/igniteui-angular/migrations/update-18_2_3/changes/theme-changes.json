@@ -1,0 +1,11 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$header-time-period-color",
+      "remove": true,
+      "owner": "time-picker-theme",
+      "type":"property"
+    }
+  ]
+}

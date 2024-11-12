@@ -637,6 +637,22 @@ describe('IgxSlider', () => {
             expect(slider.value.upper).toBe(60);
         });
 
+        it('should reach max value with upper thumb in RANGE mode with decimal steps', () => {
+            slider.minValue = 0;
+            slider.maxValue = 10;
+            slider.step = 0.1;
+            slider.type = IgxSliderType.RANGE;
+            slider.value = { lower: 0, upper: 10 };
+            fixture.detectChanges();
+
+            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
+            toThumb.focus();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb, true);
+            fixture.detectChanges();
+
+            expect((slider.value as IRangeSliderValue).upper).toBe(10);
+        });
     });
 
     describe('Slider - List View', () => {

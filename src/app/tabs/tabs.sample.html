@@ -30,9 +30,9 @@
                         <span igxTabHeaderLabel>{{tab2Label}}</span>
                     </igx-tab-header>
                     <igx-tab-content>
-                        <div class="sample-scrollable">
+                        <div class="sample-list">
                             <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
-                                <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
+                                <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-base"
                                                *ngFor="let contact of contacts">
                                     <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
                                     <p igxListLineTitle>{{contact.text}}</p>
