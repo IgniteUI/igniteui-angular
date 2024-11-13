@@ -16,6 +16,7 @@ import { IgxAvatarComponent } from '../../avatar/avatar.component';
 import { IColumnResizeEventArgs, IgxColumnComponent } from '../public_api';
 import { Size } from "../common/enums";
 import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { IgxColumnResizerDirective } from '../resizing/resizer.directive';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
@@ -131,6 +132,27 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(grid.columnList.get(1).width).toEqual('70px');
+        }));
+
+        it('should calculate correct resizer position and column width when grid is scaled and zoomed', fakeAsync(() => {
+            grid.nativeElement.style.transform = 'scale(1.2)';
+            grid.nativeElement.style.setProperty('zoom', '1.05');
+            fixture.detectChanges();
+            headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 153, 0);
+            tick(200);
+            fixture.detectChanges();
+
+            const resizer = GridFunctions.getResizer(fixture);
+            const resizerDirective = resizer.componentInstance.resizer as IgxColumnResizerDirective;
+            const leftSetterSpy = spyOnProperty(resizerDirective, 'left', 'set').and.callThrough();
+            UIInteractions.simulateMouseEvent('mousemove', resizer.nativeElement, 200, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer.nativeElement, 200, 5);
+            fixture.detectChanges();
+
+            expect(leftSetterSpy).toHaveBeenCalled();
+            expect(parseInt(leftSetterSpy.calls.mostRecent().args[0].toFixed(0))).toEqual(200);
+            expect(parseInt(grid.columnList.get(1).headerCell.nativeElement.getBoundingClientRect().width.toFixed(0))).toEqual(173);
         }));
 
         it('should be able to resize column to the minWidth < defaultMinWidth', fakeAsync(() => {
