@@ -104,7 +104,9 @@
     ));
     @include tabs-typography($categories: (
         label: 'subtitle-2',
-    ));
+    )) {
+        --ig-subtitle-2-text-transform: uppercase;
+    };
     @include time-picker-typography($categories: (
         header-hour: 'h5',
         selected-time: 'h6'
