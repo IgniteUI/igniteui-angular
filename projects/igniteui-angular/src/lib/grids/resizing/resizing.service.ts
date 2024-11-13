@@ -35,7 +35,7 @@ export class IgxColumnResizingService {
      * @hidden
      */
     public getColumnHeaderRenderedWidth() {
-        return this.column.headerCell.nativeElement.getBoundingClientRect().width;
+        return parseFloat(window.getComputedStyle(this.column.headerCell.nativeElement).width);
     }
 
     /**
@@ -61,7 +61,7 @@ export class IgxColumnResizingService {
      * Returns the minimal possible width to which the column can be resized.
      */
     public get restrictResizeMin(): number {
-        const actualWidth = parseFloat(window.getComputedStyle(this.column.headerCell.nativeElement).width);
+        const actualWidth = this.getColumnHeaderRenderedWidth();
         const minWidth = this.column.minWidthPx < actualWidth ? this.column.minWidthPx : actualWidth;
 
         return actualWidth - minWidth;
@@ -71,7 +71,7 @@ export class IgxColumnResizingService {
      * Returns the maximal possible width to which the column can be resized.
      */
     public get restrictResizeMax(): number {
-        const actualWidth = parseFloat(window.getComputedStyle(this.column.headerCell.nativeElement).width);
+        const actualWidth = this.getColumnHeaderRenderedWidth();
         const maxWidth = this.column.maxWidthPx;
         if (this.column.maxWidth) {
             return maxWidth - actualWidth;
