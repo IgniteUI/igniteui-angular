@@ -2427,6 +2427,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
         });
 
         it("should position correct the horizontal scrollbar", () => {
+            fixture.detectChanges();
             const scrollBarPosition = fixture.nativeElement.querySelector("igx-horizontal-virtual-helper").getBoundingClientRect();
             const displayContainerPosition = fixture.nativeElement.querySelector(".igx-grid__tbody-content").getBoundingClientRect()
             expect(scrollBarPosition.x).toEqual(displayContainerPosition.x);
