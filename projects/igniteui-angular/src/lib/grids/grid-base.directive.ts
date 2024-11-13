@@ -6774,7 +6774,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected checkPrimaryKeyField() {
         if (this.primaryKey && this.data?.length && !(this.primaryKey in this.data[0])) {
-            console.warn(`Primary key column "${this.primaryKey}" is not defined. Set \`primaryKey\` to a valid column.`);
+            console.warn(`Field "${this.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`);
         }
     }
 

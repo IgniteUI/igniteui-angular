@@ -683,7 +683,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(console.warn).toHaveBeenCalledTimes(1);
             expect(console.warn).toHaveBeenCalledWith(
-                `Primary key column "${grid.primaryKey}" is not defined. Set \`primaryKey\` to a valid column.`
+                `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
             warnSpy.calls.reset();
 
@@ -700,7 +700,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(console.warn).toHaveBeenCalledTimes(1);
             expect(console.warn).toHaveBeenCalledWith(
-                `Primary key column "${grid.primaryKey}" is not defined. Set \`primaryKey\` to a valid column.`
+                `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
         });
     });
