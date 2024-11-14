@@ -154,7 +154,7 @@
     $mark-offset: map.get((
         'material': 0,
         'fluent': -1px,
-        'bootstrap': .5px,
+        'bootstrap': 1px,
         'indigo': 1px,
     ), $variant);
 
@@ -324,6 +324,7 @@
     %igx-checkbox--indeterminate {
         %cbx-composite-mark {
             top: $mark-offset;
+            margin-inline-start: $mark-offset;
         }
 
         &:hover {
