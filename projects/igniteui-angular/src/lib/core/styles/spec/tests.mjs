@@ -5,4 +5,4 @@ import {} from 'jasmine';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const file = path.join(__dirname, '_index.scss');
-sassTrue.runSass({ file, includePaths: ['node_modules'] }, { describe, it });
+sassTrue.runSass({ describe, it }, file, { loadPaths: ['node_modules'] });
