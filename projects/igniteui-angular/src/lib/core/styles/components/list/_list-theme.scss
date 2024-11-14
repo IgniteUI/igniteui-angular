@@ -301,7 +301,10 @@
         overflow-x: hidden;
         z-index: 0;
         border-radius: var-get($theme, 'border-radius');
-        border: rem(1px) solid var-get($theme, 'border-color');
+
+        @if $variant == 'bootstrap' {
+            border: rem(1px) solid var-get($theme, 'border-color');
+        }
 
         &:focus-visible {
             outline-style: none;
