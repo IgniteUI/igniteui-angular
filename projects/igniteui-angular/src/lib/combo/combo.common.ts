@@ -176,16 +176,10 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
             return;
         }
         const selection = this.selectionService.get(this._id);
+        this.selectionService.clear(this._id);
         this._id = value;
         if (selection) {
             this.selectionService.set(this._id, selection);
-        }
-        if (this.dropdown?.open) {
-            this.dropdown.close();
-        }
-        if (this.inputGroup?.isFocused) {
-            this.inputGroup.element.nativeElement.blur();
-            this.inputGroup.isFocused = false;
         }
     }
 
@@ -1212,15 +1206,15 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.searchValue = '';
         if (!e.event) {
             this.comboInput?.nativeElement.focus();
+        } else {
+            this._onTouchedCallback();
+            this.updateValidity();
         }
     }
 
     /** @hidden @internal */
     public handleClosed() {
         this.closed.emit({ owner: this });
-        if(this.comboInput.nativeElement !== document.activeElement){
-            this.validateComboState();
-        }
     }
 
     /** @hidden @internal */
@@ -1260,13 +1254,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public onBlur() {
         if (this.collapsed) {
             this._onTouchedCallback();
-            this.validateComboState();
+            this.updateValidity();
         }
-    }
-
-    /** @hidden @internal */
-    public onFocus(): void {
-        this._onTouchedCallback();
     }
 
     /** @hidden @internal */
@@ -1293,7 +1282,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.manageRequiredAsterisk();
     };
 
-    private validateComboState() {
+    private updateValidity() {
         if (this.ngControl && this.ngControl.invalid) {
             this.valid = IgxInputState.INVALID;
         } else {
