@@ -37,6 +37,7 @@
         name: $name,
         selector: $selector,
         background-color: $background-color,
+        theme: map.get($schema, '_meta', 'theme'),
     ));
 }
 
