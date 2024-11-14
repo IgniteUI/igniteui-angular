@@ -803,7 +803,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
             await wait(100);
             fixture.detectChanges();
             const pivotGrid = fixture.componentInstance.pivotGrid;
-            expect(pivotGrid.nativeElement.clientWidth).toBeGreaterThan(pivotGrid.pivotPinnedWidth, "should have greater width than row dimension cols.");
+            const colSum = pivotGrid.featureColumnsWidth() + pivotGrid.columns.filter(x => !x.columnGroup).map(x => x.calcPixelWidth).reduce((x, y) => x + y);
+            const expectedSize = Math.min(window.innerWidth, colSum);
+            expect(pivotGrid.nativeElement.clientWidth - expectedSize).toBeLessThan(50, "should take sum of columns as width.");
         });
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
