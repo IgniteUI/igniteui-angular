@@ -90,6 +90,7 @@
         focus-outline-color: $focus-outline-color,
         error-color: $error-color,
         error-color-hover: $error-color-hover,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')

@@ -244,6 +244,7 @@
                 disabled-icon-color: $disabled-icon-color,
                 disabled-border-color: $disabled-border-color,
                 size: $size,
+                theme: map.get($schema, '_meta', 'theme'),
             ))
         ));
     }

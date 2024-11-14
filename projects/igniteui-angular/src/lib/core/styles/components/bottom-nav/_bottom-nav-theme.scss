@@ -107,6 +107,7 @@
         label-disabled-color: $label-disabled-color,
         border-color: $border-color,
         shadow: $shadow,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')

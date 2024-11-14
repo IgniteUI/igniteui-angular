@@ -136,6 +136,7 @@
         item-disabled-text-color:$item-disabled-text-color,
         item-disabled-icon-color: $item-disabled-icon-color,
         shadow: $shadow,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),

@@ -53,6 +53,7 @@
         resting-color: $resting-color,
         active-background: $active-background,
         active-color: $active-color,
+        theme: map.get($schema, '_meta', 'theme'),
     ));
 }
 

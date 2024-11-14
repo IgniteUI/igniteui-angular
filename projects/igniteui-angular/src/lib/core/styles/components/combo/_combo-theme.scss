@@ -80,6 +80,7 @@
         clear-button-background-focus: $clear-button-background-focus,
         clear-button-foreground: $clear-button-foreground,
         clear-button-foreground-focus: $clear-button-foreground-focus,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),

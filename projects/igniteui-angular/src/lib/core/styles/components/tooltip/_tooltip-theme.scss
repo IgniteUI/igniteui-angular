@@ -61,6 +61,7 @@
         text-color: $text-color,
         border-radius: $border-radius,
         shadow: $shadow,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),

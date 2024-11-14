@@ -98,6 +98,7 @@
         disabled-fill-track-color: $disabled-fill-track-color,
         tick-label-color: $tick-label-color,
         tick-color: $tick-color,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),

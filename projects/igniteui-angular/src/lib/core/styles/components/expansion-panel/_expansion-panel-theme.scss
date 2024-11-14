@@ -86,6 +86,7 @@
         disabled-text-color: $disabled-text-color,
         disabled-description-color: $disabled-description-color,
         expanded-margin: $expanded-margin,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),

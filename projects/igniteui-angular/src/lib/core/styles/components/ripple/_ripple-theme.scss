@@ -36,7 +36,8 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        color: $color
+        color: $color,
+        theme: map.get($schema, '_meta', 'theme'),
     ));
 }
 

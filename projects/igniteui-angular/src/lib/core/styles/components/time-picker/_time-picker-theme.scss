@@ -135,6 +135,7 @@
         divider-color: $divider-color,
         time-item-size: $time-item-size,
         active-item-border-radius: $active-item-border-radius,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),

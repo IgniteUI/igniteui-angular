@@ -38,6 +38,7 @@
         name: $name,
         color: $color,
         inset: $inset,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
         )),

@@ -98,6 +98,7 @@
         border-color: $border-color,
         hover-color: $hover-color,
         hover-selected-color: $hover-selected-color,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
