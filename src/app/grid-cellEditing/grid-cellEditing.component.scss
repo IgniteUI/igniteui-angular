@@ -1,17 +1,8 @@
-button {
-    margin: 0.2rem;
-}
-
-[igxButton="contained"] {
-    margin: 0.5rem 0.5rem 0.5rem 0;
-
-    &:nth-child(12) {
-        margin-bottom: 3rem;
-    }
-
-    &:last-child {
-        margin-bottom: 3rem;
-    }
+.sample-actions {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+    gap: 0.5rem;
 }
 
 .density-chooser {
