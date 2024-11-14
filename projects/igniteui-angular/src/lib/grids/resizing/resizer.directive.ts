@@ -120,7 +120,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         const parent = this.element.nativeElement.parentElement.parentElement;
         const parentRectWidth = parent.getBoundingClientRect().width;
         const parentComputedWidth = parseFloat(window.getComputedStyle(parent).width);
-        if (parentRectWidth && parentComputedWidth && parentRectWidth / parentComputedWidth !== 1) {
+        if (Math.abs(parentRectWidth - parentComputedWidth) > 1) {
             this._ratio = parentRectWidth / parentComputedWidth;
         }
         this.left = this._left = (event.clientX - parent.getBoundingClientRect().left) / this._ratio;
