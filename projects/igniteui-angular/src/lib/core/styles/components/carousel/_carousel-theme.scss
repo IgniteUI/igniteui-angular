@@ -123,6 +123,7 @@
         indicator-active-dot-color: $indicator-active-dot-color,
         indicator-active-border-color: $indicator-active-border-color,
         indicator-active-hover-dot-color: $indicator-active-hover-dot-color,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -562,15 +563,18 @@
             }
         }
 
+
         %igx-carousel-arrow--prev {
             inset-block-start: 0;
             margin-block-start: rem(16px);
         }
 
+
         %igx-carousel-arrow--next {
             inset-block-end: 0;
             margin-block-end: rem(16px);
         }
+
 
         %igx-carousel-indicators {
             inset-inline-end: 0;
@@ -601,6 +605,7 @@
                 margin-inline-end: rem(16px);
                 padding: rem(6px);
             }
+
 
             %igx-carousel-label-indicator {
                 padding: rem(4px) rem(6px);

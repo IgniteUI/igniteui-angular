@@ -229,6 +229,7 @@
         item-thumbnail-color-active: $item-thumbnail-color-active,
         border-color: $border-color,
         border-width: $border-width,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
