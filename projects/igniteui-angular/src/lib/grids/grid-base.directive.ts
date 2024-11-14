@@ -3209,6 +3209,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
+    protected isColumnWidthSum = false;
     private _currencyPositionLeft: boolean;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
@@ -6496,6 +6497,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         if (this.width === null || !width) {
             width = this.getColumnWidthSum();
+            this.isColumnWidthSum = true;
         }
 
         if (this.hasVerticalScroll() && this.width !== null) {
@@ -7330,6 +7332,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.resetCachedWidths();
             this.cdr.detectChanges();
         }
+
+        if (this.isColumnWidthSum) {
+            this.calcWidth = this.getColumnWidthSum();
+        }
     }
 
     protected extractDataFromColumnsSelection(source: any[], formatters = false, headers = false): any[] {
@@ -7788,7 +7794,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else {
                 this._shouldRecalcRowHeight = true;
             }
-        } 
+        }
     }
 
     // TODO: About to Move to CRUD
