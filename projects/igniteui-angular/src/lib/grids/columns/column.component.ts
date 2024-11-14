@@ -1077,6 +1077,33 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             this.grid.summaryService.resetSummaryHeight();
         }
     }
+
+    /**
+     * Sets/gets the summary operands to exclude from display.
+     * Accepts an array of string keys representing the summary types to disable, such as 'Min', 'Max', 'Count' etc.
+     * ```typescript
+     * let disabledSummaries = this.column.disabledSummaries;
+     * ```
+     * ```html
+     * <igx-column [disabledSummaries]="['min', 'max', 'average']"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public get disabledSummaries(): string[] {
+        return this._disabledSummaries;
+    }
+
+    public set disabledSummaries(value: string[]) {
+        this._disabledSummaries = value;
+        if (this.grid) {
+            this.grid.summaryService.removeSummariesCachePerColumn(this.field);
+            this.grid.summaryPipeTrigger++;
+            this.grid.summaryService.resetSummaryHeight();
+        }
+    }
+
     /**
      * Gets the column `filters`.
      * ```typescript
@@ -1743,6 +1770,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _summaries = null;
+    /**
+     * @hidden
+     */
+    private _disabledSummaries: string[] = [];
     /**
      * @hidden
      */

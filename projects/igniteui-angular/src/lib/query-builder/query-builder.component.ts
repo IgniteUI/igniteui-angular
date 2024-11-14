@@ -767,12 +767,20 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public deleteGroup() {
-        const selectedGroup = this.contextualGroup;
-        const parent = selectedGroup.parent;
-        if (parent) {
-            const index = parent.children.indexOf(selectedGroup);
+        let selectedGroup = this.contextualGroup;
+        let parent = selectedGroup.parent;
+        if (!parent) {
+            this.rootGroup = null;
+        }
+
+        while (parent) {
+            let index = parent.children.indexOf(selectedGroup);
             parent.children.splice(index, 1);
-        } else {
+            selectedGroup = parent;
+            parent = parent.children.length === 0 ? parent.parent : null;
+        }
+
+        if (this.rootGroup?.children.length === 0) {
             this.rootGroup = null;
         }
 

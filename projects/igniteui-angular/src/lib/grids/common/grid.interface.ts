@@ -443,6 +443,7 @@ export interface ColumnType extends FieldType {
     filteringExpressionsTree: FilteringExpressionsTree;
     hasSummary: boolean;
     summaries: any;
+    disabledSummaries?: string[];
     /**
      * The template reference for a summary of the column
      * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
