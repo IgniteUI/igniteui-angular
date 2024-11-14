@@ -1,14 +1,12 @@
 import { ITimePickerResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const TimePickerResourceStringsTR_: ExpandRequire<ITimePickerResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Turkish resource strings for IgxTimePicker
+ */
+export const TimePickerResourceStringsTR = {
     igx_time_picker_ok: 'OK',
     igx_time_picker_cancel: 'Iptal',
     igx_time_picker_change_time: 'Saati değiştir',
     igx_time_picker_choose_time: 'Saat seçin'
-};
-
-/**
- * Turkish resource strings for IgxTimePicker
- */
-export const TimePickerResourceStringsTR = TimePickerResourceStringsTR_ as ExpandRequire<ITimePickerResourceStrings>;
+} satisfies MakeRequired<ITimePickerResourceStrings>;
