@@ -19,8 +19,7 @@ import {
     IgxColumnComponent,
     IgxPaginatorComponent,
     IgxButtonDirective,
-    IgxIconComponent,
-    FilteringLogic
+    IgxIconComponent
 } from 'igniteui-angular';
 import { data } from '../shared/data';
 
