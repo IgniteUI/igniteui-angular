@@ -12,7 +12,8 @@ import {
     Renderer2,
     Optional,
     Self,
-    booleanAttribute
+    booleanAttribute,
+    inject
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
@@ -288,6 +289,58 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
     public cssClass = 'igx-checkbox';
 
     /**
+     * Returns if the component is of type `material`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.material;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--material')
+    protected get material() {
+        return this.theme === 'material';
+    }
+
+    /**
+     * Returns if the component is of type `indigo`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.indigo;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--indigo')
+    protected get indigo() {
+        return this.theme === 'indigo';
+    }
+
+    /**
+     * Returns if the component is of type `bootstrap`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.bootstrap;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--bootstrap')
+    protected get bootstrap() {
+        return this.theme === 'bootstrap';
+    }
+
+    /**
+     * Returns if the component is of type `fluent`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.fluent;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--fluent')
+    protected get fluent() {
+        return this.theme === 'fluent';
+    }
+
+    /**
      * Sets/gets whether the checkbox component is on focus.
      * Default value is `false`.
      *
@@ -410,24 +463,29 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * @internal
      */
     public inputId = `${this.id}-input`;
+
     /**
      * @hidden
      */
     protected _onChangeCallback: (_: any) => void = noop;
+
     /**
      * @hidden
      */
     private _onTouchedCallback: () => void = noop;
+
     /**
      * @hidden
      * @internal
      */
     protected _checked = false;
+
     /**
      * @hidden
      * @internal
      */
     private _required = false;
+    private elRef = inject(ElementRef);
 
     /**
      * @hidden
@@ -460,6 +518,13 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
                 this._required = this.ngControl?.control?.hasValidator(Validators.required);
                 this.cdr.detectChanges();
             }
+        }
+
+        const theme = this.themeService.getComponentTheme(this.elRef);
+
+        if (theme) {
+            this.theme = theme;
+            this.cdr.markForCheck();
         }
     }
 
