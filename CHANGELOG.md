@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxColumn`
     - Introduced the `disabledSummaries` property, allowing users to specify which summaries should be disabled for a given column. This property accepts an array of strings corresponding to the summary keys, enabling selective control over both default summaries (e.g., 'Count', 'Min') and any custom summaries created by the user.
+- `IgxFilteringService`, `IgxGridBaseDirective`
+    - **Deprecation** The `filterGlobal` method has been deprecated and will be removed in a future version.
 
 ## 18.2.0
 ### General
