@@ -70,6 +70,7 @@
         stripes-color: $stripes-color,
         text-color: $text-color,
         track-border-radius: $track-border-radius,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -449,6 +450,7 @@
         progress-circle-color-end: $progress-circle-color-end,
         text-color: $text-color,
         diameter: $diameter,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
