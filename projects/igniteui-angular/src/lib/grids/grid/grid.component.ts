@@ -417,6 +417,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (dataLoaded && this._columns.some(x => (x as any)._width === 'auto')) {
             this.recalculateAutoSizes();
         }
+        this.checkPrimaryKeyField();
     }
 
     /**
