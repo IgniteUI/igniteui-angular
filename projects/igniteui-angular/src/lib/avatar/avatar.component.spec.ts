@@ -159,6 +159,17 @@ describe('Avatar', () => {
         expect(hostEl.getAttribute('aria-roledescription')).toEqual('image avatar');
         expect(hostEl.getAttribute('aria-label')).toEqual('avatar');
     });
+
+    it('Normalizes the value of the `src` input', () => {
+        const fixture = TestBed.createComponent(InitImageAvatarComponent);
+        fixture.detectChanges();
+
+        const instance = fixture.componentInstance.avatar;
+        instance.src = "/assets/Test - 17.jpg";
+        fixture.detectChanges();
+
+        expect(instance.src).toEqual("/assets/Test%20-%2017.jpg");
+    });
 });
 
 @Component({
