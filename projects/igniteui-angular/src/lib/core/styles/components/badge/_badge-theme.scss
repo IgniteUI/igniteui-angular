@@ -73,6 +73,7 @@
         border-radius: $border-radius,
         background-color: $background-color,
         shadow: $shadow,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
         )),
