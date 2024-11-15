@@ -1,12 +1,10 @@
 import { ITreeResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const TreeResourceStringsZHHANT_: ExpandRequire<ITreeResourceStrings> = {
-    igx_expand: '展開',
-    igx_collapse: '摺疊'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxTree
  */
-export const TreeResourceStringsZHHANT = TreeResourceStringsZHHANT_ as ExpandRequire<ITreeResourceStrings>;
+export const TreeResourceStringsZHHANT = {
+    igx_expand: '展開',
+    igx_collapse: '摺疊'
+} satisfies MakeRequired<ITreeResourceStrings>;

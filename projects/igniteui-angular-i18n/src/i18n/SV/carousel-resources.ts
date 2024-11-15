@@ -1,14 +1,12 @@
 import { ICarouselResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const CarouselResourceStringsSV_: ExpandRequire<ICarouselResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Swedish resource strings for IgxCarousel
+ */
+export const CarouselResourceStringsSV = {
     igx_carousel_of: 'av',
     igx_carousel_slide: 'bild',
     igx_carousel_previous_slide: 'föregående bild',
     igx_carousel_next_slide: 'nästa bild'
-};
-
-/**
- * Swedish resource strings for IgxCarousel
- */
-export const CarouselResourceStringsSV = CarouselResourceStringsSV_ as ExpandRequire<ICarouselResourceStrings>;
+} satisfies MakeRequired<ICarouselResourceStrings>;

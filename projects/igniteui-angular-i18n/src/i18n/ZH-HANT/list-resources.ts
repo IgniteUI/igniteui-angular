@@ -1,13 +1,10 @@
 import { IListResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const ListResourceStringsZHHANT_: ExpandRequire<IListResourceStrings> = {
-    igx_list_no_items: '清單中沒有任何項目。',
-    igx_list_loading: '正在從伺服器載入資料...'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Traditional Chinese (zh-Hant) resource strings for IgxList
  */
-export const ListResourceStringsZHHANT = ListResourceStringsZHHANT_ as ExpandRequire<IListResourceStrings>;
-
+export const ListResourceStringsZHHANT = {
+    igx_list_no_items: '清單中沒有任何項目。',
+    igx_list_loading: '正在從伺服器載入資料...'
+} satisfies MakeRequired<IListResourceStrings>;

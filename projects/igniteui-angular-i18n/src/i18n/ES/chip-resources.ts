@@ -1,12 +1,10 @@
 import { IChipResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const ChipResourceStringsES_: ExpandRequire<IChipResourceStrings> = {
-    igx_chip_remove: 'Quitar chip',
-    igx_chip_select: 'Seleccionar chip'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Spanish resource strings for IgxChip
  */
-export const ChipResourceStringsES = ChipResourceStringsES_ as ExpandRequire<IChipResourceStrings>;
+export const ChipResourceStringsES = {
+    igx_chip_remove: 'Quitar chip',
+    igx_chip_select: 'Seleccionar chip'
+} satisfies MakeRequired<IChipResourceStrings>;

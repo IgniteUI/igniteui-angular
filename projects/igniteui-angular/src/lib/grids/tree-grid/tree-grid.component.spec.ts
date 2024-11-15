@@ -152,6 +152,33 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
             expect(grid.dataView.length).toBeGreaterThan(0);
         });
+
+        it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            const warnSpy = spyOn(console, 'warn');
+            grid.primaryKey = 'testField';
+            fix.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledTimes(1);
+            expect(console.warn).toHaveBeenCalledWith(
+                `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
+            );
+            warnSpy.calls.reset();
+
+            const oldData = fix.componentInstance.data;
+            const newData = fix.componentInstance.data.map(rec => Object.assign({}, rec, { testField: 0 }));
+            fix.componentInstance.data = newData;
+            fix.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledTimes(0);
+
+            fix.componentInstance.data = oldData;
+            fix.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledTimes(1);
+            expect(console.warn).toHaveBeenCalledWith(
+                `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
+            );
+        });
     });
 
     describe('Auto-generated columns', () => {
