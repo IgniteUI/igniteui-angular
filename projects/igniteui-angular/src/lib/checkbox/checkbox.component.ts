@@ -13,13 +13,14 @@ import {
     Optional,
     Self,
     booleanAttribute,
-    inject
+    inject,
+    DestroyRef
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
-import { noop, Subject } from 'rxjs';
+import { noop, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTheme, ThemeService } from '../services/theme/theme.service';
 
@@ -484,14 +485,17 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * @hidden
      * @internal
      */
-    private _required = false;
-    private elRef = inject(ElementRef);
+    protected theme: IgxTheme;
 
     /**
      * @hidden
      * @internal
      */
-    protected theme: IgxTheme = 'material';
+    private _required = false;
+    private elRef = inject(ElementRef);
+    private _theme$ = new Subject<IgxTheme>();
+    private _subscription: Subscription;
+    private destroyRef = inject(DestroyRef);
 
     constructor(
         protected cdr: ChangeDetectorRef,
@@ -499,11 +503,18 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
         protected themeService: ThemeService,
         @Optional() @Self() public ngControl: NgControl,
     ) {
-        this.theme = this.themeService?.globalTheme;
-
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
+
+        this.theme = this.themeService.globalTheme;
+
+        this._subscription = this._theme$.asObservable().subscribe(value => {
+            this.theme = value as IgxTheme;
+            this.cdr.detectChanges();
+        });
+
+        this.destroyRef.onDestroy(() => this._subscription.unsubscribe());
     }
 
     /**
@@ -523,7 +534,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
         const theme = this.themeService.getComponentTheme(this.elRef);
 
         if (theme) {
-            this.theme = theme;
+            this._theme$.next(theme);
             this.cdr.markForCheck();
         }
     }
