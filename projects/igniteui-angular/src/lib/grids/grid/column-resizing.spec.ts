@@ -132,7 +132,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(1).width).toEqual('70px');
         }));
 
-        fit('should calculate correctly resizer position and column width when grid is scaled and zoomed', fakeAsync(() => {
+        it('should calculate correctly resizer position and column width when grid is scaled and zoomed', fakeAsync(() => {
             grid.nativeElement.style.transform = 'scale(1.1)';
             grid.nativeElement.style.setProperty('zoom', '1.5');
             fixture.detectChanges();
