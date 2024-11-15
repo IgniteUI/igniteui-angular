@@ -133,24 +133,24 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         }));
 
         it('should calculate correctly resizer position and column width when grid is scaled and zoomed', fakeAsync(() => {
-            grid.nativeElement.style.transform = 'scale(1.2)';
-            grid.nativeElement.style.setProperty('zoom', '1.05');
+            grid.nativeElement.style.transform = 'scale(1.1)';
+            grid.nativeElement.style.setProperty('zoom', '1.5');
             fixture.detectChanges();
             headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 153, 0);
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 290, 0);
             tick(200);
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture);
             const resizerDirective = resizer.componentInstance.resizer as IgxColumnResizerDirective;
             const leftSetterSpy = spyOnProperty(resizerDirective, 'left', 'set').and.callThrough();
-            UIInteractions.simulateMouseEvent('mousemove', resizer.nativeElement, 200, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer.nativeElement, 200, 5);
+            UIInteractions.simulateMouseEvent('mousemove', resizer.nativeElement, 350, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer.nativeElement, 350, 5);
             fixture.detectChanges();
 
             expect(leftSetterSpy).toHaveBeenCalled();
-            expect(parseInt(leftSetterSpy.calls.mostRecent().args[0].toFixed(0))).toEqual(200);
-            expect(parseInt(grid.columnList.get(1).headerCell.nativeElement.getBoundingClientRect().width.toFixed(0))).toEqual(173);
+            expect(parseInt(leftSetterSpy.calls.mostRecent().args[0].toFixed(0))).toEqual(235);
+            expect(parseInt(grid.columnList.get(1).headerCell.nativeElement.getBoundingClientRect().width.toFixed(0))).toEqual(224);
         }));
 
         it('should be able to resize column to the minWidth < defaultMinWidth', fakeAsync(() => {
