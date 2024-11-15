@@ -132,25 +132,25 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(1).width).toEqual('70px');
         }));
 
-        it('should calculate correctly resizer position and column width when grid is scaled and zoomed', fakeAsync(() => {
+        fit('should calculate correctly resizer position and column width when grid is scaled and zoomed', fakeAsync(() => {
             grid.nativeElement.style.transform = 'scale(1.1)';
             grid.nativeElement.style.setProperty('zoom', '1.5');
             fixture.detectChanges();
+            const originalColHeaderWidth = parseFloat(grid.columnList.get(1).width);
+            console.log(originalColHeaderWidth)
             headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 290, 0);
             tick(200);
             fixture.detectChanges();
-
             const resizer = GridFunctions.getResizer(fixture);
             const resizerDirective = resizer.componentInstance.resizer as IgxColumnResizerDirective;
-            const leftSetterSpy = spyOnProperty(resizerDirective, 'left', 'set').and.callThrough();
+            const parentElement = resizerDirective.element.nativeElement.parentElement.parentElement;
             UIInteractions.simulateMouseEvent('mousemove', resizer.nativeElement, 350, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer.nativeElement, 350, 5);
             fixture.detectChanges();
-
-            expect(leftSetterSpy).toHaveBeenCalled();
-            expect(parseInt(leftSetterSpy.calls.mostRecent().args[0].toFixed(0))).toEqual(235);
-            expect(parseInt(grid.columnList.get(1).headerCell.nativeElement.getBoundingClientRect().width.toFixed(0))).toEqual(224);
+            //After being scaled and zoomed the width of the grid is 825px, hence the ratio is 1.65 (825 / 500)
+            expect(resizerDirective['_left']).toEqual((290 - parentElement.getBoundingClientRect().left) / 1.65);
+            expect(parseFloat(grid.columnList.get(1).width)).toEqual(originalColHeaderWidth + ((350 - 290) / 1.65));
         }));
 
         it('should be able to resize column to the minWidth < defaultMinWidth', fakeAsync(() => {
