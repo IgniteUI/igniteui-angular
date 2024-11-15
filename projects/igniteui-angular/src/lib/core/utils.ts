@@ -644,7 +644,7 @@ export function getComponentCssSizeVar(size: string) {
 
 /**
  * @param path - The URI path to be normalized.
- * @returns string endoded using the encodeURI function.
+ * @returns string encdoded using the encodeURI function.
  */
  export function normalizeURI(path: string) {
      return path.split('/').map(encodeURI).join('/');
