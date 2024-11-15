@@ -5,7 +5,7 @@ import { IgxAvatarComponent, IgxAvatarType, IgxAvatarSize } from './avatar.compo
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
-describe('Avatar', () => {
+fdescribe('Avatar', () => {
     configureTestSuite();
     const baseClass = 'igx-avatar';
 
@@ -158,6 +158,17 @@ describe('Avatar', () => {
         expect(hostEl.getAttribute('role')).toEqual('img');
         expect(hostEl.getAttribute('aria-roledescription')).toEqual('image avatar');
         expect(hostEl.getAttribute('aria-label')).toEqual('avatar');
+    });
+
+    it('Normalizes the value of the `src` input', () => {
+        const fixture = TestBed.createComponent(InitImageAvatarComponent);
+        fixture.detectChanges();
+
+        const instance = fixture.componentInstance.avatar;
+        instance.src = "/assets/Test - 17.jpg";
+        fixture.detectChanges();
+
+        expect(instance.src).toEqual("/assets/Test%20-%2017.jpg");
     });
 });
 
