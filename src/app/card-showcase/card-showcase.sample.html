@@ -1,7 +1,7 @@
-<div class="grid-container grid-container--fit">
+<div class="cards-wrapper">
     <!--New York City Card Begins-->
+    <h4 class="sample-title">Angular Card</h4>
     <article class="card">
-        <h4 class="sample-title">Angular Card</h4>
         <igx-card class="my-cool-card">
             <igx-card-media>
                 <img [src]="cards[0].imageUrl">
@@ -25,38 +25,6 @@
             </igx-card-actions>
 
         </igx-card>
-    </article>
-    <!--New York City Card End-->
-
-    <!--New York City Card Begins-->
-    <article class="card">
-        <h4 class="sample-title">WC Card</h4>
-        <igc-card>
-            <igc-card-media>
-              <img
-                src="assets/images/card/media/ny.jpg"
-              />
-            </igc-card-media>
-            <igc-card-header>
-              <igc-avatar slot="thumbnail" src="assets/images/card/avatars/statue_of_liberty.jpg">
-              </igc-avatar>
-              <span slot="title">New York City</span>
-              <span slot="subtitle">City in New York</span>
-            </igc-card-header>
-            <igc-card-content>
-                <span>
-                    New York City comspanrises 5 boroughs sitting where the Hudson River
-                    meets the Atlantic Ocean. At its core is Manhattan, a densely
-                    populated borough that’s among the world’s major commercial,
-                    financial and cultural centers.
-                </span>
-            </igc-card-content>
-            <igc-card-actions>
-                <igc-button slot="start" variant="flat">Read More</igc-button>
-                <igc-icon-button *ngFor="let icon of cards[0].icons;" [name]="icon" slot="end" variant="flat">
-                </igc-icon-button>
-            </igc-card-actions>
-          </igc-card>
     </article>
     <!--New York City Card End-->
 
@@ -86,6 +54,38 @@
             </igx-card-media>
         </igx-card>
     </article>
+
+    <h4 class="sample-title">WC Card</h4>
+    <!--New York City Card Begins-->
+    <article class="card">
+        <igc-card>
+            <igc-card-media>
+              <img
+                src="assets/images/card/media/ny.jpg"
+              />
+            </igc-card-media>
+            <igc-card-header>
+              <igc-avatar slot="thumbnail" src="assets/images/card/avatars/statue_of_liberty.jpg">
+              </igc-avatar>
+              <span slot="title">New York City</span>
+              <span slot="subtitle">City in New York</span>
+            </igc-card-header>
+            <igc-card-content>
+                <span>
+                    New York City comspanrises 5 boroughs sitting where the Hudson River
+                    meets the Atlantic Ocean. At its core is Manhattan, a densely
+                    populated borough that’s among the world’s major commercial,
+                    financial and cultural centers.
+                </span>
+            </igc-card-content>
+            <igc-card-actions>
+                <igc-button slot="start" variant="flat">Read More</igc-button>
+                <igc-icon-button *ngFor="let icon of cards[0].icons;" [name]="icon" slot="end" variant="flat">
+                </igc-icon-button>
+            </igc-card-actions>
+          </igc-card>
+    </article>
+    <!--New York City Card End-->
 
     <article class="card">
         <igc-card style="flex-direction: row">

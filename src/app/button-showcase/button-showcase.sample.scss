@@ -2,21 +2,9 @@
     margin: 24px 16px;
 }
 
-.title {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+.title, .buttons-sample {
+    columns: 2 1vw;
     justify-items: center;
-}
-
-.buttons-sample {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: minmax(80px, auto);
-    align-items: center;
-}
-
-.button-sample {
-    justify-self: center;
 }
 
 .custom-controls {

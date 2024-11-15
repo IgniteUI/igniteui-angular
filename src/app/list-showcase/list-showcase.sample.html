@@ -24,6 +24,7 @@
                     <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                         <igx-list-item>
+                            <igx-icon igxListThumbnail>face</igx-icon>
                             <p igxListLineTitle>{{employee.position}}</p>
                             <igx-checkbox igxListAction></igx-checkbox>
                             <igx-icon igxListAction>info</igx-icon>
@@ -72,7 +73,7 @@
                     </igc-list-header>
                     <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                         <igc-list-item>
-
+                            <igc-icon slot="start" name="face"></igc-icon>
                             <span slot="title">{{employee.position}}</span>
                             <igc-checkbox slot="end"></igc-checkbox>
                             <igc-icon slot="end" name="info"></igc-icon>

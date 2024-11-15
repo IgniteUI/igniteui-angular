@@ -165,10 +165,4 @@ export class ComboShowcaseSampleComponent {
                 return SortingDirection.Asc;
         }
     }
-
-    protected get filteringOptions() {
-        return {
-            caseSensitive: this.properties.caseSensitiveIcon
-        };
-    }
 }

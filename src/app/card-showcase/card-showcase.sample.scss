@@ -1,15 +1,13 @@
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(320px, 1fr));
-    column-gap: 10px;
+.cards-wrapper {
+    columns: 2 320px;
     justify-items: center;
-    padding: 30px;
+    padding-block-start: 2rem;
 }
 
 .card {
     min-width: 320px;
     max-width: 320px;
-    margin: 10px;
+    margin: 1rem;
 
     h4 {
         margin-bottom: 1rem;
