@@ -1,12 +1,10 @@
 import { IDateRangePickerResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const DateRangePickerResourceStringsHU_: ExpandRequire<IDateRangePickerResourceStrings> = {
-    igx_date_range_picker_date_separator: '-',
-    igx_date_range_picker_done_button: 'Kész'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Hungarian resource strings for IgxDateRangePicker
  */
-export const DateRangePickerResourceStringsHU = DateRangePickerResourceStringsHU_ as ExpandRequire<IDateRangePickerResourceStrings>;
+export const DateRangePickerResourceStringsHU = {
+    igx_date_range_picker_date_separator: '-',
+    igx_date_range_picker_done_button: 'Kész'
+} satisfies MakeRequired<IDateRangePickerResourceStrings>;
