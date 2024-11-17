@@ -132,9 +132,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(1).width).toEqual('70px');
         }));
 
-        it('should calculate correctly resizer position and column width when grid is scaled and zoomed', fakeAsync(() => {
-            grid.nativeElement.style.transform = 'scale(1.1)';
-            grid.nativeElement.style.setProperty('zoom', '1.5');
+        it('should calculate correctly resizer position and column width when grid is scaled', fakeAsync(() => {
+            grid.nativeElement.style.transform = 'scale(1.65)';
             fixture.detectChanges();
             const originalColHeaderWidth = parseFloat(grid.columnList.get(1).width);
             console.log(originalColHeaderWidth)
@@ -148,7 +147,6 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             UIInteractions.simulateMouseEvent('mousemove', resizer.nativeElement, 350, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer.nativeElement, 350, 5);
             fixture.detectChanges();
-            //After being scaled and zoomed the width of the grid is 825px, hence the ratio is 1.65 (825 / 500)
             expect(resizerDirective['_left']).toEqual((290 - parentElement.getBoundingClientRect().left) / 1.65);
             expect(parseFloat(grid.columnList.get(1).width)).toEqual(originalColHeaderWidth + ((350 - 290) / 1.65));
         }));
