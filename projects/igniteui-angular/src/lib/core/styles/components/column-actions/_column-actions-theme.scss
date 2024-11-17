@@ -50,6 +50,7 @@
         elevations: $elevations,
         title-color: $title-color,
         background-color: $background-color,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
         )),
