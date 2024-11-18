@@ -12,13 +12,15 @@ import {
     Renderer2,
     Optional,
     Self,
-    booleanAttribute
+    booleanAttribute,
+    inject,
+    DestroyRef
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
-import { noop, Subject } from 'rxjs';
+import { noop, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTheme, ThemeService } from '../services/theme/theme.service';
 
@@ -288,6 +290,58 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
     public cssClass = 'igx-checkbox';
 
     /**
+     * Returns if the component is of type `material`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.material;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--material')
+    protected get material() {
+        return this.theme === 'material';
+    }
+
+    /**
+     * Returns if the component is of type `indigo`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.indigo;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--indigo')
+    protected get indigo() {
+        return this.theme === 'indigo';
+    }
+
+    /**
+     * Returns if the component is of type `bootstrap`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.bootstrap;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--bootstrap')
+    protected get bootstrap() {
+        return this.theme === 'bootstrap';
+    }
+
+    /**
+     * Returns if the component is of type `fluent`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.fluent;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--fluent')
+    protected get fluent() {
+        return this.theme === 'fluent';
+    }
+
+    /**
      * Sets/gets whether the checkbox component is on focus.
      * Default value is `false`.
      *
@@ -410,30 +464,38 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * @internal
      */
     public inputId = `${this.id}-input`;
+
     /**
      * @hidden
      */
     protected _onChangeCallback: (_: any) => void = noop;
+
     /**
      * @hidden
      */
     private _onTouchedCallback: () => void = noop;
-    /**
-     * @hidden
-     * @internal
-     */
-    protected _checked = false;
-    /**
-     * @hidden
-     * @internal
-     */
-    private _required = false;
 
     /**
      * @hidden
      * @internal
      */
-    protected theme: IgxTheme = 'material';
+    protected _checked = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected theme: IgxTheme;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    private _required = false;
+    private elRef = inject(ElementRef);
+    private _theme$ = new Subject<IgxTheme>();
+    private _subscription: Subscription;
+    private destroyRef = inject(DestroyRef);
 
     constructor(
         protected cdr: ChangeDetectorRef,
@@ -441,11 +503,18 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
         protected themeService: ThemeService,
         @Optional() @Self() public ngControl: NgControl,
     ) {
-        this.theme = this.themeService?.globalTheme;
-
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
+
+        this.theme = this.themeService.globalTheme;
+
+        this._subscription = this._theme$.asObservable().subscribe(value => {
+            this.theme = value as IgxTheme;
+            this.cdr.detectChanges();
+        });
+
+        this.destroyRef.onDestroy(() => this._subscription.unsubscribe());
     }
 
     /**
@@ -460,6 +529,13 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
                 this._required = this.ngControl?.control?.hasValidator(Validators.required);
                 this.cdr.detectChanges();
             }
+        }
+
+        const theme = this.themeService.getComponentTheme(this.elRef);
+
+        if (theme) {
+            this._theme$.next(theme);
+            this.cdr.markForCheck();
         }
     }
 

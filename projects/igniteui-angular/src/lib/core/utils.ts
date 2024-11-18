@@ -214,7 +214,9 @@ export const isObject = (value: any): boolean => !!(value && value.toString() ==
  * @returns true if provided variable is Date
  * @hidden
  */
-export const isDate = (value: any): value is Date => value instanceof Date;
+export const isDate = (value: any): value is Date => {
+    return Object.prototype.toString.call(value) === "[object Date]";
+}
 
 /**
  * Checks if the two passed arguments are equal
@@ -639,3 +641,11 @@ export function getComponentCssSizeVar(size: string) {
             return 'var(--ig-size, var(--ig-size-large))';
     }
 }
+
+/**
+ * @param path - The URI path to be normalized.
+ * @returns string encoded using the encodeURI function.
+ */
+ export function normalizeURI(path: string) {
+     return path.split('/').map(encodeURI).join('/');
+ }

@@ -13,7 +13,15 @@
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),
-            $deps: ()
+            $deps: (
+                igx-icon,
+                igx-button,
+                igx-chip,
+                igx-select,
+                igx-input-button,
+                igx-icon-button,
+                igx-overlay,
+            )
         );
 
         @extend %advanced-filter !optional;
