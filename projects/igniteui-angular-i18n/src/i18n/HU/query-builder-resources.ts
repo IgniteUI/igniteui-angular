@@ -60,7 +60,7 @@ const QueryBuilderResourceStringsHU_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Keresés',
     igx_query_builder_select_all: 'Mindet kijelöli',
     igx_query_builder_select_entity: 'Entitás kiválasztása',
-    igx_query_builder_select_return_field: 'Select return field',
+    igx_query_builder_select_return_field: 'Válassza ki a visszatérési mezőt',
     igx_query_builder_select_return_fields: 'Visszatérő mezők kiválasztása',
     igx_query_builder_dialog_title: 'Megerősítés',
     igx_query_builder_dialog_message: 'Az entitás megváltoztatásával elveszíti jelenlegi beállításait. Biztos, hogy folytatni kívánja?',

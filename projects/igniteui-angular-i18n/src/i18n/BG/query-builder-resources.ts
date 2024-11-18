@@ -60,7 +60,7 @@ const QueryBuilderResourceStringsBG_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Търсене',
     igx_query_builder_select_all: 'Избери всички',
     igx_query_builder_select_entity: 'Избери обект',
-    igx_query_builder_select_return_field: 'Select return field',
+    igx_query_builder_select_return_field: 'Избери поле за връщане',
     igx_query_builder_select_return_fields: 'Избери полета за връщане',
     igx_query_builder_dialog_title: 'Потвърждение',
     igx_query_builder_dialog_message: 'С промяната на обекта ще загубите текущите си настройки. Сигурни ли сте, че искате да продължите?',

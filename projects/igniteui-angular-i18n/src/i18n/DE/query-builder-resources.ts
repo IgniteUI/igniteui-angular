@@ -60,7 +60,7 @@ const QueryBuilderResourceStringsDE_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Suchen',
     igx_query_builder_select_all: 'Alle auswählen',
     igx_query_builder_select_entity: 'Entität auswählen',
-    igx_query_builder_select_return_field: 'Select return field',
+    igx_query_builder_select_return_field: 'Rückgabefeld auswählen',
     igx_query_builder_select_return_fields: 'Rückgabefelder auswählen',
     igx_query_builder_dialog_title: 'Bestätigung',
     igx_query_builder_dialog_message: 'Durch das Ändern der Entität gehen Ihre aktuellen Einstellungen verloren.  Möchten Sie wirklich fortfahren?',
