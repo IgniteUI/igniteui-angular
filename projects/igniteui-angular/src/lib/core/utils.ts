@@ -639,3 +639,11 @@ export function getComponentCssSizeVar(size: string) {
             return 'var(--ig-size, var(--ig-size-large))';
     }
 }
+
+/**
+ * @param path - The URI path to be normalized.
+ * @returns string encoded using the encodeURI function.
+ */
+ export function normalizeURI(path: string) {
+     return path.split('/').map(encodeURI).join('/');
+ }
