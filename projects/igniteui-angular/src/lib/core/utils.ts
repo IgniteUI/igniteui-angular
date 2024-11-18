@@ -613,3 +613,11 @@ export function* intoChunks<T>(arr: T[], size: number) {
     yield arr.slice(i, i + size);
   }
 }
+
+/**
+ * @param path - The URI path to be normalized.
+ * @returns string encoded using the encodeURI function.
+ */
+ export function normalizeURI(path: string) {
+     return path.split('/').map(encodeURI).join('/');
+ }
