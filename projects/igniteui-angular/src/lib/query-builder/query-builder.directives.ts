@@ -32,9 +32,9 @@ export class IgxQueryBuilderSearchValueTemplateDirective {
 export class IgxFieldValidatorDirective implements OnChanges {
     private picker: any;
     constructor(private element: ElementRef,
-        @Host() @Self() @Optional() private datePicker: IgxDatePickerComponent,
-        @Host() @Self() @Optional() private timePicker: IgxTimePickerComponent,
-        @Host() @Self() @Optional() private dateTimePicker: IgxDateTimeEditorDirective
+        @Host() @Self() @Optional() datePicker: IgxDatePickerComponent,
+        @Host() @Self() @Optional() timePicker: IgxTimePickerComponent,
+        @Host() @Self() @Optional() dateTimePicker: IgxDateTimeEditorDirective
     ) {
         this.picker = this.datePicker || this.timePicker || this.dateTimePicker;
     }
