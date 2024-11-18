@@ -36,7 +36,7 @@ export class IgxFieldValidatorDirective implements OnChanges {
         @Host() @Self() @Optional() timePicker: IgxTimePickerComponent,
         @Host() @Self() @Optional() dateTimePicker: IgxDateTimeEditorDirective
     ) {
-        this.picker = this.datePicker || this.timePicker || this.dateTimePicker;
+        this.picker = datePicker || timePicker || dateTimePicker;
     }
 
     @Input()
