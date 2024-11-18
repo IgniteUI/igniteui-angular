@@ -1,5 +1,3 @@
-import { isDate } from "../../core/utils";
-
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 export type DayParameter = CalendarDay | Date;
 
@@ -21,7 +19,7 @@ export const daysInWeek = 7;
 const millisecondsInDay = 86400000;
 
 export function toCalendarDay(date: DayParameter) {
-    return isDate(date) ? CalendarDay.from(date) : date;
+    return date instanceof Date ? CalendarDay.from(date) : date;
 }
 
 function checkRollover(original: CalendarDay, modified: CalendarDay) {

@@ -21,7 +21,6 @@ import {
 import { CalendarDay, DayInterval } from "../common/model";
 import { getNextActiveDate, isDateInRanges } from "./helpers";
 import { DateRangeType } from "../../core/dates";
-import { isDate } from "../../core/utils";
 
 export enum Direction {
     NEXT = 1,
@@ -142,7 +141,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      */
     @Input()
     public set date(value: Date) {
-        if (!isDate(value)) return;
+        if (!(value instanceof Date)) return;
 
         this._date = value;
     }
