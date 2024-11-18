@@ -379,20 +379,20 @@
             font-size: 50%;
         }
 
-        igx-avatar,
-        igx-circular-bar,
-        igx-icon {
-            --component-size: var(--chip-size);
-        }
-
         @if $variant == 'indigo' {
             %igx-icon-display {
                 --size: #{sizable(rem(14px), rem(14px), rem(16px))}
+            }
+        } @else {
+            %igx-icon-display {
+                --size: #{sizable(rem(18px), rem(18px), rem(24px))}
             }
         }
 
         igx-avatar,
         igx-circular-bar {
+            --component-size: var(--chip-size);
+
             max-height: 100%;
             width: sizable(rem(14px), rem(18px), rem(24px));
             max-width: sizable(rem(14px), rem(18px), rem(24px));
