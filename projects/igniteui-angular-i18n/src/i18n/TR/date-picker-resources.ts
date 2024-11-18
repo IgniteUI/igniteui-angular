@@ -1,12 +1,10 @@
 import { IDatePickerResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const DatePickerResourceStringsTR_: ExpandRequire<IDatePickerResourceStrings> = {
-    igx_date_picker_change_date: 'Tarihi değiştir',
-    igx_date_picker_choose_date: 'Tarih seçin'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Turkish resource strings for IgxDatePicker
  */
-export const DatePickerResourceStringsTR = DatePickerResourceStringsTR_ as ExpandRequire<IDatePickerResourceStrings>;
+export const DatePickerResourceStringsTR = {
+    igx_date_picker_change_date: 'Tarihi değiştir',
+    igx_date_picker_choose_date: 'Tarih seçin'
+} satisfies MakeRequired<IDatePickerResourceStrings>;
