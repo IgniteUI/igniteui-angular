@@ -872,10 +872,7 @@ describe('IgxQueryBuilder', () => {
         "operator": 1,
         "entity": "Products",
         "returnFields": [
-          "Id",
-          "ProductName",
-          "OrderId",
-          "Released"
+          "Id"
         ]
       }
     }
@@ -947,10 +944,7 @@ describe('IgxQueryBuilder', () => {
         "operator": 1,
         "entity": "Products",
         "returnFields": [
-          "Id",
-          "ProductName",
-          "OrderId",
-          "Released"
+          "Id"
         ]
       }
     }
@@ -1240,7 +1234,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Verify tree layout and remaining chip content
-            let rootGroup =  QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+            let rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
             expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup as HTMLElement).length).toBe(1);
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Downloads', 'Greater Than', '100');
         }));
@@ -1544,7 +1538,8 @@ describe('IgxQueryBuilder', () => {
             ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
         }));
 
-        it(`'In' condition 'commit' button should be disabled if there are no return fields in the nested query.`, fakeAsync(() => {
+        //Test skipped due to changing the inner query return fields from combo-select to single-select
+        xit(`'In' condition 'commit' button should be disabled if there are no return fields in the nested query.`, fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
             tick(100);
@@ -2013,6 +2008,11 @@ describe('IgxQueryBuilder', () => {
             tick(100);
             fix.detectChanges();
 
+            // Select return field
+            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
+            tick(100);
+            fix.detectChanges();
+
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
@@ -2037,10 +2037,7 @@ describe('IgxQueryBuilder', () => {
         "operator": 0,
         "entity": "Products",
         "returnFields": [
-          "Id",
-          "ProductName",
-          "OrderId",
-          "Released"
+          "Id"
         ]
       }
     }
