@@ -8,6 +8,14 @@ export const CarouselAnimationType = /*@__PURE__*/mkenum({
 export type CarouselAnimationType = (typeof CarouselAnimationType)[keyof typeof CarouselAnimationType];
 
 export const CarouselIndicatorsOrientation = /*@__PURE__*/mkenum({
+    /**
+     * @deprecated in version 19.0.0. Use `end` instead.
+     */
+    bottom: 'bottom',
+    /**
+     * @deprecated in version 19.0.0. Use `start` instead.
+     */
+    top: 'top',
     start: 'start',
     end: 'end'
 });

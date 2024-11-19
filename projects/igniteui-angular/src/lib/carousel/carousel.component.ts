@@ -473,7 +473,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public get indicatorsClass() {
         return {
             ['igx-carousel-indicators--focused']: this._hasKeyboardFocusOnIndicators,
-            [`igx-carousel-indicators--${this.indicatorsOrientation}`]: true
+            [`igx-carousel-indicators--${this.getIndicatorsClass()}`]: true
         };
     }
 
@@ -1009,6 +1009,17 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             this.indicatorsElements[this.current].nativeElement.focus();
         } else {
             this.focusSlideElement();
+        }
+    }
+
+    private getIndicatorsClass(): string {
+        switch (this.indicatorsOrientation) {
+            case CarouselIndicatorsOrientation.top:
+                return CarouselIndicatorsOrientation.start;
+            case CarouselIndicatorsOrientation.bottom:
+                return CarouselIndicatorsOrientation.end;
+            default:
+                return this.indicatorsOrientation;
         }
     }
 
