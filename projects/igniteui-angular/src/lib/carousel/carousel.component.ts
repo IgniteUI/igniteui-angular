@@ -231,9 +231,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Controls the maximum indexes that can be shown.
-     * Default value is `5`.
+     * Default value is `10`.
      * ```html
-     * <igx-carousel [maximumIndicatorsCount]="10"></igx-carousel>
+     * <igx-carousel [maximumIndicatorsCount]="5"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
@@ -248,7 +248,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * <igx-carousel>
      * ```
      *
-     * @memberOf IgxSlideComponent
+     * @memberOf IgxCarouselComponent
      */
     @Input() public indicatorsOrientation: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.end;
 
@@ -256,11 +256,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * Gets/sets the animation type of carousel.
      * Default value is `slide`.
      * ```html
-     * <igx-carousel animationType='none'>
+     * <igx-carousel animationType="none">
      * <igx-carousel>
      * ```
      *
-     * @memberOf IgxSlideComponent
+     * @memberOf IgxCarouselComponent
      */
     @Input() public override animationType: CarouselAnimationType = CarouselAnimationType.slide;
 
