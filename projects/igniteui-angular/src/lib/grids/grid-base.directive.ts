@@ -4930,6 +4930,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @param value
      * @param condition
      * @param ignoreCase
+     * @deprecated in version 19.0.0. 
      */
     public filterGlobal(value: any, condition, ignoreCase?) {
         this.filteringService.filterGlobal(value, condition, ignoreCase);
