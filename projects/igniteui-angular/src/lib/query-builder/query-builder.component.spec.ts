@@ -114,6 +114,19 @@ describe('IgxQueryBuilder', () => {
                 ControlsFunction.verifyButtonIsDisabled(button as HTMLElement, false);
             }
         }));
+
+        it('Should render combo for main entity return fields and single-select for nested entity return field.', fakeAsync(() => {
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+
+            const mainEntityContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, true, 0);
+            const nestedEntityContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, true, 1);
+
+            expect(mainEntityContainer.children[1].tagName).toBe('IGX-COMBO');
+            expect(nestedEntityContainer.children[1].tagName).toBe('IGX-SELECT');
+        }));
     });
 
     describe('Interactions', () => {
@@ -1536,33 +1549,7 @@ describe('IgxQueryBuilder', () => {
             // Verify parent is enabled
             parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
             ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
-        }));
-
-        //Test skipped due to changing the inner query return fields from combo-select to single-select
-        xit(`'In' condition 'commit' button should be disabled if there are no return fields in the nested query.`, fakeAsync(() => {
-            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-            fix.detectChanges();
-            tick(100);
-            fix.detectChanges();
-
-            // Double-click the parent chip 'Products' to enter edit mode.
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
-            tick(50);
-            fix.detectChanges();
-
-            let commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
-            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
-
-            // Deselect all fields
-            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
-            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
-            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement);
-
-            // Select all fields
-            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
-            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
-            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
-        }));
+        }));        
 
         it('Should collapse nested query when it is committed.', fakeAsync(() => {
             QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
@@ -2003,15 +1990,24 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
+            let commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, true);
+
             // Enter values in the nested query
             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 1); // Select 'Products' entity
             tick(100);
             fix.detectChanges();
 
+            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, true);
+
             // Select return field
             QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
             tick(100);
             fix.detectChanges();
+
+            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
 
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
