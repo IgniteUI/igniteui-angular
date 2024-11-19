@@ -373,7 +373,7 @@
         color: var-get($theme, 'item-text-color');
         background: var-get($theme, 'item-background');
 
-        @if $bootstrap-theme {
+        @if $bootstrap-theme or $variant == 'fluent' {
             border-bottom: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
 
             &:last-of-type {
@@ -435,10 +435,7 @@
         display: flex;
         flex-direction: column;
         flex: 1 0 0%;
-
-        @if $variant == 'indigo' {
-            gap: rem(2px);
-        }
+        gap: rem(2px);
 
         &:empty {
             display: none;
@@ -447,7 +444,6 @@
 
     %igx-list__item-line-subtitle {
         color: var-get($theme, 'item-subtitle-color');
-        opacity: .74
     }
 
     %igx-list__item-line-title {
@@ -563,13 +559,13 @@
 /// Uses the 'caption' and 'subtitle-1'
 /// categories from the typographic scale.
 /// @group typography
-/// @param {Map} $categories [(header: 'overline', item: 'subtitle-1', title: 'subtitle-1', subtitle: 'caption')] - The categories from the typographic scale used for type styles.
+/// @param {Map} $categories [(header: 'overline', item: 'subtitle-1', title: 'subtitle-1', subtitle: 'body-2')] - The categories from the typographic scale used for type styles.
 @mixin list-typography(
     $categories: (
         header: 'overline',
         item: 'subtitle-1',
         title: 'subtitle-1',
-        subtitle: 'caption'
+        subtitle: 'body-2'
     )
 ) {
     $header: map.get($categories, 'header');
