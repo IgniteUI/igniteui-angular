@@ -1,12 +1,10 @@
 import { IListResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const ListResourceStringsHU_: ExpandRequire<IListResourceStrings> = {
-    igx_list_no_items: 'Nincsenek elemek a listában.',
-    igx_list_loading: 'Adatok betöltése a szerverről...'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Hungarian resource strings for IgxList
  */
-export const ListResourceStringsHU = ListResourceStringsHU_ as ExpandRequire<IListResourceStrings>;
+export const ListResourceStringsHU = {
+    igx_list_no_items: 'Nincsenek elemek a listában.',
+    igx_list_loading: 'Adatok betöltése a szerverről...'
+} satisfies MakeRequired<IListResourceStrings>;

@@ -445,7 +445,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     public set primaryKey(value: string) {
         this._primaryKey = value;
-        this.checkPrimaryKeyColumn();
+        this.checkPrimaryKeyField();
     }
 
     /* blazorSuppress */
@@ -4929,6 +4929,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @param value
      * @param condition
      * @param ignoreCase
+     * @deprecated in version 19.0.0. 
      */
     public filterGlobal(value: any, condition, ignoreCase?) {
         this.filteringService.filterGlobal(value, condition, ignoreCase);
@@ -6654,7 +6655,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
-        this.checkPrimaryKeyColumn();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
@@ -6766,16 +6766,12 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (added || removed) {
                 this.onColumnsAddedOrRemoved();
             }
-            this.checkPrimaryKeyColumn();
         }
     }
 
-    /**
-     * @hidden @internal
-     */
-    protected checkPrimaryKeyColumn() {
-        if (this.primaryKey && this.columns.length > 0 && !this.columns.find(c => c.field === this.primaryKey)) {
-            console.warn(`Primary key column "${this.primaryKey}" is not defined. Set \`primaryKey\` to a valid column.`);
+    protected checkPrimaryKeyField() {
+        if (this.primaryKey && this.data?.length && !(this.primaryKey in this.data[0])) {
+            console.warn(`Field "${this.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`);
         }
     }
 
