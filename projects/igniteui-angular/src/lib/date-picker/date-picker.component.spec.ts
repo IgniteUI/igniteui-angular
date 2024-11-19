@@ -1575,7 +1575,6 @@ export class IgxDatePickerWithProjectionsComponent {
         <ng-template igxCalendarHeaderTitle let-formatCalendar>{{ formatCalendar.year.value }}</ng-template>
         <ng-template igxCalendarHeader let-formatCalendar>{{ formatCalendar.month.value }}</ng-template>
     </igx-date-picker>`,
-    standalone: true,
     imports: [IgxDatePickerComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective]
 })
 export class IgxDatePickerWithTemplatesComponent {
