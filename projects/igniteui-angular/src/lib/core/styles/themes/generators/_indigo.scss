@@ -31,8 +31,8 @@
         $palette: palette(
             $primary,
             $secondary,
-            $surface: if($surface != #fff, $surface, #fff),
-            $gray: #060716,
+            $surface: if($surface != #fff, $surface, #f8f8fa),
+            $gray: #9A9DA2,
             $info: $info,
             $success: $success,
             $warn: $warn,
@@ -68,8 +68,8 @@
         $palette: palette(
             $primary,
             $secondary,
-            $surface: if($surface != white, $surface, #2a2b2f),
-            $gray: #fff,
+            $surface: if($surface != white, $surface, #1E1F24),
+            $gray: #C3C4C7,
             $info: $info,
             $success: $success,
             $warn: $warn,
