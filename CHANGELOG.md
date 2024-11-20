@@ -22,6 +22,7 @@ All notable changes for each version of this project will be documented in this 
         }
     </ng-template> 
     ```
+    - Added `IgxFieldValidators` that could be used to define basic validation of the search value input based on the field data type.
 - `IFilteringExpression`
     - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
 - `IFilteringOperation`
