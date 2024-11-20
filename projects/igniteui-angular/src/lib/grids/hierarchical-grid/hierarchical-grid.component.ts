@@ -486,6 +486,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public set data(value: any[] | null) {
         this.setDataInternal(value);
         this.dataSetByUser = true;
+        this.checkPrimaryKeyField();
     }
 
     /**

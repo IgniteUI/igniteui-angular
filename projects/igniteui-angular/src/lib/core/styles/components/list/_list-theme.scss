@@ -229,6 +229,7 @@
         item-thumbnail-color-active: $item-thumbnail-color-active,
         border-color: $border-color,
         border-width: $border-width,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -286,30 +287,6 @@
         'indigo': rem(8px),
     ), $variant);
 
-    $list-icon-margin-inline: (
-        comfortable: rem(16px),
-        cosy: rem(8px),
-        compact: rem(4px)
-    );
-
-    $list-icon-margin-block: (
-        comfortable: rem(8px),
-        cosy: rem(6px),
-        compact: rem(4px)
-    );
-
-    $list-line-margin: (
-        comfortable: rem(16px),
-        cosy: rem(12px),
-        compact: rem(8px)
-    );
-
-    $list-actions-margin: (
-        comfortable: rem(8px),
-        cosy: rem(6px),
-        compact: rem(4px)
-    );
-
     %igx-list {
         @include sizable();
 
@@ -324,6 +301,10 @@
         overflow-x: hidden;
         z-index: 0;
         border-radius: var-get($theme, 'border-radius');
+
+        @if $variant == 'bootstrap' {
+            border: rem(1px) solid var-get($theme, 'border-color');
+        }
 
         &:focus-visible {
             outline-style: none;
@@ -478,10 +459,7 @@
         align-items: center;
         justify-content: center;
         color: var-get($theme, 'item-action-color');
-
-        @if $variant == 'indigo' {
-            gap: sizable(rem(4), rem(6), rem(8));
-        }
+        gap: if($variant == 'indigo', sizable(rem(4), rem(6), rem(8)), rem(8px));
 
         &:empty {
             display: none;
@@ -489,10 +467,6 @@
 
         > * {
             --component-size: #{if($variant == 'indigo', 2, var(--list-size))};
-
-            @if $variant != 'indigo' {
-                margin-inline-start: pad-inline(map.get($list-actions-margin, 'compact'), map.get($list-actions-margin, 'cosy'), map.get($list-actions-margin, 'comfortable'));
-            }
         }
 
         igc-icon,
@@ -516,10 +490,7 @@
         border-radius: var-get($theme, 'item-border-radius');
         background: inherit;
         z-index: 2;
-
-        @if $variant == 'indigo' {
-            gap: rem(8px);
-        }
+        gap: if($variant == 'indigo', rem(8px), rem(16px));
     }
 
     %igx-list-header,
@@ -532,7 +503,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        align-self: if($variant == 'indigo', center, flex-start);
+        align-self: center;
         padding: 0;
         color: var-get($theme, 'item-thumbnail-color');
         gap: rem(8px);
@@ -541,12 +512,6 @@
         > igx-icon,
         > igc-icon {
             --component-size: #{if($variant == 'indigo', 2, var(--list-size))};
-
-            @if $variant != 'indigo' {
-                margin-inline-end: pad-inline(map.get($list-icon-margin-inline, 'compact'), map.get($list-icon-margin-inline, 'cosy'), map.get($list-icon-margin-inline, 'comfortable'));
-                margin-inline-start: 0;
-                margin-block: pad-block(map.get($list-icon-margin-block, 'compact'), map.get($list-icon-margin-block, 'cosy'), map.get($list-icon-margin-block, 'comfortable'));
-            }
         }
 
         &:empty {
@@ -556,16 +521,6 @@
 
     %igx-list__item-thumbnail:not(:empty) + %igx-list__item-lines {
         --component-size: var(--list-size);
-
-        @if $variant != 'indigo' {
-            margin-inline-start: pad-inline(map.get($list-line-margin, 'compact'), map.get($list-line-margin, 'cosy'), map.get($list-line-margin, 'comfortable'));
-        }
-    }
-
-    @if $variant != 'indigo' {
-        %igx-list__item-lines + %igx-list__item-actions {
-            margin-inline-start: rem(8px);
-        }
     }
 
     %igx-list-item-content--active {

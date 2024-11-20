@@ -310,7 +310,7 @@ describe("Days View Component", () => {
                 ),
             );
 
-            UIInteractions.simulateMouseDownEvent(day.nativeElement.firstChild);
+            UIInteractions.simulateClickAndSelectEvent(day.nativeElement.firstChild);
             fixture.detectChanges();
 
             expect(instance.dateSelected.emit).toHaveBeenCalledWith(
@@ -331,7 +331,7 @@ describe("Days View Component", () => {
                 By.css(".igx-days-view__date--inactive"),
             );
 
-            UIInteractions.simulateMouseDownEvent(
+            UIInteractions.simulateClickAndSelectEvent(
                 days.at(0).nativeElement.firstChild,
             );
             fixture.detectChanges();
@@ -346,7 +346,7 @@ describe("Days View Component", () => {
                 By.css(".igx-days-view__date--inactive"),
             );
 
-            UIInteractions.simulateMouseDownEvent(
+            UIInteractions.simulateClickAndSelectEvent(
                 days.at(-1).nativeElement.firstChild,
             );
             fixture.detectChanges();

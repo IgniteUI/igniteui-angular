@@ -53,10 +53,6 @@ export class GridEventsComponent {
         this.grid.filter('ProductName', term, IgxStringFilteringOperand.instance().condition('contains'));
     }
 
-    public filterGlobal(term) {
-        this.grid.filterGlobal(term, IgxStringFilteringOperand.instance().condition('contains'));
-    }
-
     public columnMovingStart(event: IColumnMovingStartEventArgs) {
         console.log('event' + event);
         this.logAnEvent('=> columnMovingStart');
