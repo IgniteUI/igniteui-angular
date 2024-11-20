@@ -379,6 +379,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
             this.setupColumns();
         }
+        this.checkPrimaryKeyField();
         this.cdr.markForCheck();
     }
 
