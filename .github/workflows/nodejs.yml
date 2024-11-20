@@ -27,7 +27,7 @@ jobs:
             node-version: ${{ matrix.node-version }}
             cache: 'npm'
       - name: Install packages
-        run: npm i --force # TODO: CHange back to npm ci after Angular 19 release
+        run: npm ci
       - name: Lint Lib
         run: npm run lint:lib
         env:
