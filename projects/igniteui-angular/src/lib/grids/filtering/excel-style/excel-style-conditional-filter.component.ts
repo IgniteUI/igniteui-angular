@@ -145,7 +145,9 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     public onSubMenuSelection(eventArgs: ISelectionEventArgs) {
         if (this.esf.expressionsList && this.esf.expressionsList.length &&
             this.esf.expressionsList[0].expression.condition.name !== 'in') {
-            this.customDialog.expressionsList = this.esf.expressionsList;
+            this.customDialog.expressionsList = this.esf.expressionsList.filter(e => e.expression.fieldName === this.esf.column.field && e.expression.condition);
+        } else {
+            this.customDialog.expressionsList = this.customDialog.expressionsList.filter(e => e.expression.fieldName === this.esf.column.field && e.expression.condition);
         }
 
         this.customDialog.selectedOperator = eventArgs.newSelection.value;
