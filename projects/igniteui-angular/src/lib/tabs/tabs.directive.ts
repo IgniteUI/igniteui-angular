@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
 import { IgxDirectionality } from '../services/direction/directionality';
@@ -117,6 +117,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     constructor(
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         cdr: ChangeDetectorRef,
+        protected platform: PlatformUtil,
         public dir: IgxDirectionality) {
         super(animationService, cdr);
     }
