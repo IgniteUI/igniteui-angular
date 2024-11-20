@@ -440,12 +440,14 @@ export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'e
  * Related issue: https://github.com/angular/angular/issues/31712
  */
 export const resizeObservable = (target: HTMLElement): Observable<ResizeObserverEntry[]> => new Observable((observer) => {
-    const instance = new (getResizeObserver())((entries: ResizeObserverEntry[]) => {
-        observer.next(entries);
-    });
-    instance.observe(target);
-    const unsubscribe = () => instance.disconnect();
-    return unsubscribe;
+    if (isPlatformBrowser(PLATFORM_ID)) {
+        const instance = new (getResizeObserver())((entries: ResizeObserverEntry[]) => {
+            observer.next(entries);
+        });
+        instance.observe(target);
+        const unsubscribe = () => instance.disconnect();
+        return unsubscribe;
+    }
 });
 
 /**
