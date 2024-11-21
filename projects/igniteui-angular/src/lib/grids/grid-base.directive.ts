@@ -154,7 +154,6 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
-import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripToken } from '../action-strip/token';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import type { IgxPaginatorComponent } from '../paginator/paginator.component';
@@ -3771,7 +3770,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const primaryColumn = this._columns.find(col => col.field === this.primaryKey);
         const idType = this.data.length ?
             this.resolveDataTypes(this.data[0][this.primaryKey]) : primaryColumn ? primaryColumn.dataType : 'string';
-        return idType === 'string' ? uuidv4() : FAKE_ROW_ID--;
+        return idType === 'string' ? crypto.randomUUID() : FAKE_ROW_ID--;
     }
 
     /**
@@ -4930,6 +4929,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @param value
      * @param condition
      * @param ignoreCase
+     * @deprecated in version 19.0.0. 
      */
     public filterGlobal(value: any, condition, ignoreCase?) {
         this.filteringService.filterGlobal(value, condition, ignoreCase);
