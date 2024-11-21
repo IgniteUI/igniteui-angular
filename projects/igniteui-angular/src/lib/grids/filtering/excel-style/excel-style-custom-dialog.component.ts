@@ -221,10 +221,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         }
     }
 
-    public getExpressionsList(column: string) {
-        return this.expressionsList.filter(e => e.expression.fieldName === column);
-    }
-
     private createCondition(conditionName: string) {
         switch (this.column.dataType) {
             case GridColumnDataType.Boolean:
