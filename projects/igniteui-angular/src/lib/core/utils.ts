@@ -1,7 +1,7 @@
 import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { mergeWith } from 'lodash-es';
-import { Observable, of } from 'rxjs';
+import { NEVER, Observable } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 
@@ -451,7 +451,7 @@ export const resizeObservable = (target: HTMLElement): Observable<ResizeObserver
                 return unsubscribe;
         });
     } else {
-        return of();
+        return NEVER;
     }
 }
 
