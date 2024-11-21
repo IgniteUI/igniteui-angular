@@ -187,6 +187,7 @@
         button-ripple-color: $button-ripple-color,
         border-color: $border-color,
         border-radius: $border-radius,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')
@@ -472,7 +473,7 @@
         &:hover,
         &:focus {
             background: var-get($theme, 'item-active-background');
-            color: var-get($theme, 'item-active-color');
+            color: if($variant == 'fluent', var-get($theme, 'item-hover-color'), var-get($theme, 'item-active-color'));
 
             igx-icon {
                 color: var-get($theme, 'item-active-icon-color');
@@ -487,16 +488,25 @@
             background: var-get($theme, 'item-active-background');
             position: relative;
             box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+            z-index: 1;
 
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                inset-inline-start: 0;
-                width: 100%;
-                height: rem(1px);
-                background: var-get($theme, 'item-active-background');
-                z-index: 1;
+            &:not(:focus) {
+                &::before {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    inset-inline-start: 0;
+                    width: 100%;
+                    height: rem(1px);
+                    background: linear-gradient(
+                            to right,
+                            var-get($theme, 'border-color') 1px,
+                            var-get($theme, 'item-active-background') 1px,
+                            var-get($theme, 'item-active-background') calc(100% - 1px),
+                            var-get($theme, 'border-color') calc(100% - 1px)
+                    );
+                    z-index: -1;
+                }
             }
 
             &:hover {
@@ -514,11 +524,6 @@
             &:hover,
             &:focus-visible {
                 background: var-get($theme, 'item-hover-background');
-                color: var-get($theme, 'item-hover-color');
-
-                igx-icon {
-                    color: var-get($theme, 'item-hover-icon-color');
-                }
             }
         }
     }
@@ -652,6 +657,7 @@
         @include type-style($label) {
             margin-top: 0;
             margin-bottom: 0;
+            @content;
         }
     }
 }
