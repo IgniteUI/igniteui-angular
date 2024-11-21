@@ -1905,7 +1905,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
         }));
 
-        it('Should not make bug where existing inner query is leaking to a newly created one,', fakeAsync(() => {
+        it('Should not make bug where existing inner query is leaking to a newly created one', fakeAsync(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
             fix.detectChanges();
             tick(100);
