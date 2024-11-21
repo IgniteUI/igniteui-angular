@@ -664,7 +664,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Click on 'today' item in calendar.
             const calendar = GridFunctions.getAdvancedFilteringCalendar(fix);
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            todayItem.firstChild.dispatchEvent(new Event('mousedown'));
+            todayItem.firstChild.click();
             tick(100);
             fix.detectChanges();
 
@@ -1916,6 +1916,52 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(200);
             fix.detectChanges();
             verifyChildrenSelection(GridFunctions.getAdvancedFilteringTreeItem(fix, [1]), false);
+        }));
+
+        
+        it('Should remove all empty groups when clicking `delete` on a group\'s operator line\'s context menu.', fakeAsync(() => {
+            // Apply advanced filter through API.
+            const rootTree = new FilteringExpressionsTree(FilteringLogic.And);
+            rootTree.filteringOperands.push({
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+            });
+            const firstTree = new FilteringExpressionsTree(FilteringLogic.And);
+            const secondTree = new FilteringExpressionsTree(FilteringLogic.Or);
+            const thirdTree = new FilteringExpressionsTree(FilteringLogic.And);
+            thirdTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            thirdTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 's', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            secondTree.filteringOperands.push(thirdTree);
+            firstTree.filteringOperands.push(secondTree);
+            rootTree.filteringOperands.push(firstTree);
+            grid.advancedFilteringExpressionsTree = rootTree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Click group's outer operator line.
+            let middleGroupOperatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
+            middleGroupOperatorLine.click();
+            tick(200);
+            fix.detectChanges();
+
+            // Click on `delete` in the context menu.
+            let deleteBtn = fix.nativeElement.querySelector('.igx-filter-contextual-menu__delete-btn');
+            deleteBtn.click();
+            tick(200);
+            fix.detectChanges();
+
+            // Verify tree layout and remaining chip content
+            let rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+            expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(1);
+            verifyExpressionChipContent(fix, [0], 'Downloads', 'Greater Than', '100');
         }));
 
         it('Should open the operator dropdown below its respective input-group.', fakeAsync(() => {

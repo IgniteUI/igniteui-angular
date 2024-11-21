@@ -673,6 +673,36 @@ describe('IgxGrid Component Tests #grid', () => {
             const expectedCellHeight = 76; // rowHeight + 1px border
             expect(cell.offsetHeight).toEqual(expectedCellHeight);
         });
+
+        it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            const warnSpy = spyOn(console, 'warn');
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            const grid = fixture.componentInstance.grid;
+            grid.primaryKey = 'testField';
+            fixture.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledTimes(1);
+            expect(console.warn).toHaveBeenCalledWith(
+                `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
+            );
+            warnSpy.calls.reset();
+
+            // update data to include the 'testField'
+            fixture.componentInstance.data = [{ index: 1, value: 1, testField: 1 }];
+            fixture.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledTimes(0);
+
+            // remove the 'testField' runtime
+            fixture.componentInstance.data = [{ index: 1, value: 1 }];
+            fixture.componentInstance.columns = [...fixture.componentInstance.columns];
+            fixture.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledTimes(1);
+            expect(console.warn).toHaveBeenCalledWith(
+                `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
+            );
+        });
     });
 
     describe('IgxGrid - virtualization tests', () => {

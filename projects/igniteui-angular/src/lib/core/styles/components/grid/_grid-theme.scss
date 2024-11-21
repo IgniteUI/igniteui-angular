@@ -575,6 +575,7 @@
         cell-selected-within-background: $cell-selected-within-background,
         cell-selected-within-text-color: $cell-selected-within-text-color,
 
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')
@@ -1073,15 +1074,15 @@
                 %cbx-composite-wrapper {
                     padding: 0;
                 }
-    
+
                 %cbx-label-pos--after {
                     margin-inline-start: rem(12px);
                 }
-    
+
                 %cbx-label-pos--before {
                     margin-inline-end: rem(12px);
                 }
-    
+
                 %cbx-label-pos--before,
                 %cbx-label-pos--after {
                     &:empty {

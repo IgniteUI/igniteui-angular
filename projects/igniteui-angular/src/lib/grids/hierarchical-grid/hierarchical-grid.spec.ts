@@ -638,6 +638,37 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
             expect(hierarchicalGrid.columnInit.emit).toHaveBeenCalled();
         });
+
+        it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            spyOn(console, 'warn');
+            hierarchicalGrid.primaryKey = 'testField';
+            fixture.componentInstance.rowIsland.primaryKey = 'testField-rowIsland';
+            fixture.componentInstance.rowIsland2.primaryKey = 'testField-rowIsland2';
+            fixture.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledWith(
+                `Field "${hierarchicalGrid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
+            );
+
+            let row1 = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row1.expander);
+            fixture.detectChanges();
+
+            let rowIsland = fixture.componentInstance.rowIsland;
+            expect(console.warn).toHaveBeenCalledWith(
+                `Field "${rowIsland.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
+            );
+
+            const secondLevelGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
+            row1 = secondLevelGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row1.expander);
+            fixture.detectChanges();
+
+            rowIsland = fixture.componentInstance.rowIsland2;
+            expect(console.warn).toHaveBeenCalledWith(
+                `Field "${rowIsland.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
+            );
+        });
     });
 
     describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
