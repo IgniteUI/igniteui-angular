@@ -372,6 +372,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Toolbar'
         },
         {
+            link: '/gridReCreate',
+            icon: 'view_column',
+            name: 'Grid ReCreate'
+        },
+        {
             link: '/gridToolbarCustom',
             icon: 'view_column',
             name: 'Grid Toolbar Custom Content'
