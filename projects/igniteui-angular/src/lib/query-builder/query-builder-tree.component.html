@@ -67,7 +67,7 @@
                 [ngModel]="selectedReturnFields[0]"
                 [style.display]="isInEditMode() ? 'block' : 'none'"
             >
-                <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_return_field }}</label>
+                <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_return_field_single }}</label>
                 <igx-select-item *ngFor="let field of fields" [value]="field.field">
                     {{ field.field }}
                 </igx-select-item>

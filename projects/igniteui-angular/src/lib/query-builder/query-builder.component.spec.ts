@@ -115,7 +115,7 @@ describe('IgxQueryBuilder', () => {
             }
         }));
 
-        it('Should render combo for main entity return fields and single-select for nested entity return field.', fakeAsync(() => {
+        it('Should render combo for main entity return fields and select for nested entity return field.', fakeAsync(() => {
             QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
 
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.

@@ -60,7 +60,7 @@ const QueryBuilderResourceStringsPT_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Pesquisar',
     igx_query_builder_select_all: 'Selecionar tudo',
     igx_query_builder_select_entity: 'Selecionar entidade',
-    igx_query_builder_select_return_field: 'Selecione o campo de retorno',
+    igx_query_builder_select_return_field_single: 'Selecione o campo de retorno',
     igx_query_builder_select_return_fields: 'Selecionar campos de retorno',
     igx_query_builder_dialog_title: 'Confirmação',
     igx_query_builder_dialog_message: 'Ao alterar a entidade, você perderá suas configurações atuais. Tem a certeza que pretende continuar?',

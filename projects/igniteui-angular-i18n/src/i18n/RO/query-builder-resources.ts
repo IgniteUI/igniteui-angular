@@ -60,7 +60,7 @@ const QueryBuilderResourceStringsRO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Căutare',
     igx_query_builder_select_all: 'Selectează tot',
     igx_query_builder_select_entity: 'Selectează entitate',
-    igx_query_builder_select_return_field: 'Selectați câmpul de returnare',
+    igx_query_builder_select_return_field_single: 'Selectați câmpul de returnare',
     igx_query_builder_select_return_fields: 'Selectează câmpuri de returnare',
     igx_query_builder_dialog_title: 'Confirmare',
     igx_query_builder_dialog_message: 'Prin modificarea entității, veți pierde setările curente. Ești sigur că vrei să faci asta?',
