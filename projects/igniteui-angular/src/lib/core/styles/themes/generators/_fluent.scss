@@ -20,7 +20,8 @@
 ) {
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
-    $surface: color($palette, 'surface');
+    $gray: color($light-fluent-palette, 'gray');
+    $surface: color($light-fluent-palette, 'surface');
     $info: color($palette, 'info');
     $success: color($palette, 'success');
     $warn: color($palette, 'warn');
@@ -30,8 +31,8 @@
         $palette: palette(
             $primary,
             $secondary,
-            $surface: if($surface != #fff, $surface, #fff),
-            $gray: #000,
+            $surface: $surface,
+            $gray: $gray,
             $info: $info,
             $success: $success,
             $warn: $warn,
@@ -56,7 +57,8 @@
 ) {
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
-    $surface: color($palette, 'surface');
+    $gray: color($dark-fluent-palette, 'gray');
+    $surface: color($dark-fluent-palette, 'surface');
     $info: color($palette, 'info');
     $success: color($palette, 'success');
     $warn: color($palette, 'warn');
@@ -66,8 +68,8 @@
         $palette: palette(
             $primary,
             $secondary,
-            $surface: if($surface != #fff, $surface, #222),
-            $gray: #fff,
+            $surface: $surface,
+            $gray: $gray,
             $info: $info,
             $success: $success,
             $warn: $warn,

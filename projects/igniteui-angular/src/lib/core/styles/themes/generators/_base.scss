@@ -683,7 +683,7 @@
     );
 
     @include theme(
-        $palette: $light-palette,
+        $palette: $light-material-palette,
         $schema: $light-material-schema,
         $exclude: $exclude,
         $roundness: $roundness,
@@ -716,7 +716,7 @@
     );
 
     @include theme(
-        $palette: $dark-palette,
+        $palette: $dark-material-palette,
         $schema: $dark-material-schema,
         $exclude: $exclude,
         $roundness: $roundness,
