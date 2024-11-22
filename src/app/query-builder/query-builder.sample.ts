@@ -123,6 +123,40 @@ export class QueryBuilderComponent implements OnInit {
             conditionName: IgxBooleanFilteringOperand.instance().condition('true').name
         });
 
+        const subGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Entity A', ['*']);
+        subGroup.filteringOperands.push({
+            fieldName: 'Name',
+            condition: IgxStringFilteringOperand.instance().condition('endsWith'),
+            conditionName: IgxStringFilteringOperand.instance().condition('endsWith').name,
+            searchVal: 'a'
+        });
+        subGroup.filteringOperands.push({
+            fieldName: 'DateTime created',
+            condition: IgxDateFilteringOperand.instance().condition('today'),
+            conditionName: IgxDateFilteringOperand.instance().condition('today').name
+        });        
+        tree.filteringOperands.push(subGroup);
+
+        tree.filteringOperands.push({
+            fieldName: 'Validated',
+            condition: IgxBooleanFilteringOperand.instance().condition('false'),
+            conditionName: IgxBooleanFilteringOperand.instance().condition('false').name
+        });
+
+        const subGroup2 = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Entity A', ['*']);
+        subGroup2.filteringOperands.push({
+            fieldName: 'Id',
+            condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            conditionName: IgxNumberFilteringOperand.instance().condition('greaterThan').name,
+            searchVal: '3'
+        });
+        subGroup2.filteringOperands.push({
+            fieldName: 'Name',
+            condition: IgxStringFilteringOperand.instance().condition('notNull'),
+            conditionName: IgxStringFilteringOperand.instance().condition('notNull').name
+        });        
+        tree.filteringOperands.push(subGroup2);
+
         this.expressionTree = tree;
         this.lData = [{ id: 0, field: 'a' }, { id: 1, field: '1' }]
         // this.onChange();

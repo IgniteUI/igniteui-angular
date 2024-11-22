@@ -125,14 +125,26 @@
         </button>
     </ng-template>
 
-    <ng-template #operandTemplate let-expressionItem>
+    <ng-template #operandTemplate let-expressionItem let-index="index">
         <div
+        #dragRef 
+        [attr.data-index]="index"     
+        igxDrop 
+        (enter)="onEnterHandler($event, dragRef, expressionItem)"
+        (over)="listItemOver($event, dragRef)"    
+        (leave)="onLeave($event, dragRef)"
+        (dropped)="onIconDropped($event, dragRef, expressionItem)"
             *ngIf="!expressionItem.inEditMode"
-            class="igx-filter-tree__expression-item"
+            class="igx-filter-tree__expression-item"            
             (mouseenter)="expressionItem.hovered = true"
-            (mouseleave)="expressionItem.hovered = false"
+            (mouseleave)="expressionItem.hovered = false"   
         >
-            <igx-chip
+            <igx-chip            
+            [draggable]="true"     
+        (dragStart)="dragStartHandler(dragRef)"
+        (dragEnd)="dragEndHandler(dragRef)"
+        (ghostCreate)="ghostCreateHandler(dragRef)"   
+
                 #target="tooltipTarget"
                 [igxTooltipTarget]="tooltipRef"
                 [data]="expressionItem"
@@ -142,8 +154,10 @@
                 (click)="isInEditMode() ? onChipClick(expressionItem) : null"
                 (dblclick)="onChipDblClick(expressionItem)"
                 (remove)="onChipRemove(expressionItem)"
-                (selectedChanged)="onChipSelectionEnd()"
+                (selectedChanged)="onChipSelectionEnd()"      
+                style="transition: padding 200ms;"          
             >
+            <span igxPrefix>[{{index}}]</span>
                 <span igxPrefix class="igx-filter-tree__expression-column">
                     {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
                 </span>
@@ -214,7 +228,7 @@
                     }
                 }
             </div>
-            <div
+            <div igxDragIgnore
                 class="igx-filter-tree__expression-actions"
                 *ngIf="
                     (expressionItem.selected &&
@@ -222,14 +236,14 @@
                     expressionItem.hovered
                 "
             >
-                <button
+                <button igxDragIgnore
                     igxIconButton="flat"
                     aria-labelledby="edit-expression"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionEdit(expressionItem)">
                     <igx-icon id="edit-expression">edit</igx-icon>
                 </button>
-                <button
+                <button igxDragIgnore
                     igxIconButton="flat"
                     aria-labelledby="add-expression"
                     (keydown)="invokeClick($event)"
@@ -248,6 +262,7 @@
             </div>
             <div *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree && expressionItem.expression.searchTree.filteringOperands.length > 0"
                 igxButton
+                igxDragIgnore
                 class="igx-filter-tree__details-button"
                 (click)="expanderClick($event, expressionItem)"
                 (keydown)="invokeClick($event)"
@@ -457,7 +472,7 @@
             <ng-container
                 *ngTemplateOutlet="
                     addExpressionsTemplate;
-                    context: context(expressionItem.parent, expressionItem)
+                    context: context(expressionItem.parent, null, expressionItem)
                 "
             >
             </ng-container>
@@ -470,7 +485,7 @@
         </div>
     </ng-template>
 
-    <ng-template #expressionGroupTemplate let-expressionItem>
+    <ng-template #expressionGroupTemplate let-expressionItem let-index="index">
         <div class="igx-filter-tree">
             <div
                 tabindex="0"
@@ -485,13 +500,13 @@
             ></div>
 
             <div class="igx-filter-tree__expression">            
-                <ng-container *ngFor="let expr of expressionItem?.children">
+                <ng-container *ngFor="let expr of expressionItem?.children; index as i">
                     <ng-container
                         *ngTemplateOutlet="
                             isExpressionGroup(expr)
                                 ? expressionGroupTemplate
                                 : operandTemplate;
-                            context: context(expr)
+                            context: context(expr, index? [index,i] : [i])
                         "
                     >
                     </ng-container>

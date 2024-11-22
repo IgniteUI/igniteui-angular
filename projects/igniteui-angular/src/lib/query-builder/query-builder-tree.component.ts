@@ -54,6 +54,8 @@ import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
+import { IChipsAreaReorderEventArgs, IgxChipsAreaComponent } from "../chips/chips-area.component";
+import { IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -157,7 +159,9 @@ class ExpressionOperandItem extends ExpressionItem {
         IgxCheckboxComponent,
         IgxDialogComponent,
         IgxTooltipTargetDirective,
-        IgxTooltipDirective
+        IgxTooltipDirective,
+        IgxChipsAreaComponent,
+        IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IgxDropDirective,
     ]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
@@ -536,9 +540,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /** @hidden */
     protected isSearchValueInputDisabled(): boolean {
         return !this.selectedField ||
-                !this.selectedCondition ||
-                (this.selectedField &&
-                    (this.selectedField.filters.condition(this.selectedCondition).isUnary ||
+            !this.selectedCondition ||
+            (this.selectedField &&
+                (this.selectedField.filters.condition(this.selectedCondition).isUnary ||
                     this.selectedField.filters.condition(this.selectedCondition).isNestedQuery));
     }
 
@@ -936,6 +940,109 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.deleteItem(expressionItem);
     }
 
+    /* DRAG AND DROP START*/
+    public dragConditionIndex: number[];
+    public dragExpressionItem: ExpressionItem;
+    public dropConditionIndex: number[];
+
+    //Enter seems to be the first event that get's triggered since when you 'pick up' a chip it right away 'enters' the space occupied by it self
+    //Later on, the picked up chip can enter some other chip's space
+    public onEnterHandler(event: IDropBaseEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem) {
+        //console.log('enter',event,dragRef)
+        //get the index of the picked-up chip
+
+        const newIndex = dragRef.getAttribute("data-index").split(',').map(Number);
+
+        if (!this.dragConditionIndex) {
+            this.dragConditionIndex = newIndex;
+            this.dragExpressionItem = expressionItem;
+            console.log('Picked up:', this.dragExpressionItem);
+        }
+        else if (newIndex.toString() !== this.dragConditionIndex?.toString() && newIndex.toString() !== this.dropConditionIndex?.toString()) {
+            this.dropConditionIndex = newIndex;
+            (dragRef.firstChild as HTMLElement).style.paddingTop = '30px';
+            console.log('Entering:', this.dropConditionIndex);
+        }
+    }
+
+    public listItemOver(event, dragRef: HTMLElement) {
+        //console.log('over',event, dragRef)
+    }
+
+    public onLeave(event: IDropBaseEventArgs, dragRef: HTMLElement) {
+        if (this.dropConditionIndex) {
+            console.log('Leaving', this.dropConditionIndex);
+            (dragRef.firstChild as HTMLElement).style.paddingTop = '0px';
+            this.dropConditionIndex = null;
+        }
+    }
+
+    public onIconDropped(event: IDropDroppedEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem) {
+        const newIndex = dragRef.getAttribute("data-index").split(',').map(Number);
+        if (newIndex.toString() !== this.dropConditionIndex.toString()) {
+            console.error('Drop area chip is different than last entered one')
+        }
+        else {
+            //Cut dragged element
+            let tree = this.expressionTree.filteringOperands;
+            let dragOperand;
+            let dragCopy = { ...this.dragExpressionItem };
+
+            // for (const [i, ix] of dragIx.entries()) {
+            //     dragOperand = tree[ix];
+            //     if (i === dragIx.length - 1) {
+            //         dragCopy = {...dragOperand};
+
+            //         this.deleteItem(dragCopy);
+            //     }
+            //     else {
+            //         tree = dragOperand.filteringOperands;
+            //     }
+            // }
+
+
+            console.log('push', dragCopy, ' to:', expressionItem)
+
+            // const operandItem = new ExpressionOperandItem({...dragCopy}, parent);
+
+            expressionItem.parent.children.push(dragCopy);
+            this.deleteItem(this.dragExpressionItem);
+
+
+            this.dragConditionIndex = null;
+            this.dragExpressionItem = null;
+        }
+        //event.drag.dropFinished();
+    }
+
+
+    public litsItemTransitioned(event, dragRef: HTMLElement) {
+        //console.log('litsItemTransitioned',event, dragRef)
+    }
+
+
+    public dragStartHandler(dragRef: HTMLElement): void {
+        //console.log('dragStartHandler',dragRef)
+        //this.dragIconId = id;
+    }
+
+    public chipsOrderChanged(event: IChipsAreaReorderEventArgs, dragRef: HTMLElement) {
+        //console.log('chipsOrderChanged',dragRef)
+    }
+
+    public dragEndHandler(dragRef: HTMLElement) {
+        //console.log('dragEndHandler',dragRef)
+        dragRef.style.visibility = 'visible';
+    }
+
+    public ghostCreateHandler(dragRef: HTMLElement) {
+        //console.log('ghostCreateHandler',dragRef)
+        dragRef.style.visibility = 'hidden';
+    }
+
+    /* DRAG AND DROP END*/
+
+
     /**
      * @hidden @internal
      */
@@ -1266,10 +1373,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public context(expression: ExpressionItem, afterExpression?: ExpressionItem) {
+    public context(expression: ExpressionItem, index?: number[], afterExpression?: ExpressionItem) {
         return {
             $implicit: expression,
-            afterExpression
+            afterExpression,
+            index
         };
     }
 
@@ -1578,6 +1686,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     private deleteItem(expressionItem: ExpressionItem) {
+        console.log(expressionItem)
         if (!expressionItem.parent) {
             this.rootGroup = null;
             this.currentGroup = null;
