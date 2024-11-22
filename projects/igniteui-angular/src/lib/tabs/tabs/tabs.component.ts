@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
-import { getResizeObserver, mkenum } from '../../core/utils';
+import { getResizeObserver, mkenum, PlatformUtil } from '../../core/utils';
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
 import { AnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
@@ -129,6 +129,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         cdr: ChangeDetectorRef,
         private ngZone: NgZone,
+        private platform: PlatformUtil,
         dir: IgxDirectionality) {
         super(animationService, cdr, dir);
     }
@@ -139,12 +140,14 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         super.ngAfterViewInit();
 
         this.ngZone.runOutsideAngular(() => {
-            this._resizeObserver = new (getResizeObserver())(() => {
-                this.updateScrollButtons();
-                this.realignSelectedIndicator();
-            });
-            this._resizeObserver.observe(this.headerContainer.nativeElement);
-            this._resizeObserver.observe(this.viewPort.nativeElement);
+            if (this.platform.isBrowser) {
+                this._resizeObserver = new (getResizeObserver())(() => {
+                    this.updateScrollButtons();
+                    this.realignSelectedIndicator();
+                });
+                this._resizeObserver.observe(this.headerContainer.nativeElement);
+                this._resizeObserver.observe(this.viewPort.nativeElement);
+            }
         });
     }
 
