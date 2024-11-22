@@ -67,7 +67,6 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxSimpleComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
     ],
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, NgIf, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {

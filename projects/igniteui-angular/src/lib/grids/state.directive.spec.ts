@@ -21,7 +21,6 @@ import { NgFor } from '@angular/common';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 
-/* eslint-disable max-len */
 describe('IgxGridState - input properties #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
@@ -359,10 +358,8 @@ describe('IgxGridState - input properties #grid', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
         const state = fix.componentInstance.state;
-        /* eslint-disable max-len */
         const columnsState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true,"selectable":false,"key":"ProductName","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"selectable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"selectable":true,"key":"OrderDate","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
         const initialState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true,"selectable":false,"key":"ProductName","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"key":"OrderDate","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
-        /* eslint-enable max-len */
         const columns = JSON.parse(columnsState).columns;
 
         let gridState = state.getState(true, 'columns');
@@ -381,10 +378,8 @@ describe('IgxGridState - input properties #grid', () => {
         const state = fix.componentInstance.state;
         const grid = fix.componentInstance.grid;
         spyOn(grid.columnInit, 'emit').and.callThrough();
-        /* eslint-disable max-len */
         const columnsState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":false,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"200px","header":"Prodyct Name","resizable":true,"searchable":true,"selectable":true,"key":"ProductName","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"selectable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"selectable":true,"key":"OrderDate","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
         const initialState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true,"selectable":false,"key":"ProductName","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"key":"OrderDate","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
-        /* eslint-enable max-len */
         const columnsStateObject = JSON.parse(columnsState);
 
         let gridState = state.getState(true, 'columns');
@@ -403,10 +398,8 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
         const grid = fix.componentInstance.grid;
-        /* eslint-disable max-len */
         const initialState = '{"columns":[{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ID","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"key":"ID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"width":"100px","header":"Address Information","resizable":false,"searchable":true,"selectable":true,"key":"Address_City","columnGroup":true,"disableHiding":false,"disablePinning":false,"collapsible":true,"expanded":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"hidden":true,"dataType":"string","hasSummary":false,"field":"City","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"key":"City","parentKey":"Address_City","columnGroup":false,"disableHiding":false,"disablePinning":false,"visibleWhenCollapsed":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Address","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"key":"Address","parentKey":"Address_City","columnGroup":false,"disableHiding":false,"disablePinning":false,"visibleWhenCollapsed":false}]}';
         const newState = '{"columns":[{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ID","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"key":"ID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"width":"100px","header":"Address Information","resizable":false,"searchable":true,"selectable":true,"key":"Address_City","columnGroup":true,"disableHiding":false,"disablePinning":false,"collapsible":true,"expanded":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"hidden":true,"dataType":"string","hasSummary":false,"field":"City","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"key":"City","parentKey":"Address_City","columnGroup":false,"disableHiding":false,"disablePinning":false,"visibleWhenCollapsed":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Address","width":"100px","header":"","resizable":false,"searchable":true,"selectable":true,"key":"Address","parentKey":"Address_City","columnGroup":false,"disableHiding":false,"disablePinning":false,"visibleWhenCollapsed":false}]}';
-        /* eslint-enable max-len */
         const columnsStateObject = JSON.parse(newState);
         let gridState = state.getState(true, 'columns');
         expect(gridState).toBe(initialState);
@@ -429,10 +422,8 @@ describe('IgxGridState - input properties #grid', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
         const state = fix.componentInstance.state;
-        /* eslint-disable max-len */
         const initialState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true,"selectable":false,"key":"ProductName","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"key":"OrderDate","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
         const columnsState = '{"columns":[{"pinned":false,"sortable":false,"filterable":false,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductID","width":"150px","header":"General Information","resizable":true,"searchable":true,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"","width":"398px","header":"General Information","resizable":false,"searchable":true,"selectable":true,"key":"ProductName_UnitsInStock","columnGroup":true,"disableHiding":false,"disablePinning":false,"collapsible":false,"expanded":true},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":false,"field":"ProductName","width":"199px","header":"","resizable":true,"searchable":true,"selectable":true,"key":"ProductName","parentKey":"ProductName_UnitsInStock","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"UnitsInStock","width":"199px","header":"","resizable":true,"searchable":true,"selectable":true,"key":"UnitsInStock","parentKey":"ProductName_UnitsInStock","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"InStock","width":"199px","header":"","resizable":true,"searchable":true,"selectable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true}]}';
-        /* eslint-enable max-len */
         const columnsStateObject = JSON.parse(columnsState);
         let gridState = state.getState(true, 'columns');
 
@@ -699,7 +690,6 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
-        // eslint-disable-next-line max-len
         const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"InStock","condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"searchVal":null,"ignoreCase":true},{"fieldName":"ProductID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
         const initialState = '{"advancedFiltering":{}}';
 
@@ -718,7 +708,6 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
-        // eslint-disable-next-line max-len
         const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"InStock","condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"searchVal":null,"ignoreCase":true},{"fieldName":"ProductID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
         const initialState = '{"advancedFiltering":{}}';
         const advFilteringStateObject = JSON.parse(advFilteringState);
@@ -741,7 +730,6 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
 
         const state = fix.componentInstance.state;
-        // eslint-disable-next-line max-len
         const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"ProductID","condition":{"name":"custom","isUnary":false,"iconName":"custom"},"ignoreCase":true,"searchVal":"custom"}],"operator":0,"type":1}}';
         const initialState = '{"advancedFiltering":{}}';
 
@@ -918,7 +906,6 @@ class HelperFunctions {
             <span>Custom Content: {{cell.value}}</span>
         </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective, NgFor]
 })
 export class IgxGridStateComponent {
@@ -934,12 +921,10 @@ export class IgxGridStateComponent {
     public data = SampleTestData.foodProductData();
 
     public columns: any[] = [
-        /* eslint-disable max-len */
         { field: 'ProductID', header: 'Product ID', width: '150px', dataType: 'number', pinned: true, sortable: true, filterable: true, groupable: false, hasSummary: false, hidden: false, maxWidth: '300px', searchable: false, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: 'testCss', headerGroupClasses: '', resizable: true, disablePinning: false },
         { field: 'ProductName', header: 'Prodyct Name', width: '150px', dataType: 'string', pinned: false, selectable: false, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: '', headerGroupClasses: '', resizable: true, disablePinning: false },
         { field: 'InStock', header: 'In Stock', width: '140px', dataType: 'boolean', pinned: false, sortable: false, filterable: true, groupable: false, hasSummary: true, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: true, disablePinning: true },
         { field: 'OrderDate', header: 'Date ordered', width: '110px', dataType: 'date', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false, disablePinning: false },
-        /* eslint-enable max-len */
       ];
 }
 
@@ -949,7 +934,6 @@ export class IgxGridStateComponent {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxGridStateWithOptionsComponent {
@@ -979,7 +963,6 @@ export class IgxGridStateWithOptionsComponent {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxGridStateDirective, IgxGridDetailTemplateDirective, IgxPaginatorComponent]
 })
 export class IgxGridStateWithDetailsComponent {
@@ -1002,7 +985,6 @@ export class IgxGridStateWithDetailsComponent {
                 </igx-column-group>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridStateDirective, NgFor]
 })
 export class CollapsibleColumnGroupTestComponent {
@@ -1032,7 +1014,6 @@ export class CollapsibleColumnGroupTestComponent {
                 </igx-column-layout>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxGridStateDirective, IgxColumnComponent, IgxColumnLayoutComponent]
 })
 export class IgxGridMRLStateComponent {
@@ -1044,7 +1025,3 @@ export class IgxGridMRLStateComponent {
 
     public data = SampleTestData.foodProductData();
 }
-
-
-/* eslint-enable max-len */
-

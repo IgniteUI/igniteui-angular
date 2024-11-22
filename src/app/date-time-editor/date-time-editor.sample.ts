@@ -6,7 +6,6 @@ import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxDateTimeEditorEventA
     selector: 'app-date-time-editor',
     templateUrl: './date-time-editor.sample.html',
     styleUrls: ['./date-time-editor.sample.css'],
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule, IgxSuffixDirective, IgxRippleDirective, IgxButtonDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class DateTimeEditorSampleComponent {

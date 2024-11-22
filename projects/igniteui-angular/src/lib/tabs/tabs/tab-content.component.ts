@@ -7,7 +7,6 @@ import { NgIf } from '@angular/common';
     selector: 'igx-tab-content',
     templateUrl: 'tab-content.component.html',
     providers: [{ provide: IgxTabContentBase, useExisting: IgxTabContentComponent }],
-    standalone: true,
     imports: [NgIf]
 })
 export class IgxTabContentComponent extends IgxTabContentDirective {

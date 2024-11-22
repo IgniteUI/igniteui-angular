@@ -1,5 +1,4 @@
-﻿/* eslint-disable @angular-eslint/no-conflicting-lifecycle */
-import { DOCUMENT, NgForOfContext } from '@angular/common';
+﻿import { DOCUMENT, NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
     ComponentRef,

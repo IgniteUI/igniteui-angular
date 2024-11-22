@@ -63,7 +63,6 @@ let NEXT_TAB_ID = 0;
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
     providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }],
-    standalone: true,
     imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgFor, NgTemplateOutlet, NgIf, IgxIconButtonDirective]
 })
 
