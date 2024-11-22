@@ -138,11 +138,11 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     constructor(
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         cdr: ChangeDetectorRef,
-        platform: PlatformUtil,
         private ngZone: NgZone,
         dir: IgxDirectionality,
+        private platform: PlatformUtil
     ) {
-        super(animationService, cdr, platform, dir);
+        super(animationService, cdr, dir);
     }
 
 
