@@ -128,21 +128,19 @@
     <ng-template #operandTemplate let-expressionItem>
         <div
             #dragRef 
-            igxDrop 
-            (enter)="onEnter($event, dragRef, expressionItem)"
-            (over)="listItemOver($event, dragRef)"    
-            (leave)="onLeave($event, dragRef)"
-            (dropped)="onDropped($event, dragRef, expressionItem)"
             *ngIf="!expressionItem.inEditMode"
             class="igx-filter-tree__expression-item"            
             (mouseenter)="expressionItem.hovered = true"
             (mouseleave)="expressionItem.hovered = false"   
         >
             <igx-chip        
-                [draggable]="true"     
-                (dragStart)="dragStartHandler(dragRef)"
-                (dragEnd)="dragEndHandler(dragRef)"
-                (ghostCreate)="ghostCreateHandler(dragRef)"   
+                [draggable]="true" 
+                [hideBaseOnDrag] = "false"    
+                (moveStart)="onMoveStart(dragRef, expressionItem)"
+                (moveEnd)="onMoveEnd(dragRef, expressionItem)"
+                (dragEnter)="onEnter(dragRef, expressionItem)"
+                (dragLeave)="onLeave(dragRef)"
+                (dragDrop)="onDropped(dragRef, expressionItem)"
                 #target="tooltipTarget"
                 [igxTooltipTarget]="tooltipRef"
                 [data]="expressionItem"

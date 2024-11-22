@@ -945,16 +945,26 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public dragElement: HTMLElement
     public dropElement: HTMLElement
 
-    //Enter seems to be the first event that get's triggered since when you 'pick up' a chip it right away 'enters' the space occupied by it self
-    //Later on, the picked up chip can enter some other chip's space
-    public onEnter(event: IDropBaseEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem) {
+    //When we pick up a chip
+    public onMoveStart(dragRef: HTMLElement, expressionItem: ExpressionItem): void {
+        this.dragExpressionItem = expressionItem;
+        this.dragElement = dragRef;
+        console.log('Picked up:', dragRef);
+    }
+
+    //When we let go a chip outside a proper drop zone
+    public onMoveEnd(dragRef: HTMLElement, expressionItem: ExpressionItem): void {
+        this.dragExpressionItem = null;
+        this.dragElement = null;
+        console.log('Let go:', this.dragExpressionItem);
+    }
+
+    //On entering a drop area of another chip 
+    public onEnter(dragRef: HTMLElement, expressionItem: ExpressionItem) {
+        console.log('Entering:', dragRef);
         if (!this.dragExpressionItem) {
             //it's the element that's been picked up            
-            this.dragExpressionItem = expressionItem;
-            this.dragElement = dragRef;
-            //dragRef.remove();
-            (dragRef.firstChild.firstChild as HTMLElement).style.visibility = 'visible';
-            console.log('Picked up:', this.dragExpressionItem);
+            
         }
         else if (dragRef !== this.dragElement &&
             dragRef !== this.dropElement) {
@@ -969,7 +979,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public onLeave(event: IDropBaseEventArgs, dragRef: HTMLElement) {
+    //On leaving a drop area of another chip
+    public onLeave(dragRef: HTMLElement) {
         if (this.dropElement) {
             console.log('Leaving', dragRef);
             dragRef.parentNode.parentNode.querySelectorAll('[data-chip-copy]').forEach(e => e.parentElement.remove());
@@ -977,7 +988,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public onDropped(event: IDropDroppedEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem) {
+    //On dropped in a drop area of another chip
+    public onDropped(dragRef: HTMLElement, expressionItem: ExpressionItem) {
         if (dragRef !== this.dropElement) {
             console.error('Drop area chip is different than last entered one')
         }
@@ -1002,37 +1014,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.cdr.detectChanges();
         }
     }
-
-    //Not used
-    public listItemOver(event, dragRef: HTMLElement) {
-        //console.log('over',event, dragRef)
-    }
-
-    /*Not working events start*/
-    public litsItemTransitioned(event, dragRef: HTMLElement) {
-        console.log('litsItemTransitioned', event, dragRef)
-    }
-
-
-    public dragStartHandler(dragRef: HTMLElement): void {
-        console.log('dragStartHandler', dragRef)
-    }
-
-    public chipsOrderChanged(event: IChipsAreaReorderEventArgs, dragRef: HTMLElement) {
-        console.log('chipsOrderChanged', dragRef)
-    }
-
-    public dragEndHandler(dragRef: HTMLElement) {
-        console.log('dragEndHandler', dragRef)
-        dragRef.style.visibility = 'visible';
-    }
-
-    public ghostCreateHandler(dragRef: HTMLElement) {
-        console.log('ghostCreateHandler', dragRef)
-        dragRef.style.visibility = 'hidden';
-    }
-    /*Not working events end*/
-
     /* DRAG AND DROP END*/
 
 
