@@ -441,8 +441,8 @@ export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'e
  */
 export const resizeObservable = (target: HTMLElement): Observable<ResizeObserverEntry[]> => {
     const resizeObserver = getResizeObserver();
+    // check whether we are on server env or client env
     if (resizeObserver) {
-        // check whether we are on server env or client env
         return new Observable((observer) => {
                 const instance = new resizeObserver((entries: ResizeObserverEntry[]) => {
                     observer.next(entries);
