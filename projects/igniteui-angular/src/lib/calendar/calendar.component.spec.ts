@@ -7,7 +7,7 @@ import {
     waitForAsync,
     ComponentFixture,
 } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
@@ -138,6 +138,7 @@ describe("IgxCalendar - ", () => {
                     IgxCalendarRangeComponent,
                     IgxCalendarDisabledSpecialDatesComponent,
                     IgxCalendarValueComponent,
+                    IgxCalendarFormSampleComponent
                 ],
             }).compileComponents();
         }));
@@ -2857,6 +2858,33 @@ describe("IgxCalendar - ", () => {
 
         });
 
+        describe("Reactive Forms Integration - ", () => {
+            let fixture: ComponentFixture<IgxCalendarFormSampleComponent>;
+            let dom: DebugElement;
+            let calendar: IgxCalendarComponent;
+
+            beforeEach(waitForAsync(() => {
+                fixture = TestBed.createComponent(IgxCalendarFormSampleComponent);
+                fixture.detectChanges();
+                dom = fixture.debugElement;
+                calendar = fixture.componentInstance.calendar;
+            }));
+
+            it('should update calendar value, activeDate, and views when FormControl is updated', () => {
+                const date = new Date(2024, 10, 21);
+                fixture.componentInstance.form.controls.calendar.setValue(date.toISOString());
+                fixture.detectChanges();
+
+                const selectedDate = dom.query(
+                    By.css(HelperTestFunctions.SELECTED_DATE_CSSCLASS),
+                ).nativeElement;
+
+                expect(calendar.activeDate).toEqual(date);
+                expect(calendar.value).toEqual(date);
+                expect(selectedDate.textContent.trim()).toEqual(date.getDate().toString());
+            })
+        });
+
         describe("Continuous month increment/decrement - ", () => {
             let fixture: ComponentFixture<IgxCalendarSampleComponent>;
             let dom: DebugElement;
@@ -3094,6 +3122,23 @@ export class IgxCalendarValueComponent {
     @ViewChild(IgxCalendarComponent, { static: true })
     public calendar: IgxCalendarComponent;
     public value = new Date(2020, 7, 13);
+}
+
+@Component({
+    template: `
+        <form [formGroup]="form">
+            <igx-calendar name="calendar" formControlName="calendar"></igx-calendar>
+        </form>
+    `,
+    standalone: true,
+    imports: [IgxCalendarComponent, ReactiveFormsModule],
+})
+export class IgxCalendarFormSampleComponent {
+    @ViewChild(IgxCalendarComponent, { static: true })
+    public calendar: IgxCalendarComponent;
+    public form = new FormGroup({
+        calendar: new FormControl('2017-05-13'),
+    });
 }
 
 class DateTester {
