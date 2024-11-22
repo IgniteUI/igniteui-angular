@@ -943,6 +943,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /* DRAG AND DROP START*/
     public dragConditionIndex: number[];
     public dragExpressionItem: ExpressionItem;
+    public dragElement: HTMLElement
     public dropConditionIndex: number[];
 
     //Enter seems to be the first event that get's triggered since when you 'pick up' a chip it right away 'enters' the space occupied by it self
@@ -954,13 +955,21 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         const newIndex = dragRef.getAttribute("data-index").split(',').map(Number);
 
         if (!this.dragConditionIndex) {
+            //it's the element that's been picked up
             this.dragConditionIndex = newIndex;
             this.dragExpressionItem = expressionItem;
+            this.dragElement = dragRef;
+            dragRef.remove();
             console.log('Picked up:', this.dragExpressionItem);
         }
         else if (newIndex.toString() !== this.dragConditionIndex?.toString() && newIndex.toString() !== this.dropConditionIndex?.toString()) {
+            //it's a new newly entered element
             this.dropConditionIndex = newIndex;
-            (dragRef.firstChild as HTMLElement).style.paddingTop = '30px';
+            let dragCopy = this.dragElement.firstChild.cloneNode(true);
+            (dragCopy.firstChild as HTMLElement).style.visibility='visible';
+            (dragCopy.firstChild as HTMLElement).setAttribute('data-chip-copy', 'true');
+            dragRef.parentNode.insertBefore(dragCopy, dragRef.nextSibling);
+            //(dragRef.firstChild as HTMLElement).style.paddingTop = '30px';
             console.log('Entering:', this.dropConditionIndex);
         }
     }
@@ -971,8 +980,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     public onLeave(event: IDropBaseEventArgs, dragRef: HTMLElement) {
         if (this.dropConditionIndex) {
-            console.log('Leaving', this.dropConditionIndex);
-            (dragRef.firstChild as HTMLElement).style.paddingTop = '0px';
+            console.log('Leaving', dragRef);
+            dragRef.parentNode.parentNode.querySelectorAll('[data-chip-copy]').forEach(e => e.parentElement.remove());
+            //dragRef.firstChild.previousSibling.remove();
+            //(dragRef.firstChild as HTMLElement).style.paddingTop = '0px';
             this.dropConditionIndex = null;
         }
     }
@@ -1005,12 +1016,20 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             // const operandItem = new ExpressionOperandItem({...dragCopy}, parent);
 
-            expressionItem.parent.children.push(dragCopy);
+            const index = expressionItem.parent.children.indexOf(expressionItem);
+            expressionItem.parent.children.splice(index + 1, 0, dragCopy);
+
+            //expressionItem.parent.children.push(dragCopy);
             this.deleteItem(this.dragExpressionItem);
 
 
             this.dragConditionIndex = null;
             this.dragExpressionItem = null;
+            this.dragElement = null;
+            this.dropConditionIndex = null;
+            dragRef.parentNode.parentNode.querySelectorAll('[data-chip-copy]').forEach(e => e.parentElement.remove());
+            
+            this.cdr.detectChanges();
         }
         //event.drag.dropFinished();
     }
