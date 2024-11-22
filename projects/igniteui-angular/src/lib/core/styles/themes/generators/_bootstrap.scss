@@ -57,8 +57,8 @@
 ) {
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
-    $gray: color($light-bootstrap-palette, 'gray');
-    $surface: color($light-bootstrap-palette, 'surface');
+    $gray: color($dark-bootstrap-palette, 'gray');
+    $surface: color($dark-bootstrap-palette, 'surface');
     $info: color($palette, 'info');
     $success: color($palette, 'success');
     $warn: color($palette, 'warn');
