@@ -941,123 +941,102 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     /* DRAG AND DROP START*/
-    public dragConditionIndex: number[];
+    //public dragConditionIndex: number[];
     public dragExpressionItem: ExpressionItem;
     public dragElement: HTMLElement
-    public dropConditionIndex: number[];
+    public dropElement: HTMLElement
+    //public dropConditionIndex: number[];
 
     //Enter seems to be the first event that get's triggered since when you 'pick up' a chip it right away 'enters' the space occupied by it self
     //Later on, the picked up chip can enter some other chip's space
-    public onEnterHandler(event: IDropBaseEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem) {
+    public onEnter(event: IDropBaseEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem) {
         //console.log('enter',event,dragRef)
         //get the index of the picked-up chip
 
         const newIndex = dragRef.getAttribute("data-index").split(',').map(Number);
 
-        if (!this.dragConditionIndex) {
-            //it's the element that's been picked up
-            this.dragConditionIndex = newIndex;
+        if (!this.dragExpressionItem) {
+            //it's the element that's been picked up            
             this.dragExpressionItem = expressionItem;
             this.dragElement = dragRef;
             dragRef.remove();
             console.log('Picked up:', this.dragExpressionItem);
         }
-        else if (newIndex.toString() !== this.dragConditionIndex?.toString() && newIndex.toString() !== this.dropConditionIndex?.toString()) {
+        else if (dragRef.getAttribute("data-index") !== this.dragElement?.getAttribute("data-index") && 
+                dragRef.getAttribute("data-index") !== this.dropElement?.getAttribute("data-index")) {
             //it's a new newly entered element
-            this.dropConditionIndex = newIndex;
+            this.dropElement = dragRef;
             let dragCopy = this.dragElement.firstChild.cloneNode(true);
             (dragCopy.firstChild as HTMLElement).style.visibility='visible';
             (dragCopy.firstChild as HTMLElement).setAttribute('data-chip-copy', 'true');
             dragRef.parentNode.insertBefore(dragCopy, dragRef.nextSibling);
-            //(dragRef.firstChild as HTMLElement).style.paddingTop = '30px';
-            console.log('Entering:', this.dropConditionIndex);
+            console.log('Entering:', this.dropElement);
         }
-    }
-
-    public listItemOver(event, dragRef: HTMLElement) {
-        //console.log('over',event, dragRef)
     }
 
     public onLeave(event: IDropBaseEventArgs, dragRef: HTMLElement) {
-        if (this.dropConditionIndex) {
+        if (this.dropElement) {
             console.log('Leaving', dragRef);
             dragRef.parentNode.parentNode.querySelectorAll('[data-chip-copy]').forEach(e => e.parentElement.remove());
-            //dragRef.firstChild.previousSibling.remove();
-            //(dragRef.firstChild as HTMLElement).style.paddingTop = '0px';
-            this.dropConditionIndex = null;
+            this.dropElement = null;
         }
     }
 
-    public onIconDropped(event: IDropDroppedEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem) {
-        const newIndex = dragRef.getAttribute("data-index").split(',').map(Number);
-        if (newIndex.toString() !== this.dropConditionIndex.toString()) {
+    public onDropped(event: IDropDroppedEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem) {
+        if (dragRef.getAttribute("data-index") !== this.dropElement?.getAttribute("data-index")) {
             console.error('Drop area chip is different than last entered one')
         }
         else {
-            //Cut dragged element
-            let tree = this.expressionTree.filteringOperands;
-            let dragOperand;
+            //Copy dragged chip
             let dragCopy = { ...this.dragExpressionItem };
-
-            // for (const [i, ix] of dragIx.entries()) {
-            //     dragOperand = tree[ix];
-            //     if (i === dragIx.length - 1) {
-            //         dragCopy = {...dragOperand};
-
-            //         this.deleteItem(dragCopy);
-            //     }
-            //     else {
-            //         tree = dragOperand.filteringOperands;
-            //     }
-            // }
-
-
-            console.log('push', dragCopy, ' to:', expressionItem)
-
-            // const operandItem = new ExpressionOperandItem({...dragCopy}, parent);
-
+            
+            //Paste on new place
             const index = expressionItem.parent.children.indexOf(expressionItem);
             expressionItem.parent.children.splice(index + 1, 0, dragCopy);
-
-            //expressionItem.parent.children.push(dragCopy);
+            
+            //Delete from old place
             this.deleteItem(this.dragExpressionItem);
+            
+            console.log('Move', dragCopy, ' to:', expressionItem)
 
-
-            this.dragConditionIndex = null;
             this.dragExpressionItem = null;
             this.dragElement = null;
-            this.dropConditionIndex = null;
+            this.dropElement = null;
             dragRef.parentNode.parentNode.querySelectorAll('[data-chip-copy]').forEach(e => e.parentElement.remove());
             
             this.cdr.detectChanges();
         }
-        //event.drag.dropFinished();
     }
 
+    //Not used
+    public listItemOver(event, dragRef: HTMLElement) {
+        //console.log('over',event, dragRef)
+    }
 
+    /*Not working events start*/
     public litsItemTransitioned(event, dragRef: HTMLElement) {
-        //console.log('litsItemTransitioned',event, dragRef)
+        console.log('litsItemTransitioned',event, dragRef)
     }
 
 
     public dragStartHandler(dragRef: HTMLElement): void {
-        //console.log('dragStartHandler',dragRef)
-        //this.dragIconId = id;
+        console.log('dragStartHandler',dragRef)
     }
 
     public chipsOrderChanged(event: IChipsAreaReorderEventArgs, dragRef: HTMLElement) {
-        //console.log('chipsOrderChanged',dragRef)
+        console.log('chipsOrderChanged',dragRef)
     }
 
     public dragEndHandler(dragRef: HTMLElement) {
-        //console.log('dragEndHandler',dragRef)
+        console.log('dragEndHandler',dragRef)
         dragRef.style.visibility = 'visible';
     }
 
     public ghostCreateHandler(dragRef: HTMLElement) {
-        //console.log('ghostCreateHandler',dragRef)
+        console.log('ghostCreateHandler',dragRef)
         dragRef.style.visibility = 'hidden';
     }
+    /*Not working events end*/
 
     /* DRAG AND DROP END*/
 
