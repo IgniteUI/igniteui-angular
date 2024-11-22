@@ -19,7 +19,6 @@ import { NgIf } from '@angular/common';
     selector: 'igx-grid-editing-actions',
     templateUrl: 'grid-editing-actions.component.html',
     providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridEditingActionsComponent }],
-    standalone: true,
     imports: [NgIf, IgxGridActionButtonComponent]
 })
 

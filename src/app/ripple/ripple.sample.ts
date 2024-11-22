@@ -5,7 +5,6 @@ import { IgxRippleDirective } from 'igniteui-angular';
     selector: 'app-ripple-sample',
     styleUrls: ['ripple.sample.scss'],
     templateUrl: 'ripple.sample.html',
-    standalone: true,
     imports: [IgxRippleDirective]
 })
 export class RippleSampleComponent {}

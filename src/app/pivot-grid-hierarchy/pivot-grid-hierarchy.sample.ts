@@ -8,7 +8,6 @@ import { DATA } from '../shared/pivot-data';
     selector: 'app-pivot-grid-hierarchy-sample',
     styleUrls: ['pivot-grid-hierarchy.sample.scss'],
     templateUrl: 'pivot-grid-hierarchy.sample.html',
-    standalone: true,
     imports: [IgxComboComponent, FormsModule, IgxPivotGridComponent]
 })
 
