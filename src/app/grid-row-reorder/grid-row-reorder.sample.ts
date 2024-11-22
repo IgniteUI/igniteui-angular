@@ -8,7 +8,6 @@ import { IgxColumnComponent, IgxDropDirective, IgxGridComponent, IgxRowDirective
     selector: 'app-grid-row-reorder-sample',
     templateUrl: 'grid-row-reorder.sample.html',
     styleUrls: ['grid-row-reorder.sample.scss'],
-    standalone: true,
     imports: [IgxGridComponent, IgxDropDirective, IgxColumnComponent]
 })
 export class GridRowReorderComponent {

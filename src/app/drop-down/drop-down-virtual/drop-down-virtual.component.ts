@@ -14,7 +14,6 @@ interface DataItem {
     selector: 'app-drop-down-virtual',
     templateUrl: './drop-down-virtual.component.html',
     styleUrls: ['./drop-down-virtual.component.scss'],
-    standalone: true,
     providers: [RemoteService],
     imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxForOfDirective, IgxDropDownItemComponent, IgxToastComponent, AsyncPipe]
 })
@@ -38,6 +37,7 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
       const chunkSize = state.chunkSize || Math.floor(this.itemsMaxHeight / this.itemHeight) + 1;
       return `${this.remoteService.url}?$count=true&$skip=${state.startIndex}&$top=${chunkSize}`;
     };
+    // eslint-disable-next-line prefer-spread
     this.localItems = Array.apply(null, { length: 2000 }).map((e, i) => ({
       name: `Item ${i + 1}`,
       id: i

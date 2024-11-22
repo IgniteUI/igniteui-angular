@@ -1,4 +1,3 @@
-/* eslint-disable */
 export const GRID_DATA: any[] = [{
     ProductID: 1,
     ProductName: "Chai",
