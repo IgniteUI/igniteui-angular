@@ -941,33 +941,28 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     /* DRAG AND DROP START*/
-    //public dragConditionIndex: number[];
     public dragExpressionItem: ExpressionItem;
     public dragElement: HTMLElement
     public dropElement: HTMLElement
-    //public dropConditionIndex: number[];
 
     //Enter seems to be the first event that get's triggered since when you 'pick up' a chip it right away 'enters' the space occupied by it self
     //Later on, the picked up chip can enter some other chip's space
     public onEnter(event: IDropBaseEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem) {
-        //console.log('enter',event,dragRef)
-        //get the index of the picked-up chip
-
-        const newIndex = dragRef.getAttribute("data-index").split(',').map(Number);
-
         if (!this.dragExpressionItem) {
             //it's the element that's been picked up            
             this.dragExpressionItem = expressionItem;
             this.dragElement = dragRef;
-            dragRef.remove();
+            //dragRef.remove();
+            (dragRef.firstChild.firstChild as HTMLElement).style.visibility = 'visible';
             console.log('Picked up:', this.dragExpressionItem);
         }
-        else if (dragRef.getAttribute("data-index") !== this.dragElement?.getAttribute("data-index") && 
-                dragRef.getAttribute("data-index") !== this.dropElement?.getAttribute("data-index")) {
+        else if (dragRef !== this.dragElement &&
+            dragRef !== this.dropElement) {
             //it's a new newly entered element
             this.dropElement = dragRef;
             let dragCopy = this.dragElement.firstChild.cloneNode(true);
-            (dragCopy.firstChild as HTMLElement).style.visibility='visible';
+            (dragCopy.firstChild as HTMLElement).style.visibility = 'visible';
+            (dragCopy.firstChild as HTMLElement).style.opacity = '0.5';
             (dragCopy.firstChild as HTMLElement).setAttribute('data-chip-copy', 'true');
             dragRef.parentNode.insertBefore(dragCopy, dragRef.nextSibling);
             console.log('Entering:', this.dropElement);
@@ -983,27 +978,27 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     public onDropped(event: IDropDroppedEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem) {
-        if (dragRef.getAttribute("data-index") !== this.dropElement?.getAttribute("data-index")) {
+        if (dragRef !== this.dropElement) {
             console.error('Drop area chip is different than last entered one')
         }
         else {
             //Copy dragged chip
             let dragCopy = { ...this.dragExpressionItem };
-            
+
             //Paste on new place
             const index = expressionItem.parent.children.indexOf(expressionItem);
             expressionItem.parent.children.splice(index + 1, 0, dragCopy);
-            
+
             //Delete from old place
             this.deleteItem(this.dragExpressionItem);
-            
+
             console.log('Move', dragCopy, ' to:', expressionItem)
 
             this.dragExpressionItem = null;
             this.dragElement = null;
             this.dropElement = null;
             dragRef.parentNode.parentNode.querySelectorAll('[data-chip-copy]').forEach(e => e.parentElement.remove());
-            
+
             this.cdr.detectChanges();
         }
     }
@@ -1015,25 +1010,25 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     /*Not working events start*/
     public litsItemTransitioned(event, dragRef: HTMLElement) {
-        console.log('litsItemTransitioned',event, dragRef)
+        console.log('litsItemTransitioned', event, dragRef)
     }
 
 
     public dragStartHandler(dragRef: HTMLElement): void {
-        console.log('dragStartHandler',dragRef)
+        console.log('dragStartHandler', dragRef)
     }
 
     public chipsOrderChanged(event: IChipsAreaReorderEventArgs, dragRef: HTMLElement) {
-        console.log('chipsOrderChanged',dragRef)
+        console.log('chipsOrderChanged', dragRef)
     }
 
     public dragEndHandler(dragRef: HTMLElement) {
-        console.log('dragEndHandler',dragRef)
+        console.log('dragEndHandler', dragRef)
         dragRef.style.visibility = 'visible';
     }
 
     public ghostCreateHandler(dragRef: HTMLElement) {
-        console.log('ghostCreateHandler',dragRef)
+        console.log('ghostCreateHandler', dragRef)
         dragRef.style.visibility = 'hidden';
     }
     /*Not working events end*/
@@ -1371,11 +1366,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public context(expression: ExpressionItem, index?: number[], afterExpression?: ExpressionItem) {
+    public context(expression: ExpressionItem, afterExpression?: ExpressionItem) {
         return {
             $implicit: expression,
-            afterExpression,
-            index
+            afterExpression
         };
     }
 

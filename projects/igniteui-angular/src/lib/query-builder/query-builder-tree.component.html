@@ -125,26 +125,24 @@
         </button>
     </ng-template>
 
-    <ng-template #operandTemplate let-expressionItem let-index="index">
+    <ng-template #operandTemplate let-expressionItem>
         <div
-        #dragRef 
-        [attr.data-index]="index"     
-        igxDrop 
-        (enter)="onEnter($event, dragRef, expressionItem)"
-        (over)="listItemOver($event, dragRef)"    
-        (leave)="onLeave($event, dragRef)"
-        (dropped)="onDropped($event, dragRef, expressionItem)"
+            #dragRef 
+            igxDrop 
+            (enter)="onEnter($event, dragRef, expressionItem)"
+            (over)="listItemOver($event, dragRef)"    
+            (leave)="onLeave($event, dragRef)"
+            (dropped)="onDropped($event, dragRef, expressionItem)"
             *ngIf="!expressionItem.inEditMode"
             class="igx-filter-tree__expression-item"            
             (mouseenter)="expressionItem.hovered = true"
             (mouseleave)="expressionItem.hovered = false"   
         >
-            <igx-chip            
-            [draggable]="true"     
-        (dragStart)="dragStartHandler(dragRef)"
-        (dragEnd)="dragEndHandler(dragRef)"
-        (ghostCreate)="ghostCreateHandler(dragRef)"   
-
+            <igx-chip        
+                [draggable]="true"     
+                (dragStart)="dragStartHandler(dragRef)"
+                (dragEnd)="dragEndHandler(dragRef)"
+                (ghostCreate)="ghostCreateHandler(dragRef)"   
                 #target="tooltipTarget"
                 [igxTooltipTarget]="tooltipRef"
                 [data]="expressionItem"
@@ -157,7 +155,6 @@
                 (selectedChanged)="onChipSelectionEnd()"      
                 style="transition: padding 200ms;"          
             >
-            <!-- <span igxPrefix>[{{index}}]</span> -->
                 <span igxPrefix class="igx-filter-tree__expression-column">
                     {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
                 </span>
@@ -472,7 +469,7 @@
             <ng-container
                 *ngTemplateOutlet="
                     addExpressionsTemplate;
-                    context: context(expressionItem.parent, null, expressionItem)
+                    context: context(expressionItem.parent, expressionItem)
                 "
             >
             </ng-container>
@@ -485,7 +482,7 @@
         </div>
     </ng-template>
 
-    <ng-template #expressionGroupTemplate let-expressionItem let-index="index">
+    <ng-template #expressionGroupTemplate let-expressionItem>
         <div class="igx-filter-tree">
             <div
                 tabindex="0"
@@ -500,13 +497,13 @@
             ></div>
 
             <div class="igx-filter-tree__expression">            
-                <ng-container *ngFor="let expr of expressionItem?.children; index as i">
+                <ng-container *ngFor="let expr of expressionItem?.children">
                     <ng-container
                         *ngTemplateOutlet="
                             isExpressionGroup(expr)
                                 ? expressionGroupTemplate
                                 : operandTemplate;
-                            context: context(expr, index? [index,i] : [i])
+                            context: context(expr)
                         "
                     >
                     </ng-container>
