@@ -69,7 +69,6 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     providers: [{ provide: BaseFilteringComponent, useExisting: forwardRef(() => IgxGridExcelStyleFilteringComponent) }],
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './excel-style-filtering.component.html',
-    standalone: true,
     imports: [IgxExcelStyleHeaderComponent, NgIf, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
 export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewInit, OnDestroy {

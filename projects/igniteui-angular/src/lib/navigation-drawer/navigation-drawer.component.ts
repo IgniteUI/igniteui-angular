@@ -57,7 +57,6 @@ let NEXT_ID = 0;
             height: 100%;
         }
     `],
-    standalone: true,
     imports: [IgxNavDrawerItemDirective, NgTemplateOutlet]
 })
 export class IgxNavigationDrawerComponent implements

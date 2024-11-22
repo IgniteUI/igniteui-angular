@@ -1378,7 +1378,6 @@ describe('IgxDateTimeEditor', () => {
         <input igxInput [igxDateTimeEditor]="'dd/MM/yyyy'" [value]="date"/>
     </igx-input-group>
     `,
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective]
 })
 export class IgxDateTimeEditorBaseTestComponent {
@@ -1397,7 +1396,6 @@ export class IgxDateTimeEditorBaseTestComponent {
 
     <input [(ngModel)]="placeholder" />
 `,
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule]
 })
 export class IgxDateTimeEditorSampleComponent {
@@ -1423,7 +1421,6 @@ export class IgxDateTimeEditorSampleComponent {
     </igx-input-group>
 </form>
 `,
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, ReactiveFormsModule]
 })
 class IgxDateTimeEditorFormComponent {
@@ -1456,7 +1453,6 @@ class IgxDateTimeEditorFormComponent {
             <input type="text" igxInput [igxDateTimeEditor]="dateTimeFormat"/>
         </igx-input-group>`,
     encapsulation: ViewEncapsulation.ShadowDom,
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective]
 })
 export class IgxDateTimeEditorShadowDomComponent {

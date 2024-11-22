@@ -22,7 +22,6 @@ import {
     selector: 'app-tooltip-sample',
     styleUrls: ['tooltip.sample.css'],
     templateUrl: 'tooltip.sample.html',
-    standalone: true,
     imports: [IgxAvatarComponent, IgxTooltipTargetDirective, IgxTooltipDirective, IgxIconComponent, IgxIconButtonDirective, IgxSwitchComponent, FormsModule, IgxSliderComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class TooltipSampleComponent implements OnInit {
