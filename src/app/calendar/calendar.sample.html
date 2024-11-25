@@ -182,7 +182,7 @@
         <small>Selected date(s)</small>
 
         <ol class="selected-dates" [class.multiple]="selection.length > 1">
-            @for (item of selection; track item) {
+            @for (item of selection; track item.valueOf()) {
                 <li>{{item | date }}</li>
             }
         </ol>
