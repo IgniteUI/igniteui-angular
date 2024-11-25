@@ -1,6 +1,6 @@
 import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, ChangeDetectorRef, Renderer2 } from '@angular/core';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { Subscription, fromEvent } from 'rxjs';
+import { Subscription, fromEvent, takeUntil } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnMovingService } from './moving.service';
 import { ColumnType } from '../common/grid.interface';
@@ -73,8 +73,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
                 source: this.column
             };
             this.column.grid.columnMovingStart.emit(movingStartArgs);
-
-            this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
+            this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').pipe(takeUntil(this._destroy)).subscribe((ev: KeyboardEvent) => {
                 if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
                     this.onEscape(ev);
                 }

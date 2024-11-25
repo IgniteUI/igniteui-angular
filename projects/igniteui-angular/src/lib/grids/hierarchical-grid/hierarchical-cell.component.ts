@@ -29,7 +29,6 @@ import { NgIf, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe
     selector: 'igx-hierarchical-grid-cell',
     templateUrl: '../cell.component.html',
     providers: [HammerGesturesManager],
-    standalone: true,
     imports: [NgIf, IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxTextSelectionDirective, IgxCheckboxComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgTemplateOutlet, IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe]
 })
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {

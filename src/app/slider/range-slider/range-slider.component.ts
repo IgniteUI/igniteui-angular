@@ -6,7 +6,6 @@ import { IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxSlider
     selector: 'app-range-slider',
     templateUrl: './range-slider.component.html',
     styleUrls: ['./range-slider.component.scss'],
-    standalone: true,
     imports: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, FormsModule, IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 export class RangeSliderComponent {

@@ -142,7 +142,6 @@ describe('IgxLayoutDirective', () => {
             <div #inner igxFlex></div>
         </div>
     `,
-    standalone: true,
     imports: [IgxLayoutDirective, IgxFlexDirective]
 })
 class TestFlexLayoutComponent {

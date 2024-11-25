@@ -19,7 +19,6 @@ import { NgFor } from '@angular/common';
             </igx-chip>
         </igx-chips-area>
     `,
-    standalone: true,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, NgFor]
 })
 class TestChipComponent {
@@ -51,7 +50,6 @@ class TestChipComponent {
             </igx-chip>
         </igx-chips-area>
     `,
-    standalone: true,
     imports: [IgxChipsAreaComponent, IgxChipComponent]
 })
 class TestChipSelectComponent extends TestChipComponent {
@@ -67,7 +65,6 @@ class TestChipSelectComponent extends TestChipComponent {
             </igx-chip>
         </igx-chips-area>
     `,
-    standalone: true,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, NgFor]
 })
 class TestChipReorderComponent {

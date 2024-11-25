@@ -7,7 +7,6 @@ import { IgxButtonDirective, IgxButtonGroupComponent, IgxInputGroupComponent, Ig
 @Component({
     templateUrl: 'stepper.sample.html',
     styleUrls: ['stepper.sample.scss'],
-    standalone: true,
     imports: [IgxButtonDirective, IgxButtonGroupComponent, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxSwitchComponent, IgxStepperComponent, IgxStepActiveIndicatorDirective, IgxIconComponent, IgxStepComponent, IgxStepIndicatorDirective, IgxStepTitleDirective, IgxStepSubtitleDirective, IgxStepContentDirective, NgIf, IgxAvatarComponent, IgxBadgeComponent, IgxTimePickerComponent, ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective]
 })
 export class IgxStepperSampleComponent {
