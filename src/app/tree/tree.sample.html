@@ -81,10 +81,10 @@
                         <a igxTreeNodeLink href="www.google.com">Disabled Link</a>
                     </igx-tree-node>
                     <igx-tree-node>Link children
-                        @for (node of [].constructor(7); track node; let i = $index) {
+                        @for (node of [].constructor(7); track $index; let i = $index) {
                             <igx-tree-node #myNode>
                                 <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: myNode }"></ng-template>
-                                @for (node of [].constructor(2); track node; let i = $index) {
+                                @for (node of [].constructor(2); track $index; let i = $index) {
                                     <igx-tree-node #myNodel2>
                                         <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: myNodel2 }"></ng-template>
                                     </igx-tree-node>

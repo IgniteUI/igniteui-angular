@@ -94,7 +94,7 @@ export class IgxTreeSelectionSampleComponent {
         @if (showNodesWithDirective) {
             <igx-tree-node>
                 <a id="link" igxTreeNodeLink href="https://infragistics.com">Link to Infragistics</a>
-                @for (node of [].constructor(3); track node) {
+                @for (node of [].constructor(3); track $index) {
                     <igx-tree-node>
                         <a igxTreeNodeLink href="https://infragistics.com">Link to Infragistics</a>
                     </igx-tree-node>
@@ -110,7 +110,7 @@ export class IgxTreeSelectionSampleComponent {
                 <igx-tree-node #disabledChild [disabled]="isDisabled">
                     <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: disabledChild }"></ng-template>
                 </igx-tree-node>
-                @for (node of [].constructor(3); track node) {
+                @for (node of [].constructor(3); track $index) {
                     <igx-tree-node #childNode>
                         <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: childNode }"></ng-template>
                     </igx-tree-node>

@@ -46,7 +46,7 @@
         (blur)="clearFocus()"
     >
         <div aria-hidden="true">
-            @for (item of [].constructor(level); track item) {
+            @for (item of [].constructor(level); track $index) {
                 <span
                     aria-hidden="true"
                     class="igx-tree-node__spacer"
@@ -95,7 +95,7 @@
 
     <!--  Buffer element for 'move after' when D&D is implemented-->
     <div class="igx-tree-node__drop-indicator">
-        @for (item of [].constructor(level); track item) {
+        @for (item of [].constructor(level); track $index) {
             <span aria-hidden="true" class="igx-tree-node__spacer"></span>
         }
         <!-- style rules target this div, do not delete it -->
