@@ -119,9 +119,11 @@
     <igx-expansion-panel #collapsibleComponent [collapsed]="true">
         <igx-expansion-panel-header [disabled]="false">
             <igx-expansion-panel-title>Multi-Row Layouts</igx-expansion-panel-title>
-            <igx-expansion-panel-icon *ngIf="templatedIcon">
-                {{collapsed() ? 'Expand':'Collapse'}}
-            </igx-expansion-panel-icon>
+            @if (templatedIcon) {
+                <igx-expansion-panel-icon>
+                    {{collapsed() ? 'Expand':'Collapse'}}
+                </igx-expansion-panel-icon>
+            }
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
             <ng-container *ngTemplateOutlet="controls; context: getContext(mrlGrid)"></ng-container>
