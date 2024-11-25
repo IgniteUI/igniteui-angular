@@ -135,7 +135,7 @@ export class IgxGridCustomEditorsComponent extends IgxGridValidationTestCustomEr
         }
     </igx-tree-grid>
     `,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxCellValidationErrorDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxCellValidationErrorDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES, NgTemplateOutlet]
 })
 export class IgxTreeGridValidationTestComponent {
     public batchEditing = false;
