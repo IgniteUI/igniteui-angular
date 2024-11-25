@@ -21,7 +21,7 @@
             </igx-select-item>
         </igx-select>
 
-        <ng-container *ngIf="!parentExpression">
+        @if(!parentExpression) {
             <igx-combo
                 #returnFieldsCombo
                 [itemsMaxHeight]="250"
@@ -56,9 +56,8 @@
                 </ng-template>
                 <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_return_fields }}</label>
             </igx-combo>
-        </ng-container>
-        
-        <ng-container *ngIf="parentExpression">
+        }
+        @else {
             <igx-select #returnFieldSelect
                 type="box"
                 (selectionChanging)="onReturnFieldSelectChanging($event)"
@@ -72,7 +71,7 @@
                     {{ field.field }}
                 </igx-select-item>
             </igx-select>
-        </ng-container>
+        }
     </div>
 </ng-template>
 
