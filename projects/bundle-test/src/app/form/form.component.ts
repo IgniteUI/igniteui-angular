@@ -3,11 +3,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { IGX_INPUT_GROUP_DIRECTIVES, IGX_RADIO_GROUP_DIRECTIVES, IgxButtonDirective, IgxCheckboxComponent, IgxSwitchComponent } from 'igniteui-angular';
 
 @Component({
-  selector: 'app-form',
-  standalone: true,
-  imports: [IgxCheckboxComponent, IgxSwitchComponent, IGX_RADIO_GROUP_DIRECTIVES, IgxButtonDirective, IGX_INPUT_GROUP_DIRECTIVES, ReactiveFormsModule],
-  templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss']
+    selector: 'app-form',
+    imports: [IgxCheckboxComponent, IgxSwitchComponent, IGX_RADIO_GROUP_DIRECTIVES, IgxButtonDirective, IGX_INPUT_GROUP_DIRECTIVES, ReactiveFormsModule],
+    templateUrl: './form.component.html',
+    styleUrls: ['./form.component.scss']
 })
 export class FormComponent {
     public form: FormGroup;

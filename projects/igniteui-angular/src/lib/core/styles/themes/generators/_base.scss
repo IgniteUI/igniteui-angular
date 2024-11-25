@@ -6,6 +6,7 @@
 @use '../../base' as *;
 @use '../../components' as *;
 @use 'igniteui-theming/sass/color' as *;
+@use 'igniteui-theming/sass/color/presets' as *;
 @use 'igniteui-theming/sass/elevations' as *;
 @use 'igniteui-theming/sass/elevations/presets' as elevations;
 @use 'igniteui-theming/sass/utils' as *;
@@ -683,7 +684,7 @@
     );
 
     @include theme(
-        $palette: $light-palette,
+        $palette: $light-material-palette,
         $schema: $light-material-schema,
         $exclude: $exclude,
         $roundness: $roundness,
@@ -716,7 +717,7 @@
     );
 
     @include theme(
-        $palette: $dark-palette,
+        $palette: $dark-material-palette,
         $schema: $dark-material-schema,
         $exclude: $exclude,
         $roundness: $roundness,

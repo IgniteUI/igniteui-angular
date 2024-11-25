@@ -3,7 +3,6 @@ import { HeaderContentBaseDirective } from './expansion-panel.common';
 
 /** @hidden @internal */
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-title',
     standalone: true
 })
@@ -19,7 +18,6 @@ export class IgxExpansionPanelTitleDirective extends HeaderContentBaseDirective 
 
 /** @hidden @internal */
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-description',
     standalone: true
 })
@@ -35,7 +33,6 @@ export class IgxExpansionPanelDescriptionDirective extends HeaderContentBaseDire
 
 /** @hidden @internal */
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-icon',
     standalone: true
 })

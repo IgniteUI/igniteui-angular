@@ -1144,7 +1144,6 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutTestComponent {
@@ -1182,7 +1181,6 @@ export class ColumnLayoutTestComponent {
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, NgFor]
 })
 export class ColumnLayoutAndGroupsTestComponent extends ColumnLayoutTestComponent {

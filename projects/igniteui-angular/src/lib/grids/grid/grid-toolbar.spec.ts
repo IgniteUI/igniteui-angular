@@ -263,7 +263,6 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
         </igx-grid-toolbar>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent, NgIf]
 })
 export class DefaultToolbarComponent {
@@ -300,7 +299,6 @@ export class DefaultToolbarComponent {
         </igx-grid-toolbar>
     </igx-grid>
     `,
-    standalone: true,
     imports: [
         IgxGridComponent,
         IgxGridToolbarComponent,

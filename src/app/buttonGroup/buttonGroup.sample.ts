@@ -39,7 +39,6 @@ class Button {
 @Component({
     selector: 'app-buttongroup-sample',
     templateUrl: 'buttonGroup.sample.html',
-    standalone: true,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent, NgFor, IgxLayoutDirective]
 })
 

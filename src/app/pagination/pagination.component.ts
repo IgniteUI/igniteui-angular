@@ -6,7 +6,6 @@ import { IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxPageSi
     selector: 'app-pagination',
     styleUrls: ['./pagination.styles.scss'],
     templateUrl: './pagination.template.html',
-    standalone: true,
     imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, IgxButtonDirective, IgxPageSizeSelectorComponent, IgxIconComponent, IgxIconButtonDirective]
 })
 export class PaginationSampleComponent implements OnInit {

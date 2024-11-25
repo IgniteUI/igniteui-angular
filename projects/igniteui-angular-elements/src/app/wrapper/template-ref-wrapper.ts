@@ -1,5 +1,4 @@
-import { ElementRef, EmbeddedViewRef, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { v4 as uuidv4 } from 'uuid';
+import { ElementRef, EmbeddedViewRef, Injector, TemplateRef } from '@angular/core';
 
 const CONTEXT_PROP = 'context';
 const IMPLICIT_PROP = 'implicit';
@@ -71,7 +70,7 @@ export class TemplateRefWrapper<C extends object> extends TemplateRef<C> {
             root = viewRef.rootNodes[0];
 
             contentContext = new TemplateRefWrapperContentContext();
-            contentId = uuidv4() as string;
+            contentId = crypto.randomUUID();
             contentContext._id = contentId;
             root._id = contentId;
             contentContext.root = root;
