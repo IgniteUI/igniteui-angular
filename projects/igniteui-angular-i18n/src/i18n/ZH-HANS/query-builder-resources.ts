@@ -60,7 +60,7 @@ const QueryBuilderResourceStringsZHHANS_: ExpandRequire<IQueryBuilderResourceStr
     igx_query_builder_search: '搜索',
     igx_query_builder_select_all: '全选',
     igx_query_builder_select_entity: '选择实体',
-    igx_query_builder_select_return_field: '选择返回字段',
+    igx_query_builder_select_return_field_single: '选择返回字段',
     igx_query_builder_select_return_fields: '选择返回字段',
     igx_query_builder_dialog_title: '确认',
     igx_query_builder_dialog_message: '通过更改实体，您将丢失当前设置。确定要继续？',

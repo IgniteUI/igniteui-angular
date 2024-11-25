@@ -60,7 +60,7 @@ const QueryBuilderResourceStringsKO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: '검색',
     igx_query_builder_select_all: '모두 선택',
     igx_query_builder_select_entity: '엔터티 선택',
-    igx_query_builder_select_return_field: '반환 필드를 선택',
+    igx_query_builder_select_return_field_single: '반환 필드를 선택',
     igx_query_builder_select_return_fields: '반환 필드 선택',
     igx_query_builder_dialog_title: '반환 필드 선택',
     igx_query_builder_dialog_message: '엔터티를 변경하면 현재 설정이 손실됩니다. 계속하시겠습니까?',

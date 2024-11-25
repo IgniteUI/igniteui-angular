@@ -631,11 +631,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
         this.fields = this._entityNewValue ? this._entityNewValue.fields : [];
 
-        if (this.parentExpression) {
-            this._selectedReturnFields = [];
-        } else {
-            this._selectedReturnFields = this._entityNewValue.fields?.map(f => f.field);
-        }
+        this._selectedReturnFields = this.parentExpression ? [] : this._entityNewValue.fields?.map(f => f.field);
 
         if (this._expressionTree) {
             this._expressionTree.entity = this._entityNewValue.name;
@@ -1368,11 +1364,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     public onReturnFieldSelectChanging(event: IComboSelectionChangingEventArgs | ISelectionEventArgs) {
-        let newSelection;
+        let newSelection = [];
         if (event.newSelection instanceof Array) {
             newSelection = event.newSelection.map(item => item.field)
         } else {
-            newSelection = [event.newSelection.value];
+            newSelection.push(event.newSelection.value);
             this._selectedReturnFields = newSelection;
         }
 
