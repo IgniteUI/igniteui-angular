@@ -419,7 +419,6 @@ describe('IgxGrid - Cell component #grid', () => {
         }
     </igx-grid>`,
     styleUrls: ['../../test-utils/grid-cell-style-testing.scss'],
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ConditionalCellStyleTestComponent implements OnInit {

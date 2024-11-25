@@ -7,7 +7,6 @@ import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxB
     selector: 'app-tabs-routing-sample',
     styleUrls: ['tabs-routing.sample.scss'],
     templateUrl: 'tabs-routing.sample.html',
-    standalone: true,
     imports: [IgxButtonGroupComponent, IgxTabsComponent, IgxTabItemComponent, RouterLinkActive, IgxTabHeaderComponent, RouterLink, IgxIconComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, RouterOutlet]
 })
 export class TabsRoutingSampleComponent {

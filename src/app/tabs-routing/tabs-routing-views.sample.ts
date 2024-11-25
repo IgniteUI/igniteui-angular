@@ -19,7 +19,6 @@ import { IgxListComponent, IgxListThumbnailDirective, IgxListLineTitleDirective,
             }
         </igx-list>
     `,
-    standalone: true,
     imports: [IgxListComponent, IgxListItemComponent, IgxRippleDirective, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxIconComponent, IgxListActionDirective]
 })
 export class TabsRoutingView1Component {

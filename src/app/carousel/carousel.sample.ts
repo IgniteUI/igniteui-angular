@@ -7,7 +7,6 @@ import { CarouselIndicatorsOrientation, IgxButtonDirective, IgxCarouselComponent
     selector: 'app-carousel-sample',
     styleUrls: ['carousel.sample.scss'],
     templateUrl: 'carousel.sample.html',
-    standalone: true,
     imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective]
 })
 export class CarouselSampleComponent {

@@ -33,7 +33,6 @@ import { IgxTextSelectionDirective } from '../../directives/text-selection/text-
     selector: 'igx-tree-grid-cell',
     templateUrl: 'tree-cell.component.html',
     providers: [HammerGesturesManager],
-    standalone: true,
     imports: [
         NgClass,
         NgStyle,

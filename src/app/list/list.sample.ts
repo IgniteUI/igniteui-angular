@@ -32,7 +32,6 @@ interface Employee {
     styleUrls: ['list.sample.scss'],
     templateUrl: 'list.sample.html',
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [
         FormsModule,
         IgxButtonGroupComponent,

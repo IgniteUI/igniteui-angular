@@ -9,7 +9,6 @@ import { GridPagingMode, IgxButtonDirective, IgxCardComponent, IgxCardContentDir
 @Component({
     selector: 'app-grid-remote-paging-sample',
     templateUrl: 'grid-remote-paging.sample.html',
-    standalone: true,
     providers: [RemoteService],
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, AsyncPipe]
 })

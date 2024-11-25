@@ -55,7 +55,6 @@ let DIALOG_ID = 0;
 @Component({
     selector: 'igx-dialog',
     templateUrl: 'dialog-content.component.html',
-    standalone: true,
     imports: [IgxToggleDirective, IgxFocusTrapDirective, IgxFocusDirective, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, AfterContentInit {

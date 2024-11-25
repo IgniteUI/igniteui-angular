@@ -8,7 +8,7 @@ import { IgxIconComponent } from '../icon/icon.component';
     template: `
     <igx-tree #tree1 class="medium">
         @for (node of data; track node) {
-            <igx-tree-node [selected]="node.ID === 'ALFKI'" [data]="node">
+            <igx-tree-node [data]="node">
                 {{ node.CompanyName }}
                 @for (child of node.ChildCompanies; track child) {
                     <igx-tree-node [data]="child">
@@ -24,7 +24,6 @@ import { IgxIconComponent } from '../icon/icon.component';
         }
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 export class IgxTreeSimpleComponent {
@@ -52,7 +51,6 @@ export class IgxTreeSimpleComponent {
         }
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 export class IgxTreeSelectionSampleComponent {
@@ -124,7 +122,6 @@ export class IgxTreeSelectionSampleComponent {
         </ng-template>
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeNodeLinkDirective, NgTemplateOutlet]
 })
 export class IgxTreeNavigationComponent {
@@ -156,7 +153,6 @@ export class IgxTreeNavigationComponent {
         </ng-template>
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeExpandIndicatorDirective, IgxIconComponent]
 })
 export class IgxTreeScrollComponent {

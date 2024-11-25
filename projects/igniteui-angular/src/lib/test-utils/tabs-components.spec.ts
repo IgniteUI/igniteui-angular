@@ -40,7 +40,6 @@ import { SampleTestData } from './sample-test-data.spec';
         </igx-tab-item>
     </igx-tabs>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent]
 })
 export class BasicTabsComponent {
@@ -88,7 +87,6 @@ export class BasicTabsComponent {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxIconComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective]
 })
 export class TabsTestComponent {
@@ -109,7 +107,6 @@ export class TabsTestComponent {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTest2Component {
@@ -190,7 +187,6 @@ export class TabsTest2Component {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TemplatedTabsTestComponent {
@@ -210,7 +206,6 @@ export class TemplatedTabsTestComponent {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTestSelectedTabComponent {
@@ -241,7 +236,6 @@ export class TabsTestSelectedTabComponent {
         </igx-tab-item>
     </igx-tabs>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTestCustomStylesComponent {
@@ -267,7 +261,6 @@ export class TabsTestCustomStylesComponent {
         </div>
     </igx-drop-down>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, IgxDropDownComponent, IgxToggleActionDirective, IgxButtonDirective]
 })
 export class TabsTestBug4420Component {
@@ -293,7 +286,6 @@ export class TabsTestBug4420Component {
         </div>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective, RouterLinkActive, RouterLink, RouterOutlet]
 })
 export class TabsRoutingTestComponent {
@@ -329,7 +321,6 @@ export class TabsRoutingTestComponent {
         </div>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective, RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class TabsRoutingDisabledTestComponent {
@@ -353,7 +344,6 @@ export class TabsRoutingDisabledTestComponent {
         </div>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective, RouterLinkActive, RouterLink, RouterOutlet]
 })
 export class TabsRoutingGuardTestComponent {
@@ -377,7 +367,6 @@ export class TabsRoutingGuardTestComponent {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTabsOnlyModeTest1Component {
@@ -401,7 +390,6 @@ export class TabsTabsOnlyModeTest1Component {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTabsOnlyModeTest2Component {
@@ -436,7 +424,6 @@ export class TabsTabsOnlyModeTest2Component {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsDisabledTestComponent {
@@ -478,7 +465,6 @@ export class TabsDisabledTestComponent {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsTestHtmlAttributesComponent {
@@ -529,7 +515,6 @@ export class TabsTestHtmlAttributesComponent {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective, IgxIconComponent, IgxTabHeaderIconDirective, IgxPrefixDirective, IgxSuffixDirective]
 })
 export class TabsWithPrefixSuffixTestComponent extends TabsTestComponent {
@@ -552,7 +537,6 @@ export class TabsWithPrefixSuffixTestComponent extends TabsTestComponent {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsContactsComponent extends TabsTestComponent {
@@ -572,7 +556,6 @@ export class TabsContactsComponent extends TabsTestComponent {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class AddingSelectedTabComponent {
@@ -604,7 +587,6 @@ export class AddingSelectedTabComponent {
         </igx-tabs>
     </div>
     `,
-    standalone: true,
     imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
 })
 export class TabsRtlComponent {

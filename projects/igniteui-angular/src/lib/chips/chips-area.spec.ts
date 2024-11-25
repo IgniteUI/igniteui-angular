@@ -20,7 +20,6 @@ import { IgxPrefixDirective } from './public_api';
             }
         </igx-chips-area>
     `,
-    standalone: true,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipComponent {
@@ -52,7 +51,6 @@ class TestChipComponent {
             </igx-chip>
         </igx-chips-area>
     `,
-    standalone: true,
     imports: [IgxChipsAreaComponent, IgxChipComponent]
 })
 class TestChipSelectComponent extends TestChipComponent {
@@ -70,7 +68,6 @@ class TestChipSelectComponent extends TestChipComponent {
             }
         </igx-chips-area>
     `,
-    standalone: true,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipReorderComponent {

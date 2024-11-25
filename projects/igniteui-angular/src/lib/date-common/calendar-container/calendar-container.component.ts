@@ -19,7 +19,6 @@ import { IgxDividerDirective } from "../../directives/divider/divider.directive"
     selector: 'igx-calendar-container',
     styles: [':host {display: block;}'],
     templateUrl: 'calendar-container.component.html',
-    standalone: true,
     imports: [
         IgxButtonDirective,
         IgxRippleDirective,

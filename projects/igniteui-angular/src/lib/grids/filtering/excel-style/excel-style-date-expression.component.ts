@@ -23,7 +23,6 @@ import { IgxIconButtonDirective } from '../../../directives/button/icon-button.d
 @Component({
     selector: 'igx-excel-style-date-expression',
     templateUrl: './excel-style-date-expression.component.html',
-    standalone: true,
     imports: [IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxDateTimeEditorDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
 })
 export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultExpressionComponent {

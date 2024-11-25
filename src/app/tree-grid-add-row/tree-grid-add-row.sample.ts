@@ -6,7 +6,6 @@ import { ColumnPinningPosition, IgxActionStripComponent, IgxButtonDirective, Igx
     selector: 'app-tree-grid-add-row',
     styleUrls: ['tree-grid-add-row.sample.scss'],
     templateUrl: `tree-grid-add-row.sample.html`,
-    standalone: true,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective]
 })
 export class TreeGridAddRowSampleComponent implements OnInit {

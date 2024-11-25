@@ -179,7 +179,6 @@ describe('Filter', () => {
         <igx-list-item>Item 3</igx-list-item>
     </igx-list>
     <input #logInput />`,
-    standalone: true,
     imports: [IgxListComponent, IgxListItemComponent, IgxFilterDirective]
 })
 class DeclarativeListTestComponent {
@@ -218,7 +217,6 @@ class DeclarativeListTestComponent {
             <igx-list-item> {{item.text}} </igx-list-item>
         }
     </igx-list>`,
-    standalone: true,
     imports: [IgxListComponent, IgxListItemComponent, IgxFilterPipe]
 })
 class DynamicListTestComponent {

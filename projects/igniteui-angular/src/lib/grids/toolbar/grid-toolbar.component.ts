@@ -38,7 +38,6 @@ import { NgTemplateOutlet } from '@angular/common';
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html',
     providers: [{ provide: IgxToolbarToken, useExisting: IgxGridToolbarComponent }],
-    standalone: true,
     imports: [IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, NgTemplateOutlet, IgxLinearProgressBarComponent]
 })
 export class IgxGridToolbarComponent implements OnDestroy {

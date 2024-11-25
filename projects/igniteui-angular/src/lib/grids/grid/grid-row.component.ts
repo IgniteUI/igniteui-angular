@@ -15,7 +15,6 @@ import { NgTemplateOutlet, NgStyle, NgClass } from '@angular/common';
     selector: 'igx-grid-row',
     templateUrl: './grid-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxGridRowComponent) }],
-    standalone: true,
     imports: [NgTemplateOutlet, IgxRowDragDirective, IgxGridForOfDirective, NgStyle, IgxCheckboxComponent, IgxGridCellComponent, NgClass, IgxGridExpandableCellComponent, IgxGridNotGroupedPipe, IgxGridTopLevelColumns, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe]
 })
 export class IgxGridRowComponent extends IgxRowDirective {

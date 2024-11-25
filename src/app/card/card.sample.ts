@@ -59,7 +59,6 @@ const detailsFactory = (params: any): Idetails => ({
     selector: 'app-card-sample',
     styleUrls: ['card.sample.scss'],
     templateUrl: 'card.sample.html',
-    standalone: true,
     imports: [
         FormsModule,
         IgxCardComponent,

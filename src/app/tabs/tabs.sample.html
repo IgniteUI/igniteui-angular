@@ -30,10 +30,10 @@
                         <span igxTabHeaderLabel>{{tab2Label}}</span>
                     </igx-tab-header>
                     <igx-tab-content>
-                        <div class="sample-scrollable">
+                        <div class="sample-list">
                             <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                                 @for (contact of contacts; track contact) {
-                                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item">
+                                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-base">
                                         <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
                                         <p igxListLineTitle>{{contact.text}}</p>
                                         <span igxListLineSubTitle>{{contact.phone}}</span>

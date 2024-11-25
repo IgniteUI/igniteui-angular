@@ -7,7 +7,6 @@ import { IgxColumnComponent, IgxFlexDirective, IgxGridComponent, IgxGridToolbarA
     selector: 'app-grid-flex-sample',
     styleUrls: ['grid-flex.sample.scss'],
     templateUrl: 'grid-flex.sample.html',
-    standalone: true,
     imports: [IgxLayoutDirective, IgxFlexDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent, IgxPaginatorComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent]
 })
 

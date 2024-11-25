@@ -13,7 +13,6 @@ import { GridFinJSComponent } from './grid-finjs.component';
     selector: 'app-finjs-main',
     styleUrls: ['./main.component.scss'],
     templateUrl: './main.component.html',
-    standalone: true,
     imports: [ControllerComponent, GridFinJSComponent, AsyncPipe]
 })
 export class MainComponent implements OnDestroy {

@@ -9,7 +9,6 @@ import { AppComponent } from '../app.component';
     selector: 'app-navbar-sample',
     styleUrls: ['navdrawer.sample.scss'],
     templateUrl: 'navdrawer.sample.html',
-    standalone: true,
     imports: [IgxSwitchComponent, FormsModule, IgxRadioComponent]
 })
 export class NavdrawerSampleComponent {

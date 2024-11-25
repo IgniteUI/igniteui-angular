@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
     selector: 'app-colors-sample',
     styleUrls: ['color.sample.scss'],
     templateUrl: 'color.sample.html',
-    standalone: true,
     imports: []
 })
 export class ColorsSampleComponent {

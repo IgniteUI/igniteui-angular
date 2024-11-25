@@ -7,7 +7,6 @@ import { IgxButtonDirective, IgxIconComponent, IgxIconService } from 'igniteui-a
     selector: 'app-icon-sample',
     styleUrls: ['./icon.sample.scss'],
     templateUrl: 'icon.sample.html',
-    standalone: true,
     imports: [IgxIconComponent, IgxButtonDirective]
 })
 export class IconSampleComponent implements OnInit {

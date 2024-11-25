@@ -44,7 +44,6 @@ export class ForbiddenValidatorDirective extends Validators {
         }
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES]
 })
 export class IgxGridValidationTestBaseComponent {
@@ -82,8 +81,7 @@ export class IgxGridValidationTestBaseComponent {
         }
     </igx-grid>
     `,
-    standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCellValidationErrorDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES, NgTemplateOutlet]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellValidationErrorDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES]
 })
 export class IgxGridValidationTestCustomErrorComponent extends IgxGridValidationTestBaseComponent {
 }
@@ -106,7 +104,6 @@ export class IgxGridValidationTestCustomErrorComponent extends IgxGridValidation
         <input [formControl]="fc"/>
     </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellEditorTemplateDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES, ReactiveFormsModule, FormsModule]
 })
 export class IgxGridCustomEditorsComponent extends IgxGridValidationTestCustomErrorComponent {
@@ -138,8 +135,7 @@ export class IgxGridCustomEditorsComponent extends IgxGridValidationTestCustomEr
         }
     </igx-tree-grid>
     `,
-    standalone: true,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxCellValidationErrorDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES, NgTemplateOutlet]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxCellValidationErrorDirective, ForbiddenValidatorDirective, IGX_GRID_VALIDATION_DIRECTIVES]
 })
 export class IgxTreeGridValidationTestComponent {
     public batchEditing = false;

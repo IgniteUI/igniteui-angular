@@ -15,7 +15,6 @@ import { IgxAvatarComponent, IgxIconComponent, IgxListActionDirective, IgxListCo
             }
         </igx-list>
     `,
-    standalone: true,
     imports: [
         IgxListComponent,
         IgxListItemComponent,

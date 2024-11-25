@@ -1147,7 +1147,6 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         }
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class ColumnLayoutTestComponent {
@@ -1189,7 +1188,6 @@ export class ColumnLayoutTestComponent {
         }
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class ColumnLayoutAndGroupsTestComponent extends ColumnLayoutTestComponent {

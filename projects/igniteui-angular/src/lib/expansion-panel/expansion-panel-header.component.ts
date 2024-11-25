@@ -32,7 +32,6 @@ export type ExpansionPanelHeaderIconPosition = (typeof ExpansionPanelHeaderIconP
 @Component({
     selector: 'igx-expansion-panel-header',
     templateUrl: 'expansion-panel-header.component.html',
-    standalone: true,
     imports: [IgxIconComponent]
 })
 export class IgxExpansionPanelHeaderComponent {

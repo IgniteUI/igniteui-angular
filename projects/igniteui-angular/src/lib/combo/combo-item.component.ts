@@ -17,7 +17,6 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html',
-    standalone: true,
     imports: [IgxCheckboxComponent]
 })
 export class IgxComboItemComponent extends IgxDropDownItemComponent {

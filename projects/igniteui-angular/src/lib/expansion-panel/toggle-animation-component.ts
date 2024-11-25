@@ -33,7 +33,6 @@ export enum ANIMATION_TYPE {
 
 /**@hidden @internal */
 @Directive()
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnDestroy {
     /** @hidden @internal */
     public openAnimationDone: EventEmitter<void> = new EventEmitter();

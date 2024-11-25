@@ -50,7 +50,6 @@ interface CompanyData {
     selector: 'app-tree-sample',
     templateUrl: 'tree.sample.html',
     styleUrls: ['tree.sample.scss'],
-    standalone: true,
     imports: [
         IgxLayoutDirective,
         IgxInputGroupComponent,

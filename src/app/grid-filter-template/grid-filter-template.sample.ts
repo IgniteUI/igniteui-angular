@@ -9,7 +9,6 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-filter-template-sample',
     styleUrls: ['grid-filter-template.sample.scss'],
     templateUrl: 'grid-filter-template.sample.html',
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxFilterCellTemplateDirective, IgxIconComponent, IGX_INPUT_GROUP_DIRECTIVES]
 })
 

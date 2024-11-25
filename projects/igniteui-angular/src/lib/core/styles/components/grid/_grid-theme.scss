@@ -575,6 +575,7 @@
         cell-selected-within-background: $cell-selected-within-background,
         cell-selected-within-text-color: $cell-selected-within-text-color,
 
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')
@@ -1073,15 +1074,15 @@
                 %cbx-composite-wrapper {
                     padding: 0;
                 }
-    
+
                 %cbx-label-pos--after {
                     margin-inline-start: rem(12px);
                 }
-    
+
                 %cbx-label-pos--before {
                     margin-inline-end: rem(12px);
                 }
-    
+
                 %cbx-label-pos--before,
                 %cbx-label-pos--after {
                     &:empty {
@@ -1433,15 +1434,15 @@
         }
 
         &%igx-grid__tr--ghost {
+            background: var-get($theme, 'row-ghost-background');
+            color: var-get($theme, 'row-drag-color');
+            z-index: 10002;
+
             @include css-vars((
                 name: 'igx-grid-row',
                 row-ghost-background: map.get($theme, 'row-ghost-background'),
                 row-drag-color: map.get($theme, 'row-drago-color')
             ));
-
-            background: var-get($theme, 'row-ghost-background');
-            color: var-get($theme, 'row-drag-color');
-            z-index: 10002;
         }
     }
 
@@ -2796,9 +2797,9 @@
             compact: calc(#{$i * map.get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width})
         );
 
-        $level--comfortable: map-get($row-indentation-level, 'comfortable');
-        $level--cosy: map-get($row-indentation-level, 'cosy');
-        $level--compact: map-get($row-indentation-level, 'compact');
+        $level--comfortable: map.get($row-indentation-level, 'comfortable');
+        $level--cosy: map.get($row-indentation-level, 'cosy');
+        $level--compact: map.get($row-indentation-level, 'compact');
 
         %igx-grid__row-indentation--level-#{$i} {
             --indicator-inline-inset: #{sizable(

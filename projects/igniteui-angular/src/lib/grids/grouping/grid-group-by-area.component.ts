@@ -26,7 +26,6 @@ import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
     selector: 'igx-grid-group-by-area',
     templateUrl: 'group-by-area.component.html',
     providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxGridGroupByAreaComponent }],
-    standalone: true,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
 })
 export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {

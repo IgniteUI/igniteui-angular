@@ -158,7 +158,6 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         IgxForOfSyncService,
         IgxForOfScrollSyncService
     ],
-    standalone: true,
     imports: [
         NgClass,
         NgStyle,
@@ -1164,7 +1163,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /** @hidden */
     public override featureColumnsWidth() {
-        return this.pivotRowWidths;
+        return this.pivotRowWidths || 0;
     }
 
     /* blazorSuppress */
@@ -1294,7 +1293,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /** @hidden @internal */
     public get pivotPinnedWidth() {
-        return this.isPinningToStart ? this.pinnedWidth : this.headerFeaturesWidth;
+        return !this._init ? (this.isPinningToStart ? this.pinnedWidth : this.headerFeaturesWidth) : 0;
     }
 
     /** @hidden @internal */
@@ -1337,12 +1336,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.columnGroupStates.set(col.field, newState);
         this.toggleRowGroup(col, newState);
         this.reflow();
-    }
-
-    protected override getColumnWidthSum(): number {
-        let colSum = super.getColumnWidthSum();
-        colSum += this.rowDimensions.map(dim => this.rowDimensionWidthToPixels(dim)).reduce((prev, cur) => prev + cur, 0);
-        return colSum;
     }
 
     /**
@@ -2243,6 +2236,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 const maxSize = Math.ceil(Math.max(...contentWidths));
                 dim.autoWidth = maxSize;
             }
+        }
+
+        if (this.isColumnWidthSum) {
+            this.calcWidth = this.getColumnWidthSum();
         }
     }
 

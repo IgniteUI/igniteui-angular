@@ -33,8 +33,7 @@ let NEXT_ID = 0;
     ],
     selector: "igx-months-view",
     templateUrl: "months-view.component.html",
-    standalone: true,
-    imports: [IgxCalendarMonthDirective, TitleCasePipe, DatePipe],
+    imports: [IgxCalendarMonthDirective, TitleCasePipe, DatePipe]
 })
 export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     #standalone = true;

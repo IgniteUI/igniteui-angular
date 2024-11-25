@@ -19,7 +19,6 @@ interface ColumnConfig {
     selector: 'app-grid-mrl-config-sample',
     templateUrl: 'grid-mrl-config.sample.html',
     styleUrls: ['grid-mrl-config.sample.scss'],
-    standalone: true,
     imports: [IgxDragDirective, NgStyle, IgxDropDirective, IgxButtonDirective, IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxDialogComponent]
 })
 export class GridMRLConfigSampleComponent {
@@ -135,7 +134,6 @@ export class GridMRLConfigSampleComponent {
     }
 
     public updateCollectionLayout() {
-        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let rowIndex = 0; rowIndex < this.collection.length; rowIndex++) {
             let column = this.collection[rowIndex][0];
             for (let colIndex = 1; colIndex < this.collection[rowIndex].length; colIndex++) {

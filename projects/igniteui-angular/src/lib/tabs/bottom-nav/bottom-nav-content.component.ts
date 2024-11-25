@@ -6,7 +6,6 @@ import { IgxTabContentBase } from '../tabs.base';
     selector: 'igx-bottom-nav-content',
     templateUrl: 'bottom-nav-content.component.html',
     providers: [{ provide: IgxTabContentBase, useExisting: IgxBottomNavContentComponent }],
-    standalone: true,
     imports: []
 })
 export class IgxBottomNavContentComponent extends IgxTabContentDirective {

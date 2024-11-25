@@ -19,7 +19,6 @@ import { PivotUtil } from './pivot-util';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-header',
     templateUrl: '../headers/grid-header.component.html',
-    standalone: true,
     imports: [IgxIconComponent, NgTemplateOutlet, NgClass, SortingIndexPipe]
 })
 export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent implements AfterViewInit {

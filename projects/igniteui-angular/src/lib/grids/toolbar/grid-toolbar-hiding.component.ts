@@ -28,7 +28,6 @@ import { AsyncPipe } from '@angular/common';
 @Component({
     selector: 'igx-grid-toolbar-hiding',
     templateUrl: './grid-toolbar-hiding.component.html',
-    standalone: true,
     imports: [IgxButtonDirective, IgxIconComponent, IgxColumnActionsComponent, IgxColumnHidingDirective, IgxToggleDirective, AsyncPipe]
 })
 export class IgxGridToolbarHidingComponent extends BaseToolbarColumnActionsDirective {

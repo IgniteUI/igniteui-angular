@@ -1284,7 +1284,6 @@ describe('IgxGrid Master Detail #grid', () => {
         </div>
     </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxInputGroupComponent, IgxInputDirective]
 })
 export class DefaultGridMasterDetailComponent {
@@ -1330,7 +1329,6 @@ export class DefaultGridMasterDetailComponent {
         </ng-template>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent]
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
@@ -1375,9 +1373,4 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
         </ng-template>
     </igx-grid>
     `,
-    standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, IgxPaginatorComponent]
-})
-export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
-
 const getDetailAddressText = (detailElem) => detailElem.querySelector('.addressArea').innerText;

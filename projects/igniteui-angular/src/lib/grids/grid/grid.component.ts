@@ -115,7 +115,6 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html',
-    standalone: true,
     imports: [
         NgClass,
         NgStyle,
@@ -153,7 +152,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridSummaryPipe,
         IgxGridDetailsPipe,
         IgxStringReplacePipe
-],
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
@@ -415,6 +414,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (dataLoaded && this._columns.some(x => (x as any)._width === 'auto')) {
             this.recalculateAutoSizes();
         }
+        this.checkPrimaryKeyField();
     }
 
     /**

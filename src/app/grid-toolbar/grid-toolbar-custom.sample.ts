@@ -8,7 +8,6 @@ import { IgxButtonDirective, IgxCSVTextDirective, IgxColumnComponent, IgxExcelTe
     selector: 'app-grid-toolbar-custom-sample',
     styleUrls: ['grid-toolbar-custom.sample.scss'],
     templateUrl: 'grid-toolbar-custom.sample.html',
-    standalone: true,
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, FormsModule]
 })
 export class GridToolbarCustomSampleComponent {

@@ -11,7 +11,6 @@ import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.compon
 @Component({
     selector: 'igx-excel-style-moving',
     templateUrl: './excel-style-moving.component.html',
-    standalone: true,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleMovingComponent {

@@ -1,4 +1,4 @@
-@import '../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities';
+@use '../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities' as *;
 
 .ellipsis {
     @include ellipsis();

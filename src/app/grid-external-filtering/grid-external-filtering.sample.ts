@@ -8,7 +8,6 @@ import { FilterMode, FilteringExpressionsTree, FilteringLogic, GridSelectionMode
     selector: 'app-grid-external-filtering-sample',
     styleUrls: ['grid-external-filtering.sample.scss'],
     templateUrl: 'grid-external-filtering.sample.html',
-    standalone: true,
     imports: [IgxFlexDirective, IgxLayoutDirective, IgxButtonGroupComponent, IgxSelectComponent, IgxLabelDirective, IgxSelectItemComponent, IgxGridExcelStyleFilteringComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxAdvancedFilteringDialogComponent, IgxCheckboxComponent, FormsModule, IgxButtonDirective]
 })
 export class GridExternalFilteringComponent implements OnInit, AfterViewInit {

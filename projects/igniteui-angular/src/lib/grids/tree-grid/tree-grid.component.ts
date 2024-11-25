@@ -132,7 +132,6 @@ let NEXT_ID = 0;
         IgxForOfSyncService,
         IgxForOfScrollSyncService
     ],
-    standalone: true,
     imports: [
         NgClass,
         NgStyle,
@@ -169,7 +168,7 @@ let NEXT_ID = 0;
         IgxTreeGridNormalizeRecordsPipe,
         IgxTreeGridAddRowPipe,
         IgxStringReplacePipe
-],
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
@@ -377,6 +376,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
             this.setupColumns();
         }
+        this.checkPrimaryKeyField();
         this.cdr.markForCheck();
     }
 

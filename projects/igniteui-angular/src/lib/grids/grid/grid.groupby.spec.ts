@@ -2376,7 +2376,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(dataRows.length).toEqual(6);
     }));
 
-    // eslint-disable-next-line max-len
+
     it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -3977,13 +3977,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             <span> Custom template </span>
         </ng-template>
     `,
-    standalone: true,
-    imports: [IgxGridComponent, IgxPaginatorComponent]
-})
-export class DefaultGridComponent extends DataParent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
-
     @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
 
@@ -4051,7 +4045,6 @@ class MySortingStrategy extends IgxGrouping {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class GroupableGridComponent extends DataParent {
@@ -4106,7 +4099,6 @@ export class GroupableGridComponent extends DataParent {
                 </span>
         </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowTemplateDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeaderCollapsedIndicatorDirective]
 })
 export class CustomTemplateGridComponent extends DataParent {
@@ -4132,7 +4124,6 @@ export class CustomTemplateGridComponent extends DataParent {
             }
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GroupByDataMoreColumnsComponent extends DataParent {
@@ -4172,7 +4163,6 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
             </igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GroupByEmptyColumnFieldComponent extends DataParent {
@@ -4205,7 +4195,6 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
             </ng-template>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowSelectorDirective, IgxCheckboxComponent]
 })
 export class GridGroupByRowCustomSelectorsComponent extends DataParent {
@@ -4231,7 +4220,6 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
                 dataType="string"></igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupByCaseSensitiveComponent {
@@ -4278,7 +4266,6 @@ export class GridGroupByCaseSensitiveComponent {
             <igx-column [field]="'DateTimeField'" [width]="'200px'" [groupable]="true" dataType="dateTime"></igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupByTestDateTimeDataComponent {
@@ -4305,7 +4292,6 @@ export class GridGroupByTestDateTimeDataComponent {
             <igx-column [field]="'DateTimeField'" [width]="'200px'" [groupable]="true" dataType="dateTime"></igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class GridGroupByStateComponent extends GridGroupByTestDateTimeDataComponent {

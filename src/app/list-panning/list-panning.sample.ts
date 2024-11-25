@@ -5,7 +5,6 @@ import { IGX_LIST_DIRECTIVES, IgxAvatarComponent, IgxButtonDirective, IgxIconCom
     styleUrls: ['list-panning.sample.scss'],
     templateUrl: 'list-panning.sample.html',
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [IgxRippleDirective, IgxAvatarComponent, IgxIconComponent, IgxToastComponent, IgxButtonDirective, IGX_LIST_DIRECTIVES]
 })
 export class ListPanningSampleComponent {

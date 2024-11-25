@@ -10,7 +10,6 @@ defineComponents(IgcRatingComponent);
     selector: 'app-rating-sample',
     styleUrls: ['rating.sample.scss'],
     templateUrl: 'rating.sample.html',
-    standalone: true,
     imports: [IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgcFormControlDirective]
 })
 export class RatingSampleComponent {

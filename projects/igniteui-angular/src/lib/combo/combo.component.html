@@ -41,8 +41,8 @@
     [labelledBy]="ariaLabelledBy || label?.id || placeholder || ''"
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
     (opened)="handleOpened()" (closed)="handleClosed()">
-    <div class="igx-combo__search">
-        @if (displaySearchInput) {
+    @if (displaySearchInput) {
+        <div class="igx-combo__search">
             <igx-input-group>
                 <input igxInput #searchInput name="searchInput" autocomplete="off" type="text"
                     [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
@@ -60,8 +60,8 @@
                     </igx-suffix>
                 }
             </igx-input-group>
-        }
-    </div>
+        </div>
+    }
     <ng-container *ngTemplateOutlet="headerTemplate">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"

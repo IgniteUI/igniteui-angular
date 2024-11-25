@@ -51,7 +51,6 @@ interface GridState {
     selector: 'app-grid',
     styleUrls: ['./grid-state.component.scss'],
     templateUrl: './grid-state.component.html',
-    standalone: true,
     imports: [IgxColumnLayoutComponent, IgxExpansionPanelComponent, IgxCellHeaderTemplateDirective, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, NgTemplateOutlet, IgxGridComponent, IgxGridStateDirective, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, IgxTooltipDirective, IgxColumnGroupComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, RouterLink, IgxTooltipTargetDirective, IgxIconComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxCellTemplateDirective]
 })
 export class GridSaveStateComponent implements OnInit {
@@ -102,7 +101,6 @@ export class GridSaveStateComponent implements OnInit {
     };
 
     public initialColumns: GridState [] = [
-        /* eslint-disable max-len */
         { field: 'FirstName', header: 'First Name', width: '150px', dataType: 'string', pinned: true, movable: true, sortable: true, filterable: true, summaries: MySummary },
         { field: 'LastName', header: 'Last Name', width: '150px', dataType: 'string', pinned: true, movable: true, sortable: true, filterable: true},
         { field: 'Country', header: 'Country', width: '140px', dataType: 'string', groupable: true, movable: true, sortable: true, filterable: true, resizable: true },
@@ -124,7 +122,6 @@ export class GridSaveStateComponent implements OnInit {
         { field: 'ChildLevels', header: 'Child Levels', width: 200, resizable: true, sortable: true, filterable: true, groupable: true, dataType: 'number', hasSummary: true },
         { field: 'ProductName', header: 'Product Name', width: 300, resizable: true, sortable: true, filterable: true, movable: true, dataType: 'string', hasSummary: false }
     ];
-    /* eslint-enable max-len */
 
     constructor(private router: Router) { }
 

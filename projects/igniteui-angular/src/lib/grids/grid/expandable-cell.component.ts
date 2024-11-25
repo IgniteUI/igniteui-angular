@@ -39,7 +39,6 @@ import { IgxChipComponent } from '../../chips/chip.component';
     selector: 'igx-expandable-grid-cell',
     templateUrl: 'expandable-cell.component.html',
     providers: [HammerGesturesManager],
-    standalone: true,
     imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxCheckboxComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgTemplateOutlet, IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe]
 })
 export class IgxGridExpandableCellComponent extends IgxGridCellComponent implements OnInit {

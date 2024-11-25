@@ -6,7 +6,6 @@ import { IgxCSVTextDirective, IgxColumnComponent, IgxCsvExporterService, IgxExce
     selector: 'app-grid-toolbar-sample',
     styleUrls: ['grid-toolbar.sample.scss'],
     templateUrl: 'grid-toolbar.sample.html',
-    standalone: true,
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, FormsModule]
 })
 export class GridToolbarSampleComponent {

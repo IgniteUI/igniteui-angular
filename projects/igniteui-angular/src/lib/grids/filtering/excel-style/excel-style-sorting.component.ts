@@ -18,7 +18,6 @@ import { IgxButtonDirective } from '../../../directives/button/button.directive'
 @Component({
     selector: 'igx-excel-style-sorting',
     templateUrl: './excel-style-sorting.component.html',
-    standalone: true,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleSortingComponent implements OnDestroy {

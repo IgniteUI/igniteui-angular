@@ -33,7 +33,6 @@ import { IgxPivotGridHorizontalRowCellMerging } from './pivot-grid.pipes';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-mrl-row',
     templateUrl: './pivot-row-dimension-mrl-row.component.html',
-    standalone: true,
     imports: [NgClass, NgStyle, IgxIconComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe,
         IgxPivotRowDimensionContentComponent, IgxPivotGridHorizontalRowCellMerging]
 })

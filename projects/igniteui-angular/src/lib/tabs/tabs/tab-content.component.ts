@@ -6,7 +6,6 @@ import { IgxTabContentBase } from '../tabs.base';
     selector: 'igx-tab-content',
     templateUrl: 'tab-content.component.html',
     providers: [{ provide: IgxTabContentBase, useExisting: IgxTabContentComponent }],
-    standalone: true,
     imports: []
 })
 export class IgxTabContentComponent extends IgxTabContentDirective {

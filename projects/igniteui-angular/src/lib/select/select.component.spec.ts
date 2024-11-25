@@ -2730,7 +2730,6 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         }
     </igx-select>
     `,
-    standalone: true,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective]
 })
 class IgxSelectSimpleComponent {
@@ -2779,7 +2778,6 @@ class IgxSelectSimpleComponent {
         }
     </igx-select>
 `,
-    standalone: true,
     imports: [FormsModule, IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent, IgxIconComponent]
 })
 class IgxSelectGroupsComponent {
@@ -2805,7 +2803,6 @@ class IgxSelectGroupsComponent {
     <div style="width: 2500px; height: 400px;"></div>
 `,
     styles: [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }'],
-    standalone: true,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent]
 })
 class IgxSelectMiddleComponent {
@@ -2827,7 +2824,6 @@ class IgxSelectMiddleComponent {
             }
         </igx-select>
     `,
-    standalone: true,
     selector: 'igx-select-top',
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgStyle]
 })
@@ -2856,7 +2852,6 @@ class IgxSelectTopComponent {
         }
     </igx-select>
     `,
-    standalone: true,
     selector: 'igx-select-bottom',
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgStyle]
 })
@@ -2894,7 +2889,6 @@ class IgxSelectBottomComponent {
         }
     </igx-select>
     `,
-    standalone: true,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxIconComponent, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective, NgStyle]
 })
 class IgxSelectAffixComponent {
@@ -2940,7 +2934,6 @@ class IgxSelectAffixComponent {
             </p>
         </form>
         `,
-    standalone: true,
     imports: [ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxLabelDirective, IgxIconComponent]
 })
 class IgxSelectReactiveFormComponent {
@@ -2973,7 +2966,6 @@ class IgxSelectReactiveFormComponent {
     public onSubmitReactive() { }
 
     public removeValidators(form: UntypedFormGroup) {
-        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
             form.get(key).clearValidators();
             form.get(key).updateValueAndValidity();
@@ -2981,7 +2973,6 @@ class IgxSelectReactiveFormComponent {
     }
 
     public addValidators(form: UntypedFormGroup) {
-        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
             form.get(key).setValidators(this.validationType[key]);
             form.get(key).updateValueAndValidity();
@@ -3022,7 +3013,6 @@ class IgxSelectReactiveFormComponent {
             </p>
         </form>
         `,
-    standalone: true,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxLabelDirective, IgxIconComponent]
 })
 class IgxSelectTemplateFormComponent {
@@ -3085,7 +3075,6 @@ class IgxSelectTemplateFormComponent {
             box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
             }
         `],
-    standalone: true,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxButtonDirective, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective]
 })
 class IgxSelectHeaderFooterComponent implements OnInit {
@@ -3117,7 +3106,6 @@ class IgxSelectHeaderFooterComponent implements OnInit {
             </div>
         }
     `,
-    standalone: true,
     imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective]
 })
 class IgxSelectCDRComponent {
@@ -3142,7 +3130,6 @@ class IgxSelectCDRComponent {
             }
         </igx-select>
     `,
-    standalone: true,
     imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective]
 })
 class IgxSelectWithIdComponent {

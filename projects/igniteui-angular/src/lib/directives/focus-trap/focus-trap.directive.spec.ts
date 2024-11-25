@@ -183,7 +183,6 @@ describe('igxFocusTrap', () => {
             <button>SIGN IN</button>
         }
     </div>`,
-    standalone: true,
     imports: [IgxFocusTrapDirective]
 })
 class TrapFocusTestComponent {

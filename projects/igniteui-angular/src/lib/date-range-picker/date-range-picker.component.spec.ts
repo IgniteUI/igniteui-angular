@@ -80,15 +80,12 @@ describe('IgxDateRangePicker', () => {
             };
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
             mockInjector = jasmine.createSpyObj('Injector', {
                 get: mockNgControl
             });
             mockAnimationBuilder = {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 build: (a: AnimationMetadata | AnimationMetadata[]) => ({
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     create: (e: any, opt?: AnimationOptions) => ({
                         onDone: (fn: any) => { },
                         onStart: (fn: any) => { },
@@ -122,9 +119,7 @@ describe('IgxDateRangePicker', () => {
                 documentElement: document.documentElement,
                 createElement: () => mockElement,
                 appendChild: () => { },
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
             };
             mockNgZone = {};
@@ -1157,7 +1152,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.opening.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
 
-                    const calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
+                    let calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
                     expect(calendarWrapper.contains(document.activeElement))
                         .withContext('focus should move to calendar for KB nav')
                         .toBeTrue();
@@ -1169,6 +1164,24 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
+                    expect(startInput.nativeElement.contains(document.activeElement))
+                        .withContext('focus should return to the picker input')
+                        .toBeTrue();
+                    expect(dateRange.isFocused).toBeTrue();
+
+                    // reopen and close again
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+                    tick(DEBOUNCE_TIME * 2);
+                    fixture.detectChanges();
+
+                    calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
+                    expect(calendarWrapper.contains(document.activeElement))
+                        .withContext('focus should move to calendar for KB nav')
+                        .toBeTrue();
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
+                    tick();
+                    fixture.detectChanges();
+
                     expect(startInput.nativeElement.contains(document.activeElement))
                         .withContext('focus should return to the picker input')
                         .toBeTrue();
@@ -1215,7 +1228,7 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
 
-                    const calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
+                    let calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
                     expect(calendarWrapper.contains(document.activeElement))
                         .withContext('focus should move to calendar for KB nav')
                         .toBeTrue();
@@ -1228,6 +1241,24 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
+                    expect(startInput.nativeElement.contains(document.activeElement))
+                        .withContext('focus should return to the picker input')
+                        .toBeTrue();
+                    expect(dateRange.isFocused).toBeTrue();
+
+                    // reopen and close again
+                    dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+
+                    calendarWrapper = document.getElementsByClassName('igx-calendar__wrapper')[0];
+                    expect(calendarWrapper.contains(document.activeElement))
+                        .withContext('focus should move to calendar for KB nav')
+                        .toBeTrue();
+
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendarWrapper, true, true);
+                    tick();
+                    fixture.detectChanges();
                     expect(startInput.nativeElement.contains(document.activeElement))
                         .withContext('focus should return to the picker input')
                         .toBeTrue();
@@ -1566,7 +1597,6 @@ export class DateRangeTestComponent implements OnInit {
     <igx-date-range-picker [mode]="mode" [disabled]="disabled" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-range-picker>
     `,
-    standalone: true,
     imports: [IgxDateRangePickerComponent]
 })
 export class DateRangeDefaultComponent extends DateRangeTestComponent {
@@ -1593,7 +1623,6 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
         </igx-date-range-end>
     </igx-date-range-picker>
     `,
-    standalone: true,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,
@@ -1624,7 +1653,6 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
             <input igxInput [(ngModel)]="range.end" igxDateTimeEditor>
         </igx-date-range-end>
     </igx-date-range-picker>`,
-    standalone: true,
     imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule]
 })
 export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestComponent {
@@ -1638,7 +1666,6 @@ export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestCompone
         <label igxLabel>Select Date</label>
     </igx-date-range-picker>
     `,
-    standalone: true,
     imports: [IgxDateRangePickerComponent, IgxLabelDirective]
 })
 export class DateRangeCustomComponent extends DateRangeTestComponent {
@@ -1694,7 +1721,6 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         </igx-date-range-end>
     </igx-date-range-picker>
     `,
-    standalone: true,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,
@@ -1715,7 +1741,6 @@ export class DateRangeTemplatesComponent extends DateRangeTestComponent {
 @Component({
     template: `<igx-date-range-picker [disabled]="(disabled$ | async) === true"></igx-date-range-picker>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [IgxDateRangePickerComponent, AsyncPipe]
 })
 export class DateRangeDisabledComponent extends DateRangeTestComponent {
@@ -1738,7 +1763,6 @@ export class DateRangeDisabledComponent extends DateRangeTestComponent {
         </igx-date-range-end>
     </igx-date-range-picker>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, IgxDateTimeEditorDirective, AsyncPipe]
 })
 export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledComponent { }
@@ -1758,7 +1782,6 @@ export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledCompon
             </igx-date-range-end>
         </igx-date-range-picker>
     </form>`,
-    standalone: true,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,

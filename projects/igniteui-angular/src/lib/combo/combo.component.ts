@@ -100,7 +100,6 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
     ],
-    standalone: true,
     imports: [
         NgTemplateOutlet,
         NgClass,

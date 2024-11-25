@@ -9,7 +9,6 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 @Component({
     selector: 'igx-thumb-label',
     templateUrl: 'thumb-label.component.html',
-    standalone: true,
     imports: [NgClass, NgTemplateOutlet]
 })
 export class IgxThumbLabelComponent {

@@ -6,11 +6,9 @@ import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'expansion-panel-sample',
     templateUrl: './expansion-panel-sample.html',
     styleUrls: ['expansion-panel-sample.scss'],
-    standalone: true,
     imports: [IgxButtonDirective, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class ExpansionPanelSampleComponent implements OnInit {

@@ -83,7 +83,6 @@ let CHIP_ID = 0;
 @Component({
     selector: 'igx-chip',
     templateUrl: 'chip.component.html',
-    standalone: true,
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, IgxIconComponent]
 })
 export class IgxChipComponent implements OnInit, OnDestroy {

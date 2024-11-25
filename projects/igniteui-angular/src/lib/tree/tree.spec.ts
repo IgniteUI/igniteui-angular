@@ -700,7 +700,6 @@ describe('IgxTree #treeView', () => {
             }
         </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 class IgxTreeSampleComponent {

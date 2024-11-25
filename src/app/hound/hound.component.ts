@@ -29,7 +29,6 @@ import {FormsModule} from "@angular/forms";
 
 @Component({
     selector: 'app-hound',
-    standalone: true,
     imports: [
         IgxButtonModule,
         IgxIconComponent,

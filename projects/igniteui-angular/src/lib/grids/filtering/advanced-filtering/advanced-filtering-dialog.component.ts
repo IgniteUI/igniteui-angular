@@ -30,7 +30,6 @@ import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-
 @Component({
     selector: 'igx-advanced-filtering-dialog',
     templateUrl: './advanced-filtering-dialog.component.html',
-    standalone: true,
     imports: [IgxDragDirective, NgClass, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxDragHandleDirective, IgxButtonDirective]
 })
 export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {

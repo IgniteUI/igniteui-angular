@@ -11,7 +11,6 @@ import { IgxIconButtonDirective } from '../../../directives/button/icon-button.d
 @Component({
     selector: 'igx-excel-style-header',
     templateUrl: './excel-style-header.component.html',
-    standalone: true,
     imports: [IgxButtonDirective, NgClass, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxExcelStyleHeaderComponent {

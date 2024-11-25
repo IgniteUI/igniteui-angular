@@ -9,7 +9,6 @@ import { IColumnPipeArgs, IgxButtonDirective, IgxCardComponent, IgxCardContentDi
     providers: [],
     selector: 'app-grid-percantge-widths.sample',
     templateUrl: 'grid-percantge-widths.sample.html',
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxSelectComponent, IgxSelectItemComponent, IgxButtonDirective, CurrencyPipe, DatePipe]
 })
  export class GridColumnPercentageWidthsSampleComponent implements OnInit {

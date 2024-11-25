@@ -41,7 +41,6 @@ import { getComponentSize } from '../core/utils';
             </igx-chip>
         </igx-chips-area>
     `,
-    standalone: true,
     imports: [IgxChipComponent, IgxChipsAreaComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipComponent {
@@ -78,7 +77,6 @@ class TestChipComponent {
             }
         </igx-chips-area>
     `,
-    standalone: true,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxLabelDirective, IgxSuffixDirective]
 })
 class TestChipsLabelAndSuffixComponent {

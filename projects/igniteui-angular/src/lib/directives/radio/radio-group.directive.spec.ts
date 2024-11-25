@@ -272,7 +272,6 @@ describe('IgxRadioGroupDirective', () => {
         <igx-radio>Option 2</igx-radio>
     </igx-radio-group>
 `,
-    standalone: true,
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupSimpleComponent {
@@ -288,7 +287,6 @@ class RadioGroupSimpleComponent {
         }
     </igx-radio-group>
     `,
-    standalone: true,
     imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupComponent {
@@ -304,7 +302,6 @@ class RadioGroupComponent {
         }
     </igx-radio-group>
     `,
-    standalone: true,
     imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupRequiredComponent {
@@ -326,7 +323,6 @@ interface Person {
     </igx-radio-group>
 </form>
 `,
-    standalone: true,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -348,7 +344,6 @@ class RadioGroupOnPushComponent {
         }
     </igx-radio-group>
     `,
-    standalone: true,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, FormsModule]
 })
 class RadioGroupWithModelComponent {
@@ -376,7 +371,6 @@ class RadioGroupWithModelComponent {
     </igx-radio-group>
 </form>
 `,
-    standalone: true,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupReactiveFormsComponent {
@@ -431,7 +425,6 @@ class RadioGroupReactiveFormsComponent {
             </igx-radio-group>
         </form>
     `,
-    standalone: true,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupDeepProjectionComponent {

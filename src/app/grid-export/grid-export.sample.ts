@@ -58,7 +58,6 @@ class HGridChildSummary {
 @Component({
     selector: 'app-grid-export-sample',
     templateUrl: 'grid-export.sample.html',
-    standalone: true,
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxPaginatorComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxIconComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, DatePipe]
 })
 export class GridExportComponent {

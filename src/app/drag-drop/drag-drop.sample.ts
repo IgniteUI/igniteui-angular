@@ -8,10 +8,9 @@ import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEv
     selector: 'app-drag-drop-sample',
     templateUrl: './drag-drop.sample.html',
     styleUrls: ['drag-drop.sample.scss'],
-    standalone: true,
     imports: [
         NgStyle, NgClass,
-        IgxDragDirective,  IgxDragIgnoreDirective, IgxDragHandleDirective,  IgxDropDirective,
+        IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IgxDropDirective,
         IgxIconComponent, IgxButtonDirective, IgxRippleDirective, IgxToggleDirective,
         IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxLabelDirective,
         ShadowGridSampleComponent

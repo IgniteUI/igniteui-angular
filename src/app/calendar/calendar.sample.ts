@@ -63,7 +63,6 @@ defineComponents(IgcCalendarComponent);
     templateUrl: "calendar.sample.html",
     styleUrls: ["calendar.sample.scss"],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
@@ -86,7 +85,7 @@ defineComponents(IgcCalendarComponent);
         IgxSwitchComponent,
         IgxIconComponent,
         DatePipe
-    ],
+    ]
 })
 export class CalendarSampleComponent {
     @ViewChild("calendar", { static: true })

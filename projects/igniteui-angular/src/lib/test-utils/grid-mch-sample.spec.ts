@@ -15,7 +15,6 @@ import { IgxCellHeaderTemplateDirective } from '../grids/columns/templates.direc
         </igx-grid>
     </div>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class OneGroupOneColGridComponent {
@@ -39,7 +38,6 @@ export class OneGroupOneColGridComponent {
         </igx-grid>
     </div>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class OneGroupThreeColsGridComponent {
@@ -78,7 +76,6 @@ export class OneGroupThreeColsGridComponent {
         </igx-column-group>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class ColumnGroupTestComponent {
@@ -123,7 +120,6 @@ export class ColumnGroupTestComponent {
         </igx-column-group>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class ColumnGroupFourLevelTestComponent implements OnInit {
@@ -205,7 +201,6 @@ export class ColumnGroupFourLevelTestComponent implements OnInit {
         </igx-column-group>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class ThreeGroupsThreeColumnsGridComponent {
@@ -258,7 +253,6 @@ export class ThreeGroupsThreeColumnsGridComponent {
         <igx-column #cityCol field="City"></igx-column>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class NestedColGroupsGridComponent {
@@ -298,7 +292,6 @@ export class NestedColGroupsGridComponent {
             }
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class DynamicColGroupsGridComponent {
@@ -368,7 +361,6 @@ export class DynamicColGroupsGridComponent {
         </igx-column-group>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class StegosaurusGridComponent implements OnInit {
@@ -494,7 +486,6 @@ export class StegosaurusGridComponent implements OnInit {
             </igx-column-group>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class BlueWhaleGridComponent {
@@ -537,7 +528,6 @@ export class BlueWhaleGridComponent {
             </igx-column-group>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class OneColPerGroupGridComponent {
@@ -578,7 +568,6 @@ export class OneColPerGroupGridComponent {
             </igx-column-group>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class NestedColumnGroupsGridComponent {
@@ -612,7 +601,6 @@ export class NestedColumnGroupsGridComponent {
             }
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class DynamicGridComponent {
@@ -644,7 +632,6 @@ export class DynamicGridComponent {
         <igx-column #cityCol field="City"></igx-column>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent, IgxCellHeaderTemplateDirective]
 })
 export class NestedColGroupsWithTemplatesGridComponent {
@@ -702,7 +689,6 @@ export class NestedColGroupsWithTemplatesGridComponent {
         </igx-column-group>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class ColumnGroupHiddenInTemplateComponent extends ColumnGroupTestComponent { }

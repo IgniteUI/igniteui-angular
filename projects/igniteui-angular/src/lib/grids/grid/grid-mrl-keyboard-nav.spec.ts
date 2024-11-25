@@ -2633,7 +2633,6 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         }
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnLayoutComponent]
 })
 export class ColumnLayoutTestComponent {

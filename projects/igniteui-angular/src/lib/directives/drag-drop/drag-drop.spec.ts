@@ -2017,7 +2017,6 @@ const generalStyles = [`
         <h3>Drop area:</h3>
         <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }"></div>
     `,
-    standalone: true,
     imports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective]
 })
 class TestDragDropComponent {
@@ -2055,7 +2054,6 @@ class TestDragDropComponent {
         <h3>Drop area:</h3>
         <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }" [dropChannel]="1"></div>
     `,
-    standalone: true,
     imports: [IgxDragDirective, IgxDropDirective]
 })
 class TestDragDropLinkedSingleComponent extends TestDragDropComponent { }
@@ -2076,7 +2074,6 @@ class TestDragDropLinkedSingleComponent extends TestDragDropComponent { }
         <h3>Drop area:</h3>
         <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }" [dropChannel]="[1, 3]"></div>
     `,
-    standalone: true,
     imports: [IgxDragDirective, IgxDropDirective]
 })
 class TestDragDropLinkedMixedComponent extends TestDragDropComponent { }
@@ -2098,7 +2095,6 @@ class TestDragDropLinkedMixedComponent extends TestDragDropComponent { }
             <div id="thirdDrag" class="dragElem" [igxDrag]="{ key: 3 }" [dragChannel]="3">Drag 3</div>
         </div>
     `,
-    standalone: true,
     imports: [IgxDragDirective, IgxDropDirective]
 })
 class TestDragDropStrategiesComponent extends TestDragDropLinkedSingleComponent { }
@@ -2129,7 +2125,6 @@ class TestDragDropStrategiesComponent extends TestDragDropLinkedSingleComponent 
             }
         </div>
     `,
-    standalone: true,
     imports: [IgxIconComponent, IgxDragDirective, IgxDragHandleDirective]
 })
 class TestDragDropNestedComponent extends TestDragDropComponent {

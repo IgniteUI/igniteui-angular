@@ -18,7 +18,6 @@ import { IgxGridActionButtonComponent } from './grid-action-button.component';
     selector: 'igx-grid-editing-actions',
     templateUrl: 'grid-editing-actions.component.html',
     providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridEditingActionsComponent }],
-    standalone: true,
     imports: [IgxGridActionButtonComponent]
 })
 

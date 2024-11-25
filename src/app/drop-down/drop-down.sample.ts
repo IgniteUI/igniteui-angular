@@ -22,26 +22,24 @@ import {
 
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'drop-down-sample',
     templateUrl: './drop-down.sample.html',
     styleUrls: ['drop-down.sample.scss'],
-    standalone: true,
-	imports: [
-		IgxButtonGroupComponent,
-		IgxButtonDirective,
-		IgxDropDownItemNavigationDirective,
-		IgxToggleActionDirective,
-		IgxDropDownComponent,
-		IgxDropDownItemComponent,
-		IgxToggleDirective,
-		IgxDropDownGroupComponent,
-		IgxInputGroupComponent,
-		IgxInputDirective,
-		IgxRippleDirective,
-		IgxOverlayOutletDirective,
-		IgxIconComponent,
-	],
+    imports: [
+        IgxButtonGroupComponent,
+        IgxButtonDirective,
+        IgxDropDownItemNavigationDirective,
+        IgxToggleActionDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxToggleDirective,
+        IgxDropDownGroupComponent,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxRippleDirective,
+        IgxOverlayOutletDirective,
+        IgxIconComponent,
+    ]
 })
 export class DropDownSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })

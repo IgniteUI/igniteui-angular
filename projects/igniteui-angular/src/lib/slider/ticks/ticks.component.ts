@@ -8,7 +8,6 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 @Component({
     selector: 'igx-ticks',
     templateUrl: 'ticks.component.html',
-    standalone: true,
     imports: [NgClass, NgTemplateOutlet]
 })
 export class IgxTicksComponent {

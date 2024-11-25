@@ -20,7 +20,6 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-column-actions',
     templateUrl: './column-actions.component.html',
-    standalone: true,
     imports: [IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxCheckboxComponent, IgxButtonDirective, IgxRippleDirective, forwardRef(() => IgxColumnActionEnabledPipe), forwardRef(() => IgxFilterActionColumnsPipe), forwardRef(() => IgxSortActionColumnsPipe)]
 })
 export class IgxColumnActionsComponent implements DoCheck {

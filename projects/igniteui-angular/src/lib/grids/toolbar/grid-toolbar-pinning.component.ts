@@ -27,7 +27,6 @@ import { AsyncPipe } from '@angular/common';
 @Component({
     selector: 'igx-grid-toolbar-pinning',
     templateUrl: './grid-toolbar-pinning.component.html',
-    standalone: true,
     imports: [IgxButtonDirective, IgxIconComponent, IgxColumnActionsComponent, IgxColumnPinningDirective, IgxToggleDirective, AsyncPipe]
 })
 export class IgxGridToolbarPinningComponent extends BaseToolbarColumnActionsDirective {

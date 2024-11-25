@@ -10,7 +10,6 @@ interface GridConfig {
 @Component({
     selector: 'app-grid-nested-props',
     templateUrl: 'grid-nested-props.sample.html',
-    standalone: true,
     imports: [IGX_GRID_DIRECTIVES, IgxTreeGridComponent]
 })
 export class GridNestedPropsSampleComponent {

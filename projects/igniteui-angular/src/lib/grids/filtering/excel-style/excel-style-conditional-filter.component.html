@@ -7,8 +7,8 @@
         [igxDropDownItemNavigation]="subMenu"
         role="menuitem"
         aria-haspopup="true"
-        [attr.aria-controls]="this.subMenu.listId"
-        [attr.aria-activedescendant]="!this.subMenu.collapsed ? this.subMenu.focusedItem?.id : null">
+        [attr.aria-controls]="this.subMenu?.listId"
+        [attr.aria-activedescendant]="!this.subMenu?.collapsed ? this.subMenu?.focusedItem?.id : null">
         <span class="igx-excel-filter__filter-number">
             {{ subMenuText }}
             @if (filterNumber > 0) { ({{filterNumber}}) }

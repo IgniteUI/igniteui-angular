@@ -10,7 +10,6 @@ import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.compo
     selector: 'app-grid-search-sample',
     styleUrls: ['grid-search.sample.scss'],
     templateUrl: 'grid-search.sample.html',
-    standalone: true,
     imports: [IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, GridSearchBoxComponent]
 })
 

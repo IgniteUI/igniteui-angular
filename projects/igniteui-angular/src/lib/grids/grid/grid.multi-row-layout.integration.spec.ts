@@ -1243,7 +1243,6 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         }
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent]
 })
 export class ColumnLayouHidingTestComponent {
@@ -1298,7 +1297,6 @@ export class ColumnLayouHidingTestComponent {
         }
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent]
 })
 export class ColumnLayoutPinningTestComponent {
@@ -1346,7 +1344,6 @@ export class ColumnLayoutPinningTestComponent {
         }
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestComponent {
@@ -1366,7 +1363,6 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
         }
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestComponent {
@@ -1411,7 +1407,6 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
         }
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class ColumnLayoutResizingTestComponent {

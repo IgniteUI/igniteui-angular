@@ -9,7 +9,6 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-filtering-sample',
     styleUrls: ['grid-filtering.sample.scss'],
     templateUrl: 'grid-filtering.sample.html',
-    standalone: true,
     imports: [FormsModule, IGX_GRID_DIRECTIVES, IgxCheckboxComponent, IgxButtonGroupComponent, IgxIconComponent]
 })
 export class GridFilteringComponent implements OnInit {

@@ -680,7 +680,6 @@ describe('Navigation Drawer', () => {
 @Component({
     selector: 'igx-test-cmp',
     template: '<igx-nav-drawer class="markupClass"></igx-nav-drawer>',
-    standalone: true,
     imports: [IgxNavigationDrawerComponent]
 })
 class TestComponent {
@@ -691,7 +690,6 @@ class TestComponent {
     providers: [IgxNavigationService],
     selector: 'igx-test-cmp-di',
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    standalone: true,
     imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
 })
 class TestComponentDIComponent {
@@ -704,7 +702,6 @@ class TestComponentDIComponent {
     selector: 'igx-test-cmp-pin',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    standalone: true,
     imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
 })
 class TestComponentPinComponent extends TestComponentDIComponent {
@@ -717,7 +714,6 @@ class TestComponentPinComponent extends TestComponentDIComponent {
     selector: 'igx-test-cmp-mini',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    standalone: true,
     imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
 })
 class TestComponentMiniComponent extends TestComponentDIComponent {
@@ -727,7 +723,6 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
 @Component({
     selector: 'igx--test-fixed-mini',
     providers: [IgxNavigationService],
-    standalone: true,
     imports: [
         IgxLayoutModule,
         IgxNavbarModule,
@@ -762,6 +757,6 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
         <div class="main"></div>
       </div>
     </div>
-    `,
+    `
 })
 class TestFixedMiniComponent extends TestComponentDIComponent { }

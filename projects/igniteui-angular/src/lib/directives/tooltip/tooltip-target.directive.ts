@@ -55,7 +55,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
-    @Input('showDelay')
+    @Input()
     public showDelay = 500;
 
     /**
@@ -72,7 +72,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
-    @Input('hideDelay')
+    @Input()
     public hideDelay = 500;
 
     /**
@@ -91,7 +91,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
-    @Input({ alias: 'tooltipDisabled', transform: booleanAttribute })
+    @Input({ transform: booleanAttribute })
     public tooltipDisabled = false;
 
     /**

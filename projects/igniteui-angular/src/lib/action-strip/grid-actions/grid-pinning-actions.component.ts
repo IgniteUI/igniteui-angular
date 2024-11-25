@@ -16,7 +16,6 @@ import { IgxGridActionButtonComponent } from './grid-action-button.component';
     selector: 'igx-grid-pinning-actions',
     templateUrl: 'grid-pinning-actions.component.html',
     providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridPinningActionsComponent }],
-    standalone: true,
     imports: [IgxGridActionButtonComponent]
 })
 

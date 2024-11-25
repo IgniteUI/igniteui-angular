@@ -115,7 +115,6 @@ class ExpressionOperandItem extends ExpressionItem {
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
-    standalone: true,
     imports: [IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective]
 })
 export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
@@ -767,12 +766,20 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public deleteGroup() {
-        const selectedGroup = this.contextualGroup;
-        const parent = selectedGroup.parent;
-        if (parent) {
-            const index = parent.children.indexOf(selectedGroup);
+        let selectedGroup = this.contextualGroup;
+        let parent = selectedGroup.parent;
+        if (!parent) {
+            this.rootGroup = null;
+        }
+
+        while (parent) {
+            let index = parent.children.indexOf(selectedGroup);
             parent.children.splice(index, 1);
-        } else {
+            selectedGroup = parent;
+            parent = parent.children.length === 0 ? parent.parent : null;
+        }
+
+        if (this.rootGroup?.children.length === 0) {
             this.rootGroup = null;
         }
 

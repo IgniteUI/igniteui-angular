@@ -154,7 +154,6 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
-import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripToken } from '../action-strip/token';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import type { IgxPaginatorComponent } from '../paginator/paginator.component';
@@ -446,7 +445,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     public set primaryKey(value: string) {
         this._primaryKey = value;
-        this.checkPrimaryKeyColumn();
+        this.checkPrimaryKeyField();
     }
 
     /* blazorSuppress */
@@ -3209,6 +3208,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
+    protected isColumnWidthSum = false;
     private _currencyPositionLeft: boolean;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
@@ -3771,7 +3771,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const primaryColumn = this._columns.find(col => col.field === this.primaryKey);
         const idType = this.data.length ?
             this.resolveDataTypes(this.data[0][this.primaryKey]) : primaryColumn ? primaryColumn.dataType : 'string';
-        return idType === 'string' ? uuidv4() : FAKE_ROW_ID--;
+        return idType === 'string' ? crypto.randomUUID() : FAKE_ROW_ID--;
     }
 
     /**
@@ -4023,7 +4023,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.onPinnedRowsChanged(change);
             });
 
-        this.addRowSnackbar?.clicked.subscribe(() => {
+        this.addRowSnackbar?.clicked.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const rec = this.filteredSortedData[this.lastAddedRowIndex];
             this.scrollTo(rec, 0);
             this.addRowSnackbar.close();
@@ -4930,6 +4930,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @param value
      * @param condition
      * @param ignoreCase
+     * @deprecated in version 19.0.0. 
      */
     public filterGlobal(value: any, condition, ignoreCase?) {
         this.filteringService.filterGlobal(value, condition, ignoreCase);
@@ -6496,6 +6497,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         if (this.width === null || !width) {
             width = this.getColumnWidthSum();
+            this.isColumnWidthSum = true;
         }
 
         if (this.hasVerticalScroll() && this.width !== null) {
@@ -6655,7 +6657,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
-        this.checkPrimaryKeyColumn();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
@@ -6767,16 +6768,12 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (added || removed) {
                 this.onColumnsAddedOrRemoved();
             }
-            this.checkPrimaryKeyColumn();
         }
     }
 
-    /**
-     * @hidden @internal
-     */
-    protected checkPrimaryKeyColumn() {
-        if (this.primaryKey && this.columns.length > 0 && !this.columns.find(c => c.field === this.primaryKey)) {
-            console.warn(`Primary key column "${this.primaryKey}" is not defined. Set \`primaryKey\` to a valid column.`);
+    protected checkPrimaryKeyField() {
+        if (this.primaryKey && this.data?.length && !(this.primaryKey in this.data[0])) {
+            console.warn(`Field "${this.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`);
         }
     }
 
@@ -7330,6 +7327,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.resetCachedWidths();
             this.cdr.detectChanges();
         }
+
+        if (this.isColumnWidthSum) {
+            this.calcWidth = this.getColumnWidthSum();
+        }
     }
 
     protected extractDataFromColumnsSelection(source: any[], formatters = false, headers = false): any[] {
@@ -7788,7 +7789,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else {
                 this._shouldRecalcRowHeight = true;
             }
-        } 
+        }
     }
 
     // TODO: About to Move to CRUD

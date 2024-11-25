@@ -36,7 +36,6 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-snackbar',
     templateUrl: 'snackbar.component.html',
-    standalone: true,
     imports: [IgxButtonDirective]
 })
 export class IgxSnackbarComponent extends IgxNotificationsDirective

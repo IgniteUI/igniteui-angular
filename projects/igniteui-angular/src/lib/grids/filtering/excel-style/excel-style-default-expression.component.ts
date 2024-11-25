@@ -41,7 +41,6 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
 @Component({
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html',
-    standalone: true,
     imports: [IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {

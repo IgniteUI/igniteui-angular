@@ -11,7 +11,6 @@ import { IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent,
     selector: 'app-tree-grid-sample',
     styleUrls: ['tree-grid.sample.scss'],
     templateUrl: 'tree-grid.sample.html',
-    standalone: true,
     imports: [IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxPaginatorComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 

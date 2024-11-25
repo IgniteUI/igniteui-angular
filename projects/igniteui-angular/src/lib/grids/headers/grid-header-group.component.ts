@@ -36,7 +36,6 @@ const Z_INDEX = 9999;
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header-group',
     templateUrl: './grid-header-group.component.html',
-    standalone: true,
     imports: [NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
@@ -262,7 +261,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     @HostListener('mousedown', ['$event'])
     public onMouseDown(event: MouseEvent): void {
-        if (!this.grid.allowFiltering || 
+        if (!this.grid.allowFiltering ||
             (event.composedPath().findIndex(el =>
                 (el as Element).tagName?.toLowerCase() === 'igx-grid-filtering-cell') < 1)) {
                 // Hack for preventing text selection in IE and Edge while dragging the resize element

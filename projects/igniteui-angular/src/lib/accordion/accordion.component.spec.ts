@@ -405,7 +405,6 @@ describe('Rendering Tests', () => {
         }
     </igx-accordion>
     `,
-    standalone: true,
     imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxAccordionSampleTestComponent {

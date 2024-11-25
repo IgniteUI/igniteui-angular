@@ -45,7 +45,6 @@ export declare interface ISplitterBarResizeEventArgs {
 @Component({
     selector: 'igx-splitter',
     templateUrl: './splitter.component.html',
-    standalone: true,
     imports: [forwardRef(() => IgxSplitBarComponent)]
 })
 export class IgxSplitterComponent implements AfterContentInit {
@@ -178,7 +177,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     /**
      * Sets the visibility of the handle and expanders in the splitter bar.
      * False by default
-     * 
+     *
      * @example
      * ```html
      * <igx-splitter [nonCollapsible]='true'>
@@ -369,7 +368,6 @@ export class IgxSplitterComponent implements AfterContentInit {
 @Component({
     selector: 'igx-splitter-bar',
     templateUrl: './splitter-bar.component.html',
-    standalone: true,
     imports: [IgxDragDirective, IgxDragIgnoreDirective]
 })
 export class IgxSplitBarComponent {

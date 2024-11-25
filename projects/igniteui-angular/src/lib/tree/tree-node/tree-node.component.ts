@@ -154,7 +154,6 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
     providers: [
         { provide: IGX_TREE_NODE_COMPONENT, useExisting: IgxTreeNodeComponent }
     ],
-    standalone: true,
     imports: [NgTemplateOutlet, IgxIconComponent, IgxCheckboxComponent, NgClass, IgxCircularProgressBarComponent]
 })
 export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements IgxTreeNode<T>, OnInit, OnDestroy {

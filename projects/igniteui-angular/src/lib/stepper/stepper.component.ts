@@ -73,7 +73,6 @@ import { fadeIn, growVerIn, growVerOut } from 'igniteui-angular/animations';
         IgxStepperService,
         { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
     ],
-    standalone: true,
     imports: [NgTemplateOutlet]
 })
 export class IgxStepperComponent extends IgxCarouselComponentBase implements IgxStepper, OnChanges, OnInit, AfterContentInit, OnDestroy {

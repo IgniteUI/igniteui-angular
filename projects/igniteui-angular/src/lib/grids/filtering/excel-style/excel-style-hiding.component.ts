@@ -8,7 +8,6 @@ import { IgxIconComponent } from '../../../icon/icon.component';
 @Component({
     selector: 'igx-excel-style-hiding',
     templateUrl: './excel-style-hiding.component.html',
-    standalone: true,
     imports: [IgxIconComponent]
 })
 export class IgxExcelStyleHidingComponent {

@@ -6,7 +6,6 @@ import { IRowDataCancelableEventArgs, IRowDataEventArgs, IgxActionStripComponent
     selector: 'app-grid-add-row',
     styleUrls: ['grid-add-row.sample.scss'],
     templateUrl: `grid-add-row.sample.html`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective]
 })
 export class GridAddRowSampleComponent implements OnInit {
@@ -44,7 +43,6 @@ export class GridAddRowSampleComponent implements OnInit {
         ];
 
         this.dataFull = [
-            /* eslint-disable max-len */
             { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative'},
             { ID: 'ANATR', CompanyName: 'Ana Trujillo Emparedados y helados', ContactName: 'Ana Trujillo', ContactTitle: 'Owner'},
             { ID: 'ANTON', CompanyName: 'Antonio Moreno Taquería', ContactName: 'Antonio Moreno', ContactTitle: 'Owner'},
@@ -75,7 +73,6 @@ export class GridAddRowSampleComponent implements OnInit {
         ];
 
         this.data = [];
-        /* eslint-enable max-len */
     }
 
     public add() {

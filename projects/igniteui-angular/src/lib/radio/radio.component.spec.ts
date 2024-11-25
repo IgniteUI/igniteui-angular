@@ -261,7 +261,6 @@ describe('IgxRadio', () => {
 
 @Component({
     template: `<igx-radio #radio>Radio</igx-radio>`,
-    standalone: true,
     imports: [IgxRadioComponent]
 })
 class InitRadioComponent {
@@ -274,7 +273,6 @@ class InitRadioComponent {
             <igx-radio [value]="item"
                 name="group" [(ngModel)]="selected">{{item}}</igx-radio>
         }`,
-    standalone: true,
     imports: [FormsModule, IgxRadioComponent]
 })
 class RadioWithModelComponent {
@@ -293,7 +291,6 @@ class RadioWithModelComponent {
             {{item.value}}
         </igx-radio>
     }`,
-    standalone: true,
     imports: [FormsModule, IgxRadioComponent]
 })
 class DisabledRadioComponent {
@@ -320,7 +317,6 @@ class DisabledRadioComponent {
             {{item}}
         </igx-radio>
     }`,
-    standalone: true,
     imports: [FormsModule, IgxRadioComponent]
 })
 class RequiredRadioComponent {
@@ -330,7 +326,6 @@ class RequiredRadioComponent {
 @Component({
     template: `<p id="my-label">{{label}}</p>
     <igx-radio #radio aria-labelledby="my-label"></igx-radio>`,
-    standalone: true,
     imports: [IgxRadioComponent]
 })
 class RadioExternalLabelComponent {
@@ -340,7 +335,6 @@ class RadioExternalLabelComponent {
 
 @Component({
     template: `<igx-radio #radio [aria-label]="label"></igx-radio>`,
-    standalone: true,
     imports: [IgxRadioComponent]
 })
 class RadioInvisibleLabelComponent {
@@ -355,7 +349,6 @@ class RadioInvisibleLabelComponent {
         <button type="submit" [disabled]="!form.valid">Submit</button>
     </form>
 `,
-    standalone: true,
     imports: [FormsModule, IgxRadioComponent]
 })
 class RadioFormComponent {
@@ -372,7 +365,6 @@ class RadioFormComponent {
     template: `<form [formGroup]="reactiveForm">
         <igx-radio #radio formControlName="radio">Radio</igx-radio>
     </form>`,
-    standalone: true,
     imports: [ReactiveFormsModule, IgxRadioComponent]
 })
 class ReactiveFormComponent {
