@@ -213,7 +213,7 @@
         [class.igx-calendar__pickers--vertical]="orientation === 'vertical'"
     >
         @if (isDefaultView) {
-            @for (view of monthsViewNumber | IgxMonthViewSlots; track view; let i = $index) {
+            @for (view of monthsViewNumber | IgxMonthViewSlots; track $index; let i = $index) {
                 <ng-container *ngTemplateOutlet="calendarDaysPicker; context: {$implicit: i}"></ng-container>
             }
         }
@@ -229,7 +229,7 @@
 
     <section class="igx-calendar__body" [class.igx-calendar__body--vertical]="orientation === 'vertical'" role="presentation">
         @if (isDefaultView) {
-            @for (view of monthsViewNumber | IgxMonthViewSlots; track view; let i = $index) {
+            @for (view of monthsViewNumber | IgxMonthViewSlots; track $index; let i = $index) {
                 <igx-days-view
                     #days
                     role="rowgroup"

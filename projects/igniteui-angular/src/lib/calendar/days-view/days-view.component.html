@@ -13,7 +13,7 @@
             </span>
         </div>
     }
-    @for (dayName of weekHeaderLabels; track dayName) {
+    @for (dayName of weekHeaderLabels; track dayName.long) {
         <span
             role="columnheader"
             [attr.aria-label]="dayName.long"
