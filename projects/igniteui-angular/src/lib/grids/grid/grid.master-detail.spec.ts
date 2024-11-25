@@ -1373,4 +1373,8 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
         </ng-template>
     </igx-grid>
     `,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, IgxPaginatorComponent]
+})
+export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
+
 const getDetailAddressText = (detailElem) => detailElem.querySelector('.addressArea').innerText;

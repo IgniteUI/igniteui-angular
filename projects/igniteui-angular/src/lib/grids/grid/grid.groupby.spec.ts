@@ -3977,7 +3977,12 @@ describe('IgxGrid - GroupBy #grid', () => {
             <span> Custom template </span>
         </ng-template>
     `,
+    imports: [IgxGridComponent, IgxPaginatorComponent]
+})
+export class DefaultGridComponent extends DataParent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+
     @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
 
