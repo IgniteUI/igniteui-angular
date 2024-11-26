@@ -114,6 +114,17 @@ export class IgxSummaryCellComponent {
             this.column.pipeArgs.display : getLocaleCurrencySymbol(this.grid.locale);
     }
 
+    /**
+     * Collection re-created w/ the built in track by identity will always log
+     * warning even for valid cases (cached single summary res after filter).
+     * See https://github.com/angular/angular/blob/55581b4181639568fb496e91055142a1b489e988/packages/core/src/render3/instructions/control_flow.ts#L393-L409
+     * Current solution explicit track function doing the same as suggested in:
+     * https://github.com/angular/angular/issues/56471#issuecomment-2180315803
+     */
+    protected trackSummaryResult(summary: IgxSummaryResult) {
+        return summary;
+    }
+
     public translateSummary(summary: IgxSummaryResult): string {
         return this.grid.resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
     }
