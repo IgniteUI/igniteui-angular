@@ -346,6 +346,32 @@ export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseCompon
     }
 }
 
+
+@Component({
+    styles: `
+    .pivot-container {
+    display: flex;
+    align-items: flex-start;
+    flex: 1 1 auto;
+    order: 0;
+    align-items: stretch;
+    }
+    `,
+    template: `
+    <div class="pivot-container">
+        <div>
+            <igx-pivot-grid #grid [width]="'100%'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
+                [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]="defaultExpand">
+            </igx-pivot-grid>
+        </div>
+    </div>
+    `,
+    standalone: true,
+    imports: [IgxPivotGridComponent]
+})
+export class IgxPivotGridFlexContainerComponent extends IgxPivotGridTestBaseComponent{
+}
+
 export class IgxTotalSaleAggregate {
     public static totalSale: PivotAggregation = (members, data: any) =>
         data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
