@@ -1201,6 +1201,7 @@ describe('igxSelect', () => {
             }));
 
             it('should select first match out of duplicated values', fakeAsync(() => {
+                fixture.componentInstance.itemTrack = (_item: string, index: number) => index;
                 fixture.componentInstance.items = ['Paris', 'London', 'Paris', 'Hamburg', 'London'];
                 fixture.detectChanges();
 
@@ -2723,7 +2724,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
     <input class="dummyInput" #dummyInput/>
     <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [width]="'300px'" [height]="'200px'" [placeholder]="'Choose a city'" [(ngModel)]="value">
         <label igxLabel #simpleLabel>Select Simple Component</label>
-        @for (item of items; track item) {
+        @for (item of items; track itemTrack(item, $index)) {
             <igx-select-item [value]="item" [text]="item">
                 {{ item }} {{'©'}}
             </igx-select-item>
@@ -2763,6 +2764,8 @@ class IgxSelectSimpleComponent {
         return this.items.map((city, index) => city.toString().toLowerCase().startsWith(startsWith.toLowerCase()) ? index : undefined)
             .filter(x => x);
     }
+
+    public itemTrack = (item: string, _index: number) => item;
 }
 @Component({
     template: `
