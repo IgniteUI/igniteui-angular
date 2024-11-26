@@ -444,7 +444,7 @@ export class StegosaurusGridComponent implements OnInit {
     template: `
         <igx-grid #grid [data]="data" [height]="gridHeight" [columnWidth]="columnWidth">
             <igx-column-group headerGroupClasses="firstGroup" [header]="firstGroupTitle">
-                @for (item of hunderdItems; track item) {
+                @for (item of hunderdItems; track $index) {
                     <igx-column headerClasses="firstGroupColumn" field="ID"></igx-column>
                 }
                 @if (extraMissingColumn) {
@@ -453,12 +453,12 @@ export class StegosaurusGridComponent implements OnInit {
             </igx-column-group>
             <igx-column-group headerGroupClasses="secondGroup" [header]="secondGroupTitle">
                 <igx-column-group headerGroupClasses="secondSubGroup" [header]="secondSubGroupTitle">
-                    @for (item of fiftyItems; track item) {
+                    @for (item of fiftyItems; track $index) {
                         <igx-column headerClasses="secondSubGroupColumn" field="ID"></igx-column>
                     }
                 </igx-column-group>
                 <igx-column-group headerGroupClasses="secondSubGroup" [header]="secondSubGroupTitle">
-                    @for (item of fiftyItems; track item) {
+                    @for (item of fiftyItems; track $index) {
                         <igx-column  headerClasses="secondSubGroupColumn" field="ID"></igx-column>
                     }
                 </igx-column-group>
