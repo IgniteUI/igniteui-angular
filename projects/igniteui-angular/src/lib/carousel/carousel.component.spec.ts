@@ -107,22 +107,22 @@ describe('Carousel', () => {
         });
 
         it('add/remove slides tests', () => {
-            let currentSlide = carousel.get(carousel.current);
-            carousel.remove(currentSlide);
+            const slide1 = carousel.get(carousel.current);
+            carousel.remove(slide1);
 
             fixture.detectChanges();
             expect(carousel.slides.length).toEqual(3);
             expect(carousel.total).toEqual(3);
 
-            currentSlide = carousel.get(carousel.current);
-            carousel.remove(currentSlide);
+            const slide2 = carousel.get(carousel.current);
+            carousel.remove(slide2);
 
             fixture.detectChanges();
             expect(carousel.slides.length).toEqual(2);
             expect(carousel.total).toEqual(2);
 
-            carousel.add(currentSlide);
-            carousel.add(currentSlide);
+            carousel.add(slide1);
+            carousel.add(slide2);
 
             fixture.detectChanges();
             expect(carousel.slides.length).toEqual(4);
@@ -186,11 +186,12 @@ describe('Carousel', () => {
             expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(3);
 
             spyOn(carousel.slideAdded, 'emit');
-            carousel.add(carousel.get(carousel.current));
+            const newSlide = new IgxSlideComponent(null, null);
+            carousel.add(newSlide);
             fixture.detectChanges();
             args = {
                 carousel,
-                slide: carousel.get(carousel.current)
+                slide: newSlide
             };
             expect(carousel.slideAdded.emit).toHaveBeenCalledWith(args);
 
