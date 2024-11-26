@@ -520,6 +520,10 @@
     }
 
     %igx-list-item-content--active {
+        color: var-get($theme, 'item-text-color-active');
+        background: var-get($theme, 'item-background-active');
+        z-index: 3;
+
         %igx-list__item-line-title {
             color: var-get($theme, 'item-title-color-active')
         }
@@ -544,10 +548,6 @@
                 color: var-get($theme, 'item-thumbnail-color-active')
             }
         }
-
-        color: var-get($theme, 'item-text-color-active');
-        background: var-get($theme, 'item-background-active');
-        z-index: 3;
     }
 
     %igx-list-item-content--inactive {

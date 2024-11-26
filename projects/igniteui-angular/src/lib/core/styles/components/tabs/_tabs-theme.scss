@@ -360,13 +360,6 @@
     }
 
     %tabs-header-item {
-        > * {
-            margin-inline-start: rem(if($variant != 'indigo', 12px, 8px));
-
-            &:first-child {
-                margin-inline-start: 0;
-            }
-        }
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -388,32 +381,6 @@
 
         igx-icon {
             color: var-get($theme, 'item-icon-color');
-        }
-
-        &::-moz-focus-inner {
-            border: 0;
-        }
-
-        &:focus {
-            background: var-get($theme, 'item-active-background');
-            color: var-get($theme, 'item-hover-color');
-            border-bottom-color: transparent;
-        }
-
-        &:hover {
-            background: var-get($theme, 'item-hover-background');
-            color: var-get($theme, 'item-hover-color');
-
-            @if $bootstrap-theme {
-                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color--hover');
-            }
-        }
-
-        &:hover,
-        &:focus {
-            igx-icon {
-                color: var-get($theme, 'item-hover-icon-color');
-            }
         }
 
         @if $bootstrap-theme {
@@ -445,6 +412,40 @@
 
             igx-icon {
                 --ig-size: 2;
+            }
+        }
+
+        > * {
+            margin-inline-start: rem(if($variant != 'indigo', 12px, 8px));
+
+            &:first-child {
+                margin-inline-start: 0;
+            }
+        }
+
+        &::-moz-focus-inner {
+            border: 0;
+        }
+
+        &:focus {
+            background: var-get($theme, 'item-active-background');
+            color: var-get($theme, 'item-hover-color');
+            border-bottom-color: transparent;
+        }
+
+        &:hover {
+            background: var-get($theme, 'item-hover-background');
+            color: var-get($theme, 'item-hover-color');
+
+            @if $bootstrap-theme {
+                box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color--hover');
+            }
+        }
+
+        &:hover,
+        &:focus {
+            igx-icon {
+                color: var-get($theme, 'item-hover-icon-color');
             }
         }
 
