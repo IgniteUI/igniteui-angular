@@ -9,7 +9,6 @@ import { IChangeCheckboxEventArgs, IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIV
     selector: 'app-input-sample',
     styleUrls: ['input.sample.scss'],
     templateUrl: 'input.sample.html',
-    standalone: true,
     imports: [FormsModule, NgFor, ReactiveFormsModule, IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxSwitchComponent, IgxIconComponent, IgxCheckboxComponent, IgxAvatarComponent, IgxRadioComponent, IgxButtonDirective]
 })
 export class InputSampleComponent {

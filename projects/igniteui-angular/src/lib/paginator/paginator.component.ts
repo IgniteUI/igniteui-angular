@@ -43,7 +43,6 @@ export class IgxPaginatorContentDirective {
 @Component({
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
-    standalone: true,
     imports: [NgIf, forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)],
     providers: [
         { provide: IgxPaginatorToken, useExisting: IgxPaginatorComponent }
@@ -360,7 +359,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 @Component({
     selector: 'igx-page-size',
     templateUrl: 'page-size-selector.component.html',
-    standalone: true,
     imports: [IgxSelectComponent, FormsModule, IgxLabelDirective, NgFor, IgxSelectItemComponent]
 })
 export class IgxPageSizeSelectorComponent {
@@ -378,7 +376,6 @@ export class IgxPageSizeSelectorComponent {
 @Component({
     selector: 'igx-page-nav',
     templateUrl: 'pager.component.html',
-    standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxPageNavigationComponent {

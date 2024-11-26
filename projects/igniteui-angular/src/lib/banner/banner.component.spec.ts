@@ -543,8 +543,7 @@ describe('igxBanner', () => {
             <igx-banner></igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
-    standalone: true,
-    imports: [ IgxBannerComponent ]
+    imports: [IgxBannerComponent]
 })
 export class IgxBannerEmptyComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -563,8 +562,7 @@ export class IgxBannerEmptyComponent {
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>
     `,
-    standalone: true,
-    imports: [ IgxBannerComponent, IgxBannerActionsDirective ]
+    imports: [IgxBannerComponent, IgxBannerActionsDirective]
 })
 export class IgxBannerOneButtonComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -585,8 +583,7 @@ export class IgxBannerOneButtonComponent {
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>
     `,
-    standalone: true,
-    imports: [ IgxBannerComponent, IgxBannerActionsDirective, IgxIconComponent ]
+    imports: [IgxBannerComponent, IgxBannerActionsDirective, IgxIconComponent]
 })
 export class IgxBannerSampleComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -616,8 +613,7 @@ export class IgxBannerSampleComponent {
             </igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
-    standalone: true,
-    imports: [ IgxBannerComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxBannerActionsDirective, IgxAvatarComponent ]
+    imports: [IgxBannerComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxBannerActionsDirective, IgxAvatarComponent]
 })
 export class IgxBannerCustomTemplateComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -630,8 +626,7 @@ export class IgxBannerCustomTemplateComponent {
             <igx-banner (opening)="handleOpening($event)" (closing)="handleClosing($event)">Simple message</igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
-    standalone: true,
-    imports: [ IgxBannerComponent ]
+    imports: [IgxBannerComponent]
 })
 export class SimpleBannerEventsComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })

@@ -16,7 +16,6 @@ class Task {
     selector: 'app-slider-sample',
     styleUrls: ['slider.sample.scss'],
     templateUrl: 'slider.sample.html',
-    standalone: true,
     imports: [IgxSliderComponent, FormsModule, IgxTickLabelTemplateDirective, IgxButtonDirective]
 })
 export class SliderSampleComponent {
