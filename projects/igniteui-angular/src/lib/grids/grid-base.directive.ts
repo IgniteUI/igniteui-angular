@@ -3208,6 +3208,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
+    protected isColumnWidthSum = false;
     private _currencyPositionLeft: boolean;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
@@ -4022,7 +4023,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.onPinnedRowsChanged(change);
             });
 
-        this.addRowSnackbar?.clicked.subscribe(() => {
+        this.addRowSnackbar?.clicked.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const rec = this.filteredSortedData[this.lastAddedRowIndex];
             this.scrollTo(rec, 0);
             this.addRowSnackbar.close();
@@ -6496,6 +6497,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         if (this.width === null || !width) {
             width = this.getColumnWidthSum();
+            this.isColumnWidthSum = true;
         }
 
         if (this.hasVerticalScroll() && this.width !== null) {
@@ -7324,6 +7326,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (colResized) {
             this.resetCachedWidths();
             this.cdr.detectChanges();
+        }
+
+        if (this.isColumnWidthSum) {
+            this.calcWidth = this.getColumnWidthSum();
         }
     }
 

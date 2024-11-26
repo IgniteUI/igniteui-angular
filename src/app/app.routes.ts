@@ -171,6 +171,7 @@ import { MonthPickerSampleComponent } from './month-picker/month-picker.sample';
 import { GridDocManagerSampleComponent } from './docmanager-grid/docmanager-grid.sample';
 import { HoundComponent } from './hound/hound.component';
 import { LabelSampleComponent } from "./label/label.sample";
+import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sample';
 
 export const appRoutes: Routes = [
     {
@@ -626,6 +627,10 @@ export const appRoutes: Routes = [
     {
         path: 'gridRowDrag',
         component: GridRowDraggableComponent
+    },
+    {
+        path: 'gridReCreate',
+        component: GridRecreateSampleComponent
     },
     {
         path: 'gridToolbar',

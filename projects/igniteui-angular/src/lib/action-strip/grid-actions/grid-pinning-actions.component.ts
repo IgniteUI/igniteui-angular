@@ -17,7 +17,6 @@ import { NgIf } from '@angular/common';
     selector: 'igx-grid-pinning-actions',
     templateUrl: 'grid-pinning-actions.component.html',
     providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridPinningActionsComponent }],
-    standalone: true,
     imports: [NgIf, IgxGridActionButtonComponent]
 })
 
