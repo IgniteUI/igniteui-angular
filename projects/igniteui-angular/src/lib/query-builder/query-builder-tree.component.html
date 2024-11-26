@@ -102,7 +102,7 @@
             igxDrop 
             #addConditionDragRef
             (enter)="onAddConditionEnter(addConditionDragRef, expressionItem)"
-            (leave)="onAddConditionLeave()"
+            (leave)="onAddConditionLeave($event, addConditionDragRef)"
             (dropped)="onAddConditionDropped()"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>

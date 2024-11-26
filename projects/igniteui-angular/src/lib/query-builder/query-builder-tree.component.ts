@@ -970,7 +970,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //On entering a drop area of another chip 
-    public onEnter(event: IChipEnterDragAreaEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem) {
+    public onEnter(event: IChipEnterDragAreaEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem, overrideDropUnder?: boolean) {
         //console.log('Entering:', dragRef, this.dropUnder);
         if (!this.dragElement || !this.dragExpressionItem) return;
 
@@ -982,7 +982,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.dropElement = dragRef;
         this.dropExpressionItem = expressionItem;
 
-        this.createDropGhostChip(event, dragRef);
+        this.createDropGhostChip(event, dragRef, overrideDropUnder);
     }
 
     public onOver(event: IChipEnterDragAreaEventArgs, dragRef: HTMLElement, expressionItem: ExpressionItem): void {
@@ -1008,7 +1008,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         if (this.dropElement) {
-            console.log('Leaving', dragRef);
             (this.ghostChip as HTMLElement)?.remove();
             this.dropElement = null;
             this.dropExpressionItem = null;
@@ -1042,28 +1041,32 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }    
     
     public onAddConditionEnter(dragRef: HTMLElement, expressionItem: ExpressionGroupItem){
-        console.log('onAddConditionEnter',expressionItem);
+        //console.log('onAddConditionEnter',expressionItem);
         if (!this.dragElement || !this.dragExpressionItem) return;
 
-        this.onEnter({originalEvent:{pageY:Number.MAX_SAFE_INTEGER}} as IChipEnterDragAreaEventArgs, 
-            dragRef.parentElement.previousElementSibling as HTMLElement, 
-            expressionItem.children[expressionItem.children.length - 1])
+        this.onEnter({originalEvent:{pageY:0}} as IChipEnterDragAreaEventArgs, 
+            dragRef.parentElement as HTMLElement, 
+            expressionItem.children[expressionItem.children.length - 1],
+            true);
     }
 
-    public onAddConditionLeave(){
-        console.log('onAddConditionLeave');
+    public onAddConditionLeave(event, dragRef: HTMLElement){
+        //console.log('onAddConditionLeave');
         if (!this.dragElement || !this.dragExpressionItem) return;
 
+        // this.onLeave(event as IChipEnterDragAreaEventArgs, 
+        //     dragRef.parentElement.previousElementSibling as HTMLElement
+        // )
     }
 
     public onAddConditionDropped(){
-        console.log('onAddConditionDropped');
+        //console.log('onAddConditionDropped');
         if (!this.dragElement || !this.dragExpressionItem) return;
     
     }
 
     //Make a copy of the drag chip and place it in the DOM north or south of the drop chip
-    private createDropGhostChip(event: IChipEnterDragAreaEventArgs, dragRef: HTMLElement): void {
+    private createDropGhostChip(event: IChipEnterDragAreaEventArgs, dragRef: HTMLElement, overrideDropUnder?: boolean): void {
         let dragCopy = this.dragElement.cloneNode(true);
         (dragCopy.firstChild as HTMLElement).style.visibility = 'visible';
         (dragCopy.firstChild as HTMLElement).style.opacity = '0.5';
@@ -1071,16 +1074,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         //Is the mouse, dragging the chip, in the upper or lower part of the drop chip
         const mouseInUpperPart = ((event.originalEvent as any).pageY <= (dragRef.getBoundingClientRect().top + dragRef.getBoundingClientRect().bottom) / 2);
 
-        if (mouseInUpperPart && this.dropUnder !== false) {
+        if ((mouseInUpperPart && this.dropUnder !== false) ) {
             (this.ghostChip as HTMLElement)?.remove();
             this.ghostChip = dragCopy;
-            this.dropUnder = false;
+            this.dropUnder = overrideDropUnder ?? false;
             dragRef.parentNode.insertBefore(this.ghostChip, dragRef);
         }
         else if (!mouseInUpperPart && this.dropUnder !== true) {
             (this.ghostChip as HTMLElement)?.remove();
             this.ghostChip = dragCopy;
-            this.dropUnder = true;
+            this.dropUnder = overrideDropUnder ?? true;
             dragRef.parentNode.insertBefore(this.ghostChip, dragRef.nextSibling);
         }
     }
