@@ -13,7 +13,6 @@ import { IgxAvatarComponent, IgxBottomNavComponent, IgxBottomNavContentComponent
     selector: 'app-bottomnav-sample',
     styleUrls: ['bottomnav.sample.scss'],
     templateUrl: 'bottomnav.sample.html',
-    standalone: true,
     imports: [
         NgFor,
         IgxBottomNavComponent,

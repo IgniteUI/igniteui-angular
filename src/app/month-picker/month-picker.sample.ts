@@ -6,7 +6,6 @@ import { IgxCardComponent, IgxMonthPickerComponent, IgxButtonDirective } from 'i
     selector: 'app-monthpicker',
     styleUrls: ['./month-picker.sample.scss'],
     templateUrl: './month-picker.sample.html',
-    standalone: true,
     imports: [IgxCardComponent, IgxMonthPickerComponent, IgxButtonDirective, FormsModule]
 })
 export class MonthPickerSampleComponent {

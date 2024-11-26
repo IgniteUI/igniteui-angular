@@ -1190,7 +1190,6 @@ describe('Row Drag Tests', () => {
         [ngStyle]="{width:'100px', height:'100px', backgroundColor:'yellow'}">
         </div>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxDropDirective, NgStyle]
 })
 export class IgxGridRowDraggableComponent extends DataParent {
@@ -1260,7 +1259,6 @@ export class IgxGridRowDraggableComponent extends DataParent {
             <igx-icon>expand_less</igx-icon>
         </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxIconComponent, IgxDropDirective, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective, NgStyle]
 })
 export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
@@ -1324,7 +1322,6 @@ export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
             <igx-column [field]="'Released'"></igx-column>
         </igx-grid></div>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxDropDirective]
 })
 export class IgxGridFeaturesRowDragComponent extends DataParent {
@@ -1365,7 +1362,6 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
             <igx-column [field]="'Col3'"></igx-column>
         </igx-hierarchical-grid>
     </div>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxDropDirective]
 })
 export class IgxHierarchicalGridTestComponent {
@@ -1406,7 +1402,6 @@ export class IgxHierarchicalGridTestComponent {
             </div>
         </ng-template>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxRowDragGhostDirective]
 })
 export class IgxHierarchicalGridCustomGhostTestComponent {
@@ -1439,7 +1434,6 @@ export class IgxHierarchicalGridCustomGhostTestComponent {
         <igx-column [field]="'Salary'" dataType="number" ></igx-column>
     </igx-grid></div>
     `,
-    standalone: true,
     imports: [IgxTreeGridComponent, IgxGridComponent, IgxColumnComponent, IgxDropDirective]
 })
 export class IgxTreeGridTestComponent {

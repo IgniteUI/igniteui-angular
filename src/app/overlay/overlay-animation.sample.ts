@@ -11,11 +11,9 @@ import {
 } from 'igniteui-angular';
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-animation-sample',
     templateUrl: './overlay-animation.sample.html',
     styleUrls: ['overlay-animation.sample.scss'],
-    standalone: true,
     imports: [IgxAvatarComponent, IgxToggleDirective, IGX_CARD_DIRECTIVES]
 })
 export class OverlayAnimationSampleComponent {

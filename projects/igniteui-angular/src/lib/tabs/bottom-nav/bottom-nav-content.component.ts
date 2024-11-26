@@ -7,7 +7,6 @@ import { NgIf } from '@angular/common';
     selector: 'igx-bottom-nav-content',
     templateUrl: 'bottom-nav-content.component.html',
     providers: [{ provide: IgxTabContentBase, useExisting: IgxBottomNavContentComponent }],
-    standalone: true,
     imports: [NgIf]
 })
 export class IgxBottomNavContentComponent extends IgxTabContentDirective {

@@ -25,7 +25,6 @@ export class MySummaryOperand extends IgxSummaryOperand {
     selector: 'app-tree-grid-load-on-demand-sample',
     styleUrls: ['tree-grid-load-on-demand.sample.scss'],
     templateUrl: 'tree-grid-load-on-demand.sample.html',
-    standalone: true,
     imports: [IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, NgFor, IgxColumnComponent, IgxSwitchComponent, FormsModule, NgIf, IgxPaginatorComponent, IgxButtonDirective]
 })
 export class TreeGridLoadOnDemandSampleComponent implements OnInit {

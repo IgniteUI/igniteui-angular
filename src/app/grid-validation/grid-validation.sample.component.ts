@@ -34,7 +34,6 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     selector: 'app-grid-row-edit',
     styleUrls: [`grid-validation.sample.component.scss`],
     templateUrl: 'grid-validation.sample.component.html',
-    standalone: true,
     imports: [
         NgFor,
         NgIf,

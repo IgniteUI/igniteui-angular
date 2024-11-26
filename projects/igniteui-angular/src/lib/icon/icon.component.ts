@@ -42,8 +42,7 @@ import { ThemeService } from "../services/theme/theme.service";
 @Component({
     selector: "igx-icon",
     templateUrl: "icon.component.html",
-    standalone: true,
-    imports: [NgTemplateOutlet, NgIf],
+    imports: [NgTemplateOutlet, NgIf]
 })
 export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     private _iconRef: IconReference;
@@ -108,7 +107,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      * <igx-icon family="material">settings</igx-icon>
      * ```
      */
-    @Input("family")
+    @Input()
     public family: string;
 
     /**
@@ -119,7 +118,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      * <igx-icon name="contains" family="filter-icons"></igx-icon>
      * ```
      */
-    @Input("name")
+    @Input()
     public name: string;
 
     /**
@@ -130,7 +129,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      * <igx-icon [active]="false">settings</igx-icon>
      * ```
      */
-    @Input({ alias: "active", transform: booleanAttribute })
+    @Input({ transform: booleanAttribute })
     public active = true;
 
     constructor(

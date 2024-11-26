@@ -52,7 +52,6 @@ import { IgxPaginatorDirective } from '../paginator/paginator-interfaces';
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [
         IgxHierarchicalGridComponent,
         IgxColumnComponent,
@@ -127,7 +126,6 @@ export class IgxHierarchicalGridTestBaseComponent {
         </igx-row-island>
     </igx-hierarchical-grid>`,
     providers: [IgxHierarchicalTransactionServiceFactory],
-    standalone: true,
     imports: [
         IgxHierarchicalGridComponent,
         IgxColumnComponent,
@@ -186,7 +184,6 @@ export class IgxHierarchicalGridWithTransactionProviderComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionComponent {
@@ -219,7 +216,6 @@ export class IgxHierarchicalGridRowSelectionComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
@@ -253,7 +249,6 @@ export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
@@ -304,7 +299,6 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
             </igx-checkbox>
         </ng-template>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [
         IgxHierarchicalGridComponent,
         IgxColumnComponent,
@@ -365,7 +359,6 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
             </igx-grid-toolbar>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
@@ -388,7 +381,6 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
         </igx-row-island>
 
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestInputToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
@@ -412,7 +404,6 @@ export class IgxHierarchicalGridTestInputToolbarComponent extends IgxHierarchica
         <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true" [paginatorTemplate]="paginatorTemplate">
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestInputPaginatorComponent extends IgxHierarchicalGridTestBaseComponent { }
@@ -434,7 +425,6 @@ export class IgxHierarchicalGridTestInputPaginatorComponent extends IgxHierarchi
             </igx-action-strip>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [
         IgxHierarchicalGridComponent,
         IgxActionStripComponent,
@@ -470,7 +460,6 @@ export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGrid
     </igx-hierarchical-grid>
     <igx-advanced-filtering-dialog [grid]="grid1">
     </igx-advanced-filtering-dialog>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxAdvancedFilteringDialogComponent]
 })
 export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchicalGridTestBaseComponent {
@@ -515,7 +504,6 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridExportComponent {
@@ -571,7 +559,6 @@ export class IgxHierarchicalGridExportComponent {
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
@@ -607,7 +594,6 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
@@ -639,7 +625,6 @@ export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridSummariesExportComponent {
@@ -718,7 +703,6 @@ class MyChildSummary {
             <igx-column field="Headliner"></igx-column>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridDefaultComponent {

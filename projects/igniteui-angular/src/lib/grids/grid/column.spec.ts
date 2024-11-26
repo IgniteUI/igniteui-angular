@@ -1662,7 +1662,6 @@ describe('IgxGrid - Column properties #grid', () => {
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnsFromIterableComponent {
@@ -1689,7 +1688,6 @@ interface IColumnConfig {
         <button type="button" igxButton="contained">{{value}}</button>
     </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor, IgxButtonDirective]
 })
 export class ResizableColumnsComponent {
@@ -1719,7 +1717,6 @@ export class ResizableColumnsComponent {
         <ng-template #newSummary>
             <span class="new-summary">New summary text</span>
         </ng-template>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellFooterTemplateDirective, IgxSummaryTemplateDirective]
 })
 export class TemplatedColumnsComponent {
@@ -1763,7 +1760,6 @@ export class TemplatedColumnsComponent {
             <span class="customSummaryTemplate">{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span>
         </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor, IgxSummaryTemplateDirective]
 })
 export class TemplatedInputColumnsComponent {
@@ -1790,7 +1786,6 @@ export class TemplatedInputColumnsComponent {
             </igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class TemplatedContextInputColumnsComponent {
@@ -1815,7 +1810,6 @@ export class TemplatedContextInputColumnsComponent {
         </igx-grid>
     `,
     styles: [`.headerAlignSyle {text-align: right !important;}`],
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnHaederClassesComponent {
@@ -1864,7 +1858,6 @@ export class ColumnHaederClassesComponent {
             <igx-column field="value"></igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class DOMAttributesAsSettersComponent {

@@ -55,7 +55,6 @@ let NEXT_ID = 0;
         }
     `
     ],
-    standalone: true,
     imports: [NgIf, IgxIconComponent]
 })
 

@@ -1,7 +1,7 @@
 import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
 import { mergeWith } from 'lodash-es';
-import { Observable } from 'rxjs';
+import { NEVER, Observable } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
 
@@ -449,14 +449,23 @@ export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'e
  * Run the resizeObservable outside angular zone, because it patches the MutationObserver which causes an infinite loop.
  * Related issue: https://github.com/angular/angular/issues/31712
  */
-export const resizeObservable = (target: HTMLElement): Observable<ResizeObserverEntry[]> => new Observable((observer) => {
-    const instance = new (getResizeObserver())((entries: ResizeObserverEntry[]) => {
-        observer.next(entries);
-    });
-    instance.observe(target);
-    const unsubscribe = () => instance.disconnect();
-    return unsubscribe;
-});
+export const resizeObservable = (target: HTMLElement): Observable<ResizeObserverEntry[]> => {
+    const resizeObserver = getResizeObserver();
+    // check whether we are on server env or client env
+    if (resizeObserver) {
+        return new Observable((observer) => {
+                const instance = new resizeObserver((entries: ResizeObserverEntry[]) => {
+                    observer.next(entries);
+                });
+                instance.observe(target);
+                const unsubscribe = () => instance.disconnect();
+                return unsubscribe;
+        });
+    } else {
+        // if on a server env return a empty observable that does not complete immediately
+        return NEVER;
+    }
+}
 
 /**
  * @hidden

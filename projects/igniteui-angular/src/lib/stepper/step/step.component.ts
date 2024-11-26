@@ -57,7 +57,6 @@ let NEXT_ID = 0;
     providers: [
         { provide: IGX_STEP_COMPONENT, useExisting: IgxStepComponent }
     ],
-    standalone: true,
     imports: [NgIf, NgClass, IgxRippleDirective, NgTemplateOutlet]
 })
 export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, AfterViewInit, OnDestroy, IgxSlideComponentBase {

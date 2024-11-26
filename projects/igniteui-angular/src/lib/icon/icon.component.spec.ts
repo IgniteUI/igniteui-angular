@@ -222,8 +222,7 @@ function assertRenderedIcon(el: HTMLElement, icon: ProtoIgxIcon) {
 
 @Component({
     template: `<igx-icon class="my-class" name="home"></igx-icon>`,
-    standalone: true,
-    imports: [IgxIconComponent],
+    imports: [IgxIconComponent]
 })
 class IconTestComponent {}
 
@@ -233,7 +232,6 @@ class IconTestComponent {}
         family="default"
         name="home"
     ></igx-icon>`,
-    standalone: true,
-    imports: [IgxIconComponent],
+    imports: [IgxIconComponent]
 })
 class MetaIconComponent {}

@@ -1,6 +1,5 @@
 import { useAnimation } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
-// eslint-disable-next-line max-len
 import { HorizontalAlignment, IgxButtonDirective, IgxOverlayOutletDirective, IgxSnackbarComponent, PositionSettings, VerticalAlignment } from 'igniteui-angular';
 import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
 
@@ -8,7 +7,6 @@ import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
     selector: 'app-snackbar-sample',
     styleUrls: ['snackbar.sample.css'],
     templateUrl: 'snackbar.sample.html',
-    standalone: true,
     imports: [IgxSnackbarComponent, IgxOverlayOutletDirective, IgxButtonDirective]
 })
 export class SnackbarSampleComponent implements OnInit {

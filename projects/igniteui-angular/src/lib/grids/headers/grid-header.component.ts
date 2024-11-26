@@ -30,7 +30,6 @@ import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header',
     templateUrl: 'grid-header.component.html',
-    standalone: true,
     imports: [IgxIconComponent, NgTemplateOutlet, NgIf, NgClass, SortingIndexPipe]
 })
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {

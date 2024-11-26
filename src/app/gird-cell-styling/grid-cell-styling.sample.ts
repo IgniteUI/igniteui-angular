@@ -9,7 +9,6 @@ import { IgxActionStripComponent, IgxButtonDirective, IgxColumnComponent, IgxGri
     selector: 'app-grid-cell-styling.sample',
     styleUrls: ['grid-cell-styling.sample.scss'],
     templateUrl: 'grid-cell-styling.sample.html',
-    standalone: true,
     imports: [IgxButtonDirective, IgxInputGroupComponent, IgxInputDirective, IgxHintDirective, IgxGridComponent, NgFor, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxTreeGridComponent, JsonPipe]
 })
 export class GridCellStylingSampleComponent implements OnInit {
@@ -42,7 +41,6 @@ export class GridCellStylingSampleComponent implements OnInit {
 
     public selectedRowCondition = (row: RowType) => row.cells.some(s => s.active);
 
-    // eslint-disable-next-line @typescript-eslint/member-ordering
     public rowClasses = {
         pinnedClass: this.rowCondition,
         selected: this.selectedRowCondition

@@ -18,7 +18,6 @@ class Person {
     selector: 'app-radio-sample',
     styleUrls: ['radio.sample.scss'],
     templateUrl: 'radio.sample.html',
-    standalone: true,
     imports: [IgxRadioGroupDirective, FormsModule, IgxLayoutDirective, NgFor, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxButtonDirective, IgxRadioComponent, ReactiveFormsModule, JsonPipe]
 })
 export class RadioSampleComponent implements AfterContentInit {

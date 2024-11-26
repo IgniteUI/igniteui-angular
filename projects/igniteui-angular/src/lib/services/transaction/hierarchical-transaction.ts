@@ -17,6 +17,5 @@ export interface HierarchicalTransactionService<T extends HierarchicalTransactio
      * @param childDataKey Key of child data collection
      * @param id Optional record id to commit transactions for
      */
-    // eslint-disable-next-line @typescript-eslint/unified-signatures
     commit(data: any[], primaryKey: any, childDataKey: any, id?: any): void;
 }

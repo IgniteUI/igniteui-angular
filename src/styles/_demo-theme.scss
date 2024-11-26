@@ -1,4 +1,5 @@
 // Standard imports
+@use 'sass:math';
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 @use 'variables' as *;
 @use 'mixins' as *;
@@ -11,7 +12,7 @@ body {
 }
 
 :root {
-    --some-dynamic-color: hsl(#{random(360)}, 100%, 50%);
+    --some-dynamic-color: hsl(#{math.random(360)}, 100%, 50%);
 }
 
 @include core();

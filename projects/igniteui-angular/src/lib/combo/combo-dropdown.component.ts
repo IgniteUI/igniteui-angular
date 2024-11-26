@@ -18,7 +18,6 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
     selector: 'igx-combo-drop-down',
     templateUrl: '../drop-down/drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }],
-    standalone: true,
     imports: [IgxToggleDirective, NgIf]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {

@@ -16,11 +16,9 @@ import {
 } from 'igniteui-angular';
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-presets-sample',
     templateUrl: './overlay-presets.sample.html',
     styleUrls: ['overlay-presets.sample.scss'],
-    standalone: true,
     imports: [NgFor, IgxRadioComponent, FormsModule, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class OverlayPresetsSampleComponent implements OnInit {

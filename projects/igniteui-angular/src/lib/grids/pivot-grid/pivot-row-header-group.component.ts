@@ -22,7 +22,6 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-header-group',
     templateUrl: './pivot-row-dimension-header-group.component.html',
-    standalone: true,
     imports: [IgxIconComponent, NgIf, IgxPivotRowDimensionHeaderComponent, NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxGridFilteringCellComponent, IgxPivotResizeHandleDirective, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent implements PivotRowHeaderGroupType {

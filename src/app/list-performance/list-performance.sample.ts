@@ -9,7 +9,6 @@ import { IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxAvatarComponent, Ig
     selector: 'app-list-performance-sample',
     styleUrls: ['list-performance.sample.scss'],
     templateUrl: 'list-performance.sample.html',
-    standalone: true,
     imports: [IgxIconComponent, FormsModule, NgIf, IgxButtonDirective, IgxCardComponent, IgxForOfDirective, IgxRippleDirective, IgxAvatarComponent, IgxFilterPipe, IGX_LIST_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES]
 })
 export class ListPerformanceSampleComponent {

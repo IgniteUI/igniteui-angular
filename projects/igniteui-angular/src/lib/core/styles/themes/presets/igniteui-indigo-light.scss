@@ -1,5 +1,11 @@
 @use '../../themes' as *;
 
 @include core();
-@include typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
-@include indigo-light-theme($light-indigo-palette);
+@include typography(
+    $font-family: $indigo-typeface,
+    $type-scale: $indigo-type-scale
+);
+@include theme(
+    $schema: $light-indigo-schema,
+    $palette: $light-indigo-palette,
+);

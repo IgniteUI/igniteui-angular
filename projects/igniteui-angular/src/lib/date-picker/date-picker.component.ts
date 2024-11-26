@@ -92,7 +92,6 @@ let NEXT_ID = 0;
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
     styles: [':host { display: block; }'],
-    standalone: true,
     imports: [
         NgIf,
         IgxInputGroupComponent,

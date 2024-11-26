@@ -439,7 +439,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
             await wait();
 
-            let activeThumb = fixture.debugElement.query(By.css(THUMB_TO_PRESSED_CLASS));
+            const activeThumb = fixture.debugElement.query(By.css(THUMB_TO_PRESSED_CLASS));
             expect(activeThumb).not.toBeNull();
             expect(sliderInstance.value).toBeGreaterThan(sliderInstance.minValue);
 
@@ -2065,7 +2065,6 @@ describe('IgxSlider', () => {
     template: `
         <igx-slider [type]="type" [value]="value"></igx-slider>
     `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 export class SliderRtlComponent {
@@ -2094,7 +2093,6 @@ export class SliderRtlComponent {
             [secondaryTickLabels]="secondaryTickLabels"
             [tickLabelsOrientation]="tickLabelsOrientation"></igx-slider>
     `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 export class SliderTicksComponent {
@@ -2114,7 +2112,6 @@ export class SliderTicksComponent {
     selector: 'igx-slider-test-component',
     template: `<igx-slider #slider>
     </igx-slider>`,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 class SliderInitializeTestComponent {
@@ -2125,7 +2122,6 @@ class SliderInitializeTestComponent {
     template: `
         <igx-slider [maxValue]='maxValue' [minValue]='minValue'></igx-slider>
     `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 export class SliderMinMaxComponent {
@@ -2143,7 +2139,6 @@ export class SliderMinMaxComponent {
                                         [type]="type">
                     </igx-slider>
                 </div>`,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 class SliderTestComponent {
@@ -2166,7 +2161,6 @@ class SliderTestComponent {
     template: `
     <igx-slider [labels]="['Winter', 'Spring', 'Summer', 'Autumn']">
     </igx-slider> `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 class SliderWithLabelsComponent {
@@ -2176,7 +2170,6 @@ class SliderWithLabelsComponent {
 @Component({
     template: `<igx-slider #slider [type]="type">
     </igx-slider>`,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 class RangeSliderTestComponent {
@@ -2190,7 +2183,6 @@ class RangeSliderTestComponent {
     [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"
     [type]="type">
     </igx-slider> `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 class RangeSliderWithLabelsComponent {
@@ -2212,7 +2204,6 @@ class RangeSliderWithLabelsComponent {
         </ng-template>
     </igx-slider>
     `,
-    standalone: true,
     imports: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective]
 })
 class RangeSliderWithCustomTemplateComponent {
@@ -2226,7 +2217,6 @@ class RangeSliderWithCustomTemplateComponent {
             <igx-slider [(ngModel)]="value" name="amount" [ngModelOptions]="{ updateOn: updateOn}"></igx-slider>
         </form>
     `,
-    standalone: true,
     imports: [IgxSliderComponent, FormsModule]
 })
 export class SliderTemplateFormComponent {
@@ -2243,7 +2233,6 @@ export class SliderTemplateFormComponent {
             <igx-slider [formControl]="formControl"></igx-slider>
         </form>
     `,
-    standalone: true,
     imports: [IgxSliderComponent, FormsModule, ReactiveFormsModule]
 })
 export class SliderReactiveFormComponent {
@@ -2256,7 +2245,6 @@ export class SliderReactiveFormComponent {
     template: `
         <igx-slider type="range" [value]="value" [lowerBound]="30" [upperBound]="40"></igx-slider>
     `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 export class SliderWithValueAdjustmentComponent {

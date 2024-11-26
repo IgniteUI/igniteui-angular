@@ -251,7 +251,6 @@ describe('IgxInputGroup', () => {
                     <input #igxInput igxInput />
                 </igx-input-group>`,
     providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'box' }],
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective]
 })
 class InputGroupComponent {
@@ -268,7 +267,6 @@ class InputGroupComponent {
     template: `<igx-input-group #igxInputGroup type="box">
                     <input igxInput />
                 </igx-input-group>`,
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupBoxComponent {
@@ -279,7 +277,6 @@ class InputGroupBoxComponent {
     template: `<igx-input-group #igxInputGroup type="border">
                     <input igxInput />
                 </igx-input-group>`,
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupBorderComponent {
@@ -290,7 +287,6 @@ class InputGroupBorderComponent {
     template: `<igx-input-group #igxInputGroup type="search">
                     <input igxInput />
                 </igx-input-group>`,
-    standalone: true,
     imports: [IgxInputDirective, IgxInputGroupComponent]
 })
 class InputGroupSearchComponent {
@@ -301,7 +297,6 @@ class InputGroupSearchComponent {
     template: `<igx-input-group>
                     <input igxInput type="file" multiple />
                 </igx-input-group>`,
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupFileComponent { }
@@ -342,7 +337,6 @@ const testInputGroupType = (type: IgxInputGroupType, component: IgxInputGroupCom
     template: `<igx-input-group #igxInputGroup>
                     <input igxInput [disabled]="disabled"/>
                 </igx-input-group>`,
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupDisabledComponent {
@@ -359,7 +353,6 @@ class InputGroupDisabledComponent {
     template: `<igx-input-group #igxInputGroup>
                     <input igxInput disabled/>
                 </igx-input-group>`,
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupDisabledWithoutValueComponent {
@@ -378,7 +371,6 @@ class InputGroupDisabledWithoutValueComponent {
     template: `<igx-input-group #igxInputGroup>
                     <input igxInput [disabled]="disabled"/>
                 </igx-input-group>`,
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupDisabledByDefaultComponent {

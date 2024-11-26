@@ -159,7 +159,6 @@ class IgxTestFocusDirective {
     template: `
             <input type="text" [igxTextSelection]="true" value="Some custom value!" />
         `,
-    standalone: true,
     imports: [IgxTextSelectionDirective]
 })
 class TriggerTextSelectionComponent { }
@@ -168,7 +167,6 @@ class TriggerTextSelectionComponent { }
     template: `
             <input #input [type]="inputType" [igxTextSelection]="selectValue" #select="igxTextSelection" (click)="select.trigger()" [value]="inputValue" />
         `,
-    standalone: true,
     imports: [IgxTextSelectionDirective]
 })
 class TriggerTextSelectionOnClickComponent {
@@ -189,7 +187,6 @@ class TriggerTextSelectionOnClickComponent {
 
 @Component({
     template: `<input #input type="text" igxTestFocusDirective [igxTextSelection]="true" [value]="inputValue" />`,
-    standalone: true,
     imports: [IgxTextSelectionDirective, IgxTestFocusDirective]
 })
  class TextSelectionWithMultipleFocusHandlersComponent {

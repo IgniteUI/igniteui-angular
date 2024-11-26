@@ -12,7 +12,6 @@ import { ColumnType } from '../common/grid.interface';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-summary-cell',
     templateUrl: './summary-cell.component.html',
-    standalone: true,
     imports: [NgIf, NgTemplateOutlet, NgFor]
 })
 export class IgxSummaryCellComponent {

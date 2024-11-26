@@ -15,7 +15,6 @@ import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/togg
         Hello, I am a tooltip!
     </div>
     `,
-    standalone: true,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipSingleTargetComponent {
@@ -51,7 +50,6 @@ export class IgxTooltipSingleTargetComponent {
         Hello, I am a tooltip!
     </div>
     `,
-    standalone: true,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipMultipleTargetsComponent {
@@ -67,7 +65,6 @@ export class IgxTooltipMultipleTargetsComponent {
             info
     </button>
     `,
-    standalone: true,
     imports: [IgxTooltipTargetDirective]
 })
 export class IgxTooltipPlainStringComponent {
@@ -82,7 +79,6 @@ export class IgxTooltipPlainStringComponent {
     <div #toggleDiv="toggle" class="toggle-content" igxToggle>Toggle content</div>
     <div #tooltipRef="tooltip" igxTooltip>Test</div>
     `,
-    standalone: true,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxToggleActionDirective, IgxToggleDirective]
 })
 export class IgxTooltipWithToggleActionComponent {

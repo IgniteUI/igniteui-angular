@@ -655,7 +655,6 @@ describe('IgxToggle', () => {
       </ul>
     </div>
     `,
-    standalone: true,
     imports: [IgxToggleDirective]
 })
 export class IgxToggleTestComponent {
@@ -676,7 +675,6 @@ export class IgxToggleTestComponent {
       </ul>
     </div>
     `,
-    standalone: true,
     imports: [IgxToggleDirective, IgxToggleActionDirective]
 })
 export class IgxToggleActionTestComponent {
@@ -694,7 +692,6 @@ export class IgxToggleActionTestComponent {
     <div igxToggle #toggleRef="toggle"></div>
     <div igxOverlayOutlet #outlet="overlay-outlet" class="outlet-container"></div>
     `,
-    standalone: true,
     imports: [IgxToggleActionDirective, IgxToggleDirective, IgxOverlayOutletDirective]
 })
 export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
@@ -706,7 +703,6 @@ export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
             <span>Some content</span>
         </div>
     `,
-    standalone: true,
     selector: 'igx-toggle-service-inject',
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
@@ -725,7 +721,6 @@ export class IgxToggleServiceInjectComponent {
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [IgxToggleDirective]
 })
 export class IgxOverlayServiceComponent {
@@ -745,7 +740,6 @@ export class IgxOverlayServiceComponent {
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'igx-test-with-on-push',
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
@@ -776,7 +770,6 @@ export class TestWithOnPushComponent {
             <span>Toggle 3</span>
         </div>
     `,
-    standalone: true,
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class TestWithThreeToggleActionsComponent implements OnInit {

@@ -477,7 +477,6 @@ describe('IgxSplitter pane collapse', () => {
     </igx-splitter-pane>
 </igx-splitter>
     `,
-    standalone: true,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterTestComponent {
@@ -506,7 +505,6 @@ export class SplitterTestComponent {
     </igx-splitter-pane>
 </igx-splitter>
     `,
-    standalone: true,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 
@@ -533,7 +531,6 @@ export class SplitterTogglePaneComponent extends SplitterTestComponent {
     </igx-splitter-pane>
 </igx-splitter>
     `,
-    standalone: true,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterCollapsedPaneComponent extends SplitterTestComponent {

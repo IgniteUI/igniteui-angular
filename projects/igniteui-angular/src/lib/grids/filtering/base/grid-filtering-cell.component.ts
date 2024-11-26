@@ -30,7 +30,6 @@ import { Size } from '../../common/enums';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-filtering-cell',
     templateUrl: './grid-filtering-cell.component.html',
-    standalone: true,
     imports: [
         IgxChipsAreaComponent,
         IgxChipComponent,

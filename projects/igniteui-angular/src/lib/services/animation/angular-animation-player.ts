@@ -23,7 +23,9 @@ export class IgxAngularAnimationPlayer implements AnimationPlayer {
         // To workaround this we are getting the positions from the inner player.
         //  This is logged in Angular here - https://github.com/angular/angular/issues/18891
         //  As soon as this is resolved we can remove this hack
-        this._innerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
+        const rendererEngine = innerRenderer.engine || innerRenderer.delegate.engine;
+        // A workaround because of Angular SSR is using some delegation.
+        this._innerPlayer = rendererEngine.players[rendererEngine.players.length - 1];
     }
 
     public init(): void {

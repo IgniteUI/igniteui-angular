@@ -1301,7 +1301,6 @@ describe('Stepper service unit tests', () => {
     </igx-stepper>
     <br>
     `,
-    standalone: true,
     imports: [
         IgxStepperComponent,
         IgxStepComponent,
@@ -1341,7 +1340,6 @@ export class IgxStepperSampleTestComponent {
         </igx-step>
     </igx-stepper>
     `,
-    standalone: true,
     imports: [IgxStepperComponent, IgxStepComponent]
 })
 export class IgxStepperLinearComponent {

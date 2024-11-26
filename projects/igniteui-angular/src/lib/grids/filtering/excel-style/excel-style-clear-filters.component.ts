@@ -10,7 +10,6 @@ import { NgIf, NgClass } from '@angular/common';
 @Component({
     selector: 'igx-excel-style-clear-filters',
     templateUrl: './excel-style-clear-filters.component.html',
-    standalone: true,
     imports: [NgIf, NgClass, IgxIconComponent]
 })
 export class IgxExcelStyleClearFiltersComponent {

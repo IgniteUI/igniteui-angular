@@ -464,8 +464,7 @@ describe('IgxButtonGroup', () => {
 
 @Component({
     template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>`,
-    standalone: true,
-    imports: [ IgxButtonGroupComponent ]
+    imports: [IgxButtonGroupComponent]
 })
 class InitButtonGroupComponent implements OnInit {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
@@ -499,8 +498,7 @@ class InitButtonGroupComponent implements OnInit {
         [values]="cities" [alignment]="alignment">
     </igx-buttongroup>
     `,
-    standalone: true,
-    imports: [ IgxButtonGroupComponent ]
+    imports: [IgxButtonGroupComponent]
 })
 class InitButtonGroupWithValuesComponent implements OnInit {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
@@ -549,8 +547,7 @@ class InitButtonGroupWithValuesComponent implements OnInit {
         <button igxButton [disabled]="'true'">Tokio</button>
     </igx-buttongroup>
     `,
-    standalone: true,
-    imports: [ IgxButtonGroupComponent, IgxButtonDirective ]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class TemplatedButtonGroupComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
@@ -565,8 +562,7 @@ class TemplatedButtonGroupComponent {
         <button igxButton>London</button>
     </igx-buttongroup>
     `,
-    standalone: true,
-    imports: [ IgxButtonGroupComponent, IgxButtonDirective ]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class TemplatedButtonGroupDesplayDensityComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
@@ -580,8 +576,7 @@ class TemplatedButtonGroupDesplayDensityComponent {
         <button igxButton>Button 2</button>
     </igx-buttongroup>
     `,
-    standalone: true,
-    imports: [ IgxButtonGroupComponent, IgxButtonDirective ]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class ButtonGroupWithSelectedButtonComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
@@ -593,8 +588,7 @@ class ButtonGroupWithSelectedButtonComponent {
         <button igxButton *ngFor="let item of items" [selected]="item.key === selectedValue">{{item.value}}</button>
     </igx-buttongroup>
     `,
-    standalone: true,
-    imports: [ IgxButtonGroupComponent, IgxButtonDirective, NgFor ]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective, NgFor]
 })
 class ButtonGroupButtonWithBoundSelectedOutputComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
@@ -629,8 +623,7 @@ class ButtonGroupButtonWithBoundSelectedOutputComponent {
         </button>
     </igx-buttongroup>
     `,
-    standalone: true,
-    imports: [ IgxButtonGroupComponent, IgxButtonDirective, NgFor, IgxRadioGroupDirective, IgxRadioComponent ]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective, NgFor, IgxRadioGroupDirective, IgxRadioComponent]
 })
 class ButtonGroupSelectionBoundToAnotherComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;

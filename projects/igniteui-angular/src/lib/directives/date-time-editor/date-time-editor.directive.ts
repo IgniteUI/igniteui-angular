@@ -1,4 +1,3 @@
-/* eslint-disable @angular-eslint/no-conflicting-lifecycle */
 import {
     Directive, Input, ElementRef,
     Renderer2, Output, EventEmitter, Inject,

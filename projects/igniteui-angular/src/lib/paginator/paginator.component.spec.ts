@@ -297,7 +297,6 @@ describe('IgxPaginator with custom settings', () => {
                 </div>
             </igx-paginator-content>
         </igx-paginator>`,
-    standalone: true,
     imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, NgIf, IgxButtonDirective]
 })
 export class DefaultPaginatorComponent {
@@ -315,7 +314,6 @@ export class DefaultPaginatorComponent {
         [perPage]="7"
         >
         </igx-paginator>`,
-    standalone: true,
     imports: [IgxPaginatorComponent]
 })
 export class CustomizedPaginatorComponent {

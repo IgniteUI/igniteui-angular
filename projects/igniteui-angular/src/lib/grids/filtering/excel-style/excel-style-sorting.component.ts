@@ -19,7 +19,6 @@ import { NgIf } from '@angular/common';
 @Component({
     selector: 'igx-excel-style-sorting',
     templateUrl: './excel-style-sorting.component.html',
-    standalone: true,
     imports: [NgIf, IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleSortingComponent implements OnDestroy {

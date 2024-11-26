@@ -18,7 +18,6 @@ import { NgIf } from '@angular/common';
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html',
-    standalone: true,
     imports: [NgIf, IgxCheckboxComponent]
 })
 export class IgxComboItemComponent extends IgxDropDownItemComponent {

@@ -9,7 +9,6 @@ import { NgIf, NgClass } from '@angular/common';
 @Component({
     selector: 'igx-excel-style-selecting',
     templateUrl: './excel-style-selecting.component.html',
-    standalone: true,
     imports: [NgIf, NgClass, IgxIconComponent]
 })
 export class IgxExcelStyleSelectingComponent {

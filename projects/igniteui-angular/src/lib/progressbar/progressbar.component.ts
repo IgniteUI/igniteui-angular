@@ -326,7 +326,6 @@ let NEXT_GRADIENT_ID = 0;
 @Component({
     selector: 'igx-linear-bar',
     templateUrl: 'templates/linear-bar.component.html',
-    standalone: true,
     imports: [NgClass]
 })
 export class IgxLinearProgressBarComponent extends BaseProgressDirective implements AfterContentInit {
@@ -500,7 +499,6 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 @Component({
     selector: 'igx-circular-bar',
     templateUrl: 'templates/circular-bar.component.html',
-    standalone: true,
     imports: [NgTemplateOutlet, NgIf]
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterViewInit, AfterContentInit {

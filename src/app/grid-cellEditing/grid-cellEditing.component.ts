@@ -22,7 +22,6 @@ import { data, dataWithoutPK } from '../shared/data';
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html',
     styleUrl: 'grid-cellEditing.component.scss',
-    standalone: true,
     imports: [
         FormsModule,
         IGX_SELECT_DIRECTIVES,

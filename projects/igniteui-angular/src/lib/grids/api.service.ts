@@ -341,7 +341,6 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         const grid = this.grid;
         const data = this.get_all_data(grid.transactions.enabled);
         if (grid.primaryKey) {
-            // eslint-disable-next-line @typescript-eslint/no-shadow
             index = data.map((record) => record[grid.primaryKey]).indexOf(rowId);
         } else {
             index = data.indexOf(rowId);

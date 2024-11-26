@@ -99,10 +99,12 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
     /** @hidden @internal */
     public ngAfterViewInit(): void {
         this.ngZone.runOutsideAngular(() => {
-            this._resizeObserver = new (getResizeObserver())(() => {
-                this.tabs.realignSelectedIndicator();
-            });
-            this._resizeObserver.observe(this.nativeElement);
+            if (this.platform.isBrowser) {
+                this._resizeObserver = new (getResizeObserver())(() => {
+                    this.tabs.realignSelectedIndicator();
+                });
+                this._resizeObserver.observe(this.nativeElement);
+            }
         });
     }
 

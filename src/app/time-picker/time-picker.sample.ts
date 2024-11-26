@@ -21,7 +21,6 @@ import {
     selector: 'app-time-picker-sample',
     styleUrls: ['time-picker.sample.scss'],
     templateUrl: 'time-picker.sample.html',
-    standalone: true,
     imports: [IgxTimePickerComponent, FormsModule, NgIf, IgxHintDirective, IgxButtonDirective, IgxPickerActionsDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxIconComponent, IgxPickerClearComponent, IgxSuffixDirective]
 })
 export class TimePickerSampleComponent {

@@ -30,8 +30,7 @@ import { calendarRange } from "../common/helpers";
     ],
     selector: "igx-years-view",
     templateUrl: "years-view.component.html",
-    standalone: true,
-    imports: [NgFor, IgxCalendarYearDirective],
+    imports: [NgFor, IgxCalendarYearDirective]
 })
 export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     #standalone = true;

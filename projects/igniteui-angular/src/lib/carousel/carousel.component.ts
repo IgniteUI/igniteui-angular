@@ -84,7 +84,6 @@ export class CarouselHammerConfig extends HammerGestureConfig {
         display: block;
         outline-style: none;
     }`],
-    standalone: true,
     imports: [IgxButtonDirective, IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 

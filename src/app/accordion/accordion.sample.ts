@@ -7,7 +7,6 @@ import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
     selector: 'app-accordion-sample',
     templateUrl: 'accordion.sample.html',
     styleUrls: ['accordion.sample.scss'],
-    standalone: true,
     imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IGX_ACCORDION_DIRECTIVES]
 })
 export class AccordionSampleComponent {

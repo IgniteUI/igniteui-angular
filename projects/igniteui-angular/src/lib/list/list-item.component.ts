@@ -39,7 +39,6 @@ import { NgIf, NgTemplateOutlet } from '@angular/common';
     selector: 'igx-list-item',
     templateUrl: 'list-item.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, NgTemplateOutlet]
 })
 export class IgxListItemComponent implements IListChild {

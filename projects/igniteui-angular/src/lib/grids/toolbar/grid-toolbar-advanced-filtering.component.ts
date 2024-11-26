@@ -30,7 +30,6 @@ import { IFilteringExpression } from '../../data-operations/filtering-expression
 @Component({
     selector: 'igx-grid-toolbar-advanced-filtering',
     templateUrl: './grid-toolbar-advanced-filtering.component.html',
-    standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, NgClass, IgxIconComponent, NgIf]
 })
 export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {

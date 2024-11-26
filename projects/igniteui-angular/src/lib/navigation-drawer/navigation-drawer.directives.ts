@@ -16,7 +16,7 @@ export class IgxNavDrawerItemDirective {
      * <span igxDrawerItem [active]="true">Active Item</span>
      * ```
      */
-    @Input({ alias: 'active', transform: booleanAttribute }) public active = false;
+    @Input({ transform: booleanAttribute }) public active = false;
 
     /**
      * Disables a navigation drawer item.
@@ -27,7 +27,7 @@ export class IgxNavDrawerItemDirective {
      * <span igxDrawerItem [disabled]="true">Disabled Item</span>
      * ```
      */
-    @Input({ alias: 'disabled', transform: booleanAttribute }) public disabled = false;
+    @Input({ transform: booleanAttribute }) public disabled = false;
 
     /**
      * Styles a navigation drawer item as a group header.
@@ -38,7 +38,7 @@ export class IgxNavDrawerItemDirective {
      * <span igxDrawerItem [isHeader]="true">Header</span>
      * ```
      */
-    @Input({ alias: 'isHeader', transform: booleanAttribute }) public isHeader = false;
+    @Input({ transform: booleanAttribute }) public isHeader = false;
 
     /**
      * @hidden

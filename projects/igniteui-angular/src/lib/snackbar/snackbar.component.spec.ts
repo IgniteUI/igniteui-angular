@@ -258,7 +258,6 @@ describe('IgxSnackbar with custom content', () => {
 @Component({
     template: `<igx-snackbar #snackbar [actionText]="text">
                </igx-snackbar>`,
-    standalone: true,
     imports: [IgxSnackbarComponent]
 })
 class SnackbarInitializeTestComponent {
@@ -271,7 +270,6 @@ class SnackbarInitializeTestComponent {
                     <span class="igx-snackbar__content">Custom content</span>
                     <button igxButton>Read More</button>
                </igx-snackbar>`,
-    standalone: true,
     imports: [IgxSnackbarComponent, IgxButtonDirective]
 })
 class SnackbarCustomContentComponent {

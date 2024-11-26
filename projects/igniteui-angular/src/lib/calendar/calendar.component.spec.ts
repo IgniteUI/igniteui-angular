@@ -3030,8 +3030,7 @@ describe("IgxCalendar - ", () => {
     template: `
         <igx-calendar [viewDate]="viewDate" [(ngModel)]="model"></igx-calendar>
     `,
-    standalone: true,
-    imports: [IgxCalendarComponent, FormsModule],
+    imports: [IgxCalendarComponent, FormsModule]
 })
 export class IgxCalendarSampleComponent {
     @ViewChild(IgxCalendarComponent, { static: true })
@@ -3044,8 +3043,7 @@ export class IgxCalendarSampleComponent {
     template: `
         <igx-calendar [viewDate]="viewDate" selection="range"></igx-calendar>
     `,
-    standalone: true,
-    imports: [IgxCalendarComponent],
+    imports: [IgxCalendarComponent]
 })
 export class IgxCalendarRangeComponent {
     @ViewChild(IgxCalendarComponent, { static: true })
@@ -3063,8 +3061,7 @@ export class IgxCalendarRangeComponent {
         >
         </igx-calendar>
     `,
-    standalone: true,
-    imports: [IgxCalendarComponent, FormsModule],
+    imports: [IgxCalendarComponent, FormsModule]
 })
 export class IgxCalendarDisabledSpecialDatesComponent {
     @ViewChild(IgxCalendarComponent, { static: true })
@@ -3087,8 +3084,7 @@ export class IgxCalendarDisabledSpecialDatesComponent {
 
 @Component({
     template: ` <igx-calendar [value]="value"></igx-calendar> `,
-    standalone: true,
-    imports: [IgxCalendarComponent],
+    imports: [IgxCalendarComponent]
 })
 export class IgxCalendarValueComponent {
     @ViewChild(IgxCalendarComponent, { static: true })

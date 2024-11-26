@@ -19,7 +19,6 @@ const CURRENT_VIEW = 'Ignite UI for Angular Samples';
     selector: 'app-navbar-sample',
     styleUrls: ['navbar.sample.scss'],
     templateUrl: 'navbar.sample.html',
-    standalone: true,
     imports: [IGX_NAVBAR_DIRECTIVES, IgxIconComponent, IgxButtonDirective, IgxIconButtonDirective, IgxAvatarComponent, IGX_PROGRESS_BAR_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, FormsModule]
 })
 export class NavbarSampleComponent implements OnInit {

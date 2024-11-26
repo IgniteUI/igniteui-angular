@@ -14,7 +14,6 @@ import { NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common
     selector: 'igx-tree-grid-row',
     templateUrl: 'tree-grid-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxTreeGridRowComponent) }],
-    standalone: true,
     imports: [NgTemplateOutlet, NgIf, IgxRowDragDirective, IgxGridForOfDirective, IgxGridCellComponent, NgClass, NgStyle, IgxTreeGridCellComponent, IgxCheckboxComponent, NgFor, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe]
 })
 export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck {

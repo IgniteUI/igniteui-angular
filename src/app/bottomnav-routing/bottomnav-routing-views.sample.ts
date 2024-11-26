@@ -14,7 +14,6 @@ import { IgxAvatarComponent, IgxIconComponent, IgxListActionDirective, IgxListCo
             </igx-list-item>
         </igx-list>
     `,
-    standalone: true,
     imports: [
         NgFor,
         IgxListComponent,

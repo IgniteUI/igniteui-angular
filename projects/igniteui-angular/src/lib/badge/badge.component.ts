@@ -41,7 +41,6 @@ export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
 @Component({
     selector: 'igx-badge',
     templateUrl: 'badge.component.html',
-    standalone: true,
     imports: [NgIf, IgxIconComponent]
 })
 export class IgxBadgeComponent {

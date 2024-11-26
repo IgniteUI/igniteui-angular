@@ -8,7 +8,6 @@ import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
     selector: 'app-dialog-sample',
     styleUrls: ['dialog.sample.scss'],
     templateUrl: 'dialog.sample.html',
-    standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxSwitchComponent, IgxDialogComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 export class DialogSampleComponent implements OnInit {

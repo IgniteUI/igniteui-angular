@@ -176,7 +176,6 @@ describe('igxFocusTrap', () => {
         <input type="password" *ngIf="showInput" placeholder="Enter Password" name="psw"><br>
         <button *ngIf="showButton">SIGN IN</button>
     </div>`,
-    standalone: true,
     imports: [IgxFocusTrapDirective, NgIf]
 })
 class TrapFocusTestComponent {

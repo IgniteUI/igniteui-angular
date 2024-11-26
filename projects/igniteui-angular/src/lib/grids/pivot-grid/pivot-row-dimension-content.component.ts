@@ -40,7 +40,6 @@ import { IMultiRowLayoutNode } from '../common/types';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-content',
     templateUrl: './pivot-row-dimension-content.component.html',
-    standalone: true,
     imports: [IgxPivotRowDimensionHeaderGroupComponent, NgClass, NgStyle, IgxIconComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowComponent implements OnChanges {

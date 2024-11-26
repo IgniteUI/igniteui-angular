@@ -115,7 +115,6 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html',
-    standalone: true,
     imports: [
         NgIf,
         NgClass,
@@ -155,7 +154,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridSummaryPipe,
         IgxGridDetailsPipe,
         IgxStringReplacePipe
-],
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {

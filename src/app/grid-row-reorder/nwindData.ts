@@ -1,4 +1,3 @@
-/* eslint-disable */
 export const DATA: any[] = [{
     ProductID: 1,
     ProductName: "Chai",

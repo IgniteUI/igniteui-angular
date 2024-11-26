@@ -42,7 +42,6 @@ describe('IgxHint', () => {
 
 @Component({
     template: `<igx-hint>regular hint</igx-hint>`,
-    standalone: true,
     imports: [IgxHintDirective]
 })
 class HintComponent {
@@ -50,7 +49,6 @@ class HintComponent {
 
 @Component({
     template: `<igx-hint position="start">hin with position start</igx-hint>`,
-    standalone: true,
     imports: [IgxHintDirective]
 })
 class StartHintComponent {
@@ -58,7 +56,6 @@ class StartHintComponent {
 
 @Component({
     template: `<igx-hint position="end">hint with position end</igx-hint>`,
-    standalone: true,
     imports: [IgxHintDirective]
 })
 class EndHintComponent {

@@ -26,7 +26,6 @@ export class AutocompleteGroupPipeContains implements PipeTransform {
     selector: 'app-autocomplete-sample',
     styleUrls: ['autocomplete.sample.scss'],
     templateUrl: `autocomplete.sample.html`,
-    standalone: true,
     imports: [
         NgFor,
         FormsModule,

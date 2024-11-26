@@ -6,7 +6,6 @@ import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
     selector: 'app-grid-esf-load-on-demand',
     templateUrl: './grid-esf-load-on-demand.component.html',
     styleUrls: ['./grid-esf-load-on-demand.component.scss'],
-    standalone: true,
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent]
 })
 export class GridEsfLoadOnDemandComponent implements OnInit {

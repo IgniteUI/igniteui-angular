@@ -225,14 +225,12 @@ describe('Card', () => {
 
 @Component({
     template: `<igx-card></igx-card>`,
-    standalone: true,
     imports: [IgxCardComponent]
 })
 class InitCardComponent { }
 
 @Component({
     template: `<igx-card type="outlined"></igx-card>`,
-    standalone: true,
     imports: [IgxCardComponent]
 })
 class InitOutlinedCardComponent {
@@ -244,7 +242,6 @@ class InitOutlinedCardComponent {
     template: `<igx-card>
         <igx-card-header></igx-card-header>
     <igx-card>`,
-    standalone: true,
     imports: [IgxCardComponent, IgxCardHeaderComponent]
 })
 class CardWithHeaderComponent { }
@@ -270,7 +267,6 @@ class CardWithHeaderComponent { }
             </button>
         </igx-card-actions>
     <igx-card>`,
-    standalone: true,
     imports: [
         IgxCardComponent,
         IgxCardMediaDirective,
@@ -299,7 +295,6 @@ class VerticalCardComponent {
             </button>
         </igx-card-actions>
     </igx-card>`,
-    standalone: true,
     imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 class HorizontalCardComponent {

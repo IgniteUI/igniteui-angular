@@ -12,7 +12,6 @@ import { data } from '../shared/data';
     selector: 'app-grid-selection-sample',
     templateUrl: 'grid-selection.sample.html',
     styleUrls: ['grid-selection.sample.scss'],
-    standalone: true,
     providers: [RemoteService],
     imports: [
         AsyncPipe,

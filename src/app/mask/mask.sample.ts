@@ -15,7 +15,6 @@ interface IPerson {
     selector: 'app-mask-sample',
     styleUrls: ['mask.sample.scss'],
     templateUrl: './mask.sample.html',
-    standalone: true,
     imports: [FormsModule, IGX_INPUT_GROUP_DIRECTIVES, IgxMaskDirective, IgxTextSelectionDirective, IgxSnackbarComponent]
 })
 export class MaskSampleComponent {

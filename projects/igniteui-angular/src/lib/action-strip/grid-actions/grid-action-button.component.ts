@@ -11,7 +11,6 @@ import { IgxIconButtonDirective } from '../../directives/button/icon-button.dire
 @Component({
     selector: 'igx-grid-action-button',
     templateUrl: 'grid-action-button.component.html',
-    standalone: true,
     imports: [NgIf, IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxGridActionButtonComponent {

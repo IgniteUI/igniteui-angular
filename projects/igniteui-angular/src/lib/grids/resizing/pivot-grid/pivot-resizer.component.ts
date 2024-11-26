@@ -7,7 +7,6 @@ import { IgxColumnResizerDirective } from '../resizer.directive';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-grid-column-resizer',
     templateUrl: '../resizer.component.html',
-    standalone: true,
     imports: [IgxColumnResizerDirective]
 })
 export class IgxPivotGridColumnResizerComponent extends IgxGridColumnResizerComponent {

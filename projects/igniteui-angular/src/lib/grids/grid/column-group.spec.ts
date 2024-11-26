@@ -26,7 +26,7 @@ const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid-thead__title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid-thead__group';
 
-/* eslint-disable max-len */
+ 
 describe('IgxGrid - multi-column headers #grid', () => {
     let fixture: ComponentFixture<any>; let grid: IgxGridComponent; let componentInstance;
 
@@ -1828,4 +1828,4 @@ class NestedColGroupsTests {
             'slaveColGroup', masterColGroupChildrenCount);
     }
 }
-/* eslint-enable max-len */
+ 

@@ -83,7 +83,6 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
     });
 
     it('getState should return corect JSON string', () => {
-        // eslint-disable-next-line max-len
         const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true,"key":"ID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"Name","width":"150px","header":"Name","resizable":true,"searchable":true,"selectable":true,"key":"Name","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"date","hasSummary":true,"field":"Hire Date","width":"140px","header":"Hire Date","resizable":true,"searchable":true,"selectable":true,"key":"Hire Date","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"Age","width":"110px","header":"Age","resizable":false,"searchable":true,"selectable":true,"key":"Age","columnGroup":false,"disableHiding":false,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":18,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"moving":true,"rowIslands":[]}';
         fix.detectChanges();
 
@@ -135,7 +134,6 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
     it('setState should correctly restore grid filtering state from string', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
-        // eslint-disable-next-line max-len
         const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":35,"fieldName":"Age","ignoreCase":true}],"operator":0,"fieldName":"Age"}],"operator":0,"type":0}}';
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
 
@@ -164,7 +162,6 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
     it('setState should correctly restore grid moving state from string', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
-        // eslint-disable-next-line max-len
         const movingState = '{"moving":false}';
         const initialState = '{"moving":true}';
 
@@ -181,7 +178,6 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
     it('setState should correctly restore grid sorting state from string', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
-        // eslint-disable-next-line max-len
         const sortingState = '{"sorting":[{"fieldName":"HireDate","dir":1,"ignoreCase":true}]}';
         const initialState = '{"sorting":[]}';
 
@@ -198,10 +194,8 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
     it('setState should correctly restore grid columns state from string', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
-        /* eslint-disable max-len */
         const initialColumnsState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true,"key":"ID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"Name","width":"150px","header":"Name","resizable":true,"searchable":true,"selectable":true,"key":"Name","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"date","hasSummary":true,"field":"Hire Date","width":"140px","header":"Hire Date","resizable":true,"searchable":true,"selectable":true,"key":"Hire Date","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"Age","width":"110px","header":"Age","resizable":false,"searchable":true,"selectable":true,"key":"Age","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
         const newColumnsState = '{"columns":[{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true,"key":"ID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"Name","width":"150px","header":"Name","resizable":true,"searchable":true,"selectable":true,"key":"Name","columnGroup":false,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"Age","width":"110px","header":"Age","resizable":false,"searchable":true,"selectable":true,"key":"Age","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"date","hasSummary":true,"field":"Hire Date","width":"140px","header":"Hire Date","resizable":true,"searchable":true,"selectable":true,"key":"Hire Date","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
-        /* eslint-enable max-len */
         const columns = JSON.parse(newColumnsState).columns;
 
         let gridState = state.getState(true, 'columns');
@@ -266,7 +260,6 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
     it('setState should correctly restore grid advanced filtering state from string', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
-        // eslint-disable-next-line max-len
         const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"Age","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":25,"ignoreCase":true},{"fieldName":"ID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
         const initialState = '{"advancedFiltering":{}}';
 
@@ -375,20 +368,17 @@ class HelperFunctions {
         <igx-paginator [perPage]="5"></igx-paginator>
     </igx-tree-grid>
     `,
-    standalone: true,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective, NgFor]
 })
 export class IgxTreeGridTreeDataTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
 
-    /* eslint-disable max-len */
     public columns: any[] = [
         { field: 'ID', header: 'ID', width: '150px', dataType: 'number', pinned: true, sortable: true, filterable: true, groupable: false, hasSummary: false, hidden: false, maxWidth: '300px', searchable: false, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: 'testCss', headerGroupClasses: '', resizable: true },
         { field: 'Name', header: 'Name', width: '150px', dataType: 'string', pinned: false, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: '', headerGroupClasses: '', resizable: true },
         { field: 'Hire Date', header: 'Hire Date', width: '140px', dataType: 'date', pinned: false, sortable: false, filterable: true, groupable: false, hasSummary: true, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: true },
         { field: 'Age', header: 'Age', width: '110px', dataType: 'number', pinned: false, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false }
-        /* eslint-enable max-len */
     ];
     public data = SampleTestData.employeeTreeData();
 }

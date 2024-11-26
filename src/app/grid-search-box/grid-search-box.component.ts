@@ -8,7 +8,6 @@ import { IGX_CHIPS_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IgxGridComponent, Igx
     selector: 'app-grid-search-box',
     styleUrls: ['./grid-search-box.component.scss'],
     templateUrl: './grid-search-box.component.html',
-    standalone: true,
     imports: [NgIf, IgxIconComponent, FormsModule, IgxRippleDirective, IGX_INPUT_GROUP_DIRECTIVES, IGX_CHIPS_DIRECTIVES]
 })
 export class GridSearchBoxComponent {

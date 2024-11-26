@@ -2,7 +2,6 @@ import { Component, HostBinding, ElementRef, Input, ChangeDetectorRef, Inject } 
 import { IgxExpansionPanelBase, IGX_EXPANSION_PANEL_COMPONENT } from './expansion-panel.common';
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-body',
     template: `<ng-content></ng-content>`,
     standalone: true

@@ -48,7 +48,7 @@ export interface IFieldPipeArgs {
 }
 
 // D.P. Can't use `export type IColumnPipeArgs = IFieldPipeArgs` because TypeScripts Compiler API optimizes it away completely
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+ 
 export interface IColumnPipeArgs extends IFieldPipeArgs {}
 
 export interface IFieldEditorOptions {

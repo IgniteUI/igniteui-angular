@@ -12,11 +12,10 @@ defineCustomElements();
 @Component({
     encapsulation: ViewEncapsulation.None,
     providers: [],
-    standalone: true,
     selector: 'app-grid-docmanager-sample',
     styleUrls: ['docmanager-grid.sample.scss'],
     templateUrl: 'docmanager-grid.sample.html',
-    imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, CommonModule, IgxSelectModule, IgxSwitchModule, IgxIconModule ]
+    imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, CommonModule, IgxSelectModule, IgxSwitchModule, IgxIconModule]
 })
 
 export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterViewInit, DoCheck {
@@ -226,7 +225,6 @@ export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterVi
         this.liveData = event.checked;
     }
 
-    /* eslint-disable @typescript-eslint/member-ordering */
     /** Grid CellStyles and CellClasses */
     private negative = (rowData: any): boolean => rowData['changeP'] < 0;
     private positive = (rowData: any): boolean => rowData['changeP'] > 0;
@@ -278,6 +276,6 @@ export class GridDocManagerSampleComponent implements OnInit, OnDestroy, AfterVi
         this.cdr.detectChanges();
     }
 
-    /* eslint-enable @typescript-eslint/member-ordering */
+
 }
 

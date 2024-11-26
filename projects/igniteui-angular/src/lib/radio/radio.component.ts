@@ -29,12 +29,11 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 @Component({
     selector: 'igx-radio',
     providers: [{
-        provide: EDITOR_PROVIDER,
-        useExisting: IgxRadioComponent,
-        multi: true
-    }],
+            provide: EDITOR_PROVIDER,
+            useExisting: IgxRadioComponent,
+            multi: true
+        }],
     templateUrl: 'radio.component.html',
-    standalone: true,
     imports: [IgxRippleDirective]
 })
 export class IgxRadioComponent extends IgxCheckboxComponent implements AfterViewInit, ControlValueAccessor, EditorProvider {

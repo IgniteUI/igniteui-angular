@@ -7,7 +7,6 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 @Component({
     selector: 'app-grid-clipboard-sample',
     templateUrl: './grid-clipboard.sample.html',
-    standalone: true,
     imports: [FormsModule, IGX_GRID_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IgxIconComponent, IgxButtonDirective, IgxSwitchComponent]
 })
 export class GridClipboardSampleComponent {

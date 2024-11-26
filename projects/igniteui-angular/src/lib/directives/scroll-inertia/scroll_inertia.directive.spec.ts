@@ -340,7 +340,6 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
             <div [style.height]='innerHeight' [style.width]='innerWidth'></div>
         </div>
     `,
-    standalone: true,
     imports: [IgxTestScrollInertiaDirective]
 })
 export class ScrollInertiaComponent implements OnInit {

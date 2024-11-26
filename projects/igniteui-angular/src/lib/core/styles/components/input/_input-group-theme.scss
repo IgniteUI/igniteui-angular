@@ -1884,15 +1884,14 @@
     %form-group-bundle-start--bootstrap,
     %form-group-bundle-end--bootstrap {
         flex: none;
-
-        &:empty {
-            display: none;
-        }
-
         border-width: rem(1px);
         border-style: solid;
         border-color: var-get($theme, 'border-color');
         overflow: hidden;
+
+        &:empty {
+            display: none;
+        }
     }
 
     %form-group-bundle-start--bootstrap {

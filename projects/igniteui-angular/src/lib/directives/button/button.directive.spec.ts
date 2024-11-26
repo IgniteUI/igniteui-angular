@@ -107,7 +107,6 @@ describe('IgxButton', () => {
     template: `<span igxButton="flat" igxRipple="white">
         <i class="material-icons">add</i>
     </span>`,
-    standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective]
 })
 class InitButtonComponent {
@@ -117,7 +116,6 @@ class InitButtonComponent {
 
 @Component({
     template: `<span igxButton="contained" [disabled]="disabled">Test</span>`,
-    standalone: true,
     imports: [IgxButtonDirective]
 })
 class ButtonWithAttribsComponent {

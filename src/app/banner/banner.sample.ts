@@ -7,7 +7,6 @@ import { growVerIn, growVerOut } from 'igniteui-angular/animations';
     selector: 'app-banner-sample',
     templateUrl: `banner.sample.html`,
     styleUrls: [`banner.sample.scss`],
-    standalone: true,
     imports: [IgxBannerComponent, IgxIconComponent, IgxBannerActionsDirective, IgxRippleDirective, IgxLayoutDirective, IgxFlexDirective, IgxNavbarModule, IgxButtonModule]
 })
 export class BannerSampleComponent {

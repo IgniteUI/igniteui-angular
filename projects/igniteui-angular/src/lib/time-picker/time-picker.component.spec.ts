@@ -1852,7 +1852,6 @@ describe('IgxTimePicker', () => {
         <igx-time-picker #picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
         <label igxLabel>Select time</label>
         </igx-time-picker>`,
-    standalone: true,
     imports: [IgxTimePickerComponent, IgxLabelDirective]
 })
 export class IgxTimePickerTestComponent {
@@ -1875,7 +1874,6 @@ export class IgxTimePickerTestComponent {
             <igx-hint>Hint</igx-hint>
         </igx-time-picker>
 `,
-    standalone: true,
     imports: [IgxTimePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective, NgIf]
 })
 export class IgxTimePickerWithProjectionsComponent {
@@ -1893,7 +1891,6 @@ export class IgxTimePickerWithProjectionsComponent {
         <igx-time-picker name="timePicker" [minValue]="minValue" [(ngModel)]="date" [required]="true"></igx-time-picker>
     </form>
     `,
-    standalone: true,
     imports: [IgxTimePickerComponent, FormsModule]
 })
 export class IgxTimePickerInFormComponent {
@@ -1917,7 +1914,6 @@ export class IgxTimePickerInFormComponent {
     </div>
 </form>
     `,
-    standalone: true,
     imports: [IgxTimePickerComponent, IgxLabelDirective, ReactiveFormsModule]
 })
 export class IgxTimePickerReactiveFormComponent {

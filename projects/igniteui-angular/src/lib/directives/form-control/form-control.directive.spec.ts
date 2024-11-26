@@ -113,7 +113,6 @@ describe('IgcFormControlDirective - ', () => {
         <igc-rating name="modelRating" [(ngModel)]="model.Rating" max="10" label="Model Rating"></igc-rating>
     </form>
     `,
-    standalone: true,
     imports: [IgcFormControlDirective, FormsModule]
 })
 class IgxFormsControlComponent {

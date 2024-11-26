@@ -337,7 +337,6 @@ describe('IgxCircularBar', () => {
                 <svg:tspan>{{process.value}}</svg:tspan>
             </ng-template>
         </igx-circular-bar>`,
-    standalone: true,
     imports: [IgxCircularProgressBarComponent, IgxProgressBarTextTemplateDirective]
 })
 class CircularBarTemplateComponent {
@@ -355,7 +354,6 @@ class CircularBarTemplateComponent {
                 </svg:linearGradient>
             </ng-template>
         </igx-circular-bar>`,
-    standalone: true,
     imports: [IgxCircularProgressBarComponent, IgxProgressBarGradientDirective]
 })
 class CircularBarTemplateGradientComponent {

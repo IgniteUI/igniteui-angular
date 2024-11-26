@@ -6,7 +6,6 @@ import { IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxRipple
     selector: 'app-page-header',
     styleUrls: ['./pageHeading.styles.scss'],
     templateUrl: './pageHeading.template.html',
-    standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxToggleActionDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class PageHeaderComponent {

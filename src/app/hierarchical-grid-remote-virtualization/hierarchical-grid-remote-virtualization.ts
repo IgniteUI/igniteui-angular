@@ -13,7 +13,6 @@ import { debounceTime } from 'rxjs/operators';
     templateUrl: 'hierarchical-grid-remote-virtualization.html',
     styleUrls: ['hierarchical-grid-remote-virtualization.scss'],
     providers: [RemoteService],
-    standalone: true,
     imports: [NgIf, IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
 export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewInit {

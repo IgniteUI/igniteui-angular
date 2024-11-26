@@ -7,7 +7,6 @@ import { AMINO_DATA } from './aminoData';
     selector: 'app-grid-updates',
     styleUrls: ['./grid-updates.component.scss'],
     templateUrl: './grid-updates.component.html',
-    standalone: true,
     imports: [IgxGridComponent, NgFor, IgxColumnComponent]
 })
 export class GridUpdatesComponent implements OnInit {

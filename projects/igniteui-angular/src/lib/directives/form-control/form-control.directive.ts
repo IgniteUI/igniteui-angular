@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-@Directive({// eslint-disable-next-line @angular-eslint/directive-selector
+@Directive({ 
     selector: 'igc-rating[ngModel],igc-rating[formControlName]',
     providers: [
         {

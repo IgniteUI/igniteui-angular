@@ -2,7 +2,7 @@ import { Directive } from '@angular/core';
 import { RequiredValidator, NG_VALIDATORS, MinValidator, MaxValidator, EmailValidator, MinLengthValidator, MaxLengthValidator, PatternValidator } from '@angular/forms';
 
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
+     
     selector: 'igx-column[required]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -15,7 +15,7 @@ export class IgxColumnRequiredValidatorDirective extends RequiredValidator {
 }
 
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
+     
     selector: 'igx-column[min]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -28,7 +28,7 @@ export class IgxColumnMinValidatorDirective extends MinValidator { }
 
 
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
+     
     selector: 'igx-column[max]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -41,7 +41,7 @@ export class IgxColumnMaxValidatorDirective extends MaxValidator { }
 
 
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
+     
     selector: 'igx-column[email]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -54,7 +54,7 @@ export class IgxColumnEmailValidatorDirective extends EmailValidator { }
 
 
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
+     
     selector: 'igx-column[minlength]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -66,7 +66,7 @@ export class IgxColumnEmailValidatorDirective extends EmailValidator { }
 export class IgxColumnMinLengthValidatorDirective extends MinLengthValidator { }
 
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
+     
     selector: 'igx-column[maxlength]',
     providers: [{
             provide: NG_VALIDATORS,
@@ -79,7 +79,7 @@ export class IgxColumnMaxLengthValidatorDirective extends MaxLengthValidator {
 }
 
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
+     
     selector: 'igx-column[pattern]',
     providers: [{
             provide: NG_VALIDATORS,

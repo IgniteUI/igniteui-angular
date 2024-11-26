@@ -33,7 +33,6 @@ import { IgxColumnFormatterPipe } from '../common/pipes';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-groupby-row',
     templateUrl: './groupby-row.component.html',
-    standalone: true,
     imports: [
         NgIf,
         NgTemplateOutlet,

@@ -27,7 +27,6 @@ import { data } from '../shared/data';
     selector: 'app-grid-events',
     styleUrls: ['grid-events.component.scss'],
     templateUrl: 'grid-events.component.html',
-    standalone: true,
     imports: [IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxPaginatorComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class GridEventsComponent {

@@ -10,7 +10,6 @@ type TemplateFunction = (arg: any) => TemplateResult;
     selector: 'igx-template-wrapper',
     templateUrl: './wrapper.component.html',
     styleUrls: ['./wrapper.component.scss'],
-    standalone: true,
     imports: [NgFor]
 })
 export class TemplateWrapperComponent {

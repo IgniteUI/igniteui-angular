@@ -74,7 +74,6 @@ describe('Calendar Container', () => {
             <button type="button" igxButton (click)="doWork(calendar)">action</button>
         </ng-template>
         `,
-    standalone: true,
     imports: [IgxCalendarContainerComponent, IgxPickerActionsDirective, IgxButtonDirective]
 })
 export class IgxDatePickerTestComponent {

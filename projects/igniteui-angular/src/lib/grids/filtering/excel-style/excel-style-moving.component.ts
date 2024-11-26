@@ -12,7 +12,6 @@ import { NgIf } from '@angular/common';
 @Component({
     selector: 'igx-excel-style-moving',
     templateUrl: './excel-style-moving.component.html',
-    standalone: true,
     imports: [NgIf, IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleMovingComponent {

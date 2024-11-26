@@ -68,7 +68,6 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         this.captureKey(event);
     }
 
-    /* eslint-disable @typescript-eslint/member-ordering */
     private inputStream = '';
     private clearStream$ = Subscription.EMPTY;
 

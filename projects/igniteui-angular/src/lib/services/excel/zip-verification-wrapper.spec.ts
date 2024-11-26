@@ -59,7 +59,7 @@ export class ZipWrapper {
     private createFilesAndFolders(obj: Object, prefix: string) {
         Object.keys(obj).forEach((key) => {
             if (ArrayBuffer.isView(obj[key])) {
-                this._files.set(`${prefix}${key}`, obj[key]);
+                this._files.set(`${prefix}${key}`, obj[key] as Uint8Array);
                 this._filesAndFolders.push(`${prefix}${key}`);
             } else {
                 const newPrefix = `${prefix}${key}/`;
@@ -239,7 +239,6 @@ export class ObjectComparer {
 
         // Compare properties
         if (Object.prototype.toString.call(actual) === '[object Array]') {
-            // eslint-disable-next-line @typescript-eslint/prefer-for-of
             for (let i = 0; i < actual.length; i++) {
                 result = (result && template.indexof(actual[i]) >= 0);
             }

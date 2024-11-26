@@ -7,7 +7,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 @Component({
     template: `
     <igx-tree #tree1 class="medium">
-        <igx-tree-node *ngFor="let node of data" [selected]="node.ID === 'ALFKI'" [data]="node">
+        <igx-tree-node *ngFor="let node of data" [data]="node">
             {{ node.CompanyName }}
             <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
                 {{ child.CompanyName }}
@@ -18,7 +18,6 @@ import { IgxIconComponent } from '../icon/icon.component';
         </igx-tree-node>
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, NgFor]
 })
 export class IgxTreeSimpleComponent {
@@ -40,7 +39,6 @@ export class IgxTreeSimpleComponent {
         </igx-tree-node>
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, NgFor]
 })
 export class IgxTreeSelectionSampleComponent {
@@ -98,7 +96,6 @@ export class IgxTreeSelectionSampleComponent {
         </ng-template>
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeNodeLinkDirective, NgTemplateOutlet, NgFor, NgIf]
 })
 export class IgxTreeNavigationComponent {
@@ -124,7 +121,6 @@ export class IgxTreeNavigationComponent {
         </ng-template>
     </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeExpandIndicatorDirective, IgxIconComponent, NgFor]
 })
 export class IgxTreeScrollComponent {

@@ -5,7 +5,6 @@ import { IgxButtonDirective, IgxOverlayOutletDirective, IgxRippleDirective, IgxT
     selector: 'app-toast-sample',
     styleUrls: ['toast.sample.scss'],
     templateUrl: 'toast.sample.html',
-    standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxOverlayOutletDirective, IgxToastComponent]
 })
 export class ToastSampleComponent {

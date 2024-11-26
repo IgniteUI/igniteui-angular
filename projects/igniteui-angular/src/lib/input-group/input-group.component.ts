@@ -33,7 +33,6 @@ import { Subject, Subscription } from 'rxjs';
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
-    standalone: true,
     imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
 })
 export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewChecked, OnDestroy {
@@ -159,7 +158,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
      * <igx-input-group [type]="'search'">
      * ```
      */
-    @Input('type')
+    @Input()
     public set type(value: IgxInputGroupType) {
         this._type = value;
     }

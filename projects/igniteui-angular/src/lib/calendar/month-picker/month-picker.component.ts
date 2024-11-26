@@ -37,7 +37,6 @@ let NEXT_ID = 0;
     ],
     selector: "igx-month-picker",
     templateUrl: "month-picker.component.html",
-    standalone: true,
     imports: [
         NgIf,
         NgStyle,
@@ -46,7 +45,7 @@ let NEXT_ID = 0;
         IgxIconComponent,
         IgxMonthsViewComponent,
         IgxYearsViewComponent,
-    ],
+    ]
 })
 export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements OnInit, AfterViewInit, OnDestroy {
     /**

@@ -49,8 +49,7 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
 @Component({
     selector: 'igx-banner',
     templateUrl: 'banner.component.html',
-    standalone: true,
-    imports: [ IgxExpansionPanelComponent, IgxExpansionPanelBodyComponent, NgIf, IgxButtonDirective, IgxRippleDirective ]
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelBodyComponent, NgIf, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxBannerComponent implements IToggleView {
     /**

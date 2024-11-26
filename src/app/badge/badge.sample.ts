@@ -6,7 +6,6 @@ import { heartMonitor } from '@igniteui/material-icons-extended';
     selector: 'app-badge-sample',
     styleUrls: ['badge.sample.scss'],
     templateUrl: 'badge.sample.html',
-    standalone: true,
     imports: [IgxAvatarComponent, IgxBadgeComponent, IgxIconComponent]
 })
 export class BadgeSampleComponent implements OnInit {

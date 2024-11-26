@@ -6,7 +6,6 @@ import { IgxBottomNavComponent, IgxBottomNavHeaderComponent, IgxBottomNavHeaderI
     selector: 'app-bottomnav-routing-sample',
     styleUrls: ['bottomnav-routing.sample.scss'],
     templateUrl: 'bottomnav-routing.sample.html',
-    standalone: true,
     imports: [RouterOutlet, IgxBottomNavComponent, IgxBottomNavItemComponent, RouterLinkActive, IgxBottomNavHeaderComponent, RouterLink, IgxIconComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective]
 })
 export class BottomNavRoutingSampleComponent {

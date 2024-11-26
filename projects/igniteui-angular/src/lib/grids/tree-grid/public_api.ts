@@ -12,7 +12,7 @@ export * from './tree-grid.grouping.pipe';
 /* Imports that cannot be resolved from IGX_GRID_COMMON_DIRECTIVES spread
     NOTE: Do not remove! Issue: https://github.com/IgniteUI/igniteui-angular/issues/13310
 */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import {
     IgxRowDirective,
     IgxRowEditTextDirective,

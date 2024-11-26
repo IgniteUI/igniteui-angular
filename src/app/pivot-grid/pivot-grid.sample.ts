@@ -55,7 +55,6 @@ export class IgxTotalSaleAggregate {
     selector: 'app-tree-grid-sample',
     styleUrls: ['pivot-grid.sample.scss'],
     templateUrl: 'pivot-grid.sample.html',
-    standalone: true,
     imports: [IgxComboComponent, FormsModule, IgxButtonGroupComponent, IgxButtonDirective, IgxPivotGridComponent, IgxPivotValueChipTemplateDirective, IgxPivotDataSelectorComponent]
 })
 export class PivotGridSampleComponent {

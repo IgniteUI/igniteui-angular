@@ -5,7 +5,6 @@ import { DateRangeDescriptor, DateRangeType, IgxButtonDirective, IgxDatePickerCo
     selector: 'app-date-picker-sample',
     styleUrls: ['date-picker.sample.scss'],
     templateUrl: 'date-picker.sample.html',
-    standalone: true,
     imports: [IgxDatePickerComponent, IgxLabelDirective, IgxSuffixDirective, IgxIconComponent, IgxPickerActionsDirective, IgxButtonDirective, IgxRippleDirective]
 })
 

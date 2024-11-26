@@ -168,7 +168,6 @@ describe('igxActionStrip', () => {
         </igx-action-strip>
     </div>
     `,
-    standalone: true,
     imports: [IgxActionStripComponent, IgxIconComponent]
 })
 class IgxActionStripTestingComponent {
@@ -206,7 +205,6 @@ class IgxActionStripTestingComponent {
         </igx-action-strip>
     </div>
     `,
-    standalone: true,
     imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripMenuTestingComponent {
@@ -229,7 +227,6 @@ class IgxActionStripMenuTestingComponent {
         </igx-action-strip>
     </div>
     `,
-    standalone: true,
     imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripCombinedMenuTestingComponent {

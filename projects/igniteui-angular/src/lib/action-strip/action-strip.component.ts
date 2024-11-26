@@ -73,7 +73,6 @@ export class IgxActionStripMenuItemDirective {
 @Component({
     selector: 'igx-action-strip',
     templateUrl: 'action-strip.component.html',
-    standalone: true,
     imports: [
         NgIf,
         NgFor,

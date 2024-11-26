@@ -1754,8 +1754,8 @@ describe('igxCombo', () => {
                     combo.virtualScrollContainer.scrollTo(51);
                     await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                     fixture.detectChanges();
-                    let items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
-                    let lastItem = items[items.length - 1].componentInstance;
+                    const items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
+                    const lastItem = items[items.length - 1].componentInstance;
                     expect(lastItem).toBeDefined();
                     lastItem.clicked(mockClick);
                     fixture.detectChanges();
@@ -3638,7 +3638,6 @@ describe('igxCombo', () => {
             <div class="footer-class">This is a footer</div>
         </ng-template>
     </igx-combo>`,
-    standalone: true,
     imports: [IgxComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective]
 })
 class IgxComboSampleComponent {
@@ -3715,7 +3714,6 @@ class IgxComboSampleComponent {
         </p>
     </form>
     `,
-    standalone: true,
     imports: [IgxComboComponent, IgxLabelDirective, ReactiveFormsModule]
 })
 class IgxComboFormComponent {
@@ -3786,7 +3784,6 @@ class IgxComboFormComponent {
         </igx-combo>
     </form>
     `,
-    standalone: true,
     imports: [IgxComboComponent, IgxLabelDirective, FormsModule]
 })
 class IgxComboInTemplatedFormComponent {
@@ -3856,7 +3853,6 @@ export class LocalService {
         [ariaLabelledBy]="'mockID'">
     </igx-combo>
     `,
-    standalone: true,
     providers: [LocalService],
     imports: [IgxComboComponent]
 })
@@ -3884,7 +3880,6 @@ export class IgxComboBindingTestComponent {
         </igx-combo>
     </div>
     `,
-    standalone: true,
     imports: [IgxComboComponent]
 })
 class IgxComboInContainerTestComponent {
@@ -3954,7 +3949,6 @@ export class RemoteDataService {
         [ariaLabelledBy]="'mockID'">
     </igx-combo>
     `,
-    standalone: true,
     providers: [RemoteDataService],
     imports: [IgxComboComponent, AsyncPipe]
 })
@@ -3987,7 +3981,6 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
 
 @Component({
     template: `<igx-combo [(ngModel)]="selectedItems" [data]="items"></igx-combo>`,
-    standalone: true,
     imports: [IgxComboComponent, FormsModule]
 })
 export class ComboModelBindingComponent implements OnInit {
@@ -4005,7 +3998,6 @@ export class ComboModelBindingComponent implements OnInit {
 @Component({
     template: `
         <igx-combo [(ngModel)]="selectedItems" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-combo>`,
-    standalone: true,
     imports: [IgxComboComponent, FormsModule]
 })
 export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
@@ -4026,7 +4018,6 @@ export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
 @Component({
     template: `
         <igx-combo [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
-    standalone: true,
     imports: [IgxComboComponent]
 })
 export class ComboArrayTypeValueKeyComponent {
@@ -4055,7 +4046,6 @@ export class ComboArrayTypeValueKeyComponent {
 @Component({
     template: `
         <igx-combo id="id1" [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
-    standalone: true,
     imports: [IgxComboComponent]
 })
 export class ComboWithIdComponent {

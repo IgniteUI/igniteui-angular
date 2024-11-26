@@ -9,7 +9,6 @@ import { NgIf, NgClass } from '@angular/common';
 @Component({
     selector: 'igx-excel-style-pinning',
     templateUrl: './excel-style-pinning.component.html',
-    standalone: true,
     imports: [NgIf, NgClass, IgxIconComponent]
 })
 export class IgxExcelStylePinningComponent {

@@ -302,13 +302,11 @@ describe('IgxHighlight', () => {
 });
 
 @Component({
-    // eslint-disable-next-line max-len
     template: `
     <div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [containerClass]="'test'">
         {{html}}
     </div>
     `,
-    standalone: true,
     imports: [IgxTextHighlightDirective]
 })
 class HighlightLoremIpsumComponent {
@@ -319,7 +317,6 @@ class HighlightLoremIpsumComponent {
     public activeHighlightClass = 'igx-highlight__active';
     public groupName = 'test';
 
-    // eslint-disable-next-line max-len
     public html = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate luctus dui ut maximus. Quisque sed suscipit lorem. Vestibulum sit.';
 
     constructor(private highlightService: IgxTextHighlightService) { }

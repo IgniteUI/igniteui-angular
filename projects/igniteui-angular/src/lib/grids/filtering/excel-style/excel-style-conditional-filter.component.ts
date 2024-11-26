@@ -24,7 +24,6 @@ import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
 @Component({
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html',
-    standalone: true,
     imports: [NgIf, NgClass, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {

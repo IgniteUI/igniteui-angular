@@ -101,14 +101,12 @@ describe('igxFocus', () => {
         <input type="text" [igxFocus]="true" value="Fifth" />
         <input type="text" value="Seventh" />
     `,
-    standalone: true,
     imports: [IgxFocusDirective]
 })
 class SetFocusComponent { }
 
 @Component({
     template: `<input type="text" [igxFocus]="false" value="First" />`,
-    standalone: true,
     imports: [IgxFocusDirective]
 })
 class NoFocusComponent { }
@@ -120,7 +118,6 @@ class NoFocusComponent { }
     <div tabindex="0" [igxFocus]>Third</div>
     <button type="button" (click)="focus()">Focus the third one</button>
     `,
-    standalone: true,
     imports: [IgxFocusDirective]
 })
 class TriggerFocusOnClickComponent {
@@ -139,7 +136,6 @@ class TriggerFocusOnClickComponent {
     <igx-switch #switch [igxFocus]></igx-switch>
     <igx-date-picker #picker [igxFocus]></igx-date-picker>
     `,
-    standalone: true,
     imports: [IgxFocusDirective, IgxCheckboxComponent, IgxSwitchComponent, IgxRadioComponent, IgxDatePickerComponent]
 })
 class CheckboxPickerComponent {

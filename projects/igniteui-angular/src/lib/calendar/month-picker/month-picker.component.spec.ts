@@ -562,7 +562,6 @@ describe('IgxMonthPicker', () => {
                           [formatOptions]="formatOptions"
                           [locale]="locale">
                 </igx-month-picker>`,
-    standalone: true,
     imports: [FormsModule, IgxMonthPickerComponent]
 })
 export class IgxMonthPickerSampleComponent {

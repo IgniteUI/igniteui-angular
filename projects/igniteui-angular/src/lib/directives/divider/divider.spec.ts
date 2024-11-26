@@ -100,7 +100,6 @@ describe('Divider', () => {
         [inset]="inset"
         [role]="role">
     </igx-divider>`,
-    standalone: true,
     imports: [IgxDividerDirective]
 })
 class TestDividerComponent {

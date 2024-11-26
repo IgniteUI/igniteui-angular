@@ -40,7 +40,6 @@ import { getComponentSize } from '../core/utils';
             </igx-chip>
         </igx-chips-area>
     `,
-    standalone: true,
     imports: [IgxChipComponent, IgxChipsAreaComponent, IgxIconComponent, IgxPrefixDirective, NgFor]
 })
 class TestChipComponent {
@@ -75,7 +74,6 @@ class TestChipComponent {
             </igx-chip>
         </igx-chips-area>
     `,
-    standalone: true,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxLabelDirective, IgxSuffixDirective, NgFor]
 })
 class TestChipsLabelAndSuffixComponent {

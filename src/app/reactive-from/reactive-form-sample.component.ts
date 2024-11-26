@@ -7,7 +7,6 @@ import { IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent, Ig
     selector: 'app-reactive-form',
     styleUrls: ['reactive-form-sample.component.scss'],
     templateUrl: 'reactive-form-sample.component.html',
-    standalone: true,
     imports: [FormsModule, ReactiveFormsModule, IgxSelectComponent, NgFor, IgxSelectGroupComponent, IgxSelectItemComponent, IgxLabelDirective, IgxSelectToggleIconDirective, IgxIconComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxPrefixDirective, IgxHintDirective, IgxComboComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxButtonDirective, IgxRippleDirective]
 })
 export class ReactiveFormSampleComponent {

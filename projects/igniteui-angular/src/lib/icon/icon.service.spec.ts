@@ -222,14 +222,12 @@ describe("Icon Service", () => {
         <igx-icon builtin name="home" family="material"></igx-icon>
         <igx-icon extended name="test" family="material"></igx-icon>
      `,
-    standalone: true,
     imports: [IgxIconComponent]
 })
 class IconTestComponent { }
 
 @Component({
     template: `<igx-icon name="reference" family="default"></igx-icon>`,
-    standalone: true,
     imports: [IgxIconComponent]
 })
 class IconRefComponent { }

@@ -30,7 +30,6 @@ import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
     selector: 'app-hound',
-    standalone: true,
     imports: [
         IgxButtonModule,
         IgxIconComponent,

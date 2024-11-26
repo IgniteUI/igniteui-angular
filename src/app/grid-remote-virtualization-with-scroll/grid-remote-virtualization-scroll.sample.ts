@@ -8,7 +8,6 @@ import { RemoteVirtService } from '../shared/remoteProductsData.service';
     selector: 'app-grid-remote-virtualization-scroll',
     templateUrl: 'grid-remote-virtualization-scroll.sample.html',
     providers: [RemoteVirtService],
-    standalone: true,
     imports: [IgxGridComponent, AsyncPipe]
 })
 

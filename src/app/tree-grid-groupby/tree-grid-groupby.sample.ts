@@ -11,7 +11,6 @@ import { IgxButtonGroupComponent, IgxSwitchComponent, IgxTreeGridComponent, IgxT
     selector: 'app-tree-grid-groupby-sample',
     styleUrls: ['tree-grid-groupby.sample.scss'],
     templateUrl: 'tree-grid-groupby.sample.html',
-    standalone: true,
     imports: [IgxButtonGroupComponent, NgIf, IgxSwitchComponent, FormsModule, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, NgFor, IgxTreeGridGroupingPipe]
 })
 

@@ -17,7 +17,6 @@ import { IgxIconComponent } from '../icon/icon.component';
            </igx-list>
        </div>
     `,
-    standalone: true,
     imports: [
         IgxListComponent,
         IgxListItemComponent,
@@ -42,7 +41,6 @@ export class ListDirectivesComponent {
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
     </div>`,
-    standalone: true,
     imports: [IgxListComponent, IgxListItemComponent]
 })
 export class BasicListComponent {
@@ -60,7 +58,6 @@ export class BasicListComponent {
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
     </div>`,
-    standalone: true,
     imports: [IgxListComponent, IgxListItemComponent]
 })
 export class ListWithHeaderComponent extends BasicListComponent {
@@ -75,9 +72,7 @@ export class ListWithHeaderComponent extends BasicListComponent {
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
     </div>`,
-    standalone: true,
     imports: [IgxListComponent, IgxListItemComponent]
-
 })
 export class ListWithPanningComponent extends BasicListComponent {
     public allowRightPanning = true;
@@ -90,7 +85,6 @@ export class ListWithPanningComponent extends BasicListComponent {
         <igx-list>
         </igx-list>
     </div>`,
-    standalone: true,
     imports: [IgxListComponent]
 })
 export class EmptyListComponent extends BasicListComponent {
@@ -105,7 +99,6 @@ export class EmptyListComponent extends BasicListComponent {
             </ng-template>
         </igx-list>
     </div>`,
-    standalone: true,
     imports: [IgxListComponent, IgxEmptyListTemplateDirective]
 })
 export class CustomEmptyListComponent extends BasicListComponent {
@@ -117,7 +110,6 @@ export class CustomEmptyListComponent extends BasicListComponent {
         <igx-list [isLoading]="isLoading">
         </igx-list>
     </div>`,
-    standalone: true,
     imports: [IgxListComponent]
 })
 export class ListLoadingComponent extends BasicListComponent {
@@ -133,7 +125,6 @@ export class ListLoadingComponent extends BasicListComponent {
             </ng-template>
         </igx-list>
     </div>`,
-    standalone: true,
     imports: [IgxListComponent, IgxDataLoadingTemplateDirective]
 })
 export class ListCustomLoadingComponent extends ListLoadingComponent {
@@ -150,7 +141,6 @@ export class ListCustomLoadingComponent extends ListLoadingComponent {
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
     </div>`,
-    standalone: true,
     selector: 'igx-list-with-headers',
     imports: [IgxListComponent, IgxListItemComponent]
 })
@@ -168,7 +158,6 @@ export class TwoHeadersListComponent extends ListWithPanningComponent {
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
     </div>`,
-    standalone: true,
     selector: 'igx-list-with-headers-no-panning',
     imports: [IgxListComponent, IgxListItemComponent]
 })
@@ -191,7 +180,6 @@ export class TwoHeadersListNoPanningComponent extends ListWithHeaderComponent {
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
     </div>`,
-    standalone: true,
     imports: [IgxListComponent, IgxListItemComponent, IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective]
 })
 export class ListWithPanningTemplatesComponent extends ListWithPanningComponent {
@@ -215,7 +203,6 @@ export class ListWithPanningTemplatesComponent extends ListWithPanningComponent 
     styles: [`.item-container {
         display: flex;
     }`],
-    standalone: true,
     imports: [IgxListComponent, IgxListItemComponent, IgxForOfDirective]
 })
 export class ListWithIgxForAndScrollingComponent {

@@ -2891,7 +2891,6 @@ describe('IgxSimpleCombo', () => {
             </igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent, IGX_GRID_DIRECTIVES, FormsModule]
 })
 class IgxSimpleComboInGridComponent {
@@ -2933,7 +2932,6 @@ class IgxSimpleComboInGridComponent {
         </ng-template>
     </igx-simple-combo>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective]
 })
 class IgxSimpleComboSampleComponent {
@@ -2984,7 +2982,6 @@ class IgxSimpleComboSampleComponent {
 
 @Component({
     template: `<igx-simple-combo #combo [data]="data" displayKey="test" [(ngModel)]="name"></igx-simple-combo>`,
-    standalone: true,
     imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class IgxSimpleComboEmptyComponent {
@@ -2999,7 +2996,6 @@ export class IgxSimpleComboEmptyComponent {
     template: `<igx-simple-combo #combo [data]="data" displayKey="name" valueKey="id" [(ngModel)]="name">
                     <ng-template igxComboToggleIcon><igx-icon>search</igx-icon></ng-template>
                 </igx-simple-combo>`,
-    standalone: true,
     imports: [IgxSimpleComboComponent, IgxIconComponent, IgxComboToggleIconDirective, FormsModule]
 })
 export class IgxSimpleComboIconTemplatesComponent {
@@ -3015,7 +3011,6 @@ export class IgxSimpleComboIconTemplatesComponent {
 
 @Component({
     template: `<igx-simple-combo [(ngModel)]="selectedItem" [data]="items"></igx-simple-combo>`,
-    standalone: true,
     imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class ComboModelBindingComponent implements OnInit {
@@ -3040,7 +3035,6 @@ export class ComboModelBindingComponent implements OnInit {
 </igx-simple-combo>
 </div>
 `,
-    standalone: true,
     imports: [IgxSimpleComboComponent]
 })
 class IgxComboInContainerTestComponent {
@@ -3076,7 +3070,6 @@ class IgxComboInContainerTestComponent {
     [ariaLabelledBy]="'mockID'">
     </igx-simple-combo>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent, AsyncPipe]
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -3117,7 +3110,6 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
         </igx-simple-combo>
     </form>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent, IgxLabelDirective, FormsModule]
 })
 class IgxSimpleComboInTemplatedFormComponent {
@@ -3169,7 +3161,6 @@ class IgxSimpleComboInTemplatedFormComponent {
      <button #button IgxButton (click)="changeValue()">Change value</button>
     </form>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent, AsyncPipe, ReactiveFormsModule]
 })
 export class IgxComboRemoteDataInReactiveFormComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -3220,7 +3211,6 @@ export class IgxComboRemoteDataInReactiveFormComponent implements OnInit, AfterV
         </igx-simple-combo>
     </form>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
 export class IgxSimpleComboInReactiveFormComponent {
@@ -3249,7 +3239,6 @@ export class IgxSimpleComboInReactiveFormComponent {
     template: `
         <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
@@ -3275,7 +3264,6 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
         </igx-simple-combo>
     </div>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent]
 })
 export class IgxBottomPositionSimpleComboComponent {
@@ -3318,7 +3306,6 @@ export class IgxBottomPositionSimpleComboComponent {
     template: `
         <igx-simple-combo [data]="items" [valueKey]="'id'" [displayKey]="'text'" [formControl]="formControl" required></igx-simple-combo>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
 })
 export class IgxSimpleComboFormControlRequiredComponent implements OnInit {
@@ -3351,7 +3338,6 @@ export class IgxSimpleComboFormControlRequiredComponent implements OnInit {
             </igx-simple-combo>
         </form>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
 })
 export class IgxSimpleComboFormWithFormControlComponent implements OnInit {
@@ -3380,7 +3366,6 @@ export class IgxSimpleComboFormWithFormControlComponent implements OnInit {
     template: `
         <igx-simple-combo [data]="items" [(ngModel)]="selectedItem" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
 })
 export class IgxSimpleComboNgModelComponent implements OnInit {
@@ -3415,7 +3400,6 @@ export class IgxSimpleComboNgModelComponent implements OnInit {
         </div>
     </form>
     `,
-    standalone: true,
     imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
 export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {

@@ -8,7 +8,6 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
     styleUrls: ['button.sample.scss'],
     templateUrl: 'button.sample.html',
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [IgxButtonDirective, IgxIconComponent, IgxButtonGroupComponent, IgxIconButtonDirective, IgxRippleDirective, SizeSelectorComponent]
 })
 export class ButtonSampleComponent implements OnInit {

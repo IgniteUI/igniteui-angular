@@ -4,7 +4,6 @@ import { IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinning
 @Component({
     selector: 'app-hierarchical-grid-add-row-sample',
     templateUrl: 'hierarchical-grid-add-row.sample.html',
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxRowIslandComponent]
 })
 export class HierarchicalGridAddRowSampleComponent implements AfterViewInit {

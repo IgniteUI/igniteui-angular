@@ -348,7 +348,6 @@ describe('IgxGrid - CRUD operations #grid', () => {
             [primaryKey]="'index'">
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent]
 })
 export class DefaultCRUDGridComponent {

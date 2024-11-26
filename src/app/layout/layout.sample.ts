@@ -5,7 +5,6 @@ import { IgxFlexDirective, IgxLayoutDirective } from 'igniteui-angular';
     selector: 'app-layout-sample',
     styleUrls: ['layout.sample.scss'],
     templateUrl: 'layout.sample.html',
-    standalone: true,
     imports: [IgxLayoutDirective, IgxFlexDirective]
 })
 export class LayoutSampleComponent { }
