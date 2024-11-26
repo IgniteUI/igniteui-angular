@@ -145,6 +145,7 @@
             %advanced-filter__main {
                 padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
                 padding-block: pad-block(rem(16px));
+                padding-bottom: 0px;
             }
         }
     }
@@ -194,7 +195,6 @@
     %advanced-filter__main {
         display: flex;
         overflow: auto;
-        gap: $gap;
     }
 
     %advanced-filter__root {
@@ -234,6 +234,9 @@
     %filter-tree {
         display: flex;
         width: 100%;
+    }
+
+    %filter-tree:not(:last-child) {
         padding-bottom: $gap;
     }
 
@@ -373,6 +376,10 @@
         [igxIconButton] {
             transition: none;
         }
+    }
+
+    %filter-tree__inputs:not(:first-child) {
+        padding-bottom: $gap;
     }
 
     %filter-legend {
