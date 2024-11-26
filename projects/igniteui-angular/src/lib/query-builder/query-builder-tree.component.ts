@@ -960,8 +960,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         //console.log('Let go:', dragRef);
         if (!this.dragElement || !this.dragExpressionItem) return;
 
-        if (this.dropUnder == false && this.ghostChip) {
-            //Assume we are in the artificial drop zone of a north positioned ghost chip 
+        if (this.ghostChip) {
+            //If there is a ghost chip presented to the user, execute drop
             this.onDropped(this.dropElement, this.dropExpressionItem);
         }
         else {
@@ -976,7 +976,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         //Simulate leaving the last entered chip in case of no Leave event triggered due to the artificial drop zone of a north positioned ghost chip 
         if (this.dropElement) {
-            console.log('Leaving', dragRef);
             this.resetDragAndDrop(false);
         }
 
@@ -1039,14 +1038,33 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.deleteItem(this.dragExpressionItem);
 
             this.resetDragAndDrop(true);
-
-            //this.cdr.detectChanges();
         }
     }    
     
+    public onAddConditionEnter(dragRef: HTMLElement, expressionItem: ExpressionGroupItem){
+        console.log('onAddConditionEnter',expressionItem);
+        if (!this.dragElement || !this.dragExpressionItem) return;
+
+        this.onEnter({originalEvent:{pageY:Number.MAX_SAFE_INTEGER}} as IChipEnterDragAreaEventArgs, 
+            dragRef.parentElement.previousElementSibling as HTMLElement, 
+            expressionItem.children[expressionItem.children.length - 1])
+    }
+
+    public onAddConditionLeave(){
+        console.log('onAddConditionLeave');
+        if (!this.dragElement || !this.dragExpressionItem) return;
+
+    }
+
+    public onAddConditionDropped(){
+        console.log('onAddConditionDropped');
+        if (!this.dragElement || !this.dragExpressionItem) return;
+    
+    }
+
     //Make a copy of the drag chip and place it in the DOM north or south of the drop chip
     private createDropGhostChip(event: IChipEnterDragAreaEventArgs, dragRef: HTMLElement): void {
-        let dragCopy = this.dragElement.firstChild.cloneNode(true);
+        let dragCopy = this.dragElement.cloneNode(true);
         (dragCopy.firstChild as HTMLElement).style.visibility = 'visible';
         (dragCopy.firstChild as HTMLElement).style.opacity = '0.5';
         
