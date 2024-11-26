@@ -397,33 +397,33 @@ describe('igxBanner', () => {
             expect(banner.closed.emit).toHaveBeenCalledTimes(1);
         }));
 
-        it('Should toggle banner state when collapsed property changes', fakeAsync(() => {
+        it('Should toggle banner state when expanded property changes', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
 
-            banner.collapsed = true;
+            banner.expanded = false;
             tick();
             fixture.detectChanges();
 
-            expect(banner.collapsed).toBeTrue();
+            expect(banner.expanded).toBeFalse();
 
-            banner.collapsed = false;
+            banner.expanded = true;
             tick();
             fixture.detectChanges();
-            expect(banner.collapsed).toBeFalse();
+            expect(banner.expanded).toBeTrue();
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
 
-            banner.collapsed = true;
+            banner.expanded = false;
             tick();
             fixture.detectChanges();
-            expect(banner.collapsed).toBeTrue();
+            expect(banner.expanded).toBeFalse();
             expect(banner.elementRef.nativeElement.style.display).toEqual('');
 
-            banner.collapsed = false;
+            banner.expanded = true;
             tick();
             fixture.detectChanges();
-            expect(banner.collapsed).toBeFalse();
+            expect(banner.expanded).toBeTrue();
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
         }));
     });
@@ -517,12 +517,12 @@ describe('igxBanner', () => {
             expect(panel.attributes.getNamedItem('aria-live').nodeValue).toEqual('polite');
         }));
 
-        it('Should initialize banner as open when collapsed is set to false', fakeAsync(() => {
+        it('Should initialize banner as open when expanded is set to true', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
 
-            expect(banner.collapsed).toBeFalse();
+            expect(banner.expanded).toBeTrue();
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
             expect(banner.elementRef.nativeElement.querySelector('.' + CSS_CLASS_BANNER)).not.toBeNull();
         }));
@@ -651,7 +651,7 @@ export class SimpleBannerEventsComponent {
 @Component({
     template: `
         <div>
-            <igx-banner [collapsed]="false">
+            <igx-banner [expanded]="true">
                 Banner initialized as open.
             </igx-banner>
         </div>
