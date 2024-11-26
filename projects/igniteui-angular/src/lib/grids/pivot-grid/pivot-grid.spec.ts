@@ -10,7 +10,7 @@ import { ISortingExpression, SortingDirection } from '../../data-operations/sort
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
-import { IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
+import { IgxPivotGridFlexContainerComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxPivotDateAggregate, IgxPivotNumericAggregate } from './pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
@@ -36,7 +36,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent,
-                IgxPivotGridTestComplexHierarchyComponent
+                IgxPivotGridTestComplexHierarchyComponent,
+                IgxPivotGridFlexContainerComponent
             ]
         }).compileComponents();
     }));
@@ -796,6 +797,16 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightMedium);
         });
 
+        it('should render with correct width when set to 100% inside of flex container', async() => {
+            fixture = TestBed.createComponent(IgxPivotGridFlexContainerComponent);
+            fixture.detectChanges();
+            await wait(100);
+            fixture.detectChanges();
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            const colSum = pivotGrid.featureColumnsWidth() + pivotGrid.columns.filter(x => !x.columnGroup).map(x => x.calcPixelWidth).reduce((x, y) => x + y);
+            const expectedSize = Math.min(window.innerWidth, colSum);
+            expect(pivotGrid.nativeElement.clientWidth - expectedSize).toBeLessThan(50, "should take sum of columns as width.");
+        });
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', async () => {
@@ -2418,6 +2429,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
         });
 
         it("should position correct the horizontal scrollbar", () => {
+            fixture.detectChanges();
             const scrollBarPosition = fixture.nativeElement.querySelector("igx-horizontal-virtual-helper").getBoundingClientRect();
             const displayContainerPosition = fixture.nativeElement.querySelector(".igx-grid__tbody-content").getBoundingClientRect()
             expect(scrollBarPosition.x).toEqual(displayContainerPosition.x);

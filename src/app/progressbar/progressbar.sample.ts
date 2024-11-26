@@ -6,7 +6,6 @@ import { IgxButtonDirective, IgxCircularProgressBarComponent, IgxIconComponent, 
     selector: 'app-progressbar-sample',
     styleUrls: ['progressbar.sample.scss'],
     templateUrl: 'progressbar.sample.html',
-    standalone: true,
     imports: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent, IgxProgressBarTextTemplateDirective, IgxProgressBarGradientDirective, IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 
