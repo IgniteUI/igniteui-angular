@@ -1,104 +1,174 @@
-<div class="density-chooser">
-    <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
+<div class="grid__wrapper">
+  <p>
+    Grid with <strong>DEFAULT</strong> summaries <strong>NOT</strong> using
+    <strong>`disabledSummaries`</strong> property.
+  </p>
+  <igx-grid
+    #grid1
+    [data]="data"
+    [autoGenerate]="false"
+    height="650px"
+    width="100%"
+  >
+    <igx-column field="ProductID" header="Product ID" [hasSummary]="true">
+    </igx-column>
+    <igx-column field="ProductName" header="Product Name" [hasSummary]="true">
+    </igx-column>
+    <igx-column
+      field="UnitPrice"
+      header="Price"
+      dataType="number"
+      [hasSummary]="true"
+    >
+    </igx-column>
+    <igx-column
+      field="UnitsInStock"
+      header="Units In Stock"
+      dataType="number"
+      [hasSummary]="true"
+    >
+    </igx-column>
+    <igx-column
+      field="Discontinued"
+      header="Discontinued"
+      [dataType]="'boolean'"
+      [hasSummary]="true"
+    >
+    </igx-column>
+    <igx-column field="OrderDate" [dataType]="'date'" [hasSummary]="true">
+    </igx-column>
+  </igx-grid>
 </div>
-<igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [width]="w" [height]="h"
-    [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'" [showSummaryOnCollapse]="true"
-    [summaryRowHeight]="rh" [rowSelection]="rowSelection ? 'multiple' : 'none'">
-    <igx-grid-toolbar *ngIf="showToolbar">
-        <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
-        <igx-grid-toolbar-actions>
-            <igx-grid-toolbar-pinning *ngIf="columnPinning"></igx-grid-toolbar-pinning>
-            <igx-grid-toolbar-hiding *ngIf="columnHiding"></igx-grid-toolbar-hiding>
-            <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
-            <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
-                <span excelText>Export to Excel 👌</span>
-                <span csvText>Export to CSV 👍</span>
-            </igx-grid-toolbar-exporter>
-        </igx-grid-toolbar-actions>
-    </igx-grid-toolbar>
-    <igx-column field="Index" header="Index" [width]="cw">
+<div class="grid__wrapper">
+  <p>
+    Grid with <strong>DEFAULT</strong> summaries using
+    <strong>`disabledSummaries`</strong> property.
+  </p>
+  <igx-grid
+    #grid2
+    [data]="data"
+    [autoGenerate]="false"
+    height="650px"
+    width="100%"
+  >
+    <igx-column field="ProductID" header="Product ID" [hasSummary]="true">
     </igx-column>
-    <igx-column field="ProductID" header="Product ID" [width]="cw" [headerClasses]="'prodId'" [groupable]="groupable">
-        <ng-template igxCell let-cell="cell" let-val>
-            <button (click)="viewRecord()">{{val}}</button>
-        </ng-template>
+    <igx-column field="ProductName" header="Product Name" [hasSummary]="true">
     </igx-column>
-    <igx-column field="ReorderLevel" [width]="cw" [sortable]="true" [groupable]="groupable" [filterable]="filterable"
-        [editable]="true" [dataType]="'number'" [disableHiding]="disableHiding" [disablePinning]="disablePinning">
+    <igx-column
+      field="UnitPrice"
+      header="Price"
+      dataType="number"
+      [hasSummary]="true"
+    >
     </igx-column>
-    <igx-column field="QuantityPerUnit" [width]="cw" header="QuantityPerUnit" [sortable]="true" [dataType]="'string'"
-        [editable]="true">
+    <igx-column
+      field="UnitsInStock"
+      header="Units In Stock"
+      dataType="number"
+      [hasSummary]="true"
+      [disabledSummaries]="['count', 'min', 'max']"
+    >
     </igx-column>
-    <igx-column field="UnitsInStock" header="UnitsInStock" [width]="cw" [dataType]="'currency'"
-        [hasSummary]="hasSummaryUnit" [hidden]="hasHidden" [editable]="true" [sortable]="true">
-        <ng-template igxCell let-cell="cell" let-val let-row>
-            ${{val}}
-        </ng-template>
-        <ng-template igxSummary let-summaryResults>
-            <div style="font-size: 0.75rem">
-                <span>Custom summary cell:</span><br>
-                <span>Number of Summaries: {{ summaryResults.length }}</span><br>
-                <span>First Summary - {{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span><br>
-                <span>Second Summary - {{ summaryResults[1].label }}: {{ summaryResults[1].summaryResult }}</span><br>
-                <span>Third Summary - {{ summaryResults[2].label }}: {{ summaryResults[2].summaryResult }}</span><br>
-                <span> Fourth Summary - {{ summaryResults[3].label }}: {{ summaryResults[3].summaryResult }}</span><br>
-            </div>
-        </ng-template>
+    <igx-column
+      field="Discontinued"
+      header="Discontinued"
+      [dataType]="'boolean'"
+      [hasSummary]="true"
+    >
     </igx-column>
-    <igx-column field="OrderDate" [width]="cw" [dataType]="'date'" [hasSummary]="false" [sortable]="true">
+    <igx-column field="OrderDate" [dataType]="'date'" [hasSummary]="true">
     </igx-column>
-    <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" [width]="cw" [hasSummary]="false"
-        [editable]="true">
-        <ng-template igxCell let-cell="cell" let-val>
-            {{val}}
-        </ng-template>
-    </igx-column>
-    <igx-column field="Sum" [hasSummary]="true" [dataType]="'percent'" [summaries]="mySummary">
-    </igx-column>
-    <igx-paginator *ngIf="paging"></igx-paginator>
-</igx-grid>
-
-<div class="properties-input">
-    <label> Grid Width </label>
-    <input [(ngModel)]="w">
+  </igx-grid>
+  <button igxButton="contained" (click)="changeDefaultSummaries()">
+    Change default disabled summaries runtime for column Units In Stock.
+  </button>
 </div>
-<div class="properties-input">
-    <label> Grid Height </label>
-    <input [(ngModel)]="h">
+<div class="grid__wrapper">
+  <p>
+    Grid with <strong>CUSTOM</strong> summaries <strong>NOT</strong> using
+    <strong>`disabledSummaries`</strong> property.
+  </p>
+  <igx-grid
+    #grid3
+    [data]="data"
+    [autoGenerate]="false"
+    height="650px"
+    width="100%"
+  >
+    <igx-column field="ProductID" header="Product ID" [hasSummary]="true">
+    </igx-column>
+    <igx-column field="ProductName" header="Product Name" [hasSummary]="true">
+    </igx-column>
+    <igx-column
+      field="UnitPrice"
+      header="Price"
+      dataType="number"
+      [hasSummary]="true"
+    >
+    </igx-column>
+    <igx-column
+      field="UnitsInStock"
+      header="Units In Stock"
+      dataType="number"
+      [hasSummary]="true"
+      [summaries]="discontinuedSummary"
+    >
+    </igx-column>
+    <igx-column
+      field="Discontinued"
+      header="Discontinued"
+      [dataType]="'boolean'"
+      [hasSummary]="true"
+    >
+    </igx-column>
+    <igx-column field="OrderDate" [dataType]="'date'" [hasSummary]="true">
+    </igx-column>
+  </igx-grid>
 </div>
-<div class="properties-input">
-    <label> Columns Width </label>
-    <input [(ngModel)]="cw">
-</div>
-<div class="properties-input">
-    <label> Summary Row Height </label>
-    <input type="number" [(ngModel)]="rh">
-</div>
-
-<igx-switch [(ngModel)]="paging">Enable Paging</igx-switch>
-<igx-switch [(ngModel)]="grid1.allowFiltering">allowFiltering</igx-switch>
-<igx-switch [(ngModel)]="columnHiding">columnHiding</igx-switch>
-<igx-switch [(ngModel)]="columnPinning">columnPinning</igx-switch>
-<igx-switch (change)='onChange()'>Left Pinning toggle</igx-switch>
-<igx-switch [(ngModel)]="showToolbar">showToolbar</igx-switch>
-<igx-switch [(ngModel)]="groupable">ReorderLevel groupable</igx-switch>
-<igx-switch [(ngModel)]="filterable">ReorderLevel filterable</igx-switch>
-<igx-switch [(ngModel)]="disableHiding">ReorderLevel disableHiding</igx-switch>
-<igx-switch [(ngModel)]="disablePinning">ReorderLevel disablePinning</igx-switch>
-<igx-switch [(ngModel)]="hasSummaryUnit">hasSummaryUnit</igx-switch>
-<igx-switch [(ngModel)]="hasHidden">hasHidden</igx-switch>
-<igx-switch [(ngModel)]="rowSelection">Row Selection</igx-switch>
-
-<button igxButton="contained" (click)="enableSummary()"> Enable Summary for column ReorderLevel</button>
-<button igxButton="contained" (click)="toggleSummary()">Toggle Custom Summary</button>
-<button igxButton="contained" (click)="updateData()">Update Data</button>
-<button igxButton="contained" (click)="addRow()">Add Row</button>
-<button igxButton="contained" (click)="deleteRow()">Delete Row</button>
-<button igxButton="contained" (click)="updateCell()">Update Cell</button>
-<button igxButton="contained" (click)="updateRow()">Update Row</button>
-<button igxButton="contained" (click)="pin()">Pin</button>
-<button igxButton="contained" (click)="hide()">Hide</button>
-<div>
-    <input type='number' #input />
-    <button igxButton="contained" (click)='scrScrollTo(input.value)'>Go To Index</button>
+<div class="grid__wrapper">
+  <p>
+    Grid with <strong>CUSTOM</strong> summaries using
+    <strong>`disabledSummaries`</strong> property.
+  </p>
+  <igx-grid
+    #grid4
+    [data]="data"
+    [autoGenerate]="false"
+    height="650px"
+    width="100%"
+  >
+    <igx-column field="ProductID" header="Product ID" [hasSummary]="true">
+    </igx-column>
+    <igx-column field="ProductName" header="Product Name" [hasSummary]="true">
+    </igx-column>
+    <igx-column
+      field="UnitPrice"
+      header="Price"
+      dataType="number"
+      [hasSummary]="true"
+    >
+    </igx-column>
+    <igx-column
+      field="UnitsInStock"
+      header="Units In Stock"
+      dataType="number"
+      [hasSummary]="true"
+      [summaries]="discontinuedSummary"
+      [disabledSummaries]="['total', 'totalDiscontinued']"
+    >
+    </igx-column>
+    <igx-column
+      field="Discontinued"
+      header="Discontinued"
+      [dataType]="'boolean'"
+      [hasSummary]="true"
+    >
+    </igx-column>
+    <igx-column field="OrderDate" [dataType]="'date'" [hasSummary]="true">
+    </igx-column>
+  </igx-grid>
+  <button igxButton="contained" (click)="changeCustomSummaries()">
+    Change custom disabled summaries runtime for column Units In Stock.
+  </button>
 </div>

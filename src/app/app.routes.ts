@@ -147,7 +147,7 @@ export const appRoutes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: '/avatar'
+        redirectTo: '/gridSummary'
     },
     {
         path: 'accordion',
