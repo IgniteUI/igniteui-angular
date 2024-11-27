@@ -2,14 +2,16 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 19.0.0
+## 19.1.0
 ### General
-- `IgxFilteringService`, `IgxGridBaseDirective`
-    - **Deprecation** The `filterGlobal` method has been deprecated and will be removed in a future version.
 - `IgxCarousel`
     - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
     - **Deprecation** - `CarouselIndicatorsOrientation` enum members `top` and `bottom` have been deprecated and will be removed in a future version. Use `start` and `end` instead.
 
+## 19.0.0
+### General
+- `IgxFilteringService`, `IgxGridBaseDirective`
+    - **Deprecation** The `filterGlobal` method has been deprecated and will be removed in a future version.
 ### New Features
 - `IgxColumn`
     - Introduced the `disabledSummaries` property, allowing users to specify which summaries should be disabled for a given column. This property accepts an array of strings corresponding to the summary keys, enabling selective control over both default summaries (e.g., 'Count', 'Min') and any custom summaries created by the user.
