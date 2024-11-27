@@ -103,7 +103,7 @@
             #addConditionDragRef
             (enter)="onAddConditionEnter(addConditionDragRef, expressionItem)"
             (leave)="onAddConditionLeave($event, addConditionDragRef)"
-            (dropped)="onAddConditionDropped(addConditionDragRef,expressionItem)"
+            (dropped)="onAddConditionDropped(expressionItem)"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{
@@ -137,23 +137,22 @@
             (enter)="onDivEnter($event, dragRef, expressionItem)"
             (over)="onDivOver($event, dragRef, expressionItem)"
             (leave)="onDivLeave($event, dragRef)"
-            (dropped)="onDivDropped(dragRef, expressionItem)"
+            (dropped)="onDivDropped(expressionItem)"
             *ngIf="!expressionItem.inEditMode"
             class="igx-filter-tree__expression-item"            
             (mouseenter)="expressionItem.hovered = true"
             (mouseleave)="expressionItem.hovered = false"   
-            style="border: 2px solid red;  border-radius: 5px;"
         >
             <igx-chip        
                 [draggable]="true" 
                 [hideBaseOnDrag] = "false"    
                 [animateOnRelease] = "false"
                 (moveStart)="onMoveStart(dragRef, expressionItem)"
-                (moveEnd)="onMoveEnd(dragRef)"
+                (moveEnd)="onMoveEnd()"
                 (dragEnter)="onChipEnter($event, dragRef, expressionItem, false)"
                 (dragOver)="onChipOver($event, dragRef, false)"
                 (dragLeave)="onChipLeave($event, dragRef)"
-                (dragDrop)="onChipDropped(dragRef, expressionItem)"
+                (dragDrop)="onChipDropped(expressionItem)"
                 #target="tooltipTarget"
                 [igxTooltipTarget]="tooltipRef"
                 [data]="expressionItem"

@@ -956,13 +956,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //When we let go a chip outside a proper drop zone
-    public onMoveEnd(dragSourceRef: HTMLElement): void {
+    public onMoveEnd(): void {
         //console.log('Let go:', dragSourceRef,this.sourceElement);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         if (this.ghostChip) {
             //If there is a ghost chip presented to the user, execute drop
-            this.onChipDropped(this.targetElement, this.targetExpressionItem);
+            this.onChipDropped(this.targetExpressionItem);
         }
         else {
             this.resetDragAndDrop(true);
@@ -1004,10 +1004,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public onDivOver(event: IDropBaseEventArgs, targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
         //If over the div, at least close to the contained chip, behave like chipOver. If not behave like chipLeave
         if ((targetDragElement.children[0].getBoundingClientRect().right * 1.2) > event.pageX) {
-            if(this.targetExpressionItem){
+            if (this.targetExpressionItem) {
                 this.onChipOver(event, targetDragElement, true)
             }
-            else{
+            else {
                 this.onChipEnter(event, targetDragElement, targetExpressionItem, true);
             }
         }
@@ -1051,35 +1051,30 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //On dropped in a drop area of another chip
-    public onDivDropped(dragRef: HTMLElement, targetExpressionItem: ExpressionItem) {
+    public onDivDropped(targetExpressionItem: ExpressionItem) {
         //console.log('div dropped:');
-        this.onChipDropped(dragRef, targetExpressionItem);
+        this.onChipDropped(targetExpressionItem);
     }
-    public onChipDropped(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
-        console.log('Drop', this.sourceElement, (this.dropUnder ? 'under' : ' over:'), this.targetExpressionItem)
+    public onChipDropped(targetExpressionItem: ExpressionItem) {
         if (!this.sourceElement || !this.sourceExpressionItem) return;
-
-        if (targetDragElement !== this.targetElement) {
-            //doesn't seems to happen but still notify if it does. Remove at some point
-            console.error('Drop area chip is different than last entered one',targetDragElement, this.targetElement)
-        }
-        else {
-            this.moveChipToNewLocation(targetExpressionItem)
-            this.resetDragAndDrop(true);
-        }
+        
+        console.log('Move: [', this.sourceElement.children[0].textContent.trim(), (this.dropUnder ? '] under: [' : '] over: ['), this.targetElement.textContent.trim() + ']')
+        
+        this.moveChipToNewLocation(targetExpressionItem)
+        this.resetDragAndDrop(true);
     }
 
     public onAddConditionEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionGroupItem) {
-        console.log('onAddConditionEnter',targetDragElement);
+        //console.log('onAddConditionEnter', targetDragElement);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         let lastElement = targetDragElement.parentElement.previousElementSibling;
         lastElement = lastElement?.classList?.contains('igx-query-builder-tree') ? lastElement.previousElementSibling : lastElement;
 
-        if(lastElement == this.ghostChip) return;
+        if (lastElement == this.ghostChip) return;
 
         //simulate entering in the lower part of the last chip/group
-        this.onChipEnter({ originalEvent: { pageY: 9999} } as IChipEnterDragAreaEventArgs,
+        this.onChipEnter({ originalEvent: { pageY: 9999 } } as IChipEnterDragAreaEventArgs,
             lastElement as HTMLElement,
             targetExpressionItem.children[targetExpressionItem.children.length - 1],
             false);
@@ -1092,12 +1087,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.onChipLeave(event, targetDragElement.parentElement.previousElementSibling as HTMLElement)
     }
 
-    public onAddConditionDropped(targetDragElement: HTMLElement, targetExpressionItem: ExpressionGroupItem) {
-        console.log('onAddConditionDropped');
+    public onAddConditionDropped(targetExpressionItem: ExpressionGroupItem) {
+        //console.log('onAddConditionDropped');
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
-        this.onChipDropped(targetDragElement.parentElement as HTMLElement,
-            targetExpressionItem.children[targetExpressionItem.children.length - 1]);
+        this.onChipDropped(targetExpressionItem.children[targetExpressionItem.children.length - 1]);
     }
 
     private mouseInLowerPart(event: IDropBaseEventArgs | IChipEnterDragAreaEventArgs, ofElement: HTMLElement) {
@@ -1139,7 +1133,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             appendToElement.parentNode.insertBefore(this.ghostChip, appendToElement.nextSibling);
         }
     }
-    
+
     private moveChipToNewLocation(appendToExpressionItem: ExpressionItem, fromAddConditionBtn?: boolean) {
         //Copy dragged chip
         let dragCopy = { ...this.sourceExpressionItem };
