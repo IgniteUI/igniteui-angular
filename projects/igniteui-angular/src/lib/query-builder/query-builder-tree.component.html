@@ -103,7 +103,7 @@
             #addConditionDragRef
             (enter)="onAddConditionEnter(addConditionDragRef, expressionItem)"
             (leave)="onAddConditionLeave($event, addConditionDragRef)"
-            (dropped)="onAddConditionDropped()"
+            (dropped)="onAddConditionDropped(addConditionDragRef,expressionItem)"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{
@@ -135,7 +135,7 @@
             #dragRef 
             igxDrop
             (enter)="onDivEnter($event, dragRef, expressionItem)"
-            (over)="onDivOver($event, dragRef)"
+            (over)="onDivOver($event, dragRef, expressionItem)"
             (leave)="onDivLeave($event, dragRef)"
             (dropped)="onDivDropped(dragRef, expressionItem)"
             *ngIf="!expressionItem.inEditMode"
@@ -150,8 +150,8 @@
                 [animateOnRelease] = "false"
                 (moveStart)="onMoveStart(dragRef, expressionItem)"
                 (moveEnd)="onMoveEnd(dragRef)"
-                (dragEnter)="onChipEnter($event, dragRef, expressionItem)"
-                (dragOver)="onChipOver($event, dragRef)"
+                (dragEnter)="onChipEnter($event, dragRef, expressionItem, false)"
+                (dragOver)="onChipOver($event, dragRef, false)"
                 (dragLeave)="onChipLeave($event, dragRef)"
                 (dragDrop)="onChipDropped(dragRef, expressionItem)"
                 #target="tooltipTarget"
