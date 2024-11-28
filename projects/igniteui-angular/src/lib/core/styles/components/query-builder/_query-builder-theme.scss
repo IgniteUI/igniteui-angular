@@ -281,7 +281,7 @@
         flex-grow: 1;
     }
 
-    %filter-tree__expression-item:not(:last-child) {
+    %filter-tree__expression-item:not(:last-child):not(:nth-last-child(2):has(+ %query-builder-tree)) {        
         padding-bottom: $gap;
     }
 

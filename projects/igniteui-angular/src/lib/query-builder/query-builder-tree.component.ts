@@ -1053,14 +1053,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     //On dropped in a drop area of another chip
     public onDivDropped(targetExpressionItem: ExpressionItem) {
         //console.log('div dropped:');
-        this.onChipDropped(targetExpressionItem);
+        if (targetExpressionItem != this.sourceExpressionItem) {
+            this.onChipDropped(targetExpressionItem);
+        }
     }
     public onChipDropped(targetExpressionItem: ExpressionItem) {
         if (!this.sourceElement || !this.sourceExpressionItem) return;
-        
+
         console.log('Move: [', this.sourceElement.children[0].textContent.trim(), (this.dropUnder ? '] under: [' : '] over: ['), this.targetElement.textContent.trim() + ']')
-        
-        this.moveChipToNewLocation(targetExpressionItem)
+
+        this.moveDraggedChipToNewLocation(targetExpressionItem)
         this.resetDragAndDrop(true);
     }
 
@@ -1088,10 +1090,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     public onAddConditionDropped(targetExpressionItem: ExpressionGroupItem) {
-        //console.log('onAddConditionDropped');
+        //console.log('onAddConditionDropped',targetExpressionItem, this.sourceExpressionItem,targetExpressionItem == this.sourceExpressionItem);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
-        this.onChipDropped(targetExpressionItem.children[targetExpressionItem.children.length - 1]);
+        if (this.targetExpressionItem) {
+            this.onChipDropped(targetExpressionItem.children[targetExpressionItem.children.length - 1]);
+        }
     }
 
     private mouseInLowerPart(event: IDropBaseEventArgs | IChipEnterDragAreaEventArgs, ofElement: HTMLElement) {
@@ -1134,9 +1138,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    private moveChipToNewLocation(appendToExpressionItem: ExpressionItem, fromAddConditionBtn?: boolean) {
+    private moveDraggedChipToNewLocation(appendToExpressionItem: ExpressionItem, fromAddConditionBtn?: boolean) {
         //Copy dragged chip
         let dragCopy = { ...this.sourceExpressionItem };
+        dragCopy.parent = appendToExpressionItem.parent;
 
         //Paste on new place
         const index = appendToExpressionItem.parent.children.indexOf(appendToExpressionItem);
@@ -1803,7 +1808,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     private deleteItem(expressionItem: ExpressionItem) {
-        //console.log(expressionItem)
+        //console.log('deleteItem', expressionItem)
         if (!expressionItem.parent) {
             this.rootGroup = null;
             this.currentGroup = null;
