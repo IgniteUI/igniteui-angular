@@ -1,4 +1,4 @@
-﻿import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -839,10 +839,11 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 ]
             }
         ];
-        fixture.componentInstance.colGroups = [];
+        let colGroups = [];
         for (let i = 0; i < 3; i++) {
-            fixture.componentInstance.colGroups = fixture.componentInstance.colGroups.concat(uniqueGroups);
+            colGroups = colGroups.concat(structuredClone(uniqueGroups));
         }
+        fixture.componentInstance.colGroups = colGroups;
         grid.columnWidth = '200px';
         fixture.componentInstance.grid.width = '600px';
         fixture.detectChanges();
