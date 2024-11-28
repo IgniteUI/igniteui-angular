@@ -1,4 +1,6 @@
+import { DOCUMENT } from '@angular/common';
 import { ExportUtilities } from '../exporter-common/export-utilities';
+import { inject } from '@angular/core';
 
 /** @hidden */
 export class WorksheetDataDictionary {
@@ -19,6 +21,7 @@ export class WorksheetDataDictionary {
     private _counter: number;
     private _columnWidths: number[];
     private _context: any;
+    private document = inject(DOCUMENT);
 
     constructor(columnCount: number, columnWidth: number, columnWidthsList: number[]) {
         this._dictionary = {};
@@ -93,7 +96,7 @@ export class WorksheetDataDictionary {
 
     private getContext(): any {
         if (!this._context) {
-            const canvas = document.createElement('canvas');
+            const canvas = this.document.createElement('canvas');
             this._context = canvas.getContext('2d');
             this._context.font = WorksheetDataDictionary.DEFAULT_FONT;
         }
