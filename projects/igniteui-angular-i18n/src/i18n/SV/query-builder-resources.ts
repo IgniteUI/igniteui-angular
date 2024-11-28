@@ -60,6 +60,7 @@ const QueryBuilderResourceStringsSV_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Sök',
     igx_query_builder_select_all: 'Välj alla',
     igx_query_builder_select_entity: 'Välj enhet',
+    igx_query_builder_select_return_field_single: 'Välj returfält',
     igx_query_builder_select_return_fields: 'Välj returfält',
     igx_query_builder_dialog_title: 'Bekräftelse',
     igx_query_builder_dialog_message: 'Genom att ändra entitet förlorar du dina nuvarande inställningar. Vill du fortsätta?',

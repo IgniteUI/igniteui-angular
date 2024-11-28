@@ -60,6 +60,7 @@ const QueryBuilderResourceStringsPL_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Szukaj',
     igx_query_builder_select_all: 'Zaznacz wszystko',
     igx_query_builder_select_entity: 'Wybierz encję',
+    igx_query_builder_select_return_field_single: 'Wybierz pole zwrotne',
     igx_query_builder_select_return_fields: 'Wybierz pola zwrotne',
     igx_query_builder_dialog_title: 'Potwierdzenie',
     igx_query_builder_dialog_message: 'Zmieniając encję, stracisz swoje aktualne ustawienia. Czy na pewno chcesz to zrobić?',

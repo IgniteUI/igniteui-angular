@@ -60,6 +60,7 @@ const QueryBuilderResourceStringsZHHANT_: ExpandRequire<IQueryBuilderResourceStr
     igx_query_builder_search: '搜尋',
     igx_query_builder_select_all: '全選',
     igx_query_builder_select_entity: '選取實體',
+    igx_query_builder_select_return_field_single: '選擇返回欄位',
     igx_query_builder_select_return_fields: '選取返回欄位',
     igx_query_builder_dialog_title: '確認',
     igx_query_builder_dialog_message: '透過變更實體，您將遺失目前設定。確定要繼續？',
