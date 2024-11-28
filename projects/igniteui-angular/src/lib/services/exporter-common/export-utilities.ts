@@ -1,6 +1,3 @@
-import { DOCUMENT } from '@angular/common';
-import { inject } from '@angular/core';
-
 /**
  * @hidden
  */
@@ -25,7 +22,7 @@ export class ExportUtilities {
     }
 
     public static saveBlobToFile(blob: Blob, fileName) {
-        const doc = inject(DOCUMENT);
+        const doc = globalThis.document;
         const a = doc.createElement('a');
         const url = window.URL.createObjectURL(blob);
         a.download = fileName;
