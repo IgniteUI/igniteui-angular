@@ -349,7 +349,7 @@ export class ColumnDefinitions {
     }`;
 
     public static generatedWithWidth = `
-    @for (c of columns; track c) {
+    @for (c of columns; track c.field) {
         <igx-column  [field]="c.field" [header]="c.field" [width]="c.width">
         </igx-column>
     }`;
