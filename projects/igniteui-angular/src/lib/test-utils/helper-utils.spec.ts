@@ -4,6 +4,23 @@ import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/public_
 import { GridType } from '../grids/common/grid.interface';
 import { Subscription } from 'rxjs';
 
+/**
+ * Global beforeEach and afterEach checks to ensure test fails on specific warnings
+ */
+beforeEach(() => {
+    spyOn(console, 'warn').and.callThrough();
+});
+
+afterEach(() => {
+    expect(console.warn)
+        .withContext('Components & tests should be free of @for track duplicated keys warnings')
+        .not.toHaveBeenCalledWith(jasmine.stringContaining('NG0955'));
+    expect(console.warn)
+        .withContext('Components & tests should be free of @for track DOM re-creation warnings')
+        .not.toHaveBeenCalledWith(jasmine.stringContaining('NG0956'));
+});
+
+
 export let gridsubscriptions: Subscription [] = [];
 
 export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: GridType) => {
