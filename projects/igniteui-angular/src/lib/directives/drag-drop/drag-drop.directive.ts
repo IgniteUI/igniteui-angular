@@ -19,7 +19,7 @@ import {
     RendererStyleFlags2,
     booleanAttribute,
     EmbeddedViewRef,
-    Inject
+    inject
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
@@ -643,6 +643,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _scrollContainerStepMs = 10;
     protected _scrollContainerThreshold = 25;
     protected _containerScrollIntervalId = null;
+    private document = inject(DOCUMENT);
 
     /**
      * Sets the offset of the dragged element relative to the mouse in pixels.
@@ -692,8 +693,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         public viewContainer: ViewContainerRef,
         public zone: NgZone,
         public renderer: Renderer2,
-        protected platformUtil: PlatformUtil,
-        @Inject(DOCUMENT) private document: any
+        protected platformUtil: PlatformUtil
     ) {
     }
 
