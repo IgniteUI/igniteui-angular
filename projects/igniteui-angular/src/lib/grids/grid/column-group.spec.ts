@@ -27,7 +27,7 @@ const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid-thead__title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid-thead__group';
 
 
-fdescribe('IgxGrid - multi-column headers #grid', () => {
+describe('IgxGrid - multi-column headers #grid', () => {
     let fixture: ComponentFixture<any>; let grid: IgxGridComponent; let componentInstance;
 
     configureTestSuite();
