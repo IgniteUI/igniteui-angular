@@ -134,7 +134,6 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
         this.fieldName = fieldName;
     }
 
-
     /**
      * Checks if filtering expressions tree is empty.
      *
