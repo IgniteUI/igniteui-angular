@@ -195,7 +195,7 @@ export class ColumnDefinitions {
     }`;
 
     public static iterableComponent = `
-    @for (each of columns; track c) {
+    @for (each of columns; track each) {
         <igx-column [field]="each"></igx-column>
     }`;
 
