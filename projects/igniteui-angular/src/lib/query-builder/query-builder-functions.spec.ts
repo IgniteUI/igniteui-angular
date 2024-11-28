@@ -212,8 +212,8 @@ export class QueryBuilderFunctions {
     public static getQueryBuilderEditModeContainer(fix: ComponentFixture<any>, entityContainer = true, level = 0) {
         const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix, level);
         const editModeContainers = Array.from(exprContainer.querySelectorAll('.igx-filter-tree__inputs'));
-        const entityEditModeContainer = editModeContainers.find(container => container.querySelector('igx-combo'));
-        const conditionEditModeContainer = editModeContainers.find(container => container.querySelector('igx-select') && !container.querySelector('igx-combo'));
+        const entityEditModeContainer = editModeContainers.find(container => container.children.length == 2);
+        const conditionEditModeContainer = editModeContainers.find(container => container.children.length >= 4);
         return entityContainer ? entityEditModeContainer : conditionEditModeContainer;
     }
 
@@ -225,7 +225,7 @@ export class QueryBuilderFunctions {
 
     public static getQueryBuilderFieldsCombo(fix: ComponentFixture<any>, level = 0) {
         const editModeContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, true, level);
-        const fieldCombo = editModeContainer.querySelector('igx-combo');
+        const fieldCombo = level == 0 ? editModeContainer.querySelector('igx-combo') : editModeContainer.querySelectorAll('igx-select')[1];
         return fieldCombo;
     }
 
@@ -544,7 +544,7 @@ export class QueryBuilderFunctions {
         expect(!fieldInputGroup.classList.contains('igx-input-group--disabled')).toBe(fieldComboEnabled,
             'incorrect fields combo state');
 
-        if(columnSelectEnabled || operatorSelectEnabled ||  valueInputEnabled || commitButtonEnabled){
+        if (columnSelectEnabled || operatorSelectEnabled || valueInputEnabled || commitButtonEnabled) {
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, columnSelectEnabled, operatorSelectEnabled, valueInputEnabled, commitButtonEnabled, level);
         }
     };
@@ -592,7 +592,7 @@ export class QueryBuilderFunctions {
         expect(entityInput.value).toBe(entityText);
         expect(fieldInput.value).toBe(fieldsText);
 
-        if(columnText ||  operatorText ||  valueText){
+        if (columnText || operatorText || valueText) {
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, columnText, operatorText, valueText, level);
         }
     };
@@ -804,9 +804,12 @@ export class QueryBuilderFunctions {
             tick();
             fix.detectChanges();
         });
-        //close combo drop-down
-        QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
-        fix.detectChanges();
+
+        if (level == 0) {
+            //close combo drop-down
+            QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
+            fix.detectChanges();
+        }
     }
 
     public static selectColumnInEditModeExpression(fix, dropdownItemIndex: number, level = 0) {
@@ -832,9 +835,14 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-     public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
+    public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
         // Enter values in the nested query
         QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
+        tick(100);
+        fix.detectChanges();
+
+        // Select return field
+        QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], level);
         tick(100);
         fix.detectChanges();
 
@@ -863,7 +871,7 @@ export class QueryBuilderFunctions {
         // Verify all inputs
         QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false, level - 1); // Parent commit button should be disabled
         QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, true, level);
-        QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released', 'ProductName', 'Contains', 'a', level);
+        QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id', 'ProductName', 'Contains', 'a', level);
 
         //Commit the populated expression.
         QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, level);
@@ -890,7 +898,7 @@ export class QueryBuilderFunctions {
     }
 
     public static selectEntityAndClickInitialAddGroup(fix: ComponentFixture<any>, entityIndex: number, groupIndex: number) {
-        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex); 
+        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex);
         tick(100);
         fix.detectChanges();
 

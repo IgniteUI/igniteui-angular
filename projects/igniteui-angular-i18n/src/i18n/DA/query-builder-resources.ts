@@ -60,6 +60,7 @@ const QueryBuilderResourceStringsDA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Søg',
     igx_query_builder_select_all: 'Vælg alle',
     igx_query_builder_select_entity: 'Vælg objekt',
+    igx_query_builder_select_return_field_single: 'Vælg returfelt',
     igx_query_builder_select_return_fields: 'Vælg returfelter',
     igx_query_builder_dialog_title: 'Bekræftelse',
     igx_query_builder_dialog_message: 'Ved at ændre objektet mister du dine nuværende indstillinger. Er du sikker på, at du vil fortsætte?',

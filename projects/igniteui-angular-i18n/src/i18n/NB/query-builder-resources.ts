@@ -60,6 +60,7 @@ const QueryBuilderResourceStringsNB_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Søk',
     igx_query_builder_select_all: 'Velg alle',
     igx_query_builder_select_entity: 'Velg enhet',
+    igx_query_builder_select_return_field_single: 'Velg returfelt',
     igx_query_builder_select_return_fields: 'Velg returfelter',
     igx_query_builder_dialog_title: 'Bekreftelse',
     igx_query_builder_dialog_message: 'Ved å endre enheten vil du miste de nåværende innstillingene dine. Er du sikker på at du vil fortsette?',
