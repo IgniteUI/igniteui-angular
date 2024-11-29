@@ -49,7 +49,7 @@
                 'grid-template-rows':col.getGridTemplate(true),
                 'grid-template-columns':col.getGridTemplate(false)
             }">
-                @for (col of col.children; track col) {
+                @for (col of col.children; track trackPinnedColumn(col)) {
                     <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? mrlExpandableCellTemplate : mrlCellTemplate; context: getContext(col, this)"></ng-container>
                 }
             </div>

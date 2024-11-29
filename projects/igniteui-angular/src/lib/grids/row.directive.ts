@@ -601,6 +601,9 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         return `${defaultDragIndicatorCssClass} ${dragIndicatorOff}`;
     }
 
-    /** state persistence switching all pinned columns resets collection */
+    /**
+     * - state persistence switching all pinned columns resets collection
+     * - MRL unpinnedColumns igxFor modes entire child loop on unpin
+     */
     protected trackPinnedColumn = trackByIdentity;
 }
