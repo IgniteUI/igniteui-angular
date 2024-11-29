@@ -1,5 +1,5 @@
 <igx-chips-area (reorder)="handleReorder($event)" (moveEnd)="handleMoveEnd()">
-    @for (expression of chipExpressions; track expression; let last = $last) {
+    @for (expression of chipExpressions; track expression.fieldName; let last = $last) {
         <igx-chip
             [id]="expression.fieldName"
             [title]="(expression.fieldName | igxGroupByMeta:grid:grid.groupablePipeTrigger).title"
