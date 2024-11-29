@@ -29,6 +29,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxActionStripToken } from './token';
+import { trackByIdentity } from '../core/utils';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
@@ -313,6 +314,9 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
             this.renderer.removeChild(this.context.element.nativeElement, this._viewContainer.element.nativeElement);
         }
     }
+
+    /** pin swapping w/ unpin resets the menuItems collection */
+    protected trackMenuItem = trackByIdentity;
 
     /**
      * Close the menu if opened

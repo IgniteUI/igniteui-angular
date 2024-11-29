@@ -15,7 +15,7 @@
         </button>
     }
     <igx-drop-down #dropdown>
-        @for (item of menuItems; track item) {
+        @for (item of menuItems; track trackMenuItem(item)) {
             <igx-drop-down-item
                 class="igx-action-strip__menu-item"
             >
