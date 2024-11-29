@@ -1,6 +1,10 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 19.1.0
+### New Features
+- `IgxBanner`
+    - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. This property allows the banner to be programmatically set as expanded (visible) or collapsed (hidden) both initially and during runtime.
 
 ## 19.0.0
 ### General
@@ -50,6 +54,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridState`
     -  When possible the state directive nows reuses the column that already exists on the grid when restoring the state, instead of creating new column instances every time. This removes the need to set any complex objects manually back on the column on `columnInit`. The only instance where this is still necessary is when the column (or its children in case of column groups) have no `field` property so there's no way to uniquely identify the matching column.
     - Added support for persisting Multi-Row Layout.
+
 ### Themes
 - **Breaking Change** `Palettes`
     - All palette colors have been migrated to the [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors). This means that color consumed as CSS variables no longer need to be wrapped in an `hsl` function. 

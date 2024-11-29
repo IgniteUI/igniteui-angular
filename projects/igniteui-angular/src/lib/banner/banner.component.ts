@@ -157,14 +157,52 @@ export class IgxBannerComponent implements IToggleView {
     public get resourceStrings(): IBannerResourceStrings {
         return this._resourceStrings;
     }
+
     /**
-     * Gets whether banner is collapsed
+     * Gets/Sets whether the banner is expanded (visible) or collapsed (hidden).
+     * Defaults to `false`.
+     * Setting to `true` opens the banner, while `false` closes it.
+     *
+     * @example
+     * // Expand the banner
+     * banner.expanded = true;
+     *
+     * @example
+     * // Collapse the banner
+     * banner.expanded = false;
+     *
+     * @example
+     * // Check if the banner is expanded
+     * const isExpanded = banner.expanded;
+     */
+    @Input()
+    public get expanded(): boolean {
+        return this._expanded;
+    }
+
+    public set expanded(value: boolean) {
+        if (value === this._expanded) {
+            return;
+        }
+
+        this._expanded = value;
+        this._isProgrammaticExpanded = true;
+
+        if (value) {
+            this._expansionPanel.open();
+        } else {
+            this._expansionPanel.close();
+        }
+    }
+
+    /**
+     * Gets whether the banner is collapsed.
      *
      * ```typescript
      * const isCollapsed: boolean = banner.collapsed;
      * ```
-     */
-    public get collapsed() {
+    */
+    public get collapsed(): boolean {
         return this._expansionPanel.collapsed;
     }
 
@@ -195,6 +233,8 @@ export class IgxBannerComponent implements IToggleView {
     @ContentChild(IgxBannerActionsDirective)
     private _bannerActionTemplate: IgxBannerActionsDirective;
 
+    private _expanded: boolean = false;
+    private _isProgrammaticExpanded = false;
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
     private _resourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
@@ -216,7 +256,7 @@ export class IgxBannerComponent implements IToggleView {
      * ```
      */
     public open(event?: Event) {
-        this._bannerEvent = { owner: this, event};
+        this._bannerEvent = { owner: this, event };
         const openingArgs: BannerCancelEventArgs = {
             owner: this,
             event,
@@ -227,6 +267,8 @@ export class IgxBannerComponent implements IToggleView {
             return;
         }
         this._expansionPanel.open(event);
+        this._expanded = true;
+        this._isProgrammaticExpanded = false;
     }
 
     /**
@@ -255,6 +297,8 @@ export class IgxBannerComponent implements IToggleView {
             return;
         }
         this._expansionPanel.close(event);
+        this._expanded = false;
+        this._isProgrammaticExpanded = false;
     }
 
     /**
@@ -281,11 +325,17 @@ export class IgxBannerComponent implements IToggleView {
 
     /** @hidden */
     public onExpansionPanelOpen() {
+        if (this._isProgrammaticExpanded) {
+            return;
+        }
         this.opened.emit(this._bannerEvent);
     }
 
     /** @hidden */
     public onExpansionPanelClose() {
+        if (this._isProgrammaticExpanded) {
+            return;
+        }
         this.closed.emit(this._bannerEvent);
     }
 }
