@@ -206,7 +206,8 @@
 <div #container class="igx-grid__filtering-row-main">
     <div>
         <igx-chips-area #chipsArea>
-            @for (item of expressionsList; track item; let i = $index; let last = $last) {
+            <!-- expressionsList items re-created on refreshExpressions(), track stable expression -->
+            @for (item of expressionsList; track item.expression; let i = $index; let last = $last) {
                 <ng-container tabindex="0">
                     <igx-chip #chip id="chip"
                         (pointerdown)="onChipPointerdown($event, chip)"
