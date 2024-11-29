@@ -47,7 +47,7 @@
                             'igx-grid__tr--pinned-top': isRowPinningToTop
                         }"
                         class="igx-grid__tr--pinned" [style.width.px]="calcWidth">
-                        @for (rowData of pinnedData; track rowData; let rowIndex = $index) {
+                        @for (rowData of pinnedData; track trackPinnedRowData(rowData); let rowIndex = $index) {
                             <ng-container *ngTemplateOutlet="pinned_record_template; context: getContext(rowData, rowIndex, true)">
                             </ng-container>
                         }

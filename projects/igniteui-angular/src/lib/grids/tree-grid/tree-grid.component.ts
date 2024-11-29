@@ -1074,6 +1074,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this.treeGroupArea ? this.getComputedHeight(this.treeGroupArea.nativeElement) : 0;
     }
 
+    /** {@link triggerPipes} will re-create pinnedData on CRUD operations */
+    protected trackPinnedRowData(record: ITreeGridRecord) {
+        // TODO FIX: pipeline data doesn't match end interface (¬_¬ )
+        // return record.key || (record as any).rowID;
+        return record;
+    }
+
     /**
      * @description A recursive way to deselect all selected children of a given record
      * @param recordID ID of the record whose children to deselect
