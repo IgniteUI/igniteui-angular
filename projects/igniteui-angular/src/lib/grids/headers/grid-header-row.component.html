@@ -62,7 +62,7 @@
 
         <!-- Pinned columns collection from the start -->
         @if (pinnedColumnCollection.length && grid.isPinningToStart) {
-            @for (column of pinnedColumnCollection | igxTopLevel; track column) {
+            @for (column of pinnedColumnCollection | igxTopLevel; track trackPinnedColumn(column)) {
                 <igx-grid-header-group
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
@@ -93,7 +93,7 @@
 
         <!-- Pinned columns collection at the end -->
         @if (pinnedColumnCollection.length && !grid.isPinningToStart) {
-            @for (column of pinnedColumnCollection | igxTopLevel; track column) {
+            @for (column of pinnedColumnCollection | igxTopLevel; track trackPinnedColumn(column)) {
                 <igx-grid-header-group
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"

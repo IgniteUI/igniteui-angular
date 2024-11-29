@@ -11,7 +11,7 @@ import {
     ViewChildren,
     booleanAttribute
 } from '@angular/core';
-import { flatten } from '../../core/utils';
+import { flatten, trackByIdentity } from '../../core/utils';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ColumnType, GridType, IgxHeadSelectorTemplateContext } from '../common/grid.interface';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
@@ -198,4 +198,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
             this.grid.selectionService.selectAllRows(event);
         }
     }
+
+    /** state persistence switching all pinned columns resets collection */
+    protected trackPinnedColumn = trackByIdentity;
 }

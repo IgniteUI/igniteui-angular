@@ -26,7 +26,7 @@
 
     @if (!grid.hasColumnLayouts) {
         @if (pinnedColumns.length > 0 && grid.isPinningToStart) {
-            @for (col of pinnedColumns | igxNotGrouped; track col) {
+            @for (col of pinnedColumns | igxNotGrouped; track trackPinnedColumn(col)) {
                 <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
             }
         }
@@ -34,7 +34,7 @@
             <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
         </ng-template>
         @if (pinnedColumns.length > 0 && !grid.isPinningToStart) {
-            @for (col of pinnedColumns | igxNotGrouped; track col) {
+            @for (col of pinnedColumns | igxNotGrouped; track trackPinnedColumn(col)) {
                 <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
             }
         }
@@ -61,7 +61,7 @@
 </ng-template>
 
 <ng-template #mrlPinnedTemplate let-pinnedColumns>
-    @for (col of pinnedColumns | igxTopLevel; track col) {
+    @for (col of pinnedColumns | igxTopLevel; track trackPinnedColumn(col)) {
         <div class="igx-grid__mrl-block"
             [class.igx-grid__td--pinned-last]="col.hasLastPinnedChildColumn"
             [class.igx-grid__td--pinned-first]="col.hasFirstPinnedChildColumn"

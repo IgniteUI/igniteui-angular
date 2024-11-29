@@ -105,7 +105,7 @@
 </ng-template>
 
 <ng-template #pinnedCellsTemplate let-col>
-    @for (col of pinnedColumns | igxNotGrouped; track col) {
+    @for (col of pinnedColumns | igxNotGrouped; track trackPinnedColumn(col)) {
         <ng-template #cellTemplate>
             <igx-grid-cell
                 class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"

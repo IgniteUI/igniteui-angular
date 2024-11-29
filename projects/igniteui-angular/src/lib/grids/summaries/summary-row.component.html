@@ -37,7 +37,7 @@
 }
 
 <ng-template #summaryCellTemplate let-col>
-    @for (col of pinnedColumns | igxNotGrouped; track col) {
+    @for (col of pinnedColumns | igxNotGrouped; track trackPinnedColumn(col)) {
         <igx-grid-summary-cell
             role="cell"
             class="igx-grid-summary igx-grid-summary--fw igx-grid-summary--pinned"
