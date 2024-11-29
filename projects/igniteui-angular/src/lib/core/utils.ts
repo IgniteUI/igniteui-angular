@@ -655,6 +655,19 @@ export function getComponentCssSizeVar(size: string) {
  * @param path - The URI path to be normalized.
  * @returns string encoded using the encodeURI function.
  */
- export function normalizeURI(path: string) {
-     return path.split('/').map(encodeURI).join('/');
- }
+export function normalizeURI(path: string) {
+    return path.split('/').map(encodeURI).join('/');
+}
+
+/**
+ * Collection re-created w/ the built in track by identity will always log
+ * warning even for valid cases of recalculating all collection items.
+ * See https://github.com/angular/angular/blob/55581b4181639568fb496e91055142a1b489e988/packages/core/src/render3/instructions/control_flow.ts#L393-L409
+ * Current solution explicit track function doing the same as suggested in:
+ * https://github.com/angular/angular/issues/56471#issuecomment-2180315803
+ * This should be used with moderation and when necessary.
+ * @internal
+ */
+export function trackByIdentity<T>(item: T): T {
+    return item;
+}

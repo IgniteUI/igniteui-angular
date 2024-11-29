@@ -7,6 +7,7 @@ import { GridColumnDataType } from '../../data-operations/data-util';
 import { formatCurrency, formatDate, formatNumber, formatPercent, getLocaleCurrencyCode, getLocaleCurrencySymbol, NgTemplateOutlet } from '@angular/common';
 import { ISelectionNode } from '../common/types';
 import { ColumnType } from '../common/grid.interface';
+import { trackByIdentity } from '../../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -114,16 +115,8 @@ export class IgxSummaryCellComponent {
             this.column.pipeArgs.display : getLocaleCurrencySymbol(this.grid.locale);
     }
 
-    /**
-     * Collection re-created w/ the built in track by identity will always log
-     * warning even for valid cases (cached single summary res after filter).
-     * See https://github.com/angular/angular/blob/55581b4181639568fb496e91055142a1b489e988/packages/core/src/render3/instructions/control_flow.ts#L393-L409
-     * Current solution explicit track function doing the same as suggested in:
-     * https://github.com/angular/angular/issues/56471#issuecomment-2180315803
-     */
-    protected trackSummaryResult(summary: IgxSummaryResult) {
-        return summary;
-    }
+    /** cached single summary res after filter resets collection */
+    protected trackSummaryResult = trackByIdentity;
 
     public translateSummary(summary: IgxSummaryResult): string {
         return this.grid.resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
