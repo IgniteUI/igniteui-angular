@@ -14,7 +14,8 @@
 
 <ng-template #defaultFilter>
     <igx-chips-area #chipsArea class="igx-filtering-chips">
-        @for (item of expressionsList; track item; let last = $last; let index = $index) {
+        <!-- expressionsList items re-created on refreshExpressions(), track stable expression -->
+        @for (item of expressionsList; track item.expression; let last = $last; let index = $index) {
             @if (isChipVisible(index)) {
                 <igx-chip
                     [removable]="true"
