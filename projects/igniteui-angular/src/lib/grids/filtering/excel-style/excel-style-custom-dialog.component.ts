@@ -46,6 +46,7 @@ import { BaseFilteringComponent } from './base-filtering.component';
 export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public expressionsList = new Array<ExpressionUI>();
+
     @Input()
     public column: ColumnType;
 
