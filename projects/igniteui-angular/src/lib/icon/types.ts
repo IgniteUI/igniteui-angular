@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import { IgxTheme } from "../services/theme/theme.service";
+import { IgxTheme } from "../services/theme/theme.token";
 
 // Exported internal types
 export type IconThemeKey = IgxTheme | 'default';
@@ -23,6 +23,7 @@ export interface IconMeta {
     name: string;
     family: string;
     type?: IconType;
+    external?: boolean;
 }
 
 export interface FamilyMeta {

@@ -14,15 +14,16 @@ import {
     Self,
     booleanAttribute,
     inject,
-    DestroyRef
+    DestroyRef,
+    Inject
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseEventArgs, getComponentTheme, mkenum } from '../core/utils';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
-import { noop, Subject, Subscription } from 'rxjs';
+import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxTheme, ThemeService } from '../services/theme/theme.service';
+import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token';
 
 export const LabelPosition = /*@__PURE__*/mkenum({
     BEFORE: 'before',
@@ -492,29 +493,43 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * @internal
      */
     private _required = false;
+    private _prefersTokenizedTheme = false;
     private elRef = inject(ElementRef);
-    private _theme$ = new Subject<IgxTheme>();
-    private _subscription: Subscription;
     private destroyRef = inject(DestroyRef);
 
     constructor(
         protected cdr: ChangeDetectorRef,
         protected renderer: Renderer2,
-        protected themeService: ThemeService,
+        @Inject(THEME_TOKEN)
+        protected themeToken: ThemeToken,
         @Optional() @Self() public ngControl: NgControl,
     ) {
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
+        const { theme, preferToken } = this.themeToken.getValue();
+        this.theme = theme;
+        this._prefersTokenizedTheme = preferToken;
 
-        this.theme = this.themeService.globalTheme;
-
-        this._subscription = this._theme$.asObservable().subscribe(value => {
-            this.theme = value as IgxTheme;
-            this.cdr.detectChanges();
+        const { unsubscribe } = this.themeToken.subscribe((props) => {
+            if (this.theme !== props.theme) {
+                this.theme = props.theme;
+                this.cdr.detectChanges();
+            }
         });
 
-        this.destroyRef.onDestroy(() => this._subscription.unsubscribe());
+        this.destroyRef.onDestroy(() => unsubscribe);
+    }
+
+    private setComponentTheme() {
+        if(!this._prefersTokenizedTheme) {
+            const theme = getComponentTheme(this.elRef.nativeElement);
+
+            if (theme && theme !== this.theme) {
+                this.themeToken.next({theme});
+                this.cdr.markForCheck();
+            }
+        }
     }
 
     /**
@@ -531,12 +546,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
             }
         }
 
-        const theme = this.themeService.getComponentTheme(this.elRef);
-
-        if (theme) {
-            this._theme$.next(theme);
-            this.cdr.markForCheck();
-        }
+        this.setComponentTheme();
     }
 
     /** @hidden @internal */

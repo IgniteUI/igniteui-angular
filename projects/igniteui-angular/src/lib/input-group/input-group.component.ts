@@ -1,18 +1,19 @@
 import { DOCUMENT, NgIf, NgTemplateOutlet, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import {
-    AfterViewChecked,
+    AfterViewInit,
     ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
+    DestroyRef,
     ElementRef,
     HostBinding,
     HostListener, Inject, Input,
-    OnDestroy,
-    Optional, QueryList, booleanAttribute
+    Optional, QueryList, booleanAttribute,
+    inject
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
-import { PlatformUtil } from '../core/utils';
+import { PlatformUtil, getComponentTheme } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -26,8 +27,7 @@ import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { IgxTheme, ThemeService } from '../services/theme/theme.service';
-import { Subject, Subscription } from 'rxjs';
+import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token';
 
 @Component({
     selector: 'igx-input-group',
@@ -36,7 +36,7 @@ import { Subject, Subscription } from 'rxjs';
     standalone: true,
     imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
 })
-export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewChecked, OnDestroy {
+export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -121,11 +121,11 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
     @ContentChild(IgxInputDirective, { read: IgxInputDirective, static: true })
     protected input: IgxInputDirective;
 
+    private _destroyRef = inject(DestroyRef);
     private _type: IgxInputGroupType = null;
     private _filled = false;
     private _theme: IgxTheme;
-    private _theme$ = new Subject<IgxTheme>();
-    private _subscription: Subscription;
+    private _prefersTokenizedTheme = false;
     private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
 
     /** @hidden */
@@ -217,14 +217,21 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
         private document: any,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
-        private themeService: ThemeService,
+        @Inject(THEME_TOKEN)
+        private themeToken: ThemeToken
     ) {
-        this._theme = this.themeService.globalTheme;
+        const { theme, preferToken } = this.themeToken.getValue();
+        this._theme = theme;
+        this._prefersTokenizedTheme = preferToken;
 
-        this._subscription = this._theme$.asObservable().subscribe(value => {
-            this._theme = value as IgxTheme;
-            this.cdr.detectChanges();
+        const { unsubscribe } = this.themeToken.asObservable().subscribe((props) => {
+            if (this._theme !== props.theme) {
+                this._theme = props.theme;
+                this.cdr.detectChanges();
+            }
         });
+
+        this._destroyRef.onDestroy(() => unsubscribe);
     }
 
     /** @hidden */
@@ -440,18 +447,19 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewCheck
         this._filled = val;
     }
 
-    /** @hidden @internal */
-    public ngAfterViewChecked() {
-        const theme = this.themeService.getComponentTheme(this.element);
+    private setComponentTheme() {
+        if (!this._prefersTokenizedTheme) {
+            const theme = getComponentTheme(this.element.nativeElement);
 
-        if (theme) {
-            this._theme$.next(theme);
-            this.cdr.markForCheck();
+            if (theme && theme !== this._theme) {
+                this.themeToken.next({theme});
+                this.cdr.markForCheck();
+            }
         }
     }
 
     /** @hidden @internal */
-    public ngOnDestroy() {
-        this._subscription.unsubscribe();
+    public ngAfterViewInit() {
+        this.setComponentTheme();
     }
 }
