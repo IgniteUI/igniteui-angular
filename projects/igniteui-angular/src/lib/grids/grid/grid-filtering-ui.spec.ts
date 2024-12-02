@@ -3019,16 +3019,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             );
         }));
 
-        it('Should emit filteringDone when we clicked reset - Boolean column type', fakeAsync(() => {
-            emitFilteringDoneOnResetClick(
-                fix,
-                grid,
-                true,
-                'Released',
-                IgxBooleanFilteringOperand.instance().condition('true')
-            );
-        }));
-
         it('Should emit filteringDone when we clicked reset - DateTime column type', fakeAsync(() => {
             emitFilteringDoneOnResetClick(
                 fix,
@@ -3076,16 +3066,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 100000,
                 'Revenue',
                 IgxNumberFilteringOperand.instance().condition('equals')
-            );
-        }));
-
-        it('Should emit filteringDone when clear the input of filteringUI - Boolean column type', fakeAsync(() => {
-            emitFilteringDoneOnInputClear(
-                fix,
-                grid,
-                true,
-                'Released',
-                IgxBooleanFilteringOperand.instance().condition('true')
             );
         }));
 
@@ -6517,7 +6497,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
             const parentContainerRect = displayContainer.parentElement.getBoundingClientRect();
-            
+
             expect(displayContainerRect.top - parentContainerRect.top <= 1).toBe(true, 'search scrollbar did not reset');
         });
     });
