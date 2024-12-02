@@ -58,11 +58,9 @@ $theme: $material;
     line-height: calc(#{var-get($theme, 'size')} / 2);
 }
 
-igx-avatar {
-    @include css-vars-from-theme($base, 'igx-avatar');
-}
-
 @include b(igx-avatar) {
+    @include css-vars-from-theme($base, 'igx-avatar');
+
     @extend %igx-avatar-display;
 
     @include e(image) {

@@ -1,10 +1,11 @@
+@use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use '../light/themes' as *;
 
 $theme: $bootstrap;
 
-.igx-avatar {
+@include b(igx-avatar) {
     @container style(--ig-theme: bootstrap) {
         &::after {
             position: absolute;
@@ -12,11 +13,11 @@ $theme: $bootstrap;
             width: 100%;
             height: 100%;
             border-radius: inherit;
-            opacity: .5;
+            opacity: 0.5;
         }
 
         &:focus::after {
-            box-shadow: 0 0 0 rem(3px) var-get($theme, 'background');
+            box-shadow: 0 0 0 rem(3px) var-get($bootstrap, 'background');
         }
     }
 }

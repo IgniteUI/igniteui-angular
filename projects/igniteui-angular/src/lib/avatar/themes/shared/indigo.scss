@@ -1,4 +1,6 @@
-.igx-avatar {
+@use 'igniteui-theming/sass/bem' as *;
+
+@include b(igx-avatar) {
     @container style(--ig-theme: indigo) {
         igx-icon {
             --ig-size: 1;

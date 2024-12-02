@@ -13,7 +13,7 @@ import {
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { ThemeService, ThemedComponent } from '../services/theme/theme.service';
-import styles from './themes/themes.css';
+import themes from './themes/index';
 
 let NEXT_ID = 0;
 export const IgxAvatarSize = /*@__PURE__*/mkenum({
@@ -345,7 +345,7 @@ export class IgxAvatarComponent implements OnInit, ThemedComponent {
     /** @hidden @internal */
     public ngOnInit() {
         this.roleDescription = this.getRole();
-        this.themeService.adoptStyles(IgxAvatarComponent, styles);
+        this.themeService.adoptStyles(IgxAvatarComponent, themes);
     }
 
     /** @hidden @internal */
