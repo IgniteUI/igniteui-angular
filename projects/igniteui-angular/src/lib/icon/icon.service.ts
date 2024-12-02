@@ -1,4 +1,4 @@
-import { Injectable, SecurityContext, inject } from "@angular/core";
+import { Inject, Injectable, Optional, SecurityContext } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { DOCUMENT } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
@@ -7,7 +7,7 @@ import { PlatformUtil } from "../core/utils";
 import { iconReferences } from './icon.references'
 import { IconFamily, IconMeta, FamilyMeta } from "./types";
 import type { IconType, IconReference } from './types';
-import { IgxTheme, THEME_TOKEN } from "../services/theme/theme.token";
+import { IgxTheme, THEME_TOKEN, ThemeToken } from "../services/theme/theme.token";
 import { IndigoIcons } from "./icons.indigo";
 
 /**
@@ -50,11 +50,6 @@ export class IgxIconService {
      */
     public iconLoaded: Observable<IgxIconLoadedEvent>;
 
-    private _sanitizer = inject(DomSanitizer, { optional: true });
-    private _httpClient = inject(HttpClient, { optional: true }) ;
-    private _platformUtil = inject(PlatformUtil, { optional: true });
-    protected document = inject(DOCUMENT, { optional: true });
-
     private _defaultFamily: IconFamily = {
         name: "material",
         meta: { className: "material-icons", type: "liga" },
@@ -64,13 +59,19 @@ export class IgxIconService {
     private _cachedIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
     private _domParser: DOMParser;
-    private themeToken$ = inject(THEME_TOKEN);
 
-    constructor() {
+    constructor(
+        @Optional() private _sanitizer: DomSanitizer,
+        @Optional() private _httpClient: HttpClient,
+        @Optional() private _platformUtil: PlatformUtil,
+        @Optional() @Inject(THEME_TOKEN) private _themeToken$: ThemeToken,
+        @Optional() @Inject(DOCUMENT) protected document: Document,
+    ) {
+
         this.iconLoaded = this._iconLoaded.asObservable();
         this.setFamily(this._defaultFamily.name, this._defaultFamily.meta);
 
-        this.themeToken$.subscribe((props) => {
+        this._themeToken$?.subscribe((props) => {
             this.setRefsByTheme(props.theme);
         });
 
