@@ -2746,6 +2746,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
                 GridFunctions.clickFilterCellChip(fix, 'AnotherField');
                 fix.detectChanges();
+                grid.cdr.detectChanges();
 
                 // check if it is positioned at the bottom of the thead.
                 const theadWrapper = grid.theadRow.nativeElement.firstElementChild;
@@ -5828,6 +5829,32 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(gridCellValues).toEqual(listItems);
         }));
 
+        it('Should filter grid correctly with case insensitive duplicates', fakeAsync(() => {
+            grid.data = SampleTestData.excelFilteringDataDuplicateValues();
+            fix.detectChanges();
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'cust', fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Get the results and verify their count.
+            const gridCellValues = GridFunctions.getColumnCells(fix, 'AnotherField')
+                .map(c => c.nativeElement.innerText)
+                .sort();
+
+            expect(gridCellValues.length).toEqual(5);
+        }));
+
         it('Should disable the apply button when there are no results.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
@@ -6466,31 +6493,31 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Select column
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Scroll the search list to the bottom.
             let scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
             scrollbar.scrollTop = 3000;
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Select another column
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Update scrollbar
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
-            // Get the display container and its parent and verify if the display contaier is at start
+            // Get the display container and its parent and verify that the display container is at start
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
             const parentContainerRect = displayContainer.parentElement.getBoundingClientRect();
-
+            
             expect(displayContainerRect.top - parentContainerRect.top <= 1).toBe(true, 'search scrollbar did not reset');
         });
     });

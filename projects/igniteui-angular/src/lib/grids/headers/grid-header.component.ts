@@ -30,7 +30,6 @@ import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header',
     templateUrl: 'grid-header.component.html',
-    standalone: true,
     imports: [IgxIconComponent, NgTemplateOutlet, NgIf, NgClass, SortingIndexPipe]
 })
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
@@ -107,15 +106,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     @HostBinding('class.igx-grid-th--selected')
     public get selectedStyle() {
         return this.selected;
-    }
-
-    @HostBinding('style.height.rem')
-    public get height() {
-        if (!this.grid.hasColumnGroups || this.grid.type === 'pivot') {
-            return null;
-        }
-
-        return (this.grid.maxLevelHeaderDepth + 1 - this.column.level) * this.grid.defaultRowHeight / this.grid._baseFontSize;
     }
 
     /**

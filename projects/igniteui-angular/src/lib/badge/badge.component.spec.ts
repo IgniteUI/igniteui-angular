@@ -94,7 +94,6 @@ describe('Badge', () => {
 
 @Component({
     template: `<igx-badge type="error" value="22" outlined></igx-badge>`,
-    standalone: true,
     imports: [IgxBadgeComponent]
 })
 class InitBadgeComponent {
@@ -103,7 +102,6 @@ class InitBadgeComponent {
 
 @Component({
     template: `<igx-badge></igx-badge>`,
-    standalone: true,
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithDefaultsComponent {
@@ -112,7 +110,6 @@ class InitBadgeWithDefaultsComponent {
 
 @Component({
     template: `<igx-badge icon="person" type="info"></igx-badge>`,
-    standalone: true,
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconComponent {
@@ -121,7 +118,6 @@ class InitBadgeWithIconComponent {
 
 @Component({
     template: `<igx-badge icon="person"></igx-badge>`,
-    standalone: true,
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconARIAComponent {

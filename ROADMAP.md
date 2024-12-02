@@ -2,16 +2,39 @@
 
 # Current Milestone
 
-## Milestone 34, (Due by Sep, 2024)
+## Milestone 35, (Due by Jan, 2025)
 
-1. Indigo Theme Calendar Improvements [#14407](https://github.com/IgniteUI/igniteui-angular/issues/14407)
-2. Provide a set of properties to be settable to default grid CRUD editors without the need for templates [#14009](https://github.com/IgniteUI/igniteui-angular/issues/14009)
+1. Tile Manager - new component [#239](https://github.com/IgniteUI/igniteui-angular/issues/239)
+2. Query Builder component update [#14979](https://github.com/IgniteUI/igniteui-angular/issues/14979)
+3. IgxBannerComponent - Support collapsed input [#14890](https://github.com/IgniteUI/igniteui-angular/issues/14890)
+4. Update of the carousel component [#15025](https://github.com/IgniteUI/igniteui-angular/issues/15025)
 
 ## Going down the road
 
-1. Scheduler component [#8097](https://github.com/IgniteUI/igniteui-angular/issues/8097)
+1. Provide an option to modify the default enter edit mode conditions, to e.g. allow edit mode start on a single click [#14658](https://github.com/IgniteUI/igniteui-angular/issues/14658)
+2. Provide an excel-like navigation mode for editing where all arrow keys navigate the cell in edit mode. [#14659](https://github.com/IgniteUI/igniteui-angular/issues/14659)
+3. Extend the 18.2 editorOptions property to allow modifying numeric editors to not change the value on up/down arrow press [#14660](https://github.com/IgniteUI/igniteui-angular/issues/14660)
 
 # Previous Milestone
+
+## Milestone 35, version 19.0 (Released Nov 25th, 2024)
+
+1. Angular 19 support
+2. Simplify hiding Grid summary results through API [#14905](https://github.com/IgniteUI/igniteui-angular/issues/14905)
+
+## Milestone 34, version 18.2 (Released Oct 25th, 2024)
+
+1. **[DONE]** Indigo Theme Calendar Improvements [#14407](https://github.com/IgniteUI/igniteui-angular/issues/14407)
+2. **[DONE]** Provide a set of properties to be settable to default grid CRUD editors without the need for templates [#14009](https://github.com/IgniteUI/igniteui-angular/issues/14009)
+3. **[DONE]** Add Multi-row layout support to igxGridState [#14907](https://github.com/IgniteUI/igniteui-angular/issues/14907)
+4. **[DONE]** Re-use column instances for state persistence [#14896](https://github.com/IgniteUI/igniteui-angular/issues/14896)
+5. **[DONE]** Tabs: add manual activation through keyboard navigation [#14839](https://github.com/IgniteUI/igniteui-angular/issues/14839)
+6. **[DONE]** Carousel Component update [#14627](https://github.com/IgniteUI/igniteui-angular/issues/14627)
+7. **[DONE]** Grids: provide a more straightforward approach to sort by formatted values [#14442](https://github.com/IgniteUI/igniteui-angular/issues/14442)
+8. **[DONE]** IgxSimpleCombo: Combo gets cleared when entering a valid value and press tab [#14085](https://github.com/IgniteUI/igniteui-angular/issues/14085)
+9. **[DONE]** Ability to format igxGrid export to excel summary values [#14626](https://github.com/IgniteUI/igniteui-angular/issues/14626)
+10. **[DONE]** All palette colors migrated to [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors)
+
 
 ## Milestone 33, version 18.1 (Released Jul 22nd, 2024)
 

@@ -15,7 +15,6 @@ import {
     selector: 'app-finjs-controllers',
     styleUrls: ['./controllers.component.scss'],
     templateUrl: './controllers.component.html',
-    standalone: true,
     imports: [IgxSwitchComponent, IgxSliderComponent, FormsModule, IgxButtonGroupComponent, NgIf]
 })
 export class ControllerComponent implements OnInit, OnDestroy {

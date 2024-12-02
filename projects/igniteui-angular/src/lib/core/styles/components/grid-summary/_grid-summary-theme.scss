@@ -82,6 +82,7 @@
         pinned-border-style: $pinned-border-style,
         pinned-border-color: $pinned-border-color,
         label-hover-color: $label-hover-color,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),

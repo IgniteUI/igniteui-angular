@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
@@ -1532,7 +1532,7 @@ describe('igxCombo', () => {
 
                 productIndex = 42;
                 combo.virtualScrollContainer.scrollTo(productIndex);
-                await wait();
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 verifyComboData();
                 // index is at bottom
@@ -1541,7 +1541,7 @@ describe('igxCombo', () => {
 
                 productIndex = 485;
                 combo.virtualScrollContainer.scrollTo(productIndex);
-                await wait(30);
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 verifyComboData();
                 expect(combo.virtualizationState.startIndex + combo.virtualizationState.chunkSize - 1)
@@ -1549,13 +1549,13 @@ describe('igxCombo', () => {
 
                 productIndex = 873;
                 combo.virtualScrollContainer.scrollTo(productIndex);
-                await wait();
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 verifyComboData();
 
                 productIndex = 649;
                 combo.virtualScrollContainer.scrollTo(productIndex);
-                await wait();
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 verifyComboData();
             });
@@ -1578,7 +1578,7 @@ describe('igxCombo', () => {
 
                 // Scroll selected items out of view
                 combo.virtualScrollContainer.scrollTo(40);
-                await wait();
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 combo.handleClearItems(spyObj);
                 expect(combo.selection).toEqual([]);
@@ -1604,7 +1604,7 @@ describe('igxCombo', () => {
 
                 // scroll to second selected item
                 combo.virtualScrollContainer.scrollTo(19);
-                await wait(30);
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
 
                 const secondItem = combo.data[combo.data.length - 1];
@@ -1633,7 +1633,7 @@ describe('igxCombo', () => {
 
                 // Scroll selected items out of view
                 combo.virtualScrollContainer.scrollTo(40);
-                await wait();
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 combo.select([combo.data[0][valueKey], combo.data[1][valueKey]]);
                 Object.assign(expectedResults, {
@@ -1745,71 +1745,60 @@ describe('igxCombo', () => {
                     expect(dropdown).toBeDefined();
                     expect(dropdown.focusedItem).toBeFalsy();
                     expect(combo.virtualScrollContainer).toBeDefined();
+                    combo.allowCustomValues = true;
                     const mockClick = jasmine.createSpyObj('event', ['preventDefault', 'stopPropagation']);
                     const virtualMockUP = spyOn<any>(dropdown, 'navigatePrev').and.callThrough();
                     const virtualMockDOWN = spyOn<any>(dropdown, 'navigateNext').and.callThrough();
                     expect(dropdown.focusedItem).toEqual(null);
                     expect(combo.collapsed).toBeTruthy();
                     combo.toggle();
-                    await wait(30);
+                    await wait();
                     fixture.detectChanges();
                     expect(combo.collapsed).toBeFalsy();
                     combo.virtualScrollContainer.scrollTo(51);
-                    await wait(30);
+                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                     fixture.detectChanges();
-                    let items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
-                    let lastItem = items[items.length - 1].componentInstance;
+                    const items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
+                    const lastItem = items[items.length - 1].componentInstance;
                     expect(lastItem).toBeDefined();
                     lastItem.clicked(mockClick);
-                    await wait(30);
                     fixture.detectChanges();
                     expect(dropdown.focusedItem).toEqual(lastItem);
                     dropdown.navigateItem(-1);
-                    await wait(30);
                     fixture.detectChanges();
                     expect(virtualMockDOWN).toHaveBeenCalledTimes(0);
                     lastItem.clicked(mockClick);
-                    await wait(30);
                     fixture.detectChanges();
                     expect(dropdown.focusedItem).toEqual(lastItem);
                     dropdown.navigateNext();
-                    await wait(30);
                     fixture.detectChanges();
                     expect(virtualMockDOWN).toHaveBeenCalledTimes(1);
                     combo.searchValue = 'New';
                     combo.handleInputChange();
                     fixture.detectChanges();
-                    await wait(30);
-                    items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
-                    lastItem = items[items.length - 1].componentInstance;
-                    (lastItem as IgxComboAddItemComponent).clicked(mockClick);
-                    await wait(30);
+                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                    const addItemButton = fixture.debugElement.query(By.directive(IgxComboAddItemComponent));
+                    addItemButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     fixture.detectChanges();
                     // After `Add Item` is clicked, the input is focused and the item is added to the list
-                    // expect(dropdown.focusedItem).toEqual(null);
+                    expect(dropdown.focusedItem).toEqual(null);
                     expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
                     expect(combo.customValueFlag).toBeFalsy();
                     expect(combo.searchInput.nativeElement.value).toBeTruthy();
 
                     // TEST move from first item
-                    combo.virtualScrollContainer.scrollTo(0);
-                    await wait();
-                    fixture.detectChanges();
                     const firstItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[0].componentInstance;
                     firstItem.clicked(mockClick);
-                    await wait(30);
                     fixture.detectChanges();
                     expect(dropdown.focusedItem).toEqual(firstItem);
                     expect(dropdown.focusedItem.itemIndex).toEqual(0);
-                    // spyOnProperty(dropdown, 'focusedItem', 'get').and.returnValue(firstItem);
                     dropdown.navigateFirst();
-                    await wait(30);
                     fixture.detectChanges();
                     dropdown.navigatePrev();
-                    await wait(30);
                     fixture.detectChanges();
-                    // Called once before the `await` and called once more, because item @ index 0 is a header
+                    // Called once manually and called once more, because item @ index 0 is a header
                     expect(virtualMockUP).toHaveBeenCalledTimes(2);
+                    expect(dropdown.focusedItem).toBeNull();
                 }));
                 it('should properly get the first focusable item when focusing the component list', () => {
                     const expectedItemText = 'State: MichiganRegion: East North Central';
@@ -1969,14 +1958,14 @@ describe('igxCombo', () => {
                     expect(scrollbar.scrollTop).toEqual(0);
                     // Scroll to bottom;
                     UIInteractions.triggerEventHandlerKeyDown('End', dropdownContent);
-                    await wait(30);
+                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                     fixture.detectChanges();
                     // Content was scrolled to bottom
                     expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
 
                     // Scroll to top
                     UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
-                    await wait(30);
+                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                     fixture.detectChanges();
                     const dropdownContainer: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                     firstVisibleItem = dropdownContainer.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}` + ':first-child');
@@ -2013,14 +2002,14 @@ describe('igxCombo', () => {
                     expect(scrollbar.scrollTop).toEqual(0);
                     // Scroll to bottom;
                     UIInteractions.triggerEventHandlerKeyDown('End', dropdownContent);
-                    await wait();
+                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                     fixture.detectChanges();
                     // Content was scrolled to bottom
                     expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
 
                     // Scroll to top
                     UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
-                    await wait(30);
+                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                     fixture.detectChanges();
                     const dropdownContainer: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                     firstVisibleItem = dropdownContainer.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}` + ':first-child');
@@ -2066,7 +2055,7 @@ describe('igxCombo', () => {
                 spyOn(combo.dropdown, 'onToggleClosing').and.callThrough();
                 spyOn(combo.dropdown, 'onToggleClosed').and.callThrough();
                 combo.toggle();
-                await wait(30);
+                await wait();
                 fixture.detectChanges();
                 expect(combo.collapsed).toEqual(false);
                 expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(1);
@@ -2075,17 +2064,17 @@ describe('igxCombo', () => {
                 expect(virtDir.getScroll().scrollTop).toEqual(0);
                 expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
                 virtDir.getScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
-                await wait(30);
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 expect(virtDir.getScroll().scrollTop).toBeGreaterThan(0);
                 UIInteractions.simulateClickEvent(document.documentElement);
-                await wait(10);
+                await wait();
                 fixture.detectChanges();
                 expect(combo.collapsed).toEqual(true);
                 expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(1);
                 expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
                 combo.toggle();
-                await wait(30);
+                await wait();
                 fixture.detectChanges();
                 expect(combo.collapsed).toEqual(false);
                 expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
@@ -2116,7 +2105,7 @@ describe('igxCombo', () => {
                 expect(scrollbar.scrollTop).toEqual(0);
 
                 combo.virtualScrollContainer.scrollTo(16);
-                await wait(30);
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 let selectedItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
                 selectedItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2126,13 +2115,13 @@ describe('igxCombo', () => {
 
                 const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
                 UIInteractions.triggerEventHandlerKeyDown('End', dropdownContent);
-                await wait(30);
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 // Content was scrolled to bottom
                 expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
 
                 combo.virtualScrollContainer.scrollTo(5);
-                await wait(30);
+                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
                 selectedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_SELECTED}`));
                 expect(selectedItem.nativeElement.textContent).toEqual(selectedItemText);
@@ -3615,7 +3604,7 @@ describe('igxCombo', () => {
                     combo.open();
                     input.triggerEventHandler('focus', {});
                     fixture.detectChanges();
-                    expect(ngModel.touched).toBeTrue();
+                    expect(ngModel.touched).toBeFalse();
                     combo.searchInput.nativeElement.focus();
                     fixture.detectChanges();
                     const documentClickEvent = new MouseEvent('click', { bubbles: true });
@@ -3671,7 +3660,6 @@ describe('igxCombo', () => {
             <div class="footer-class">This is a footer</div>
         </ng-template>
     </igx-combo>`,
-    standalone: true,
     imports: [IgxComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective]
 })
 class IgxComboSampleComponent {
@@ -3748,7 +3736,6 @@ class IgxComboSampleComponent {
         </p>
     </form>
     `,
-    standalone: true,
     imports: [IgxComboComponent, IgxLabelDirective, ReactiveFormsModule]
 })
 class IgxComboFormComponent {
@@ -3819,7 +3806,6 @@ class IgxComboFormComponent {
         </igx-combo>
     </form>
     `,
-    standalone: true,
     imports: [IgxComboComponent, IgxLabelDirective, FormsModule]
 })
 class IgxComboInTemplatedFormComponent {
@@ -3889,7 +3875,6 @@ export class LocalService {
         [ariaLabelledBy]="'mockID'">
     </igx-combo>
     `,
-    standalone: true,
     providers: [LocalService],
     imports: [IgxComboComponent]
 })
@@ -3917,7 +3902,6 @@ export class IgxComboBindingTestComponent {
         </igx-combo>
     </div>
     `,
-    standalone: true,
     imports: [IgxComboComponent]
 })
 class IgxComboInContainerTestComponent {
@@ -3987,7 +3971,6 @@ export class RemoteDataService {
         [ariaLabelledBy]="'mockID'">
     </igx-combo>
     `,
-    standalone: true,
     providers: [RemoteDataService],
     imports: [IgxComboComponent, AsyncPipe]
 })
@@ -4020,7 +4003,6 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
 
 @Component({
     template: `<igx-combo [(ngModel)]="selectedItems" [data]="items"></igx-combo>`,
-    standalone: true,
     imports: [IgxComboComponent, FormsModule]
 })
 export class ComboModelBindingComponent implements OnInit {
@@ -4038,7 +4020,6 @@ export class ComboModelBindingComponent implements OnInit {
 @Component({
     template: `
         <igx-combo [(ngModel)]="selectedItems" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-combo>`,
-    standalone: true,
     imports: [IgxComboComponent, FormsModule]
 })
 export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
@@ -4059,7 +4040,6 @@ export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
 @Component({
     template: `
         <igx-combo [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
-    standalone: true,
     imports: [IgxComboComponent]
 })
 export class ComboArrayTypeValueKeyComponent {
@@ -4088,7 +4068,6 @@ export class ComboArrayTypeValueKeyComponent {
 @Component({
     template: `
         <igx-combo id="id1" [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
-    standalone: true,
     imports: [IgxComboComponent]
 })
 export class ComboWithIdComponent {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 export const TGRID_DATA = [
     { ID: 1, ParentID: -1, Name: 'Foods', UnitPrice: 0, AddedDate: new Date('2009-06-19'), Discontinued: false },
     { ID: 101, ParentID: 1, Name: 'Chef Antons Gumbo Mix', UnitPrice: 21.35, AddedDate: new Date('2011-11-11'), Discontinued: true },

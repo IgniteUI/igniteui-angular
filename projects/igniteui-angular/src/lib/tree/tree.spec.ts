@@ -693,7 +693,6 @@ describe('IgxTree #treeView', () => {
             <div *ngIf="divChild"></div>
         </igx-tree>
     `,
-    standalone: true,
     imports: [IgxTreeComponent, NgIf, IgxTreeNodeComponent, NgFor]
 })
 class IgxTreeSampleComponent {

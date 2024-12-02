@@ -10,7 +10,7 @@ import {
     inject
 } from '@angular/core';
 
-import { mkenum } from '../core/utils';
+import { mkenum, normalizeURI } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { ThemeService, ThemedComponent } from '../services/theme/theme.service';
 import themes from './themes/index';
@@ -56,7 +56,6 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
 @Component({
     selector: 'igx-avatar',
     templateUrl: 'avatar.component.html',
-    standalone: true,
     imports: [IgxIconComponent, NgTemplateOutlet]
 })
 export class IgxAvatarComponent implements OnInit, ThemedComponent {
@@ -208,7 +207,13 @@ export class IgxAvatarComponent implements OnInit, ThemedComponent {
      * @igxFriendlyName Image URL
      */
     @Input()
-    public src: string;
+    public set src(value: string) {
+        this._src = normalizeURI(value);
+    }
+
+    public get src() {
+        return this._src;
+    }
 
     /** @hidden @internal */
     @ViewChild('defaultTemplate', { read: TemplateRef, static: true })
@@ -231,6 +236,7 @@ export class IgxAvatarComponent implements OnInit, ThemedComponent {
      * @internal
      */
     private _size: string | IgxAvatarSize;
+    private _src: string;
 
     /**
      * Returns the size of the avatar.

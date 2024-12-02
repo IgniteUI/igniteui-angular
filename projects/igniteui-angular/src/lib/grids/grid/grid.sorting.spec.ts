@@ -630,7 +630,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             // Verify that the grid is NOT sorted.
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
-            // eslint-disable-next-line max-len
+             
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
 
             expect(GridFunctions.getColumnSortingIndex(firstHeaderCell)).toEqual(1);
@@ -647,7 +647,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             // Verify that the grid is NOT sorted.
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
-            // eslint-disable-next-line max-len
+             
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
 
             expect(GridFunctions.getColumnSortingIndex(firstHeaderCell)).toEqual(1);

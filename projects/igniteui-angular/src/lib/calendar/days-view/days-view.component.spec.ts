@@ -391,8 +391,7 @@ function getInactiveDays(fixture: ComponentFixture<InitDaysViewComponent>) {
         [value]="date"
         [disabledDates]="disabledDates"
     ></igx-days-view>`,
-    standalone: true,
-    imports: [IgxDaysViewComponent],
+    imports: [IgxDaysViewComponent]
 })
 class InitDaysViewComponent {
     @ViewChild(IgxDaysViewComponent, { static: true })

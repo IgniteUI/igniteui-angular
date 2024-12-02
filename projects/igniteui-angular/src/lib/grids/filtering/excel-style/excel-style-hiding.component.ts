@@ -9,7 +9,6 @@ import { NgIf } from '@angular/common';
 @Component({
     selector: 'igx-excel-style-hiding',
     templateUrl: './excel-style-hiding.component.html',
-    standalone: true,
     imports: [NgIf, IgxIconComponent]
 })
 export class IgxExcelStyleHidingComponent {

@@ -24,7 +24,6 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
     { name: 'tslib', target: PackageTarget.NONE },
     { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
     { name: 'lodash-es', target: PackageTarget.NONE },
-    { name: 'uuid', target: PackageTarget.NONE },
     { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
     { name: 'igniteui-theming', target: PackageTarget.NONE },
     // peerDependencies
