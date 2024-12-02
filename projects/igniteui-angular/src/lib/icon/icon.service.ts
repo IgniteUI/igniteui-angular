@@ -1,4 +1,4 @@
-import { Injectable, SecurityContext, Inject, Optional } from "@angular/core";
+import { Injectable, SecurityContext, inject } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { DOCUMENT } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
@@ -7,7 +7,7 @@ import { PlatformUtil } from "../core/utils";
 import { iconReferences } from './icon.references'
 import { IconFamily, IconMeta, FamilyMeta } from "./types";
 import type { IconType, IconReference } from './types';
-import { IgxTheme } from "../services/theme/theme.service";
+import { IgxTheme, THEME_TOKEN } from "../services/theme/theme.token";
 import { IndigoIcons } from "./icons.indigo";
 
 /**
@@ -50,6 +50,11 @@ export class IgxIconService {
      */
     public iconLoaded: Observable<IgxIconLoadedEvent>;
 
+    private _sanitizer = inject(DomSanitizer, { optional: true });
+    private _httpClient = inject(HttpClient, { optional: true }) ;
+    private _platformUtil = inject(PlatformUtil, { optional: true });
+    protected document = inject(DOCUMENT, { optional: true });
+
     private _defaultFamily: IconFamily = {
         name: "material",
         meta: { className: "material-icons", type: "liga" },
@@ -59,16 +64,15 @@ export class IgxIconService {
     private _cachedIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
     private _domParser: DOMParser;
-    private theme!: IgxTheme;
+    private themeToken$ = inject(THEME_TOKEN);
 
-    constructor(
-        @Optional() private _sanitizer: DomSanitizer,
-        @Optional() private _httpClient: HttpClient,
-        @Optional() private _platformUtil: PlatformUtil,
-        @Optional() @Inject(DOCUMENT) protected document: Document,
-    ) {
+    constructor() {
         this.iconLoaded = this._iconLoaded.asObservable();
         this.setFamily(this._defaultFamily.name, this._defaultFamily.meta);
+
+        this.themeToken$.subscribe((props) => {
+            this.setRefsByTheme(props.theme);
+        });
 
         if (this._platformUtil?.isBrowser) {
             this._domParser = new DOMParser();
@@ -133,13 +137,36 @@ export class IgxIconService {
 
     /** @hidden @internal */
     public setRefsByTheme(theme: IgxTheme) {
-        if (this.theme !== theme) {
-            this.theme = theme;
+        for (const { alias, target } of iconReferences) {
+            const external = this._iconRefs.get(alias.family)?.get(alias.name)?.external;
 
-            for (const { alias, target } of iconReferences) {
-                const icon = target.get(theme) ?? target.get('default')!;
-                this.addIconRef(alias.name, alias.family, icon);
-            }
+            const _ref = this._iconRefs.get('default')?.get(alias.name) ?? {};
+            const _target = target.get(theme) ?? target.get('default')!;
+
+            const icon = target.get(theme) ?? target.get('default')!;
+            const overwrite = !external && !(JSON.stringify(_ref) === JSON.stringify(_target));
+
+            this._setIconRef(
+                alias.name,
+                alias.family,
+                icon,
+                overwrite
+            );
+        }
+    }
+
+    public _setIconRef(name: string, family: string, icon: IconMeta, overwrite = false) {
+        let familyRef = this._iconRefs.get(family);
+
+        if (!familyRef) {
+            familyRef = new Map<string, IconMeta>();
+            this._iconRefs.set(family, familyRef);
+        }
+
+        if (overwrite) {
+            const familyType = this.familyType(icon?.family);
+            familyRef.set(name, { ...icon, type: icon.type ?? familyType });
+            this._iconLoaded.next({ name, family });
         }
     }
 
@@ -184,7 +211,7 @@ export class IgxIconService {
         }
 
         const familyType = this.familyType(icon?.family);
-        familyRef.set(name, { ...icon, type: icon.type ?? familyType });
+        familyRef.set(name, { ...icon, type: icon.type ?? familyType, external: true });
 
         this._iconLoaded.next({ name, family });
     }
