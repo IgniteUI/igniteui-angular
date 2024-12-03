@@ -131,6 +131,11 @@
     }
 
     %query-builder-tree {
+        margin-bottom: $gap;
+    }
+    
+
+    %query-builder-tree {
         width: 100%;
 
         border-radius: var-get($theme, 'tree-border-radius');
@@ -220,6 +225,7 @@
             map.get($vertical-space, 'comfortable')
         );
         padding-block: rem(16px);
+        padding-bottom: 0px;
     }
 
     %advanced-filter__outlet {
@@ -236,8 +242,8 @@
         width: 100%;
     }
 
-    %filter-tree:not(:last-child) {
-        padding-bottom: $gap;
+    %filter-tree:not(:last-child):not(:nth-last-child(2):has(+ %query-builder-tree)) {
+        margin-bottom: $gap;
     }
 
     %filter-tree__line {
@@ -282,7 +288,7 @@
     }
 
     %filter-tree__expression-item:not(:last-child):not(:nth-last-child(2):has(+ %query-builder-tree)) {        
-        padding-bottom: $gap;
+        margin-bottom: $gap;
     }
 
     %filter-tree__expression-item {
@@ -339,6 +345,10 @@
         opacity: if($variant != 'indigo', .6, .8);
     }
 
+    %filter-tree__buttons:not(:last-child) {
+        margin-bottom: $gap;
+    }
+
     %filter-tree__buttons {
         display: flex;
         justify-content: space-between;
@@ -346,12 +356,15 @@
         gap: rem(8px);
     }
 
+    %filter-tree__inputs:not(:last-child) {
+        margin-bottom: $gap;
+    }
+
     %filter-tree__inputs {
         display: flex;
         align-items: flex-end;
         gap: rem(8px);
         width: 100%;
-        padding-bottom: $gap;
 
         igx-input-group {
             --ig-size: 1;
@@ -376,10 +389,6 @@
         [igxIconButton] {
             transition: none;
         }
-    }
-
-    %filter-tree__inputs:not(:first-child) {
-        padding-bottom: $gap;
     }
 
     %filter-legend {
