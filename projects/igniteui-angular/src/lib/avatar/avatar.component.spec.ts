@@ -180,6 +180,18 @@ describe('Avatar', () => {
             fixture.detectChanges();
         }).not.toThrow();
     });
+
+    it('avatar with [src] and fallback [initials] should not throw error if src is null', () => {
+        const fixture = TestBed.createComponent(AvatarWithAttribsComponent);
+        fixture.detectChanges();
+        const instance = fixture.componentInstance.avatar;
+        expect(instance.type).toEqual(IgxAvatarType.INITIALS);
+        expect(instance.initials).toEqual('ZK');
+        expect(() => {
+            instance.src = null;
+            fixture.detectChanges();
+        }).not.toThrow();
+    });
 });
 
 @Component({
