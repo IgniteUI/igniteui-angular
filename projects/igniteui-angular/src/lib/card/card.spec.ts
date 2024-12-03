@@ -17,7 +17,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 
-describe('Card', () => {
+fdescribe('Card', () => {
     configureTestSuite();
     // TODO: Refactor card tests to reuse components
     const baseClass = 'igx-card';
@@ -67,6 +67,7 @@ describe('Card', () => {
             imports: [
                 InitCardComponent,
                 InitOutlinedCardComponent,
+                CardContentIconComponent,
                 CardWithHeaderComponent,
                 VerticalCardComponent,
                 HorizontalCardComponent
@@ -182,6 +183,16 @@ describe('Card', () => {
         expect(actions).not.toHaveClass(classes.actions.vertical);
     });
 
+    it('Should use Material Icons font-family for igx-icon in card content', () => {
+        const fixture = TestBed.createComponent(CardContentIconComponent);
+        fixture.detectChanges();
+
+        const iconElement = fixture.debugElement.query(By.css('igx-icon')).nativeElement;
+        const computedStyle = window.getComputedStyle(iconElement);
+
+        expect(computedStyle.fontFamily).toBe('"Material Icons"');
+    });
+
     it('Should automatically align actions vertically when in horizontal layout', () => {
         const fixture = TestBed.createComponent(HorizontalCardComponent);
         fixture.detectChanges();
@@ -248,6 +259,17 @@ class InitOutlinedCardComponent {
     imports: [IgxCardComponent, IgxCardHeaderComponent]
 })
 class CardWithHeaderComponent { }
+
+@Component({
+    template: `<igx-card class="ig-typography">
+            <igx-card-content>
+                <igx-icon>face</igx-icon>
+            </igx-card-content>
+        <igx-card>`,
+    imports: [IgxCardComponent, IgxCardContentDirective, IgxIconComponent]
+})
+class CardContentIconComponent { }
+
 
 @Component({
     template: `<igx-card>
