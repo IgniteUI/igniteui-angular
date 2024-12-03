@@ -17,7 +17,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 
-fdescribe('Card', () => {
+describe('Card', () => {
     configureTestSuite();
     // TODO: Refactor card tests to reuse components
     const baseClass = 'igx-card';
