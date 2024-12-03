@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective } from 'igniteui-angular';
+import { IgxIconButtonDirective, IgxIconComponent } from 'igniteui-angular';
 import { defineComponents, IgcIconButtonComponent, registerIconFromText} from "igniteui-webcomponents";
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
@@ -9,14 +9,13 @@ const favorite = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0
 registerIconFromText("favorite", favorite );
 
 @Component({
-    selector: 'app-icon-button-showcase-sample',
-    styleUrls: ['icon-button-showcase.sample.scss'],
-    templateUrl: 'icon-button-showcase.sample.html',
+    selector: 'app-icon-button-sample',
+    styleUrls: ['icon-button.sample.scss'],
+    templateUrl: 'icon-button.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    standalone: true,
-    imports: [IgxIconComponent, IgxIconButtonDirective, IgxRippleDirective]
+    imports: [IgxIconComponent, IgxIconButtonDirective]
 })
-export class IconButtonShowcaseSampleComponent {
+export class IconButtonSampleComponent {
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {

@@ -6,14 +6,13 @@ import { Properties, PropertyChangeService, PropertyPanelConfig } from '../prope
 defineComponents(IgcCheckboxComponent);
 
 @Component({
-    selector: 'app-checkbox-showcase-sample',
-    styleUrls: ['checkbox-showcase.sample.scss'],
-    templateUrl: 'checkbox-showcase.sample.html',
+    selector: 'app-checkbox-sample',
+    styleUrls: ['checkbox.sample.scss'],
+    templateUrl: 'checkbox.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    standalone: true,
     imports: [IgxCheckboxComponent]
 })
-export class CheckboxShowcaseSampleComponent {
+export class CheckboxSampleComponent {
     public panelConfig : PropertyPanelConfig = {
         indeterminate: {
             control: {

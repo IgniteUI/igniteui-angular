@@ -117,9 +117,19 @@ export class AppComponent implements OnInit {
             name: 'Carousel'
         },
         {
+            link: '/checkbox',
+            icon: 'check_box',
+            name: 'Checkbox'
+        },
+        {
             link: '/chip',
             icon: 'android',
             name: 'Chips'
+        },
+        {
+            link: '/circular-progress',
+            icon: 'poll',
+            name: 'Circular Progress'
         },
         {
             link: '/combo',
@@ -426,6 +436,16 @@ export class AppComponent implements OnInit {
             name: 'Icon'
         },
         {
+            link: '/icon-button',
+            icon: 'favorite',
+            name: 'Icon Button'
+        },
+        {
+            link: '/linear-progress',
+            icon: 'poll',
+            name: 'Linear Progress'
+        },
+        {
             link: '/list',
             icon: 'list',
             name: 'List'
@@ -708,74 +728,14 @@ export class AppComponent implements OnInit {
 
     public WcCompareLinks = [
         {
-            link: '/accordion-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Accordion'
-        },
-        {
-            link: '/avatar-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Avatar'
-        },
-        {
-            link: '/badge-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Badge'
-        },
-        {
-            link: '/banner-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Banner'
-        },
-        {
-            link: '/button-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Buttons'
-        },
-        {
-            link: '/buttonGroup-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Button Group'
-        },
-        {
-            link: '/calendar-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Calendar'
-        },
-        {
             link: '/card-showcase',
             icon: 'radio_button_unchecked',
             name: 'Card'
         },
         {
-            link: '/carousel-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Carousel'
-        },
-        {
-            link: '/checkbox-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Checkbox'
-        },
-        {
-            link: '/chip-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Chips'
-        },
-        {
-            link: '/circular-progress-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Circular Progress'
-        },
-        {
             link: '/combo-showcase',
             icon: 'radio_button_unchecked',
             name: 'Combo'
-        },
-        {
-            link: '/datePicker-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Date Picker'
         },
         {
             link: '/dialog-showcase',
@@ -788,16 +748,6 @@ export class AppComponent implements OnInit {
             name: 'DropDown'
         },
         {
-            link: '/expansionPanel-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Expansion Panel'
-        },
-        {
-            link: '/icon-button-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Icon Button'
-        },
-        {
             link: '/input-group-showcase',
             icon: 'radio_button_unchecked',
             name: 'Input Group'
@@ -806,11 +756,6 @@ export class AppComponent implements OnInit {
             link: '/list-showcase',
             icon: 'radio_button_unchecked',
             name: 'List'
-        },
-        {
-            link: '/linear-progress',
-            icon: 'radio_button_unchecked',
-            name: 'Linear Progress'
         },
         {
             link: '/radio-showcase',

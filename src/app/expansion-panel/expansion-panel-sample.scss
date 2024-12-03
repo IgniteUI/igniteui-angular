@@ -1,37 +1,15 @@
-.game-board {
-    width: 600px;
-    margin: 30px auto;
+.flex-container {
+    display: flex;
+    justify-content: space-around;
 }
 
-.sample-flex-item {
-    display: flex;
-    flex-direction: column;
-}
+.flex-item {
+    width: 100%;
 
-.sample-flex-row {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-
-    button {
-        margin-right: 10px;
-
-        &:last-of-type {
-            margin: 0;
-        }
+    strong {
+        color: hsla(var(--ig-secondary-500));
+        display: block;
+        text-align: center;
+        margin-bottom: 12px;
     }
-}
-
-.game-board__collapsible {
-    width: 100%;
-}
-
-.game-board__grid {
-    height: 100%;
-    width: 100%;
-}
-
-.game-board__grid__match {
-    font-weight: 600;
-    font-size: 12px; 
 }
