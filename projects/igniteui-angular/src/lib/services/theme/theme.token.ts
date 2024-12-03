@@ -3,7 +3,7 @@ import { mkenum } from "../../core/utils";
 import { BehaviorSubject } from "rxjs";
 import { DOCUMENT } from "@angular/common";
 
-interface ThemeTokenProps {
+export interface ThemeTokenProps {
     theme: IgxTheme,
     preferToken?: boolean
 }
