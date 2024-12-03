@@ -15,7 +15,7 @@ import {
     providers: [
         {
           provide: THEME_TOKEN,
-          useFactory: ThemeTokenFactory,
+          useFactory: ThemeTokenFactory
         },
         IgxIconService, // Create New Icon Service Scoped to this component
     ],
@@ -27,10 +27,10 @@ export class ThemedIconComponent {
 
     constructor(private iconService: IgxIconService) {
         this.iconService.setIconRef('expand_more', 'default', { family: 'material', name: 'home' });
-        //this.themeToken.next({ theme: 'indigo'});
+        //this.themeToken.set({ theme: 'indigo' });
     }
 
     protected setTheme(theme: IgxTheme) {
-        this.themeToken.next({ theme, preferToken: true });
+        this.themeToken.set({ theme });
     }
 }

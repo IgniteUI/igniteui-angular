@@ -64,14 +64,14 @@ export class IgxIconService {
         @Optional() private _sanitizer: DomSanitizer,
         @Optional() private _httpClient: HttpClient,
         @Optional() private _platformUtil: PlatformUtil,
-        @Optional() @Inject(THEME_TOKEN) private _themeToken$: ThemeToken,
+        @Optional() @Inject(THEME_TOKEN) private _themeToken: ThemeToken,
         @Optional() @Inject(DOCUMENT) protected document: Document,
     ) {
 
         this.iconLoaded = this._iconLoaded.asObservable();
         this.setFamily(this._defaultFamily.name, this._defaultFamily.meta);
 
-        this._themeToken$?.subscribe((props) => {
+        this._themeToken?.onChange((props) => {
             this.setRefsByTheme(props.theme);
         });
 

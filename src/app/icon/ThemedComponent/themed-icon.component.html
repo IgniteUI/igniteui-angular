@@ -8,7 +8,7 @@
   @for (theme of themes; track theme) {
     <button
       igxButton
-      [selected]="theme === themeToken.getValue().theme"
+      [selected]="theme === themeToken.theme"
       (click)="setTheme(theme)"
     >
       {{ theme }}
