@@ -136,7 +136,7 @@
             igxDrop
             (enter)="onDivEnter($event, dragRef, expressionItem)"
             (over)="onDivOver($event, dragRef, expressionItem)"
-            (leave)="onDivLeave($event, dragRef)"
+            (leave)="onDivLeave($event)"
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="!expressionItem.inEditMode"
             class="igx-filter-tree__expression-item"            
@@ -151,7 +151,7 @@
                 (moveEnd)="onMoveEnd()"
                 (dragEnter)="onChipEnter($event, dragRef, expressionItem, false)"
                 (dragOver)="onChipOver($event, dragRef, false)"
-                (dragLeave)="onChipLeave($event, dragRef)"
+                (dragLeave)="onChipLeave($event)"
                 (dragDrop)="onChipDropped(expressionItem)"
                 #target="tooltipTarget"
                 [igxTooltipTarget]="tooltipRef"
@@ -284,7 +284,7 @@
             igxDrop
             (enter)="onDivEnter($event, dragRef, expressionItem)"
             (over)="onDivOver($event, dragRef, expressionItem)"
-            (leave)="onDivLeave($event, dragRef)"
+            (leave)="onDivLeave($event)"
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="expressionItem.inEditMode"
             #editingInputsContainer
