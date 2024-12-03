@@ -185,20 +185,12 @@ describe('Card', () => {
 
     it('Should use Material Icons font-family for igx-icon in card content', () => {
         const fixture = TestBed.createComponent(CardContentIconComponent);
-        fixture.detectChanges();  // Detect changes to ensure styles are applied
-
-        // Force a reflow to ensure all styles are applied
         fixture.detectChanges();
 
         const iconElement = fixture.debugElement.query(By.css('igx-icon')).nativeElement;
         const computedStyle = window.getComputedStyle(iconElement);
 
-        // Log computed font-family for debugging
-        console.log('Computed font-family:', computedStyle.fontFamily);
-
-        // Check that the font-family is "Material Icons"
-        const effectiveFontFamily = computedStyle.fontFamily.split(',')[0].trim().replace(/['"]/g, '');
-        expect(effectiveFontFamily).toBe('Material Icons');
+        expect(computedStyle.fontFamily).toBe('"Material Icons"');
     });
 
     it('Should automatically align actions vertically when in horizontal layout', () => {
