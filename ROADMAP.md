@@ -2,7 +2,7 @@
 
 # Current Milestone
 
-## Milestone 35, (Due by Nov, 2024)
+## Milestone 35, (Due by Jan, 2025)
 
 1. Tile Manager - new component [#239](https://github.com/IgniteUI/igniteui-angular/issues/239)
 2. Query Builder component update [#14979](https://github.com/IgniteUI/igniteui-angular/issues/14979)
