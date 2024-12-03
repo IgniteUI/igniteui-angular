@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { editor } from '@igniteui/material-icons-extended';
 import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
@@ -37,6 +36,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
+import { registerFilteringSVGIcons } from '../icon/filtering-icons';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -157,7 +157,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     /**
     * Returns the expression tree.
     */
-     public get expressionTree(): IExpressionTree {
+    public get expressionTree(): IExpressionTree {
         return this._expressionTree;
     }
 
@@ -650,8 +650,8 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
 
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
-            } else if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
-                this.conditionSelect.input.nativeElement.focus();
+        } else if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
+            this.conditionSelect.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
             input.focus();
@@ -1208,11 +1208,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     }
 
     private registerSVGIcons(): void {
-        const editorIcons = editor as any[];
-
-        editorIcons.forEach((icon) => {
-            this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
-        });
+        registerFilteringSVGIcons(this.iconService);
     }
 }
-
