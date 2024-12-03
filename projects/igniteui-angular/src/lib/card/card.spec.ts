@@ -68,6 +68,7 @@ describe('Card', () => {
                 InitCardComponent,
                 InitOutlinedCardComponent,
                 CardWithHeaderComponent,
+                CardContentIconComponent,
                 VerticalCardComponent,
                 HorizontalCardComponent
             ]
@@ -182,6 +183,24 @@ describe('Card', () => {
         expect(actions).not.toHaveClass(classes.actions.vertical);
     });
 
+    it('Should use Material Icons font-family for igx-icon in card content', () => {
+        const fixture = TestBed.createComponent(CardContentIconComponent);
+        fixture.detectChanges();  // Detect changes to ensure styles are applied
+
+        // Force a reflow to ensure all styles are applied
+        fixture.detectChanges();
+
+        const iconElement = fixture.debugElement.query(By.css('igx-icon')).nativeElement;
+        const computedStyle = window.getComputedStyle(iconElement);
+
+        // Log computed font-family for debugging
+        console.log('Computed font-family:', computedStyle.fontFamily);
+
+        // Check that the font-family is "Material Icons"
+        const effectiveFontFamily = computedStyle.fontFamily.split(',')[0].trim().replace(/['"]/g, '');
+        expect(effectiveFontFamily).toBe('Material Icons');
+    });
+
     it('Should automatically align actions vertically when in horizontal layout', () => {
         const fixture = TestBed.createComponent(HorizontalCardComponent);
         fixture.detectChanges();
@@ -245,6 +264,16 @@ class InitOutlinedCardComponent {
     imports: [IgxCardComponent, IgxCardHeaderComponent]
 })
 class CardWithHeaderComponent { }
+
+@Component({
+    template: `<igx-card class="ig-typography">
+            <igx-card-content>
+                <igx-icon>face</igx-icon>
+            </igx-card-content>
+        <igx-card>`,
+    imports: [IgxCardComponent, IgxCardContentDirective, IgxIconComponent]
+})
+class CardContentIconComponent { }
 
 @Component({
     template: `<igx-card>
