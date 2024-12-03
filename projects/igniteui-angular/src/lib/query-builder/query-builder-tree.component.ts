@@ -948,6 +948,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public dropUnder: boolean;
     public ghostChip: Node;
 
+    public canBeDragged(): boolean {
+        return this.isInEditMode && (!this.innerQueries || this.innerQueries.length == 0 || !this.innerQueries?.some(q => q.isInEditMode()))
+    }
+
     //When we pick up a chip
     public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem): void {
         //console.log('Picked up:', sourceDragElement);
