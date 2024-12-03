@@ -950,7 +950,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     //When we pick up a chip
     public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem): void {
-        //console.log('Picked up:', dragRef);
+        //console.log('Picked up:', sourceDragElement);
         this.sourceExpressionItem = sourceExpressionItem;
         this.sourceElement = sourceDragElement;
     }
@@ -1030,18 +1030,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.onChipLeave(event, targetDragElement);
     }
     public onChipLeave(event: IDropBaseEventArgs | IChipEnterDragAreaEventArgs, targetDragElement: HTMLElement) {
-        //console.log('Leaving:', targetDragElement);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
+        //console.log('Leaving:', targetDragElement.textContent.trim());
 
-        const ghostCoordinates = (this.ghostChip as HTMLElement)?.getBoundingClientRect();
+        const ghostCoordinates = (this.ghostChip?.firstChild as HTMLElement)?.getBoundingClientRect();
         const mouseCoordinates = (event.originalEvent as any);
 
-        //if there is ghost chip and the mouse is still over it don't trigger leave
+        //if there is ghost chip and the mouse is still close enough to it don't trigger leave
         if (ghostCoordinates &&
-            mouseCoordinates.pageX >= ghostCoordinates.left &&
-            mouseCoordinates.pageX <= ghostCoordinates.right &&
-            mouseCoordinates.pageY >= ghostCoordinates.top &&
-            mouseCoordinates.pageY <= ghostCoordinates.bottom) {
+            mouseCoordinates.pageX >= ghostCoordinates.left * 0.8 &&
+            mouseCoordinates.pageX <= ghostCoordinates.right * 1.2 &&
+            mouseCoordinates.pageY >= ghostCoordinates.top * 0.8 &&
+            mouseCoordinates.pageY <= ghostCoordinates.bottom * 1.2) {
             return;
         }
 
@@ -1136,7 +1136,21 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.dropUnder = true;
             appendToElement.parentNode.insertBefore(this.ghostChip, appendToElement.nextSibling);
         }
+
+        this.setDragCursor('grab');
     }
+
+    private get ghostChipElement(): HTMLElement {
+        return (document.querySelector('.igx-chip__ghost[ghostclass="igx-chip__ghost"]') as HTMLElement);
+    }
+
+    private setDragCursor(cursor: string) {
+
+        if (this.ghostChipElement) {
+            this.ghostChipElement.style.cursor = cursor;
+        }
+    }
+
 
     private moveDraggedChipToNewLocation(appendToExpressionItem: ExpressionItem, fromAddConditionBtn?: boolean) {
         //Copy dragged chip
@@ -1157,6 +1171,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.dropUnder = null;
         (this.ghostChip as HTMLElement)?.remove();
         this.ghostChip = null;
+
+        this.setDragCursor('no-drop');
 
         if (clearDragged) {
             this.sourceExpressionItem = null;
