@@ -11,14 +11,14 @@
             @extend %igx-carousel-indicator !optional;
         }
 
-        @include m(top) {
+        @include m(start) {
             @extend %igx-carousel-indicators !optional;
-            @extend %igx-carousel-indicators--top !optional;
+            @extend %igx-carousel-indicators--start !optional;
         }
 
-        @include m(bottom) {
+        @include m(end) {
             @extend %igx-carousel-indicators !optional;
-            @extend %igx-carousel-indicators--bottom !optional;
+            @extend %igx-carousel-indicators--end !optional;
         }
 
         @include m(focused) {
