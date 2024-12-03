@@ -67,8 +67,8 @@ describe('Card', () => {
             imports: [
                 InitCardComponent,
                 InitOutlinedCardComponent,
-                CardContentIconComponent,
                 CardWithHeaderComponent,
+                CardContentIconComponent,
                 VerticalCardComponent,
                 HorizontalCardComponent
             ]
@@ -262,14 +262,14 @@ class CardWithHeaderComponent { }
 
 @Component({
     template: `<igx-card class="ig-typography">
-            <igx-card-content>
-                <igx-icon>face</igx-icon>
-            </igx-card-content>
-        <igx-card>`,
+        <igx-card-content>
+            <igx-icon>face</igx-icon>
+        </igx-card-content>
+    <igx-card>`,
+    standalone: true,
     imports: [IgxCardComponent, IgxCardContentDirective, IgxIconComponent]
 })
 class CardContentIconComponent { }
-
 
 @Component({
     template: `<igx-card>
