@@ -1,4 +1,4 @@
-@import '../../../projects/igniteui-angular/src/lib/core/styles/base/index';
+@use '../../../projects/igniteui-angular/src/lib/core/styles/base' as *;
 
 :host {
     display: block;

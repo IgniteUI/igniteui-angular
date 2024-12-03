@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 export const REGIONS: any[] = [
     {
         Region: 'North America',

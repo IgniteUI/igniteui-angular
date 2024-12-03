@@ -9,9 +9,8 @@ import { IgxForOfDirective, ButtonGroupAlignment, IgxListComponent, IgxButtonDir
     templateUrl: 'virtual-for.sample.html',
     styleUrls: ['virtual-for.sample.css'],
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     providers: [RemoteService],
-    imports: [IgxAvatarComponent,IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, NgClass, AsyncPipe]
+    imports: [IgxAvatarComponent, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, NgClass, AsyncPipe]
 })
 export class VirtualForSampleComponent implements OnInit {
     @ViewChild('virtDirVertical', { read: IgxForOfDirective, static: true })

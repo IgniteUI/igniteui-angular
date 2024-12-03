@@ -7,7 +7,6 @@ import { IgxGridComponent } from '../../../../projects/igniteui-angular/src/lib/
     templateUrl: './shadow-grid-sample.html',
     styleUrls: ['./shadow-grid-sample.scss'],
     encapsulation: ViewEncapsulation.ShadowDom,
-    standalone: true,
     imports: [IgxGridComponent]
 })
 export class ShadowGridSampleComponent implements OnInit {

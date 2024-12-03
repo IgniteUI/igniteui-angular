@@ -3326,7 +3326,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             //Check for the active element
-            let searchValueInput = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            const searchValueInput = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
             expect(document.activeElement).toBe(searchValueInput, 'The input should be the active element.');
         }));
     });
