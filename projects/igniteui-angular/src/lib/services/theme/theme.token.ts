@@ -8,28 +8,50 @@ interface ThemeTokenProps {
     preferToken?: boolean
 }
 
-export type ThemeToken = BehaviorSubject<ThemeTokenProps>;
+export class ThemeToken {
+    public subject: BehaviorSubject<ThemeTokenProps>;
+
+    constructor(props: ThemeTokenProps) {
+        this.subject = new BehaviorSubject(props);
+    }
+
+    public onChange(callback: (props: ThemeTokenProps) => void) {
+        return this.subject.subscribe(callback);
+    }
+
+    public set(props: ThemeTokenProps) {
+        this.subject.next({
+            theme: props.theme,
+            preferToken: props.preferToken ?? this.preferToken
+        });
+    }
+
+    public get theme() {
+        return this.subject.getValue().theme;
+    }
+
+    public get preferToken() {
+        return this.subject.getValue().preferToken;
+    }
+}
+
 export function ThemeTokenFactory(options?: ThemeTokenProps): ThemeToken {
-    return new BehaviorSubject<ThemeTokenProps>({
-        theme: options?.theme ?? 'material',
+    const document = inject(DOCUMENT);
+
+    const theme = globalThis.window
+        ?.getComputedStyle(document.body)
+        .getPropertyValue("--ig-theme")
+        .trim() || 'material';
+
+    return new ThemeToken({
+        theme: options?.theme ?? theme as IgxTheme,
         preferToken: options?.preferToken ?? false
     });
 }
 
 export const THEME_TOKEN = new InjectionToken<ThemeToken>('ThemeToken', {
     providedIn: 'root',
-    factory: () => {
-        const document = inject(DOCUMENT);
-
-        const theme = globalThis.window
-            ?.getComputedStyle(document.body)
-            .getPropertyValue("--ig-theme")
-            .trim() || 'material';
-
-        return ThemeTokenFactory({
-            theme: theme as IgxTheme,
-        });
-    }
+    factory: ThemeTokenFactory
 });
 
 const Theme = /*@__PURE__*/ mkenum({
