@@ -280,6 +280,12 @@
         </div>
 
         <div
+            #dragRef 
+            igxDrop
+            (enter)="onDivEnter($event, dragRef, expressionItem)"
+            (over)="onDivOver($event, dragRef, expressionItem)"
+            (leave)="onDivLeave($event, dragRef)"
+            (dropped)="onDivDropped(expressionItem)"
             *ngIf="expressionItem.inEditMode"
             #editingInputsContainer
             class="igx-filter-tree__inputs"
