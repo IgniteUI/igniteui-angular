@@ -507,11 +507,11 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
-        const { theme, preferToken } = this.themeToken.getValue();
+        const { theme, preferToken } = this.themeToken;
         this.theme = theme;
         this._prefersTokenizedTheme = preferToken;
 
-        const { unsubscribe } = this.themeToken.subscribe((props) => {
+        const { unsubscribe } = this.themeToken.onChange((props) => {
             if (this.theme !== props.theme) {
                 this.theme = props.theme;
                 this.cdr.detectChanges();
@@ -526,7 +526,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
             const theme = getComponentTheme(this.elRef.nativeElement);
 
             if (theme && theme !== this.theme) {
-                this.themeToken.next({theme});
+                this.themeToken.set({theme});
                 this.cdr.markForCheck();
             }
         }
