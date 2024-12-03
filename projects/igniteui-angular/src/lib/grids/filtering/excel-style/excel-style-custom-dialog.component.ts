@@ -45,6 +45,7 @@ import { NgClass } from '@angular/common';
 export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public expressionsList = new Array<ExpressionUI>();
+
     @Input()
     public column: ColumnType;
 

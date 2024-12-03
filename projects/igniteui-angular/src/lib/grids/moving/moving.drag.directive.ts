@@ -120,8 +120,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
 
         this.ghostElement.classList.remove(this.columnSelectedClass);
 
-        const icon = document.createElement('i');
-        const text = document.createTextNode('block');
+        const icon = this.column?.grid.document.createElement('i');
+        const text = this.column?.grid.document.createTextNode('block');
         icon.appendChild(text);
 
         icon.classList.add('material-icons');

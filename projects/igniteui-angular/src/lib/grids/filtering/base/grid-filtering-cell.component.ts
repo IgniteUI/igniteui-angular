@@ -220,7 +220,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             const chipsAreaElements = this.chipsArea.element.nativeElement.children;
             let visibleChipsCount = 0;
             const moreIconWidth = this.moreIcon.nativeElement.offsetWidth -
-                parseInt(document.defaultView.getComputedStyle(this.moreIcon.nativeElement)['margin-left'], 10);
+                parseInt(this.column?.grid.document.defaultView.getComputedStyle(this.moreIcon.nativeElement)['margin-left'], 10);
 
             for (let index = 0; index < chipsAreaElements.length - 1; index++) {
                 if (viewWidth + chipsAreaElements[index].offsetWidth < areaWidth) {
@@ -228,8 +228,8 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
                     if (index % 2 === 0) {
                         visibleChipsCount++;
                     } else {
-                        viewWidth += parseInt(document.defaultView.getComputedStyle(chipsAreaElements[index])['margin-left'], 10);
-                        viewWidth += parseInt(document.defaultView.getComputedStyle(chipsAreaElements[index])['margin-right'], 10);
+                        viewWidth += parseInt(this.column?.grid.document.defaultView.getComputedStyle(chipsAreaElements[index])['margin-left'], 10);
+                        viewWidth += parseInt(this.column?.grid.document.defaultView.getComputedStyle(chipsAreaElements[index])['margin-right'], 10);
                     }
                 } else {
                     if (index % 2 !== 0 && viewWidth + moreIconWidth > areaWidth) {
