@@ -215,6 +215,7 @@
     %advanced-filter__root-actions {
         display: flex;
         gap: rem(8px);
+        margin-bottom: $gap;
     }
 
     %advanced-filter__header,
