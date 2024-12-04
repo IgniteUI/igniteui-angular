@@ -841,7 +841,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         ];
         let colGroups = [];
         for (let i = 0; i < 3; i++) {
-            colGroups = colGroups.concat(structuredClone(uniqueGroups));
+            const groups = structuredClone(uniqueGroups)
+                .map(({ group, columns }) => ({ group: group + i, columns }));
+            colGroups = colGroups.concat(groups);
         }
         fixture.componentInstance.colGroups = colGroups;
         grid.columnWidth = '200px';
@@ -1137,9 +1139,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px" [rowEditable]='true' [primaryKey]="'ID'">
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track group.group) {
             <igx-column-layout>
-                @for (col of group.columns; track col) {
+                @for (col of group.columns; track col.field) {
                     <igx-column
                         [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
                     [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
