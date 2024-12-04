@@ -643,7 +643,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups);
 
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
+            group: 'group3',
             columns: [
                 { field: 'ID', rowStart: 1, colStart: 1 },
                 { field: 'CompanyName', rowStart: 1, colStart: 2 },
@@ -891,8 +891,6 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
     it('should apply horizontal virtualization correctly for widths in px, % and no-width columns.', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
-        fixture.detectChanges();
-        const grid = fixture.componentInstance.grid;
         // test with px
         fixture.componentInstance.colGroups = [{
             group: 'group1',
@@ -906,6 +904,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         }];
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
 
         const horizontalVirtualization = grid.rowList.first.virtDirRow;
         expect(grid.hasHorizontalScroll()).toBeTruthy();
