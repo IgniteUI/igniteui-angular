@@ -6,7 +6,7 @@ import {
     IgxIconService,
     type IgxTheme,
     THEME_TOKEN,
-    ThemeTokenFactory
+    ThemeToken,
 } from 'igniteui-angular';
 
 @Component({
@@ -15,7 +15,7 @@ import {
     providers: [
         {
           provide: THEME_TOKEN,
-          useFactory: ThemeTokenFactory
+          useFactory: () => new ThemeToken()
         },
         IgxIconService, // Create New Icon Service Scoped to this component
     ],
@@ -27,10 +27,9 @@ export class ThemedIconComponent {
 
     constructor(private iconService: IgxIconService) {
         this.iconService.setIconRef('expand_more', 'default', { family: 'material', name: 'home' });
-        //this.themeToken.set({ theme: 'indigo' });
     }
 
     protected setTheme(theme: IgxTheme) {
-        this.themeToken.set({ theme });
+        this.themeToken.set(theme);
     }
 }
