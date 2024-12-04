@@ -3,55 +3,40 @@ import { mkenum } from "../../core/utils";
 import { BehaviorSubject } from "rxjs";
 import { DOCUMENT } from "@angular/common";
 
-export interface ThemeTokenProps {
-    theme: IgxTheme,
-    preferToken?: boolean
-}
-
 export class ThemeToken {
-    public subject: BehaviorSubject<ThemeTokenProps>;
+    private document = inject(DOCUMENT);
+    public subject: BehaviorSubject<IgxTheme>;
 
-    constructor(props: ThemeTokenProps) {
-        this.subject = new BehaviorSubject(props);
+    constructor(private t?: IgxTheme) {
+        const globalTheme = globalThis.window
+            ?.getComputedStyle(this.document.body)
+            .getPropertyValue("--ig-theme")
+            .trim() || 'material' as IgxTheme;
+
+        const _theme = t ?? globalTheme as IgxTheme;
+        this.subject = new BehaviorSubject(_theme);
     }
 
-    public onChange(callback: (props: ThemeTokenProps) => void) {
+    public onChange(callback: (theme: IgxTheme) => void) {
         return this.subject.subscribe(callback);
     }
 
-    public set(props: ThemeTokenProps) {
-        this.subject.next({
-            theme: props.theme,
-            preferToken: props.preferToken ?? this.preferToken
-        });
+    public set(theme: IgxTheme) {
+        this.subject.next(theme);
     }
 
     public get theme() {
-        return this.subject.getValue().theme;
+        return this.subject.getValue();
     }
 
     public get preferToken() {
-        return this.subject.getValue().preferToken;
+        return !!this.t;
     }
-}
-
-export function ThemeTokenFactory(options?: ThemeTokenProps): ThemeToken {
-    const document = inject(DOCUMENT);
-
-    const theme = globalThis.window
-        ?.getComputedStyle(document.body)
-        .getPropertyValue("--ig-theme")
-        .trim() || 'material';
-
-    return new ThemeToken({
-        theme: options?.theme ?? theme as IgxTheme,
-        preferToken: options?.preferToken ?? false
-    });
 }
 
 export const THEME_TOKEN = new InjectionToken<ThemeToken>('ThemeToken', {
     providedIn: 'root',
-    factory: ThemeTokenFactory
+    factory: () => new ThemeToken()
 });
 
 const Theme = /*@__PURE__*/ mkenum({

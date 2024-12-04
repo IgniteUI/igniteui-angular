@@ -220,13 +220,12 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
         @Inject(THEME_TOKEN)
         private themeToken: ThemeToken
     ) {
-        const { theme, preferToken } = this.themeToken;
-        this._theme = theme;
-        this._prefersTokenizedTheme = preferToken;
+        this._theme = this.themeToken.theme;
+        this._prefersTokenizedTheme = this.themeToken.preferToken;
 
-        const { unsubscribe } = this.themeToken.onChange((props) => {
-            if (this._theme !== props.theme) {
-                this._theme = props.theme;
+        const { unsubscribe } = this.themeToken.onChange((theme) => {
+            if (this._theme !== theme) {
+                this._theme = theme;
                 this.cdr.detectChanges();
             }
         });
@@ -450,9 +449,10 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
     private setComponentTheme() {
         if (!this._prefersTokenizedTheme) {
             const theme = getComponentTheme(this.element.nativeElement);
+            console.log(this._prefersTokenizedTheme, this.themeToken.theme);
 
             if (theme && theme !== this._theme) {
-                this.themeToken.set({theme});
+                this.themeToken.set(theme);
                 this.cdr.markForCheck();
             }
         }

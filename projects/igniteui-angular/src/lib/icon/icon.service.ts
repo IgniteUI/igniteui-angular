@@ -71,8 +71,8 @@ export class IgxIconService {
         this.iconLoaded = this._iconLoaded.asObservable();
         this.setFamily(this._defaultFamily.name, this._defaultFamily.meta);
 
-        this._themeToken?.onChange((props) => {
-            this.setRefsByTheme(props.theme);
+        this._themeToken?.onChange((theme) => {
+            this.setRefsByTheme(theme);
         });
 
         if (this._platformUtil?.isBrowser) {

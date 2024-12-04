@@ -8,7 +8,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { Component, inject } from "@angular/core";
 import { IgxIconComponent } from "./icon.component";
 import { By } from "@angular/platform-browser";
-import { THEME_TOKEN, ThemeTokenFactory, ThemeTokenProps } from "igniteui-angular";
+import { IgxTheme, THEME_TOKEN, ThemeToken } from "igniteui-angular";
 
 describe("Icon Service", () => {
     configureTestSuite();
@@ -230,7 +230,7 @@ describe("Icon Service", () => {
         expect(expand_more).toBeTruthy();
         expect(expand_more.classes['material-icons']).toBeTrue();
 
-        fixture.componentInstance.setTheme({ theme: 'indigo' });
+        fixture.componentInstance.setTheme('indigo');
         fixture.detectChanges();
 
         arrow_prev = fixture.debugElement.query(By.css("igx-icon[name='arrow_prev']"));
@@ -273,7 +273,7 @@ class IconRefComponent { }
     providers: [
         {
             provide: THEME_TOKEN,
-            useFactory: ThemeTokenFactory
+            useFactory: () => new ThemeToken()
         },
         IgxIconService
     ],
@@ -286,7 +286,7 @@ class IconWithThemeTokenComponent {
         this.iconService.setIconRef('expand_more', 'default', { family: 'material', name: 'home' });
     }
 
-    public setTheme(options: ThemeTokenProps) {
-        this.themeToken.set(options);
+    public setTheme(theme: IgxTheme) {
+        this.themeToken.set(theme);
     }
 }
