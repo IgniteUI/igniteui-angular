@@ -448,7 +448,6 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
     private setComponentTheme() {
         if (!this._prefersTokenizedTheme) {
             const theme = getComponentTheme(this.element.nativeElement);
-            console.log(this._prefersTokenizedTheme, this.themeToken.theme);
 
             if (theme && theme !== this._theme) {
                 this.themeToken.set(theme);
