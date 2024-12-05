@@ -147,7 +147,7 @@
                 [draggable]="canBeDragged() ? 'true' : 'false'" 
                 [hideBaseOnDrag] = "false"    
                 [animateOnRelease] = "false"
-                (moveStart)="onMoveStart(dragRef, expressionItem)"
+                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem): null" 
                 (moveEnd)="onMoveEnd()"
                 (dragEnter)="onChipEnter($event, dragRef, expressionItem, false)"
                 (dragOver)="onChipOver($event, dragRef, false)"

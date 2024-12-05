@@ -1044,7 +1044,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.onChipLeave(event);
     }
     public onChipLeave(event: IDropBaseEventArgs | IChipEnterDragAreaEventArgs | MouseEvent) {
-        if (!this.sourceElement || !this.sourceExpressionItem) return;
+        if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
         //console.log('Leaving:', targetDragElement.textContent.trim());
 
         const ghostCoordinates = (this.ghostChip?.firstChild as HTMLElement)?.getBoundingClientRect();
