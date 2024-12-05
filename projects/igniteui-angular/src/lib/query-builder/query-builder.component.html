@@ -202,6 +202,7 @@
                     this.resourceStrings.igx_query_builder_condition_placeholder
                 "
                 [(ngModel)]="selectedCondition"
+                (ngModelChange)="onConditionChange()"
                 [disabled]="!selectedField"
             >
                 <igx-prefix

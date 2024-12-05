@@ -2995,6 +2995,75 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Verify context menu is closed.
                 verifyContextMenuVisibility(fix, false);
             }));
+
+            it('Should clear the value input when another condition is selected.', fakeAsync(() => {
+                // Initialize grid filter with a 'contains' condition and search value 'test'.
+                const tree = new FilteringExpressionsTree(FilteringLogic.And);
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName',
+                    searchVal: 'test',
+                    condition: IgxStringFilteringOperand.instance().condition('contains')
+                });
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog and activate edit mode for the initial condition.
+                grid.openAdvancedFilteringDialog();
+                tick(100);
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0], true);
+                tick(200);
+                fix.detectChanges();
+
+                // Verify the search input displays 'test'.
+                let searchValueInput = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+                expect(searchValueInput.value).toBe('test');
+
+                // Change filter condition to 'Equals' and verify input is cleared.
+                selectOperatorInEditModeExpression(fix, 4);
+                tick(100);
+                fix.detectChanges();
+
+                // Verify selected condition is 'Equals'.
+                const selectedConditionTextEquals = GridFunctions.getAdvancedFilteringOperatorSelect(fix)
+                    .querySelector('.igx-drop-down__item--selected').textContent.trim();
+                const extractedConditionEquals = selectedConditionTextEquals.split(' ').find(word => word === 'Equals');
+                expect(extractedConditionEquals).toBe('Equals');
+                expect(searchValueInput.value).toBe(''); // Confirm input field is cleared.
+
+                // Close dialog, reinitialize filter with 'equals' condition, and verify 'test' value reappears.
+                grid.closeAdvancedFilteringDialog(false);
+                tick(100);
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName',
+                    searchVal: 'test',
+                    condition: IgxStringFilteringOperand.instance().condition('equals')
+                });
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Reopen dialog and activate edit mode for initial condition.
+                grid.openAdvancedFilteringDialog();
+                tick(100);
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0], true);
+                tick(200);
+                fix.detectChanges();
+
+                // Confirm 'test' value is restored in the input field.
+                searchValueInput = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+                expect(searchValueInput.value).toBe('test');
+
+                // Change filter condition to 'Empty' and verify input is cleared again.
+                selectOperatorInEditModeExpression(fix, 6);
+                tick(200);
+                fix.detectChanges();
+
+                // Verify selected condition is 'Empty'.
+                const selectedConditionTextEmpty = GridFunctions.getAdvancedFilteringOperatorSelect(fix)
+                    .querySelector('.igx-drop-down__item--selected').textContent.trim();
+                const extractedConditionEmpty = selectedConditionTextEmpty.split(' ').find(word => word === 'Empty');
+                expect(extractedConditionEmpty).toBe('Empty');
+                expect(searchValueInput.value).toBe(''); // Confirm input field is cleared again.
+            }));
         });
 
         describe('Keyboard Navigation/Interaction - ', () => {
