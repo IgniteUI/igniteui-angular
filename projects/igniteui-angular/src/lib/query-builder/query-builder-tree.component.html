@@ -101,6 +101,11 @@
             [disabled]="hasEditedExpression"
             (click)="addCondition(expressionItem, afterExpression)"
             (focus)="this.prevFocusedExpression ? this.prevFocusedExpression.focused = false : null"
+            igxDrop 
+            #addConditionDragRef
+            (enter)="onAddConditionEnter(addConditionDragRef, expressionItem)"
+            (leave)="onAddConditionLeave($event, addConditionDragRef)"
+            (dropped)="onAddConditionDropped(expressionItem)"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{
@@ -129,14 +134,29 @@
 
     <ng-template #operandTemplate let-expressionItem>
         <div
+            #dragRef 
+            igxDrop
+            (enter)="onDivEnter($event, dragRef, expressionItem)"
+            (over)="onDivOver($event, dragRef, expressionItem)"
+            (leave)="onDivLeave($event)"
+            (dropped)="onDivDropped(expressionItem)"
             *ngIf="!expressionItem.inEditMode"
-            class="igx-filter-tree__expression-item"
+            class="igx-filter-tree__expression-item"            
             (mouseenter)="expressionItem.hovered = true"
             (mouseleave)="expressionItem.hovered = false"
             (focusin)="onExpressionFocus(expressionItem)"
             (focusout)="onExpressionBlur($event, expressionItem)"
         >
-            <igx-chip
+            <igx-chip        
+                [draggable]="canBeDragged() ? 'true' : 'false'" 
+                [hideBaseOnDrag] = "false"    
+                [animateOnRelease] = "false"
+                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem): null" 
+                (moveEnd)="onMoveEnd()"
+                (dragEnter)="onChipEnter($event, dragRef, expressionItem, false)"
+                (dragOver)="onChipOver($event, dragRef, false)"
+                (dragLeave)="onChipLeave($event)"
+                (dragDrop)="onChipDropped(expressionItem)"
                 #target="tooltipTarget"
                 [igxTooltipTarget]="tooltipRef"
                 [data]="expressionItem"
@@ -215,9 +235,10 @@
                     }
                 }
             </div>
+
             @if((expressionItem.focused || expressionItem.hovered) && !expressionItem.inAddMode) {
-                <div class="igx-filter-tree__expression-actions">
-                    <button igxIconButton="flat" aria-labelledby="add-expression" (keydown)="invokeClick($event)"
+                <div igxDragIgnore class="igx-filter-tree__expression-actions">
+                    <button igxDragIgnore igxIconButton="flat" aria-labelledby="add-expression" (keydown)="invokeClick($event)"
                         (click)="enterExpressionAdd(expressionItem)" *ngIf="
                                             !expressionItem.inAddMode
                                         ">
@@ -228,6 +249,12 @@
         </div>
 
         <div
+            #dragRef 
+            igxDrop
+            (enter)="onDivEnter($event, dragRef, expressionItem)"
+            (over)="onDivOver($event, dragRef, expressionItem)"
+            (leave)="onDivLeave($event)"
+            (dropped)="onDivDropped(expressionItem)"
             *ngIf="expressionItem.inEditMode"
             #editingInputsContainer
             class="igx-filter-tree__inputs"
