@@ -139,7 +139,7 @@
 
         .igx-input-group__bundle-start,
         .igx-input-group__bundle-end {
-            display: none;
+            min-width: 0;
         }
 
         igx-input-group {
@@ -151,9 +151,9 @@
     %igx-combo__case-icon,
     %igx-combo__case-icon--active {
         .igx-icon {
-            width: rem(16px);
-            height: rem(16px);
-            font-size: rem(16px);
+            width: rem(18px);
+            height: rem(18px);
+            font-size: rem(18px);
         }
     }
 
