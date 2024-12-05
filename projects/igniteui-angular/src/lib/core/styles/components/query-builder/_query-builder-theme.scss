@@ -131,11 +131,6 @@
     }
 
     %query-builder-tree {
-        margin-bottom: $gap;
-    }
-    
-
-    %query-builder-tree {
         width: 100%;
 
         border-radius: var-get($theme, 'tree-border-radius');
@@ -215,7 +210,7 @@
     %advanced-filter__root-actions {
         display: flex;
         gap: rem(8px);
-        margin-bottom: $gap;
+        padding-bottom: $gap;
     }
 
     %advanced-filter__header,
@@ -242,9 +237,13 @@
         display: flex;
         width: 100%;
     }
+    
+    %query-builder-tree:not([style*="display: none"]) + %filter-tree {
+        padding-top: $gap;
+    }
 
     %filter-tree:not(:last-child):not(:nth-last-child(2):has(+ %query-builder-tree)) {
-        margin-bottom: $gap;
+        padding-bottom: $gap;
     }
 
     %filter-tree__line {
@@ -289,7 +288,11 @@
     }
 
     %filter-tree__expression-item:not(:last-child):not(:nth-last-child(2):has(+ %query-builder-tree)) {        
-        margin-bottom: $gap;
+        padding-bottom: $gap;
+    }
+
+    %query-builder-tree:not([style*="display: none"]) + %filter-tree__expression-item {
+        padding-top: $gap;
     }
 
     %filter-tree__expression-item {
@@ -346,8 +349,12 @@
         opacity: if($variant != 'indigo', .6, .8);
     }
 
+    %query-builder-tree:not([style*="display: none"]) + %filter-tree__buttons {
+        padding-top: $gap;
+    }
+
     %filter-tree__buttons:not(:last-child) {
-        margin-bottom: $gap;
+        padding-bottom: $gap;
     }
 
     %filter-tree__buttons {
@@ -358,7 +365,7 @@
     }
 
     %filter-tree__inputs:not(:last-child) {
-        margin-bottom: $gap;
+        padding-bottom: $gap;
     }
 
     %filter-tree__inputs {
