@@ -1,7 +1,45 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IgxAvatarComponent, IgxButtonDirective, IgxCardActionsComponent, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderSubtitleDirective, IgxCardHeaderTitleDirective, IgxCardMediaDirective, IgxChipComponent, IgxDividerDirective, IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxIconButtonDirective, IgxIconComponent, IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective, IgxRippleDirective, IgxSliderComponent } from 'igniteui-angular';
+import { IgxAvatarComponent, IgxButtonDirective, IgxCardActionsComponent, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderSubtitleDirective, IgxCardHeaderTitleDirective, IgxCardMediaDirective, IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective, IgxInputGroupModule } from 'igniteui-angular';
+import { defineComponents, IgcCardComponent, IgcAvatarComponent, IgcButtonComponent, IgcIconButtonComponent, registerIconFromText } from "igniteui-webcomponents";
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+
+defineComponents(IgcCardComponent, IgcAvatarComponent, IgcButtonComponent, IgcIconButtonComponent);
+
+const icons = [
+    {
+        name: 'favorite',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
+    },
+    {
+        name: 'share',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>'
+    },
+    {
+        name: 'bookmark',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>'
+    },
+    {
+        name: 'bookmark',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>'
+    },
+    {
+        name: 'skip_previous',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>'
+    },
+    {
+        name: 'play_arrow',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M8 5v14l11-7z"/></svg>'
+    },
+    {
+        name: 'skip_next',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>'
+    },
+];
+
+icons.forEach((icon) => {
+    registerIconFromText(icon.name, icon.url);
+});
 
 export interface ICard {
     title: string;
@@ -13,20 +51,6 @@ export interface ICard {
     buttons: string[];
     chip: string[];
     icons: string[];
-}
-
-export interface Ilist {
-    isSunny: boolean;
-    day: string;
-    icon: string;
-    tempHeight: string;
-    tempLow: string;
-}
-
-export interface Idetails {
-    value: string;
-    icon: string;
-    label: string;
 }
 
 const cardFactory = (params: any): ICard => ({
@@ -41,110 +65,118 @@ const cardFactory = (params: any): ICard => ({
     icons: params.icons || ['favorite', 'bookmark', 'share']
 });
 
-const listFactory = (params: any): Ilist => ({
-    isSunny: params.isSunny || '',
-    day: params.day || 'day of the week',
-    icon: params.icon || 'wb_cloudy',
-    tempHeight: params.tempHeight || '°C',
-    tempLow: params.tempLow || '°C',
-});
-
-const detailsFactory = (params: any): Idetails => ({
-    value: params.value || '',
-    icon: params.icon || '',
-    label: params.label || '',
-});
-
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'app-card-sample',
     styleUrls: ['card.sample.scss'],
     templateUrl: 'card.sample.html',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    standalone: true,
     imports: [
-        NgFor,
         FormsModule,
         IgxCardComponent,
         IgxCardMediaDirective,
         IgxCardHeaderComponent,
         IgxCardContentDirective,
-        IgxDividerDirective,
-        IgxChipComponent,
         IgxCardActionsComponent,
         IgxButtonDirective,
         IgxRippleDirective,
         IgxIconComponent,
-        IgxSliderComponent,
-        IgxExpansionPanelComponent,
-        IgxExpansionPanelBodyComponent,
-        IgxListComponent,
-        IgxListItemComponent,
-        IgxListLineTitleDirective,
         IgxAvatarComponent,
         IgxCardHeaderTitleDirective,
         IgxCardHeaderSubtitleDirective,
-        IgxIconButtonDirective
+        IgxIconButtonDirective,
+        IgxInputGroupModule
     ]
 })
-export class CardSampleComponent {
-    @ViewChild(IgxExpansionPanelComponent, { static: true })
-    private panel: IgxExpansionPanelComponent;
+export class CardSampleComponent implements OnInit {
+    @ViewChild('customControls', { static: true }) public customControlsTemplate!: TemplateRef<any>;
 
-    public horizontal = false;
-    public volume = 10;
+    public sectionOrder: string[] = ['media', 'header', 'content', 'actions']; // Default order
+    public orderInput: string = '';
 
-    public details = [
-        detailsFactory({
-            value: '12%',
-            icon: 'rain',
-            label: 'Participation',
-        }),
-        detailsFactory({
-            value: '23 km/h',
-            icon: 'breeze',
-            label: 'Wind',
-        })
-    ];
+    public panelConfig : PropertyPanelConfig = {
+        hasMedia: {
+            label: 'Toggle Media',
+            control: {
+                type: 'boolean',
+                defaultValue: 'true'
+            }
+        },
+        hasHeader: {
+            label: 'Toggle Header',
+            control: {
+                type: 'boolean',
+                defaultValue: 'true'
+            }
+        },
+        hasThumbnail: {
+            label: 'Toggle Thumbnail',
+            control: {
+                type: 'boolean',
+                defaultValue: 'true'
+            }
+        },
+        hasTitle: {
+            label: 'Toggle Title',
+            control: {
+                type: 'boolean',
+                defaultValue: 'true'
+            }
+        },
+        hasSubtitle: {
+            label: 'Toggle Subtitle',
+            control: {
+                type: 'boolean',
+                defaultValue: 'true'
+            }
+        },
+        hasContent: {
+            label: 'Toggle Content',
+            control: {
+                type: 'boolean',
+                defaultValue: 'true'
+            }
+        },
+        hasActions: {
+            label: 'Toggle Actions',
+            control: {
+                type: 'boolean',
+                defaultValue: 'true'
+            }
+        },
+    }
 
-    public days = [
-        listFactory({
-            day: 'Tuesday',
-            icon: 'wb_cloudy',
-            tempHeight: '18°',
-            tempLow: '11°',
-        }),
-        listFactory({
-            day: 'Wednesday',
-            icon: 'wb_cloudy',
-            tempHeight: '16°',
-            tempLow: '10°',
-        }),
-        listFactory({
-            isSunny: 'true',
-            day: 'Thursday',
-            icon: 'wb_sunny',
-            tempHeight: '22°',
-            tempLow: '12°',
-        }),
-        listFactory({
-            day: 'Friday',
-            icon: 'wb_cloudy',
-            tempHeight: '28°',
-            tempLow: '17°',
-        }),
-        listFactory({
-            day: 'Saturday',
-            icon: 'wb_cloudy',
-            tempHeight: '21°',
-            tempLow: '16°',
-        }),
-        listFactory({
-            isSunny: 'true',
-            day: 'Sunday',
-            icon: 'wb_sunny',
-            tempHeight: '29°',
-            tempLow: '20°',
-        }),
-    ];
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
+    }
+
+    public ngOnInit() {
+        this.propertyChangeService.setCustomControls(this.customControlsTemplate)
+    }
+
+    public updateSectionOrder(): void {
+        const validSections = ['media', 'header', 'content', 'actions']; // Valid sections
+        const inputOrder = this.orderInput
+          .split(',')
+          .map((section) => section.trim().toLowerCase());
+
+        // Validate and update sectionOrder
+        this.sectionOrder = inputOrder.filter((section) => validSections.includes(section));
+
+        // Add remaining sections that were not provided (optional)
+        validSections.forEach((section) => {
+          if (!this.sectionOrder.includes(section)) {
+            this.sectionOrder.push(section);
+          }
+        });
+    }
 
     public cards = [
         cardFactory({
@@ -159,21 +191,10 @@ export class CardSampleComponent {
             title: 'New York City'
         }),
         cardFactory({
-            icons: ['favorite', 'bookmark', 'share'],
-            imageUrl: 'assets/images/card/media/the_red_ice_forest.jpg'
-        }),
-        cardFactory({
-            buttons: ['Share', 'Explore'],
-            imageUrl: 'assets/images/card/media/yosemite.jpg',
-            subtitle: 'Yosemite National Park',
-            title: 'Incipient Dawn'
-        }),
-        cardFactory({
-            content: `Nico Erik Rosberg is a German former Formula One racing driver
-                and current Formula One World Champion who drove for Williams F1 and
-                Mercedes AMG Petronas under the German flag.`,
-            subtitle: 'Racing Driver',
-            title: 'Nico Rosberg'
+            title: 'Rozes',
+            subtitle: 'Under the Grave (2016)',
+            imageUrl: 'assets/images/card/media/roses.jpg',
+            icons: ['skip_previous', 'play_arrow', 'skip_next']
         }),
         cardFactory({
             avatarUrl: 'assets/images/card/avatars/alicia_keys.jpg',
@@ -182,45 +203,5 @@ export class CardSampleComponent {
             subtitle: 'by Melow D',
             title: 'THERE'
         }),
-        cardFactory({
-            buttons: ['Comment', 'Explore'],
-            icons: ['favorite', 'share'],
-            imageUrl: 'assets/images/card/media/monuments.jpg'
-        }),
-        cardFactory({
-            avatarUrl: 'assets/images/card/avatars/rupert_stadler.jpg',
-            buttons: ['message', 'follow'],
-            icons: ['add', 'star'],
-            imageUrl: 'assets/images/card/media/audi.jpg',
-            subtitle: 'January 30, 2017',
-            title: 'Rupert Stadler'
-        }),
-        cardFactory({
-            title: 'Rozes',
-            subtitle: 'Under the Grave (2016)',
-            imageUrl: 'assets/images/card/media/roses.jpg',
-            icons: ['skip_previous', 'play_arrow', 'skip_next']
-        }),
-        cardFactory({
-            imageUrl: 'assets/images/card/media/cofe.jpg',
-            title: 'Cafe Badilico',
-            subtitle: '$ - Italian, Cafe',
-            content: `Small plates, salads & sandwiches setting with 12 indoor seats plus patio seating.`,
-            buttons: ['RESERVE'],
-            chip: ['5:30', '7:30', '8:00', '9:00']
-        }),
-        cardFactory({
-            imageUrl: 'assets/images/card/media/weather.png',
-            title: 'Sofia - Bulgaria',
-            subtitle: 'Mon 12:30 PM, Mostly sunny',
-            content: `37`,
-            unit: '°C',
-            buttons: ['Details'],
-        }),
-        cardFactory({})
     ];
-
-    public toggleDetails() {
-        this.panel.toggle();
-    }
 }

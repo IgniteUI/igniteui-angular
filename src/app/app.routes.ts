@@ -5,7 +5,6 @@ import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
-import { CardShowcaseSampleComponent } from './card-showcase/card-showcase.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
 import { CheckboxSampleComponent } from './checkbox/checkbox.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
@@ -214,10 +213,6 @@ export const appRoutes: Routes = [
     {
         path: 'card',
         component: CardSampleComponent
-    },
-    {
-        path: 'card-showcase',
-        component: CardShowcaseSampleComponent
     },
     {
         path: 'carousel',

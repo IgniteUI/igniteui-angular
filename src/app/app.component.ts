@@ -739,11 +739,6 @@ export class AppComponent implements OnInit {
 
     public WcCompareLinks = [
         {
-            link: '/card-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Card'
-        },
-        {
             link: '/combo-showcase',
             icon: 'radio_button_unchecked',
             name: 'Combo'
