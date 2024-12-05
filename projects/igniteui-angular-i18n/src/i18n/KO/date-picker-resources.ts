@@ -1,12 +1,10 @@
 import { IDatePickerResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const DatePickerResourceStringsKO_: ExpandRequire<IDatePickerResourceStrings> = {
-    igx_date_picker_change_date: '날짜 변경',
-    igx_date_picker_choose_date: '날짜 선택'
-};
-
+// only use `satisfies` operator so export is typed by its schema
 /**
  * Korean resource strings for IgxDatePicker
  */
-export const DatePickerResourceStringsKO = DatePickerResourceStringsKO_ as ExpandRequire<IDatePickerResourceStrings>;
+export const DatePickerResourceStringsKO = {
+    igx_date_picker_change_date: '날짜 변경',
+    igx_date_picker_choose_date: '날짜 선택'
+} satisfies MakeRequired<IDatePickerResourceStrings>;

@@ -8,7 +8,6 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-column-types-sample',
     styleUrls: ['grid-column-types.sample.scss'],
     templateUrl: 'grid-column-types.sample.html',
-    standalone: true,
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent]
 })
 export class GridColumnTypesSampleComponent implements OnInit {

@@ -60,6 +60,7 @@
         background-and--focus: $background-and--focus,
         background-or: $background-or,
         background-or--focus: $background-or--focus,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),

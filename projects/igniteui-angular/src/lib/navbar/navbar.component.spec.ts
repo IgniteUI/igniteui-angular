@@ -194,7 +194,6 @@ describe('IgxNavbar', () => {
                             [actionButtonIcon]="actionButtonIcon"
                             [isActionButtonVisible]="isActionButtonVisible">
                </igx-navbar>`,
-    standalone: true,
     imports: [IgxNavbarComponent]
 })
 class NavbarIntializeTestComponent {
@@ -214,7 +213,6 @@ class NavbarIntializeTestComponent {
                         <button type="button">custom action</button>
                     </igx-navbar-action>
                </igx-navbar>`,
-    standalone: true,
     imports: [IgxNavbarComponent, IgxNavbarActionDirective]
 })
 class NavbarCustomActionIconTestComponent {
@@ -231,7 +229,6 @@ class NavbarCustomActionIconTestComponent {
                         <igx-icon>arrow_back</igx-icon>
                     </igx-navbar-action>
                </igx-navbar>`,
-    standalone: true,
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxIconComponent]
 })
 class NavbarCustomIgxIconTestComponent {
@@ -246,7 +243,6 @@ class NavbarCustomIgxIconTestComponent {
                             isActionButtonVisible="true">
                     <igx-icon igxNavbarAction>arrow_back</igx-icon>
                </igx-navbar>`,
-    standalone: true,
     imports: [IgxNavbarComponent, IgxIconComponent, IgxNavbarActionDirective]
 })
 class NavbarCustomIgxIconDirectiveTestComponent {
@@ -264,7 +260,6 @@ class NavbarCustomIgxIconDirectiveTestComponent {
                     </igx-navbar-action>
                     <igx-navbar-title>Custom Title</igx-navbar-title>
                </igx-navbar>`,
-    standalone: true,
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective, IgxIconComponent]
 })
 class NavbarCustomTitleTestComponent {
@@ -285,7 +280,6 @@ class NavbarCustomTitleTestComponent {
                         <span>Title</span>
                     </div>
                </igx-navbar>`,
-    standalone: true,
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective, IgxIconComponent]
 })
 class NavbarCustomTitleDirectiveTestComponent {

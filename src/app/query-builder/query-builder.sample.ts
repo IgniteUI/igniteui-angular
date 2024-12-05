@@ -16,7 +16,6 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
     selector: 'app-query-builder-sample',
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
-    standalone: true,
     imports: [IgxButtonGroupComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent]
 })
 export class QueryBuilderComponent implements OnInit {

@@ -98,6 +98,7 @@
         border-color: $border-color,
         hover-color: $hover-color,
         hover-selected-color: $hover-selected-color,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -147,7 +148,7 @@
     ), $variant);
 
     $icon-space: map.get((
-        'material': $icon-space-default,
+        'material': $icon-space-indigo,
         'fluent': $icon-space-default,
         'bootstrap': $icon-space-default,
         'indigo': $icon-space-indigo
@@ -206,6 +207,12 @@
     %node-toggle-button,
     %node-select {
         margin-inline-end: $icon-space;
+    }
+
+    @if $variant == 'material' {
+        %node-select {
+            margin-inline: rem(10px) rem(14px);
+        }
     }
 
     @if $variant == 'indigo' {

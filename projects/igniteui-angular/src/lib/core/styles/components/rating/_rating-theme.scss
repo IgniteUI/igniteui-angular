@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:meta';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 
@@ -40,7 +41,7 @@
 
     $theme: digest-schema($rating-schema);
 
-    @return extend($theme, (name: $name), keywords($rest));
+    @return extend($theme, (name: $name), meta.keywords($rest));
 }
 
 /// @deprecated Use the `css-vars` mixin instead.

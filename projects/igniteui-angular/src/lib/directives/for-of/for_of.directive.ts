@@ -1,5 +1,4 @@
-﻿/* eslint-disable @angular-eslint/no-conflicting-lifecycle */
-import { DOCUMENT, NgForOfContext } from '@angular/common';
+﻿import { DOCUMENT, NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
     ComponentRef,
@@ -491,8 +490,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     public ngAfterViewInit(): void {
         if (this.igxForScrollOrientation === 'vertical') {
             this._zone.runOutsideAngular(() => {
-                this.contentObserver = new (getResizeObserver())(() => this.contentResizeNotify.next());
-                this.contentObserver.observe(this.dc.instance._viewContainer.element.nativeElement);
+                if (this.platformUtil.isBrowser) {
+                    this.contentObserver = new (getResizeObserver())(() => this.contentResizeNotify.next());
+                    this.contentObserver.observe(this.dc.instance._viewContainer.element.nativeElement);
+                }
             });
         }
     }

@@ -1,6 +1,7 @@
 @use 'base' as *;
 @use '../schemas' as *;
 @use 'igniteui-theming/sass/color' as *;
+@use 'igniteui-theming/sass/color/presets' as *;
 @use 'igniteui-theming/sass/elevations/presets' as elevations;
 
 ////
@@ -13,6 +14,7 @@
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 /// @see {mixin} theme
+/// @deprecated - Use the theme mixin instead.
 @mixin indigo-light-theme(
     $palette,
     $exclude: (),
@@ -21,7 +23,8 @@
 ) {
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
-    $surface: color($palette, 'surface');
+    $gray: color($light-indigo-palette, 'gray');
+    $surface: color($light-indigo-palette, 'surface');
     $info: color($palette, 'info');
     $success: color($palette, 'success');
     $warn: color($palette, 'warn');
@@ -31,8 +34,8 @@
         $palette: palette(
             $primary,
             $secondary,
-            $surface: if($surface != #fff, $surface, #fff),
-            $gray: #060716,
+            $surface: $surface,
+            $gray: $gray,
             $info: $info,
             $success: $success,
             $warn: $warn,
@@ -50,6 +53,7 @@
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 /// @see {mixin} theme
+/// @deprecated - Use the theme mixin instead.
 @mixin indigo-dark-theme(
     $palette,
     $exclude: (),
@@ -58,7 +62,8 @@
 ) {
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
-    $surface: color($palette, 'surface');
+    $gray: color($dark-indigo-palette, 'gray');
+    $surface: color($dark-indigo-palette, 'surface');
     $info: color($palette, 'info');
     $success: color($palette, 'success');
     $warn: color($palette, 'warn');
@@ -68,8 +73,8 @@
         $palette: palette(
             $primary,
             $secondary,
-            $surface: if($surface != white, $surface, #2a2b2f),
-            $gray: #fff,
+            $surface: $surface,
+            $gray: $gray,
             $info: $info,
             $success: $success,
             $warn: $warn,

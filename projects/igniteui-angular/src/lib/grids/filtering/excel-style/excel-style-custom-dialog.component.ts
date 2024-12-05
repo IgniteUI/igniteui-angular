@@ -40,12 +40,12 @@ import { NgClass, NgIf, NgFor } from '@angular/common';
 @Component({
     selector: 'igx-excel-style-custom-dialog',
     templateUrl: './excel-style-custom-dialog.component.html',
-    standalone: true,
     imports: [IgxToggleDirective, NgClass, NgIf, NgFor, IgxExcelStyleDateExpressionComponent, IgxExcelStyleDefaultExpressionComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public expressionsList = new Array<ExpressionUI>();
+
     @Input()
     public column: ColumnType;
 
