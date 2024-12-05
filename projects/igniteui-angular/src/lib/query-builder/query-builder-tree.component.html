@@ -500,17 +500,20 @@
         <div class="igx-filter-tree">
             <div
                 tabindex="0"
-                class="igx-filter-tree__line"
-                [ngClass]="{
-                    'igx-filter-tree__line--and': expressionItem?.operator === 0,
-                    'igx-filter-tree__line--or': expressionItem?.operator === 1,
-                    'igx-filter-tree__line--selected': expressionItem?.selected
-                }"
+                class="igx-filter-tree__line igx-filter-tree__line--and"
+                [ngClass]="{'igx-filter-tree__line--selected': expressionItem?.selected}"
                 (keydown)="invokeClick($event)"
                 (click)="onGroupClick(expressionItem)"
             ></div>
 
-            <div class="igx-filter-tree__expression">            
+            <div class="igx-filter-tree__expression">     
+                <button igxButton="flat"
+                        (keydown)="invokeClick($event)"
+                        (click)="onGroupClick(expressionItem)"
+                >
+                <span> {{expressionItem?.operator === 0? 'AND':'OR'}}</span>
+                <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>                   
+                </button>   
                 <ng-container *ngFor="let expr of expressionItem?.children">
                     <ng-container
                         *ngTemplateOutlet="
