@@ -10,7 +10,6 @@ defineComponents(IgcSliderComponent, IgcSliderLabelComponent);
     styleUrls: ['slider-showcase.sample.scss'],
     templateUrl: 'slider-showcase.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 export class SliderShowcaseSampleComponent {
