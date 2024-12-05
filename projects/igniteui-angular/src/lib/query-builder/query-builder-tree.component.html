@@ -100,9 +100,8 @@
             [disabled]="hasEditedExpression"
             (click)="addCondition(expressionItem, afterExpression)"
             igxDrop 
-            #addConditionDragRef
-            (enter)="onAddConditionEnter(addConditionDragRef, expressionItem)"
-            (leave)="onAddConditionLeave($event, addConditionDragRef)"
+            (enter)="onAddConditionEnter(addConditionButton, expressionItem)"
+            (leave)="onAddConditionLeave($event, addConditionButton)"
             (dropped)="onAddConditionDropped(expressionItem)"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
