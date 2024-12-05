@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IgxAvatarComponent, IgxButtonDirective, IgxCardActionsComponent, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderSubtitleDirective, IgxCardHeaderTitleDirective, IgxCardMediaDirective, IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective, IgxInputGroupModule } from 'igniteui-angular';
+import { IgxAvatarComponent, IgxSwitchComponent, IgxButtonDirective, IgxCardActionsComponent, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderSubtitleDirective, IgxCardHeaderTitleDirective, IgxCardMediaDirective, IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective, IgxInputGroupModule } from 'igniteui-angular';
 import { defineComponents, IgcCardComponent, IgcAvatarComponent, IgcButtonComponent, IgcIconButtonComponent, registerIconFromText } from "igniteui-webcomponents";
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
@@ -86,11 +86,16 @@ const cardFactory = (params: any): ICard => ({
         IgxCardHeaderTitleDirective,
         IgxCardHeaderSubtitleDirective,
         IgxIconButtonDirective,
-        IgxInputGroupModule
+        IgxInputGroupModule,
+        IgxSwitchComponent
     ]
 })
 export class CardSampleComponent implements OnInit {
     @ViewChild('customControls', { static: true }) public customControlsTemplate!: TemplateRef<any>;
+
+    protected hasTitle: boolean = true;
+    protected hasSubtitle: boolean = true;
+    protected hasThumbnail: boolean = true;
 
     public sectionOrder: string[] = ['media', 'header', 'content', 'actions']; // Default order
     public orderInput: string = '';
@@ -98,34 +103,6 @@ export class CardSampleComponent implements OnInit {
     public panelConfig : PropertyPanelConfig = {
         hasMedia: {
             label: 'Toggle Media',
-            control: {
-                type: 'boolean',
-                defaultValue: 'true'
-            }
-        },
-        hasHeader: {
-            label: 'Toggle Header',
-            control: {
-                type: 'boolean',
-                defaultValue: 'true'
-            }
-        },
-        hasThumbnail: {
-            label: 'Toggle Thumbnail',
-            control: {
-                type: 'boolean',
-                defaultValue: 'true'
-            }
-        },
-        hasTitle: {
-            label: 'Toggle Title',
-            control: {
-                type: 'boolean',
-                defaultValue: 'true'
-            }
-        },
-        hasSubtitle: {
-            label: 'Toggle Subtitle',
             control: {
                 type: 'boolean',
                 defaultValue: 'true'
@@ -140,6 +117,13 @@ export class CardSampleComponent implements OnInit {
         },
         hasActions: {
             label: 'Toggle Actions',
+            control: {
+                type: 'boolean',
+                defaultValue: 'true'
+            }
+        },
+        hasHeader: {
+            label: 'Toggle Header',
             control: {
                 type: 'boolean',
                 defaultValue: 'true'

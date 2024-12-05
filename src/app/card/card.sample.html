@@ -15,15 +15,15 @@
 
                         @if(section === 'header' && properties.hasHeader) {
                             <igx-card-header [vertical]="false">
-                                @if(properties.hasThumbnail) {
+                                @if(hasThumbnail) {
                                     <igx-avatar [src]="cards[0].avatarUrl"></igx-avatar>
                                 }
 
-                                @if(properties.hasTitle) {
+                                @if(hasTitle) {
                                     <h1 igxCardHeaderTitle>{{ cards[0].title }}</h1>
                                 }
 
-                                @if(properties.hasSubtitle) {
+                                @if(hasSubtitle) {
                                     <h2 igxCardHeaderSubtitle>{{ cards[0].subtitle }}</h2>
                                 }
                             </igx-card-header>
@@ -68,11 +68,11 @@
                 <div style="flex-direction: row">
                     @if(properties.hasHeader) {
                         <igx-card-header>
-                            @if(properties.hasTitle) {
+                            @if(hasTitle) {
                                 <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
                             }
 
-                            @if(properties.hasSubtitle) {
+                            @if(hasSubtitle) {
                                 <h5 igxCardHeaderSubtitle>{{cards[1].subtitle}}</h5>
                             }
                         </igx-card-header>
@@ -96,11 +96,11 @@
         <article class="card">
             <igx-card>
                 <igx-card-header>
-                    @if(properties.hasHeader && properties.hasTitle) {
+                    @if(properties.hasHeader && hasTitle) {
                         <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
                     }
 
-                    @if(properties.hasHeader && properties.hasSubtitle) {
+                    @if(properties.hasHeader && hasSubtitle) {
                         <h5 igxCardHeaderSubtitle>{{cards[1].subtitle}}</h5>
                     }
 
@@ -169,16 +169,16 @@
 
                         @if(section === 'header' && properties.hasHeader) {
                             <igc-card-header>
-                                @if(properties.hasThumbnail) {
+                                @if(hasThumbnail) {
                                     <igc-avatar slot="thumbnail" [src]="cards[0].avatarUrl">
                                     </igc-avatar>
                                 }
 
-                                @if(properties.hasTitle) {
+                                @if(hasTitle) {
                                     <span slot="title">New York City</span>
                                 }
 
-                                @if(properties.hasSubtitle) {
+                                @if(hasSubtitle) {
                                     <span slot="subtitle">City in New York</span>
                                 }
                             </igc-card-header>
@@ -224,11 +224,11 @@
                 <div>
                     @if(properties.hasHeader) {
                         <igc-card-header>
-                            @if(properties.hasTitle) {
+                            @if(hasTitle) {
                                 <span slot="title">{{cards[1].title}}</span>
                             }
 
-                            @if(properties.hasSubtitle) {
+                            @if(hasSubtitle) {
                                 <span slot="subtitle">{{cards[1].subtitle}}</span>
                             }
                         </igc-card-header>
@@ -259,11 +259,11 @@
                     }
 
                     @if(properties.hasHeader) {
-                        @if(properties.hasTitle) {
+                        @if(hasTitle) {
                             <span slot="title">{{cards[1].title}}</span>
                         }
 
-                        @if(properties.hasSubtitle) {
+                        @if(hasSubtitle) {
                             <span slot="subtitle">{{cards[1].subtitle}}</span>
                         }
                     }
@@ -308,6 +308,20 @@
 
     <ng-template #customControls>
         <div class="custom-controls">
+            @if (properties.hasHeader) {
+                <igx-switch id="hasTitle" [(ngModel)]="hasTitle">
+                    <label for="hasTitle">Toggle Title</label>
+                </igx-switch>
+
+                <igx-switch id="hasSubtitle" [(ngModel)]="hasSubtitle">
+                    <label for="hasSubtitle">Toggle Subtitle</label>
+                </igx-switch>
+
+                <igx-switch id="hasThumbnail" [(ngModel)]="hasThumbnail">
+                    <label for="hasThumbnail">Toggle Thumbnail</label>
+                </igx-switch>
+            }
+
             <igx-input-group type="border">
                 <label igxLabel>Card Layout Order</label>
                 <input
