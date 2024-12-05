@@ -1,4 +1,4 @@
-import { DOCUMENT, NgIf, NgTemplateOutlet, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet, NgClass } from '@angular/common';
 import {
     AfterViewChecked,
     ChangeDetectorRef,
@@ -33,7 +33,7 @@ import { Subject, Subscription } from 'rxjs';
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
-    imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
+    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewChecked, OnDestroy {
     /**

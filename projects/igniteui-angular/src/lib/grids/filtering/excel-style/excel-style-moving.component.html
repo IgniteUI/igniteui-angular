@@ -1,31 +1,31 @@
-<ng-container *ngIf="esf.column">
-<header>
-    {{ esf.grid.resourceStrings.igx_grid_excel_filter_moving_header }}
-</header>
-<igx-buttongroup>
-    <button
-        type="button"
-        igxButton
-        [disabled]="canNotMoveLeft"
-        (click)="onMoveButtonClicked(0)">
-        <igx-icon family="default" name="arrow_back"></igx-icon>
-        <span>
-            {{ esfSize === '1'?
-            esf.grid.resourceStrings.igx_grid_excel_filter_moving_left_short:
-            esf.grid.resourceStrings.igx_grid_excel_filter_moving_left }}
-        </span>
-    </button>
-    <button
-        type="button"
-        igxButton
-        [disabled]="canNotMoveRight"
-        (click)="onMoveButtonClicked(1)">
-        <span>
-            {{ esfSize === '1'?
-            esf.grid.resourceStrings.igx_grid_excel_filter_moving_right_short:
-            esf.grid.resourceStrings.igx_grid_excel_filter_moving_right }}
-        </span>
-        <igx-icon family="default" name="arrow_forward"></igx-icon>
-    </button>
-</igx-buttongroup>
-</ng-container>
+@if (esf.column) {
+    <header>
+        {{ esf.grid.resourceStrings.igx_grid_excel_filter_moving_header }}
+    </header>
+    <igx-buttongroup>
+        <button
+            type="button"
+            igxButton
+            [disabled]="canNotMoveLeft"
+            (click)="onMoveButtonClicked(0)">
+            <igx-icon family="default" name="arrow_back"></igx-icon>
+            <span>
+                {{ esfSize === '1'?
+                esf.grid.resourceStrings.igx_grid_excel_filter_moving_left_short:
+                esf.grid.resourceStrings.igx_grid_excel_filter_moving_left }}
+            </span>
+        </button>
+        <button
+            type="button"
+            igxButton
+            [disabled]="canNotMoveRight"
+            (click)="onMoveButtonClicked(1)">
+            <span>
+                {{ esfSize === '1'?
+                esf.grid.resourceStrings.igx_grid_excel_filter_moving_right_short:
+                esf.grid.resourceStrings.igx_grid_excel_filter_moving_right }}
+            </span>
+            <igx-icon family="default" name="arrow_forward"></igx-icon>
+        </button>
+    </igx-buttongroup>
+}

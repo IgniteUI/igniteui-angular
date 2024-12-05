@@ -23,7 +23,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { DOCUMENT, NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -101,7 +101,7 @@ export class IgxSelectFooterDirective {
             display: block;
         }
     `],
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, NgIf, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
     AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider, AfterContentChecked {

@@ -1,5 +1,7 @@
-<ng-container *ngIf="grid.hasColumnLayouts && column.columnGroup">
-    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-left"></span>
+@if (grid.hasColumnLayouts && column.columnGroup) {
+    @if (grid.moving) {
+        <span class="igx-grid-th__drop-indicator-left"></span>
+    }
     <div class="igx-grid-thead__group igx-grid__mrl-block"
      [ngClass]="{
          'igx-grid-th--pinned-last': hasLastPinnedChildColumn,
@@ -7,16 +9,20 @@
         }"
      [ngStyle]="{'grid-template-rows':column.getGridTemplate(true),
      'grid-template-columns':column.getGridTemplate(false)}">
-        <ng-container *ngFor="let child of column.children" >
-            <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid-thead__subgroup"
-                [ngClass]="child.headerGroupClasses"
-                [ngStyle]="child.headerGroupStyles | igxHeaderGroupStyle:child:grid.pipeTrigger"
-                [column]="child">
-            </igx-grid-header-group>
-        </ng-container>
+        @for (child of column.children; track child) {
+            @if (!child.hidden) {
+                <igx-grid-header-group class="igx-grid-thead__subgroup"
+                    [ngClass]="child.headerGroupClasses"
+                    [ngStyle]="child.headerGroupStyles | igxHeaderGroupStyle:child:grid.pipeTrigger"
+                    [column]="child">
+                </igx-grid-header-group>
+            }
+        }
     </div>
-    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-right"></span>
-</ng-container>
+    @if (grid.moving) {
+        <span class="igx-grid-th__drop-indicator-right"></span>
+    }
+}
 
 
 <ng-template #defaultColumn>
@@ -30,8 +36,10 @@
     </igx-icon>
 </ng-template>
 
-<ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">
-    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-left"></span>
+@if (!grid.hasColumnLayouts && column.columnGroup) {
+    @if (grid.moving) {
+        <span class="igx-grid-th__drop-indicator-left"></span>
+    }
     <div class="igx-grid-thead__title"
         role="columnheader"
         [attr.aria-label]="column.header || column.field"
@@ -53,32 +61,40 @@
         (pointerenter)="onPinterEnter()"
         (pointerleave)="onPointerLeave()"
         >
-        <ng-container *ngIf="column.collapsible">
+        @if (column.collapsible) {
             <div class="igx-grid-th__expander" (pointerdown)="onPointerDownIndicator($event)" (click)="toggleExpandState($event)">
                 <ng-container
                     *ngTemplateOutlet="column.collapsibleIndicatorTemplate ? column.collapsibleIndicatorTemplate : defaultCollapseIndicator; context: {$implicit: column, column: column}">
                 </ng-container>
             </div>
-        </ng-container>
+        }
         <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
         </ng-container>
     </div>
-    <div class="igx-grid-thead__group" *ngIf="grid.type !== 'pivot'">
-        <ng-container *ngFor="let child of column.children">
-            <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid-thead__subgroup"
-                [ngClass]="child.headerGroupClasses"
-                [ngStyle]="child.headerGroupStyles | igxHeaderGroupStyle:child:grid.pipeTrigger"
-                [column]="child"
-                [style.min-width]="child.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts"
-                [style.flex-basis]="child.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts">
-            </igx-grid-header-group>
-        </ng-container>
-    </div>
-    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-right"></span>
-</ng-container>
+    @if (grid.type !== 'pivot') {
+        <div class="igx-grid-thead__group">
+            @for (child of column.children; track child) {
+                @if (!child.hidden) {
+                    <igx-grid-header-group class="igx-grid-thead__subgroup"
+                        [ngClass]="child.headerGroupClasses"
+                        [ngStyle]="child.headerGroupStyles | igxHeaderGroupStyle:child:grid.pipeTrigger"
+                        [column]="child"
+                        [style.min-width]="child.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts"
+                        [style.flex-basis]="child.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts">
+                    </igx-grid-header-group>
+                }
+            }
+        </div>
+    }
+    @if (grid.moving) {
+        <span class="igx-grid-th__drop-indicator-right"></span>
+    }
+}
 
-<ng-container *ngIf="!column.columnGroup">
-    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-left"></span>
+@if (!column.columnGroup) {
+    @if (grid.moving) {
+        <span class="igx-grid-th__drop-indicator-left"></span>
+    }
     <igx-grid-header
         role="columnheader"
         class="igx-grid-th--fw"
@@ -93,11 +109,17 @@
         [column]="column"
     >
     </igx-grid-header>
-    <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode === 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
-    <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid-th__resize-handle"
-        [igxResizeHandle]="column"
-        [attr.draggable]="false"
-        [style.cursor]="colResizingService.resizeCursor">
-    </span>
-    <span *ngIf="grid.moving" class="igx-grid-th__drop-indicator-right"></span>
-</ng-container>
+    @if (grid.allowFiltering && grid.filterMode === 'quickFilter') {
+        <igx-grid-filtering-cell [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
+    }
+    @if (!column.columnGroup && column.resizable) {
+        <span class="igx-grid-th__resize-handle"
+            [igxResizeHandle]="column"
+            [attr.draggable]="false"
+            [style.cursor]="colResizingService.resizeCursor">
+        </span>
+    }
+    @if (grid.moving) {
+        <span class="igx-grid-th__drop-indicator-right"></span>
+    }
+}

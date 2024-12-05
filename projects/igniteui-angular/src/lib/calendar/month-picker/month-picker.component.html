@@ -44,7 +44,9 @@
 
 <!-- Year -->
 <ng-template #defaultYear let-obj>
-    <span *ngIf="activeView === 'year'" class="igx-calendar__aria-off-screen" aria-live="polite">{{ formattedYear(obj.date) }}</span>
+    @if (activeView === 'year') {
+        <span class="igx-calendar__aria-off-screen" aria-live="polite">{{ formattedYear(obj.date) }}</span>
+    }
     <span
         #yearsBtn
         tabindex="0"
@@ -106,17 +108,17 @@
     </caption>
 
     <section class="igx-calendar__pickers">
-        <ng-container *ngIf="isDefaultView">
+        @if (isDefaultView) {
             <ng-container *ngTemplateOutlet="calendarYearPicker"></ng-container>
-        </ng-container>
+        }
 
-        <ng-container *ngIf="isDecadeView">
+        @if (isDecadeView) {
             <ng-container *ngTemplateOutlet="calendarDecadePicker"></ng-container>
-        </ng-container>
+        }
     </section>
 
     <section class="igx-calendar__body">
-        <ng-container *ngIf="isDefaultView">
+        @if (isDefaultView) {
             <igx-months-view
                 #months
                 role="rowgroup"
@@ -134,9 +136,9 @@
                 (mousedown)="$event.preventDefault()">
             >
             </igx-months-view>
-        </ng-container>
+        }
 
-        <ng-container *ngIf="isDecadeView">
+        @if (isDecadeView) {
             <igx-years-view
                 #decade
                 role="rowgroup"
@@ -154,6 +156,6 @@
                 (mousedown)="$event.preventDefault()"
             >
             </igx-years-view>
-        </ng-container>
+        }
     </section>
 </div>

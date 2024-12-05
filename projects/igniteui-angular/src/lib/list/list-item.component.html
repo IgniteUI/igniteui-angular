@@ -1,15 +1,19 @@
 
-<div *ngIf="!isHeader && list.listItemLeftPanningTemplate" #leftPanningTmpl class="igx-list__item-right"
-    [style.width.rem]="offsetWidthInRem" [style.height.rem]="offsetHeightInRem">
-    <ng-container *ngTemplateOutlet="list.listItemLeftPanningTemplate.template; context: context">
-    </ng-container>
-</div>
+@if (!isHeader && list.listItemLeftPanningTemplate) {
+    <div #leftPanningTmpl class="igx-list__item-right"
+        [style.width.rem]="offsetWidthInRem" [style.height.rem]="offsetHeightInRem">
+        <ng-container *ngTemplateOutlet="list.listItemLeftPanningTemplate.template; context: context">
+        </ng-container>
+    </div>
+}
 
-<div *ngIf="!isHeader && list.listItemRightPanningTemplate" #rightPanningTmpl class="igx-list__item-left"
-    [style.width.rem]="offsetWidthInRem" [style.height.rem]="offsetHeightInRem">
-    <ng-container *ngTemplateOutlet="list.listItemRightPanningTemplate.template; context: context">
-    </ng-container>
-</div>
+@if (!isHeader && list.listItemRightPanningTemplate) {
+    <div #rightPanningTmpl class="igx-list__item-left"
+        [style.width.rem]="offsetWidthInRem" [style.height.rem]="offsetHeightInRem">
+        <ng-container *ngTemplateOutlet="list.listItemRightPanningTemplate.template; context: context">
+        </ng-container>
+    </div>
+}
 
 <ng-template #itemsContent>
     <ng-content></ng-content>
@@ -33,15 +37,15 @@
     </div>
 </ng-template>
 
-<ng-container *ngIf="isHeader">
+@if (isHeader) {
     <ng-container *ngTemplateOutlet="itemsContent"></ng-container>
-</ng-container>
+}
 
-<ng-container *ngIf="!isHeader">
+@if (!isHeader) {
     <div class="igx-list__item-content">
         <ng-container *ngTemplateOutlet="itemThumbnails"></ng-container>
         <ng-container *ngTemplateOutlet="itemLines"></ng-container>
         <ng-container *ngTemplateOutlet="itemActions"></ng-container>
         <ng-container *ngTemplateOutlet="itemsContent"></ng-container>
     </div>
-</ng-container>
+}

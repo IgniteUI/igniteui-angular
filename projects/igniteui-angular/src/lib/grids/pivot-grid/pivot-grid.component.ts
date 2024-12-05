@@ -29,7 +29,7 @@ import {
     OnChanges,
     SimpleChanges
 } from '@angular/core';
-import { DOCUMENT, NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { first, take, takeUntil} from 'rxjs/operators';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -159,8 +159,6 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         IgxForOfScrollSyncService
     ],
     imports: [
-        NgIf,
-        NgFor,
         NgClass,
         NgStyle,
         NgTemplateOutlet,

@@ -5,7 +5,6 @@ import { IgxListComponent } from '../../list/list.component';
 import { IgxFilterDirective, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { NgFor } from '@angular/common';
 
 describe('Filter', () => {
     configureTestSuite();
@@ -214,11 +213,11 @@ class DeclarativeListTestComponent {
 @Component({
     template: `
     <igx-list>
-        <igx-list-item *ngFor="let item of dataSourceItems | igxFilter: fo">
-            {{item.text}}
-        </igx-list-item>
+        @for (item of dataSourceItems | igxFilter: fo; track item) {
+            <igx-list-item> {{item.text}} </igx-list-item>
+        }
     </igx-list>`,
-    imports: [IgxListComponent, IgxListItemComponent, IgxFilterPipe, NgFor]
+    imports: [IgxListComponent, IgxListItemComponent, IgxFilterPipe]
 })
 class DynamicListTestComponent {
     @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;

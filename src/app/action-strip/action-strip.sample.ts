@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import {
     IDataCloneStrategy,
@@ -63,8 +62,6 @@ class User {
     styleUrls: ['action-strip.sample.scss'],
     templateUrl: `action-strip.sample.html`,
     imports: [
-        NgIf,
-        NgFor,
         IgxButtonGroupComponent,
         IgxButtonDirective,
         IgxActionStripComponent,

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { GridColumnDataType, IGX_GRID_DIRECTIVES, IgxTreeGridComponent } from 'igniteui-angular';
 
 interface GridConfig {
@@ -11,7 +10,7 @@ interface GridConfig {
 @Component({
     selector: 'app-grid-nested-props',
     templateUrl: 'grid-nested-props.sample.html',
-    imports: [NgFor, IGX_GRID_DIRECTIVES, IgxTreeGridComponent]
+    imports: [IGX_GRID_DIRECTIVES, IgxTreeGridComponent]
 })
 export class GridNestedPropsSampleComponent {
     public data = [];

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, AfterViewInit, HostBinding } from '@angular/core';
-import { NgFor } from '@angular/common';
 
 import {
     IgxGridComponent,
@@ -28,7 +27,7 @@ import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.compo
     providers: [
         IgxIconService
     ],
-    imports: [NgFor, IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxGridComponent, IgxTreeGridComponent, IgxIconComponent, GridSearchBoxComponent, IgxSwitchComponent, IgxButtonDirective]
+    imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxGridComponent, IgxTreeGridComponent, IgxIconComponent, GridSearchBoxComponent, IgxSwitchComponent, IgxButtonDirective]
 })
 
 export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {

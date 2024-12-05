@@ -1,5 +1,4 @@
 import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
-import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
     IGX_INPUT_GROUP_DIRECTIVES,
@@ -34,7 +33,6 @@ interface Employee {
     templateUrl: 'list.sample.html',
     encapsulation: ViewEncapsulation.None,
     imports: [
-        NgFor,
         FormsModule,
         IgxButtonGroupComponent,
         IgxBadgeComponent,

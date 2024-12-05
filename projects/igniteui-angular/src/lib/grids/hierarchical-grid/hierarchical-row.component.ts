@@ -17,14 +17,14 @@ import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
-import { NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common';
+import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid-row',
     templateUrl: './hierarchical-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }],
-    imports: [NgTemplateOutlet, IgxIconComponent, NgIf, IgxRowDragDirective, NgClass, IgxGridForOfDirective, IgxHierarchicalGridCellComponent, NgStyle, IgxCheckboxComponent, NgFor, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe]
+    imports: [NgTemplateOutlet, IgxIconComponent, IgxRowDragDirective, NgClass, IgxGridForOfDirective, IgxHierarchicalGridCellComponent, NgStyle, IgxCheckboxComponent, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe]
 })
 export class IgxHierarchicalRowComponent extends IgxRowDirective {
     @ViewChild('expander', { read: ElementRef })

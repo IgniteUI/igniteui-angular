@@ -2,28 +2,30 @@
     <article class="sample-column">
         <igx-radio-group #group="igxRadioGroup" [(ngModel)]="initial">
             <div igxLayout>
-                <igx-card class="promotion" layout="justify" *ngFor="let opt of options"
-                    [type]="group.value !== opt ? 'outlined' : 'default'"
-                    [class.promotion-selected]="group.value === opt">
-                    <igx-card-header>
-                        <h6 igxCardHeaderTitle>Reserve your dream vacation at {{ opt }}</h6>
-                    </igx-card-header>
-                    <igx-card-content>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna
-                            aliqua. Elit pellentesque habitant morbi tristique senectus et netus et. Aliquet bibendum
-                            enim facilisis gravida. Rutrum
-                        </p>
-                    </igx-card-content>
-                    <igx-card-actions layout="justify-center">
-                        <button igxRipple igxButton="outlined" [disabled]="group.value !== opt">
-                            Reserve item
-                            {{ opt }}
-                        </button>
-                        <igx-radio class="radio-sample__radio" [value]="opt">Pick choice {{ opt }}</igx-radio>
-                    </igx-card-actions>
-                </igx-card>
+                @for (opt of options; track opt) {
+                    <igx-card class="promotion" layout="justify"
+                        [type]="group.value !== opt ? 'outlined' : 'default'"
+                        [class.promotion-selected]="group.value === opt">
+                        <igx-card-header>
+                            <h6 igxCardHeaderTitle>Reserve your dream vacation at {{ opt }}</h6>
+                        </igx-card-header>
+                        <igx-card-content>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                                labore et dolore magna
+                                aliqua. Elit pellentesque habitant morbi tristique senectus et netus et. Aliquet bibendum
+                                enim facilisis gravida. Rutrum
+                            </p>
+                        </igx-card-content>
+                        <igx-card-actions layout="justify-center">
+                            <button igxRipple igxButton="outlined" [disabled]="group.value !== opt">
+                                Reserve item
+                                {{ opt }}
+                            </button>
+                            <igx-radio class="radio-sample__radio" [value]="opt">Pick choice {{ opt }}</igx-radio>
+                        </igx-card-actions>
+                    </igx-card>
+                }
             </div>
         </igx-radio-group>
         <p>Selected: {{ initial }}</p>
@@ -33,9 +35,11 @@
     <article class="sample-column">
         <h4 class="sample-title">Radio group without data model (Vertical Alignment)</h4>
         <igx-radio-group #radioGroupZZ name="radiogroupZZ" value="Bar" required (change)="onRadioChange($event)" [alignment]="alignment">
-            <igx-radio class="radio-sample" *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" [disabled]="disabled" [invalid]="invalid">
-                {{item}}
-            </igx-radio>
+            @for (item of ['Foo', 'Bar', 'Baz']; track item) {
+                <igx-radio class="radio-sample" value="{{item}}" [disabled]="disabled" [invalid]="invalid">
+                    {{item}}
+                </igx-radio>
+            }
         </igx-radio-group>
         <label>
             <input type="checkbox" [checked]="disabled" (change)="disabled = !disabled"> Disabled
@@ -62,9 +66,11 @@
             <div>
                 <label for="radioGroupSeasons">Favorite season </label>
                 <igx-radio-group id="radioGroupSeasons" name="radioGroupSeasons" labelPosition="before" [(ngModel)]="personBob.favoriteSeason">
-                    <igx-radio class="radio-sample" *ngFor="let item of seasons" [value]="item.name" [disabled]="item.disabled">
-                        {{item.name}}
-                    </igx-radio>
+                    @for (item of seasons; track item) {
+                        <igx-radio class="radio-sample" [value]="item.name" [disabled]="item.disabled">
+                            {{item.name}}
+                        </igx-radio>
+                    }
                 </igx-radio-group>
             </div>
 
@@ -79,11 +85,13 @@
                 <input formControlName="name">
             </label>
             <br>
-                <igx-radio-group formControlName="favoriteSeason" name="radioGroupReactive">
-                    <igx-radio class="radio-sample" *ngFor="let item of seasons" [value]="item.name" [disabled]="item.disabled">
+            <igx-radio-group formControlName="favoriteSeason" name="radioGroupReactive">
+                @for (item of seasons; track item) {
+                    <igx-radio class="radio-sample" [value]="item.name" [disabled]="item.disabled">
                         {{item.name}}
                     </igx-radio>
-                </igx-radio-group>
+                }
+            </igx-radio-group>
             <br>
             <button igxButton type="button" (click)="onUpdateBtnClick()" style="width: 200px">Update model</button>
         </form>
