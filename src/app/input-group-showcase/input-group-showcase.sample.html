@@ -4,28 +4,26 @@
 
         @if (properties.required) {
             <small class="showcase__warn">
-                <code>required</code> is set as attr on the native input.
-            </small>
-            <small class="showcase__warn">
-                <code>igx-select</code> has no required [attr].
+               Angular uses Reactive form.
             </small>
         }
     </header>
 
-    <div class="showcase__fields">
-        <igx-input-group [type]="properties.type === 'search'? 'search': inputTypeAngular"
-                         [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+    <form class="showcase__fields" [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+        <igx-input-group
+                #field
+
+                [type]="properties.type === 'search'? 'search': inputTypeAngular"
+                [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
             @if (properties.label) {
                 <label igxLabel>{{ properties.label }}</label>
             }
             <igx-icon igxPrefix [hidden]="properties.hidePrefix">face</igx-icon>
             <input
-                    name="inputValidityTest"
-                    [required]="properties.required"
+                    formControlName="field"
                     [disabled]="properties.disabled"
                     [type]="properties.type"
                     [readOnly]="properties.readonly"
-                    [(ngModel)]="properties.value"
                     [attr.placeholder]="properties.placeholder"
                     igxInput
             />
@@ -34,17 +32,20 @@
             </igx-suffix>
             <igx-hint>Type your web address</igx-hint>
         </igx-input-group>
-        <igx-input-group [type]="inputTypeAngular" [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+        <igx-input-group
+            #fieldTextarea
+            [type]="inputTypeAngular"
+            [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
             @if (properties.label) {
                 <label igxLabel>{{ properties.label }}</label>
             }
             <igx-icon igxPrefix [hidden]="properties.hidePrefix">face</igx-icon>
             <textarea
+                    formControlName="fieldTextarea"
                     name="inputValidityTest"
                     [required]="properties.required"
                     [disabled]="properties.disabled"
                     [readOnly]="properties.readonly"
-                    [(ngModel)]="properties.value"
                     [attr.placeholder]="properties.placeholder"
                     igxInput
             ></textarea>
@@ -53,37 +54,37 @@
             </igx-suffix>
             <igx-hint>Hint text</igx-hint>
         </igx-input-group>
-        <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
-            <igx-select
-                    formControlName="angularSelect"
-                    #selectReactive
-                    [attr.placeholder]="properties.placeholder"
-                    name="inputValidityTest"
-                    [disabled]="properties.disabled"
-                    [type]="properties.type === 'search'? 'search': inputTypeAngular"
-                    [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
-                <label igxLabel>Sample Label</label>
-                <igx-icon igxPrefix>favorite</igx-icon>
-                <igx-hint>I am a Hint</igx-hint>
-                <igx-select-item [value]="'Apple'" [disabled]="true">Apple</igx-select-item>
-                <igx-select-item [value]="'Orange'">Orange</igx-select-item>
-                <igx-select-item [value]="'Grapes'">Grapes</igx-select-item>
-                <igx-select-item [value]="'Banana'">Banana</igx-select-item>
-            </igx-select>
-        </form>
-        <igx-input-group [type]="properties.type === 'search'? 'search': inputTypeAngular"
-                         [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+        <igx-select
+                #selectReactive
+                formControlName="angularSelect"
+                [attr.placeholder]="properties.placeholder"
+                name="inputValidityTest"
+                [disabled]="properties.disabled"
+                [type]="properties.type === 'search'? 'search': inputTypeAngular"
+                [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+            <label igxLabel>Sample Label</label>
+            <igx-icon igxPrefix>favorite</igx-icon>
+            <igx-hint>I am a Hint</igx-hint>
+            <igx-select-item [value]="'Apple'" [disabled]="true">Apple</igx-select-item>
+            <igx-select-item [value]="'Orange'">Orange</igx-select-item>
+            <igx-select-item [value]="'Grapes'">Grapes</igx-select-item>
+            <igx-select-item [value]="'Banana'">Banana</igx-select-item>
+        </igx-select>
+        <igx-input-group
+                #fieldFile
+                [type]="properties.type === 'search'? 'search': inputTypeAngular"
+                [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
             @if (properties.label) {
                 <label igxLabel>{{ properties.label }} ("No file chosen" is not an actual value)</label>
             }
             <igx-icon igxPrefix [hidden]="properties.hidePrefix">face</igx-icon>
             <input
+                    formControlName="fieldFile"
                     name="inputValidityTest"
                     [required]="properties.required"
                     [disabled]="properties.disabled"
                     [type]="'file'"
                     [readOnly]="properties.readonly"
-                    [(ngModel)]="properties.value"
                     [attr.placeholder]="properties.placeholder"
                     igxInput
             />
@@ -92,7 +93,7 @@
             </igx-suffix>
             <igx-hint>Type your web address</igx-hint>
         </igx-input-group>
-    </div>
+    </form>
 </section>
 
 <section class="showcase">

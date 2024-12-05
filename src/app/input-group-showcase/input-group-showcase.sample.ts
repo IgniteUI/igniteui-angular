@@ -8,7 +8,7 @@ import {
     IgxIconComponent,
     IgxMaskDirective,
     IgxInputGroupType,
-    IgxSelectComponent, IgxSelectItemComponent
+    IgxSelectComponent, IgxSelectItemComponent, IgxInputGroupComponent
 } from 'igniteui-angular';
 import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
 import {nothing} from "lit-html";
@@ -26,11 +26,8 @@ registerIconFromText('face', face);
     providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'box' }],
     imports: [
         FormsModule,
-        NgIf,
         ReactiveFormsModule,
-        NgFor,
         IGX_INPUT_GROUP_DIRECTIVES,
-        IgxMaskDirective,
         IgxIconComponent,
         IgxSelectComponent,
         IgxSelectItemComponent,
@@ -38,6 +35,15 @@ registerIconFromText('face', face);
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class InputGroupShowcaseSampleComponent {
+    @ViewChild('field', { read: IgxInputGroupComponent, static: true })
+    public field: IgxInputGroupComponent;
+
+    @ViewChild('fieldTextarea', { read: IgxInputGroupComponent, static: true })
+    public fieldTextarea: IgxInputGroupComponent;
+
+    @ViewChild('fieldFile', { read: IgxInputGroupComponent, static: true })
+    public fieldFile: IgxInputGroupComponent;
+
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
 
@@ -129,29 +135,45 @@ export class InputGroupShowcaseSampleComponent {
 
         // Initialize the form without validators
         this.reactiveForm = fb.group({
-            angularSelect: ['']
+            angularSelect: [''],
+            field: [''],
+            fieldTextarea: [''],
+            fieldFile: ['']
         });
 
         // Subscribe to property changes
         this.propertyChangeService.propertyChanges.subscribe(properties => {
+
+            // Sync properties.value to the form
+            this.reactiveForm.patchValue({
+                angularSelect: properties.value,
+                field: properties.value,
+                fieldTextarea: properties.value,
+                fieldFile: properties.value
+            });
+
             this.properties = properties;
             this.updateValidators();
         });
     }
 
     private updateValidators() {
+        // Get form controls
         const angularSelectControl = this.reactiveForm.get('angularSelect');
+        const fieldControl = this.reactiveForm.get('field');
+        const fieldTextareaControl = this.reactiveForm.get('fieldTextarea');
+        const fieldFileControl = this.reactiveForm.get('fieldFile');
 
-        if (this.properties.required) {
-            // Add the required validator
-            angularSelectControl.setValidators(Validators.required);
-        } else {
-            // Remove all validators
-            angularSelectControl.clearValidators();
-        }
-
-        // Update the validity status
-        angularSelectControl.updateValueAndValidity();
+        // Check if properties.required is true and update validators
+        const controls = [angularSelectControl, fieldControl, fieldTextareaControl, fieldFileControl];
+        controls.forEach(control => {
+            if (this.properties.required) {
+                control.setValidators(Validators.required);
+            } else {
+                control.clearValidators();
+            }
+            control.updateValueAndValidity(); // Trigger validation update
+        });
     }
 
     public inputType: IgxInputGroupType = 'box';
