@@ -218,13 +218,6 @@ export class IgxQueryBuilderComponent implements OnDestroy {
 
     /**
      * @hidden @internal
-     */
-    public clearSelection() {
-        this.queryTree.clearSelection();
-    }
-
-    /**
-     * @hidden @internal
      *
      * used by the grid
      */
