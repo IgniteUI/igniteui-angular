@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostBinding, inject } from '@angular/core';
+import {Component, OnInit, ViewChild, HostBinding, inject} from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective } from 'igniteui-angular';
@@ -529,7 +529,12 @@ export class AppComponent implements OnInit {
         {
             link: '/range-slider',
             icon: 'open_in_full',
-            name: 'Range Slider'
+            name: 'Slider (Range)'
+        },
+        {
+            link: '/slider-showcase',
+            icon: 'tune',
+            name: 'Slider (showcase)'
         },
         {
             link: '/splitter',
@@ -563,9 +568,10 @@ export class AppComponent implements OnInit {
         },
         {
             link: '/toast',
-            icon: 'android',
+            icon: 'notifications',
             name: 'Toast'
-        }, {
+        },
+        {
             link: '/hierarchicalGrid',
             icon: 'view_column',
             name: 'Hierarchical Grid'
@@ -591,6 +597,11 @@ export class AppComponent implements OnInit {
             link: '/tree',
             icon: 'account_tree',
             name: 'Tree'
+        },
+        {
+            link: '/tree-showcase',
+            icon: 'account_tree',
+            name: 'Tree (showcase)'
         },
         {
             link: '/treeGrid',
@@ -768,11 +779,6 @@ export class AppComponent implements OnInit {
             name: 'Select'
         },
         {
-            link: '/slider-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Slider'
-        },
-        {
             link: '/snackbar-showcase',
             icon: 'radio_button_unchecked',
             name: 'Snackbar'
@@ -792,16 +798,6 @@ export class AppComponent implements OnInit {
             icon: 'radio_button_unchecked',
             name: 'Tabs'
         },
-        {
-            link: '/toast-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Toast'
-        },
-        {
-            link: '/tree-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Tree'
-        }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     constructor(private router: Router, private iconService: IgxIconService) {

@@ -56,7 +56,6 @@ import {
     TabsRoutingView3Component
 } from './tabs-routing/tabs-routing-views.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
-import { ToastSampleComponent } from './toast/toast.sample';
 import { ToastShowcaseSampleComponent } from './toast-showcase/toast-showcase.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
@@ -475,10 +474,6 @@ export const appRoutes: Routes = [
     },
     {
         path: 'toast',
-        component: ToastSampleComponent
-    },
-    {
-        path: 'toast-showcase',
         component: ToastShowcaseSampleComponent
     },
     {
