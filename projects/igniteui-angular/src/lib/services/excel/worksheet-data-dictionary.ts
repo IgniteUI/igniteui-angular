@@ -93,7 +93,7 @@ export class WorksheetDataDictionary {
 
     private getContext(): any {
         if (!this._context) {
-            const canvas = document.createElement('canvas');
+            const canvas = globalThis.document?.createElement('canvas');
             this._context = canvas.getContext('2d');
             this._context.font = WorksheetDataDictionary.DEFAULT_FONT;
         }

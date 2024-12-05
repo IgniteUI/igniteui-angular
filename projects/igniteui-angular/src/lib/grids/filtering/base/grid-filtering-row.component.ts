@@ -511,7 +511,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             return;
         }
         requestAnimationFrame(() => {
-            const focusedElement = document.activeElement;
+            const focusedElement = this.column?.grid.document.activeElement;
 
             if (focusedElement.classList.contains('igx-chip__remove')) {
                 return;
@@ -605,7 +605,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
 
     public onChipPointerdown(args, chip: IgxChipComponent) {
-        const activeElement = document.activeElement;
+        const activeElement = this.column?.grid.document.activeElement;
         this._cancelChipClick = chip.selected
             && activeElement && this.editorFocused(activeElement);
     }

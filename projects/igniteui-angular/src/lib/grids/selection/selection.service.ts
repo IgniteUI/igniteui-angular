@@ -248,7 +248,7 @@ export class IgxGridSelectionService {
         this.pointerState.ctrl = ctrl;
         this.pointerState.shift = shift;
         this.pointerEventInGridBody = true;
-        document.body.addEventListener('pointerup', this.pointerOriginHandler);
+        this.grid.document.body.addEventListener('pointerup', this.pointerOriginHandler);
 
         // No ctrl key pressed - no multiple selection
         if (!ctrl) {
@@ -385,7 +385,7 @@ export class IgxGridSelectionService {
     public restoreTextSelection(): void {
         const selection = window.getSelection();
         if (!selection.rangeCount) {
-            selection.addRange(this._selectionRange || document.createRange());
+            selection.addRange(this._selectionRange || this.grid.document.createRange());
         }
     }
 
@@ -855,7 +855,7 @@ export class IgxGridSelectionService {
 
     private pointerOriginHandler = (event) => {
         this.pointerEventInGridBody = false;
-        document.body.removeEventListener('pointerup', this.pointerOriginHandler);
+        this.grid.document.body.removeEventListener('pointerup', this.pointerOriginHandler);
 
         const targetTagName = event.target.tagName.toLowerCase();
         if (targetTagName !== 'igx-grid-cell' && targetTagName !== 'igx-tree-grid-cell') {
