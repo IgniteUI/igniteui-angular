@@ -1,34 +1,184 @@
-<div class="inputs-wrapper">
-    <strong>Angular Input</strong>
-    <igx-input-group [type]="inputTypeAngular" [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
-        <label igxLabel>Web address</label>
-        <igx-icon igxPrefix>face</igx-icon>
+<section class="showcase">
+    <header class="showcase__header">
+        <h1 class="showcase__title">Angular</h1>
 
-        <input
-            name="inputValidityTest"
-            [required]="properties.required"
-            [disabled]="properties.disabled"
-            igxInput
-            [type]="properties.type"
-        />
-        <igx-hint>Type your web address</igx-hint>
-        <igx-suffix>
-            <igx-icon>face</igx-icon>
-        </igx-suffix>
-    </igx-input-group>
+        @if (properties.required) {
+            <small class="showcase__warn">
+                <code>required</code> is set as attr on the native input.
+            </small>
+            <small class="showcase__warn">
+                <code>igx-select</code> has no required [attr].
+            </small>
+        }
+    </header>
 
-    <strong>WC Input</strong>
-    <igc-input #igcInput
-        [style.--ig-size]="'var(--ig-size-' + properties.size + ')'"
-        label="Web component"
-        [required]="properties.required"
-        [disabled]="properties.disabled"
-        [type]="properties.type"
-        [outlined]="inputTypeWC">
-        <span slot="prefix"><igc-icon name="face"></igc-icon></span>
-        <span slot="suffix"><igc-icon name="face"></igc-icon></span>
-        <span slot="helper-text">
-            Web component
-        </span>
-    </igc-input>
-</div>
+    <div class="showcase__fields">
+        <igx-input-group [type]="properties.type === 'search'? 'search': inputTypeAngular"
+                         [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+            @if (properties.label) {
+                <label igxLabel>{{ properties.label }}</label>
+            }
+            <igx-icon igxPrefix [hidden]="properties.hidePrefix">face</igx-icon>
+            <input
+                    name="inputValidityTest"
+                    [required]="properties.required"
+                    [disabled]="properties.disabled"
+                    [type]="properties.type"
+                    [readOnly]="properties.readonly"
+                    [(ngModel)]="properties.value"
+                    [attr.placeholder]="properties.placeholder"
+                    igxInput
+            />
+            <igx-suffix [hidden]="properties.hideSuffix">
+                <igx-icon>face</igx-icon>
+            </igx-suffix>
+            <igx-hint>Type your web address</igx-hint>
+        </igx-input-group>
+        <igx-input-group [type]="inputTypeAngular" [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+            @if (properties.label) {
+                <label igxLabel>{{ properties.label }}</label>
+            }
+            <igx-icon igxPrefix [hidden]="properties.hidePrefix">face</igx-icon>
+            <textarea
+                    name="inputValidityTest"
+                    [required]="properties.required"
+                    [disabled]="properties.disabled"
+                    [readOnly]="properties.readonly"
+                    [(ngModel)]="properties.value"
+                    [attr.placeholder]="properties.placeholder"
+                    igxInput
+            ></textarea>
+            <igx-suffix [hidden]="properties.hideSuffix">
+                <igx-icon>face</igx-icon>
+            </igx-suffix>
+            <igx-hint>Hint text</igx-hint>
+        </igx-input-group>
+        <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+            <igx-select
+                    formControlName="angularSelect"
+                    #selectReactive
+                    [attr.placeholder]="properties.placeholder"
+                    name="inputValidityTest"
+                    [disabled]="properties.disabled"
+                    [type]="properties.type === 'search'? 'search': inputTypeAngular"
+                    [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+                <label igxLabel>Sample Label</label>
+                <igx-icon igxPrefix>favorite</igx-icon>
+                <igx-hint>I am a Hint</igx-hint>
+                <igx-select-item [value]="'Apple'" [disabled]="true">Apple</igx-select-item>
+                <igx-select-item [value]="'Orange'">Orange</igx-select-item>
+                <igx-select-item [value]="'Grapes'">Grapes</igx-select-item>
+                <igx-select-item [value]="'Banana'">Banana</igx-select-item>
+            </igx-select>
+        </form>
+        <igx-input-group [type]="properties.type === 'search'? 'search': inputTypeAngular"
+                         [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+            @if (properties.label) {
+                <label igxLabel>{{ properties.label }} ("No file chosen" is not an actual value)</label>
+            }
+            <igx-icon igxPrefix [hidden]="properties.hidePrefix">face</igx-icon>
+            <input
+                    name="inputValidityTest"
+                    [required]="properties.required"
+                    [disabled]="properties.disabled"
+                    [type]="'file'"
+                    [readOnly]="properties.readonly"
+                    [(ngModel)]="properties.value"
+                    [attr.placeholder]="properties.placeholder"
+                    igxInput
+            />
+            <igx-suffix [hidden]="properties.hideSuffix">
+                <igx-icon>face</igx-icon>
+            </igx-suffix>
+            <igx-hint>Type your web address</igx-hint>
+        </igx-input-group>
+    </div>
+</section>
+
+<section class="showcase">
+    <header class="showcase__header">
+        <h1 class="showcase__title">Web components</h1>
+        @if (inputTypeAngular === 'line') {
+            <small class="showcase__warn">
+                <code>line</code> type is not supported
+            </small>
+        }
+        @if (inputTypeAngular === 'search') {
+            <small class="showcase__warn">
+                The type <code>search</code> for the web-component is set from the input type field
+            </small>
+        }
+
+        @if (inputTypeAngular !== 'search' && properties.type === 'search') {
+            <small class="showcase__warn">
+                Please, change the Input Type. <strong>Box and border search are not supported!</strong>
+            </small>
+        }
+
+        @if (properties.required) {
+            <small class="showcase__warn">
+                <code>required</code> is set as input property on <code>igc-input</code>
+            </small>
+        }
+    </header>
+
+    <div class="showcase__fields">
+        <igc-input #igcInput
+                   [style.--ig-size]="'var(--ig-size-' + properties.size + ')'"
+                   [label]="properties.label"
+                   [required]="properties.required"
+                   [disabled]="properties.disabled"
+                   [readOnly]="properties.readonly"
+                   [attr.value]="properties.value || null"
+                   [attr.placeholder]="properties.placeholder || null"
+                   [type]="properties.type"
+                   [outlined]="inputTypeWC">
+            <span slot="prefix" [hidden]="properties.hidePrefix"><igc-icon name="face"></igc-icon></span>
+            <span slot="suffix" [hidden]="properties.hideSuffix"><igc-icon name="face"></igc-icon></span>
+            <span slot="helper-text">
+        Type your web address
+    </span>
+        </igc-input>
+        <igc-textarea #igcInput
+                      [style.--ig-size]="'var(--ig-size-' + properties.size + ')'"
+                      [label]="properties.label"
+                      [required]="properties.required"
+                      [disabled]="properties.disabled"
+                      [readOnly]="properties.readonly"
+                      [attr.value]="properties.value || null"
+                      [outlined]="inputTypeWC">
+            <span slot="prefix" [hidden]="properties.hidePrefix"><igc-icon name="face"></igc-icon></span>
+            <span slot="suffix" [hidden]="properties.hideSuffix"><igc-icon name="face"></igc-icon></span>
+            <span slot="helper-text">
+        Hint text
+    </span>
+        </igc-textarea>
+        <igc-select
+                [required]="properties.required"
+                [attr.placeholder]="properties.placeholder || null"
+                [label]="properties.label"
+                [disabled]="properties.disabled"
+                [outlined]="inputTypeWC"
+                [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+            <igc-icon slot="prefix" name="favorite"></igc-icon>
+            <span slot="helper-text">I am a Hint</span>
+            <igc-select-item [value]="'Apple'" [disabled]="true">Apple</igc-select-item>
+            <igc-select-item [value]="'Orange'" [selected]="properties.value">Orange</igc-select-item>
+            <igc-select-item [value]="'Grapes'">Grapes</igc-select-item>
+            <igc-select-item [value]="'Banana'">Banana</igc-select-item>
+        </igc-select>
+        <div class="showcase__placeholder">
+            NO file type in web components
+        </div>
+    </div>
+</section>
+
+<!-- TODO: TEXTAREA EMPTY SPACE PROBLEM -->
+<!-- TODO: (WEBc) (Disabled) state inconsistency -->
+<!-- TODO: (WEBc) (placeholder) not updated after view init -->
+<!-- TODO: (WEBc) (Helper text) should be error color, if no error message is provided -->
+<!-- TODO: (WEBc) (Textarea) is broken when prefix/suffix has display: none -->
+<!-- TODO: (WEBc) (Select) label not moving on focus -->
+<!-- TODO: (WEBc) (select) label is cut off and jumps -->
+<!-- TODO: The (select) (dropdown) has inconsistent appearance -->
+<!-- TODO: The (Helper text) size has differences between WEBc and angular -->

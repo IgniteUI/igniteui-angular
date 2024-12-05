@@ -1,9 +1,17 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, signal, ViewChild} from '@angular/core';
+import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import { NgIf, NgFor } from '@angular/common';
 import { defineComponents, IgcInputComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
-import { IGX_INPUT_GROUP_DIRECTIVES, IGX_INPUT_GROUP_TYPE, IgxIconComponent, IgxMaskDirective, IgxInputGroupType } from 'igniteui-angular';
+import {
+    IGX_INPUT_GROUP_DIRECTIVES,
+    IGX_INPUT_GROUP_TYPE,
+    IgxIconComponent,
+    IgxMaskDirective,
+    IgxInputGroupType,
+    IgxSelectComponent, IgxSelectItemComponent
+} from 'igniteui-angular';
 import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
+import {nothing} from "lit-html";
 
 defineComponents(IgcInputComponent, IgcIconComponent);
 
@@ -11,12 +19,11 @@ const face = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 2
 registerIconFromText('face', face);
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
+
     selector: 'app-input-group-showcase-sample',
     styleUrls: ['input-group-showcase.sample.scss'],
     templateUrl: 'input-group-showcase.sample.html',
     providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'box' }],
-    standalone: true,
     imports: [
         FormsModule,
         NgIf,
@@ -25,10 +32,19 @@ registerIconFromText('face', face);
         IGX_INPUT_GROUP_DIRECTIVES,
         IgxMaskDirective,
         IgxIconComponent,
+        IgxSelectComponent,
+        IgxSelectItemComponent,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class InputGroupShowcaseSampleComponent {
+    @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
+    public select: IgxSelectComponent;
+
+    public reactiveForm: UntypedFormGroup;
+
+    public required = signal(false);
+
     public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
@@ -37,21 +53,38 @@ export class InputGroupShowcaseSampleComponent {
                 defaultValue: 'medium'
             }
         },
+        inputType: {
+            label: 'Input Group Type (Material theme only)',
+            control: {
+                type: 'button-group',
+                options: ['box', 'border', 'line', 'search'],
+            }
+        },
         type: {
+            label: 'Native Inout Type ',
             control: {
                 type: 'select',
                 options: ['email', 'number', 'password', 'search', 'tel', 'text', 'url']
             }
         },
-        inputType: {
-            label: 'Choose Input Type (Material only)',
+        label: {
             control: {
-                type: 'button-group',
-                options: ['box', 'border'],
-                defaultValue: 'box'
+                type: 'text',
+                defaultValue: 'Web address',
+            }
+        },
+        value: {
+            control: {
+                type: 'text',
+            }
+        },
+        placeholder: {
+            control: {
+                type: 'text',
             }
         },
         required: {
+            label: 'Required',
             control: {
                 type: 'boolean',
                 defaultValue: false
@@ -63,23 +96,69 @@ export class InputGroupShowcaseSampleComponent {
                 defaultValue: false
             }
         },
+        readonly: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        hidePrefix: {
+            label: 'Toggle Prefix',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        hideSuffix: {
+            label: 'Toggle Suffix',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        }
     }
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(fb: UntypedFormBuilder, private propertyChangeService: PropertyChangeService) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
         this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+        // Initialize the form without validators
+        this.reactiveForm = fb.group({
+            angularSelect: ['']
+        });
+
+        // Subscribe to property changes
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+            this.updateValidators();
+        });
+    }
+
+    private updateValidators() {
+        const angularSelectControl = this.reactiveForm.get('angularSelect');
+
+        if (this.properties.required) {
+            // Add the required validator
+            angularSelectControl.setValidators(Validators.required);
+        } else {
+            // Remove all validators
+            angularSelectControl.clearValidators();
+        }
+
+        // Update the validity status
+        angularSelectControl.updateValueAndValidity();
     }
 
     public inputType: IgxInputGroupType = 'box';
 
     protected get inputTypeWC() {
         const inputTypeValue = this.propertyChangeService.getProperty('inputType');
-        return inputTypeValue === 'border' ? true : false;
+        return inputTypeValue === 'border';
     }
 
     protected get inputTypeAngular() {
@@ -89,8 +168,16 @@ export class InputGroupShowcaseSampleComponent {
             this.inputType = 'border';
         } else if (inputTypeValue === 'box') {
             this.inputType = 'box';
+        } else if (inputTypeValue === 'search') {
+            this.inputType = 'search';
+        } else if (inputTypeValue === 'line') {
+            this.inputType = 'line';
         }
 
         return this.inputType;
     }
+
+    public onSubmitReactive() { }
+
+    protected readonly nothing = nothing;
 }
