@@ -10,7 +10,6 @@ defineComponents(IgcToastComponent);
     styleUrls: ['toast-showcase.sample.scss'],
     templateUrl: 'toast-showcase.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxOverlayOutletDirective, IgxToastComponent]
 })
 export class ToastShowcaseSampleComponent {
