@@ -9,7 +9,7 @@
         }
     </header>
 
-    <form class="showcase__fields" [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+    <form class="showcase__fields" [formGroup]="reactiveForm">
         <igx-input-group
                 #field
 
@@ -58,18 +58,34 @@
                 #selectReactive
                 formControlName="angularSelect"
                 [attr.placeholder]="properties.placeholder"
-                name="inputValidityTest"
                 [disabled]="properties.disabled"
                 [type]="properties.type === 'search'? 'search': inputTypeAngular"
                 [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
             <label igxLabel>Sample Label</label>
-            <igx-icon igxPrefix>favorite</igx-icon>
-            <igx-hint>I am a Hint</igx-hint>
+            <igx-icon igxPrefix [hidden]="properties.hidePrefix">favorite</igx-icon>
+            <igx-hint>
+                I am a Hint
+            </igx-hint>
+            <igx-suffix [hidden]="properties.hideSuffix">
+                <igx-icon>favorite</igx-icon>
+            </igx-suffix>
             <igx-select-item [value]="'Apple'" [disabled]="true">Apple</igx-select-item>
             <igx-select-item [value]="'Orange'">Orange</igx-select-item>
             <igx-select-item [value]="'Grapes'">Grapes</igx-select-item>
             <igx-select-item [value]="'Banana'">Banana</igx-select-item>
         </igx-select>
+        <igx-combo
+                #comboReactive
+                formControlName="angularCombo"
+                [attr.placeholder]="properties.placeholder || null"
+                [type]="properties.type === 'search'? 'search': inputTypeAngular"
+                [disabled]="properties.disabled"
+                [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+            @if( properties.label) {
+                <label igxLabel>{{ properties.label }}</label>
+            }
+            <igx-hint>Select a unique falsy value</igx-hint>
+        </igx-combo>
         <igx-input-group
                 #fieldFile
                 [type]="properties.type === 'search'? 'search': inputTypeAngular"
@@ -161,13 +177,31 @@
                 [disabled]="properties.disabled"
                 [outlined]="inputTypeWC"
                 [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
-            <igc-icon slot="prefix" name="favorite"></igc-icon>
-            <span slot="helper-text">I am a Hint</span>
+            <igc-icon slot="prefix" [hidden]="properties.hidePrefix" name="favorite"></igc-icon>
+            <igc-icon slot="suffix" [hidden]="properties.hideSuffix" name="favorite"></igc-icon>
+
+            <span slot="helper-text">
+                I am a Hint
+            </span>
             <igc-select-item [value]="'Apple'" [disabled]="true">Apple</igc-select-item>
             <igc-select-item [value]="'Orange'" [selected]="properties.value">Orange</igc-select-item>
             <igc-select-item [value]="'Grapes'">Grapes</igc-select-item>
             <igc-select-item [value]="'Banana'">Banana</igc-select-item>
         </igc-select>
+        <igc-combo
+            #comboReactive
+            formControlName="angularCombo"
+            [required]="properties.required"
+            [label]="properties.label"
+            [attr.placeholder]="properties.placeholder || null"
+            [outlined]="inputTypeWC"
+            [disabled]="properties.disabled"
+            [style.--ig-size]="'var(--ig-size-' + properties.size + ')'"
+        >
+            <span slot="helper-text">
+                I am a Hint
+            </span>
+        </igc-combo>
         <div class="showcase__placeholder">
             NO file type in web components
         </div>

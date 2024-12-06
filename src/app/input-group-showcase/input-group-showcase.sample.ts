@@ -6,9 +6,7 @@ import {
     IGX_INPUT_GROUP_DIRECTIVES,
     IGX_INPUT_GROUP_TYPE,
     IgxIconComponent,
-    IgxMaskDirective,
-    IgxInputGroupType,
-    IgxSelectComponent, IgxSelectItemComponent, IgxInputGroupComponent
+    IgxSelectComponent, IgxSelectItemComponent, IgxInputGroupComponent, IgxComboComponent
 } from 'igniteui-angular';
 import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
 import {nothing} from "lit-html";
@@ -31,6 +29,7 @@ registerIconFromText('face', face);
         IgxIconComponent,
         IgxSelectComponent,
         IgxSelectItemComponent,
+        IgxComboComponent,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -136,6 +135,7 @@ export class InputGroupShowcaseSampleComponent {
         // Initialize the form without validators
         this.reactiveForm = fb.group({
             angularSelect: [''],
+            angularCombo: [''],
             field: [''],
             fieldTextarea: [''],
             fieldFile: ['']
@@ -147,6 +147,7 @@ export class InputGroupShowcaseSampleComponent {
             // Sync properties.value to the form
             this.reactiveForm.patchValue({
                 angularSelect: properties.value,
+                angularCombo: properties.value,
                 field: properties.value,
                 fieldTextarea: properties.value,
                 fieldFile: properties.value
@@ -160,23 +161,34 @@ export class InputGroupShowcaseSampleComponent {
     private updateValidators() {
         // Get form controls
         const angularSelectControl = this.reactiveForm.get('angularSelect');
+        const angularComboControl = this.reactiveForm.get('angularCombo');
         const fieldControl = this.reactiveForm.get('field');
         const fieldTextareaControl = this.reactiveForm.get('fieldTextarea');
         const fieldFileControl = this.reactiveForm.get('fieldFile');
 
-        // Check if properties.required is true and update validators
-        const controls = [angularSelectControl, fieldControl, fieldTextareaControl, fieldFileControl];
+        const controls = [
+            angularSelectControl,
+            angularComboControl,
+            fieldControl,
+            fieldTextareaControl,
+            fieldFileControl
+        ];
+
         controls.forEach(control => {
+
+            // Check if properties.required is true and update validators
             if (this.properties.required) {
                 control.setValidators(Validators.required);
             } else {
                 control.clearValidators();
             }
-            control.updateValueAndValidity(); // Trigger validation update
+
+            // Trigger validation update
+            control.updateValueAndValidity();
         });
     }
 
-    public inputType: IgxInputGroupType = 'box';
+    public inputType: string;
 
     protected get inputTypeWC() {
         const inputTypeValue = this.propertyChangeService.getProperty('inputType');
@@ -198,8 +210,6 @@ export class InputGroupShowcaseSampleComponent {
 
         return this.inputType;
     }
-
-    public onSubmitReactive() { }
 
     protected readonly nothing = nothing;
 }
