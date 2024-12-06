@@ -277,6 +277,7 @@ class IconRefComponent { }
         },
         IgxIconService
     ],
+    standalone: true,
     imports: [IgxIconComponent]
 })
 class IconWithThemeTokenComponent {
