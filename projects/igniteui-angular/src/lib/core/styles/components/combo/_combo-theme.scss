@@ -122,7 +122,7 @@
     }
 
     %igx-combo__search {
-        padding-inline: if($variant == 'indigo', pad-inline(rem(12px)), pad-inline(rem(16px)));
+        padding-inline: if($variant == 'indigo', pad-inline(rem(12px)), sizable(rem(4px), rem(8px), rem(16px)));
         padding-block: if($variant == 'indigo', pad-block(rem(12px)), pad-block(rem(8px)));
         margin: 0 !important;
         z-index: 26;
