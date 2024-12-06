@@ -108,26 +108,17 @@
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{
-                this.resourceStrings.igx_query_builder_add_condition
+                this.resourceStrings.igx_query_builder_add_condition_root
             }}</span>
         </button>
 
         <button type="button"
             igxButton="outlined"
             [disabled]="hasEditedExpression"
-            (click)="addAndGroup(expressionItem, afterExpression)"
+            (click)="addReverseGroup(expressionItem, afterExpression)"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
-            <span>{{ this.resourceStrings.igx_query_builder_and_group }}</span>
-        </button>
-
-        <button type="button"
-            igxButton="outlined"
-            [disabled]="hasEditedExpression"
-            (click)="addOrGroup(expressionItem, afterExpression)"
-        >
-            <ng-container *ngTemplateOutlet="addIcon"></ng-container>
-            <span>{{ this.resourceStrings.igx_query_builder_or_group }}</span>
+            <span>{{ this.resourceStrings.igx_query_builder_add_group_root }}</span>
         </button>
     </ng-template>
 
@@ -245,10 +236,10 @@
                     <igx-drop-down #addOptionsDropDown
                         (selectionChanging)="enterExpressionAdd($event, expressionItem)">
                         <igx-drop-down-item [value]="'addCondition'">
-                            Add condition
+                            <span>{{this.resourceStrings.igx_query_builder_add_condition}}</span>
                         </igx-drop-down-item>
                         <igx-drop-down-item [value]="'addGroup'">
-                            Add group
+                            <span>{{this.resourceStrings.igx_query_builder_add_group}}</span>
                         </igx-drop-down-item>
                     </igx-drop-down>
                 </div>
@@ -567,13 +558,7 @@
                 igxButton="outlined"
                 (click)="createAndGroup()"
             >
-                {{ this.resourceStrings.igx_query_builder_create_and_group }}
-            </button>
-            <button type="button"
-                igxButton="outlined"
-                (click)="createOrGroup()"
-            >
-                {{ this.resourceStrings.igx_query_builder_create_or_group }}
+                {{ this.resourceStrings.igx_query_builder_add_group }}
             </button>
             <button type="button"
                 igxButton="outlined"

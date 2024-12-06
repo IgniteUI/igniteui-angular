@@ -766,15 +766,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public addAndGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
-        this.addGroup(FilteringLogic.And, parent, afterExpression);
-    }
+    public addReverseGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
+        parent = parent ?? this.rootGroup;
 
-    /**
-     * @hidden @internal
-     */
-    public addOrGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
-        this.addGroup(FilteringLogic.Or, parent, afterExpression);
+        if(parent.operator === FilteringLogic.And) {
+            this.addGroup(FilteringLogic.Or, parent, afterExpression);
+        } else {
+            this.addGroup(FilteringLogic.And, parent, afterExpression);
+        }
     }
 
     /**
@@ -1346,10 +1345,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         const parent = expressionItem.parent ?? this.rootGroup;
         if (event.newSelection.value === 'addCondition') {
             this.addCondition(parent, expressionItem);
-        } else if (event.newSelection.value === 'addGroup' && parent.operator === FilteringLogic.And) {
-            this.addOrGroup(parent, expressionItem);
-        } else {
-            this.addAndGroup(parent, expressionItem);
+        } else if (event.newSelection.value === 'addGroup') {
+            this.addReverseGroup(parent, expressionItem);
         }
         expressionItem.inAddMode = true;
         this._addModeExpression = expressionItem;
@@ -1392,6 +1389,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden @internal
+     */
+    public onGroupClick(groupItem: ExpressionGroupItem) {
+    }
 
     /**
      * @hidden @internal
