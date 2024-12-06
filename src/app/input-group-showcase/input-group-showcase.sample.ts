@@ -1,27 +1,40 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, signal, ViewChild} from '@angular/core';
-import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import { NgIf, NgFor } from '@angular/common';
-import { defineComponents, IgcInputComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, computed, ViewChild, viewChild} from '@angular/core';
+import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators} from '@angular/forms';
+import {
+    defineComponents,
+    IgcInputComponent,
+    IgcIconComponent,
+    IgcSelectGroupComponent,
+    IgcSelectComponent,
+    IgcSelectItemComponent,
+    IgcSelectHeaderComponent,
+} from 'igniteui-webcomponents';
 import {
     IGX_INPUT_GROUP_DIRECTIVES,
     IGX_INPUT_GROUP_TYPE,
     IgxIconComponent,
-    IgxSelectComponent, IgxSelectItemComponent, IgxInputGroupComponent, IgxComboComponent
+    IgxSelectComponent,
+    IgxSelectItemComponent,
+    IgxInputGroupComponent,
+    IgxComboComponent,
 } from 'igniteui-angular';
-import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
-import {nothing} from "lit-html";
+import {PropertyPanelConfig, PropertyChangeService, Properties} from '../properties-panel/property-change.service';
 
-defineComponents(IgcInputComponent, IgcIconComponent);
-
-const face = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/></svg>'
-registerIconFromText('face', face);
+// Define Ignite UI Web Components
+defineComponents(
+    IgcInputComponent,
+    IgcIconComponent,
+    IgcSelectGroupComponent,
+    IgcSelectComponent,
+    IgcSelectItemComponent,
+    IgcSelectHeaderComponent
+);
 
 @Component({
-
     selector: 'app-input-group-showcase-sample',
     styleUrls: ['input-group-showcase.sample.scss'],
     templateUrl: 'input-group-showcase.sample.html',
-    providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'box' }],
+    providers: [{provide: IGX_INPUT_GROUP_TYPE, useValue: 'box'}], // Default input group type
     imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -31,24 +44,16 @@ registerIconFromText('face', face);
         IgxSelectItemComponent,
         IgxComboComponent,
     ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class InputGroupShowcaseSampleComponent {
-    @ViewChild('field', { read: IgxInputGroupComponent, static: true })
-    public field: IgxInputGroupComponent;
+    public field = viewChild<IgxInputGroupComponent>('field');
+    public fieldTextarea = viewChild<IgxInputGroupComponent>('fieldTextarea');
+    public fieldFile = viewChild<IgxInputGroupComponent>('fieldFile');
+    public select = viewChild<IgxSelectComponent>('selectReactive');
 
-    @ViewChild('fieldTextarea', { read: IgxInputGroupComponent, static: true })
-    public fieldTextarea: IgxInputGroupComponent;
-
-    @ViewChild('fieldFile', { read: IgxInputGroupComponent, static: true })
-    public fieldFile: IgxInputGroupComponent;
-
-    @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
-    public select: IgxSelectComponent;
-
-    public reactiveForm: UntypedFormGroup;
-
-    public required = signal(false);
+    private fb = inject(UntypedFormBuilder); // Angular FormBuilder
+    private propertyChangeService = inject(PropertyChangeService); // Service for managing property changes
 
     public panelConfig: PropertyPanelConfig = {
         size: {
@@ -59,40 +64,44 @@ export class InputGroupShowcaseSampleComponent {
             }
         },
         inputType: {
-            label: 'Input Group Type (Material theme only)',
+            label: 'Input Group Type',
             control: {
                 type: 'button-group',
                 options: ['box', 'border', 'line', 'search'],
+                defaultValue: ''
             }
         },
         type: {
-            label: 'Native Inout Type ',
+            label: 'Native Input Type',
             control: {
                 type: 'select',
-                options: ['email', 'number', 'password', 'search', 'tel', 'text', 'url']
+                options: ['email', 'number', 'password', 'search', 'tel', 'text', 'url'],
+                defaultValue: 'text'
             }
         },
         label: {
             control: {
                 type: 'text',
-                defaultValue: 'Web address',
+                defaultValue: 'Web address'
             }
         },
         value: {
             control: {
                 type: 'text',
+                defaultValue: ''
             }
         },
         placeholder: {
             control: {
                 type: 'text',
+                defaultValue:
+                    'Placeholder'
             }
         },
         required: {
             label: 'Required',
             control: {
-                type: 'boolean',
-                defaultValue: false
+                type: 'boolean', defaultValue: false
             }
         },
         disabled: {
@@ -108,108 +117,113 @@ export class InputGroupShowcaseSampleComponent {
             }
         },
         hidePrefix: {
-            label: 'Toggle Prefix',
+            label: 'Hide Prefix',
             control: {
                 type: 'boolean',
                 defaultValue: false
             }
         },
         hideSuffix: {
-            label: 'Toggle Suffix',
+            label: 'Hide Suffix',
             control: {
                 type: 'boolean',
                 defaultValue: false
             }
-        }
-    }
+        },
+    };
 
-    public properties: Properties;
+    // Reactive properties for managing UI states
+    public properties = signal<Properties>(
+        Object.fromEntries(
+            Object.keys(this.panelConfig).map((key) => {
+                const control = this.panelConfig[key]?.control;
+                return [key, control?.defaultValue];
+            })
+        ) as Properties
+    );
 
-    constructor(fb: UntypedFormBuilder, private propertyChangeService: PropertyChangeService) {
+    // Reactive form initialization
+    public reactiveForm = this.fb.group({
+        angularSelect: [this.properties()?.value || ''],
+        angularCombo: [this.properties()?.value || ''],
+        field: [this.properties()?.value || ''],
+        fieldTextarea: [this.properties()?.value || ''],
+        fieldFile: [this.properties()?.value || '']
+    });
+
+    constructor() {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
-            this.properties = properties;
-        });
+        // Listen for property changes and update form controls
+        this.propertyChangeService.propertyChanges.subscribe((updatedProperties) => {
+            const mergedProperties = this.mergeProperties(updatedProperties);
 
-        // Initialize the form without validators
-        this.reactiveForm = fb.group({
-            angularSelect: [''],
-            angularCombo: [''],
-            field: [''],
-            fieldTextarea: [''],
-            fieldFile: ['']
-        });
-
-        // Subscribe to property changes
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
-
-            // Sync properties.value to the form
-            this.reactiveForm.patchValue({
-                angularSelect: properties.value,
-                angularCombo: properties.value,
-                field: properties.value,
-                fieldTextarea: properties.value,
-                fieldFile: properties.value
-            });
-
-            this.properties = properties;
-            this.updateValidators();
+            this.properties.set(mergedProperties);
+            this.updateFormControls();
+            this.getPlaceholder();
         });
     }
 
-    private updateValidators() {
-        // Get form controls
-        const angularSelectControl = this.reactiveForm.get('angularSelect');
-        const angularComboControl = this.reactiveForm.get('angularCombo');
-        const fieldControl = this.reactiveForm.get('field');
-        const fieldTextareaControl = this.reactiveForm.get('fieldTextarea');
-        const fieldFileControl = this.reactiveForm.get('fieldFile');
+    // Merge incoming property updates with the default configuration
+    private mergeProperties(updatedProperties: any): Properties {
+        return Object.fromEntries(
+            Object.entries(this.panelConfig).map(([key, config]) => [
+                key,
+                updatedProperties[key] !== undefined
+                    ? updatedProperties[key]
+                    : config?.control?.defaultValue
+            ])
+        ) as Properties;
+    }
 
-        const controls = [
-            angularSelectControl,
-            angularComboControl,
-            fieldControl,
-            fieldTextareaControl,
-            fieldFileControl
-        ];
+    // Update reactive form controls dynamically
+    private updateFormControls(): void {
+        const patchValues = {
+            angularSelect: this.properties()?.value || '',
+            angularCombo: this.properties()?.value || '',
+            field: this.properties()?.value || '',
+            fieldTextarea: this.properties()?.value || '',
+        };
 
-        controls.forEach(control => {
+        this.reactiveForm.patchValue(patchValues);
 
-            // Check if properties.required is true and update validators
-            if (this.properties.required) {
-                control.setValidators(Validators.required);
-            } else {
-                control.clearValidators();
+        this.updateDisabledState(this.properties().disabled);
+        this.updateValidators(this.properties().required);
+    }
+
+    // Enable or disable form controls based on `disabled` property
+    private updateDisabledState(isDisabled: boolean): void {
+        Object.keys(this.reactiveForm.controls).forEach((controlName) => {
+            const control = this.reactiveForm.get(controlName);
+            if (control) {
+                isDisabled ? control.disable() : control.enable();
             }
-
-            // Trigger validation update
-            control.updateValueAndValidity();
         });
     }
 
-    public inputType: string;
-
-    protected get inputTypeWC() {
-        const inputTypeValue = this.propertyChangeService.getProperty('inputType');
-        return inputTypeValue === 'border';
+    // Set validators for form controls dynamically
+    private updateValidators(isRequired: boolean): void {
+        Object.keys(this.reactiveForm.controls).forEach((controlName) => {
+            const control = this.reactiveForm.get(controlName);
+            if (control) {
+                control.setValidators(isRequired ? Validators.required : null);
+                control.updateValueAndValidity();
+            }
+        });
     }
 
-    protected get inputTypeAngular() {
-        const inputTypeValue = this.propertyChangeService.getProperty('inputType');
+    public getValue = computed(() => this.properties()?.value || '');
+    public getSize = computed(() => `var(--ig-size-${this.properties()?.size || 'medium'})`);
+    public getPlaceholder = computed(() => this.properties()?.placeholder || null);
+    public getLabel = computed(() => this.properties()?.label || '');
+    public getNativeInputType = computed(() => this.properties()?.type || 'text');
+    public getInputGroupType = computed(() => this.properties()?.inputType || '');
 
-        if (inputTypeValue === 'border') {
-            this.inputType = 'border';
-        } else if (inputTypeValue === 'box') {
-            this.inputType = 'box';
-        } else if (inputTypeValue === 'search') {
-            this.inputType = 'search';
-        } else if (inputTypeValue === 'line') {
-            this.inputType = 'line';
-        }
-
-        return this.inputType;
-    }
-
-    protected readonly nothing = nothing;
+    public isOutlined = computed((): boolean => this.properties()?.inputType === 'border');
+    public isRequired = computed(() => !!this.properties()?.required);
+    public isDisabled = computed(() => !!this.properties()?.disabled);
+    public isReadonly = computed(() => !!this.properties()?.readonly);
+    public hidePrefix = computed(() => !!this.properties()?.hidePrefix);
+    public hideSuffix = computed(() => !!this.properties()?.hideSuffix);
 }
+
