@@ -116,6 +116,10 @@
             igxButton="outlined"
             [disabled]="hasEditedExpression"
             (click)="addCondition(expressionItem, afterExpression)"
+            igxDrop 
+            (enter)="onAddConditionEnter(addConditionButton, expressionItem)"
+            (leave)="onAddConditionLeave($event, addConditionButton)"
+            (dropped)="onAddConditionDropped(expressionItem)"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{
@@ -144,22 +148,38 @@
 
     <ng-template #operandTemplate let-expressionItem>
         <div
+            #dragRef 
+            igxDrop
+            (enter)="onDivEnter($event, dragRef, expressionItem)"
+            (over)="onDivOver($event, dragRef, expressionItem)"
+            (leave)="onDivLeave($event)"
+            (dropped)="onDivDropped(expressionItem)"
             *ngIf="!expressionItem.inEditMode"
-            class="igx-filter-tree__expression-item"
+            class="igx-filter-tree__expression-item"            
             (mouseenter)="expressionItem.hovered = true"
-            (mouseleave)="expressionItem.hovered = false"
+            (mouseleave)="expressionItem.hovered = false"   
         >
-            <igx-chip
+            <igx-chip        
+                [draggable]="canBeDragged() ? 'true' : 'false'" 
+                [hideBaseOnDrag] = "false"    
+                [animateOnRelease] = "false"
+                (moveStart)="canBeDragged() ? onMoveStart($event, dragRef, expressionItem): null" 
+                (moveEnd)="onMoveEnd()"
+                (dragEnter)="onChipEnter($event, dragRef, expressionItem, false)"
+                (dragOver)="onChipOver($event, dragRef, false)"
+                (dragLeave)="onChipLeave($event)"
+                (dragDrop)="onChipDropped(expressionItem)"
                 #target="tooltipTarget"
                 [igxTooltipTarget]="tooltipRef"
                 [data]="expressionItem"
                 [removable]="isInEditMode() ? 'true' : 'false'"
                 [selected]="expressionItem.selected && isInEditMode()"
-                (keydown)="invokeClick($event)"
                 (click)="isInEditMode() ? onChipClick(expressionItem) : null"
                 (dblclick)="onChipDblClick(expressionItem)"
                 (remove)="onChipRemove(expressionItem)"
-                (selectedChanged)="onChipSelectionEnd()"
+                (selectedChanged)="onChipSelectionEnd()"       
+                (focus)="onChipFocus(dragRef, expressionItem)" 
+                (focusout)="onChipFocusOut()"    
             >
                 <span igxPrefix class="igx-filter-tree__expression-column">
                     {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
@@ -231,7 +251,7 @@
                     }
                 }
             </div>
-            <div
+            <div igxDragIgnore
                 class="igx-filter-tree__expression-actions"
                 *ngIf="
                     (expressionItem.selected &&
@@ -239,14 +259,14 @@
                     expressionItem.hovered
                 "
             >
-                <button
+                <button igxDragIgnore
                     igxIconButton="flat"
                     aria-labelledby="edit-expression"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionEdit(expressionItem)">
                     <igx-icon id="edit-expression">edit</igx-icon>
                 </button>
-                <button
+                <button igxDragIgnore
                     igxIconButton="flat"
                     aria-labelledby="add-expression"
                     (keydown)="invokeClick($event)"
@@ -265,6 +285,7 @@
             </div>
             <div *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree && expressionItem.expression.searchTree.filteringOperands.length > 0"
                 igxButton
+                igxDragIgnore
                 class="igx-filter-tree__details-button"
                 (click)="expanderClick($event, expressionItem)"
                 (keydown)="invokeClick($event)"
@@ -276,6 +297,12 @@
         </div>
 
         <div
+            #dragRef 
+            igxDrop
+            (enter)="onDivEnter($event, dragRef, expressionItem)"
+            (over)="onDivOver($event, dragRef, expressionItem)"
+            (leave)="onDivLeave($event)"
+            (dropped)="onDivDropped(expressionItem)"
             *ngIf="expressionItem.inEditMode"
             #editingInputsContainer
             class="igx-filter-tree__inputs"
@@ -491,17 +518,20 @@
         <div class="igx-filter-tree">
             <div
                 tabindex="0"
-                class="igx-filter-tree__line"
-                [ngClass]="{
-                    'igx-filter-tree__line--and': expressionItem?.operator === 0,
-                    'igx-filter-tree__line--or': expressionItem?.operator === 1,
-                    'igx-filter-tree__line--selected': expressionItem?.selected
-                }"
+                class="igx-filter-tree__line igx-filter-tree__line--and"
+                [ngClass]="{'igx-filter-tree__line--selected': expressionItem?.selected}"
                 (keydown)="invokeClick($event)"
                 (click)="onGroupClick(expressionItem)"
             ></div>
 
-            <div class="igx-filter-tree__expression">            
+            <div class="igx-filter-tree__expression">     
+                <button igxButton="flat"
+                        (keydown)="invokeClick($event)"
+                        (click)="onGroupClick(expressionItem)"
+                >
+                <span> {{expressionItem?.operator === 0? 'AND':'OR'}}</span>
+                <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>                   
+                </button>   
                 <ng-container *ngFor="let expr of expressionItem?.children">
                     <ng-container
                         *ngTemplateOutlet="
