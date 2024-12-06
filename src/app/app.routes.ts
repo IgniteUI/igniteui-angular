@@ -96,7 +96,6 @@ import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-col
 import { BannerSampleComponent } from './banner/banner.sample';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
 import { SelectSampleComponent } from './select/select.sample';
-import { SelectShowcaseSampleComponent } from './select-showcase/select-showcase.sample';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample';
@@ -192,10 +191,6 @@ export const appRoutes: Routes = [
     {
         path: 'select',
         component: SelectSampleComponent
-    },
-    {
-        path: 'select-showcase',
-        component: SelectShowcaseSampleComponent
     },
     {
         path: 'buttons',
