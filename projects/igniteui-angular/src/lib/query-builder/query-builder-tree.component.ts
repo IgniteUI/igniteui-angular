@@ -56,6 +56,8 @@ import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.dir
 import { IgxQueryBuilderComponent } from './query-builder.component';
 import { IChipsAreaReorderEventArgs, IgxChipsAreaComponent } from "../chips/chips-area.component";
 import { IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
+import { IgxDropDownComponent } from '../drop-down/drop-down.component';
+import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -161,7 +163,12 @@ class ExpressionOperandItem extends ExpressionItem {
         IgxTooltipTargetDirective,
         IgxTooltipDirective,
         IgxChipsAreaComponent,
-        IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IgxDropDirective,
+        IgxDragDirective,
+        IgxDragIgnoreDirective,
+        IgxDragHandleDirective,
+        IgxDropDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent
     ]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
@@ -334,6 +341,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChild('entityChangeDialog', { read: IgxDialogComponent })
     private entityChangeDialog: IgxDialogComponent;
 
+    @ViewChild('addOptionsDropDown', { read: IgxDropDownComponent })
+    private addExpressionItemDropDown: IgxDropDownComponent;
+
     /**
      * @hidden @internal
      */
@@ -355,23 +365,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /** @hidden */
     protected get editingInputsContainer(): ElementRef {
         return this._editingInputsContainer;
-    }
-
-    @ViewChild('addModeContainer', { read: ElementRef })
-    protected set addModeContainer(value: ElementRef) {
-        if ((value && !this._addModeContainer) ||
-            (value && this._addModeContainer && this._addModeContainer.nativeElement !== value.nativeElement)) {
-            requestAnimationFrame(() => {
-                this.scrollElementIntoView(value.nativeElement);
-            });
-        }
-
-        this._addModeContainer = value;
-    }
-
-    /** @hidden */
-    protected get addModeContainer(): ElementRef {
-        return this._addModeContainer;
     }
 
     @ViewChild('currentGroupButtonsContainer', { read: ElementRef })
@@ -492,13 +485,22 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         closeOnOutsideClick: true
     };
 
+    /**
+     * @hidden @internal
+     */
+    public addExpressionDropDownOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
+
+
     private destroy$ = new Subject<any>();
     private _parentExpression: ExpressionOperandItem;
     private _selectedEntity: EntityType;
     private _selectedReturnFields: string | string[];
     private _selectedField: FieldType;
     private _editingInputsContainer: ElementRef;
-    private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
     private _addModeExpression: ExpressionOperandItem;
     private _editedExpression: ExpressionOperandItem;
@@ -566,6 +568,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
         this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.addExpressionDropDownOverlaySettings.outlet = this.overlayOutlet;
         // Trigger additional change detection cycle
         this.cdr.detectChanges();
     }
@@ -815,9 +818,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup, this.selectedEntity?.name, this.selectedReturnFields);
-            if (!this.parentExpression) {
-                this.expressionTreeChange.emit(this._expressionTree);
-            }
+        if (!this.parentExpression) {
+            this.expressionTreeChange.emit(this._expressionTree);
+        }
     }
 
     /**
@@ -1299,19 +1302,40 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public enterExpressionAdd(expressionItem: ExpressionOperandItem) {
+    public openExpressionAdd(expressionItem: ExpressionOperandItem, targetButton: HTMLElement) {
         this.exitOperandEdit();
 
+        this.addExpressionDropDownOverlaySettings.target = targetButton;
+        this.addExpressionDropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
+            horizontalDirection: HorizontalAlignment.Right,
+            horizontalStartPoint: HorizontalAlignment.Right,
+            verticalStartPoint: VerticalAlignment.Bottom
+        });
+            this.addExpressionItemDropDown.open(this.addExpressionDropDownOverlaySettings);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public enterExpressionAdd(event: ISelectionEventArgs, expressionItem: ExpressionOperandItem) {
         if (this._addModeExpression) {
             this._addModeExpression.inAddMode = false;
         }
-
+        
         if (this.parentExpression) {
             this.inEditModeChange.emit(this.parentExpression);
         }
-
         expressionItem.inAddMode = true;
         this._addModeExpression = expressionItem;
+
+        const parent = expressionItem.parent ?? this.rootGroup;
+        if (event.newSelection.value === 'addCondition') {
+            this.addCondition(parent, expressionItem);
+        } else if (event.newSelection.value === 'addGroup' && parent.operator === FilteringLogic.And) {
+            this.addOrGroup(parent, expressionItem);
+        } else {
+            this.addAndGroup(parent, expressionItem);
+        }
     }
 
     /**
@@ -1708,14 +1732,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         const expressionTree = new FilteringExpressionsTree(groupItem.operator, undefined, entity, returnFields);
 
-            for (const item of groupItem.children) {
-                if (item instanceof ExpressionGroupItem) {
-                    const subTree = this.createExpressionTreeFromGroupItem((item as ExpressionGroupItem), entity, returnFields);
-                    expressionTree.filteringOperands.push(subTree);
-                } else {
-                    expressionTree.filteringOperands.push((item as ExpressionOperandItem).expression);
-                }
+        for (const item of groupItem.children) {
+            if (item instanceof ExpressionGroupItem) {
+                const subTree = this.createExpressionTreeFromGroupItem((item as ExpressionGroupItem), entity, returnFields);
+                expressionTree.filteringOperands.push(subTree);
+            } else {
+                expressionTree.filteringOperands.push((item as ExpressionOperandItem).expression);
             }
+        }
 
         return expressionTree;
     }
@@ -1786,7 +1810,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         const entity = this.expressionTree ? this.expressionTree.entity : null;
         const returnFields = this.expressionTree ? this.expressionTree.returnFields : null;
         this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup, entity, returnFields); // TODO: don't recreate if not necessary
-        
+
         if (!children.length) {
             this.deleteItem(expressionItem.parent);
         }
