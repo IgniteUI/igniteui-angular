@@ -141,7 +141,7 @@
                 [draggable]="canBeDragged() ? 'true' : 'false'" 
                 [hideBaseOnDrag] = "false"    
                 [animateOnRelease] = "false"
-                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem): null" 
+                (moveStart)="canBeDragged() ? onMoveStart($event, dragRef, expressionItem): null" 
                 (moveEnd)="onMoveEnd()"
                 (dragEnter)="onChipEnter($event, dragRef, expressionItem, false)"
                 (dragOver)="onChipOver($event, dragRef, false)"
@@ -154,6 +154,8 @@
                 (keydown)="invokeClick($event)"
                 (click)="onChipClick(expressionItem)"
                 (remove)="onChipRemove(expressionItem)"
+                (focus)="onChipFocus(dragRef, expressionItem)" 
+                (focusout)="onChipFocusOut()"    
             >
                 <span igxPrefix class="igx-filter-tree__expression-column">
                     {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
