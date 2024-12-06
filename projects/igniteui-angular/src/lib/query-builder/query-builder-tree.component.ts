@@ -975,14 +975,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public dropUnder: boolean;
     public ghostChip: Node;
     private ghostChipMousemoveSubscription: Subscription;
+    //hysteresis used when dragging towards and away from chip, to prevent drop area chip flickering  
     private vicinityHysteresis = {
-        enterRight: 1.2,
-        leaveLeft: 1.5,
-        leaveRight: 0.8,
-        leaveUp: 0.8,
-        leaveDown: 1.2,
+        entering: 30,
+        leaving: 100,
     }
 
+    //Chip can be dragged if it's tree is in edit mode and there is no inner query that's been edited
     public canBeDragged(): boolean {
         return this.isInEditMode && (!this.innerQueries || this.innerQueries.length == 0 || !this.innerQueries?.some(q => q.isInEditMode()))
     }
@@ -1013,7 +1012,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     //On entering a drop area of another chip 
     public onDivEnter(event: IDropBaseEventArgs, targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
         //If entering the div, at least close to the contained chip, behave like the chip was entered
-        if ((targetDragElement.children[0].getBoundingClientRect().right * this.vicinityHysteresis.enterRight) > event.pageX) {
+        if (this.chipsAreNearBy(targetDragElement.children[0] as HTMLElement, this.ghostChipElement, this.vicinityHysteresis.entering)) {
             this.onChipEnter(event, targetDragElement, targetExpressionItem, true)
         }
         else if (this.targetElement) {
@@ -1036,7 +1035,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.targetExpressionItem = targetExpressionItem;
 
         //Determine the middle point of the chip. (fromDiv - get the div's chip) 
-        const appendUnder = fromDiv ? this.mouseInLowerPart(event, targetDragElement.children[0] as HTMLElement) : this.mouseInLowerPart(event, targetDragElement);
+        const appendUnder = fromDiv ? this.ghostInLowerPart(event, targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(event, targetDragElement);
 
         this.createDropGhostChip(targetDragElement, appendUnder);
     }
@@ -1044,7 +1043,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     //On moving the dragged chip in a drop area
     public onDivOver(event: IDropBaseEventArgs, targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
         //If over the div, at least close to the contained chip, behave like chipOver. If not behave like chipLeave
-        if ((targetDragElement.children[0].getBoundingClientRect().right * this.vicinityHysteresis.enterRight) > event.pageX) {
+        if (this.chipsAreNearBy(targetDragElement.children[0] as HTMLElement,
+            this.ghostChipElement,
+            (this.targetExpressionItem ? this.vicinityHysteresis.leaving : this.vicinityHysteresis.entering))) {
             if (this.targetExpressionItem) {
                 this.onChipOver(event, targetDragElement, true)
             }
@@ -1061,7 +1062,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         //Determine the middle point of the chip. (fromDiv - get the div's chip) 
-        const appendUnder = fromDiv ? this.mouseInLowerPart(event, targetDragElement.children[0] as HTMLElement) : this.mouseInLowerPart(event, targetDragElement);
+        const appendUnder = fromDiv ? this.ghostInLowerPart(event, targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(event, targetDragElement);
 
         this.createDropGhostChip(targetDragElement, appendUnder);
     }
@@ -1079,10 +1080,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         //if there is ghost chip and the mouse is still close enough to it don't trigger leave
         if (ghostCoordinates &&
-            mouseCoordinates.pageX >= ghostCoordinates.left * this.vicinityHysteresis.leaveRight &&
-            mouseCoordinates.pageX <= ghostCoordinates.right * this.vicinityHysteresis.leaveLeft &&
-            mouseCoordinates.pageY >= ghostCoordinates.top * this.vicinityHysteresis.leaveUp &&
-            mouseCoordinates.pageY <= ghostCoordinates.bottom * this.vicinityHysteresis.leaveDown) {
+            this.chipsAreNearBy(this.ghostChip?.firstChild as HTMLElement, this.ghostChipElement, this.vicinityHysteresis.leaving)) {
             return;
         }
 
@@ -1139,8 +1137,23 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    private mouseInLowerPart(event: IDropBaseEventArgs | IChipEnterDragAreaEventArgs, ofElement: HTMLElement) {
-        return ((event.originalEvent as any).pageY >= (ofElement.getBoundingClientRect().top + ofElement.getBoundingClientRect().bottom) / 2)
+    //Check if one element is overlapping or close to another one
+    private chipsAreNearBy(chip1: HTMLElement, chip2: HTMLElement, maxDistance: number) {
+        const chip1Bounds = chip1.getBoundingClientRect();
+        const chip2Bounds = chip2.getBoundingClientRect();
+
+        return !(chip1Bounds.right < chip2Bounds.left - maxDistance ||
+            chip1Bounds.left > chip2Bounds.right + maxDistance ||
+            chip1Bounds.bottom < chip2Bounds.top - maxDistance ||
+            chip1Bounds.top > chip2Bounds.bottom + maxDistance);
+    }
+
+    //Checks if the dragged ghost is north or south of a target element's center
+    private ghostInLowerPart(event: IDropBaseEventArgs | IChipEnterDragAreaEventArgs, ofElement: HTMLElement) {
+        const ghostBounds = this.ghostChipElement.getBoundingClientRect();
+        const targetBounds = ofElement.getBoundingClientRect();
+
+        return ((ghostBounds.top + ghostBounds.bottom) / 2) >= ((targetBounds.top + targetBounds.bottom) / 2);
     }
 
     //Make a copy of the drag chip and place it in the DOM north or south of the drop chip
@@ -1191,16 +1204,19 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.setDragCursor('grab');
     }
 
+    //Get the dragged ghost as a HTMLElement
     private get ghostChipElement(): HTMLElement {
         return (document.querySelector('.igx-chip__ghost[ghostclass="igx-chip__ghost"]') as HTMLElement);
     }
 
+    //Set the cursor when dragging a ghost
     private setDragCursor(cursor: string) {
         if (this.ghostChipElement) {
             this.ghostChipElement.style.cursor = cursor;
         }
     }
 
+    //Execute the drop
     private moveDraggedChipToNewLocation(appendToExpressionItem: ExpressionItem, fromAddConditionBtn?: boolean) {
         //Copy dragged chip
         let dragCopy = { ...this.sourceExpressionItem };
@@ -1214,6 +1230,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.deleteItem(this.sourceExpressionItem);
     }
 
+    //Reset Drag&Drop vars. Optionally the drag source vars too 
     private resetDragAndDrop(clearDragged: boolean) {
         this.targetExpressionItem = null;
         this.targetElement = null;
