@@ -80,8 +80,12 @@
     </igx-nav-drawer>
 
     <div [style.paddingLeft]="drawerState.miniVariant && !drawerState.pin ? '60px' : null" class="content">
-        <app-page-header [title]="urlString"></app-page-header>
-        <div class="sample-wrapper">
+        <app-page-header
+                [title]="urlString"
+                [dirMode]="dirMode()"
+                (toggleDirection)="toggleDirection()"
+        ></app-page-header>
+        <div #dirTarget class="sample-wrapper">
             <router-outlet></router-outlet>
         </div>
     </div>

@@ -1,4 +1,12 @@
-import {Component, OnInit, ViewChild, HostBinding, inject} from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ViewChild,
+    HostBinding,
+    inject,
+    signal,
+    ElementRef
+} from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective } from 'igniteui-angular';
@@ -34,6 +42,21 @@ export class AppComponent implements OnInit {
 
     @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
     public navdrawer;
+
+    @ViewChild('dirTarget', { static: true })
+    public dirTarget!: ElementRef<HTMLDivElement>;
+
+    public dirMode = signal<'ltr' | 'rtl'>('ltr');
+
+    public toggleDirection(): void {
+        this.dirMode.update((current) => (current === 'ltr' ? 'rtl' : 'ltr'));
+
+        if (this.dirTarget?.nativeElement) {
+            this.dirTarget.nativeElement.setAttribute('dir', this.dirMode());
+        } else {
+            console.error('dirTarget is not defined or does not have nativeElement');
+        }
+    }
 
     protected propertyChangeService = inject(PropertyChangeService);
 
@@ -762,11 +785,6 @@ export class AppComponent implements OnInit {
             link: '/radio-showcase',
             icon: 'radio_button_unchecked',
             name: 'Radio'
-        },
-        {
-            link: '/select-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Select'
         },
         {
             link: '/snackbar-showcase',

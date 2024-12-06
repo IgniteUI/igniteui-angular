@@ -13,12 +13,27 @@
             {{ title }}
         </h5>
     </div>
-    <button *ngIf="config"
-            igxIconButton="flat"
-            igxRipple
-            [igxRippleCentered]="true"
-            igxToggleAction="paneldrawer"
-            class="toggle-properties-panel">
-        <igx-icon>settings</igx-icon>
-    </button>
+
+    <div class="header-actions">
+        <small class="header-actions__title">Direction: </small>
+        <button
+                (click)="onToggleDirectionClick()"
+                igxIconButton="flat"
+                igxRipple
+                [igxRippleCentered]="true"
+                class="toggle-button">
+                {{ dirMode }}
+        </button>
+
+        @if(config) {
+            <button
+                    igxIconButton="flat"
+                    igxRipple
+                    [igxRippleCentered]="true"
+                    igxToggleAction="paneldrawer"
+                    class="toggle-button">
+                <igx-icon>settings</igx-icon>
+            </button>
+        }
+    </div>
 </div>
