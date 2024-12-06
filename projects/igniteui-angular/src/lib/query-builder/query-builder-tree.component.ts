@@ -1328,7 +1328,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             horizontalStartPoint: HorizontalAlignment.Right,
             verticalStartPoint: VerticalAlignment.Bottom
         });
-            this.addExpressionItemDropDown.open(this.addExpressionDropDownOverlaySettings);
+        this.addExpressionItemDropDown.open(this.addExpressionDropDownOverlaySettings);
     }
 
     /**
@@ -1342,9 +1342,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this.parentExpression) {
             this.inEditModeChange.emit(this.parentExpression);
         }
-        expressionItem.inAddMode = true;
-        this._addModeExpression = expressionItem;
-
+        
         const parent = expressionItem.parent ?? this.rootGroup;
         if (event.newSelection.value === 'addCondition') {
             this.addCondition(parent, expressionItem);
@@ -1353,6 +1351,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         } else {
             this.addAndGroup(parent, expressionItem);
         }
+        expressionItem.inAddMode = true;
+        this._addModeExpression = expressionItem;
     }
 
     /**

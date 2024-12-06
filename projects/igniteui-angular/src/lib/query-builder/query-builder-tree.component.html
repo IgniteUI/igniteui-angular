@@ -237,9 +237,9 @@
 
             @if((expressionItem.focused || expressionItem.hovered) && !expressionItem.inAddMode) {
                 <div igxDragIgnore class="igx-filter-tree__expression-actions">
-                    <button #addExpressionButton igxDragIgnore igxIconButton="flat" aria-labelledby="add-expression" (keydown)="invokeClick($event)"
-                        (click)="openExpressionAdd(expressionItem, addExpressionButton)"
-                    " >
+                    <button #addExpressionButton igxDragIgnore igxIconButton="flat"
+                    aria-labelledby="add-expression" (keydown)="invokeClick($event)"
+                        (click)="openExpressionAdd(expressionItem, addExpressionButton)">
                         <igx-icon id="add-expression">add</igx-icon>
                     </button>
                     <igx-drop-down #addOptionsDropDown
