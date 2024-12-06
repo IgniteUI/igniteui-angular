@@ -12,6 +12,7 @@ import {
 @Component({
     selector: 'app-themed-icon',
     templateUrl: 'themed-icon.component.html',
+    standalone: true,
     providers: [
         {
           provide: THEME_TOKEN,

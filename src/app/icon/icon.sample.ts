@@ -8,6 +8,7 @@ import { ThemedIconComponent } from './ThemedComponent/themed-icon.component';
     selector: 'app-icon-sample',
     styleUrls: ['./icon.sample.scss'],
     templateUrl: 'icon.sample.html',
+    standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [IgxIconComponent, IgxButtonDirective, ThemedIconComponent]
 })
