@@ -6,26 +6,35 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
+import { CheckboxSampleComponent } from './checkbox/checkbox.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
+import { CircularProgressSampleComponent } from './circular-progress-showcase/circular-progress-showcase.sample'
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
+import { IconButtonSampleComponent } from './icon-button/icon-button.sample'
 import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
+import { InputGroupShowcaseSampleComponent } from './input-group-showcase/input-group-showcase.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
+import { ListShowcaseSampleComponent } from './list-showcase/list-showcase.sample';
 import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
 import { ListPerformanceSampleComponent } from './list-performance/list-performance.sample';
+import { LinearProgressSampleComponent } from './linear-progress-showcase/linear-progress-showcase.sample';
 import { NavbarSampleComponent } from './navbar/navbar.sample';
 import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
 import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
+import { SliderShowcaseSampleComponent } from './slider-showcase/slider-showcase.sample';
 import { SplitterSampleComponent } from './splitter/splitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
+import { SnackbarShowcaseSampleComponent } from './snackbar-showcase/snackbar-showcase.sample';
+import { SwitchShowcaseSampleComponent } from './switch-showcase/switch-showcase.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
 import { TypographySampleComponent } from './styleguide/typography/typography.sample';
@@ -37,6 +46,7 @@ import {
     BottomNavRoutingView3Component
 } from './bottomnav-routing/bottomnav-routing-views.sample';
 import { TabsSampleComponent } from './tabs/tabs.sample';
+import { TabsShowcaseSampleComponent } from './tabs-showcase/tabs-showcase.sample';
 import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
 import {
     TabsRoutingView1Component,
@@ -44,7 +54,7 @@ import {
     TabsRoutingView3Component
 } from './tabs-routing/tabs-routing-views.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
-import { ToastSampleComponent } from './toast/toast.sample';
+import { ToastShowcaseSampleComponent } from './toast-showcase/toast-showcase.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridSampleComponent } from './grid/grid.sample';
@@ -64,13 +74,16 @@ import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { DropDownShowcaseSampleComponent } from './drop-down-showcase/drop-down-showcase.sample';
 import { DropDownSizeSampleComponent } from './drop-down/drop-down-size/drop-down-size.sample';
 import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
+import { ComboShowcaseSampleComponent } from './combo-showcase/combo-showcase.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { OverlayPresetsSampleComponent } from './overlay/overlay-presets.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { RadioShowcaseSampleComponent } from './radio-showcase/radio-showcase.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
@@ -120,6 +133,7 @@ import { GridEventsComponent } from './grid-events/grid-events.component';
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TreeSampleComponent } from './tree/tree.sample';
+import { TreeShowcaseSampleComponent } from './tree-showcase/tree-showcase.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 import { AccordionSampleComponent } from './accordion/accordion.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
@@ -130,6 +144,7 @@ import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-grid-hierarchy.sample';
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent as StepperSampleComponent } from './stepper/stepper.sample';
+import { IgxStepperShowcaseSampleComponent } from './stepper-showcase/stepper-showcase.sample';
 import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 import { QueryBuilderComponent } from './query-builder/query-builder.sample';
@@ -198,8 +213,16 @@ export const appRoutes: Routes = [
         component: CarouselSampleComponent
     },
     {
+        path: 'checkbox',
+        component: CheckboxSampleComponent
+    },
+    {
         path: 'combo',
         component: ComboSampleComponent
+    },
+    {
+        path: 'combo-showcase',
+        component: ComboShowcaseSampleComponent
     },
     {
         path: 'expansionPanel',
@@ -208,6 +231,10 @@ export const appRoutes: Routes = [
     {
         path: 'chip',
         component: ChipsSampleComponent
+    },
+    {
+        path: 'circular-progress',
+        component: CircularProgressSampleComponent
     },
 	{
         path: 'divider',
@@ -224,6 +251,10 @@ export const appRoutes: Routes = [
     {
         path: 'dropDown',
         component: DropDownSampleComponent
+    },
+    {
+        path: 'dropDown-showcase',
+        component: DropDownShowcaseSampleComponent
     },
     {
         path: 'dropDown-density',
@@ -246,6 +277,10 @@ export const appRoutes: Routes = [
         component: IconSampleComponent
     },
     {
+        path: 'icon-button',
+        component: IconButtonSampleComponent
+    },
+    {
         path: 'lazyIconModule',
         loadChildren: () => import('./icon/LazyModule/lazyIcon.module').then(m => m.LazyIconModule)
     },
@@ -258,6 +293,10 @@ export const appRoutes: Routes = [
         component: InputGroupSampleComponent
     },
     {
+        path: 'input-group-showcase',
+        component: InputGroupShowcaseSampleComponent
+    },
+    {
         path: 'layout',
         component: LayoutSampleComponent
     },
@@ -266,12 +305,20 @@ export const appRoutes: Routes = [
         component: ListSampleComponent
     },
     {
+        path: 'list-showcase',
+        component: ListShowcaseSampleComponent
+    },
+    {
         path: 'listPanning',
         component: ListPanningSampleComponent
     },
     {
         path: 'listPerformance',
         component: ListPerformanceSampleComponent
+    },
+    {
+        path: 'linear-progress',
+        component: LinearProgressSampleComponent
     },
     {
         path: 'mask',
@@ -314,6 +361,10 @@ export const appRoutes: Routes = [
         component: RadioSampleComponent
     },
     {
+        path: 'radio-showcase',
+        component: RadioShowcaseSampleComponent
+    },
+    {
         path: 'rating',
         component: RatingSampleComponent
     },
@@ -330,6 +381,10 @@ export const appRoutes: Routes = [
         component: SliderSampleComponent
     },
     {
+        path: 'slider-showcase',
+        component: SliderShowcaseSampleComponent
+    },
+    {
         path: 'range-slider',
         component: RangeSliderComponent
     },
@@ -340,6 +395,14 @@ export const appRoutes: Routes = [
     {
         path: 'snackbar',
         component: SnackbarSampleComponent
+    },
+    {
+        path: 'snackbar-showcase',
+        component: SnackbarShowcaseSampleComponent
+    },
+    {
+        path: 'switch-showcase',
+        component: SwitchShowcaseSampleComponent
     },
     {
         path: 'colors',
@@ -378,6 +441,10 @@ export const appRoutes: Routes = [
         component: TabsSampleComponent
     },
     {
+        path: 'tabs-showcase',
+        component: TabsShowcaseSampleComponent
+    },
+    {
         path: 'tabs-routing',
         component: TabsRoutingSampleComponent,
         children: [
@@ -392,7 +459,7 @@ export const appRoutes: Routes = [
     },
     {
         path: 'toast',
-        component: ToastSampleComponent
+        component: ToastShowcaseSampleComponent
     },
     {
         path: 'virtualForDirective',
@@ -565,9 +632,14 @@ export const appRoutes: Routes = [
     {
         path: 'gridFinJS',
         component: MainComponent
-    }, {
+    },
+    {
         path: 'tree',
         component: TreeSampleComponent
+    },
+    {
+        path: 'tree-showcase',
+        component: TreeShowcaseSampleComponent
     },
     {
         path: 'gridUpdates',
@@ -680,6 +752,10 @@ export const appRoutes: Routes = [
     {
         path: 'stepper',
         component: StepperSampleComponent
+    },
+    {
+        path: 'stepper-showcase',
+        component: IgxStepperShowcaseSampleComponent
     },
     {
         path: 'labelDirective',

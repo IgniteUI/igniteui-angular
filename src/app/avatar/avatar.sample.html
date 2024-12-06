@@ -1,74 +1,39 @@
-<div class="sample-content">
-    <!--Circular Avatars-->
-    <section class="sample-column">
-        <h4 class="sample-title">Circular Avatars</h4>
-        <article class="avatars">
-            <igx-avatar class="avatar-theme" icon="tag_faces" size="small" shape="circle"></igx-avatar>
+<div class="wrapper" [ngStyle]="{'--ig-size': 'var(--ig-size-' + properties.size + ')'}">
+    <article class="avatars-wrapper">
+        <div class="avatars">
+            <h3 class="sample-title">Angular Avatars</h3>
+            <div class="avatar">
+                <p>Avatar with an image</p>
+                <igx-avatar [src]="properties.src" [shape]="properties.shape"></igx-avatar>
+            </div>
 
-            <igx-avatar igxDrag icon="tag_faces" size="medium" shape="circle"></igx-avatar>
+            <div class="avatar">
+                <p>Avatar with initials</p>
+                <igx-avatar [initials]="properties.initials" [shape]="properties.shape"></igx-avatar>
+            </div>
 
-            <igx-avatar icon="tag_faces" size="large" shape="circle"></igx-avatar>
+            <div class="avatar">
+                <p>Avatar with an icon</p>
+                <igx-avatar [shape]="properties.shape"><igx-icon>tag_faces</igx-icon></igx-avatar>
+            </div>
+        </div>
 
-            <igx-avatar initials="AZ" size="small" shape="circle"></igx-avatar>
+        <div class="avatars">
+            <h3 class="sample-title">WebComponents Avatars</h3>
+            <div class="avatar">
+                <p>Avatar with an image</p>
+                <igc-avatar [src]="properties.src" [shape]="properties.shape"></igc-avatar>
+            </div>
 
-            <igx-avatar initials="AZ" size="medium" shape="circle"></igx-avatar>
+            <div class="avatar">
+                <p>Avatar with initials</p>
+                <igc-avatar [initials]="properties.initials" [shape]="properties.shape"></igc-avatar>
+            </div>
 
-            <igx-avatar initials="AZ" size="large" shape="circle"></igx-avatar>
-
-            <igx-avatar src="https://images.unsplash.com/photo-1514041790697-53f1f86214d2?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=b7ac79503fbe78855a346c8d814f95ba&auto=format&fit=crop&w=1650&q=80" size="small" shape="circle"></igx-avatar>
-
-            <igx-avatar src="assets/images/avatar/17.jpg" size="medium" shape="circle"></igx-avatar>
-
-            <igx-avatar src="https://images.unsplash.com/photo-1506804880640-f3205deb1b8b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=2f8dd0c16478825034602dce63d9aaca&auto=format&fit=crop&w=1350&q=80" size="large" shape="circle"></igx-avatar>
-        </article>
-    </section>
-
-    <!--Round Avatars-->
-    <section class="sample-column">
-        <h4 class="sample-title">Rounded Avatars</h4>
-        <article class="avatars">
-            <igx-avatar class="avatar-theme" icon="tag_faces" size="small" shape="rounded"></igx-avatar>
-
-            <igx-avatar igxDrag icon="tag_faces" size="medium" shape="rounded"></igx-avatar>
-
-            <igx-avatar icon="tag_faces" size="large" shape="rounded"></igx-avatar>
-
-            <igx-avatar initials="AZ" size="small" shape="rounded"></igx-avatar>
-
-            <igx-avatar initials="AZ" size="medium" shape="rounded"></igx-avatar>
-
-            <igx-avatar initials="AZ" size="large" shape="rounded"></igx-avatar>
-
-            <igx-avatar src="https://images.unsplash.com/photo-1514041790697-53f1f86214d2?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=b7ac79503fbe78855a346c8d814f95ba&auto=format&fit=crop&w=1650&q=80" size="small" shape="rounded"></igx-avatar>
-
-            <igx-avatar src="assets/images/avatar/17.jpg" size="medium"
-                shape="rounded"></igx-avatar>
-
-            <igx-avatar src="https://images.unsplash.com/photo-1506804880640-f3205deb1b8b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=2f8dd0c16478825034602dce63d9aaca&auto=format&fit=crop&w=1350&q=80" size="large" shape="rounded"></igx-avatar>
-        </article>
-    </section>
-
-    <!--Square Avatars-->
-    <section class="sample-column">
-        <h4 class="sample-title">Square Avatars</h4>
-        <article class="avatars">
-            <igx-avatar icon="tag_faces" size="small"></igx-avatar>
-
-            <igx-avatar icon="tag_faces" size="medium" shape="square"></igx-avatar>
-
-            <igx-avatar icon="tag_faces" size="large"></igx-avatar>
-
-            <igx-avatar initials="AZ" size="small"></igx-avatar>
-
-            <igx-avatar initials="AZ" size="medium"></igx-avatar>
-
-            <igx-avatar initials="AZ" size="large"></igx-avatar>
-
-            <igx-avatar src="assets/images/avatar/18.jpg" size="small"></igx-avatar>
-
-            <igx-avatar src="assets/images/avatar/16.jpg" size="medium"></igx-avatar>
-
-            <igx-avatar src="assets/images/avatar/19.jpg" size="large"></igx-avatar>
-        </article>
-    </section>
+            <div class="avatar">
+                <p>Avatar with an icon</p>
+                <igc-avatar [shape]="properties.shape"><igc-icon name="mood"></igc-icon></igc-avatar>
+            </div>
+        </div>
+    </article>
 </div>

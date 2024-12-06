@@ -24,9 +24,15 @@
     }
 }
 
-.sample-header {
+.header-actions,
+.sample-header,
+.wrapper {
     display: flex;
     align-items: center;
+}
+
+.sample-header {
+    justify-content: space-between;
     height: rem(90px);
     padding: 0 rem(16px);
     background: var(--ph-background);
@@ -40,4 +46,16 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    .header-actions {
+        gap: .2em
+    }
+
+    .toggle-button {
+        color: var(--ph-foreground);
+    }
+}
+
+.header-actions__title {
+    color: var(--ig-primary-900-contrast);
 }
