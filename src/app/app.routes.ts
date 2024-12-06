@@ -12,7 +12,6 @@ import { CircularProgressSampleComponent } from './circular-progress-showcase/ci
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
-import { DialogShowcaseSampleComponent } from './dialog-showcase/dialog-showcase.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
@@ -253,10 +252,6 @@ export const appRoutes: Routes = [
     {
         path: 'dialog',
         component: DialogSampleComponent
-    },
-    {
-        path: 'dialog-showcase',
-        component: DialogShowcaseSampleComponent
     },
     {
         path: 'dropDown',

@@ -744,11 +744,6 @@ export class AppComponent implements OnInit {
             name: 'Combo'
         },
         {
-            link: '/dialog-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Dialog'
-        },
-        {
             link: '/dropDown-showcase',
             icon: 'radio_button_unchecked',
             name: 'DropDown'
