@@ -20,7 +20,6 @@ import { InputSampleComponent } from './input/input.sample';
 import { InputGroupShowcaseSampleComponent } from './input-group-showcase/input-group-showcase.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
-import { ListShowcaseSampleComponent } from './list-showcase/list-showcase.sample';
 import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
 import { ListPerformanceSampleComponent } from './list-performance/list-performance.sample';
 import { LinearProgressSampleComponent } from './linear-progress/linear-progress.sample';
@@ -279,10 +278,6 @@ export const appRoutes: Routes = [
     {
         path: 'list',
         component: ListSampleComponent
-    },
-    {
-        path: 'list-showcase',
-        component: ListShowcaseSampleComponent
     },
     {
         path: 'listPanning',

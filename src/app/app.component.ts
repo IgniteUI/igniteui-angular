@@ -757,16 +757,6 @@ export class AppComponent implements OnInit {
 
     public WcCompareLinks = [
         {
-            link: '/dropDown-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'DropDown'
-        },
-        {
-            link: '/list-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'List'
-        },
-        {
             link: '/stepper-showcase',
             icon: 'radio_button_unchecked',
             name: 'Stepper'
