@@ -6,7 +6,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
-import { CheckboxSampleComponent } from './checkbox/checkbox.sample';
+import { InputControlsSampleComponent } from './input-controls/input-controls.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
 import { CircularProgressSampleComponent } from './circular-progress-showcase/circular-progress-showcase.sample'
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
@@ -34,7 +34,6 @@ import { SliderShowcaseSampleComponent } from './slider-showcase/slider-showcase
 import { SplitterSampleComponent } from './splitter/splitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
 import { SnackbarShowcaseSampleComponent } from './snackbar-showcase/snackbar-showcase.sample';
-import { SwitchShowcaseSampleComponent } from './switch-showcase/switch-showcase.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
 import { TypographySampleComponent } from './styleguide/typography/typography.sample';
@@ -83,7 +82,6 @@ import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { OverlayPresetsSampleComponent } from './overlay/overlay-presets.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
-import { RadioShowcaseSampleComponent } from './radio-showcase/radio-showcase.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
@@ -213,8 +211,8 @@ export const appRoutes: Routes = [
         component: CarouselSampleComponent
     },
     {
-        path: 'checkbox',
-        component: CheckboxSampleComponent
+        path: 'input-controls',
+        component: InputControlsSampleComponent
     },
     {
         path: 'combo',
@@ -361,10 +359,6 @@ export const appRoutes: Routes = [
         component: RadioSampleComponent
     },
     {
-        path: 'radio-showcase',
-        component: RadioShowcaseSampleComponent
-    },
-    {
         path: 'rating',
         component: RatingSampleComponent
     },
@@ -399,10 +393,6 @@ export const appRoutes: Routes = [
     {
         path: 'snackbar-showcase',
         component: SnackbarShowcaseSampleComponent
-    },
-    {
-        path: 'switch-showcase',
-        component: SwitchShowcaseSampleComponent
     },
     {
         path: 'colors',

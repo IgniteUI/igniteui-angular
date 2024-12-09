@@ -140,11 +140,6 @@ export class AppComponent implements OnInit {
             name: 'Carousel'
         },
         {
-            link: '/checkbox',
-            icon: 'check_box',
-            name: 'Checkbox'
-        },
-        {
             link: '/chip',
             icon: 'android',
             name: 'Chips'
@@ -462,6 +457,11 @@ export class AppComponent implements OnInit {
             link: '/icon-button',
             icon: 'favorite',
             name: 'Icon Button'
+        },
+        {
+            link: '/input-controls',
+            icon: 'check_box',
+            name: 'Input Controls'
         },
         {
             link: '/linear-progress',
@@ -782,11 +782,6 @@ export class AppComponent implements OnInit {
             name: 'List'
         },
         {
-            link: '/radio-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Radio'
-        },
-        {
             link: '/snackbar-showcase',
             icon: 'radio_button_unchecked',
             name: 'Snackbar'
@@ -795,11 +790,6 @@ export class AppComponent implements OnInit {
             link: '/stepper-showcase',
             icon: 'radio_button_unchecked',
             name: 'Stepper'
-        },
-        {
-            link: '/switch-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Switch'
         },
         {
             link: '/tabs-showcase',

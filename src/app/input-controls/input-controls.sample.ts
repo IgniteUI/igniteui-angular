@@ -1,20 +1,31 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IgxSwitchComponent } from 'igniteui-angular';
-import { defineComponents, IgcSwitchComponent} from "igniteui-webcomponents";
+import { IgxCheckboxComponent, IgxSwitchComponent, IgxRadioComponent, RadioGroupAlignment, IgxRadioGroupDirective } from 'igniteui-angular';
+import { defineComponents, IgcCheckboxComponent, IgcSwitchComponent, IgcRadioComponent, IgcRadioGroupComponent } from "igniteui-webcomponents";
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
-defineComponents(IgcSwitchComponent);
+defineComponents(IgcCheckboxComponent, IgcSwitchComponent, IgcRadioComponent, IgcRadioGroupComponent);
 
 @Component({
-    selector: 'app-switch-showcase-sample',
-    styleUrls: ['switch-showcase.sample.scss'],
-    templateUrl: 'switch-showcase.sample.html',
+    selector: 'app-input-controls-sample',
+    styleUrls: ['input-controls.sample.scss'],
+    templateUrl: 'input-controls.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    standalone: true,
-    imports: [IgxSwitchComponent]
+    imports: [
+        IgxCheckboxComponent,
+        IgxSwitchComponent,
+        IgxRadioComponent,
+        IgxRadioGroupDirective
+    ]
 })
-export class SwitchShowcaseSampleComponent {
+export class InputControlsSampleComponent {
     public panelConfig : PropertyPanelConfig = {
+        indeterminate: {
+            label: 'Indeterminate Checkbox',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
         required: {
             control: {
                 type: 'boolean',
@@ -40,10 +51,18 @@ export class SwitchShowcaseSampleComponent {
             }
         },
         labelPosition: {
+            label: 'Label Position',
             control: {
                 type: 'button-group',
                 options: ['before', 'after'],
                 defaultValue: 'after'
+            }
+        },
+        alignment: {
+            label: 'Radio Group Alignment',
+            control: {
+                type: 'button-group',
+                options: ['vertical', 'horizontal']
             }
         },
         name: {
@@ -66,5 +85,15 @@ export class SwitchShowcaseSampleComponent {
         this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+    }
+
+    private alignmentMap = {
+        vertical: RadioGroupAlignment.vertical,
+        horizontal: RadioGroupAlignment.horizontal,
+    };
+
+    public get alignment(): RadioGroupAlignment {
+        const alignment = this.propertyChangeService.getProperty('alignment');
+        return this.alignmentMap[alignment] || RadioGroupAlignment.vertical;
     }
 }
