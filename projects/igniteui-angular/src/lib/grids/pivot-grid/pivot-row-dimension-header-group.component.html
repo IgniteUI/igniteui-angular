@@ -9,8 +9,10 @@
     </igx-icon>
 </ng-template>
 
-<ng-container *ngIf="!column.columnGroup">
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-left"></span>
+@if (!column.columnGroup) {
+    @if (grid.hasMovableColumns) {
+        <span class="igx-grid-th__drop-indicator-left"></span>
+    }
     <igx-pivot-row-dimension-header
         role="columnheader"
         class="igx-grid-th--fw"
@@ -26,11 +28,15 @@
         (keydown)="grid.navigation.headerNavigation($event)"
     >
     </igx-pivot-row-dimension-header>
-    <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid-th__resize-handle"
-        [igxPivotResizeHandle]="column"
-        [igxPivotResizeHandleHeader]="this"
-        [attr.draggable]="false"
-        [style.cursor]="colResizingService.resizeCursor">
-    </span>
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-right"></span>
-</ng-container>
+    @if (!column.columnGroup && column.resizable) {
+        <span class="igx-grid-th__resize-handle"
+            [igxPivotResizeHandle]="column"
+            [igxPivotResizeHandleHeader]="this"
+            [attr.draggable]="false"
+            [style.cursor]="colResizingService.resizeCursor">
+        </span>
+    }
+    @if (grid.hasMovableColumns) {
+        <span class="igx-grid-th__drop-indicator-right"></span>
+    }
+}

@@ -1437,7 +1437,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
-         
+
         let col = this;
         let vIndex = -1;
 
@@ -2182,8 +2182,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 grid._pinnedColumns.splice(args.insertAtIndex, 0, this);
             } else {
                 // insert based only on root collection
-                rootPinnedCols.splice(args.insertAtIndex, 0, this);
+                if (this.level === 0) {
+                    rootPinnedCols.splice(args.insertAtIndex, 0, this);
+                }
                 let allPinned = [];
+                // FIX: this is duplicated on every step in the hierarchy....
                 // re-create hierarchy
                 rootPinnedCols.forEach(group => {
                     allPinned.push(group);
@@ -2326,10 +2329,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             columns = columns.filter(c => c.level >= this.level && c !== this && c.parent !== this &&
                 c.topLevelParent === this.topLevelParent);
         }
-         
+
         // If isPreceding, find a target such that when the current column is placed after it, current colummn will receive a visibleIndex === index. This takes into account visible children of the columns.
         // If !isPreceding, finds a column of the same level and visible index that equals the passed index agument (c.visibleIndex === index). No need to consider the children here.
-         
+
         if (isPreceding) {
             columns = columns.filter(c => c.visibleIndex > this.visibleIndex);
             target = columns.find(c => c.level === this.level && c.visibleIndex + (c as any).calcChildren() - this.calcChildren() === index);

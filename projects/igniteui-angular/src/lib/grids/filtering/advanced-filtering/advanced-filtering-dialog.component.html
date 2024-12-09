@@ -1,35 +1,37 @@
-<article *ngIf="grid" class="igx-advanced-filter" igxDrag [ghost]="false" [dragTolerance]="0"
-    (dragStart)="dragStart($event)" (dragMove)="onDragMove($event)" (keydown)="onKeyDown($event)"
-    [ngClass]="{
-        'igx-advanced-filter': true,
-        'igx-advanced-filter--inline': inline
-    }">
-    <igx-query-builder #queryBuilder [locale]="grid.locale"
-        [fields]="this.filterableFields"
-        [expressionTree]="this.grid.advancedFilteringExpressionsTree">
-        <igx-query-builder-header
-            [title]="grid.resourceStrings.igx_grid_advanced_filter_title"
-            igxDragHandle>
-        </igx-query-builder-header>
-    </igx-query-builder>
+@if (grid) {
+    <article class="igx-advanced-filter" igxDrag [ghost]="false" [dragTolerance]="0"
+        (dragStart)="dragStart($event)" (dragMove)="onDragMove($event)" (keydown)="onKeyDown($event)"
+        [ngClass]="{
+            'igx-advanced-filter': true,
+            'igx-advanced-filter--inline': inline
+        }">
+        <igx-query-builder #queryBuilder [locale]="grid.locale"
+            [fields]="this.filterableFields"
+            [expressionTree]="this.grid.advancedFilteringExpressionsTree">
+            <igx-query-builder-header
+                [title]="grid.resourceStrings.igx_grid_advanced_filter_title"
+                igxDragHandle>
+            </igx-query-builder-header>
+        </igx-query-builder>
 
-    <footer class="igx-excel-filter__secondary-footer">
-        <div class="igx-excel-filter__clear">
-            <button igxButton="flat" type="button"
-                (click)="onClearButtonClick($event)">
-                {{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}
-            </button>
-        </div>
-        <div class="igx-excel-filter__cancel">
-            <button igxButton="flat" type="button" (click)="cancelChanges()">
-                {{ grid.resourceStrings.igx_grid_excel_cancel }}
-            </button>
-        </div>
-        <div class="igx-excel-filter__apply">
-            <button igxButton="contained" type="button"
-                (click)="onApplyButtonClick($event)">
-                {{ grid.resourceStrings.igx_grid_excel_apply }}
-            </button>
-        </div>
-    </footer>
-</article>
+        <footer class="igx-excel-filter__secondary-footer">
+            <div class="igx-excel-filter__clear">
+                <button igxButton="flat" type="button"
+                    (click)="onClearButtonClick($event)">
+                    {{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}
+                </button>
+            </div>
+            <div class="igx-excel-filter__cancel">
+                <button igxButton="flat" type="button" (click)="cancelChanges()">
+                    {{ grid.resourceStrings.igx_grid_excel_cancel }}
+                </button>
+            </div>
+            <div class="igx-excel-filter__apply">
+                <button igxButton="contained" type="button"
+                    (click)="onApplyButtonClick($event)">
+                    {{ grid.resourceStrings.igx_grid_excel_apply }}
+                </button>
+            </div>
+        </footer>
+    </article>
+}

@@ -38,7 +38,7 @@ import { IgxTreeService } from '../tree.service';
 import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxIconComponent } from '../../icon/icon.component';
-import { NgTemplateOutlet, NgIf, NgClass, NgFor } from '@angular/common';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { getCurrentResourceStrings } from '../../core/i18n/resources';
 
 // TODO: Implement aria functionality
@@ -154,7 +154,7 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
     providers: [
         { provide: IGX_TREE_NODE_COMPONENT, useExisting: IgxTreeNodeComponent }
     ],
-    imports: [NgTemplateOutlet, NgIf, IgxIconComponent, IgxCheckboxComponent, NgClass, NgFor, IgxCircularProgressBarComponent]
+    imports: [NgTemplateOutlet, IgxIconComponent, IgxCheckboxComponent, NgClass, IgxCircularProgressBarComponent]
 })
 export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements IgxTreeNode<T>, OnInit, OnDestroy {
     /**

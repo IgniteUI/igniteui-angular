@@ -3,12 +3,11 @@
         <h4 class="sample-title">Animations categories</h4>
         <div>
             <igx-list (itemClicked)="categoryItemClicked($event)">
-                <igx-list-item
-                    igxRipple
-                    *ngFor="let category of animationsCategories"
-                >
-                    <p>{{ category }}</p>
-                </igx-list-item>
+                @for (category of animationsCategories; track category) {
+                    <igx-list-item igxRipple>
+                        <p>{{ category }}</p>
+                    </igx-list-item>
+                }
             </igx-list>
         </div>
     </article>
@@ -16,9 +15,11 @@
         <h4 class="sample-title">Animations</h4>
         <div>
             <igx-list (itemClicked)="playAnimation($event)">
-                <igx-list-item igxRipple *ngFor="let animation of animations">
-                    <p>{{ animation.name }}</p>
-                </igx-list-item>
+                @for (animation of animations; track animation) {
+                    <igx-list-item igxRipple>
+                        <p>{{ animation.name }}</p>
+                    </igx-list-item>
+                }
             </igx-list>
         </div>
     </article>

@@ -1,4 +1,4 @@
-import { DOCUMENT, NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
     Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute
@@ -101,7 +101,6 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
     ],
     imports: [
-        NgIf,
         NgTemplateOutlet,
         NgClass,
         FormsModule,

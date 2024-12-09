@@ -1,9 +1,11 @@
-<div *ngIf="esf.column"
-    [ngClass]="esf.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select'"
-    tabindex="0"
-    (click)="esf.onSelect()"
-    role="button"
-    [attr.aria-pressed]="esf.column.selected">
-    <span>{{esf.grid.resourceStrings.igx_grid_excel_select }}</span>
-    <igx-icon family="default" name="selected"></igx-icon>
-</div>
+@if (esf.column) {
+    <div
+        [ngClass]="esf.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select'"
+        tabindex="0"
+        (click)="esf.onSelect()"
+        role="button"
+        [attr.aria-pressed]="esf.column.selected">
+        <span>{{esf.grid.resourceStrings.igx_grid_excel_select }}</span>
+        <igx-icon family="default" name="selected"></igx-icon>
+    </div>
+}

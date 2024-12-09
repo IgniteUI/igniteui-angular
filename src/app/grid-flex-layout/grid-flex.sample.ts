@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { IgxColumnComponent, IgxFlexDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxHierarchicalGridComponent, IgxLayoutDirective, IgxPaginatorComponent, IgxRowIslandComponent, IgxTreeGridComponent } from 'igniteui-angular';
 
 
@@ -8,7 +7,7 @@ import { IgxColumnComponent, IgxFlexDirective, IgxGridComponent, IgxGridToolbarA
     selector: 'app-grid-flex-sample',
     styleUrls: ['grid-flex.sample.scss'],
     templateUrl: 'grid-flex.sample.html',
-    imports: [IgxLayoutDirective, IgxFlexDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgFor, IgxColumnComponent, IgxPaginatorComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent]
+    imports: [IgxLayoutDirective, IgxFlexDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent, IgxPaginatorComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent]
 })
 
 export class GridFlexSampleComponent implements OnInit, AfterViewInit {

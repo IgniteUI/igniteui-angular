@@ -1,20 +1,21 @@
 <div class="igx-calendar-view__items" role="row">
-    <span
-        igxCalendarMonth
-        #item="igxCalendarMonth"
-        *ngFor="let month of range; trackBy: monthTracker"
-        class="igx-calendar-view__item"
-        role="gridcell"
-        [attr.id]="month.getTime()"
-        [attr.aria-label]="formattedMonth(month).long"
-        [attr.aria-selected]="item.isSelected"
-        [value]="month"
-        [date]="date"
-        [showActive]="showActive"
-        (itemSelection)="selectDate($event)"
-    >
-        <span class="igx-calendar-view__item-inner" aria-hidden="true">
-            {{ formattedMonth(month).formatted | titlecase }}
+    @for (month of range; track monthTracker($index, month)) {
+        <span
+            igxCalendarMonth
+            #item="igxCalendarMonth"
+            class="igx-calendar-view__item"
+            role="gridcell"
+            [attr.id]="month.getTime()"
+            [attr.aria-label]="formattedMonth(month).long"
+            [attr.aria-selected]="item.isSelected"
+            [value]="month"
+            [date]="date"
+            [showActive]="showActive"
+            (itemSelection)="selectDate($event)"
+        >
+            <span class="igx-calendar-view__item-inner" aria-hidden="true">
+                {{ formattedMonth(month).formatted | titlecase }}
+            </span>
         </span>
-    </span>
+    }
 </div>

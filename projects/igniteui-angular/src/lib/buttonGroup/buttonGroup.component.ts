@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import {
     AfterViewInit,
     Component,
@@ -58,7 +57,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-buttongroup',
     templateUrl: 'buttongroup-content.component.html',
-    imports: [NgFor, IgxButtonDirective, IgxRippleDirective, NgIf, IgxIconComponent]
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     /**

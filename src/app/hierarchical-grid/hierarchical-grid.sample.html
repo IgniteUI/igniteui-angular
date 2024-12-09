@@ -115,8 +115,8 @@
             <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
         </igx-row-island>
         <!-- <igx-row-island [key]="'childData2'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true" >
-                <igx-column field="ChildLevels" [groupable]="true"></igx-column>
-                <igx-column field="ProductName" [groupable]="true"></igx-column>
+            <igx-column field="ChildLevels" [groupable]="true"></igx-column>
+            <igx-column field="ProductName" [groupable]="true"></igx-column>
         </igx-row-island>  -->
         <ng-template let-data igxRowDragGhost>
             <div class="dragGhost">
@@ -154,27 +154,37 @@
         <button igxButton="contained" (click)="layoutsReady = !layoutsReady">Toggle child layouts</button>
     </div>
     <igx-hierarchical-grid [batchEditing]="true"
-    [rowEditable]="true" [primaryKey]="'ID'"  [data]="localData" [height]="'600px'" [width]="'100%'" #hGrid2>
-        <igx-column *ngIf="columnsReady" field="ID"></igx-column>
-        <igx-column *ngIf="columnsReady" field="ProductName"></igx-column>
-        <igx-row-island *ngIf="layoutsReady" [key]="'childData'" [primaryKey]="'ID'" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
-            [allowFiltering]="true">
+        [rowEditable]="true" [primaryKey]="'ID'"  [data]="localData" [height]="'600px'" [width]="'100%'" #hGrid2>
+        @if (columnsReady) {
             <igx-column field="ID"></igx-column>
-            <igx-column field="ChildLevels"></igx-column>
-            <div *ngIf='riToggle'>
-                <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
-                    [allowFiltering]="true"></igx-row-island>
-            </div>
-        </igx-row-island>
-
-
-
-        <div *ngIf='!riToggle'>
-            <igx-row-island [key]="'childData2'" [autoGenerate]="false">
-                <igx-column field="ChildLevels" [groupable]="true"></igx-column>
-                <igx-column field="ProductName" [groupable]="true"></igx-column>
+        }
+        @if (columnsReady) {
+            <igx-column field="ProductName"></igx-column>
+        }
+        @if (layoutsReady) {
+            <igx-row-island [key]="'childData'" [primaryKey]="'ID'" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
+                [allowFiltering]="true">
+                <igx-column field="ID"></igx-column>
+                <igx-column field="ChildLevels"></igx-column>
+                @if (riToggle) {
+                    <div>
+                        <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
+                        [allowFiltering]="true"></igx-row-island>
+                    </div>
+                }
             </igx-row-island>
-        </div>
+        }
+
+
+
+        @if (!riToggle) {
+            <div>
+                <igx-row-island [key]="'childData2'" [autoGenerate]="false">
+                    <igx-column field="ChildLevels" [groupable]="true"></igx-column>
+                    <igx-column field="ProductName" [groupable]="true"></igx-column>
+                </igx-row-island>
+            </div>
+        }
     </igx-hierarchical-grid>
 
     <h4 class="sample-title">Sample 4</h4>
@@ -188,11 +198,15 @@
         <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
         <igx-column field="ChildLevels" [resizable]="true" [groupable]="true"></igx-column>
         <igx-column field="ProductName" [hasSummary]="true"></igx-column>
-        <igx-column *ngFor="let c of columns" [field]="c"></igx-column>
+        @for (c of columns; track c) {
+            <igx-column [field]="c"></igx-column>
+        }
         <igx-row-island #ri1 [key]="'childData'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
             [allowFiltering]="true">
             <igx-column field="ID" header='ID' [hasSummary]='true' [dataType]="'number'"></igx-column>
-            <igx-column *ngFor="let c of childColumns" [field]="c"></igx-column>
+            @for (c of childColumns; track c) {
+                <igx-column [field]="c"></igx-column>
+            }
         </igx-row-island>
     </igx-hierarchical-grid>
 </div>
