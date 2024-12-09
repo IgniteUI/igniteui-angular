@@ -52,13 +52,52 @@ import { IgxDialogComponent } from "../dialog/dialog.component";
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
-import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
+import { IgxFieldValidatorDirective, IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
 const DEFAULT_PIPE_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
+
+export interface IFieldValidator {
+    type: string,
+    value?: any
+}
+
+export class IgxFieldValidators {
+    public static Required(): IFieldValidator {
+        return {type: 'required'};
+    }
+
+    public static Min(min: number): IFieldValidator {
+        return {type: 'min', value: min};
+    }
+
+    public static Max(max: number): IFieldValidator {
+        return {type: 'max', value: max};
+    }
+
+    public static MinLength(length: number): IFieldValidator {
+        return {type: 'minlength', value: length};
+    }
+
+    public static MaxLength(length: number): IFieldValidator {
+        return {type: 'maxlength', value: length};
+    }
+
+    public static MinDate(date: Date): IFieldValidator {
+        return {type: 'mindate', value: date};
+    }
+
+    public static MaxDate(date: Date): IFieldValidator {
+        return {type: 'maxdate', value: date};
+    }
+
+    public static Pattern(pattern: string | RegExp): IFieldValidator {
+        return {type: 'pattern', value: pattern};
+    }
+}
 
 @Pipe({
     name: 'fieldFormatter',
@@ -149,6 +188,7 @@ class ExpressionOperandItem extends ExpressionItem {
         IgxOverlayOutletDirective,
         DatePipe,
         IgxFieldFormatterPipe,
+        IgxFieldValidatorDirective,
         IgxIconButtonDirective,
         IgxToggleActionDirective,
         IgxComboComponent,
@@ -320,6 +360,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('searchValueInput', { read: ElementRef })
     private searchValueInput: ElementRef;
+
+    @ViewChild('searchValueInput', { read: IgxInputDirective })
+    private valueInput: IgxInputDirective;
 
     @ViewChild('picker')
     private picker: IgxDatePickerComponent | IgxTimePickerComponent;
@@ -858,12 +901,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public operandCanBeCommitted(): boolean {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
-
         return this.selectedField && this.selectedCondition &&
             (
                 (
                     ((!Array.isArray(this.searchValue.value) && !!this.searchValue.value) || (Array.isArray(this.searchValue.value) && this.searchValue.value.length !== 0)) &&
-                    !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
+                    !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery) &&
+                    (!!this.valueInput && ((this._editedExpression.inAddMode && this.valueInput?.nativeElement.validity.valid)) || (this._editedExpression.inEditMode && (this.valueInput?.nativeElement.validity.valid || !(this.valueInput as any)?.isTouchedOrDirty)))
                 ) ||
                 (
                     this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields?.length > 0
