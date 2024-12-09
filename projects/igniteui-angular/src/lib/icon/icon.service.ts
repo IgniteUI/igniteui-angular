@@ -156,21 +156,6 @@ export class IgxIconService {
         }
     }
 
-    public _setIconRef(name: string, family: string, icon: IconMeta, overwrite = false) {
-        let familyRef = this._iconRefs.get(family);
-
-        if (!familyRef) {
-            familyRef = new Map<string, IconMeta>();
-            this._iconRefs.set(family, familyRef);
-        }
-
-        if (overwrite) {
-            const familyType = this.familyType(icon?.family);
-            familyRef.set(name, { ...icon, type: icon.type ?? familyType });
-            this._iconLoaded.next({ name, family });
-        }
-    }
-
     /**
      *  Creates a family to className relationship that is applied to the IgxIconComponent
      *   whenever that family name is used.
@@ -197,6 +182,15 @@ export class IgxIconService {
         }
     }
 
+    private _setIconRef(name: string, family: string, icon: IconMeta, overwrite = false) {
+        if (overwrite) {
+            this.setIconRef(name, family, {
+                ...icon,
+                external: false
+            });
+        }
+    }
+
     /**
      *  Similar to addIconRef, but always sets the icon reference meta for an icon in a meta family.
      * ```typescript
@@ -211,8 +205,9 @@ export class IgxIconService {
             this._iconRefs.set(family, familyRef);
         }
 
+        const external = icon.external ?? true;
         const familyType = this.familyType(icon?.family);
-        familyRef.set(name, { ...icon, type: icon.type ?? familyType, external: true });
+        familyRef.set(name, { ...icon, type: icon.type ?? familyType, external });
 
         this._iconLoaded.next({ name, family });
     }
