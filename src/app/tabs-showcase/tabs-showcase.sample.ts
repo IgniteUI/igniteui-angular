@@ -1,8 +1,26 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation} from '@angular/core';
-import { NgFor } from '@angular/common';
-import { IgxAvatarComponent, IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxPrefixDirective, IgxRippleDirective, IgxSuffixDirective, IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular';
-import { defineComponents, IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent } from 'igniteui-webcomponents';
-import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
+import {
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    inject,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    OnInit,
+    ElementRef, ChangeDetectorRef
+} from '@angular/core';
+
+import {
+    IgxButtonDirective,
+    IgxIconComponent,
+    IgxTabContentComponent,
+    IgxTabHeaderComponent,
+    IgxTabHeaderIconDirective,
+    IgxTabHeaderLabelDirective,
+    IgxTabItemComponent,
+    IgxTabsComponent
+} from 'igniteui-angular';
+import {defineComponents, IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent} from 'igniteui-webcomponents';
+import {PropertyChangeService, Properties} from '../properties-panel/property-change.service';
 
 defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
 
@@ -13,64 +31,132 @@ defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [IgxButtonDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxRippleDirective, IgxIconComponent, IgxTabHeaderIconDirective, IgxIconButtonDirective, IgxTabHeaderLabelDirective, IgxTabContentComponent, IgxListComponent, NgFor, IgxListItemComponent, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective, IgxPrefixDirective, IgxSuffixDirective]
+    imports: [IgxButtonDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxIconComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabContentComponent]
 })
-export class TabsShowcaseSampleComponent {
-    public panelConfig: PropertyPanelConfig = {
-        alignment: {
-            control: {
-                type: 'select',
-                options: ['start', 'end', 'center', 'justify'],
-                defaultValue: 'start'
-            }
-        },
-        activation: {
-            control: {
-                type: 'button-group',
-                options: ['manual', 'auto'],
-                defaultValue: 'auto'
-            }
-        }
-    }
+export class TabsShowcaseSampleComponent implements OnInit {
+    @ViewChild('angularTabs', {static: false}) public angularTabsRef!: ElementRef;
+    @ViewChild('webComponentsTabs', {static: false}) public webComponentsTabsRef!: ElementRef;
+    @ViewChild('customControlsTemplate', {static: true}) public customControlsTemplate!: TemplateRef<any>;
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
-        this.propertyChangeService.setPanelConfig(this.panelConfig);
+    public contacts: any[] = [
+        {id: '1', text: 'Terrance Orta', phone: '770-504-2217'},
+        {id: '2', text: 'Richard Mahoney', phone: '423-676-2869'},
+        {id: '3', text: 'Donna Price', phone: '859-496-2817'},
+        {id: '4', text: 'Lisa Landers', phone: '901-747-3428'}
+    ];
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+    public selectedTabId = this.contacts[0]?.id;
+    public indexMessage: string;
+
+    private pcs = inject(PropertyChangeService);
+    private cdr = inject(ChangeDetectorRef);
+
+    constructor() {
+        this.pcs.setPanelConfig({
+            alignment: {
+                control: {
+                    type: 'select',
+                    options: ['start', 'end', 'center', 'justify'],
+                    defaultValue: 'start'
+                }
+            },
+            activation: {
+                control: {
+                    type: 'button-group',
+                    options: ['manual', 'auto'],
+                    defaultValue: 'auto'
+                }
+            },
+            hideIcon: {
+                label: 'Hide icons',
+                control: {type: 'boolean', defaultValue: false}
+            },
+            hideText: {
+                label: 'Hide Text',
+                control: {type: 'boolean', defaultValue: false}
+            }
+        });
+
+        this.pcs.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
     }
 
-    public contacts: any[] = [{
-        avatar: 'assets/images/avatar/1.jpg',
-        favorite: true,
-        key: '1',
-        link: '#',
-        phone: '770-504-2217',
-        text: 'Terrance Orta'
-    }, {
-        avatar: 'assets/images/avatar/2.jpg',
-        favorite: false,
-        key: '2',
-        link: '#',
-        phone: '423-676-2869',
-        text: 'Richard Mahoney'
-    }, {
-        avatar: 'assets/images/avatar/3.jpg',
-        favorite: false,
-        key: '3',
-        link: '#',
-        phone: '859-496-2817',
-        text: 'Donna Price'
-    }, {
-        avatar: 'assets/images/avatar/4.jpg',
-        favorite: false,
-        key: '4',
-        link: '#',
-        phone: '901-747-3428',
-        text: 'Lisa Landers'
-    }];
+    public ngOnInit() {
+        this.pcs.setCustomControls(this.customControlsTemplate);
+    }
+
+    /**
+     * Select a tab programmatically by its ID.
+     * Use ChangeDetectorRef to notify Angular about the change,
+     * preventing the ExpressionChangedAfterItHasBeenCheckedError.
+     */
+    public selectTab(id: string) {
+        this.selectedTabId = id;
+        this.cdr.detectChanges(); // Notify Angular of the programmatic change
+    }
+
+    /**
+     * Add a new tab and automatically select it.
+     */
+    public addTab() {
+        const newContact = {
+            id: (this.contacts.length + 1).toString(),
+            text: `New Contact ${this.contacts.length + 1}`,
+            phone: '555-555-5555'
+        };
+
+        this.contacts.push(newContact);
+
+        // Select the new tab
+        this.selectTab(newContact.id);
+    }
+
+    /**
+     * Remove the last tab and select the previous one if available.
+     */
+    public removeTab() {
+        if (this.contacts.length > 0) {
+            this.contacts.pop();
+
+            // Select the previous tab or none if empty
+            this.selectTab(this.contacts[this.contacts.length - 1]?.id || '');
+        }
+    }
+
+    /**
+     * Update the tab index for next or previous navigation.
+     * Use modular arithmetic for circular navigation.
+     */
+    private updateTabIndex(forward: boolean) {
+        const currentIndex = this.contacts.findIndex(contact => contact.id === this.selectedTabId);
+        if (currentIndex !== -1) {
+            const nextIndex = forward
+                // Move forward, loop to start
+                ? (currentIndex + 1) % this.contacts.length
+                // Move backward, loop to end
+                : (currentIndex - 1 + this.contacts.length) % this.contacts.length;
+            this.selectTab(this.contacts[nextIndex].id); // Select the new tab
+        }
+    }
+
+    public nextTab() {
+        this.updateTabIndex(true); // Move forward
+    }
+
+    public previousTab() {
+        this.updateTabIndex(false); // Move backward
+    }
+
+    public selectTabAtIndex(index: number): string {
+        if (index >= 0 && index < this.contacts.length) {
+            this.selectTab(this.contacts[index].id);
+            return this.indexMessage = `Tab at index ${index} selected: ${this.contacts[index].text}`;
+        } else {
+            return this.indexMessage = `Tab at index ${index} does not exist.`;
+        }
+    }
 }
 

@@ -155,6 +155,11 @@ export class AppComponent implements OnInit {
             name: 'Combo'
         },
         {
+            link: '/combo-showcase',
+            icon: 'arrow_drop_down_circle',
+            name: 'Combo (showcase)'
+        },
+        {
             link: '/datePicker',
             icon: 'date_range',
             name: 'DatePicker'
@@ -535,11 +540,6 @@ export class AppComponent implements OnInit {
             name: 'Reactive Form'
         },
         {
-            link: '/select',
-            icon: 'arrow_drop_down_circle',
-            name: 'Select'
-        },
-        {
             link: '/slider',
             icon: 'tab',
             name: 'Slider'
@@ -757,14 +757,9 @@ export class AppComponent implements OnInit {
 
     public WcCompareLinks = [
         {
-            link: '/combo-showcase',
+            link: '/dropDown-showcase',
             icon: 'radio_button_unchecked',
-            name: 'Combo'
-        },
-        {
-            link: '/input-group-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Input Group'
+            name: 'DropDown'
         },
         {
             link: '/list-showcase',
@@ -772,19 +767,9 @@ export class AppComponent implements OnInit {
             name: 'List'
         },
         {
-            link: '/snackbar-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Snackbar'
-        },
-        {
             link: '/stepper-showcase',
             icon: 'radio_button_unchecked',
             name: 'Stepper'
-        },
-        {
-            link: '/tabs-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Tabs'
         },
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 

@@ -1,48 +1,24 @@
 <div class="combo-sample">
     <section class="combo-sample__section">
-        <size-selector #sizeSelector></size-selector>
+        <h1 class="combo-sample__title">Remote Binding (Combo & Simple-combo)</h1>
+        <igx-combo #remoteCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
+                   [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'" placeholder="Product(s)"
+                   (dataPreLoad)="dataLoading()" (searchInputUpdate)="searchInput($event)"
+                   (selectionChanging)="handleSelectionChanging($event)" (closing)="onClosing()"
+                   (opening)="onOpening()">
+            <label igxLabel>Combo</label>
+        </igx-combo>
+        <igx-toast #loadingToast></igx-toast>
 
         <!-- Simple combo -->
-        <igx-simple-combo #densityCombo [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo"
-                          required [data]="uniqueFalsyData" displayKey="field" valueKey="value">
-            <label igxLabel>Falsy unique values (simple-combo)</label>
-            <igx-hint>Select a unique falsy value</igx-hint>
+        <igx-simple-combo #remoteSimpleCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
+            [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'" placeholder="Product"
+            (dataPreLoad)="onSimpleComboDataLoading()" (closing)="onSimpleComboClosing()"
+            (opened)="onSimpleComboOpened()" (closed)="onSimpleComboClosed()"
+            (selectionChanging)="onSimpleComboSelectionChanging($event)"
+            (searchInputUpdate)="onSimpleComboSearchInputUpdate($event)">
+            <label igxLabel>Simple Combo</label>
         </igx-simple-combo>
-    </section>
-
-    <section class="combo-sample__section">
-        <h1 class="combo-sample__title">Normal and simple combo next to each other</h1>
-        <igx-switch (click)="isDisabled = !isDisabled">{{isDisabled? 'Enable' : 'Disable'}}</igx-switch>
-        <form class="combo-sample__form" [style.--ig-size]="'var(--ig-size-' + sizeSelector.size + ')'">
-            <div class="combo-sample__row combo-sample__row--stretch">
-                <!-- Simple combo -->
-                <igx-combo [allowCustomValues]="true"
-                           name="falsyValueCombo"
-                           required
-                           [data]="uniqueFalsyData"
-                           displayKey="field"
-                           valueKey="value"
-                           type="border"
-                           [disabled]="isDisabled">
-                    <label igxLabel>Falsy unique values (Normal combo)</label>
-                    <igx-hint>Select a unique falsy value</igx-hint>
-                </igx-combo>
-                <igx-simple-combo  #simpleCombo class="input-container"
-                           name="anyName" #comboModel="ngModel"
-                           [(ngModel)]="singleValue"
-                           minlength="2"
-                           required
-                           type="border"
-                           [data]="items"
-                           [displayKey]="valueKeyVar"
-                           [disabled]="isDisabled"
-                           [valueKey]="valueKeyVar"
-                           [groupKey]="valueKeyVar ? 'region' : ''" >
-                    <label igxLabel>If there is an ellipsis the required indicator is gone Lorem ipsum dolor sit</label>
-                    <igx-hint>Hint text.</igx-hint>
-                </igx-simple-combo>
-            </div>
-        </form>
     </section>
 
     <section class="combo-sample__section">
@@ -63,72 +39,6 @@
                 <igx-hint>Please select the states you've visited</igx-hint>
             </igx-combo>
         </form>
-    </section>
-
-    <section class="combo-sample__section">
-        <h1 class="combo-sample__title">Reactive Form</h1>
-        <form class="input-group-form" [formGroup]="user">
-            <div class="container">
-                <igx-combo #combo1 type="line" class="input-container" [itemsMaxHeight]="130" [data]="genres"
-                    [valueKey]="'type'" [displayKey]="'type'" formControlName="genres"
-                    searchPlaceholder="Search...">
-                    <label igxLabel>States</label>
-                </igx-combo>
-            </div>
-        </form>
-    </section>
-
-    <section class="combo-sample__section">
-        <h1 class="combo-sample__title">Remote Binding</h1>
-        <igx-combo #remoteCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
-            [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'" placeholder="Product(s)"
-            (dataPreLoad)="dataLoading()" (searchInputUpdate)="searchInput($event)"
-            (selectionChanging)="handleSelectionChanging($event)" (closing)="onClosing()"
-            (opening)="onOpening()">
-                    <label igxLabel>Combo</label>
-        </igx-combo>
-        <igx-toast #loadingToast></igx-toast>
-
-        <!-- Simple combo -->
-        <igx-simple-combo #remoteSimpleCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
-                          [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'" placeholder="Product"
-                          (dataPreLoad)="onSimpleComboDataLoading()" (closing)="onSimpleComboClosing()"
-                          (opened)="onSimpleComboOpened()" (closed)="onSimpleComboClosed()"
-                          (selectionChanging)="onSimpleComboSelectionChanging($event)"
-                          (searchInputUpdate)="onSimpleComboSearchInputUpdate($event)">
-            <label igxLabel>Simple Combo</label>
-        </igx-simple-combo>
-    </section>
-
-    <section class="combo-sample__section">
-        <h1 class="combo-sample__title">Simple combo that opens on clear by handling its selectionChanging event</h1>
-        <igx-simple-combo
-                    #simpleComboOpenOnClear
-                    [(ngModel)]="singleValue"
-                    type="border"
-                    [data]="items"
-                    [displayKey]="valueKeyVar"
-                    [disabled]="isDisabled"
-                    [valueKey]="valueKeyVar"
-                    [groupKey]="valueKeyVar ? 'region' : ''"
-                    (selectionChanging)="handleSelectionChanging($event)">
-                <label igxLabel>States</label>
-        </igx-simple-combo>
-        <h1 class="combo-sample__title">Simple combo that opens after its templated clear icon is clicked</h1>
-        <igx-simple-combo
-                    #simpleComboOpenOnClearWithTemplate
-                    [(ngModel)]="singleValue"
-                    type="border"
-                    [data]="items"
-                    [displayKey]="valueKeyVar"
-                    [disabled]="isDisabled"
-                    [valueKey]="valueKeyVar"
-                    [groupKey]="valueKeyVar ? 'region' : ''" >
-                <label igxLabel>States</label>
-                <ng-template igxComboClearIcon>
-                    <igx-icon (click)="simpleComboOpenOnClearWithTemplate.open()">cancel</igx-icon>
-                </ng-template>
-        </igx-simple-combo>
     </section>
 
     <section class="combo-sample__section">
@@ -168,16 +78,16 @@
             <button igxButton (click)="changeOverlaySettings(0)">Default (Auto)</button>
         </igx-buttongroup>
         <igx-combo #playgroundCombo [placeholder]="'Locations'"
-            [showSearchCaseIcon]='true'
-            (addition)="handleAddition($event)"
-            (selectionChanging)="handleSelectionChanging($event)"
-            [data]="items"
-            [allowCustomValues]="customValuesFlag"
-            [autoFocusSearch]="autoFocusSearch"
-            [disableFiltering]="disableFilteringFlag"
-            [displayKey]="valueKeyVar"
-            [valueKey]="valueKeyVar"
-            [groupKey]="valueKeyVar ? 'region' : ''">
+                   [showSearchCaseIcon]='true'
+                   (addition)="handleAddition($event)"
+                   (selectionChanging)="handleSelectionChanging($event)"
+                   [data]="items"
+                   [allowCustomValues]="customValuesFlag"
+                   [autoFocusSearch]="autoFocusSearch"
+                   [disableFiltering]="disableFilteringFlag"
+                   [displayKey]="valueKeyVar"
+                   [valueKey]="valueKeyVar"
+                   [groupKey]="valueKeyVar ? 'region' : ''">
             <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
                 <div class="state-card--simple">
                     <div class="display-value--main">{{display[key]}}</div>
@@ -197,7 +107,7 @@
                 <div class="custom-combo-footer">This is a footer</div>
             </ng-template>
             <ng-template *ngIf="currentDataType !== 'primitive'" #headerItemTemplate let-display
-                let-key="groupKey">
+                         let-key="groupKey">
                 <div>Group header for {{display[key]}}</div>
             </ng-template>
             <ng-template igxComboAddItem>
@@ -213,5 +123,34 @@
                 <div class="display-value--sub">In Region {{display.region}}</div>
             </div>
         </ng-template>
+    </section>
+
+    <section class="combo-sample__section">
+        <h1 class="combo-sample__title">Simple combo that opens on clear by handling its selectionChanging event</h1>
+        <igx-simple-combo
+                    #simpleComboOpenOnClear
+                    [(ngModel)]="singleValue"
+                    [data]="items"
+                    [displayKey]="valueKeyVar"
+                    [disabled]="isDisabled"
+                    [valueKey]="valueKeyVar"
+                    [groupKey]="valueKeyVar ? 'region' : ''"
+                    (selectionChanging)="handleSelectionChanging($event)">
+                <label igxLabel>States</label>
+        </igx-simple-combo>
+        <h1 class="combo-sample__title">Simple combo that opens after its templated clear icon is clicked</h1>
+        <igx-simple-combo
+                    #simpleComboOpenOnClearWithTemplate
+                    [(ngModel)]="singleValue"
+                    [data]="items"
+                    [displayKey]="valueKeyVar"
+                    [disabled]="isDisabled"
+                    [valueKey]="valueKeyVar"
+                    [groupKey]="valueKeyVar ? 'region' : ''" >
+                <label igxLabel>States</label>
+                <ng-template igxComboClearIcon>
+                    <igx-icon (click)="simpleComboOpenOnClearWithTemplate.open()">cancel</igx-icon>
+                </ng-template>
+        </igx-simple-combo>
     </section>
 </div>

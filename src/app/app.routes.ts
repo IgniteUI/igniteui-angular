@@ -17,7 +17,6 @@ import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { IconButtonSampleComponent } from './icon-button/icon-button.sample'
 import { InputSampleComponent } from './input/input.sample';
-import { InputGroupSampleComponent } from './input-group/input-group.sample';
 import { InputGroupShowcaseSampleComponent } from './input-group-showcase/input-group-showcase.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
@@ -32,7 +31,6 @@ import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
 import { SliderShowcaseSampleComponent } from './slider-showcase/slider-showcase.sample';
 import { SplitterSampleComponent } from './splitter/splitter.sample';
-import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
 import { SnackbarShowcaseSampleComponent } from './snackbar-showcase/snackbar-showcase.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
@@ -44,7 +42,6 @@ import {
     BottomNavRoutingView2Component,
     BottomNavRoutingView3Component
 } from './bottomnav-routing/bottomnav-routing-views.sample';
-import { TabsSampleComponent } from './tabs/tabs.sample';
 import { TabsShowcaseSampleComponent } from './tabs-showcase/tabs-showcase.sample';
 import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
 import {
@@ -91,7 +88,6 @@ import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-upd
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
-import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample';
@@ -185,10 +181,6 @@ export const appRoutes: Routes = [
         component: BannerSampleComponent
     },
     {
-        path: 'select',
-        component: SelectSampleComponent
-    },
-    {
         path: 'buttons',
         component: ButtonSampleComponent
     },
@@ -278,10 +270,6 @@ export const appRoutes: Routes = [
     },
     {
         path: 'input-group',
-        component: InputGroupSampleComponent
-    },
-    {
-        path: 'input-group-showcase',
         component: InputGroupShowcaseSampleComponent
     },
     {
@@ -378,10 +366,6 @@ export const appRoutes: Routes = [
     },
     {
         path: 'snackbar',
-        component: SnackbarSampleComponent
-    },
-    {
-        path: 'snackbar-showcase',
         component: SnackbarShowcaseSampleComponent
     },
     {
@@ -418,10 +402,6 @@ export const appRoutes: Routes = [
     },
     {
         path: 'tabs',
-        component: TabsSampleComponent
-    },
-    {
-        path: 'tabs-showcase',
         component: TabsShowcaseSampleComponent
     },
     {
@@ -721,7 +701,7 @@ export const appRoutes: Routes = [
         path: 'pivot-state',
         component: PivotGridStateSampleComponent
     },
-     {
+    {
         path: 'pivot-noop',
         component: PivotGridNoopSampleComponent
     },

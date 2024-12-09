@@ -1,101 +1,85 @@
 <div class="items-wrapper">
     <div class="sample-wrapper">
-        <strong>Angular Tabs</strong>
+        <strong>Angular</strong>
         <igx-tabs
             [tabAlignment]="properties.alignment"
-            [activation]="properties.activation"
-        >
-            <igx-tab-item>
-                <igx-tab-header igxRipple>
-                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
-                    <span igxTabHeaderLabel>Tab 1</span>
-                </igx-tab-header>
-                <igx-tab-content>
-                    Content 1
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                </igx-tab-content>
-            </igx-tab-item>
+            [activation]="properties.activation">
 
-            <igx-tab-item>
-                <igx-tab-header igxRipple>
-                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
-                    <span igxTabHeaderLabel>Tab 2</span>
-                </igx-tab-header>
-                <igx-tab-content>
-                    <div class="sample-scrollable">
-                        <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
-                            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
-                                            *ngFor="let contact of contacts">
-                                <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
-                                <p igxListLineTitle>{{contact.text}}</p>
-                                <span igxListLineSubTitle>{{contact.phone}}</span>
-                                <igx-icon igxListAction>phone</igx-icon>
-                            </igx-list-item>
-                        </igx-list>
-                    </div>
-                </igx-tab-content>
-            </igx-tab-item>
-
-            <igx-tab-item>
-                <igx-tab-header igxRipple>
-                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
-                    <span igxTabHeaderLabel>Tab 3 Settings and Configuration Options for Advanced User Preferences and System Customization</span>
-                </igx-tab-header>
-                <igx-tab-content>
-                    Content 3
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                </igx-tab-content>
-            </igx-tab-item>
-
-            <igx-tab-item [disabled]="true">
-                <igx-tab-header>
-                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
-                    <span igxTabHeaderLabel>Tab 4 Disabled</span>
-                </igx-tab-header>
-                <igx-tab-content>
-                    Content 4
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                </igx-tab-content>
-            </igx-tab-item>
+            @for (contact of contacts; track contact.id) {
+                <igx-tab-item [selected]="contact.id === selectedTabId">
+                    <igx-tab-header>
+                        @if(!properties.hideIcon) {
+                            <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                        }
+                        @if(!properties.hideText) {
+                            <span igxTabHeaderLabel>{{ contact.text }}</span>
+                        }
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        Phone: {{ contact.phone }}
+                    </igx-tab-content>
+                </igx-tab-item>
+            }
         </igx-tabs>
     </div>
 
     <div class="sample-wrapper">
-        <strong>WC Tabs</strong>
+        <strong>Web components</strong>
         <igc-tabs
-        [alignment]="properties.alignment"
-        [activation]="properties.activation">
-            <igc-tab panel="first">
-                <igx-icon>folder</igx-icon>
-                Tab 1
+            [alignment]="properties.alignment"
+            [activation]="properties.activation">
+
+            @for (contact of contacts; track contact.id) {
+                <igc-tab [selected]="contact.id === selectedTabId" [panel]="contact.i">
+                    @if(!properties.hideIcon) {
+                        <igx-icon>folder</igx-icon>
+                    }
+                    @if(!properties.hideText) {
+                    <span>{{ contact.text }}</span>
+                    }
                 </igc-tab>
-                <igc-tab panel="second">
-                <igx-icon >folder</igx-icon>
-                Tab 2
-                </igc-tab>
-                <igc-tab panel="third">
-                <igx-icon >folder</igx-icon>
-                Tab 3 Settings and Configuration Options for Advanced User Preferences and System Customization
-                </igc-tab>
-                <igc-tab panel="fourth" disabled>
-                <igx-icon >folder</igx-icon>
-                Tab 4 disabled
-                </igc-tab>
-                <igc-tab-panel id="first">Content 1 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat, eos?</igc-tab-panel>
-                <igc-tab-panel id="second">
-                <div class="sample-scrollable">
-                    <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
-                        <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
-                                        *ngFor="let contact of contacts">
-                            <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
-                            <p igxListLineTitle>{{contact.text}}</p>
-                            <span igxListLineSubTitle>{{contact.phone}}</span>
-                            <igx-icon igxListAction>phone</igx-icon>
-                        </igx-list-item>
-                    </igx-list>
-                </div>
+
+                <igc-tab-panel [id]="contact.id">
+                    Phone: {{ contact.phone }}
                 </igc-tab-panel>
-                <igc-tab-panel id="third">Content 3 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.</igc-tab-panel>
+            }
         </igc-tabs>
     </div>
 </div>
+
+<ng-template #customControlsTemplate>
+        <p>Item actions</p>
+        <div class="panel-actions panel-actions--col">
+            <section class="panel-actions">
+                <button igxButton="outlined" (click)="addTab()">Add item</button>
+                <button igxButton="contained" (click)="removeTab()">Remove item</button>
+            </section>
+
+            <section class="panel-actions panel-actions--col">
+                <p>Move selection</p>
+
+                <div class="panel-actions">
+                    <button igxButton="outlined" (click)="previousTab()">
+                        <igx-icon>chevron_left</igx-icon>
+                        <span>Previous item</span>
+
+                    </button>
+                    <button igxButton="outlined" (click)="nextTab()">
+                        <span>Next item</span>
+                        <igx-icon>chevron_right</igx-icon>
+                    </button>
+                </div>
+            </section>
+
+            <section class="panel-actions panel-actions--col">
+                <p>Select by index</p>
+
+                <div class="panel-actions panel-actions--col">
+                    <button class="select-index" igxButton="outlined" (click)="selectTabAtIndex(2)">Select by index</button>
+                    @if (indexMessage) {
+                        <small class="warning-message">{{ indexMessage }}</small>
+                    }
+                </div>
+            </section>
+        </div>
+</ng-template>
