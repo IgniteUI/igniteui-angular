@@ -342,6 +342,13 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      */
     public searchValue: any;
 
+    /** @hidden */
+    protected isSearchValueInputDisabled(): boolean {
+        return !this.selectedField ||
+                !this.selectedCondition ||
+                (this.selectedField && this.selectedField.filters.condition(this.selectedCondition).isUnary);
+    }
+    
     /**
      * @hidden @internal
      */
@@ -523,6 +530,11 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
                 : this.selectedField.header
                     ? this.selectedField.header
                     : this.selectedField.field;
+                    
+            if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary) {
+                this._editedExpression.expression.searchVal = null;
+            }
+            
             this._editedExpression.inEditMode = false;
             this._editedExpression = null;
         }
