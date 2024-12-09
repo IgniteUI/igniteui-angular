@@ -1,0 +1,17 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+}
+
+.angular-inputs, .wc-inputs {
+    place-items: center;
+
+    > article {
+        min-width: 200px;
+        display: grid;
+        justify-items: center;
+        gap: .5rem;
+        margin-bottom: 3rem;
+    }
+}
