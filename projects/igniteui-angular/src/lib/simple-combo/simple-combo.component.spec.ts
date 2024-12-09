@@ -76,7 +76,7 @@ describe('IgxSimpleCombo', () => {
             get: mockNgControl
         });
         mockSelection.get.and.returnValue(new Set([]));
-        const mockIconService = new IgxIconService(null, null, null, null, null);
+        const mockIconService = new IgxIconService(null, null, null, null, null, null);
         const platformUtil = null;
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
         it('should properly call dropdown methods on toggle', () => {

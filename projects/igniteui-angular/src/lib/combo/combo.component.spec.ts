@@ -87,7 +87,7 @@ describe('igxCombo', () => {
             get: mockNgControl
         });
         mockSelection.get.and.returnValue(new Set([]));
-        const mockIconService = new IgxIconService(null, null, null, null, null);
+        const mockIconService = new IgxIconService(null, null, null, null, null, null);
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
