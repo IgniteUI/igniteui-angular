@@ -23,6 +23,7 @@ export interface IconMeta {
     name: string;
     family: string;
     type?: IconType;
+    /** @hidden @internal */
     external?: boolean;
 }
 
