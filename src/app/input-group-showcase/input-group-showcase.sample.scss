@@ -26,18 +26,6 @@
     gap: 1rem;
 }
 
-::ng-deep {
-    [dir='rtl'] {
-        .showcase--angular {
-            order: 2;
-        }
-
-        .showcase--web-components {
-            order: 1;
-        }
-    }
-}
-
 .showcase__header {
     --ig-h1-font-size: 1.2em;
     --ig-h1-font-weight: bold;
