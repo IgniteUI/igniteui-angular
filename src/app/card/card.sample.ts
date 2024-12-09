@@ -93,40 +93,40 @@ const cardFactory = (params: any): ICard => ({
 export class CardSampleComponent implements OnInit {
     @ViewChild('customControls', { static: true }) public customControlsTemplate!: TemplateRef<any>;
 
-    protected hasTitle: boolean = true;
-    protected hasSubtitle: boolean = true;
-    protected hasThumbnail: boolean = true;
+    protected hideTitle: boolean = false;
+    protected hideSubtitle: boolean = false;
+    protected hideThumbnail: boolean = false;
 
     public sectionOrder: string[] = ['media', 'header', 'content', 'actions']; // Default order
     public orderInput: string = '';
 
     public panelConfig : PropertyPanelConfig = {
-        hasMedia: {
-            label: 'Toggle Media',
+        hideMedia: {
+            label: 'Hide Media',
             control: {
                 type: 'boolean',
-                defaultValue: 'true'
+                defaultValue: false
             }
         },
-        hasContent: {
-            label: 'Toggle Content',
+        hideContent: {
+            label: 'Hide Content',
             control: {
                 type: 'boolean',
-                defaultValue: 'true'
+                defaultValue: false
             }
         },
-        hasActions: {
-            label: 'Toggle Actions',
+        hideActions: {
+            label: 'Hide Actions',
             control: {
                 type: 'boolean',
-                defaultValue: 'true'
+                defaultValue: false
             }
         },
-        hasHeader: {
-            label: 'Toggle Header',
+        hideHeader: {
+            label: 'Hide Header',
             control: {
                 type: 'boolean',
-                defaultValue: 'true'
+                defaultValue: false
             }
         },
     }

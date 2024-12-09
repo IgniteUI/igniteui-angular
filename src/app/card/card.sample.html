@@ -7,35 +7,35 @@
             <igx-card class="my-cool-card">
                 @for(section of sectionOrder; track section) {
                     <ng-container>
-                        @if(section === 'media' && properties.hasMedia) {
+                        @if(section === 'media' && !properties.hideMedia) {
                             <igx-card-media>
                                 <img [src]="cards[0].imageUrl">
                             </igx-card-media>
                         }
 
-                        @if(section === 'header' && properties.hasHeader) {
+                        @if(section === 'header' && !properties.hideHeader) {
                             <igx-card-header [vertical]="false">
-                                @if(hasThumbnail) {
+                                @if(!hideThumbnail) {
                                     <igx-avatar [src]="cards[0].avatarUrl"></igx-avatar>
                                 }
 
-                                @if(hasTitle) {
+                                @if(!hideTitle) {
                                     <h1 igxCardHeaderTitle>{{ cards[0].title }}</h1>
                                 }
 
-                                @if(hasSubtitle) {
+                                @if(!hideSubtitle) {
                                     <h2 igxCardHeaderSubtitle>{{ cards[0].subtitle }}</h2>
                                 }
                             </igx-card-header>
                         }
 
-                        @if(section === 'content' && properties.hasContent) {
+                        @if(section === 'content' && !properties.hideContent) {
                             <igx-card-content>
                                 <p>{{ cards[0].content }}</p>
                             </igx-card-content>
                         }
 
-                        @if(section === 'actions' && properties.hasActions) {
+                        @if(section === 'actions' && !properties.hideActions) {
                             <igx-card-actions>
                                 <button igxButton igxRipple>Read More</button>
                                 @for(icon of cards[0].icons; track icon) {
@@ -53,7 +53,7 @@
 
         <article class="card">
             <igx-card [horizontal]="true">
-                @if(properties.hasActions) {
+                @if(!properties.hideActions) {
                     <igx-card-actions layout="justify">
                         @for(icon of cards[1].icons; track icon) {
                             <button igxIconButton="flat" igxRipple [igxRippleCentered]="true">
@@ -66,26 +66,26 @@
                 <igx-divider [middle]="true" [vertical]="true"></igx-divider>
 
                 <div style="flex-direction: row">
-                    @if(properties.hasHeader) {
+                    @if(!properties.hideHeader) {
                         <igx-card-header>
-                            @if(hasTitle) {
+                            @if(!hideTitle) {
                                 <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
                             }
 
-                            @if(hasSubtitle) {
+                            @if(!hideSubtitle) {
                                 <h5 igxCardHeaderSubtitle>{{cards[1].subtitle}}</h5>
                             }
                         </igx-card-header>
                     }
 
-                    @if(properties.hasContent) {
+                    @if(!properties.hideContent) {
                         <igx-card-content>
                             <p>New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean.</p>
                         </igx-card-content>
                     }
                 </div>
 
-                @if(properties.hasMedia) {
+                @if(!properties.hideMedia) {
                     <igx-card-media>
                         <img [src]="cards[1].imageUrl">
                     </igx-card-media>
@@ -96,15 +96,15 @@
         <article class="card">
             <igx-card>
                 <igx-card-header>
-                    @if(properties.hasHeader && hasTitle) {
+                    @if(!properties.hideHeader && !hideTitle) {
                         <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
                     }
 
-                    @if(properties.hasHeader && hasSubtitle) {
+                    @if(!properties.hideHeader && !hideSubtitle) {
                         <h5 igxCardHeaderSubtitle>{{cards[1].subtitle}}</h5>
                     }
 
-                    @if(properties.hasMedia) {
+                    @if(!properties.hideMedia) {
                         <igx-card-media width="62px" height="62px">
                             <img [src]="cards[1].imageUrl">
                         </igx-card-media>
@@ -113,7 +113,7 @@
 
                 <igx-divider type="dashed" [middle]="true"></igx-divider>
 
-                @if(properties.hasActions) {
+                @if(!properties.hideActions) {
                     <igx-card-actions layout="justify">
                         @for(icon of cards[1].icons; track icon) {
                             <button igxIconButton="flat" igxRipple [igxRippleCentered]="true">
@@ -159,7 +159,7 @@
             <igc-card>
                 @for(section of sectionOrder; track section) {
                     <ng-container>
-                        @if(section === 'media' && properties.hasMedia) {
+                        @if(section === 'media' && !properties.hideMedia) {
                             <igc-card-media>
                                 <img
                                 src="assets/images/card/media/ny.jpg"
@@ -167,24 +167,24 @@
                             </igc-card-media>
                         }
 
-                        @if(section === 'header' && properties.hasHeader) {
+                        @if(section === 'header' && !properties.hideHeader) {
                             <igc-card-header>
-                                @if(hasThumbnail) {
+                                @if(!hideThumbnail) {
                                     <igc-avatar slot="thumbnail" [src]="cards[0].avatarUrl">
                                     </igc-avatar>
                                 }
 
-                                @if(hasTitle) {
+                                @if(!hideTitle) {
                                     <span slot="title">New York City</span>
                                 }
 
-                                @if(hasSubtitle) {
+                                @if(!hideSubtitle) {
                                     <span slot="subtitle">City in New York</span>
                                 }
                             </igc-card-header>
                         }
 
-                        @if(section === 'content' && properties.hasContent) {
+                        @if(section === 'content' && !properties.hideContent) {
                             <igc-card-content>
                                 <span>
                                     New York City comspanrises 5 boroughs sitting where the Hudson River
@@ -195,7 +195,7 @@
                             </igc-card-content>
                         }
 
-                        @if(section === 'actions' && properties.hasActions) {
+                        @if(section === 'actions' && !properties.hideActions) {
                             <igc-card-actions>
                                 <igc-button slot="start" variant="flat">Read More</igc-button>
                                 @for(icon of cards[0].icons; track icon) {
@@ -212,7 +212,7 @@
 
         <article class="card">
             <igc-card style="flex-direction: row">
-                @if(properties.hasActions) {
+                @if(!properties.hideActions) {
                     <igc-card-actions orientation="vertical">
                         @for(icon of cards[1].icons; track icon) {
                             <igc-icon-button [name]="icon" variant="flat">
@@ -222,26 +222,26 @@
                 }
 
                 <div>
-                    @if(properties.hasHeader) {
+                    @if(!properties.hideHeader) {
                         <igc-card-header>
-                            @if(hasTitle) {
+                            @if(!hideTitle) {
                                 <span slot="title">{{cards[1].title}}</span>
                             }
 
-                            @if(hasSubtitle) {
+                            @if(!hideSubtitle) {
                                 <span slot="subtitle">{{cards[1].subtitle}}</span>
                             }
                         </igc-card-header>
                     }
 
-                    @if(properties.hasContent) {
+                    @if(!properties.hideContent) {
                         <igc-card-content>
                             New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean.
                         </igc-card-content>
                     }
                 </div>
 
-                @if(properties.hasMedia) {
+                @if(!properties.hideMedia) {
                     <igc-card-media>
                         <img [src]="cards[1].imageUrl"/>
                     </igc-card-media>
@@ -252,24 +252,24 @@
         <article class="card">
             <igc-card>
                 <igc-card-header style="flex-direction: row">
-                    @if(properties.hasMedia) {
+                    @if(!properties.hideMedia) {
                         <igc-card-media slot="thumbnail" style="width: 62px; height: 62px;">
                             <img [src]="cards[1].imageUrl" />
                         </igc-card-media>
                     }
 
-                    @if(properties.hasHeader) {
-                        @if(hasTitle) {
+                    @if(!properties.hideHeader) {
+                        @if(!hideTitle) {
                             <span slot="title">{{cards[1].title}}</span>
                         }
 
-                        @if(hasSubtitle) {
+                        @if(!hideSubtitle) {
                             <span slot="subtitle">{{cards[1].subtitle}}</span>
                         }
                     }
                 </igc-card-header>
 
-                @if(properties.hasActions) {
+                @if(!properties.hideActions) {
                     <igc-card-actions>
                         @for(icon of cards[1].icons; track icon) {
                             <button igxIconButton="flat" igxRipple [igxRippleCentered]="true">
@@ -308,17 +308,17 @@
 
     <ng-template #customControls>
         <div class="custom-controls">
-            @if (properties.hasHeader) {
-                <igx-switch id="hasTitle" [(ngModel)]="hasTitle">
-                    <label for="hasTitle">Toggle Title</label>
+            @if (!properties.hideHeader) {
+                <igx-switch id="hideTitle" [(ngModel)]="hideTitle">
+                    <label for="hideTitle">Hide Title</label>
                 </igx-switch>
 
-                <igx-switch id="hasSubtitle" [(ngModel)]="hasSubtitle">
-                    <label for="hasSubtitle">Toggle Subtitle</label>
+                <igx-switch id="hideSubtitle" [(ngModel)]="hideSubtitle">
+                    <label for="hideSubtitle">Hide Subtitle</label>
                 </igx-switch>
 
-                <igx-switch id="hasThumbnail" [(ngModel)]="hasThumbnail">
-                    <label for="hasThumbnail">Toggle Thumbnail</label>
+                <igx-switch id="hideThumbnail" [(ngModel)]="hideThumbnail">
+                    <label for="hideThumbnail">Hide Thumbnail</label>
                 </igx-switch>
             }
 

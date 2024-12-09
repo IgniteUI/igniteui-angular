@@ -1,24 +1,27 @@
 import { Component, OnInit, ViewChild, ElementRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import {
+    AutoPositionStrategy,
+    BlockScrollStrategy,
+    CloseScrollStrategy,
 	ConnectedPositioningStrategy,
+	ContainerPositionStrategy,
+	GlobalPositionStrategy,
+	HorizontalAlignment,
 	IgxButtonDirective,
-	IgxButtonGroupComponent,
 	IgxDropDownComponent,
-	IgxDropDownGroupComponent,
 	IgxDropDownItemComponent,
 	IgxDropDownItemNavigationDirective,
 	IgxIconComponent,
-	IgxInputDirective,
-	IgxInputGroupComponent,
 	IgxOverlayOutletDirective,
-	IgxRippleDirective,
-	IgxToggleActionDirective,
-	IgxToggleDirective,
 	NoOpScrollStrategy,
 	OverlaySettings,
+    PositionSettings,
+    ScrollStrategy,
+    VerticalAlignment,
 } from 'igniteui-angular';
 import { defineComponents, IgcDropdownComponent, IgcButtonComponent, IgcIconComponent, registerIconFromText} from "igniteui-webcomponents";
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import { BaseFitPositionStrategy } from 'igniteui-angular/src/lib/services/overlay/position/base-fit-position-strategy';
 
 defineComponents(IgcDropdownComponent, IgcButtonComponent, IgcIconComponent);
 
@@ -45,33 +48,77 @@ const icons = [
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
 	imports: [
-		NgFor,
-		IgxButtonGroupComponent,
 		IgxButtonDirective,
 		IgxDropDownItemNavigationDirective,
-		IgxToggleActionDirective,
 		IgxDropDownComponent,
 		IgxDropDownItemComponent,
-		IgxToggleDirective,
-		IgxDropDownGroupComponent,
-		IgxInputGroupComponent,
-		IgxInputDirective,
-		IgxRippleDirective,
 		IgxOverlayOutletDirective,
 		IgxIconComponent,
-		NgIf,
 	],
 })
 export class DropDownShowcaseSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })
     private igxDropDown: IgxDropDownComponent;
-    private igxDropDownSelection: IgxDropDownComponent;
     @ViewChild('button', { static: true })
     private button: ElementRef;
+
     @ViewChild(IgxOverlayOutletDirective, { static: true })
     private igxOverlayOutlet: IgxOverlayOutletDirective;
 
     public items: any[] = [];
+
+    public panelConfig : PropertyPanelConfig = {
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large']
+            }
+        },
+        placement: {
+            control: {
+                type: 'select',
+                options: ['top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'right', 'right-start', 'right-end', 'left', 'left-start', 'left-end'],
+                defaultValue: 'bottom'
+            }
+        },
+        scrollStrategy: {
+            control: {
+                type: 'button-group',
+                options: ['scroll', 'block', 'close']
+            }
+        },
+        keepOpenOnOutsideClick: {
+            label: 'Keep Open on Outside Click',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        hidePrefix: {
+            label: 'Hide Prefix',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        hideSuffix: {
+            label: 'Hide Suffix',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        }
+    }
+
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
+    }
 
     public ngOnInit() {
         this.igxDropDown.height = '400px';
@@ -160,76 +207,108 @@ export class DropDownShowcaseSampleComponent implements OnInit {
             }
             this.items.push(item);
         }
+    }
 
-        this.items[3]['selected'] = true;
+    private getPositionStrategy(): ConnectedPositioningStrategy {
+        // Retrieve the currently selected placement option
+        const selectedPosition = this.propertyChangeService.getProperty('placement') || 'bottom'; // Default to 'top'
+
+        const positionSettings: PositionSettings = {};
+
+        // Map the selected position to enum values for HorizontalAlignment and VerticalAlignment
+        switch (selectedPosition) {
+            case 'top':
+                positionSettings.horizontalDirection = HorizontalAlignment.Center;
+                positionSettings.verticalDirection = VerticalAlignment.Top;
+                break;
+            case 'top-start':
+                positionSettings.horizontalDirection = HorizontalAlignment.Left;
+                positionSettings.verticalDirection = VerticalAlignment.Top;
+                positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
+                break;
+            case 'top-end':
+                positionSettings.horizontalDirection = HorizontalAlignment.Right;
+                positionSettings.verticalDirection = VerticalAlignment.Top;
+                positionSettings.horizontalStartPoint = HorizontalAlignment.Right;
+                break;
+            case 'bottom':
+                positionSettings.horizontalDirection = HorizontalAlignment.Center;
+                positionSettings.verticalDirection = VerticalAlignment.Bottom;
+                break;
+            case 'bottom-start':
+                positionSettings.horizontalDirection = HorizontalAlignment.Left;
+                positionSettings.verticalDirection = VerticalAlignment.Bottom;
+                positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
+                break;
+            case 'bottom-end':
+                positionSettings.horizontalDirection = HorizontalAlignment.Right;
+                positionSettings.verticalDirection = VerticalAlignment.Bottom;
+                positionSettings.horizontalStartPoint = HorizontalAlignment.Right;
+                break;
+            case 'right':
+                positionSettings.horizontalDirection = HorizontalAlignment.Right;
+                positionSettings.verticalDirection = VerticalAlignment.Middle;
+                break;
+            case 'right-start':
+                positionSettings.horizontalDirection = HorizontalAlignment.Right;
+                positionSettings.verticalDirection = VerticalAlignment.Top;
+                positionSettings.verticalStartPoint = VerticalAlignment.Top;
+                break;
+            case 'right-end':
+                positionSettings.horizontalDirection = HorizontalAlignment.Right;
+                positionSettings.verticalDirection = VerticalAlignment.Bottom;
+                positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
+                break;
+            case 'left':
+                positionSettings.horizontalDirection = HorizontalAlignment.Left;
+                positionSettings.verticalDirection = VerticalAlignment.Middle;
+                break;
+            case 'left-start':
+                positionSettings.horizontalDirection = HorizontalAlignment.Left;
+                positionSettings.verticalDirection = VerticalAlignment.Top;
+                positionSettings.verticalStartPoint = VerticalAlignment.Top;
+                break;
+            case 'left-end':
+                positionSettings.horizontalDirection = HorizontalAlignment.Left;
+                positionSettings.verticalDirection = VerticalAlignment.Bottom;
+                positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
+                break;
+            default:
+                // Default to 'bottom' if no valid position is selected
+                positionSettings.horizontalDirection = HorizontalAlignment.Center;
+                positionSettings.verticalDirection = VerticalAlignment.Bottom;
+                break;
+        }
+
+        // Return a ConnectedPositioningStrategy using the settings
+        return new ConnectedPositioningStrategy(positionSettings);
+    }
+
+
+    private getScrollStrategy(): ScrollStrategy {
+        const selectedStrategy = this.propertyChangeService.getProperty('scrollStrategy') || 'scroll';
+
+        switch (selectedStrategy) {
+            case 'scroll':
+                return new NoOpScrollStrategy();
+            case 'block':
+                return new BlockScrollStrategy();
+            case 'close':
+                return new CloseScrollStrategy();
+            default:
+                return new NoOpScrollStrategy();
+        }
     }
 
     public toggleDropDown() {
         const overlaySettings: OverlaySettings = {
-            positionStrategy: new ConnectedPositioningStrategy(),
-            scrollStrategy: new NoOpScrollStrategy(),
-            closeOnOutsideClick: false,
-            modal: false,
-            outlet: this.igxOverlayOutlet
+            positionStrategy: this.getPositionStrategy(),
+            scrollStrategy: this.getScrollStrategy(),
+            closeOnOutsideClick: !this.propertyChangeService.getProperty('keepOpenOnOutsideClick'),
+            outlet: this.igxOverlayOutlet,
+            target: this.button.nativeElement
         };
 
-        overlaySettings.target = this.button.nativeElement;
         this.igxDropDown.toggle(overlaySettings);
-    }
-
-    public toggleDropDownWC() {
-        const overlaySettings: OverlaySettings = {
-            positionStrategy: new ConnectedPositioningStrategy(),
-            scrollStrategy: new NoOpScrollStrategy(),
-            closeOnOutsideClick: false,
-            modal: false,
-            outlet: this.igxOverlayOutlet
-        };
-
-        overlaySettings.target = this.button.nativeElement;
-        this.igxDropDown.toggle(overlaySettings);
-    }
-
-    public open() {
-        const overlaySettings: OverlaySettings = {
-            positionStrategy: new ConnectedPositioningStrategy(),
-            scrollStrategy: new NoOpScrollStrategy(),
-            closeOnOutsideClick: false,
-            modal: false,
-            outlet: this.igxOverlayOutlet
-        };
-
-        overlaySettings.target = this.button.nativeElement;
-        this.igxDropDown.open(overlaySettings);
-    }
-
-    public close() {
-        this.igxDropDown.close();
-    }
-
-    public clearSelection() {
-        this.igxDropDownSelection.clearSelection();
-    }
-
-    public onSelection(event) {
-        console.log(event);
-        const old = event.oldSelection;
-        event.oldSelection = event.newSelection;
-        event.newSelection = old;
-    }
-
-    public onSelectionLogger(event) {
-        // event.cancel = true;
-        console.log(event);
-    }
-
-    public onSelectionMenu(eventArgs) {
-        eventArgs.cancel = true;
-
-        console.log(`new selection ${eventArgs.newSelection.element.nativeElement.textContent}`);
-        console.log(`old selection ${eventArgs.oldSelection ? eventArgs.oldSelection.element.nativeElement.textContent : ''}`);
-    }
-
-    public onOpening() {
     }
 }
