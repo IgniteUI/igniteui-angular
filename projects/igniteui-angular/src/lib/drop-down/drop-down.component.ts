@@ -105,6 +105,14 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     public closed = new EventEmitter<IBaseEventArgs>();
 
     /**
+     * @hidden
+     * @internal
+     * Emitted just before the overlay animation start.
+     */
+    @Output()
+    public animationStarting = new EventEmitter<ToggleViewEventArgs>();
+
+    /**
      * Gets/sets whether items take focus. Disabled by default.
      * When enabled, drop down items gain tab index and are focused when active -
      * this includes activating the selected item when opening the drop down and moving with keyboard navigation.
