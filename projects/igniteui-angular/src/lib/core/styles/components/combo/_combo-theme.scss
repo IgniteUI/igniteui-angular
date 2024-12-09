@@ -148,12 +148,12 @@
         }
 
         .igx-input-group__bundle-main {
-            padding-inline-start: 0;
+            padding-inline: 0;
         }
 
         .igx-input-group__bundle-start,
         .igx-input-group__bundle-end {
-            display: none;
+            min-width: 0;
         }
 
         igx-input-group {
@@ -164,10 +164,10 @@
 
     %igx-combo__case-icon,
     %igx-combo__case-icon--active {
-        .igx-icon {
-            width: rem(16px);
-            height: rem(16px);
-            font-size: rem(16px);
+        line-height: 0;
+
+        igx-icon {
+            --size: rem(18px);
         }
     }
 
