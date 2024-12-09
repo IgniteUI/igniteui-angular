@@ -450,7 +450,7 @@
         }
     }
 
-    %igx-card-content > * {
+    %igx-card-content > *:not(igx-icon) {
         @include type-style($content) {
             margin: 0;
         }
