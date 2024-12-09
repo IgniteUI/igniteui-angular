@@ -13,6 +13,7 @@
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 /// @see {mixin} theme
+/// @deprecated - Use the theme mixin instead.
 @mixin fluent-light-theme(
     $palette,
     $exclude: (),
@@ -50,6 +51,7 @@
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 /// @see {mixin} theme
+/// @deprecated - Use the theme mixin instead.
 @mixin fluent-dark-theme(
     $palette,
     $exclude: (),

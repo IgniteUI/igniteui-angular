@@ -663,6 +663,7 @@
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 /// @see {mixin} theme
+/// @deprecated - Use the theme mixin instead.
 @mixin light-theme(
     $palette,
     $exclude: (),
@@ -672,7 +673,7 @@
     $gray: color($palette, 'gray');
     $surface: color($palette, 'surface');
 
-    $light-palette: palette(
+    $_light-palette: palette(
         $primary: color($palette, 'primary'),
         $secondary: color($palette, 'secondary'),
         $info: color($palette, 'info'),
@@ -684,7 +685,7 @@
     );
 
     @include theme(
-        $palette: $light-material-palette,
+        $palette: $_light-palette,
         $schema: $light-material-schema,
         $exclude: $exclude,
         $roundness: $roundness,
@@ -696,6 +697,7 @@
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
 /// @see {mixin} theme
+/// @deprecated - Use the theme mixin instead.
 @mixin dark-theme(
     $palette,
     $exclude: (),
@@ -705,7 +707,7 @@
     $gray: color($palette, 'gray');
     $surface: color($palette, 'surface');
 
-    $dark-palette: palette(
+    $_dark-palette: palette(
         $primary: color($palette, 'primary'),
         $secondary: color($palette, 'secondary'),
         $info: color($palette, 'info'),
@@ -717,7 +719,7 @@
     );
 
     @include theme(
-        $palette: $dark-material-palette,
+        $palette: $_dark-palette,
         $schema: $dark-material-schema,
         $exclude: $exclude,
         $roundness: $roundness,
