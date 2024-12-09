@@ -190,11 +190,6 @@ export class AppComponent implements OnInit {
             name: 'DropDown - Virtual'
         },
         {
-            link: '/dropDown-density',
-            icon: 'horizontal_split',
-            name: 'DropDown - Density'
-        },
-        {
             link: '/expansionPanel',
             icon: 'expand_more',
             name: 'ExpansionPanel'
@@ -765,11 +760,6 @@ export class AppComponent implements OnInit {
             link: '/combo-showcase',
             icon: 'radio_button_unchecked',
             name: 'Combo'
-        },
-        {
-            link: '/dropDown-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'DropDown'
         },
         {
             link: '/input-group-showcase',

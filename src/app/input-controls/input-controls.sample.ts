@@ -62,7 +62,8 @@ export class InputControlsSampleComponent {
             label: 'Radio Group Alignment',
             control: {
                 type: 'button-group',
-                options: ['vertical', 'horizontal']
+                options: ['vertical', 'horizontal'],
+                defaultValue: 'vertical'
             }
         },
         name: {

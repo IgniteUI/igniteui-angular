@@ -35,18 +35,18 @@
         <article>
             <strong>Angular Radio</strong>
 
-            <igx-radio-group name="angGroup" [required]="properties.required" [alignment]="alignment">
+            <igx-radio-group [name]="properties.name? properties.name : 'angGroup'" [required]="properties.required" [alignment]="alignment">
                 <igx-radio [checked]="properties.checked"
                 [disabled]="properties.disabled"
                 [invalid]="properties.invalid"
                 [labelPosition]="properties.labelPosition"
-                value="Foo">Foo</igx-radio>
+                [value]="properties.value? properties.value : 'Foo'">Foo</igx-radio>
 
                 <igx-radio
                 [disabled]="properties.disabled"
                 [invalid]="properties.invalid"
                 [labelPosition]="properties.labelPosition"
-                value="Bar">Bar</igx-radio>
+                [value]="properties.value? properties.value : 'Bar'">Bar</igx-radio>
             </igx-radio-group>
         </article>
     </div>
@@ -87,16 +87,16 @@
         <article>
             <strong>WC Radio</strong>
 
-            <igc-radio-group name="wcGroup" [alignment]="properties.alignment">
+            <igc-radio-group [name]="properties.name? properties.name : 'wcGroup'" [alignment]="properties.alignment">
                 <igc-radio [checked]="properties.checked" [required]="properties.required"
                 [disabled]="properties.disabled" [invalid]="properties.invalid"
                 [labelPosition]="properties.labelPosition"
-                value="Foo">Foo</igc-radio>
+                [value]="properties.value? properties.value : 'Foo'">Foo</igc-radio>
 
                 <igc-radio [disabled]="properties.disabled"
                 [invalid]="properties.invalid"
                 [labelPosition]="properties.labelPosition"
-                value="Bar">Bar</igc-radio>
+                [value]="properties.value? properties.value : 'Bar'">Bar</igc-radio>
             </igc-radio-group>
         </article>
     </div>
