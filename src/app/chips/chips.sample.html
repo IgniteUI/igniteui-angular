@@ -14,11 +14,14 @@
                 (remove)="removeChip(me)">
                 @if (hasAvatar) {
                     <igx-avatar igxPrefix class="chip-area-avatar" [shape]="'circle'" initials="MP"></igx-avatar>
-                } @else if (hasPrefix) {
+                }
+                @if (hasPrefix) {
                     <igx-icon igxPrefix>face</igx-icon>
-                } @else if (hasSuffix) {
+                }
+                @if (hasSuffix) {
                     <igx-icon igxSuffix>face</igx-icon>
-                } @else if (hasProgressbar) {
+                }
+                @if (hasProgressbar) {
                     <igx-circular-bar igxSuffix class="circular-sample" [indeterminate]="true"></igx-circular-bar>
                 }
                     Chip component
@@ -34,14 +37,18 @@
                 [selected]="properties.selected">
                 @if (hasAvatar) {
                     <igc-avatar class="chip-area-avatar" slot="prefix" initials="MP" shape="circle"></igc-avatar>
-                } @else if (hasPrefix) {
+                }
+                @if (hasPrefix) {
                     <span slot="prefix"><igc-icon name="face"></igc-icon></span>
-                } @else if (customIcons) {
+                }
+                @if (customIcons) {
                     <span slot="select"><igc-icon name="check_circle"></igc-icon></span>
                     <span slot="remove"><igc-icon name="delete"></igc-icon></span>
-                } @else if (hasSuffix) {
+                }
+                @if (hasSuffix) {
                     <span slot="suffix"><igc-icon name="face"></igc-icon></span>
-                } @else if (hasProgressbar) {
+                }
+                @if (hasProgressbar) {
                     <igc-circular-progress class="circular-sample" slot="suffix" [indeterminate]="true"></igc-circular-progress>
                 }
                     Chip component

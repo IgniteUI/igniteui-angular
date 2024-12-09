@@ -7,7 +7,9 @@
             [indeterminate]="properties.indeterminate"
             [value]="properties.value"
             [type]="variantAngular"
-            [textVisibility]="!properties.hideLabel">
+            [textVisibility]="!properties.hideLabel"
+            [textTop]="getTextAlignmentConfig(properties.labelAlign).textTop"
+            [textAlign]="getTextAlignmentConfig(properties.labelAlign).textAlign">
             </igx-linear-bar>
         </div>
 
@@ -19,7 +21,7 @@
             [value]="properties.value"
             [variant]="properties.variant"
             [hideLabel]="properties.hideLabel"
-            label-align="bottom-start">
+            [labelAlign]="properties.labelAlign">
             </igc-linear-progress>
         </div>
     </article>

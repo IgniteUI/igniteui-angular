@@ -23,7 +23,7 @@ import { ListSampleComponent } from './list/list.sample';
 import { ListShowcaseSampleComponent } from './list-showcase/list-showcase.sample';
 import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
 import { ListPerformanceSampleComponent } from './list-performance/list-performance.sample';
-import { LinearProgressSampleComponent } from './linear-progress-showcase/linear-progress-showcase.sample';
+import { LinearProgressSampleComponent } from './linear-progress/linear-progress.sample';
 import { NavbarSampleComponent } from './navbar/navbar.sample';
 import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
