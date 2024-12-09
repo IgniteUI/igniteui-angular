@@ -526,7 +526,6 @@ describe('Dialog', () => {
             [isModal]="isModal">
         </igx-dialog>
     </div>`,
-    standalone: true,
     imports: [IgxDialogComponent]
 })
 class AlertComponent {
@@ -546,7 +545,6 @@ class AlertComponent {
             rightButtonRipple="white">
         </igx-dialog>
     </div>`,
-    standalone: true,
     imports: [IgxDialogComponent]
 })
 class DialogComponent {
@@ -566,7 +564,6 @@ class DialogComponent {
             rightButtonRipple="white">
         </igx-dialog>
     </div>`,
-    standalone: true,
     imports: [IgxDialogComponent]
 })
 class DialogTwoWayDataBindingComponent {
@@ -589,7 +586,6 @@ class DialogTwoWayDataBindingComponent {
             </div>
         </igx-dialog>
     </div>`,
-    standalone: true,
     imports: [IgxDialogComponent]
 })
 class DialogSampleComponent {
@@ -604,7 +600,6 @@ class DialogSampleComponent {
             </div>
         </igx-dialog>
     <div>`,
-    standalone: true,
     imports: [IgxDialogComponent]
 })
 class CustomDialogComponent {
@@ -626,7 +621,6 @@ class CustomDialogComponent {
             [closeOnOutsideSelect]="true">
         </igx-dialog>
     </igx-dialog>`,
-    standalone: true,
     imports: [IgxDialogComponent]
 })
 class NestedDialogsComponent {
@@ -644,7 +638,6 @@ class NestedDialogsComponent {
             <div>BUTTONS 1</div>
         </igx-dialog-actions>
     </igx-dialog>`,
-    standalone: true,
     imports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 class CustomTemplates1DialogComponent {
@@ -657,7 +650,6 @@ class CustomTemplates1DialogComponent {
         <div igxDialogTitle>TITLE 2</div>
         <div igxDialogActions>BUTTONS 2</div>
     </igx-dialog>`,
-    standalone: true,
     imports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 class CustomTemplates2DialogComponent {
@@ -670,7 +662,6 @@ class CustomTemplates2DialogComponent {
     <igx-dialog #dialog title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK"
         [positionSettings]="positionSettings" >
     </igx-dialog>`,
-    standalone: true,
     imports: [IgxDialogComponent]
 })
 class PositionSettingsDialogComponent {

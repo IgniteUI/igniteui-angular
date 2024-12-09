@@ -6,7 +6,7 @@ import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { IFormattingViews, IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
+import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, WEEKDAYS } from '../calendar/public_api';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
 import {
@@ -46,6 +46,7 @@ describe('IgxDatePicker', () => {
                     IgxDatePickerTestComponent,
                     IgxDatePickerNgModelComponent,
                     IgxDatePickerWithProjectionsComponent,
+                    IgxDatePickerWithTemplatesComponent,
                     IgxDatePickerInFormComponent,
                     IgxDatePickerReactiveFormComponent
                 ]
@@ -490,6 +491,47 @@ describe('IgxDatePicker', () => {
                 expect(toggle.clicked.observers).toHaveSize(0);
                 expect(clear.clicked.observers).toHaveSize(0);
             });
+        });
+
+        describe('Templated Header', () => {
+            let fixture: ComponentFixture<IgxDatePickerWithTemplatesComponent>;
+
+            beforeEach(fakeAsync(() => {
+              TestBed.configureTestingModule({
+                imports: [IgxDatePickerWithTemplatesComponent]
+              }).compileComponents();
+
+              fixture = TestBed.createComponent(IgxDatePickerWithTemplatesComponent);
+              fixture.detectChanges();
+            }));
+
+            it('Should use the custom template for header title', fakeAsync(() => {
+              const testDate = new Date(2024, 10, 11);
+              fixture.componentInstance.datePicker.value = testDate;
+              fixture.componentInstance.datePicker.open();
+              tick();
+              fixture.detectChanges();
+
+              const headerTitleElement = fixture.debugElement.query(By.css('.igx-calendar__header-year'));
+              expect(headerTitleElement).toBeTruthy('Header title element should be present');
+              if (headerTitleElement) {
+                expect(headerTitleElement.nativeElement.textContent.trim()).toBe('2024');
+              }
+            }));
+
+            it('Should use the custom template for header', fakeAsync(() => {
+              const testDate = new Date(2024, 10, 11);
+              fixture.componentInstance.datePicker.value = testDate;
+              fixture.componentInstance.datePicker.open();
+              tick();
+              fixture.detectChanges();
+
+              const headerElement = fixture.debugElement.query(By.css('.igx-calendar__header-date'));
+              expect(headerElement).toBeTruthy('Header element should be present');
+              if (headerElement) {
+                expect(headerElement.nativeElement.textContent.trim()).toBe('Nov');
+              }
+            }));
         });
 
         describe('UI Interaction', () => {
@@ -1467,7 +1509,6 @@ describe('IgxDatePicker', () => {
     template: `
     <igx-date-picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-picker>`,
-    standalone: true,
     imports: [IgxDatePickerComponent]
 })
 export class IgxDatePickerTestComponent {
@@ -1482,7 +1523,6 @@ export class IgxDatePickerTestComponent {
     template: `
         <igx-date-picker [(ngModel)]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue" [required]="isRequired">
         </igx-date-picker>`,
-    standalone: true,
     imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerNgModelComponent {
@@ -1500,7 +1540,6 @@ export class IgxDatePickerNgModelComponent {
             <label igxLabel>Select a Date</label>
         </igx-date-picker>
     `,
-    standalone: true,
     imports: [IgxDatePickerComponent, IgxLabelDirective]
 })
 export class IgxDatePickerTestKbrdComponent {
@@ -1519,7 +1558,6 @@ export class IgxDatePickerTestKbrdComponent {
         <igx-suffix>Suffix</igx-suffix>
         <igx-hint>Hint</igx-hint>
     </igx-date-picker>`,
-    standalone: true,
     imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxLabelDirective, IgxSuffixDirective, IgxHintDirective, NgIf]
 })
 export class IgxDatePickerWithProjectionsComponent {
@@ -1533,11 +1571,23 @@ export class IgxDatePickerWithProjectionsComponent {
 
 @Component({
     template: `
+    <igx-date-picker [mode]="mode">
+        <ng-template igxCalendarHeaderTitle let-formatCalendar>{{ formatCalendar.year.value }}</ng-template>
+        <ng-template igxCalendarHeader let-formatCalendar>{{ formatCalendar.month.value }}</ng-template>
+    </igx-date-picker>`,
+    imports: [IgxDatePickerComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective]
+})
+export class IgxDatePickerWithTemplatesComponent {
+    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    public mode: PickerInteractionMode = PickerInteractionMode.Dialog;
+}
+
+@Component({
+    template: `
     <form #form="ngForm">
         <igx-date-picker name="datePicker" id="datePicker" [(ngModel)]="date" [required]="true"></igx-date-picker>
     </form>
     `,
-    standalone: true,
     imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerInFormComponent {
@@ -1560,7 +1610,6 @@ export class IgxDatePickerInFormComponent {
         </div>
     </form>
     `,
-    standalone: true,
     imports: [IgxDatePickerComponent, ReactiveFormsModule, IgxLabelDirective]
 })
 export class IgxDatePickerReactiveFormComponent {

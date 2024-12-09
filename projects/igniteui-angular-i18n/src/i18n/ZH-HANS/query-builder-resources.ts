@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsZHHANS_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Simplified Chinese (zh-Hans) resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsZHHANS = {
     igx_query_builder_date_placeholder: '选择日期',
     igx_query_builder_time_placeholder: '取车时间',
     igx_query_builder_datetime_placeholder: '选择日期和时间',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsZHHANS_: ExpandRequire<IQueryBuilderResourceStr
     igx_query_builder_filter_lessThanOrEqualTo: '小于或等于',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: '全部',    
+    igx_query_builder_filter_all: '全部',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"And" 组',
     igx_query_builder_or_group: '"Or" 组',
@@ -67,9 +70,4 @@ const QueryBuilderResourceStringsZHHANS_: ExpandRequire<IQueryBuilderResourceStr
     igx_query_builder_dialog_checkbox_text: '不再显示此对话框',
     igx_query_builder_dialog_cancel: '取消',
     igx_query_builder_dialog_confirm: '确认',
-};
-
-/**
- * Simplified Chinese (zh-Hans) resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsZHHANS = QueryBuilderResourceStringsZHHANS_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

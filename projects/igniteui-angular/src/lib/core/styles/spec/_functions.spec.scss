@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use 'sass:list';
-@use 'node_modules/sass-true' as *;
+@use 'sass-true' as *;
 @use '../base' as *;
 
 @include describe('Theme Module System') {

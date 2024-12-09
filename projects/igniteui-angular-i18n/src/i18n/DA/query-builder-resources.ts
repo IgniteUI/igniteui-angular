@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsDA_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Danish resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsDA = {
     igx_query_builder_date_placeholder: 'Afhentningsdato',
     igx_query_builder_time_placeholder: 'Afhentningstidspunkt',
     igx_query_builder_datetime_placeholder: 'Vælg dato og tid',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsDA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Mindre end eller lig med',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'Alle',    
+    igx_query_builder_filter_all: 'Alle',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"Og" gruppe',
     igx_query_builder_or_group: '"Eller" gruppe',
@@ -67,9 +70,4 @@ const QueryBuilderResourceStringsDA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_dialog_checkbox_text: 'Vis ikke denne dialogboks igen',
     igx_query_builder_dialog_cancel: 'Annuller',
     igx_query_builder_dialog_confirm: 'Bekræft',
-};
-
-/**
- * Danish resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsDA = QueryBuilderResourceStringsDA_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

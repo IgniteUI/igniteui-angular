@@ -39,7 +39,6 @@ let NEXT_ID = 0;
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: 'igx-slider',
     templateUrl: 'slider.component.html',
-    standalone: true,
     imports: [NgIf, IgxTicksComponent, IgxThumbLabelComponent, IgxSliderThumbComponent, IgxTickLabelsPipe]
 })
 export class IgxSliderComponent implements
@@ -1354,11 +1353,11 @@ export class IgxSliderComponent implements
     private normalizeByStep(value: IRangeSliderValue | number) {
         if (this.isRange) {
             this._value = {
-                lower: (value as IRangeSliderValue).lower - ((value as IRangeSliderValue).lower % this.step),
-                upper: (value as IRangeSliderValue).upper - ((value as IRangeSliderValue).upper % this.step)
+                lower: Math.floor((value as IRangeSliderValue).lower / this.step) * this.step,
+                upper: Math.floor((value as IRangeSliderValue).upper / this.step) * this.step
             };
         } else {
-            this._value = (value as number) - ((value as number) % this.step);
+            this._value = Math.floor((value as number) / this.step) * this.step;
         }
     }
 

@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsES_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Spanish resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsES = {
     igx_query_builder_date_placeholder: 'Elegir Fecha',
     igx_query_builder_time_placeholder: 'Hora de recogida',
     igx_query_builder_datetime_placeholder: 'Seleccionar fecha y hora',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsES_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Menor o Igual Que',
     igx_query_builder_filter_true: 'Verdadero',
     igx_query_builder_filter_false: 'Falso',
-    igx_query_builder_filter_all: 'Todo',    
+    igx_query_builder_filter_all: 'Todo',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: 'Grupo "Y"',
     igx_query_builder_or_group: '"Grupo "O"',
@@ -67,9 +70,4 @@ const QueryBuilderResourceStringsES_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_dialog_checkbox_text: 'No volver a mostrar este cuadro de diálogo',
     igx_query_builder_dialog_cancel: 'Cancelar',
     igx_query_builder_dialog_confirm: 'Confirmar',
-};
-
-/**
- * Spanish resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsES = QueryBuilderResourceStringsES_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

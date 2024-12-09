@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsBG_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Bulgarian resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsBG = {
     igx_query_builder_date_placeholder: 'Избери дата',
     igx_query_builder_time_placeholder: 'Избери време',
     igx_query_builder_datetime_placeholder: 'Избери дата и час',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsBG_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'По-малко или равно на',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'Всички',    
+    igx_query_builder_filter_all: 'Всички',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"And" група',
     igx_query_builder_or_group: '"Or" група',
@@ -67,9 +70,4 @@ const QueryBuilderResourceStringsBG_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_dialog_checkbox_text: 'Не показвай този диалогов прозорец отново',
     igx_query_builder_dialog_cancel: 'Отказ',
     igx_query_builder_dialog_confirm: 'Потвърди',
-};
-
-/**
- * Bulgarian resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsBG = QueryBuilderResourceStringsBG_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

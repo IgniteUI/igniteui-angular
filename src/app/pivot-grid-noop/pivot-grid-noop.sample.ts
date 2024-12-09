@@ -23,7 +23,6 @@ export class MyColumnStrategy extends NoopPivotDimensionsStrategy {
     selector: 'app-tree-grid-sample',
     styleUrls: ['pivot-grid-noop.sample.scss'],
     templateUrl: 'pivot-grid-noop.sample.html',
-    standalone: true,
     imports: [IgxPivotGridComponent, IgxGridStateDirective, IgxButtonDirective]
 })
 
