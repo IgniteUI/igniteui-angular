@@ -14,7 +14,6 @@ import {
     Self,
     booleanAttribute,
     inject,
-    DestroyRef,
     Inject
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
@@ -492,9 +491,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * @internal
      */
     private _required = false;
-    private _prefersTokenizedTheme = false;
     private elRef = inject(ElementRef);
-    private destroyRef = inject(DestroyRef);
 
     constructor(
         protected cdr: ChangeDetectorRef,
@@ -508,20 +505,17 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
         }
 
         this.theme = this.themeToken.theme;
-        this._prefersTokenizedTheme = this.themeToken.preferToken;
 
-        const { unsubscribe } = this.themeToken.onChange((theme) => {
+        this.themeToken.onChange((theme) => {
             if (this.theme !== theme) {
                 this.theme = theme;
                 this.cdr.detectChanges();
             }
         });
-
-        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     private setComponentTheme() {
-        if(!this._prefersTokenizedTheme) {
+        if(!this.themeToken.preferToken) {
             const theme = getComponentTheme(this.elRef.nativeElement);
 
             if (theme && theme !== this.theme) {

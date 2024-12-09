@@ -1,10 +1,12 @@
-import { inject, InjectionToken } from "@angular/core";
+import { DestroyRef, inject, InjectionToken } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { mkenum } from "../../core/utils";
 import { BehaviorSubject } from "rxjs";
 import { DOCUMENT } from "@angular/common";
 
 export class ThemeToken {
     private document = inject(DOCUMENT);
+    private destroyRef = inject(DestroyRef);
     public subject: BehaviorSubject<IgxTheme>;
 
     constructor(private t?: IgxTheme) {
@@ -17,8 +19,8 @@ export class ThemeToken {
         this.subject = new BehaviorSubject(_theme);
     }
 
-    public onChange(callback: (theme: IgxTheme) => void) {
-        return this.subject.subscribe(callback);
+    public onChange(callback: (theme: IgxTheme) => void): void {
+        this.subject.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(callback);
     }
 
     public set(theme: IgxTheme) {

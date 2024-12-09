@@ -5,12 +5,10 @@ import {
     Component,
     ContentChild,
     ContentChildren,
-    DestroyRef,
     ElementRef,
     HostBinding,
     HostListener, Inject, Input,
     Optional, QueryList, booleanAttribute,
-    inject
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { PlatformUtil, getComponentTheme } from '../core/utils';
@@ -120,11 +118,9 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
     @ContentChild(IgxInputDirective, { read: IgxInputDirective, static: true })
     protected input: IgxInputDirective;
 
-    private _destroyRef = inject(DestroyRef);
     private _type: IgxInputGroupType = null;
     private _filled = false;
     private _theme: IgxTheme;
-    private _prefersTokenizedTheme = false;
     private _resourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
 
     /** @hidden */
@@ -220,16 +216,13 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
         private themeToken: ThemeToken
     ) {
         this._theme = this.themeToken.theme;
-        this._prefersTokenizedTheme = this.themeToken.preferToken;
 
-        const { unsubscribe } = this.themeToken.onChange((theme) => {
+        this.themeToken.onChange((theme) => {
             if (this._theme !== theme) {
                 this._theme = theme;
                 this.cdr.detectChanges();
             }
         });
-
-        this._destroyRef.onDestroy(() => unsubscribe);
     }
 
     /** @hidden */
@@ -446,7 +439,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
     }
 
     private setComponentTheme() {
-        if (!this._prefersTokenizedTheme) {
+        if (!this.themeToken.preferToken) {
             const theme = getComponentTheme(this.element.nativeElement);
 
             if (theme && theme !== this._theme) {
