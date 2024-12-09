@@ -5,6 +5,8 @@
 }
 
 .angular-inputs, .wc-inputs {
+    place-items: center;
+
     > article {
         min-width: 200px;
         display: grid;
