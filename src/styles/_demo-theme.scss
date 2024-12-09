@@ -22,6 +22,30 @@ body {
     $schema: $schema,
 );
 
+
+.avatar-theme {
+    --ig-theme: bootstrap;
+    @include palette($light-bootstrap-palette);
+
+    @include css-vars(avatar-theme(
+        $schema: $light-bootstrap-schema,
+    ));
+}
+
+
+.custom-palette {
+    @include palette(palette(
+        $primary: green,
+        $secondary: green,
+        $surface: white,
+        $info: #1377d5,
+        $success: #4eb862,
+        $warn: #faa419,
+        $error: #ff134a,
+        $variant: 'material',
+    ));
+}
+
 .dock {
     @include css-vars(dock-manager-theme());
 }

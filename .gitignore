@@ -48,6 +48,9 @@ src/**/*.js
 src/**/*.js.map
 src/**/*.css.map
 
+# Artefacts
+projects/igniteui-angular/**/*.css.ts
+
 # Typedoc Theme
 extras/docs/themes/typedoc/bin
 extras/docs/themes/sassdoc/node_modules
