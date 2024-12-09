@@ -11,6 +11,18 @@
     }
 }
 
+::ng-deep {
+    [dir='rtl'] {
+        .showcase--angular {
+            order: 2;
+        }
+
+        .showcase--web-components {
+            order: 1;
+        }
+    }
+}
+
 .showcase__header,
 .showcase__placeholder {
     display: flex;
