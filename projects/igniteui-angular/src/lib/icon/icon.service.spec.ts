@@ -5,9 +5,10 @@ import { IgxIconService } from './icon.service';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { IgxIconComponent } from "./icon.component";
 import { By } from "@angular/platform-browser";
+import { IgxTheme, THEME_TOKEN, ThemeToken } from "igniteui-angular";
 
 describe("Icon Service", () => {
     configureTestSuite();
@@ -215,6 +216,36 @@ describe("Icon Service", () => {
 
         iconService.addSvgIcon(iconName, "test.svg", familyName);
     });
+
+    it('should change icon references dynamically when the value of THEME_TOKEN changes', () => {
+        const fixture = TestBed.createComponent(IconWithThemeTokenComponent);
+        fixture.detectChanges();
+
+        let arrow_prev = fixture.debugElement.query(By.css("igx-icon[name='arrow_prev']"));
+        let expand_more = fixture.debugElement.query(By.css("igx-icon[name='expand_more']"));
+
+        expect(fixture.componentInstance.themeToken.theme).toBe('material');
+        expect(arrow_prev).toBeTruthy();
+        expect(arrow_prev.classes['material-icons']).toBeTrue();
+        expect(expand_more).toBeTruthy();
+        expect(expand_more.classes['material-icons']).toBeTrue();
+
+        fixture.componentInstance.setTheme('indigo');
+        fixture.detectChanges();
+
+        arrow_prev = fixture.debugElement.query(By.css("igx-icon[name='arrow_prev']"));
+        expand_more = fixture.debugElement.query(By.css("igx-icon[name='expand_more']"));
+
+        expect(fixture.componentInstance.themeToken.theme).toBe('indigo');
+
+        // The class change should be reflected as the family changes
+        expect(arrow_prev).toBeTruthy();
+        expect(arrow_prev.classes['internal_indigo']).toBeTrue();
+
+        // The expand_more shouldn't change as its reference is set explicitly
+        expect(expand_more).toBeTruthy();
+        expect(expand_more.classes['material-icons']).toBeTrue();
+    });
 });
 
 @Component({
@@ -233,3 +264,30 @@ class IconTestComponent { }
     imports: [IgxIconComponent]
 })
 class IconRefComponent { }
+
+@Component({
+    template: `
+        <igx-icon name="arrow_prev" family="default"></igx-icon>
+        <igx-icon name="expand_more" family="default"></igx-icon>
+    `,
+    providers: [
+        {
+            provide: THEME_TOKEN,
+            useFactory: () => new ThemeToken()
+        },
+        IgxIconService
+    ],
+    standalone: true,
+    imports: [IgxIconComponent]
+})
+class IconWithThemeTokenComponent {
+    public themeToken = inject(THEME_TOKEN);
+
+    constructor(public iconService: IgxIconService) {
+        this.iconService.setIconRef('expand_more', 'default', { family: 'material', name: 'home' });
+    }
+
+    public setTheme(theme: IgxTheme) {
+        this.themeToken.set(theme);
+    }
+}
