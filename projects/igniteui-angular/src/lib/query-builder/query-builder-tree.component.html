@@ -33,7 +33,6 @@
             searchPlaceholder="{{ this.resourceStrings.igx_query_builder_search }}"
             [style.display]="isInEditMode() ? 'block' : 'none'"
             (selectionChanging)="onReturnFieldSelectChanging($event)"
-            (focusin)="this.prevFocusedExpression ? this.prevFocusedExpression.focused = false : null"
         >
             <ng-template igxComboHeader>
                 <div
@@ -100,7 +99,6 @@
             igxButton="outlined"
             [disabled]="hasEditedExpression"
             (click)="addCondition(expressionItem, afterExpression)"
-            (focus)="this.prevFocusedExpression ? this.prevFocusedExpression.focused = false : null"
             igxDrop 
             (enter)="onAddConditionEnter(addConditionButton, expressionItem)"
             (leave)="onAddConditionLeave($event, addConditionButton)"
@@ -232,7 +230,8 @@
                 <div igxDragIgnore class="igx-filter-tree__expression-actions">
                     <button #addExpressionButton igxDragIgnore igxIconButton="flat" [igxDropDownItemNavigation]="addOptionsDropDown"
                     aria-labelledby="add-expression" (keydown)="invokeClick($event)"
-                        (click)="openExpressionAdd(expressionItem, addExpressionButton)">
+                        (click)="openExpressionAdd(expressionItem, addExpressionButton)"
+                        (blur)="this.prevFocusedExpression ? this.prevFocusedExpression.focused = false : null">
                         <igx-icon id="add-expression">add</igx-icon>
                     </button>
                     <igx-drop-down #addOptionsDropDown
@@ -460,7 +459,6 @@
                 <button igxButton="flat"
                         (keydown)="invokeClick($event)"
                         (click)="onGroupClick(expressionItem)"
-                        (focus)="this.prevFocusedExpression ? this.prevFocusedExpression.focused = false : null"
                 >
                 <span> {{expressionItem?.operator === 0? 'AND':'OR'}}</span>
                 <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>                   
