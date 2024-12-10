@@ -66,22 +66,6 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
-     *
-     * @example
-     * ```typescript
-     * @ViewChild("MyIcon") public icon: IgxIconComponent;
-     * constructor(private cdRef:ChangeDetectorRef) {}
-     * ngAfterViewInit() {
-     *     this.icon.ariaHidden = false;
-     *     this.cdRef.detectChanges();
-     * }
-     * ```
-     */
-    @HostBinding("attr.aria-hidden")
-    public ariaHidden = true;
-
-    /**
      *  An accessor that returns inactive property.
      *
      * @example
