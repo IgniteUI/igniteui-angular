@@ -460,6 +460,7 @@
                 <button igxButton="flat"
                         (keydown)="invokeClick($event)"
                         (click)="onGroupClick(expressionItem)"
+                        (focus)="this.prevFocusedExpression ? this.prevFocusedExpression.focused = false : null"
                 >
                 <span> {{expressionItem?.operator === 0? 'AND':'OR'}}</span>
                 <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>                   
