@@ -567,7 +567,7 @@ export class AppComponent implements OnInit {
         {
             link: '/stepper',
             icon: 'format_list_bulleted',
-            name: 'Stepper'
+            name: 'Stepper (showcase)'
         },
         {
             link: '/tabs',
@@ -753,14 +753,6 @@ export class AppComponent implements OnInit {
             icon: 'font_download',
             name: 'Typography'
         }
-    ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
-
-    public WcCompareLinks = [
-        {
-            link: '/stepper-showcase',
-            icon: 'radio_button_unchecked',
-            name: 'Stepper'
-        },
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     constructor(private router: Router, private iconService: IgxIconService) {

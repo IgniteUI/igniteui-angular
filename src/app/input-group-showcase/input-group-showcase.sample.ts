@@ -52,8 +52,8 @@ export class InputGroupShowcaseSampleComponent {
     public fieldFile = viewChild<IgxInputGroupComponent>('fieldFile');
     public select = viewChild<IgxSelectComponent>('selectReactive');
 
-    private fb = inject(UntypedFormBuilder); // Angular FormBuilder
-    private propertyChangeService = inject(PropertyChangeService); // Service for managing property changes
+    private fb = inject(UntypedFormBuilder);
+    private pcs = inject(PropertyChangeService);
 
     public panelConfig: PropertyPanelConfig = {
         size: {
@@ -152,10 +152,10 @@ export class InputGroupShowcaseSampleComponent {
     });
 
     constructor() {
-        this.propertyChangeService.setPanelConfig(this.panelConfig);
+        this.pcs.setPanelConfig(this.panelConfig);
 
         // Listen for property changes and update form controls
-        this.propertyChangeService.propertyChanges.subscribe((updatedProperties) => {
+        this.pcs.propertyChanges.subscribe((updatedProperties) => {
             const mergedProperties = this.mergeProperties(updatedProperties);
 
             this.properties.set(mergedProperties);
