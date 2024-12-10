@@ -3120,6 +3120,7 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
         <igx-column *ngFor="let col of columns" [width]="'10%'" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
         </igx-column>
     </igx-grid>`,
+    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class IgxGridColumnHiddenPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
