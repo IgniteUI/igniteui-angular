@@ -36,7 +36,6 @@ describe("Icon", () => {
             fixture.detectChanges();
 
             expect(instance.getFamily).toBe("material");
-            expect(instance.ariaHidden).toBe(true);
             expect(instance.getActive).toBe(true);
         });
 

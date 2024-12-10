@@ -148,7 +148,7 @@
     ), $variant);
 
     $icon-space: map.get((
-        'material': $icon-space-default,
+        'material': $icon-space-indigo,
         'fluent': $icon-space-default,
         'bootstrap': $icon-space-default,
         'indigo': $icon-space-indigo
@@ -207,6 +207,12 @@
     %node-toggle-button,
     %node-select {
         margin-inline-end: $icon-space;
+    }
+
+    @if $variant == 'material' {
+        %node-select {
+            margin-inline: rem(10px) rem(14px);
+        }
     }
 
     @if $variant == 'indigo' {

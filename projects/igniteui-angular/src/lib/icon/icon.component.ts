@@ -15,7 +15,6 @@ import { filter, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SafeHtml } from "@angular/platform-browser";
 import { NgIf, NgTemplateOutlet } from "@angular/common";
-import { ThemeService } from "../services/theme/theme.service";
 
 /**
  * Icon provides a way to include material icons to markup
@@ -65,22 +64,6 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     private clearIconClasses() {
         this._iconClasses.clear();
     }
-
-    /**
-     *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
-     *
-     * @example
-     * ```typescript
-     * @ViewChild("MyIcon") public icon: IgxIconComponent;
-     * constructor(private cdRef:ChangeDetectorRef) {}
-     * ngAfterViewInit() {
-     *     this.icon.ariaHidden = false;
-     *     this.cdRef.detectChanges();
-     * }
-     * ```
-     */
-    @HostBinding("attr.aria-hidden")
-    public ariaHidden = true;
 
     /**
      *  An accessor that returns inactive property.
@@ -135,11 +118,9 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         public el: ElementRef,
         private iconService: IgxIconService,
-        private themeService: ThemeService,
         private ref: ChangeDetectorRef,
     ) {
         this.family = this.iconService.defaultFamily.name;
-        this.iconService.setRefsByTheme(this.themeService.globalTheme);
 
         this.iconService.iconLoaded
             .pipe(

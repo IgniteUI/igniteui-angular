@@ -4,6 +4,7 @@ import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
+import { IgxTheme } from '../services/theme/theme.token';
 
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
@@ -656,5 +657,12 @@ export function getComponentCssSizeVar(size: string) {
  * @returns string encoded using the encodeURI function.
  */
  export function normalizeURI(path: string) {
-     return path.split('/').map(encodeURI).join('/');
+    return path?.split('/').map(encodeURI).join('/');
  }
+
+export function getComponentTheme(el: Element) {
+    return globalThis.window
+    ?.getComputedStyle(el)
+    .getPropertyValue('--theme')
+    .trim() as IgxTheme;
+}
