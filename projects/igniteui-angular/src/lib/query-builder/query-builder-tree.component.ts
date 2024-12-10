@@ -58,6 +58,7 @@ import { IChipsAreaReorderEventArgs, IgxChipsAreaComponent } from "../chips/chip
 import { IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
+import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -168,7 +169,8 @@ class ExpressionOperandItem extends ExpressionItem {
         IgxDragHandleDirective,
         IgxDropDirective,
         IgxDropDownComponent,
-        IgxDropDownItemComponent
+        IgxDropDownItemComponent,
+        IgxDropDownItemNavigationDirective
     ]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
@@ -1462,13 +1464,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
         
         const parent = expressionItem.parent ?? this.rootGroup;
-        if (event.newSelection.value === 'addCondition') {
-            this.addCondition(parent, expressionItem);
-        } else if (event.newSelection.value === 'addGroup') {
-            this.addReverseGroup(parent, expressionItem);
-        }
-        expressionItem.inAddMode = true;
-        this._addModeExpression = expressionItem;
+        requestAnimationFrame(() => {
+            if (event.newSelection.value === 'addCondition') {
+                this.addCondition(parent, expressionItem);
+            } else if (event.newSelection.value === 'addGroup') {
+                this.addReverseGroup(parent, expressionItem);
+            }
+            expressionItem.inAddMode = true;
+            this._addModeExpression = expressionItem;
+        })
     }
 
     /**
