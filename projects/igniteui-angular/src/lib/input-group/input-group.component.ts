@@ -449,7 +449,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
             const theme = getComponentTheme(this.element.nativeElement);
 
             if (theme && theme !== this._theme) {
-                this.themeToken.set(theme);
+                this.theme = theme;
                 this.cdr.markForCheck();
             }
         }

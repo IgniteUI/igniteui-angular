@@ -524,7 +524,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
             const theme = getComponentTheme(this.elRef.nativeElement);
 
             if (theme && theme !== this.theme) {
-                this.themeToken.set(theme);
+                this.theme = theme;
                 this.cdr.markForCheck();
             }
         }
