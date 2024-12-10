@@ -908,6 +908,15 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden @internal
+     */
+    public onConditionChange() {
+        if (this.selectedCondition && this.selectedField) {
+            this.searchValue = null;
+        }
+    }
+
     private setFormat(field: FieldType) {
         if (!field.pipeArgs) {
             field.pipeArgs = { digitsInfo: DEFAULT_PIPE_DIGITS_INFO };
