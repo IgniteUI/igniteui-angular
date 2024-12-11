@@ -4,5 +4,5 @@
     [restrictHResizeMax]="colResizingService.restrictResizeMax"
     [restrictHResizeMin]="colResizingService.restrictResizeMin"
     [restrictResizerTop]="restrictResizerTop"
-    (resizeEnd)="colResizingService.resizeColumn($event)">
+    (resizeEnd)="colResizingService.resizeColumn($event, resizer.ratio)">
 </div>
