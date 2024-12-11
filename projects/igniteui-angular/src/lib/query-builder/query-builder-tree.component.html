@@ -231,7 +231,7 @@
                     <button #addExpressionButton igxDragIgnore igxIconButton="flat" [igxDropDownItemNavigation]="addOptionsDropDown"
                     aria-labelledby="add-expression" (keydown)="invokeClick($event)"
                         (click)="openExpressionAdd(expressionItem, addExpressionButton)"
-                        (blur)="this.prevFocusedExpression ? this.prevFocusedExpression.focused = false : null">
+                        (blur)="addExpressionBlur()">
                         <igx-icon id="add-expression">add</igx-icon>
                     </button>
                     <igx-drop-down #addOptionsDropDown

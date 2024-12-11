@@ -771,7 +771,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public addReverseGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
         parent = parent ?? this.rootGroup;
 
-        if(parent.operator === FilteringLogic.And) {
+        if (parent.operator === FilteringLogic.And) {
             this.addGroup(FilteringLogic.Or, parent, afterExpression);
         } else {
             this.addGroup(FilteringLogic.And, parent, afterExpression);
@@ -1144,6 +1144,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden @internal
+     */
+    public addExpressionBlur() {
+        if (this.prevFocusedExpression) {
+            this.prevFocusedExpression.focused = false;
+        }
+        if (this.addExpressionItemDropDown && !this.addExpressionItemDropDown.collapsed) {
+            this.addExpressionItemDropDown.close();
+        }
+    }
+
     //Check if one element is overlapping or close to another one
     private chipsAreNearBy(chip1: HTMLElement, chip2: HTMLElement, maxDistance: number) {
         const chip1Bounds = chip1.getBoundingClientRect();
@@ -1319,7 +1331,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.createDropGhostChip(this.targetElement, under, true);
 
             //If drop ghost is not displayed or hasn't moved, move one more step in the same direction
-            if (!this.dropGhostChipElement || 
+            if (!this.dropGhostChipElement ||
                 (this.dropGhostChipElement?.previousElementSibling === before && this.dropGhostChipElement?.nextElementSibling === after)) {
                 this.arrowDrag(key);
             }
@@ -1458,11 +1470,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this._addModeExpression) {
             this._addModeExpression.inAddMode = false;
         }
-        
+
         if (this.parentExpression) {
             this.inEditModeChange.emit(this.parentExpression);
         }
-        
+
         const parent = expressionItem.parent ?? this.rootGroup;
         requestAnimationFrame(() => {
             if (event.newSelection.value === 'addCondition') {
