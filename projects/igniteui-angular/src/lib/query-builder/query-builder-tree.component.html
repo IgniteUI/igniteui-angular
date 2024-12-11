@@ -106,26 +106,17 @@
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{
-                this.resourceStrings.igx_query_builder_add_condition
+                this.resourceStrings.igx_query_builder_add_condition_root
             }}</span>
         </button>
 
         <button type="button"
             igxButton="outlined"
             [disabled]="hasEditedExpression"
-            (click)="addAndGroup(expressionItem, afterExpression)"
+            (click)="addReverseGroup(expressionItem, afterExpression)"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
-            <span>{{ this.resourceStrings.igx_query_builder_and_group }}</span>
-        </button>
-
-        <button type="button"
-            igxButton="outlined"
-            [disabled]="hasEditedExpression"
-            (click)="addOrGroup(expressionItem, afterExpression)"
-        >
-            <ng-container *ngTemplateOutlet="addIcon"></ng-container>
-            <span>{{ this.resourceStrings.igx_query_builder_or_group }}</span>
+            <span>{{ this.resourceStrings.igx_query_builder_add_group_root }}</span>
         </button>
     </ng-template>
 
@@ -140,7 +131,9 @@
             *ngIf="!expressionItem.inEditMode"
             class="igx-filter-tree__expression-item"            
             (mouseenter)="expressionItem.hovered = true"
-            (mouseleave)="expressionItem.hovered = false"   
+            (mouseleave)="expressionItem.hovered = false"
+            (focusin)="onExpressionFocus(expressionItem)"
+            (focusout)="onExpressionBlur($event, expressionItem)"
         >
             <igx-chip        
                 [draggable]="canBeDragged() ? 'true' : 'false'" 
@@ -156,11 +149,9 @@
                 [igxTooltipTarget]="tooltipRef"
                 [data]="expressionItem"
                 [removable]="isInEditMode() ? 'true' : 'false'"
-                [selected]="expressionItem.selected && isInEditMode()"
-                (click)="isInEditMode() ? onChipClick(expressionItem) : null"
-                (dblclick)="onChipDblClick(expressionItem)"
+                (keydown)="invokeClick($event)"
+                (click)="onChipClick(expressionItem)"
                 (remove)="onChipRemove(expressionItem)"
-                (selectedChanged)="onChipSelectionEnd()"       
                 (focus)="onChipFocus(dragRef, expressionItem)" 
                 (focusout)="onChipFocusOut()"    
             >
@@ -234,49 +225,26 @@
                     }
                 }
             </div>
-            <div igxDragIgnore
-                class="igx-filter-tree__expression-actions"
-                *ngIf="
-                    (expressionItem.selected &&
-                        selectedExpressions.length === 1) ||
-                    expressionItem.hovered
-                "
-            >
-                <button igxDragIgnore
-                    igxIconButton="flat"
-                    aria-labelledby="edit-expression"
-                    (keydown)="invokeClick($event)"
-                    (click)="enterExpressionEdit(expressionItem)">
-                    <igx-icon id="edit-expression">edit</igx-icon>
-                </button>
-                <button igxDragIgnore
-                    igxIconButton="flat"
-                    aria-labelledby="add-expression"
-                    (keydown)="invokeClick($event)"
-                    (click)="enterExpressionAdd(expressionItem)"
-                    *ngIf="
-                            !expressionItem.inAddMode &&
-                            (expressionItem.parent !== currentGroup ||
-                                expressionItem !==
-                                    currentGroup.children[
-                                        currentGroup.children.length - 1
-                                    ])
-                        "
-                >
-                    <igx-icon id="add-expression">add</igx-icon>
-                </button>
-            </div>
-            <div *ngIf="!expressionItem.inEditMode && expressionItem.expression.searchTree && expressionItem.expression.searchTree.filteringOperands.length > 0"
-                igxButton
-                igxDragIgnore
-                class="igx-filter-tree__details-button"
-                (click)="expanderClick($event, expressionItem)"
-                (keydown)="invokeClick($event)"
-                tabindex="0">
-                <span>{{this.resourceStrings.igx_query_builder_details}}</span>
-                <igx-icon *ngIf="expressionItem.expanded" family="default" name="unfold_less" role="button"></igx-icon>
-                <igx-icon *ngIf="!expressionItem.expanded" family="default" name="unfold_more" role="button"></igx-icon>
-            </div>
+
+            @if((expressionItem.focused || expressionItem.hovered) && !expressionItem.inAddMode) {
+                <div igxDragIgnore class="igx-filter-tree__expression-actions">
+                    <button #addExpressionButton igxDragIgnore igxIconButton="flat" [igxDropDownItemNavigation]="addOptionsDropDown"
+                    aria-labelledby="add-expression" (keydown)="invokeClick($event)"
+                        (click)="openExpressionAdd(expressionItem, addExpressionButton)"
+                        (blur)="addExpressionBlur()">
+                        <igx-icon id="add-expression">add</igx-icon>
+                    </button>
+                    <igx-drop-down #addOptionsDropDown
+                        (selectionChanging)="enterExpressionAdd($event, expressionItem)">
+                        <igx-drop-down-item [value]="'addCondition'">
+                            <span>{{this.resourceStrings.igx_query_builder_add_condition}}</span>
+                        </igx-drop-down-item>
+                        <igx-drop-down-item [value]="'addGroup'">
+                            <span>{{this.resourceStrings.igx_query_builder_add_group}}</span>
+                        </igx-drop-down-item>
+                    </igx-drop-down>
+                </div>
+            }
         </div>
 
         <div
@@ -475,36 +443,16 @@
                 [searchValueTemplate]="searchValueTemplate">
             </igx-query-builder-tree>
         </ng-container>
-
-        <div
-            *ngIf="expressionItem.inAddMode"
-            #addModeContainer
-            class="igx-filter-tree__buttons"
-        >
-            <ng-container
-                *ngTemplateOutlet="
-                    addExpressionsTemplate;
-                    context: context(expressionItem.parent, expressionItem)
-                "
-            >
-            </ng-container>
-            <button type="button"
-                igxIconButton="flat"
-                (click)="cancelOperandAdd()"
-            >
-                <ng-container *ngTemplateOutlet="closeIcon"></ng-container>
-            </button>
-        </div>
     </ng-template>
 
     <ng-template #expressionGroupTemplate let-expressionItem>
         <div class="igx-filter-tree">
             <div
-                tabindex="0"
-                class="igx-filter-tree__line igx-filter-tree__line--and"
-                [ngClass]="{'igx-filter-tree__line--selected': expressionItem?.selected}"
-                (keydown)="invokeClick($event)"
-                (click)="onGroupClick(expressionItem)"
+                class="igx-filter-tree__line"
+                [ngClass]="{
+                    'igx-filter-tree__line--and': expressionItem?.operator === 0,
+                    'igx-filter-tree__line--or': expressionItem?.operator === 1
+                }"
             ></div>
 
             <div class="igx-filter-tree__expression">     
@@ -611,13 +559,7 @@
                 igxButton="outlined"
                 (click)="createAndGroup()"
             >
-                {{ this.resourceStrings.igx_query_builder_create_and_group }}
-            </button>
-            <button type="button"
-                igxButton="outlined"
-                (click)="createOrGroup()"
-            >
-                {{ this.resourceStrings.igx_query_builder_create_or_group }}
+                {{ this.resourceStrings.igx_query_builder_add_group }}
             </button>
             <button type="button"
                 igxButton="outlined"

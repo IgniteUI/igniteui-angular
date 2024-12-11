@@ -44,8 +44,9 @@ export interface IQueryBuilderResourceStrings {
     igx_query_builder_and_label?: string;
     igx_query_builder_or_label?: string;
     igx_query_builder_add_condition?: string;
-    igx_query_builder_create_and_group?: string;
-    igx_query_builder_create_or_group?: string;
+    igx_query_builder_add_group?: string;
+    igx_query_builder_add_condition_root?: string;
+    igx_query_builder_add_group_root?: string;
     igx_query_builder_ungroup?: string;
     igx_query_builder_delete?: string;
     igx_query_builder_delete_filters?: string;
@@ -111,9 +112,10 @@ export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
     igx_query_builder_end_group: 'End Group',
     igx_query_builder_and_label: 'and',
     igx_query_builder_or_label: 'or',
-    igx_query_builder_add_condition: 'Condition',
-    igx_query_builder_create_and_group: 'Create "And" Group',
-    igx_query_builder_create_or_group: 'Create "Or" Group',
+    igx_query_builder_add_condition: 'Add condition',
+    igx_query_builder_add_group: 'Add group',
+    igx_query_builder_add_condition_root: 'Condition',
+    igx_query_builder_add_group_root: 'Group',
     igx_query_builder_ungroup: 'Ungroup',
     igx_query_builder_delete: 'Delete',
     igx_query_builder_delete_filters: 'Delete filters',
