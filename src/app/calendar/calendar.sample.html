@@ -53,28 +53,30 @@
 
             <label>Weekday format</label>
             <igx-buttongroup selectionMode="singleRequired">
-                <button
+                @for(option of ['narrow', 'short', 'long']; track option) {
+                    <button
                     igxButton
-                    *ngFor="let option of ['narrow', 'short', 'long']"
                     value="option"
                     (click)="setWeekDayFormat(option)"
                     [selected]="option === formatOptions['weekday']"
-                >
-                    {{option}}
-                </button>
+                    >
+                        {{option}}
+                    </button>
+                }
             </igx-buttongroup>
 
             <label>Month format</label>
             <igx-buttongroup selectionMode="singleRequired">
-                <button
+                @for(option of ['numeric', '2-digit', 'narrow', 'short', 'long']; track option) {
+                    <button
                     igxButton
-                    *ngFor="let option of ['numeric', '2-digit', 'narrow', 'short', 'long']"
                     value="option"
                     (click)="setMonthFormat(option)"
                     [selected]="option === formatOptions['month']"
-                >
-                    {{option}}
-                </button>
+                    >
+                        {{option}}
+                    </button>
+                }
             </igx-buttongroup>
         </div>
     </ng-template>

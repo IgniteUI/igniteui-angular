@@ -5,7 +5,7 @@ import {
     TemplateRef,
     ViewChild,
 } from "@angular/core";
-import { NgFor, DATE_PIPE_DEFAULT_OPTIONS } from "@angular/common";
+import { DATE_PIPE_DEFAULT_OPTIONS } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import {
     IgxButtonDirective,
@@ -42,7 +42,6 @@ defineComponents(IgcCalendarComponent);
         IgxCalendarComponent,
         IgxButtonGroupComponent,
         FormsModule,
-        NgFor,
     ],
 })
 export class CalendarSampleComponent implements OnInit {
