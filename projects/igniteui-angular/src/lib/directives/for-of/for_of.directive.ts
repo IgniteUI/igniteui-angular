@@ -169,6 +169,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     public igxForContainerSize: any;
 
     /**
+     * @hidden
+     * @internal
+     * Initial chunk size if no container size is passed. If container size is passed then the igxForOf calculates its chunk size
+     */
+    @Input()
+    public igxForInitialChunkSize: any;
+
+    /**
      * Sets the px-affixed size of the item along the axis of scrolling.
      * For "horizontal" orientation this value is the width of the column and for "vertical" is the height or the row.
      * ```html
@@ -1207,7 +1215,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             }
         } else {
             if (this.igxForOf) {
-                chunkSize = this.igxForOf.length;
+                chunkSize = Math.min(this.igxForInitialChunkSize || this.igxForOf.length, this.igxForOf.length);
             }
         }
         return chunkSize;
