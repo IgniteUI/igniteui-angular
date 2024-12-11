@@ -1,0 +1,279 @@
+<!-- Define Reusable Form Templates -->
+<ng-template #shoppingCardForm>
+    <form [formGroup]="shoppingCard">
+        <igx-input-group>
+            <label igxLabel for="firstName">First Name</label>
+            <input igxInput formControlName="firstName" id="firstName" name="firstName" type="text" required />
+        </igx-input-group>
+        <igx-input-group>
+            <label igxLabel for="lastName">Last Name</label>
+            <input igxInput formControlName="lastName" id="lastName" name="lastName" type="text" required />
+        </igx-input-group>
+        <div class="nav-buttons">
+            <button igxButton="outlined" (click)="stepper.prev(); stepper2.prev()">PREV</button>
+            <button igxButton="outlined" (click)="stepper.next(); stepper2.next()" [disabled]="!shoppingCard.valid && properties.linear">NEXT</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #deliveryAddressForm>
+    <form [formGroup]="deliveryAddress">
+        <igx-input-group>
+            <label igxLabel for="address">Address</label>
+            <input igxInput formControlName="address" id="address" name="address" type="text" required />
+        </igx-input-group>
+        <div class="nav-buttons">
+            <button igxButton="outlined" (click)="stepper.prev(); stepper2.prev()">PREV</button>
+            <button igxButton="outlined" (click)="stepper.next(); stepper2.next()" [disabled]="!deliveryAddress.valid && stepper.linear">NEXT</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #userDetailsForm>
+    <form [formGroup]="userDetails">
+        <igx-input-group>
+            <label igxLabel for="phone">Phone</label>
+            <input igxInput formControlName="phone" id="phone" type="tel" name="phone" required/>
+        </igx-input-group>
+        <div class="nav-buttons">
+            <button igxButton="outlined" (click)="steppersPrev()">PREV</button>
+            <button igxButton="outlined" (click)="steppersNext()" [disabled]="!userDetails.valid && stepper.linear">NEXT</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #paymentMethodForm>
+    <form [formGroup]="paymentMethod">
+        <igx-select placeholder="Select paymend method" name="payment" formControlName="payment">
+            <igx-select-item [value]="'Credit or debit card'">Credit or debit card</igx-select-item>
+            <igx-select-item [value]="'Google Pay'">Google Pay</igx-select-item>
+            <igx-select-item [value]="'Revolut'">Revolut</igx-select-item>
+        </igx-select>
+
+        <div class="nav-buttons">
+            <button igxButton="outlined" (click)="steppersPrev()">PREV</button>
+            <button igxButton="outlined" (click)="steppersNext()" [disabled]="!paymentMethod.valid && stepper.linear">NEXT</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #additionalNotesForm>
+    <form [formGroup]="additionalNotes">
+        <igx-input-group>
+            <label igxLabel for="notes">Additional notes</label>
+            <textarea igxInput id="notes" name="notes" formControlName="notes"></textarea>
+        </igx-input-group>
+
+        <div class="nav-buttons">
+            <button igxButton="outlined" (click)="steppersPrev(); stepper2.prev()">PREV</button>
+            <button igxButton="outlined" (click)="steppersNext(); stepper2.next()">NEXT</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #finishOrderForm>
+    <form [formGroup]="finish">
+        <igx-input-group>
+            <igx-prefix>+359</igx-prefix>
+            <label igxLabel for="email">Email</label>
+            <input igxInput id="email" name="email" type="email" formControlName="email"/>
+            <igx-suffix>
+                <igx-icon>phone</igx-icon>
+            </igx-suffix>
+            <igx-hint position="start">Ex.: +359 888 123 456</igx-hint>
+        </igx-input-group>
+
+        <div class="nav-buttons">
+            <button igxButton="outlined" (click)="stepper.prev(); stepper2.prev()">PREV</button>
+            <button igxButton="outlined" [disabled]="!finish.valid">Submit</button>
+        </div>
+    </form>
+</ng-template>
+
+<div class="sample-stepper-wrapper">
+    <strong>Angular Stepper</strong>
+    <igx-stepper #stepper
+         [titlePosition]="titlePosition"
+         [orientation]="orientation"
+         [linear]="properties.linear"
+         [contentTop]="properties.contentTop"
+         [verticalAnimationType]="properties.verticalAnimation"
+         [horizontalAnimationType]="properties.horizontalAnimation"
+         [animationDuration]="properties.animationDuration"
+         (activeStepChanged)="onAngularStepperChange($event)"
+         [stepType]="stepType">
+
+        <ng-template igxStepActiveIndicator>
+            <igx-icon>edit</igx-icon>
+        </ng-template>
+
+        <!-- Step 1 Shopping Card -->
+        <igx-step
+            #step1
+            [completed]="shoppingCard.valid"
+            [isValid]="shoppingCard.valid">
+
+            <igx-icon igxStepIndicator>shopping_cart</igx-icon>
+            <span igxStepTitle>Shopping Card</span>
+            <span igxStepSubtitle>{{!shoppingCard.valid ? '(Required)' : 'completed'}}</span>
+
+            <div igxStepContent>
+                <ng-container *ngTemplateOutlet="shoppingCardForm; context: { $implicit: stepper }"></ng-container>
+            </div>
+        </igx-step>
+
+        <!-- Step 2 Delivery Address -->
+        <igx-step
+            #step2
+            [completed]="deliveryAddress.valid"
+            [isValid]="deliveryAddress.valid">
+
+            <igx-icon igxStepIndicator>location_on</igx-icon>
+            <span igxStepTitle>Delivery Address</span>
+            <span igxStepSubtitle>{{!deliveryAddress.valid ? '(Required)' : 'completed'}}</span>
+
+            <div igxStepContent>
+                <ng-container *ngTemplateOutlet="deliveryAddressForm"></ng-container>
+            </div>
+        </igx-step>
+
+        <!-- Step 3 User Details -->
+        <igx-step
+            #step3
+            [completed]="userDetails.valid"
+            [isValid]="userDetails.valid">
+
+            <span igxStepTitle>User Details</span>
+            <span igxStepSubtitle>{{!userDetails.valid ? '(Required)' : 'completed'}}</span>
+
+            <div igxStepContent>
+                <ng-container *ngTemplateOutlet="userDetailsForm"></ng-container>
+            </div>
+        </igx-step>
+
+        <!-- Step 4 Payment method -->
+        <igx-step
+            #step4
+            [completed]="paymentMethod.valid"
+            [isValid]="paymentMethod.valid">
+
+            <igx-icon igxStepIndicator>attach_money</igx-icon>
+            <span igxStepTitle>Payment method</span>
+            <span igxStepSubtitle>{{!paymentMethod.valid ? '(Required)' : '(completed)'}}</span>
+
+            <div igxStepContent>
+                <ng-container *ngTemplateOutlet="paymentMethodForm"></ng-container>
+            </div>
+        </igx-step>
+
+        <!-- Step 5 Finish Additional notes -->
+        <igx-step
+            #step5
+            [optional]="true"
+            [completed]="additionalNotes.valid">
+
+            <igx-icon igxStepIndicator>notes</igx-icon>
+            <span igxStepTitle>Additional notes</span>
+            <span igxStepSubtitle>Optional</span>
+
+            <div igxStepContent >
+                <ng-container *ngTemplateOutlet="additionalNotesForm"></ng-container>
+            </div>
+        </igx-step>
+
+        <!-- Step 6 Finish order-->
+        <igx-step #step6
+            [isValid]="finish.valid"
+            [completed]="additionalNotes.valid">
+            <igx-icon igxStepIndicator>receipt_long</igx-icon>
+            <span igxStepTitle>Finish order</span>
+            <span igxStepSubtitle>{{!finish.valid ? '(#12542653)' : '(order completed)'}}</span>
+            <div igxStepContent>
+                <ng-container *ngTemplateOutlet="finishOrderForm"></ng-container>
+            </div>
+        </igx-step>
+    </igx-stepper>
+</div>
+
+<div class="sample-stepper-wrapper">
+    <strong>WC Stepper</strong>
+    <igc-stepper
+            #stepper2
+        [orientation]="orientation"
+        [stepType]="stepType"
+        [contentTop]="properties.contentTop"
+        [titlePosition]="titlePosition"
+        [linear]="properties.linear"
+        [verticalAnimation]="properties.verticalAnimation"
+        [horizontalAnimation]="properties.horizontalAnimation"
+        [animationDuration]="properties.animationDuration"
+        (igcActiveStepChanging)="onWcStepperChange($event)"
+    >
+        <!-- Step 1 Shopping Card-->
+        <igc-step
+            [complete]="shoppingCard.valid"
+            [invalid]="!shoppingCard.valid">
+
+            <span slot="indicator"> <igx-icon igxStepIndicator>shopping_cart</igx-icon></span>
+            <span slot="title">Shopping Card</span>
+            <span slot="subtitle">{{!shoppingCard.valid ? '(Required)' : 'completed'}}</span>
+
+            <ng-container *ngTemplateOutlet="shoppingCardForm"></ng-container>
+        </igc-step>
+
+        <!-- Step 2 Delivery Address -->
+        <igc-step
+            [complete]="deliveryAddress.valid"
+            [invalid]="!deliveryAddress.valid">
+
+            <span slot="indicator">
+                <igx-icon igxStepIndicator>location_on</igx-icon>
+                <!-- TODO: Log an issue that igx icon look odd inside slot indicator-->
+                <!--  <igx-icon igxStepIndicator>location_on</igx-icon> -->
+            </span>
+            <span slot="title">Delivery Address</span>
+            <span slot="subtitle">(Required)</span>
+            <ng-container *ngTemplateOutlet="deliveryAddressForm"></ng-container>
+        </igc-step>
+
+        <!-- Step 3 User Details -->
+        <igc-step
+            [complete]="userDetails.valid"
+            [invalid]="!userDetails.valid">
+
+            <span slot="title">User Details</span>
+            <span slot="subtitle">(Required)</span>
+            <ng-container *ngTemplateOutlet="userDetailsForm"></ng-container>
+        </igc-step>
+
+        <!-- Step 4 Payment method -->
+        <igc-step
+            [complete]="paymentMethod.valid"
+            [invalid]="!paymentMethod.valid">
+
+            <span slot="title">Payment method</span>
+            <span slot="subtitle">Currently you can pay only cash</span>
+            <ng-container *ngTemplateOutlet="paymentMethodForm"></ng-container>
+        </igc-step>
+
+        <!-- Step 5 Finish Additional notes -->
+        <igc-step
+            [optional]="true"
+            [complete]="additionalNotes.valid">
+
+            <span slot="title">Additional notes</span>
+            <span slot="subtitle">Optional</span>
+            <ng-container *ngTemplateOutlet="additionalNotesForm"></ng-container>
+        </igc-step>
+
+        <!-- Step 6 Finish order -->
+        <igc-step
+            [complete]="finish.valid"
+            [invalid]="!finish.valid">
+            <span slot="title">Finish order</span>
+            <span slot="subtitle">{{!finish.valid ? '(#12542653)' : '(order completed)'}}</span>
+            <ng-container *ngTemplateOutlet="finishOrderForm"></ng-container>
+        </igc-step>
+    </igc-stepper>
+</div>
+

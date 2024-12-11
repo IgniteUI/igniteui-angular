@@ -1,60 +1,69 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { useAnimation } from '@angular/animations';
-import { HorizontalAlignment, IgxButtonDirective, IgxDialogActionsDirective, IgxDialogComponent, IgxDialogTitleDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSwitchComponent, PositionSettings, VerticalAlignment } from 'igniteui-angular';
-import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { IgxButtonDirective, IgxDialogActionsDirective, IgxDialogComponent, IgxDialogTitleDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective } from 'igniteui-angular';
+import { defineComponents, IgcDialogComponent, IgcInputComponent, IgcButtonComponent, IgcIconComponent, registerIconFromText } from "igniteui-webcomponents";
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
+defineComponents(IgcDialogComponent, IgcInputComponent, IgcButtonComponent, IgcIconComponent);
 
+const icons = [
+    {
+        name: 'person',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>'
+    },
+    {
+        name: 'lock',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>'
+    },
+];
+
+icons.forEach((icon) => {
+    registerIconFromText(icon.name, icon.url);
+});
 @Component({
     selector: 'app-dialog-sample',
     styleUrls: ['dialog.sample.scss'],
     templateUrl: 'dialog.sample.html',
-    imports: [IgxButtonDirective, IgxRippleDirective, IgxSwitchComponent, IgxDialogComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxDialogTitleDirective, IgxDialogActionsDirective]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    standalone: true,
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxDialogComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
-export class DialogSampleComponent implements OnInit {
-
-    @ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
-
-    public positionSettings: PositionSettings = {
-        openAnimation: useAnimation(slideInTop, { params: { duration: '2000ms' } }),
-        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '2000ms'} }),
-        horizontalDirection: HorizontalAlignment.Left,
-        verticalDirection: VerticalAlignment.Middle,
-        horizontalStartPoint: HorizontalAlignment.Left,
-        verticalStartPoint: VerticalAlignment.Middle,
-        minSize: { height: 100, width: 100 }
-    };
-
-    public newPositionSettings: PositionSettings = {
-        horizontalDirection: HorizontalAlignment.Center,
-        verticalDirection: VerticalAlignment.Middle,
-    };
-
-    public newAnimationSettings: PositionSettings = {
-        openAnimation: useAnimation(slideInTop),
-        closeAnimation: useAnimation(slideOutBottom)
-    };
-
-    public ngOnInit() {
-        // Set position settings on ngOnInit
-        // this.alert.positionSettings = this.newAnimationSettings;
-
-        console.log(this.alert.positionSettings);
+export class DialogSampleComponent {
+    public panelConfig : PropertyPanelConfig = {
+        keepOpenOnEscape: {
+            label: 'Keep Open on Escape',
+            control: {
+                type: 'boolean'
+            }
+        },
+        closeOnOutsideClick: {
+            label: 'Close on Outside Click',
+            control: {
+                type: 'boolean'
+            }
+        },
+        title: {
+            control: {
+                type: 'text',
+                defaultValue: 'Confirmation'
+            }
+        }
     }
 
-    public togglePosition() {
-        this.alert.positionSettings = this.alert.positionSettings === this.positionSettings ?
-            this.newPositionSettings : this.positionSettings;
+    public properties: Properties;
+
+    constructor(private propertyChangeService: PropertyChangeService) {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        this.propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
     }
 
-    public onDialogOKSelected(args) {
-        // args.event - event
-        // args.dialog - dialog
-
-        // perform OK action
+    protected onDialogOKSelected(args) {
         args.dialog.close();
     }
 
-    public closeDialog(evt) {
+    protected closeDialog(evt) {
         console.log(evt);
     }
 }
