@@ -422,10 +422,13 @@
         }
 
         input,
-        textarea,
-        span {
+        textarea {
             font: inherit;
             margin: 0;
+        }
+
+        span {
+            font-family: inherit;
         }
 
         input[type='file'] {
