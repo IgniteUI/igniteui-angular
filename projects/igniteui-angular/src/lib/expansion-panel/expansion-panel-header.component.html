@@ -12,7 +12,8 @@
         @if (!iconTemplate) {
             <igx-icon
                 family="default"
-                [name]="panel.collapsed ? 'expand' : 'collapse'">
+                [name]="panel.collapsed ? 'expand' : 'collapse'"
+                [attr.aria-hidden]="true">
             </igx-icon>
         }
     </div>
