@@ -35,7 +35,7 @@ export class IgxColumnResizingService {
      * @hidden
      */
     public getColumnHeaderRenderedWidth() {
-        return this.column.headerCell.nativeElement.getBoundingClientRect().width;
+        return parseFloat(window.getComputedStyle(this.column.headerCell.nativeElement).width);
     }
 
     /**
@@ -101,9 +101,9 @@ export class IgxColumnResizingService {
     /**
      * Resizes the column regaridng to the column minWidth and maxWidth.
      */
-    public resizeColumn(event: MouseEvent) {
+    public resizeColumn(event: MouseEvent, ratio: number = 1) {
         this.showResizer = false;
-        const diff = event.clientX - this.startResizePos;
+        const diff = (event.clientX - this.startResizePos) / ratio;
 
         const colWidth = this.column.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
