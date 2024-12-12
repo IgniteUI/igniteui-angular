@@ -15,27 +15,28 @@
         (rowDelete)="log($event)"
         (rowDeleted)="log($event)"
     >
-        <igx-column
-            *ngFor="let c of columns"
-            [sortable]="true"
-            [field]="c.field"
-            [header]="c.field"
-            [width]="c.width"
-            [pinned]="c.pinned"
-            [hidden]="c.hidden"
-            [groupable]="true"
-            [hasSummary]="true"
-        >
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column
+                [sortable]="true"
+                [field]="c.field"
+                [header]="c.field"
+                [width]="c.width"
+                [pinned]="c.pinned"
+                [hidden]="c.hidden"
+                [groupable]="true"
+                [hasSummary]="true"
+            >
+            </igx-column>
+        }
 
         <igx-action-strip #actionstrip>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
             <igx-grid-editing-actions [addRow]="true" [editRow]="false" [deleteRow]='true'></igx-grid-editing-actions>
         </igx-action-strip>
-        <igx-paginator
-            *ngIf="paging"
-            [perPage]="perPage">
-        </igx-paginator>
+        @if (paging) {
+            <igx-paginator [perPage]="perPage">
+            </igx-paginator>
+        }
     </igx-grid>
 
     <igx-card style="width: 360px; margin-top: 12px">
@@ -46,7 +47,9 @@
             <button igxButton="contained" (click)="data = data.length ? [] : dataFull">Switch Data/No Data</button>
             <button igxButton="contained" (click)="paging = !paging">Paging {{paging}}</button>
             <igx-select [(ngModel)]="perPage">
-                <igx-select-item *ngFor="let value of selectOptions" [value]="value">{{value}}</igx-select-item>
+                @for (value of selectOptions; track value) {
+                    <igx-select-item [value]="value">{{value}}</igx-select-item>
+                }
             </igx-select>
             <button igxButton="contained" (click)="beginAddRowAtIndex(indexInput.value)">Add Row At Index</button>
             <igx-input-group>

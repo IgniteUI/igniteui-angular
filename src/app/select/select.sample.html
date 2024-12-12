@@ -31,11 +31,13 @@
             <igx-select-item>
                 None
             </igx-select-item>
-            <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
-                <igx-icon igxPrefix>alarm</igx-icon>
-                {{ item.field }}
-                <igx-icon igxSuffix>notifications_active</igx-icon>
-            </igx-select-item>
+            @for (item of items; track item; let inx = $index) {
+                <igx-select-item [value]="item.field">
+                    <igx-icon igxPrefix>alarm</igx-icon>
+                    {{ item.field }}
+                    <igx-icon igxSuffix>notifications_active</igx-icon>
+                </igx-select-item>
+            }
             <ng-template igxSelectHeader>
                 <div class="custom-select-header" (click)="headerFootedClick($event);">
                     Header content
@@ -101,8 +103,8 @@
     </section>
 
     <section class="select-sample__section">
-    <h1 class="select-sample__title">Select - using Groups</h1>
-    <igx-select #select4
+        <h1 class="select-sample__title">Select - using Groups</h1>
+        <igx-select #select4
                 [placeholder]="'Pick One'"
                 [value]="value"
                 (opening)="testOnOpening($event)"
@@ -111,29 +113,29 @@
                 (closed)="testOnClosed()"
                 (selectionChanging)="testOnSelection($event)"
                 [disabled]="false">
-        <label igxLabel>Group</label>
-        <igx-prefix igxPrefix>
-            <igx-icon>alarm</igx-icon>
-        </igx-prefix>
-        <igx-select-item value="1">OutsideGroup</igx-select-item>
-        <igx-select-item-group label="Group">
-            <igx-select-item [disabled]="true" value="2">
-                <igx-icon igxPrefix>alarm</igx-icon>
-                InsideGroup1
-                <igx-icon igxSuffix>alarm</igx-icon>
-            </igx-select-item>
-            <igx-select-item value="3">
-                <igx-icon igxPrefix>alarm</igx-icon>
-                InsideGroup2
-                <igx-icon igxSuffix>alarm</igx-icon>
-            </igx-select-item>
-            <igx-select-item value="4">
-                <igx-icon igxPrefix>alarm</igx-icon>
-                InsideGroup3
-                <igx-icon igxSuffix>alarm</igx-icon>
-            </igx-select-item>
-        </igx-select-item-group>
-    </igx-select>
+            <label igxLabel>Group</label>
+            <igx-prefix igxPrefix>
+                <igx-icon>alarm</igx-icon>
+            </igx-prefix>
+            <igx-select-item value="1">OutsideGroup</igx-select-item>
+            <igx-select-item-group label="Group">
+                <igx-select-item [disabled]="true" value="2">
+                    <igx-icon igxPrefix>alarm</igx-icon>
+                    InsideGroup1
+                    <igx-icon igxSuffix>alarm</igx-icon>
+                </igx-select-item>
+                <igx-select-item value="3">
+                    <igx-icon igxPrefix>alarm</igx-icon>
+                    InsideGroup2
+                    <igx-icon igxSuffix>alarm</igx-icon>
+                </igx-select-item>
+                <igx-select-item value="4">
+                    <igx-icon igxPrefix>alarm</igx-icon>
+                    InsideGroup3
+                    <igx-icon igxSuffix>alarm</igx-icon>
+                </igx-select-item>
+            </igx-select-item-group>
+        </igx-select>
     </section>
 
     <section class="select-sample__section">
@@ -144,9 +146,11 @@
                 <igx-prefix igxPrefix>
                     <igx-icon>alarm</igx-icon>
                 </igx-prefix>
-                <igx-select-item *ngFor="let city of cities; let inx=index" [value]="city">
-                    {{ city }}
-                </igx-select-item>
+                @for (city of cities; track city; let inx = $index) {
+                    <igx-select-item [value]="city">
+                        {{ city }}
+                    </igx-select-item>
+                }
             </igx-select>
             <button type="submit" igxButton="contained" [disabled]="!reactiveForm.valid">Submit</button>
         </form>
@@ -169,9 +173,11 @@
                 <label igxLabel>Favorite fruit</label>
                 <span igxPrefix>Fruit</span>
                 <igx-select-item> None </igx-select-item>
-                <igx-select-item *ngFor="let fruit of fruits" [value]="fruit">
-                    {{fruit}}
-                </igx-select-item>
+                @for (fruit of fruits; track fruit) {
+                    <igx-select-item [value]="fruit">
+                        {{fruit}}
+                    </igx-select-item>
+                }
             </igx-select>
             <div>Selected: {{selected}}</div>
             <div>Valid: {{model.valid}}</div>

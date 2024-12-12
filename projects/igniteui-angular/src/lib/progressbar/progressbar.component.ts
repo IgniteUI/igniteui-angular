@@ -1,4 +1,4 @@
-import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     Component,
     ElementRef,
@@ -499,7 +499,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 @Component({
     selector: 'igx-circular-bar',
     templateUrl: 'templates/circular-bar.component.html',
-    imports: [NgTemplateOutlet, NgIf]
+    imports: [NgTemplateOutlet]
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterViewInit, AfterContentInit {
 

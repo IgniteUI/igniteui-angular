@@ -1,5 +1,4 @@
 import { Component, ViewChild, ChangeDetectorRef, AfterViewInit, HostBinding } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
 import {
     IgxRowIslandComponent,
@@ -17,7 +16,7 @@ import {
     selector: 'app-hierarchical-grid-sample',
     styleUrls: ['hierarchical-grid.sample.scss'],
     templateUrl: 'hierarchical-grid.sample.html',
-    imports: [NgIf, NgFor, GridSearchBoxComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxIconComponent, IGX_BUTTON_GROUP_DIRECTIVES]
+    imports: [GridSearchBoxComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxIconComponent, IGX_BUTTON_GROUP_DIRECTIVES]
 })
 export class HierarchicalGridSampleComponent implements AfterViewInit {
     @HostBinding('style.--ig-size')

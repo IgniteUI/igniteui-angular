@@ -22,7 +22,7 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
+import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -314,9 +314,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxRowIslandAPIService
     ],
     imports: [
-        NgIf,
         NgClass,
-        NgFor,
         NgTemplateOutlet,
         NgStyle,
         IgxGridHeaderRowComponent,

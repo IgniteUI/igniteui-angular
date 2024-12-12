@@ -22,9 +22,11 @@
         [igxDropDownItemNavigation]="dropDownRowSelection" class="size">Row Selection:
         {{grid1.rowSelection}}</button>
     <igx-drop-down #dropDownRowSelection (selectionChanging)="onRowSelection($event)" class="size">
-        <igx-drop-down-item *ngFor="let item of selectionModes">
-            {{ item }}
-        </igx-drop-down-item>
+        @for (item of selectionModes; track item) {
+            <igx-drop-down-item>
+                {{ item }}
+            </igx-drop-down-item>
+        }
     </igx-drop-down>
     <div class="density-chooser" style="margin-bottom: 16px">
         <igx-buttongroup [values]="summaryModes" (selected)="selectSummaryMode($event)"
@@ -33,10 +35,12 @@
     <igx-grid #grid1 [data]="data" [allowFiltering]="true" [moving]="true" [cellSelection]="'single'" [width]="'1200px'"
         [hideGroupedColumns]="hideGroupedColumns" [height]="'700px'" [(groupingExpansionState)]='expState' [sortingOptions]="sortingOp"
         [summaryCalculationMode]="summaryMode" [summaryPosition]="position" [rowDraggable]="true">
-        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
-            [hidden]='c.hidden' [sortable]="true" [groupable]='c.groupable' [pinned]='!!c.pinned'
-            [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
+                [hidden]='c.hidden' [sortable]="true" [groupable]='c.groupable' [pinned]='!!c.pinned'
+                [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
+            </igx-column>
+        }
         <!--<ng-template igxGroupByRow let-groupRow>
             <span>Total items with value:"{{ groupRow.value }}" are {{ groupRow.records.length }}</span>
         </ng-template>-->

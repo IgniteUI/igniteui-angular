@@ -1,5 +1,4 @@
 import { AnimationBuilder } from '@angular/animations';
-import { NgIf } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -1266,14 +1265,16 @@ describe('Stepper service unit tests', () => {
             </div>
         </igx-step>
 
-        <igx-step #hiddenStep *ngIf="displayHiddenStep">
-            <span igxStepIndicator>*</span>
-            <span igxStepTitle>Hidden step</span>
-            <span igxStepSubtitle>Step SubTitle</span>
-            <div igxStepContent class="sample-body">
-               <p>Test hidden step</p>
-            </div>
-        </igx-step>
+        @if (displayHiddenStep) {
+            <igx-step #hiddenStep>
+                <span igxStepIndicator>*</span>
+                <span igxStepTitle>Hidden step</span>
+                <span igxStepSubtitle>Step SubTitle</span>
+                <div igxStepContent class="sample-body">
+                    <p>Test hidden step</p>
+                </div>
+            </igx-step>
+        }
 
         <igx-step #step3>
             <span igxStepIndicator>3</span>
@@ -1314,7 +1315,6 @@ describe('Stepper service unit tests', () => {
         IgxIconComponent,
         IgxInputDirective,
         IgxInputGroupComponent,
-        NgIf
     ]
 })
 export class IgxStepperSampleTestComponent {

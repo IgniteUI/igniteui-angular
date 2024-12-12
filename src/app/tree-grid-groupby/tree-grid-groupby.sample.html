@@ -1,7 +1,9 @@
 <div class="sample-column">
     <div class="density-chooser">
         <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
-        <igx-switch *ngIf="groupArea" [(ngModel)]="groupArea.hideGroupedColumns">Hide Grouped Columns</igx-switch>
+        @if (groupArea) {
+            <igx-switch [(ngModel)]="groupArea.hideGroupedColumns">Hide Grouped Columns</igx-switch>
+        }
         <button igxButton="contained" (click)="print()" >Show Expressions</button>
     </div>
 
@@ -35,10 +37,12 @@
 
         <igx-column [field]='groupKey' [resizable]="true" [width]="'250px'" [hidden]='groupingExpressions.length === 0'></igx-column>
 
-        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
-            [groupable]="true" [resizable]="c.resizable" [width]="c.width"
-            [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
-            [minWidth]="c.minWidth" [maxWidth]="c.maxWidth" [dataType]="c.dataType">
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [field]="c.field" [header]="c.field" [pinned]="c.pinned"
+                [groupable]="true" [resizable]="c.resizable" [width]="c.width"
+                [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
+                [minWidth]="c.minWidth" [maxWidth]="c.maxWidth" [dataType]="c.dataType">
+            </igx-column>
+        }
     </igx-tree-grid>
 </div>

@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import { NgFor } from '@angular/common';
 import { IgxAvatarComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxGridComponent, IgxIconButtonDirective, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxPrefixDirective, IgxRippleDirective, IgxSuffixDirective, IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent, ITabsSelectedIndexChangingEventArgs, ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
 
 @Component({
@@ -7,7 +6,7 @@ import { IgxAvatarComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxGri
     styleUrls: ['tabs.sample.scss'],
     templateUrl: 'tabs.sample.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [IgxButtonDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxRippleDirective, IgxIconComponent, IgxTabHeaderIconDirective, IgxIconButtonDirective, IgxTabHeaderLabelDirective, IgxTabContentComponent, IgxListComponent, NgFor, IgxListItemComponent, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective, IgxButtonGroupComponent, IgxPrefixDirective, IgxSuffixDirective, IgxGridComponent]
+    imports: [IgxButtonDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxRippleDirective, IgxIconComponent, IgxTabHeaderIconDirective, IgxIconButtonDirective, IgxTabHeaderLabelDirective, IgxTabContentComponent, IgxListComponent, IgxListItemComponent, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective, IgxButtonGroupComponent, IgxPrefixDirective, IgxSuffixDirective, IgxGridComponent]
 })
 export class TabsSampleComponent implements OnInit {
 
