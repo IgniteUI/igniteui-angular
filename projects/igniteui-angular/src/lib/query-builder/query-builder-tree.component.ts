@@ -1051,8 +1051,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public onDivOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
         //If over the div, at least close to the contained chip, behave like chipOver. If not behave like chipLeave
         if (this.chipsAreNearBy(targetDragElement.children[0] as HTMLElement,
-        this.ghostChipElement,
-        (this.targetExpressionItem === targetExpressionItem? this.vicinityHysteresis.leaving : this.vicinityHysteresis.entering))) {
+            this.ghostChipElement,
+            (this.targetExpressionItem === targetExpressionItem ? this.vicinityHysteresis.leaving : this.vicinityHysteresis.entering))) {
             if (this.targetExpressionItem === targetExpressionItem) {
                 this.onChipOver(targetDragElement, true)
             }
@@ -1110,16 +1110,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.resetDragAndDrop(true);
     }
 
-    public onAddConditionEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionGroupItem) {
+    public onAddConditionEnter(addConditionElement: HTMLElement, rootGroup: ExpressionGroupItem) {
         //console.log('onAddConditionEnter', targetDragElement);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
-        let lastElement = this.getPreviousChip(targetDragElement.parentElement);
+        let lastElement = this.getPreviousChip(addConditionElement.parentElement);
         if (lastElement == this.ghostChip) return;
 
         //simulate entering in the lower part of the last chip/group
         this.onChipEnter(lastElement as HTMLElement,
-            targetExpressionItem.children[targetExpressionItem.children.length - 1],
+            rootGroup.children[rootGroup.children.length - 1],
             false);
     }
 
@@ -1129,24 +1129,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.onChipLeave()
     }
 
-    public onAddConditionDropped(targetExpressionItem: ExpressionGroupItem) {
+    public onAddConditionDropped() {
         //console.log('onAddConditionDropped',targetExpressionItem, this.sourceExpressionItem,targetExpressionItem == this.sourceExpressionItem);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         if (this.targetExpressionItem) {
             this.onChipDropped();
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public addExpressionBlur() {
-        if (this.prevFocusedExpression) {
-            this.prevFocusedExpression.focused = false;
-        }
-        if (this.addExpressionItemDropDown && !this.addExpressionItemDropDown.collapsed) {
-            this.addExpressionItemDropDown.close();
         }
     }
 
@@ -1286,6 +1274,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             });
     }
 
+    //Perform up/down movement of drop ghost along the expression tree
     private arrowDrag(key: KeyboardEvent) {
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
@@ -1300,27 +1289,43 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             newKeyIndex = this.keyDragIndex - 1 >= index * -2 - 1 ? this.keyDragIndex - 1 : this.keyDragIndex;
         }
         else if (key.code == 'ArrowDown') {
-            newKeyIndex = this.keyDragIndex <= (expressionsList.length - 1 - index) * 2 ? this.keyDragIndex + 1 : this.keyDragIndex;
+            newKeyIndex = this.keyDragIndex <= (expressionsList.length - 1 - index) * 2 + 1 ? this.keyDragIndex + 1 : this.keyDragIndex;
         }
 
         if (newKeyIndex != this.keyDragIndex) {
             this.keyDragIndex = newKeyIndex;
             const indexOffset = ~~(this.keyDragIndex / 2);
-            this.targetElement = chipsList[index + indexOffset];
-            this.targetExpressionItem = expressionsList[index + indexOffset];
 
-            const under = this.keyDragIndex < 0 ? this.keyDragIndex % 2 == 0 ? true : false
-                : this.keyDragIndex % 2 == 0 ? false : true;
+            if (index + indexOffset <= expressionsList.length - 1) {
+                this.targetElement = chipsList[index + indexOffset];
+                this.targetExpressionItem = expressionsList[index + indexOffset];
 
-            const before = this.getPreviousChip(this.dropGhostChipElement);
-            const after = this.getNextChip(this.dropGhostChipElement);
+                const under = this.keyDragIndex < 0 ? this.keyDragIndex % 2 == 0 ? true : false
+                    : this.keyDragIndex % 2 == 0 ? false : true;
 
-            this.createDropGhostChip(this.targetElement, under, true);
+                const before = this.getPreviousChip(this.dropGhostChipElement);
+                const after = this.getNextChip(this.dropGhostChipElement);
 
-            //If drop ghost is not displayed or hasn't moved, move one more step in the same direction
-            if (!this.dropGhostChipElement ||
-                (this.getPreviousChip(this.dropGhostChipElement) === before && this.getNextChip(this.dropGhostChipElement) === after)) {
-                this.arrowDrag(key);
+                this.createDropGhostChip(this.targetElement, under, true);
+
+                //If drop ghost is not displayed or hasn't moved, move one more step in the same direction
+                if (!this.dropGhostChipElement ||
+                    (this.getPreviousChip(this.dropGhostChipElement) === before && this.getNextChip(this.dropGhostChipElement) === after)) {
+                    this.arrowDrag(key);
+                }
+            }
+            else {
+                //Dropping on '+ Condition button' => simulate entering in the lower part of the last chip/group
+                let lastElement = this.getPreviousChip(chipsList[chipsList.length - 1].parentElement);
+                lastElement = lastElement === this.ghostChip? this.getPreviousChip(lastElement as HTMLElement) : lastElement;                
+
+                const getParentExpression = (expression: ExpressionItem) => { return expression.parent ? getParentExpression(expression.parent) : expression };
+                const rootGroup = getParentExpression(expressionsList[expressionsList.length - 1]);
+
+                this.targetElement = lastElement as HTMLElement;
+                this.targetExpressionItem = rootGroup.children[rootGroup.children.length - 1];
+
+                this.createDropGhostChip(lastElement as HTMLElement, true, true);
             }
         }
 
@@ -1362,7 +1367,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     //Gets all chip elements owned by this tree (discard child trees)  flatten out as a list of HTML elements
     private getListedChips(): HTMLElement[] {
-        const viableDropAreaSelector = '.igx-filter-tree__expression-item:not([style*="display:none"]):not(.igx-filter-tree__expression-item-drop-ghost),.igx-filter-tree__inputs:not(.igx-query-builder__main > .igx-filter-tree__inputs)';
+        const viableDropAreaSelector = '.igx-filter-tree__expression-item:not([style*="display:none"]):not(.igx-filter-tree__expression-item-drop-ghost),.igx-filter-tree__inputs:not(.igx-query-builder__main > .igx-filter-tree__inputs),.igx-filter-tree__buttons > .igx-button:first-of-type';
         const expressionElementList = (this.el.nativeElement as HTMLElement).querySelectorAll(viableDropAreaSelector);
         let ownChipElements = [];
 
@@ -1384,6 +1389,17 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     /* DRAG AND DROP END*/
 
+    /**
+     * @hidden @internal
+     */
+    public addExpressionBlur() {
+        if (this.prevFocusedExpression) {
+            this.prevFocusedExpression.focused = false;
+        }
+        if (this.addExpressionItemDropDown && !this.addExpressionItemDropDown.collapsed) {
+            this.addExpressionItemDropDown.close();
+        }
+    }
 
     /**
      * @hidden @internal
