@@ -22,6 +22,20 @@ All notable changes for each version of this project will be documented in this 
         }
     </ng-template> 
     ```
+    - Added `IgxFieldValidators` that could be used to define basic validation of the search value input based on the field data type. The supported validators out of the box are:
+        - For fields of type `string` - `IgxFieldValidators.Required()`, `IgxFieldValidators.MinLength()`, `IgxFieldValidators.MaxLength()` and `IgxFieldValidators.Pattern()`.
+        - For fields of type `number` - `IgxFieldValidators.Required()`, `IgxFieldValidators.Min()` and `IgxFieldValidators.Max()`.
+        - For fields of type `date`, `time`, `dateTime` - `IgxFieldValidators.MinDate()` and `IgxFieldValidators.MaxDate()`.
+    
+    Setting validators per fields could be defined as follows:
+
+    ```
+      this.fields = [
+            { field: 'Id', dataType: 'number', validators: [IgxFieldValidators.Min(3), IgxFieldValidators.Max(5)] },
+            { field: 'Name', dataType: 'string', validators: [IgxFieldValidators.MinLength(3), IgxFieldValidators.MaxLength(5), IgxFieldValidators.Required()] },
+            { field: 'Date', dataType: 'date', validators: [IgxFieldValidators.MinDate(new Date())] }
+        ];
+    ```
 - `IFilteringExpression`
     - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
 - `IFilteringOperation`

@@ -22,6 +22,7 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
 import { CommonModule } from '@angular/common';
 import { IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular/src/lib/query-builder/query-builder.directives';
 import { FormsModule } from '@angular/forms';
+import { IgxFieldValidators } from 'igniteui-angular/src/lib/query-builder/query-builder-tree.component';
 
 @Component({
     providers: [],
@@ -47,10 +48,10 @@ export class QueryBuilderComponent implements OnInit {
 
     public ngOnInit(): void {
         this.fieldsEntityA = [
-            { field: 'Id', dataType: 'number', formatter: (value: any, rowData: any) => rowData === 'equals' ? `${value.map((v: { id: any; }) => v.id)}` : value },
-            { field: 'Name', dataType: 'string' },
+            { field: 'Id', dataType: 'number', validators: [IgxFieldValidators.Min(3), IgxFieldValidators.Max(5)], formatter: (value: any, rowData: any) => rowData === 'equals' ? `${value.map((v: { id: any; }) => v.id)}` : value },
+            { field: 'Name', dataType: 'string', validators: [IgxFieldValidators.MinLength(3), IgxFieldValidators.MaxLength(5)] },
             { field: 'Validated', dataType: 'boolean' },
-            { field: 'Date created', dataType: 'date' },
+            { field: 'Date created', dataType: 'date', validators: [IgxFieldValidators.MinDate(new Date())] },
             { field: 'Time created', dataType: 'time' },
             { field: 'DateTime created', dataType: 'dateTime' }
         ];
