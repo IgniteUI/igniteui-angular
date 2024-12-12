@@ -30,6 +30,11 @@
     $background-and--focus: null,
     $background-or: null,
     $background-or--focus: null,
+    $border-color: null,
+    $border-radius: null,
+    $tree-background: null,
+    $tree-border-color: null,
+    $tree-border-radius: null,
 ) {
     $name: 'igx-query-builder';
     $selector: 'igx-query-builder';
@@ -51,7 +56,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-
         background: $background,
         header-background: $header-background,
         header-foreground: $header-foreground,
@@ -60,6 +64,11 @@
         background-and--focus: $background-and--focus,
         background-or: $background-or,
         background-or--focus: $background-or--focus,
+        border-color: $border-color,
+        tree-background: $tree-background,
+        tree-border-color: $tree-border-color,
+        tree-border-radius: $tree-border-radius,
+        border-radius: $border-radius,
         theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
@@ -97,26 +106,76 @@
         compact: rem(8px)
     );
 
+    $backgrounds: (var-get($theme, 'background'), var-get($theme, 'tree-background'));
+
+    $gap: sizable(
+        map.get($vertical-space, 'compact'),
+        map.get($vertical-space, 'cosy'),
+        map.get($vertical-space, 'comfortable')
+    );
+
+    $border-radius: var-get($theme, 'border-radius');
+;
+    $max-depth: 10;
     $icon-size: rem(18px);
 
     %advanced-filter {
+        --component-size: var(--ig-size, var(--ig-size-large));
+
         @include sizable();
 
         width: auto;
         min-width: rem(660px);
         background-color: var-get($theme, 'background');
-        border-radius: border-radius(rem(4px));
-        box-shadow: elevation(12);
+        border-radius: $border-radius;
+        border: rem(1px) solid var-get($theme, 'border-color');
+    }
+
+    %query-builder-tree {
+        width: 100%;
+
+        border-radius: var-get($theme, 'tree-border-radius');
+
+        %query-builder-tree {
+            border: rem(1px) solid var-get($theme, 'tree-border-color');
+
+            %filter-empty {
+                display: none;
+            }
+
+            %advanced-filter__main {
+                padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+                padding-block: pad-block(rem(16px));
+            }
+        }
+    }
+
+    @for $i from 0 through 5 {
+        %query-level-#{$i} {
+            background: nth($backgrounds, ($i % length($backgrounds)) + 1);
+        }
+    }
+
+    %filter-tree-details-button {
+        margin-inline-start: auto;
+    }
+
+    %query-builder-dialog {
+        display: flex;
+        flex-direction: column;
+        gap: rem(16px);
+        max-width: rem(310px);
+
+        > * {
+            margin: 0 !important;
+        }
     }
 
     %advanced-filter__header {
-        @if $variant != 'indigo' {
-            @include type-style('h6');
-        } @else {
-            @include type-style('h5');
-
-            border-top-left-radius: border-radius(rem(10px));
-            border-top-right-radius: border-radius(rem(10px));
+        @if $variant == 'bootstrap' {
+            > * {
+                margin-bottom: rem(0) !important;
+            }
         }
 
         display: flex;
@@ -124,19 +183,34 @@
         background-color: var-get($theme, 'header-background');
         color: var-get($theme, 'header-foreground');
         user-select: none;
+        border-radius: $border-radius $border-radius 0 0;
         margin-bottom: 0;
         border-block-end: rem(1px) solid var-get($theme, 'header-border');
     }
 
-    %advanced-filter__main {
-        display: block;
-        overflow: auto;
-        min-height: pad(rem(138px), rem(164px), rem(214px));
-        max-height: pad(rem(305px), rem(394px), rem(468px));
+    %advanced-filter__title {
+        @include type-style(if($variant != 'indigo', 'h6', 'h5'));
+    }
 
-        [igxButton] + [igxButton] {
-            margin-inline-start: rem(8px);
+    %advanced-filter__main {
+        display: flex;
+        overflow: auto;
+        gap: $gap;
+    }
+
+    %advanced-filter__root {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        > * {
+            flex-grow: 1;
         }
+    }
+
+    %advanced-filter__root-actions {
+        display: flex;
+        gap: rem(8px);
     }
 
     %advanced-filter__header,
@@ -160,16 +234,7 @@
 
     %filter-tree {
         display: flex;
-
-        + %filter-tree,
-        + %filter-tree__expression-item,
-        + %filter-tree__inputs {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
-        }
+        width: 100%;
     }
 
     %filter-tree__line {
@@ -178,7 +243,7 @@
         background-color: white;
         margin-inline-end: pad(rem(8px), rem(12px), rem(16px));
         outline-style: none;
-        border-radius: border-radius(rem(4px));
+        border-radius: $border-radius;
         cursor: pointer;
     }
 
@@ -210,26 +275,18 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        flex-grow: 1;
+        gap: $gap;
     }
 
     %filter-tree__expression-item {
         display: flex;
         align-items: center;
-
-        + %filter-tree,
-        + %filter-tree__inputs,
-        + %filter-tree__expression-item {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
-        }
+        width: 100%;
+        gap: if($variant != 'indigo', $gap, rem(8px));
+        position: relative;
 
         > igx-chip {
-            @container style(--ig-size: 1) {
-                --ig-size: 2;
-            }
 
             @if $variant != 'indigo' {
                 .igx-chip__item {
@@ -237,8 +294,12 @@
                 }
             }
 
-            .igx-filter-tree__expression-column {
+            %filter-tree__expression-column {
                 padding-inline: pad-inline(rem(3px), rem(6px), rem(8px));
+            }
+
+            %filter-tree__expression-condition {
+                padding-inline-start: pad-inline(rem(3px), rem(6px), rem(8px));
             }
 
             igx-prefix {
@@ -257,77 +318,56 @@
 
     %filter-tree__expression-actions {
         display: inline-flex;
-        margin: 0 rem(8px);
-        gap: rem(8px);
+        gap: if($variant != 'indigo', $gap, rem(8px));
+
+        span {
+            display: inline-flex;
+        }
 
         %igx-icon-button-display {
-            --size: #{sizable(rem(20px), rem(24px), if($variant != 'indigo', rem(32px), rem(28px)))};
-        }
+            --size: #{sizable(rem(20px), rem(24px), if($variant != 'indigo', rem(32px), rem(28px)))}
+        };
     }
 
     %filter-tree__expression-condition {
-        opacity: .7;
+        opacity: if($variant != 'indigo', .6, .8);
     }
 
     %filter-tree__buttons {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: pad(
-            map.get($vertical-space, 'compact'),
-            map.get($vertical-space, 'cosy'),
-            map.get($vertical-space, 'comfortable')
-        );
-
-        + %filter-tree,
-        + %filter-tree__expression-item,
-        + %filter-tree__inputs {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
-        }
+        gap: rem(8px);
     }
 
     %filter-tree__inputs {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        gap: rem(8px);
+        width: 100%;
 
         igx-input-group {
             --ig-size: 1;
         }
 
-        igx-select + igx-select,
-        igx-select + igx-input-group,
-        igx-select + igx-date-picker,
-        igx-select + igx-time-picker,
-        igx-input-group + igx-select {
-            margin-inline-start: rem(8px);
+        > * {
+            max-width: rem(300px);
+            width: 100%;
         }
 
-        + %filter-tree,
-        + %filter-tree__expression-item {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
+        &:empty {
+            display: none !important;
         }
     }
 
     %filter-tree__inputs-actions {
         display: flex;
-        margin: 0 rem(8px);
+        gap: $gap;
         align-items: center;
+        width: auto;
 
         [igxIconButton] {
             transition: none;
-        }
-
-        [igxIconButton] + [igxIconButton] {
-            margin-inline-start: rem(8px);
         }
     }
 
@@ -342,18 +382,16 @@
         display: inline-flex;
         align-items: center;
         font-size: rem(12px);
-
-        @if $variant == 'indigo' {
-            font-weight: 400;
-        }
+        line-height: rem(16px);
+        font-weight: 400;
 
         &::before {
             content: '';
             width: rem(24px);
             height: rem(24px);
             background: white;
-            border-radius: border-radius(rem(4px));
             margin-inline-end: rem(8px);
+            border-radius: if($variant != 'indigo', $border-radius, #{rem(4px)});
         }
 
         + %filter-legend__item {
@@ -377,7 +415,7 @@
         background-color: var-get($theme, 'background');
         padding: rem(16px);
         margin-inline-start: rem(16px);
-        border-radius: border-radius(rem(4px));
+        border-radius: $border-radius;
         border: rem(1px) solid color(null, 'gray', 200);
 
         > [igxButton] + [igxButton],
@@ -424,8 +462,9 @@
 
     %filter-con-menu__close-btn {
         position: absolute;
-        top: rem(-18px);
-        inset-inline-end: rem(-18px);
+        top: 0;
+        inset-inline-start: 100%;
+        transform: translate(-50%, -50%);
         background-color: var-get($theme, 'background');
         border: rem(1px) solid color(null, 'gray', 200);
 
@@ -456,7 +495,7 @@
                 color: contrast-color(null, 'gray', 50, .6);
             }
         } @else {
-            color: color(null, 'gray', 600);
+            color: color(null, 'gray', 500);
         }
     }
 

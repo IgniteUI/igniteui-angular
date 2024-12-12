@@ -108,6 +108,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const productExpression = {
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             fieldName: 'ProductName',
             ignoreCase: true,
             searchVal: 'A0'

@@ -3,8 +3,30 @@
     max-width: 900px;
 }
 
+.sample-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
 .sample-buttons {
     margin-top: 24px;
     display: flex;
     flex-wrap: wrap;
+
+    button {
+        margin-right: 10px;
+    }
+}
+
+.output-area{
+    overflow-y: auto;
+    height: 400px;
+    border: 1px solid hsla(var(--ig-gray-300));
+    border-radius: 4px;
+    padding: 16px;
+
+    pre {
+        margin-block: 0;
+    }
 }

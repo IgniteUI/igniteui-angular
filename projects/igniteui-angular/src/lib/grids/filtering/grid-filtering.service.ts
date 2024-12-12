@@ -545,7 +545,7 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         if (condition) {
-            const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
+            const newExpression: IFilteringExpression = { fieldName: fieldName, searchVal, condition, conditionName: condition.name, ignoreCase };
             expressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
             expressionsTree.filteringOperands.push(newExpression);
         }

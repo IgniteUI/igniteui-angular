@@ -3211,6 +3211,8 @@
             --igx-query-builder-background-or: #{var-get($theme, 'filtering-background-or')};
             --igx-query-builder-background-or--focus: #{var-get($theme, 'filtering-background-or--focus')};
             box-shadow: none;
+            border: none;
+            border-radius: inherit;
 
             @if $variant == 'indigo' {
                 border-radius: rem(10px);
