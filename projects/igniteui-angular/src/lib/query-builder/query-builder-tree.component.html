@@ -101,7 +101,7 @@
             (click)="addCondition(expressionItem, afterExpression)"
             igxDrop 
             (enter)="onAddConditionEnter(addConditionButton, expressionItem)"
-            (leave)="onAddConditionLeave($event, addConditionButton)"
+            (leave)="onAddConditionLeave()"
             (dropped)="onAddConditionDropped(expressionItem)"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
@@ -124,9 +124,9 @@
         <div
             #dragRef 
             igxDrop
-            (enter)="onDivEnter($event, dragRef, expressionItem)"
-            (over)="onDivOver($event, dragRef, expressionItem)"
-            (leave)="onDivLeave($event)"
+            (enter)="onDivEnter(dragRef, expressionItem)"
+            (over)="onDivOver(dragRef, expressionItem)"
+            (leave)="onDivLeave()"
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="!expressionItem.inEditMode"
             class="igx-filter-tree__expression-item"            
@@ -139,11 +139,11 @@
                 [draggable]="canBeDragged() ? 'true' : 'false'" 
                 [hideBaseOnDrag] = "false"    
                 [animateOnRelease] = "false"
-                (moveStart)="canBeDragged() ? onMoveStart($event, dragRef, expressionItem): null" 
+                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem): null" 
                 (moveEnd)="onMoveEnd()"
-                (dragEnter)="onChipEnter($event, dragRef, expressionItem, false)"
-                (dragOver)="onChipOver($event, dragRef, false)"
-                (dragLeave)="onChipLeave($event)"
+                (dragEnter)="onChipEnter(dragRef, expressionItem, false)"
+                (dragOver)="onChipOver(dragRef, false)"
+                (dragLeave)="onChipLeave()"
                 (dragDrop)="onChipDropped(expressionItem)"
                 #target="tooltipTarget"
                 [igxTooltipTarget]="tooltipRef"
@@ -250,9 +250,9 @@
         <div
             #dragRef 
             igxDrop
-            (enter)="onDivEnter($event, dragRef, expressionItem)"
-            (over)="onDivOver($event, dragRef, expressionItem)"
-            (leave)="onDivLeave($event)"
+            (enter)="onDivEnter(dragRef, expressionItem)"
+            (over)="onDivOver(dragRef, expressionItem)"
+            (leave)="onDivLeave()"
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="expressionItem.inEditMode"
             #editingInputsContainer

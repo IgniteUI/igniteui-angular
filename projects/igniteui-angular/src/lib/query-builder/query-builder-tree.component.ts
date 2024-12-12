@@ -989,14 +989,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //When we pick up a chip
-    public onMoveStart(event: any, sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem): void {
-        console.log('Picked up:', event, sourceDragElement);
+    public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem): void {
+        //console.log('Picked up:', event, sourceDragElement);
         this.resetDragAndDrop(true);
         this.sourceExpressionItem = sourceExpressionItem;
         this.sourceElement = sourceDragElement;
 
         this.listenToKeyboard();
-        //TODO cancel upon escape
     }
 
     //When we let go a chip outside a proper drop zone
@@ -1017,16 +1016,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //On entering a drop area of another chip 
-    public onDivEnter(event: IDropBaseEventArgs, targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
+    public onDivEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
         //If entering the div, at least close to the contained chip, behave like the chip was entered
         if (this.chipsAreNearBy(targetDragElement.children[0] as HTMLElement, this.ghostChipElement, this.vicinityHysteresis.entering)) {
-            this.onChipEnter(event, targetDragElement, targetExpressionItem, true)
+            this.onChipEnter(targetDragElement, targetExpressionItem, true)
         }
         else if (this.targetElement) {
-            this.onChipLeave(event);
+            this.onChipLeave();
         }
     }
-    public onChipEnter(event: IDropBaseEventArgs | IChipEnterDragAreaEventArgs, targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem, fromDiv: boolean) {
+    public onChipEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem, fromDiv: boolean) {
         //console.log('Entering:', targetDragElement, targetExpressionItem);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
@@ -1042,48 +1041,47 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.targetExpressionItem = targetExpressionItem;
 
         //Determine the middle point of the chip. (fromDiv - get the div's chip) 
-        const appendUnder = fromDiv ? this.ghostInLowerPart(event, targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(event, targetDragElement);
+        const appendUnder = fromDiv ? this.ghostInLowerPart(targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(targetDragElement);
 
         this.createDropGhostChip(targetDragElement, appendUnder);
     }
 
     //On moving the dragged chip in a drop area
-    public onDivOver(event: IDropBaseEventArgs, targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
+    public onDivOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
         //If over the div, at least close to the contained chip, behave like chipOver. If not behave like chipLeave
         if (this.chipsAreNearBy(targetDragElement.children[0] as HTMLElement,
             this.ghostChipElement,
             (this.targetExpressionItem ? this.vicinityHysteresis.leaving : this.vicinityHysteresis.entering))) {
             if (this.targetExpressionItem) {
-                this.onChipOver(event, targetDragElement, true)
+                this.onChipOver(targetDragElement, true)
             }
             else {
-                this.onChipEnter(event, targetDragElement, targetExpressionItem, true);
+                this.onChipEnter(targetDragElement, targetExpressionItem, true);
             }
         }
         else {
-            this.onChipLeave(event);
+            this.onChipLeave();
         }
     }
-    public onChipOver(event: IDropBaseEventArgs | IChipEnterDragAreaEventArgs, targetDragElement: HTMLElement, fromDiv: boolean): void {
+    public onChipOver(targetDragElement: HTMLElement, fromDiv: boolean): void {
         //console.log('Over:', targetDragElement, 'type: ', typeof event);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         //Determine the middle point of the chip. (fromDiv - get the div's chip) 
-        const appendUnder = fromDiv ? this.ghostInLowerPart(event, targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(event, targetDragElement);
+        const appendUnder = fromDiv ? this.ghostInLowerPart(targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(targetDragElement);
 
         this.createDropGhostChip(targetDragElement, appendUnder);
     }
 
     //On leaving a drop area of another chip
-    public onDivLeave(event: IDropBaseEventArgs | IChipEnterDragAreaEventArgs) {
-        this.onChipLeave(event);
+    public onDivLeave() {
+        this.onChipLeave();
     }
-    public onChipLeave(event: IDropBaseEventArgs | IChipEnterDragAreaEventArgs | MouseEvent) {
+    public onChipLeave() {
         if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
         //console.log('Leaving:', targetDragElement.textContent.trim());
 
         const ghostCoordinates = (this.ghostChip?.firstChild as HTMLElement)?.getBoundingClientRect();
-        const mouseCoordinates = event instanceof MouseEvent ? event : (event.originalEvent as MouseEvent);
 
         //if there is ghost chip and the mouse is still close enough to it don't trigger leave
         if (ghostCoordinates &&
@@ -1122,17 +1120,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (lastElement == this.ghostChip) return;
 
         //simulate entering in the lower part of the last chip/group
-        this.onChipEnter({ originalEvent: { pageY: 9999 } } as IChipEnterDragAreaEventArgs,
-            lastElement as HTMLElement,
-            targetExpressionItem.children[targetExpressionItem.children.length - 1],
-            false);
+        this.onChipEnter(lastElement as HTMLElement,
+                        targetExpressionItem.children[targetExpressionItem.children.length - 1],
+                        false);
     }
 
-    public onAddConditionLeave(event: IDropBaseEventArgs, targetDragElement: HTMLElement) {
-        //console.log('onAddConditionLeave');
+    public onAddConditionLeave() {
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
-        this.onChipLeave(event)
+        this.onChipLeave()
     }
 
     public onAddConditionDropped(targetExpressionItem: ExpressionGroupItem) {
@@ -1168,8 +1164,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //Checks if the dragged ghost is north or south of a target element's center
-    private ghostInLowerPart(event: IDropBaseEventArgs | IChipEnterDragAreaEventArgs, ofElement: HTMLElement) {
-        if (event == null) return true;
+    private ghostInLowerPart(ofElement: HTMLElement) {
+        //if (event == null) return true;
         const ghostBounds = this.ghostChipElement.getBoundingClientRect();
         const targetBounds = ofElement.getBoundingClientRect();
 
@@ -1220,9 +1216,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this.ghostChipElement && (!this.ghostChipMousemoveSubscription$ || this.ghostChipMousemoveSubscription$?.closed === true)) {
             const mouseMoves = fromEvent<MouseEvent>(this.ghostChipElement, 'mousemove');
 
-            this.ghostChipMousemoveSubscription$ = mouseMoves.pipe(sampleTime(100)).subscribe(event => {
-                // console.log(`Coords: ${event.clientX} X ${event.clientY}`);
-                this.onChipLeave(event);
+            this.ghostChipMousemoveSubscription$ = mouseMoves.pipe(sampleTime(100)).subscribe(() => {
+                this.onChipLeave();
             });
         }
 
@@ -1277,7 +1272,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     private provideArrowDrag(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
-        this.onMoveStart(null, sourceDragElement, sourceExpressionItem);
+        this.onMoveStart(sourceDragElement, sourceExpressionItem);
 
         //Attach a arrow keys event listener if not already in place
         if (!this.keyboardSubscription$ || this.keyboardSubscription$?.closed === true) {
@@ -1290,7 +1285,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             .pipe(filter(key => ['ArrowUp', 'ArrowDown', 'Enter', 'Space', 'Escape'].includes(key.code)))
             .subscribe(key => {
                 if (key.code == 'Escape') {
-
+                    //TODO cancel mouse drag
+                    this.resetDragAndDrop(true);
+                    this.keyboardSubscription$.unsubscribe();
+                    this.ghostChipMousemoveSubscription$?.unsubscribe();
                 }
                 else if (key.code == 'ArrowUp' || key.code == 'ArrowDown') {
                     this.arrowDrag(key);
@@ -1305,9 +1303,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     private keyDragIndex: number = 0;
     private arrowDrag(key: KeyboardEvent) {
+        if (!this.sourceElement || !this.sourceExpressionItem) return;
+
         const expressionsList = this.getListedExpressions(this.rootGroup);
         const chipsList = this.getListedChips();
         const index = expressionsList.indexOf(this.sourceExpressionItem);
+
+        if (index === -1) console.error("Dragged expression not found");
 
         let newKeyIndex = 0;
         if (key.code == 'ArrowUp') {
