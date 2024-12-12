@@ -146,6 +146,7 @@
             %advanced-filter__main {
                 padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
                 padding-block: pad-block(rem(16px));
+                padding-bottom: 0px;
             }
         }
     }
@@ -195,7 +196,6 @@
     %advanced-filter__main {
         display: flex;
         overflow: auto;
-        gap: $gap;
     }
 
     %advanced-filter__root {
@@ -211,6 +211,7 @@
     %advanced-filter__root-actions {
         display: flex;
         gap: rem(8px);
+        padding-bottom: $gap;
     }
 
     %advanced-filter__header,
@@ -221,6 +222,7 @@
             map.get($vertical-space, 'comfortable')
         );
         padding-block: rem(16px);
+        padding-bottom: 0px;
     }
 
     %advanced-filter__outlet {
@@ -235,6 +237,14 @@
     %filter-tree {
         display: flex;
         width: 100%;
+    }
+    
+    %query-builder-tree:not([style*="display: none"]) + %filter-tree {
+        padding-top: $gap;
+    }
+
+    %filter-tree:not(:last-child):not(:nth-last-child(2):has(+ %query-builder-tree)) {
+        padding-bottom: $gap;
     }
 
     %filter-tree__line {
@@ -276,7 +286,14 @@
         flex-direction: column;
         align-items: flex-start;
         flex-grow: 1;
-        gap: $gap;
+    }
+
+    %filter-tree__expression-item:not(:last-child):not(:nth-last-child(2):has(+ %query-builder-tree)) {        
+        padding-bottom: $gap;
+    }
+
+    %query-builder-tree:not([style*="display: none"]) + %filter-tree__expression-item {
+        padding-top: $gap;
     }
 
     %filter-tree__expression-item {
@@ -333,11 +350,23 @@
         opacity: if($variant != 'indigo', .6, .8);
     }
 
+    %query-builder-tree:not([style*="display: none"]) + %filter-tree__buttons {
+        padding-top: $gap;
+    }
+
+    %filter-tree__buttons:not(:last-child) {
+        padding-bottom: $gap;
+    }
+
     %filter-tree__buttons {
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: rem(8px);
+    }
+
+    %filter-tree__inputs:not(:last-child) {
+        padding-bottom: $gap;
     }
 
     %filter-tree__inputs {

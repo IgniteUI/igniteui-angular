@@ -1,5 +1,9 @@
 {
     "git.ignoreLimitWarning": true,
     "javascript.preferences.quoteStyle": "single",
-    "typescript.preferences.quoteStyle": "single"
+    "typescript.preferences.quoteStyle": "single",
+    "cSpell.words": [
+        "ghostclass",
+        "ungroup"
+    ]
 }
