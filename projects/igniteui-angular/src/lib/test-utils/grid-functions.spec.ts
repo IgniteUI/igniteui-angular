@@ -738,7 +738,7 @@ export class GridFunctions {
     public static getApplyButtonExcelStyleFiltering(fix: ComponentFixture<any>, menu = null, grid = 'igx-grid') {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix, grid);
         const containedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--contained'));
-        const applyButton: any = containedButtons.find((rb: any) => rb.innerText === 'apply');
+        const applyButton: any = containedButtons.find((rb: any) => rb.innerText === 'Apply');
         return applyButton;
     }
 
@@ -750,7 +750,7 @@ export class GridFunctions {
     public static clickCancelExcelStyleFiltering(fix: ComponentFixture<any>, menu = null) {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const flatButtons = Array.from(excelMenu.querySelectorAll('.igx-button--flat'));
-        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
+        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'Cancel');
         cancelButton.click();
     }
 
@@ -771,7 +771,7 @@ export class GridFunctions {
     public static getApplyExcelStyleCustomFiltering(fix: ComponentFixture<any>): HTMLElement {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
         const containedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--contained'));
-        const applyButton = containedButtons.find((rb: any) => rb.innerText === 'apply');
+        const applyButton = containedButtons.find((rb: any) => rb.innerText === 'Apply');
         return applyButton as HTMLElement;
     }
 
@@ -804,7 +804,7 @@ export class GridFunctions {
     public static clickCancelExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
         const flatButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--flat'));
-        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
+        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'Cancel');
         cancelButton.click();
     }
 
@@ -1677,14 +1677,14 @@ export class GridFunctions {
     public static getAdvancedFilteringCancelButton(fix: ComponentFixture<any>) {
         const footer = GridFunctions.getAdvancedFilteringFooter(fix);
         const cancelFilterButton: any = Array.from(footer.querySelectorAll('button'))
-            .find((b: any) => b.innerText.toLowerCase() === 'cancel');
+            .find((b: any) => b.innerText.toLowerCase() === 'Cancel');
         return cancelFilterButton;
     }
 
     public static getAdvancedFilteringApplyButton(fix: ComponentFixture<any>) {
         const footer = GridFunctions.getAdvancedFilteringFooter(fix);
         const applyFilterButton: any = Array.from(footer.querySelectorAll('button'))
-            .find((b: any) => b.innerText.toLowerCase() === 'apply');
+            .find((b: any) => b.innerText.toLowerCase() === 'Apply');
         return applyFilterButton;
     }
 
