@@ -1363,19 +1363,20 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     //Gets all chip elements owned by this tree (discard child trees)  flatten out as a list of HTML elements
     private getListedChips(): HTMLElement[] {
-        const expressionElementList = (this.el.nativeElement as HTMLElement).querySelectorAll('.igx-filter-tree__expression-item:not([style*="display:none"]):not(.igx-filter-tree__expression-item-drop-ghost)');
+        const viableDropAreaSelector = '.igx-filter-tree__expression-item:not([style*="display:none"]):not(.igx-filter-tree__expression-item-drop-ghost),.igx-filter-tree__inputs:not(.igx-query-builder__main > .igx-filter-tree__inputs)';
+        const expressionElementList = (this.el.nativeElement as HTMLElement).querySelectorAll(viableDropAreaSelector);
         let ownChipElements = [];
 
         expressionElementList.forEach(element => {
-            if (isParentHidden(this.el.nativeElement, element))
+            if (isNotFromThisTree(this.el.nativeElement, element))
                 return;
             ownChipElements.push(element);
         });
 
-        function isParentHidden(qb, parent) {
+        function isNotFromThisTree(qb, parent) {
             if (parent == qb) return false;
             else if (parent?.style?.display === "none" || parent.classList.contains('igx-query-builder-tree')) return true;
-            else if (parent.parentElement) return isParentHidden(qb, parent.parentElement);
+            else if (parent.parentElement) return isNotFromThisTree(qb, parent.parentElement);
             else return false;
         }
 

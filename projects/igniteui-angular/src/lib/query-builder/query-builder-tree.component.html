@@ -221,14 +221,13 @@
         </div>
 
         <div
-            #dragRef 
+            #editingInputsContainer
             igxDrop
-            (enter)="onDivEnter(dragRef, expressionItem)"
-            (over)="onDivOver(dragRef, expressionItem)"
+            (enter)="onDivEnter(editingInputsContainer, expressionItem)"
+            (over)="onDivOver(editingInputsContainer, expressionItem)"
             (leave)="onDivLeave()"
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="expressionItem.inEditMode"
-            #editingInputsContainer
             class="igx-filter-tree__inputs"
         >
             <igx-select
