@@ -65,33 +65,6 @@
     (scroll)="onExpressionsScrolled()"
 >
     <ng-container *ngTemplateOutlet="selectFromTemplate"></ng-container>
-    <ng-container *ngIf="!rootGroup && (selectedEntity || (entities?.length === 1 && !entities[0]?.name))">
-        <div class="igx-query-builder__root">
-            <div class="igx-query-builder__root-actions">
-                <button type="button"
-                        #addRootAndGroupButton
-                        igxButton="outlined"
-                        (click)="addAndGroup()"
-                >
-                    <ng-container *ngTemplateOutlet="addIcon"></ng-container>
-                    <span>{{ this.resourceStrings.igx_query_builder_and_group }}</span>
-                </button>
-
-                <button type="button"
-                        igxButton="outlined"
-                        (click)="addOrGroup()"
-                >
-                    <ng-container *ngTemplateOutlet="addIcon"></ng-container>
-                    <span>{{ this.resourceStrings.igx_query_builder_or_group }}</span>
-                </button>
-            </div>
-            <div class="igx-filter-empty">
-                <h6 class="igx-filter-empty__title">
-                    {{ this.resourceStrings.igx_query_builder_initial_text }}
-                </h6>
-            </div>
-        </div>
-    </ng-container>
 
     <ng-template #addExpressionsTemplate let-expressionItem let-afterExpression="afterExpression">
         <button type="button"
@@ -475,7 +448,7 @@
                     </ng-container>
                 </ng-container>
                 <div
-                    *ngIf="currentGroup === expressionItem && isInEditMode()"
+                    *ngIf="expressionItem === rootGroup"
                     #currentGroupButtonsContainer
                     class="igx-filter-tree__buttons"
                 >
@@ -486,19 +459,6 @@
                         "
                     >
                     </ng-container>
-                    <button type="button"
-                        igxButton="outlined"
-                        *ngIf="expressionItem !== rootGroup"
-                        [disabled]="
-                            hasEditedExpression ||
-                            expressionItem.children.length < 2
-                        "
-                        (click)="endGroup(expressionItem)"
-                    >
-                        <span>{{
-                            this.resourceStrings.igx_query_builder_end_group
-                        }}</span>
-                    </button>
                 </div>
             </div>
         </div>
