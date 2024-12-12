@@ -1001,7 +1001,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     //When we let go a chip outside a proper drop zone
     public onMoveEnd(): void {
-        //console.log('Let go:', dragSourceRef,this.sourceElement);
+        // console.log('Let go:');
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         if (this.ghostChip) {
@@ -1027,7 +1027,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
     public onChipEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem, fromDiv: boolean) {
-        //console.log('Entering:', targetDragElement, targetExpressionItem);
+        // console.log('Entering:', targetDragElement, targetExpressionItem, 'from div:', fromDiv);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         //If entering the one that's been picked up
@@ -1051,9 +1051,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public onDivOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
         //If over the div, at least close to the contained chip, behave like chipOver. If not behave like chipLeave
         if (this.chipsAreNearBy(targetDragElement.children[0] as HTMLElement,
-            this.ghostChipElement,
-            (this.targetExpressionItem ? this.vicinityHysteresis.leaving : this.vicinityHysteresis.entering))) {
-            if (this.targetExpressionItem) {
+        this.ghostChipElement,
+        (this.targetExpressionItem === targetExpressionItem? this.vicinityHysteresis.leaving : this.vicinityHysteresis.entering))) {
+            if (this.targetExpressionItem === targetExpressionItem) {
                 this.onChipOver(targetDragElement, true)
             }
             else {
@@ -1097,7 +1097,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     //On dropped in a drop area of another chip
     public onDivDropped(targetExpressionItem: ExpressionItem) {
-        //console.log('div dropped:');
         if (targetExpressionItem != this.sourceExpressionItem) {
             this.onChipDropped();
         }
