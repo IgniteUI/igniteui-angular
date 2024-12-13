@@ -750,7 +750,7 @@ export class GridFunctions {
     public static clickCancelExcelStyleFiltering(fix: ComponentFixture<any>, menu = null) {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const flatButtons = Array.from(excelMenu.querySelectorAll('.igx-button--flat'));
-        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
+        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText.toLowerCase() === 'cancel');
         cancelButton.click();
     }
 
