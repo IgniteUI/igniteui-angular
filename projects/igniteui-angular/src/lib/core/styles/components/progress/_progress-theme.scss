@@ -153,13 +153,6 @@
         } @else if $variant == 'fluent' {
             gap: rem(2px);
         }
-
-        &[dir='rtl'],
-        [dir='rtl'] & {
-            %linear-bar {
-                transform: rotateY(180deg);
-            }
-        }
     }
 
     %linear-bar {
