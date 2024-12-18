@@ -103,9 +103,11 @@
          (activeStepChanged)="onAngularStepperChange($event)"
          [stepType]="stepType">
 
-        <ng-template igxStepActiveIndicator>
-            <igx-icon>edit</igx-icon>
-        </ng-template>
+        @if(properties.angularEditTemplate){
+            <ng-template igxStepActiveIndicator>
+                <igx-icon>edit</igx-icon>
+            </ng-template>
+        }
 
         <!-- Step 1 Shopping Card -->
         <igx-step
@@ -169,8 +171,7 @@
         <!-- Step 5 Finish Additional notes -->
         <igx-step
             #step5
-            [optional]="true"
-            [completed]="additionalNotes.valid">
+            [optional]="true">
 
             <igx-icon igxStepIndicator>notes</igx-icon>
             <span igxStepTitle>Additional notes</span>
@@ -184,7 +185,7 @@
         <!-- Step 6 Finish order-->
         <igx-step #step6
             [isValid]="finish.valid"
-            [completed]="additionalNotes.valid">
+            [completed]="finish.valid">
             <igx-icon igxStepIndicator>receipt_long</igx-icon>
             <span igxStepTitle>Finish order</span>
             <span igxStepSubtitle>{{!finish.valid ? '(#12542653)' : '(order completed)'}}</span>
@@ -214,7 +215,7 @@
             [complete]="shoppingCard.valid"
             [invalid]="!shoppingCard.valid">
 
-            <span slot="indicator"> <igx-icon igxStepIndicator>shopping_cart</igx-icon></span>
+            <span slot="indicator"><igc-icon name="shopping_cart"></igc-icon></span>
             <span slot="title">Shopping Card</span>
             <span slot="subtitle">{{!shoppingCard.valid ? '(Required)' : 'completed'}}</span>
 
@@ -226,13 +227,9 @@
             [complete]="deliveryAddress.valid"
             [invalid]="!deliveryAddress.valid">
 
-            <span slot="indicator">
-                <igx-icon igxStepIndicator>location_on</igx-icon>
-                <!-- TODO: Log an issue that igx icon look odd inside slot indicator-->
-                <!--  <igx-icon igxStepIndicator>location_on</igx-icon> -->
-            </span>
+            <span slot="indicator"><igc-icon name="location_on"></igc-icon></span>
             <span slot="title">Delivery Address</span>
-            <span slot="subtitle">(Required)</span>
+            <span slot="subtitle">{{!deliveryAddress.valid ? '(Required)' : 'completed'}}</span>
             <ng-container *ngTemplateOutlet="deliveryAddressForm"></ng-container>
         </igc-step>
 
@@ -242,7 +239,7 @@
             [invalid]="!userDetails.valid">
 
             <span slot="title">User Details</span>
-            <span slot="subtitle">(Required)</span>
+            <span slot="subtitle">{{!userDetails.valid ? '(Required)' : 'completed'}}</span>
             <ng-container *ngTemplateOutlet="userDetailsForm"></ng-container>
         </igc-step>
 
@@ -251,16 +248,17 @@
             [complete]="paymentMethod.valid"
             [invalid]="!paymentMethod.valid">
 
+            <span slot="indicator"><igc-icon name="attach_money"></igc-icon></span>
             <span slot="title">Payment method</span>
-            <span slot="subtitle">Currently you can pay only cash</span>
+            <span slot="subtitle">{{!paymentMethod.valid ? '(Required)' : 'completed'}}</span>
             <ng-container *ngTemplateOutlet="paymentMethodForm"></ng-container>
         </igc-step>
 
         <!-- Step 5 Finish Additional notes -->
         <igc-step
-            [optional]="true"
-            [complete]="additionalNotes.valid">
+            [optional]="true">
 
+            <span slot="indicator"><igc-icon name="notes"></igc-icon></span>
             <span slot="title">Additional notes</span>
             <span slot="subtitle">Optional</span>
             <ng-container *ngTemplateOutlet="additionalNotesForm"></ng-container>
@@ -270,6 +268,8 @@
         <igc-step
             [complete]="finish.valid"
             [invalid]="!finish.valid">
+
+            <span slot="indicator"><igc-icon name="receipt_long"></igc-icon></span>
             <span slot="title">Finish order</span>
             <span slot="subtitle">{{!finish.valid ? '(#12542653)' : '(order completed)'}}</span>
             <ng-container *ngTemplateOutlet="finishOrderForm"></ng-container>

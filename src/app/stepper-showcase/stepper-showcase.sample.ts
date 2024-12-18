@@ -35,19 +35,47 @@ import {
     IgxStepActiveIndicatorDirective,
     IgxStepIndicatorDirective,
     IgxSuffixDirective,
-    IgxTimePickerComponent, IStepChangedEventArgs
+    IStepChangedEventArgs
 } from 'igniteui-angular';
 import {
     defineComponents,
     IgcStepperComponent,
     IgcButtonComponent,
     IgcInputComponent,
+    registerIconFromText,
 } from 'igniteui-webcomponents';
-import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
-import {JsonPipe, NgTemplateOutlet} from "@angular/common";
+import {Properties, PropertyChangeService, PropertyPanelConfig} from '../properties-panel/property-change.service';
+import {NgTemplateOutlet} from "@angular/common";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 defineComponents(IgcStepperComponent, IgcButtonComponent, IgcInputComponent);
+
+const icons = [
+    {
+        name: 'location_on',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="undefined"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
+    },
+    {
+        name: 'shopping_cart',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="undefined"><path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z"/></svg>',
+    },
+    {
+        name: 'attach_money',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="undefined"><path d="M441-120v-86q-53-12-91.5-46T293-348l74-30q15 48 44.5 73t77.5 25q41 0 69.5-18.5T587-356q0-35-22-55.5T463-458q-86-27-118-64.5T313-614q0-65 42-101t86-41v-84h80v84q50 8 82.5 36.5T651-650l-74 32q-12-32-34-48t-60-16q-44 0-67 19.5T393-614q0 33 30 52t104 40q69 20 104.5 63.5T667-358q0 71-42 108t-104 46v84h-80Z"/></svg>',
+    },
+    {
+        name: 'notes',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="undefined"><path d="M120-240v-80h480v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg>',
+    },
+    {
+        name: 'receipt_long',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="undefined"><path d="M240-80q-50 0-85-35t-35-85v-120h120v-560l60 60 60-60 60 60 60-60 60 60 60-60 60 60 60-60 60 60 60-60v680q0 50-35 85t-85 35H240Zm480-80q17 0 28.5-11.5T760-200v-560H320v440h360v120q0 17 11.5 28.5T720-160ZM360-600v-80h240v80H360Zm0 120v-80h240v80H360Zm320-120q-17 0-28.5-11.5T640-640q0-17 11.5-28.5T680-680q17 0 28.5 11.5T720-640q0 17-11.5 28.5T680-600Zm0 120q-17 0-28.5-11.5T640-520q0-17 11.5-28.5T680-560q17 0 28.5 11.5T720-520q0 17-11.5 28.5T680-480ZM240-160h360v-80H200v40q0 17 11.5 28.5T240-160Zm-40 0v-80 80Z"/></svg>',
+    },
+];
+
+icons.forEach((icon) => {
+    registerIconFromText(icon.name, icon.url);
+});
 
 /** https://github.com/angular/angular/issues/51239 */
 // This is a fix for value synchronisation otherwise only the state is in sync
@@ -58,9 +86,10 @@ defineComponents(IgcStepperComponent, IgcButtonComponent, IgcInputComponent);
 export class FormControlSyncDirective implements OnInit {
     private controlDirective = inject(NgControl);
     private destroyRef = inject(DestroyRef);
+
     public ngOnInit() {
         this.controlDirective?.control.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
-            this.controlDirective.control.setValue(value, { emitEvent: false });
+            this.controlDirective.control.setValue(value, {emitEvent: false});
         });
     }
 }
@@ -69,11 +98,11 @@ export class FormControlSyncDirective implements OnInit {
     templateUrl: 'stepper-showcase.sample.html',
     styleUrls: ['stepper-showcase.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IgxButtonDirective, FormControlSyncDirective, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxStepperComponent, IgxStepComponent, IgxStepTitleDirective, IgxStepSubtitleDirective, IgxStepContentDirective, ReactiveFormsModule, IgxHintDirective, IgxIconComponent, IgxPrefixDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStepActiveIndicatorDirective, IgxStepIndicatorDirective, IgxSuffixDirective, IgxTimePickerComponent, NgTemplateOutlet, JsonPipe]
+    imports: [IgxButtonDirective, FormControlSyncDirective, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxStepperComponent, IgxStepComponent, IgxStepTitleDirective, IgxStepSubtitleDirective, IgxStepContentDirective, ReactiveFormsModule, IgxHintDirective, IgxIconComponent, IgxPrefixDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStepActiveIndicatorDirective, IgxStepIndicatorDirective, IgxSuffixDirective, NgTemplateOutlet]
 })
 export class IgxStepperShowcaseSampleComponent {
     @ViewChild('stepper', {static: true}) public angularStepper!: IgxStepperComponent;
-    @ViewChild('stepper2', { static: true }) public webComponentStepper!: ElementRef;
+    @ViewChild('stepper2', {static: true}) public webComponentStepper!: ElementRef;
 
     private isSyncing = false;
     public panelConfig: PropertyPanelConfig = {
@@ -105,6 +134,13 @@ export class IgxStepperShowcaseSampleComponent {
             control: {
                 type: 'boolean',
                 defaultValue: true
+            }
+        },
+        angularEditTemplate: {
+            label: 'Editing mode template (Angular)',
+            control: {
+                type: 'boolean',
+                defaultValue: false
             }
         },
         contentTop: {
@@ -169,7 +205,7 @@ export class IgxStepperShowcaseSampleComponent {
     });
 
     public additionalNotes = this.fb.group({
-        notes: ['', Validators.required],
+        notes: [''],
     });
 
     public finish = this.fb.group({
