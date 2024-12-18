@@ -77,6 +77,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridState`
     -  When possible the state directive nows reuses the column that already exists on the grid when restoring the state, instead of creating new column instances every time. This removes the need to set any complex objects manually back on the column on `columnInit`. The only instance where this is still necessary is when the column (or its children in case of column groups) have no `field` property so there's no way to uniquely identify the matching column.
     - Added support for persisting Multi-Row Layout.
+- `IgxCombo`, `IgxSimpleCombo`
+    - Introduced the ability to automatically filter out and exclude values that are not in the data when programmatically setting selected items. This behavior specifically applies when the `combo` is bound to local data, as querying the entire data source to verify value presence is not feasible in remote scenarios.
+    
 ### Themes
 - **Breaking Change** `Palettes`
     - All palette colors have been migrated to the [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors). This means that color consumed as CSS variables no longer need to be wrapped in an `hsl` function. 
@@ -138,7 +141,7 @@ For Firefox users, we provide limited scrollbar styling options through the foll
     - **Breaking Change** The deprecated `filterable` property is replaced with `disableFiltering`.
     - The dropdown search field placeholder is now part of the Combo's localization resources. It now also uses two resource values depending on whether filtering is active, e.g. in the default `en` locale it remains `'Enter a Search Term'`, but changes to `'Add Item'` when `disableFiltering` and `allowCustomValues` are set to true. For that reason, the existing `searchPlaceholder` input is also **deprecated** in favor of the resources.
     - **Deprecation** - `filterable` from the `filteringOptions` has been deprecated in favor of `disableFiltering`.
-
+    
 - `IgxBadge`
     - **Breaking Change** The `$border-width` property has been removed from the badge theme.
     - New outlined variant of the badge component has been added. Users can switch to `outlined` by adding the newly created `outlined` property to a badge.

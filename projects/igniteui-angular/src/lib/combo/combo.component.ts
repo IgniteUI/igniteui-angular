@@ -1,6 +1,6 @@
 import { DOCUMENT, NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
+    AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, OnChanges, SimpleChanges,
     Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute
 } from '@angular/core';
 
@@ -121,7 +121,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
-    OnDestroy, DoCheck, EditorProvider {
+    OnDestroy, DoCheck, EditorProvider, OnChanges {
     /**
      * Whether the combo's search box should be focused after the dropdown is opened.
      * When `false`, the combo's list item container will be focused instead
@@ -242,12 +242,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * @hidden @internal
      */
     public writeValue(value: any[]): void {
-        const selection = Array.isArray(value) ? value.filter(x => x !== undefined) : [];
-        const oldSelection = this.selection;
-        this.selectionService.select_items(this.id, selection, true);
-        this.cdr.markForCheck();
-        this._displayValue = this.createDisplayText(this.selection, oldSelection);
-        this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        this._value = Array.isArray(value) ? value.filter(x => x !== undefined) : [];
+
+        if (this.data && this.data.length > 0) {
+            this.setSelection(new Set(this._value), undefined, false, false);
+        }
     }
 
     /** @hidden @internal */
@@ -255,6 +254,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         if (this.data?.length && this.selection.length) {
             this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
             this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        }
+    }
+
+    /** @hidden @internal */
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes['data'] && this.data && this.data.length > 0 && this._value && this._value.length) {
+            this.setSelection(new Set(this._value), undefined, false, true);
         }
     }
 
@@ -300,10 +306,17 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     public select(newItems: Array<any>, clearCurrentSelection?: boolean, event?: Event) {
-        if (newItems) {
-            const newSelection = this.selectionService.add_items(this.id, newItems, clearCurrentSelection);
-            this.setSelection(newSelection, event);
+        if (!newItems) {
+            return;
         }
+
+        let validItems = newItems;
+        if (!this.isRemote && this.data && this.data.length) {
+            validItems = newItems.filter(item => this.isItemInData(item));
+        }
+
+        const newSelection = this.selectionService.add_items(this.id, validItems, clearCurrentSelection);
+        this.setSelection(newSelection, event, true, true);
     }
 
     /**
@@ -410,15 +423,18 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         }
     }
 
-    protected setSelection(selection: Set<any>, event?: Event): void {
+    protected setSelection(selection: Set<any>, event?: Event, emit: boolean = true, updateModel: boolean = true): void {
+        const filteredSelection = this.isRemote ? Array.from(selection) : Array.from(selection).filter(item => this.isItemInData(item));
+        const newValue = filteredSelection;
+
         const currentSelection = this.selectionService.get(this.id);
-        const removed = this.convertKeysToItems(diffInSets(currentSelection, selection));
-        const added = this.convertKeysToItems(diffInSets(selection, currentSelection));
-        const newValue = Array.from(selection);
+        const removed = this.convertKeysToItems(diffInSets(currentSelection, new Set(filteredSelection)));
+        const added = this.convertKeysToItems(diffInSets(new Set(filteredSelection), currentSelection));
         const oldValue = Array.from(currentSelection || []);
         const newSelection = this.convertKeysToItems(newValue);
         const oldSelection = this.convertKeysToItems(oldValue);
         const displayText = this.createDisplayText(this.convertKeysToItems(newValue), oldValue);
+
         const args: IComboSelectionChangingEventArgs = {
             newValue,
             oldValue,
@@ -431,7 +447,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             displayText,
             cancel: false
         };
-        this.selectionChanging.emit(args);
+
+        if (emit) {
+            this.selectionChanging.emit(args);
+        }
+
         if (!args.cancel) {
             this.selectionService.select_items(this.id, args.newValue, true);
             this._value = args.newValue;
@@ -440,7 +460,9 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             } else {
                 this._displayValue = this.createDisplayText(this.selection, args.oldSelection);
             }
-            this._onChangeCallback(args.newValue);
+            if (updateModel) {
+                this._onChangeCallback(args.newValue);
+            }
         } else if (this.isRemote) {
             this.registerRemoteEntries(diffInSets(selection, currentSelection), false);
         }
