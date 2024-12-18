@@ -25,6 +25,23 @@
     }
 }
 
+:host(.vertical-stepper) {
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+::ng-deep {
+    [dir='rtl'] {
+        .showcase--web-components {
+            order: 1;
+        }
+
+        .showcase--angular {
+            order: 2;
+        }
+    }
+}
+
 .sample-stepper-wrapper {
     display: flex;
     flex-direction: column;

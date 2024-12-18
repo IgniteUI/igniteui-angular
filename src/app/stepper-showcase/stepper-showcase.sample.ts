@@ -3,7 +3,7 @@ import {
     CUSTOM_ELEMENTS_SCHEMA,
     DestroyRef,
     Directive,
-    ElementRef,
+    ElementRef, HostBinding,
     inject,
     OnInit,
     ViewChild
@@ -103,6 +103,11 @@ export class FormControlSyncDirective implements OnInit {
 export class IgxStepperShowcaseSampleComponent {
     @ViewChild('stepper', {static: true}) public angularStepper!: IgxStepperComponent;
     @ViewChild('stepper2', {static: true}) public webComponentStepper!: ElementRef;
+
+    @HostBinding('class.vertical-stepper')
+    public get isVertical() {
+        return this.properties?.orientation === 'vertical';
+    }
 
     private isSyncing = false;
     public panelConfig: PropertyPanelConfig = {
