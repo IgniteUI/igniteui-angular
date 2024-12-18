@@ -1,16 +1,16 @@
-.avatars-wrapper {
+.wrapper {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    row-gap: 70px;
-    align-items: center;
-    width: 60vw;
-    margin: 2rem auto;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.badges {
+    place-items: center;
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: 24px;
 }
 
 .avatar-sample {
     display: flex;
-    flex: 1 0 30%;
-    width: 88px;
-    height: 88px;
     align-items: center;
 }

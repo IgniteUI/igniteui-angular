@@ -1,51 +1,39 @@
 <div class="sample-content">
-    <section style="width: 100%">
-        <article>
-            <h4 class="sample-title">Desktop</h4>
+    <section class="sample-wrapper" style="width: 100%">
+        <h4 class="sample-title">Angular Carousel</h4>
+        <igx-carousel #car
+        [pause]="!properties.disablePauseOnInteraction"
+        [loop]="!properties.disableLoop"
+        [indicators]="!properties.hideIndicators"
+        [navigation]="!properties.hideNavigation"
+        [vertical]="properties.vertical"
+        [interval]="properties.interval"
+        [animationType]="properties.animationType"
+        [indicatorsOrientation]="angularIndicatorsOrientation"
+        [maximumIndicatorsCount]="properties.maximumIndicatorsCount">
+            @for(slide of slides; track slide) {
+                <igx-slide [active]="slide.active">
+                    <img [src]="slide.image">
+                </igx-slide>
+            }
+        </igx-carousel>
 
-            <igx-switch [(ngModel)]="car.navigation">navigation</igx-switch>
-            <igx-switch [(ngModel)]="car.indicators">indicators</igx-switch>
-            <igx-switch [(ngModel)]="car.keyboardSupport">keyboardSupport</igx-switch>
-            <igx-switch [(ngModel)]="car.gesturesSupport">gesturesSupport</igx-switch>
-            <igx-switch [(ngModel)]="loop">loop</igx-switch>
-            <igx-switch [(ngModel)]="pause">pause</igx-switch>
-            <igx-switch [(ngModel)]="car.vertical">vertical</igx-switch>
-            <br>
-            <button igxButton="contained" [igxToggleAction]="dropDownAnimation" [igxDropDownItemNavigation]="dropDownAnimation">Animation Type: {{car.animationType}}</button>
-            <igx-drop-down #dropDownAnimation (selectionChanging)="onAnimationSelection($event)" >
-                <igx-drop-down-item *ngFor="let item of animationModes">
-                        {{ item }}
-                </igx-drop-down-item>
-            </igx-drop-down>
-            <button igxButton="contained" (click)="pauseCar()">pause</button>
-            <button igxButton="contained" (click)="play()">play</button>
-            <button igxButton="contained" (click)="changeSlides()">Change slides add</button>
-            <button igxButton="contained" (click)="changeSlidesRemove()">Change slides remove</button>
-            <button igxButton="contained" (click)="changeOrientation()">changeOrientation</button>
-            <div>
-                <igx-carousel #car  [pause]="pause" [loop]="loop" [interval]="interval">
-                    <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
-                        <img [src]="slide.image">
-                    </igx-slide>
-
-                    <!-- <ng-template igxCarouselIndicator let-slide>
-                            <img *ngIf="!slide.active" [src]="slides[slide.index].image" style="width: 100px;  ">
-                            <img *ngIf="slide.active" [src]="slides[slide.index].image" style="width: 120px;  ">
-                    </ng-template> -->
-
-                    <!-- <ng-template igxCarouselNextButton let-disabled>
-                            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-                                    <igx-icon>add</igx-icon>
-                                </button>
-                    </ng-template>
-
-                    <ng-template igxCarouselPrevButton let-disabled>
-                            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-                                    <igx-icon>remove</igx-icon>
-                                </button>
-                    </ng-template> -->
-                </igx-carousel>
-            </div>
-        </article>
+        <h4 class="sample-title">WC Carousel</h4>
+        <igc-carousel
+        [disableLoop]="properties.disableLoop"
+        [disablePauseOnInteraction]="properties.disablePauseOnInteraction"
+        [hideIndicators]="properties.hideIndicators"
+        [hideNavigation]="properties.hideNavigation"
+        [vertical]="properties.vertical"
+        [interval]="properties.interval"
+        [animationType]="properties.animationType"
+        [indicatorsOrientation]="properties.indicatorsOrientation"
+        [maximumIndicatorsCount]="properties.maximumIndicatorsCount">
+            @for(slide of slides; track slide) {
+                <igc-carousel-slide [active]="slide.active">
+                    <img [src]="slide.image" />
+                </igc-carousel-slide>
+            }
+        </igc-carousel>
     </section>
 </div>

@@ -1,106 +1,46 @@
-<section class="sample-content">
+<section class="column-wrapper">
     <article class="sample-column">
-        <h4 class="sample-title">Alert</h4>
-        <p class="sample-description">Detailed description to be added.</p>
-        <br>
-        <div class="alertSection">
-            <button class="sample-column-button-mb" igxButton="contained" igxRipple (click)="alert.open()">Open Alert</button>
-            <igx-switch (click)="togglePosition()">Toggle position</igx-switch>
-        </div>
-
-        <igx-dialog #alert title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK" (leftButtonSelect)="alert.close()"
-            [positionSettings]="positionSettings" >
-        </igx-dialog>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">Fluent</h4>
-        <p class="sample-description">Fluent dialog.</p>
-        <br>
-        <button igxButton="contained" igxRipple (click)="fluent.open()">Trigger Alert</button>
-        <igx-dialog
-            #fluent
-            title="All emails together"
-            message="Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails."
-            leftButtonLabel="Save"
-            rightButtonLabel="Cancel"
-            leftButtonType='contained'
-            rightButtonType='outlined'
-            (leftButtonSelect)="fluent.close()"
-            (rightButtonSelect)="fluent.close()">
-        </igx-dialog>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">Bootstrap</h4>
-        <p class="sample-description">Bootstrap dialog.</p>
-        <br>
-        <button igxButton="contained" igxRipple (click)="bootstrap.open()">Open Modal</button>
-        <igx-dialog
-            #bootstrap
-            title="Modal title"
-            message="Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails."
-            leftButtonLabel="Close"
-            rightButtonLabel="Save changes"
-            leftButtonType='contained'
-            leftButtonBackgroundColor='#6c757d'
-            rightButtonType='contained'
-            (leftButtonSelect)="bootstrap.close()"
-            (rightButtonSelect)="bootstrap.close()">
-        </igx-dialog>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">Generic Dialog</h4>
+        <h4 class="sample-title">Angular Dialog</h4>
         <p class="sample-description">Detailed description to be added</p>
         <br>
         <button igxButton="contained" igxRipple (click)="dialog.open()">Trigger Dialog</button>
-        <igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (leftButtonSelect)="dialog.close()" rightButtonLabel="OK"
-                    (rightButtonSelect)="onDialogOKSelected($event)"
-                    message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
+        <igx-dialog #dialog
+        [title]="properties.title"
+        [closeOnEscape]="!properties.keepOpenOnEscape"
+        [closeOnOutsideSelect]="properties.closeOnOutsideClick"
+        leftButtonLabel="Cancel"
+        (leftButtonSelect)="dialog.close()"
+        rightButtonLabel="OK"
+        (rightButtonSelect)="onDialogOKSelected($event)"
+        message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
         </igx-dialog>
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">Custom Dialog</h4>
+        <h4 class="sample-title">WC Dialog</h4>
         <p class="sample-description">Detailed description to be added</p>
         <br>
-        <button igxButton="contained" igxRipple (click)="form.open()">Trigger Custom</button>
-
-        <igx-dialog #form title="Custom Content" leftButtonLabel="Cancel" (onClose)="closeDialog($event)"
-                    (leftButtonSelect)="form.close()" rightButtonLabel="Sign In" backgroundClick="true"
-                    [closeOnOutsideSelect]="true">
-            <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur dolor doloremque itaque nesciunt nostrum quas, quasi sequi sint tempora voluptatem! Asperiores, distinctio doloribus eaque harum ipsam iure minima mollitia nisi quod rem repudiandae saepe, ullam unde, vel veniam! Consequuntur, praesentium.</span>
-            <div class="login-form">
-                <igx-input-group>
-                    <igx-prefix>
-                        <igx-icon>person</igx-icon>
-                    </igx-prefix>
-                    <input type="text" igxInput />
-                    <label igxLabel>Username</label>
-                </igx-input-group>
-                <igx-input-group>
-                    <igx-prefix>
-                        <igx-icon>lock</igx-icon>
-                    </igx-prefix>
-                    <label igxLabel>Password</label>
-                    <input type="password" igxInput />
-                </igx-input-group>
-            </div>
-        </igx-dialog>
+        <button igxButton="contained" igxRipple (click)="dialogWC.show()">Trigger Dialog</button>
+        <igc-dialog #dialogWC
+        [title]="properties.title"
+        [keepOpenOnEscape]="properties.keepOpenOnEscape"
+        [closeOnOutsideClick]="properties.closeOnOutsideClick">
+            <span>Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?</span>
+            <igc-button slot="footer" (click)="dialogWC.hide()" variant="flat">Cancel</igc-button>
+            <igc-button slot="footer" (click)="dialogWC.hide()" variant="flat">OK</igc-button>
+        </igc-dialog>
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">Templated Dialog</h4>
-        <p class="sample-description">Detailed description to be added</p>
+        <h4 class="sample-title">Angular Dialog with Form</h4>
+        <p class="sample-description">Dialog with slotted form</p>
         <br>
-        <button igxButton="contained" igxRipple (click)="templated.open()">Trigger</button>
-
+        <button igxButton="contained" igxRipple (click)="templated.open()">Trigger Dialog</button>
         <igx-dialog #templated [closeOnOutsideSelect]="true">
-            <igx-dialog-title>Title</igx-dialog-title>
+            <igx-dialog-title>Login Form</igx-dialog-title>
 
             <div class="login-form">
-                <igx-input-group theme="material" type="box">
+                <igx-input-group type="box">
                     <igx-prefix>
                         <igx-icon>person</igx-icon>
                     </igx-prefix>
@@ -121,5 +61,29 @@
                 <button igxButton (click)="templated.close()">SIGN IN</button>
             </igx-dialog-actions>
         </igx-dialog>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">WC Dialog with Form</h4>
+        <p class="sample-description">Dialog with slotted form</p>
+        <br>
+        <button igxButton="contained" igxRipple (click)="templatedWC.show()">Trigger Dialog</button>
+
+        <igc-dialog #templatedWC
+        [closeOnOutsideClick]="true"
+        title="Login Form"
+        >
+            <div class="login-form">
+                <igc-input label="Username">
+                    <span slot="prefix"><igc-icon name="person"></igc-icon></span>
+                </igc-input>
+                <igc-input label="Password">
+                    <span slot="prefix"><igc-icon name="lock"></igc-icon></span>
+                </igc-input>
+            </div>
+
+            <igc-button slot="footer" (click)="templatedWC.hide()" variant="flat">Cancel</igc-button>
+            <igc-button slot="footer" (click)="templatedWC.hide()" variant="flat">Sign In</igc-button>
+        </igc-dialog>
     </article>
 </section>
