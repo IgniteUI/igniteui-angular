@@ -64,7 +64,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     /**
      * Header groups inside the header row.
      *
-     * @remark
+     * @remarks
      * Note: These are only the top level header groups in case there are multi-column headers
      * or a specific column layout. If you want to get the flattened collection use the `groups`
      * property below.

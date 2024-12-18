@@ -561,7 +561,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     /**
      * Gets the `context` object of the template binding.
      *
-     * @remark
+     * @remarks
      * Gets the `context` object which represents the `template context` binding into the `list container`
      * by providing the `$implicit` declaration which is the `IgxListComponent` itself.
      *

@@ -344,7 +344,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     /**
      * Return the child nodes of the node (if any)
      *
-     * @remark
+     * @remarks
      * Returns `null` if node does not have children
      *
      * @example

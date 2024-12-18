@@ -4266,7 +4266,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Gets/Sets the outlet used to attach the grid's overlays to.
      *
-     * @remark
+     * @remarks
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
     @Input()

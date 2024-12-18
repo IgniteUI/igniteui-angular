@@ -35,7 +35,7 @@ let NEXT_ID = 0;
  *
  * @igxGroup Layouts
  *
- * @remark
+ * @remarks
  * The Ignite UI for Angular Accordion component enables the user to navigate among multiple collapsing panels
  * displayed in a single container.
  * The accordion offers keyboard navigation and API to control the underlying panels' expansion state.

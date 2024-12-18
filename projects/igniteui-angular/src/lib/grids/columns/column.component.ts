@@ -650,7 +650,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Applies display format to cell values in the column. Does not modify the underlying data.
      *
-     * @remark
+     * @remarks
      * Note: As the formatter is used in places like the Excel style filtering dialog, in certain
      * scenarios (remote filtering for example), the row data argument can be `undefined`.
      *
