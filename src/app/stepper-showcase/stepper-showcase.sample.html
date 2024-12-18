@@ -10,7 +10,6 @@
             <input igxInput formControlName="lastName" id="lastName" name="lastName" type="text" required />
         </igx-input-group>
         <div class="nav-buttons">
-            <button igxButton="outlined" (click)="stepper.prev(); stepper2.prev()">PREV</button>
             <button igxButton="outlined" (click)="stepper.next(); stepper2.next()" [disabled]="!shoppingCard.valid && properties.linear">NEXT</button>
         </div>
     </form>
