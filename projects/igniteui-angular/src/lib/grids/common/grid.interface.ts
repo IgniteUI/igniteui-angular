@@ -1461,7 +1461,9 @@ export interface IgxGridPaginatorTemplateContext {
  * An interface describing settings for row/column pinning position.
  */
 export interface IPinningConfig {
+    /* mustCoerceToInt */
     columns?: ColumnPinningPosition;
+    /* mustCoerceToInt */
     rows?: RowPinningPosition;
 }
 
