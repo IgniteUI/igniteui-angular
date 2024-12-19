@@ -16,9 +16,11 @@
     (dropped)="onChipDrop($event)">
 
     <div class="igx-chip__start" #selectContainer>
-        <div *ngIf="selected" [ngClass]="selectClass(selected)">
-            <ng-container *ngTemplateOutlet="selectIconTemplate"></ng-container>
-        </div>
+        @if (selected) {
+            <div [ngClass]="selectClass(selected)">
+                <ng-container *ngTemplateOutlet="selectIconTemplate"></ng-container>
+            </div>
+        }
 
         <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
     </div>
@@ -30,16 +32,18 @@
     <div class="igx-chip__end">
         <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
 
-        <div class="igx-chip__remove" *ngIf="removable"
-            [attr.tabIndex]="tabIndex"
-            (keydown)="onRemoveBtnKeyDown($event)"
-            (pointerdown)="onRemoveMouseDown($event)"
-            (mousedown)="onRemoveMouseDown($event)"
-            (click)="onRemoveClick($event)"
-            (touchmove)="onRemoveTouchMove()"
-            (touchend)="onRemoveTouchEnd($event)">
-            <ng-container *ngTemplateOutlet="removeButtonTemplate"></ng-container>
-        </div>
+        @if (removable) {
+            <div class="igx-chip__remove"
+                [attr.tabIndex]="tabIndex"
+                (keydown)="onRemoveBtnKeyDown($event)"
+                (pointerdown)="onRemoveMouseDown($event)"
+                (mousedown)="onRemoveMouseDown($event)"
+                (click)="onRemoveClick($event)"
+                (touchmove)="onRemoveTouchMove()"
+                (touchend)="onRemoveTouchEnd($event)">
+                <ng-container *ngTemplateOutlet="removeButtonTemplate"></ng-container>
+            </div>
+        }
     </div>
 </div>
 

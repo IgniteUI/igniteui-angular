@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { IgxButtonDirective, IgxComboComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxLabelDirective, IgxSelectComponent, IgxSelectItemComponent, IgxToggleActionDirective } from 'igniteui-angular';
 
 // eslint-disable-next-line prefer-spread
@@ -13,7 +12,7 @@ const data = Array.apply(null, { length: 57 }).map((e, i) => ({
     selector: 'app-display-density',
     templateUrl: 'drop-down-size.sample.html',
     styleUrls: ['drop-down-size.sample.scss'],
-    imports: [IgxComboComponent, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxSelectComponent, IgxLabelDirective, IgxSelectItemComponent]
+    imports: [IgxComboComponent, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxSelectComponent, IgxLabelDirective, IgxSelectItemComponent]
 })
 export class DropDownSizeSampleComponent {
     public data = data;

@@ -4,7 +4,7 @@ import {
     OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
     SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
 } from '@angular/core';
-import { NgTemplateOutlet, NgIf, getLocaleFirstDayOfWeek } from '@angular/common';
+import { NgTemplateOutlet, getLocaleFirstDayOfWeek } from '@angular/common';
 import {
     AbstractControl, ControlValueAccessor, NgControl,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
@@ -68,7 +68,6 @@ const SingleInputDatesConcatenationString = ' - ';
         { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }
     ],
     imports: [
-        NgIf,
         NgTemplateOutlet,
         IgxIconComponent,
         IgxInputGroupComponent,

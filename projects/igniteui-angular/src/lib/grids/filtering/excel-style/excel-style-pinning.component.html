@@ -1,8 +1,10 @@
-<div *ngIf="esf.column"
-    [ngClass]="esf.column.pinned ? 'igx-excel-filter__actions-unpin' : 'igx-excel-filter__actions-pin'"
-    (click)="esf.onPin()"
-    tabindex="0"
-    role="menuitem">
-    <span>{{ esf.column.pinned ? esf.grid.resourceStrings.igx_grid_excel_unpin : esf.grid.resourceStrings.igx_grid_excel_pin }}</span>
-    <igx-icon family="default" [name]="esf.column.pinned ? 'unpin' : 'pin'"></igx-icon>
-</div>
+@if (esf.column) {
+    <div
+        [ngClass]="esf.column.pinned ? 'igx-excel-filter__actions-unpin' : 'igx-excel-filter__actions-pin'"
+        (click)="esf.onPin()"
+        tabindex="0"
+        role="menuitem">
+        <span>{{ esf.column.pinned ? esf.grid.resourceStrings.igx_grid_excel_unpin : esf.grid.resourceStrings.igx_grid_excel_pin }}</span>
+        <igx-icon family="default" [name]="esf.column.pinned ? 'unpin' : 'pin'"></igx-icon>
+    </div>
+}

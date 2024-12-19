@@ -1,17 +1,23 @@
 <div class="igx-button-group" role="group" [class.igx-button-group--vertical]="isVertical">
-    <button *ngFor="let button of values; let i = 'index'"
-        type="button"
-        igxButton="flat"
-        [selected]="button.selected"
-        [attr.data-togglable]="button.togglable"
-        [disabled]="disabled || button.disabled"
-        [igxLabel]="button.label"
-        [igxRipple]="button.ripple"
-    >
-        <span class="igx-button-group__item-content {{ itemContentCssClass }}">
-            <igx-icon *ngIf="button.icon">{{button.icon}}</igx-icon>
-            <span class="igx-button-group__button-text" *ngIf="button.label">{{button.label}}</span>
-        </span>
-    </button>
+    @for (button of values; track button) {
+        <button
+            type="button"
+            igxButton="flat"
+            [selected]="button.selected"
+            [attr.data-togglable]="button.togglable"
+            [disabled]="disabled || button.disabled"
+            [igxLabel]="button.label"
+            [igxRipple]="button.ripple"
+        >
+            <span class="igx-button-group__item-content {{ itemContentCssClass }}">
+                @if (button.icon) {
+                    <igx-icon>{{button.icon}}</igx-icon>
+                }
+                @if (button.label) {
+                    <span class="igx-button-group__button-text">{{button.label}}</span>
+                }
+            </span>
+        </button>
+    }
     <ng-content></ng-content>
 </div>
