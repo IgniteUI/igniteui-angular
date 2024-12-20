@@ -12,7 +12,6 @@
 ////
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $background [null] - The navigation drawer background color.
 /// @param {Color} $border-color [null] - The navigation drawer right border color.
@@ -41,7 +40,6 @@
 ///   @include css-vars($navdrawer-theme);
 @function navdrawer-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $border-radius: null,
     $item-border-radius: null,

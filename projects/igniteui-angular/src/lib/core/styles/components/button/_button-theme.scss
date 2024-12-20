@@ -15,7 +15,6 @@
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The background color of the button.
 /// @param {Color} $foreground [null] - The text color of the button.
 /// @param {Color} $icon-color [null] - The icon color in the button.
@@ -57,7 +56,6 @@
 ///   @include css-vars($my-button-theme);
 @function button-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $background: null,
     $foreground: null,

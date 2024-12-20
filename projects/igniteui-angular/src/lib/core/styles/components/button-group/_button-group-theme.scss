@@ -14,7 +14,6 @@
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {box-shadow} $shadow [null] - The shadow to be applied for the button group.
 /// @param {Color} $item-text-color [null]- The text color for button group items.
@@ -69,7 +68,6 @@
 ///   @include css-vars($my-button-group-theme);
 @function button-group-theme(
     $schema: $light-material-schema,
-    $elevations: null,
     $shadow: null,
 
     $item-text-color: null,

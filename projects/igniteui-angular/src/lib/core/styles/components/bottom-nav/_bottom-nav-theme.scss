@@ -14,7 +14,6 @@
 /// If only background color is specified,
 /// the label and icon colors will be assigned automatically to a contrasting color.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The background color used for the toast.
 /// @param {Color} $label-color [null] - The label color used in idle state.
 /// @param {Color} $icon-color [null] - The icon color used in idle state.
@@ -31,7 +30,6 @@
 ///   @include css-vars($my-bottom-nav-theme);
 @function bottom-nav-theme(
     $schema: $light-material-schema,
-    $elevations: null,
     $background: null,
     $icon-color: null,
     $icon-selected-color: null,

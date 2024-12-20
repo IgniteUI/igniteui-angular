@@ -11,7 +11,6 @@
 ////
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The navbar background color.
 /// @param {Color} $text-color [null] - The navbar text color.
 /// @param {Color} $border-color [null] - The navbar border color.
@@ -26,7 +25,6 @@
 ///   @include css-vars($my-navbar-theme);
 @function navbar-theme(
     $schema: $light-material-schema,
-    $elevations: null,
     $background: null,
     $border-color: null,
     $text-color: null,

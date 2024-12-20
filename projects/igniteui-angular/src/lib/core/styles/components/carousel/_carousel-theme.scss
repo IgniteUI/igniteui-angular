@@ -12,7 +12,6 @@
 ////
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $slide-background [null] - The slide background color.
 /// @param {Color} $button-background [null] - The previous/next buttons idle background color.
 /// @param {Color} $button-hover-background [null] - The previous/next buttons hover background color.
@@ -44,7 +43,6 @@
 ///   @include css-vars($my-carousel-theme);
 @function carousel-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $border-radius: null,
     $button-shadow: null,
