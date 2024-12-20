@@ -13,7 +13,6 @@
 
 /// Chip Theme
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {List} $border-radius [null] - The chip border-radius.
 ///
 /// @param {Color} $text-color [null] - The chip text color.
@@ -58,7 +57,6 @@
 ///   @include css-vars($my-chip-theme);
 @function chip-theme(
     $schema: $light-material-schema,
-    $elevations: null,
     $border-radius: null,
 
     $text-color: null,
