@@ -124,10 +124,16 @@
                 [removable]="isInEditMode() ? 'true' : 'false'"
                 (keydown)="invokeClick($event)"
                 (click)="onChipClick(expressionItem)"
-                (remove)="onChipRemove(expressionItem)"
-                (focus)="onChipFocus(dragRef, expressionItem)" 
-                (focusout)="onChipFocusOut()"    
+                (remove)="onChipRemove(expressionItem)"                
+                
             >
+                <igx-icon igxPrefix 
+                    tabindex="0"
+                    (focus)="onChipFocus(dragRef, expressionItem)" 
+                    (focusout)="onChipFocusOut()"    
+                >
+                    drag_indicator
+                </igx-icon>
                 <span igxPrefix class="igx-filter-tree__expression-column">
                     {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
                 </span>
