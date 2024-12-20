@@ -12,7 +12,6 @@
 
 ///
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The card background color.
 /// @param {Color} $outline-color [null] - The color of the outline for outlined type cards.
 /// @param {Color} $header-text-color [null] - The text color of the card title.
@@ -32,7 +31,6 @@
 ///   @include css-vars($my-card-theme);
 @function card-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $border-radius: null,
     $background: null,
