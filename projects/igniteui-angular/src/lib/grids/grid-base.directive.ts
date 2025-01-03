@@ -2272,9 +2272,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._allowFiltering = value;
             this.filteringService.registerSVGIcons();
 
-            if (!this._init) {
-                this.calcGridHeadRow();
-            }
 
             this.filteringService.isFilterRowVisible = false;
             this.filteringService.filteredColumn = null;
@@ -3206,6 +3203,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
+    protected isColumnWidthSum = false;
     private _currencyPositionLeft: boolean;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
@@ -4020,7 +4018,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.onPinnedRowsChanged(change);
             });
 
-        this.addRowSnackbar?.clicked.subscribe(() => {
+        this.addRowSnackbar?.clicked.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const rec = this.filteredSortedData[this.lastAddedRowIndex];
             this.scrollTo(rec, 0);
             this.addRowSnackbar.close();
@@ -6493,6 +6491,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         if (this.width === null || !width) {
             width = this.getColumnWidthSum();
+            this.isColumnWidthSum = true;
         }
 
         if (this.hasVerticalScroll() && this.width !== null) {
@@ -6844,23 +6843,9 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * @hidden
-     * @internal
-     */
-    protected calcGridHeadRow() {
-        if (this.maxLevelHeaderDepth) {
-            this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
-            const hasFilterRow = this._allowFiltering && this._filterMode === FilterMode.quickFilter;
-            const minSize = (this.maxLevelHeaderDepth + 1 + (hasFilterRow ? 1 : 0)) * this.defaultRowHeight / this._baseFontSize;
-            this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
-        }
-    }
-
-    /**
-     * @hidden
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        this.calcGridHeadRow();
 
         this.calcHeight = this._calculateGridBodyHeight();
         if (this.pinnedRowHeight && this.calcHeight) {
@@ -7330,6 +7315,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.resetCachedWidths();
             this.cdr.detectChanges();
         }
+
+        if (this.isColumnWidthSum) {
+            this.calcWidth = this.getColumnWidthSum();
+        }
     }
 
     protected extractDataFromColumnsSelection(source: any[], formatters = false, headers = false): any[] {
@@ -7523,7 +7512,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected get renderedActualRowHeight() {
         let border = 1;
         if (this.rowList.toArray().length > 0) {
-            const rowStyles = document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
+            const rowStyles = this.document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
             border = rowStyles.borderBottomWidth ? Math.ceil(parseFloat(rowStyles.borderBottomWidth)) : border;
         }
         return this.rowHeight + border;

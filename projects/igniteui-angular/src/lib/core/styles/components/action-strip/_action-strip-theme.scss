@@ -58,6 +58,7 @@
         icon-color: $icon-color,
         delete-action: $delete-action,
         actions-border-radius: $actions-border-radius,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),

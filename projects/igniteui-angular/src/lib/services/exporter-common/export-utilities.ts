@@ -1,4 +1,3 @@
-
 /**
  * @hidden
  */
@@ -23,14 +22,15 @@ export class ExportUtilities {
     }
 
     public static saveBlobToFile(blob: Blob, fileName) {
-        const a = document.createElement('a');
+        const doc = globalThis.document;
+        const a = doc.createElement('a');
         const url = window.URL.createObjectURL(blob);
         a.download = fileName;
 
         a.href = url;
-        document.body.appendChild(a);
+        doc.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
+        doc.body.removeChild(a);
         window.URL.revokeObjectURL(url);
     }
 
@@ -68,7 +68,9 @@ export class ExportUtilities {
                               .replace(/</g, '&lt;')
                               .replace(/>/g, '&gt;')
                               .replace(/"/g, '&quot;')
-                              .replace(/'/g, '&apos;');
+                              .replace(/'/g, '&apos;')
+                              // Bug #14944 - Remove the not supported null character (\u0000, \x00)
+                              .replace(/\x00/g, '');
         }
     }
 }

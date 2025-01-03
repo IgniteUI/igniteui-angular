@@ -9,7 +9,7 @@ import {
     ViewChild
 } from '@angular/core';
 
-import { mkenum } from '../core/utils';
+import { mkenum, normalizeURI } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
 let NEXT_ID = 0;
@@ -202,7 +202,13 @@ export class IgxAvatarComponent implements OnInit {
      * @igxFriendlyName Image URL
      */
     @Input()
-    public src: string;
+    public set src(value: string) {
+        this._src = normalizeURI(value);
+    }
+
+    public get src() {
+        return this._src;
+    }
 
     /** @hidden @internal */
     @ViewChild('defaultTemplate', { read: TemplateRef, static: true })
@@ -225,6 +231,7 @@ export class IgxAvatarComponent implements OnInit {
      * @internal
      */
     private _size: string | IgxAvatarSize;
+    private _src: string;
 
     /**
      * Returns the size of the avatar.
@@ -335,7 +342,7 @@ export class IgxAvatarComponent implements OnInit {
      * @internal
      */
     public getSrcUrl() {
-        return `url(${this.src})`;
+        return `url("${this.src}")`;
     }
 
     /** @hidden @internal */
