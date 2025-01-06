@@ -180,6 +180,47 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     /**
+     * Navigates to the specific child grid based on the array of paths leading to it
+     *
+     * @param pathToChildGrid Array of IPathSegments that describe the path to the child grid
+     * each segment is described by the rowKey of the parent row and the rowIslandKey.
+     */
+    public navigateToChildGrid(pathToChildGrid: IPathSegment[], cb?: () => void) {
+        if (pathToChildGrid.length == 0) {
+            if (cb) {
+                cb();
+            }
+            return;
+        }
+        const pathElem = pathToChildGrid.shift();
+        const rowKey = pathElem.rowKey;
+        const rowIndex = this.grid.gridAPI.get_rec_index_by_id(rowKey, this.grid.dataView);
+        // scroll to row, since it can be out of view
+        this.performVerticalScrollToCell(rowIndex, -1, () => {
+            this.grid.cdr.detectChanges();
+            // next, expand row, if it is collapsed
+            const row = this.grid.getRowByIndex(rowIndex);
+            if (!row.expanded) {
+                row.expanded = true;
+                // update sizes after expand
+                this.grid.verticalScrollContainer.recalcUpdateSizes();
+                this.grid.cdr.detectChanges();
+            }
+
+            const childGrid =  this.grid.gridAPI.getChildGrid([pathElem]);
+            const positionInfo = this.getElementPosition(childGrid.nativeElement, false);
+            if (positionInfo.offset > 0) {
+                this.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
+                this.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
+                    childGrid.navigation.navigateToChildGrid(pathToChildGrid, cb);
+                });
+            } else {
+                childGrid.navigation.navigateToChildGrid(pathToChildGrid, cb);
+            }
+        });
+    }
+
+    /**
      * Moves navigation to child grid.
      *
      * @param parentRowIndex The parent row index, at which the child grid is rendered.
@@ -270,12 +311,17 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const childGrid =  this.grid.gridAPI.getChildGrid([pathSegment]);
             rowElem = childGrid.tfoot.nativeElement;
         }
+
+        return this.getElementPosition(rowElem, isNext);
+    }
+
+    protected getElementPosition(element: HTMLElement, isNext: boolean) {
         const gridBottom = this._getMinBottom(this.grid);
         const diffBottom =
-        rowElem.getBoundingClientRect().bottom - gridBottom;
+        element.getBoundingClientRect().bottom - gridBottom;
         const gridTop = this._getMaxTop(this.grid);
-        const diffTop = rowElem.getBoundingClientRect().bottom -
-        rowElem.offsetHeight - gridTop;
+        const diffTop = element.getBoundingClientRect().bottom -
+        element.offsetHeight - gridTop;
         // Adding Math.Round because Chrome has some inconsistencies when the page is zoomed
         const isInView = isNext ? Math.round(diffBottom) <= 0 : Math.round(diffTop) >= 0;
         const calcOffset =  isNext ? diffBottom : diffTop;
