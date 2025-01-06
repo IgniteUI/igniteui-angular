@@ -203,6 +203,11 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /**
      * @hidden
      */
+    public override navigation: IgxHierarchicalGridNavigationService;
+
+    /**
+     * @hidden
+     */
     public createColumnsList(cols: Array<any>) {
         const columns = [];
         const topLevelCols = cols.filter(c => c.level === 0);

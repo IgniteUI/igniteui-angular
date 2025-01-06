@@ -1059,6 +1059,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden
      */
+    public override navigation: IgxPivotGridNavigationService;
+
+    /**
+     * @hidden
+     */
     public override ngOnInit() {
         // pivot grid always generates columns automatically.
         this.autoGenerate = true;
