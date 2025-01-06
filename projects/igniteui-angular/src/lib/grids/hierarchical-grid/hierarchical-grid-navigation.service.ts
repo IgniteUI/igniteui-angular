@@ -195,6 +195,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const pathElem = pathToChildGrid.shift();
         const rowKey = pathElem.rowKey;
         const rowIndex = this.grid.gridAPI.get_rec_index_by_id(rowKey, this.grid.dataView);
+        if (rowIndex === -1) {
+            if (cb) {
+                cb();
+            }
+            return;
+        }
         // scroll to row, since it can be out of view
         this.performVerticalScrollToCell(rowIndex, -1, () => {
             this.grid.cdr.detectChanges();
@@ -208,6 +214,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             }
 
             const childGrid =  this.grid.gridAPI.getChildGrid([pathElem]);
+            if (!childGrid) {
+                if (cb) {
+                    cb();
+                }
+                return;
+            }
             const positionInfo = this.getElementPosition(childGrid.nativeElement, false);
             if (positionInfo.offset > 0) {
                 this.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
