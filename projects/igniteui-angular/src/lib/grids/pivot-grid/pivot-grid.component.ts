@@ -1056,9 +1056,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             _diTransactions);
     }
 
-    /**
-     * @hidden
-     */
     public override navigation: IgxPivotGridNavigationService;
 
     /**
