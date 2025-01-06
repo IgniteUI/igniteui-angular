@@ -3248,6 +3248,14 @@
         }
     }
 
+    igx-child-grid-row {
+        igx-child-grid-row {
+            %igx-grid__tr-action {
+                border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+            }
+        }
+    }
+
     // Pivot grid
     %igx-grid__pivot--super-compact {
         --ig-size: 1 !important;
