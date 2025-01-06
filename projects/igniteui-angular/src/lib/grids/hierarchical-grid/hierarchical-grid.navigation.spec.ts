@@ -966,7 +966,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             clearGridSubs();
         });
 
-        it('should navigate to exact child grid with scrollToChildGrid', (done) => {
+        it('should navigate to exact child grid with navigateToChildGrid.', (done) => {
             hierarchicalGrid.primaryKey = 'ID';
             hierarchicalGrid.expandChildren = false;
             fixture.detectChanges();
@@ -987,7 +987,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 done();
             });
         });
-        it('should navigate to exact nested child grid with scrollToChildGrid', (done) => {
+        it('should navigate to exact nested child grid with navigateToChildGrid.', (done) => {
             hierarchicalGrid.expandChildren = false;
             hierarchicalGrid.primaryKey = 'ID';
             hierarchicalGrid.childLayoutList.toArray()[0].primaryKey = 'ID';
