@@ -670,16 +670,16 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $gray: color($palette, 'gray');
-    $surface: color($palette, 'surface');
+    $gray: color($palette, gray);
+    $surface: color($palette, surface);
 
     $_light-palette: palette(
-        $primary: color($palette, 'primary'),
-        $secondary: color($palette, 'secondary'),
-        $info: color($palette, 'info'),
-        $success: color($palette, 'success'),
-        $warn: color($palette, 'warn'),
-        $error: color($palette, 'error'),
+        $primary: color($palette, primary),
+        $secondary: color($palette, secondary),
+        $info: color($palette, info),
+        $success: color($palette, success),
+        $warn: color($palette, warn),
+        $error: color($palette, error),
         $surface: if($surface != #fff, $surface, #fff),
         $gray: if($gray != #9e9e9e, $gray, #000),
     );
@@ -704,16 +704,16 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $gray: color($palette, 'gray');
-    $surface: color($palette, 'surface');
+    $gray: color($palette, gray);
+    $surface: color($palette, surface);
 
     $_dark-palette: palette(
-        $primary: color($palette, 'primary'),
-        $secondary: color($palette, 'secondary'),
-        $info: color($palette, 'info'),
-        $success: color($palette, 'success'),
-        $warn: color($palette, 'warn'),
-        $error: color($palette, 'error'),
+        $primary: color($palette, primary),
+        $secondary: color($palette, secondary),
+        $info: color($palette, info),
+        $success: color($palette, success),
+        $warn: color($palette, warn),
+        $error: color($palette, error),
         $surface: if($surface != #fff, $surface, #222),
         $gray: if($gray != #9e9e9e, $gray, #fff),
     );
