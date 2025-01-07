@@ -118,7 +118,7 @@
     "gulp-uglify": "^3.0.1",
     "hammer-simulator": "0.0.1",
     "hammerjs": "^2.0.8",
-    "ig-typedoc-theme": "file:../../ig-typedoc-theme-1.0.0.tgz",
+    "ig-typedoc-theme": "^6.0.0",
     "igniteui-dockmanager": "^1.15.2",
     "igniteui-sassdoc-theme": "^1.2.3",
     "igniteui-webcomponents": "5.1.2",
@@ -147,7 +147,7 @@
     "stylelint-scss": "^6.9.0",
     "ts-node": "^10.8.1",
     "typedoc": "^0.27.0",
-    "typedoc-plugin-localization": "file:../../typedoc-plugin-localization-1.0.4.tgz",
+    "typedoc-plugin-localization": "^3.0.6",
     "typescript": "5.6.3"
   }
 }
