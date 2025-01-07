@@ -14,9 +14,9 @@ import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { filter, fromEvent, map, retry, sampleTime, Subject, Subscription } from 'rxjs';
+import { filter, fromEvent, sampleTime, Subject, Subscription } from 'rxjs';
 import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
-import { IBaseChipEventArgs, IChipEnterDragAreaEventArgs, IgxChipComponent } from '../chips/chip.component';
+import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { PlatformUtil } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
@@ -54,8 +54,8 @@ import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
-import { IChipsAreaReorderEventArgs, IgxChipsAreaComponent } from "../chips/chips-area.component";
-import { IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
+import { IgxChipsAreaComponent } from "../chips/chips-area.component";
+import { IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
@@ -120,6 +120,21 @@ class ExpressionOperandItem extends ExpressionItem {
         super(parent);
         this.expression = expression;
     }
+}
+
+
+/** @hidden */
+export enum ExpressionItemOperation {
+    Edit = 'edit',
+    Add = 'add'
+}
+
+/** "hidden" */
+export interface ExpressionOperationDetails {
+    expressionItem: ExpressionOperandItem,
+    operation: ExpressionItemOperation,
+    editedExpression: ExpressionOperandItem,
+    target?: HTMLElement,
 }
 
 /** @hidden */
@@ -514,6 +529,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _locale;
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _canExitEdit = false;
 
     public get level(): number {
         let parent = this.elRef.nativeElement.parentElement;
@@ -744,7 +760,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public addCondition(parent: ExpressionGroupItem, afterExpression?: ExpressionItem) {
+    public addCondition(parent: ExpressionGroupItem, afterExpression?: ExpressionOperandItem) {
         this.cancelOperandAdd();
 
         const operandItem = new ExpressionOperandItem({
@@ -1412,9 +1428,71 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
-        this.exitOperandEdit();
-        this.cancelOperandAdd();
+        if (this._editedExpression && !this._canExitEdit) {
+            this.exitOperandEdit();
+            this.cancelOperandAdd();
+        }
+        this.cdr.detectChanges();
+        this.enterEditMode(expressionItem);
+        this._canExitEdit = true;
+    }
 
+
+    /**
+     * @hidden @internal
+     */
+    public clickExpressionAdd(expressionItem: ExpressionOperandItem, targetButton: HTMLElement) {
+        if (this._editedExpression) {
+            this.exitOperandEdit();
+            this.cancelOperandAdd();
+        }
+        this.openExpressionAddDialog(expressionItem, targetButton);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public openExpressionAddDialog(expressionItem: ExpressionOperandItem, targetButton: HTMLElement) {
+        expressionItem.focused = true;
+        this.cdr.detectChanges();
+        this.addExpressionDropDownOverlaySettings.target = targetButton;
+        this.addExpressionDropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
+            horizontalDirection: HorizontalAlignment.Right,
+            horizontalStartPoint: HorizontalAlignment.Right,
+            verticalStartPoint: VerticalAlignment.Bottom
+        });
+
+        this.addExpressionItemDropDown.open(this.addExpressionDropDownOverlaySettings);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public enterExpressionAdd(event: ISelectionEventArgs, expressionItem: ExpressionOperandItem) {
+        if (this._addModeExpression) {
+            this._addModeExpression.inAddMode = false;
+        }
+
+        if (this.parentExpression) {
+            this.inEditModeChange.emit(this.parentExpression);
+        }
+
+        const parent = expressionItem.parent ?? this.rootGroup;
+        requestAnimationFrame(() => {
+            if (event.newSelection.value === 'addCondition') {
+                this.addCondition(parent, expressionItem);
+            } else if (event.newSelection.value === 'addGroup') {
+                this.addReverseGroup(parent, expressionItem);
+            }
+            expressionItem.inAddMode = true;
+            this._addModeExpression = expressionItem;
+        })
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public enterEditMode(expressionItem: ExpressionOperandItem) {
         if (this._editedExpression) {
             this._editedExpression.inEditMode = false;
         }
@@ -1457,7 +1535,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         }
 
-
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
         } else if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary) {
@@ -1466,46 +1543,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
             input?.focus();
         }
-    }
-
-
-    /**
-     * @hidden @internal
-     */
-    public openExpressionAdd(expressionItem: ExpressionOperandItem, targetButton: HTMLElement) {
-        this.exitOperandEdit();
-
-        this.addExpressionDropDownOverlaySettings.target = targetButton;
-        this.addExpressionDropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
-            horizontalDirection: HorizontalAlignment.Right,
-            horizontalStartPoint: HorizontalAlignment.Right,
-            verticalStartPoint: VerticalAlignment.Bottom
-        });
-        this.addExpressionItemDropDown.open(this.addExpressionDropDownOverlaySettings);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public enterExpressionAdd(event: ISelectionEventArgs, expressionItem: ExpressionOperandItem) {
-        if (this._addModeExpression) {
-            this._addModeExpression.inAddMode = false;
-        }
-
-        if (this.parentExpression) {
-            this.inEditModeChange.emit(this.parentExpression);
-        }
-
-        const parent = expressionItem.parent ?? this.rootGroup;
-        requestAnimationFrame(() => {
-            if (event.newSelection.value === 'addCondition') {
-                this.addCondition(parent, expressionItem);
-            } else if (event.newSelection.value === 'addGroup') {
-                this.addReverseGroup(parent, expressionItem);
-            }
-            expressionItem.inAddMode = true;
-            this._addModeExpression = expressionItem;
-        })
     }
 
     /**
