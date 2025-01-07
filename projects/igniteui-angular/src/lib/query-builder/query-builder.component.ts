@@ -10,7 +10,7 @@ import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive
 import { EntityType, FieldType } from '../grids/common/grid.interface';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { ExpressionOperationDetails, IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
+import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from '../icon/icon.service';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';

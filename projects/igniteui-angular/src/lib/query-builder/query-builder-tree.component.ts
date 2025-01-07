@@ -122,21 +122,6 @@ class ExpressionOperandItem extends ExpressionItem {
     }
 }
 
-
-/** @hidden */
-export enum ExpressionItemOperation {
-    Edit = 'edit',
-    Add = 'add'
-}
-
-/** "hidden" */
-export interface ExpressionOperationDetails {
-    expressionItem: ExpressionOperandItem,
-    operation: ExpressionItemOperation,
-    editedExpression: ExpressionOperandItem,
-    target?: HTMLElement,
-}
-
 /** @hidden */
 @Component({
     selector: 'igx-query-builder-tree',
@@ -277,7 +262,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._selectedReturnFields = [];
         }
 
-        this.init();
+        if(!this._preventInit) {
+            this.init();
+
+            this._preventInit = false;
+        }
     }
 
     /**
@@ -521,6 +510,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _currentGroupButtonsContainer: ElementRef;
     private _addModeExpression: ExpressionOperandItem;
     private _editedExpression: ExpressionOperandItem;
+    private _preventInit = false;
     private _prevFocusedContainer: ElementRef;
     private _selectedGroups: ExpressionGroupItem[] = [];
     private _expandedExpressions: IFilteringExpression[] = [];
@@ -529,7 +519,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _locale;
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
-    private _canExitEdit = false;
 
     public get level(): number {
         let parent = this.elRef.nativeElement.parentElement;
@@ -1428,13 +1417,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
-        if (this._editedExpression && !this._canExitEdit) {
+        if (this._editedExpression) {
             this.exitOperandEdit();
             this.cancelOperandAdd();
+
+            this._preventInit = true;
         }
         this.cdr.detectChanges();
         this.enterEditMode(expressionItem);
-        this._canExitEdit = true;
     }
 
 
@@ -1445,6 +1435,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this._editedExpression) {
             this.exitOperandEdit();
             this.cancelOperandAdd();
+
+            this._preventInit = true;
         }
         this.openExpressionAddDialog(expressionItem, targetButton);
     }
