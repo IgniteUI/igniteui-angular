@@ -221,14 +221,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 return;
             }
             const positionInfo = this.getElementPosition(childGrid.nativeElement, false);
-            if (positionInfo.offset > 0) {
-                this.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
-                this.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
-                    childGrid.navigation.navigateToChildGrid(pathToChildGrid, cb);
-                });
-            } else {
+            this.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
+            this.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
                 childGrid.navigation.navigateToChildGrid(pathToChildGrid, cb);
-            }
+            });
         });
     }
 
