@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {
-    IgxAvatarComponent,
     IgxButtonModule,
     IgxCheckboxComponent,
     IgxComboComponent,
@@ -23,7 +22,6 @@ import {
     IgxTabsComponent,
     IgxTabsModule,
     IgxToggleActionDirective,
-    IgxToggleDirective
 } from "igniteui-angular";
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
@@ -45,7 +43,6 @@ import {NgForOf, NgIf} from "@angular/common";
         IgxComboComponent,
         IgxCheckboxComponent,
         IgxDropDownComponent,
-        IgxToggleDirective,
         IgxDropDownItemComponent,
         IgxToggleActionDirective,
         IgxRadioComponent,
@@ -57,7 +54,6 @@ import {NgForOf, NgIf} from "@angular/common";
         IgxTabItemComponent,
         IgxTabHeaderIconDirective,
         IgxTabHeaderLabelDirective,
-        IgxAvatarComponent,
         IgxTabHeaderComponent,
     ],
     templateUrl: './hound.component.html',

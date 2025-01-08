@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconButtonDirective, IgxIconComponent, IgxIconService, IgxRippleDirective } from 'igniteui-angular';
+import { IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxIconService } from 'igniteui-angular';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 
 @Component({
@@ -8,7 +8,7 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
     styleUrls: ['button.sample.scss'],
     templateUrl: 'button.sample.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [IgxButtonDirective, IgxIconComponent, IgxButtonGroupComponent, IgxIconButtonDirective, IgxRippleDirective, SizeSelectorComponent]
+    imports: [IgxButtonDirective, IgxIconComponent, IgxIconButtonDirective, SizeSelectorComponent]
 })
 export class ButtonSampleComponent implements OnInit {
     @ViewChild('inactive', { read: IgxIconButtonDirective, static: true })
