@@ -1445,8 +1445,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public openExpressionAddDialog(expressionItem: ExpressionOperandItem, targetButton: HTMLElement) {
-        expressionItem.focused = true;
-        this.cdr.detectChanges();
         this.addExpressionDropDownOverlaySettings.target = targetButton;
         this.addExpressionDropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
             horizontalDirection: HorizontalAlignment.Right,
