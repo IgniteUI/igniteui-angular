@@ -6283,7 +6283,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick();
             fix.detectChanges();
 
-            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 5);
             tick();
             fix.detectChanges();
 
@@ -6293,7 +6293,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick();
             fix.detectChanges();
             const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
-
+ 
             const todayItem = dropdownList.children[0].children.find(item => item.nativeElement?.innerText === 'Today');
             todayItem.nativeElement.click();
             tick();
