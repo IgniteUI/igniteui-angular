@@ -5,7 +5,6 @@
 /// @group themes
 /// @access public
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} background [null] - The background color of the filtering row.
 /// @param {Color} header-background [null] - The background color of the query builder header.
 /// @param {Color} header-foreground [null] - The foreground color of the query builder header.
@@ -20,7 +19,6 @@
 ///   @include css-vars($my-query-builder-theme);
 @function query-builder-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $background: null,
     $header-background: null,

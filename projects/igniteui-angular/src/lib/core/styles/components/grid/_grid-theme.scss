@@ -15,7 +15,6 @@
 ////
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $header-background [null] - The table header background color.
 /// @param {Color} $header-text-color [null] - The table header text color.
 /// @param {String} $header-border-width [null] - The border width used for header borders.
@@ -110,7 +109,6 @@
 ///   @include css-vars($my-grid-theme);
 @function grid-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $header-background: null,
     $header-text-color: null,
@@ -3245,6 +3243,14 @@
     %igx-grid__tr-action {
         &:last-of-type {
             border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        }
+    }
+
+    igx-child-grid-row {
+        igx-child-grid-row {
+            %igx-grid__tr-action {
+                border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+            }
         }
     }
 
