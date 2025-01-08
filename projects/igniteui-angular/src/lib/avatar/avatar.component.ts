@@ -342,7 +342,7 @@ export class IgxAvatarComponent implements OnInit {
      * @internal
      */
     public getSrcUrl() {
-        return `url(${this.src})`;
+        return `url("${this.src}")`;
     }
 
     /** @hidden @internal */
