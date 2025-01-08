@@ -6273,6 +6273,41 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 ['Select All', '1:00:00 AM', '12:00:00 PM', '11:00:00 PM'],
                 [true, true, true, true]);
         }));
+
+        it('Bug 15193 - "Clear Filter" button should clear all filters in the custom dialog.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick();
+            fix.detectChanges();
+
+            const expressions = GridFunctions.getExcelCustomFilteringDateExpressions(fix);
+            const lastExpression = expressions[expressions.length - 1];
+            (lastExpression.querySelector('igx-select').querySelector('igx-input-group') as HTMLElement).click();
+            tick();
+            fix.detectChanges();
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+
+            const todayItem = dropdownList.children[0].children.find(item => item.nativeElement?.innerText === 'Today');
+            todayItem.nativeElement.click();
+            tick();
+            fix.detectChanges();
+            
+            GridFunctions.clickClearFilterExcelStyleCustomFiltering(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.getExcelCustomFilteringDateExpressions(fix).forEach(expr => {
+                const input = expr.children[0].querySelector('input');
+                expect(input.value).toBe('');
+            });
+        }));
     });
 
     describe('Templates: ', () => {
