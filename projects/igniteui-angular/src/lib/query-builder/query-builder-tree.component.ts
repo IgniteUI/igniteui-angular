@@ -970,6 +970,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onChipRemove(expressionItem: ExpressionItem) {
+        if(this._editedExpression) {
+            this.exitOperandEdit();
+            this.cancelOperandAdd();
+        }
         this.deleteItem(expressionItem);
     }
 
@@ -996,6 +1000,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     //When we pick up a chip
     public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem): void {
+        if(this._editedExpression) {
+            this.exitOperandEdit();
+            this.cancelOperandAdd();
+        }
         //console.log('Picked up:', event, sourceDragElement);
         this.resetDragAndDrop(true);
         this.sourceExpressionItem = sourceExpressionItem;
@@ -1438,6 +1446,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             this._preventInit = true;
         }
+        this.cdr.detectChanges();
         this.openExpressionAddDialog(expressionItem, targetButton);
     }
 
