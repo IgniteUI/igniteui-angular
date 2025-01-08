@@ -218,6 +218,13 @@
         &::after {
             animation: indeterminate-primary-scale 2000ms infinite linear;
         }
+
+        [dir="rtl"] & {
+            animation: indeterminate-primary-rtl 2000ms infinite linear;
+            left: auto;
+            right: -145.166611%;
+            transform-origin: top right;
+        }
     }
 
     %linear-indicator--indeterminate-secondary {
@@ -228,6 +235,13 @@
             animation: indeterminate-secondary-scale 2000ms infinite linear;
             width: 100%;
             height: inherit;
+        }
+
+        [dir="rtl"] & {
+            animation: indeterminate-secondary-rtl 2000ms infinite linear;
+            left: auto;
+            right: -54.888891%;
+            transform-origin: top right;
         }
     }
 
@@ -310,6 +324,26 @@
         }
     }
 
+    @keyframes indeterminate-primary-rtl {
+        0% {
+          transform: translateX(0);
+        }
+
+        20% {
+          animation-timing-function: $indeterminate-primary-translate-step-2;
+          transform: translateX(0);
+        }
+
+        59.15% {
+          animation-timing-function: $indeterminate-primary-translate-step-3;
+          transform: translateX(-83.67142%);
+        }
+
+        100% {
+          transform: translateX(-200.611057%);
+        }
+    }
+
     @keyframes indeterminate-primary-scale {
         0% {
             transform: scaleX(.08);
@@ -349,6 +383,27 @@
 
         100% {
             transform: translateX(160.277782%);
+        }
+    }
+
+    @keyframes indeterminate-secondary-rtl {
+        0% {
+          animation-timing-function: $indeterminate-secondary-translate-step-1;
+          transform: translateX(0);
+        }
+
+        25% {
+          animation-timing-function: $indeterminate-secondary-translate-step-2;
+          transform: translateX(-37.651913%);
+        }
+
+        48.35% {
+          animation-timing-function: $indeterminate-secondary-translate-step-3;
+          transform: translateX(-84.386165%);
+        }
+
+        100% {
+          transform: translateX(-160.277782%);
         }
     }
 
