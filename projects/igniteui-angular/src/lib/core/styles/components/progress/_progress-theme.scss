@@ -223,6 +223,7 @@
             animation: indeterminate-primary-rtl 2000ms infinite linear;
             left: auto;
             right: -145.166611%;
+            transform-origin: top right;
         }
     }
 
@@ -240,6 +241,7 @@
             animation: indeterminate-secondary-rtl 2000ms infinite linear;
             left: auto;
             right: -54.888891%;
+            transform-origin: top right;
         }
     }
 
