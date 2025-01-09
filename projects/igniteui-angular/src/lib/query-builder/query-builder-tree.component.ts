@@ -262,7 +262,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._selectedReturnFields = [];
         }
 
-        if(!this._preventInit) {
+        if (!this._preventInit) {
             this.init();
         }
     }
@@ -922,11 +922,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public exitEditAddMode() {
-        if(this._editedExpression) {
-            this.exitOperandEdit();
-            this.cancelOperandAdd();
+    public exitEditAddMode(shouldPreventInit = false) {
+        if (!this._editedExpression) {
+            return;
+        }
 
+        this.exitOperandEdit();
+        this.cancelOperandAdd();
+
+        if (shouldPreventInit) {
             this._preventInit = true;
         }
     }
@@ -980,10 +984,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onChipRemove(expressionItem: ExpressionItem) {
-        if(this._editedExpression) {
-            this.exitOperandEdit();
-            this.cancelOperandAdd();
-        }
+        this.exitEditAddMode();
         this.deleteItem(expressionItem);
     }
 
@@ -1010,10 +1011,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     //When we pick up a chip
     public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem): void {
-        if(this._editedExpression) {
-            this.exitOperandEdit();
-            this.cancelOperandAdd();
-        }
+        this.exitEditAddMode();
         //console.log('Picked up:', event, sourceDragElement);
         this.resetDragAndDrop(true);
         this.sourceExpressionItem = sourceExpressionItem;
@@ -1340,7 +1338,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             else {
                 //Dropping on '+ Condition button' => simulate entering in the lower part of the last chip/group
                 let lastElement = this.getPreviousChip(chipsList[chipsList.length - 1].parentElement);
-                lastElement = lastElement === this.ghostChip? this.getPreviousChip(lastElement as HTMLElement) : lastElement;                
+                lastElement = lastElement === this.ghostChip ? this.getPreviousChip(lastElement as HTMLElement) : lastElement;
 
                 const getParentExpression = (expression: ExpressionItem) => { return expression.parent ? getParentExpression(expression.parent) : expression };
                 const rootGroup = getParentExpression(expressionsList[expressionsList.length - 1]);
@@ -1435,7 +1433,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
-        this.exitEditAddMode();
+        this.exitEditAddMode(true);
         this.cdr.detectChanges();
         this.enterEditMode(expressionItem);
     }
@@ -1445,7 +1443,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public clickExpressionAdd(targetButton: HTMLElement) {
-        this.exitEditAddMode();
+        this.exitEditAddMode(true);
         this.cdr.detectChanges();
         this.openExpressionAddDialog(targetButton);
     }
@@ -1585,10 +1583,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onGroupClick(groupItem: ExpressionGroupItem) {
-        if(this._editedExpression) {
-            this.exitOperandEdit();
-            this.cancelOperandAdd();
-        }
+        this.exitEditAddMode();
     }
 
     /**

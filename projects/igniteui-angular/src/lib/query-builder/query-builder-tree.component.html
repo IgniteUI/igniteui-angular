@@ -11,7 +11,7 @@
         <igx-select #entitySelect
             type="box"
             (selectionChanging)="onEntitySelectChanging($event)"
-            (opening)="exitEditAddMode()"
+            (opening)="exitEditAddMode(true)"
             [overlaySettings]="entitySelectOverlaySettings"
             [ngModel]="selectedEntity"
             [style.display]="isInEditMode() ? 'block' : 'none'"
@@ -34,7 +34,7 @@
             searchPlaceholder="{{ this.resourceStrings.igx_query_builder_search }}"
             [style.display]="isInEditMode() ? 'block' : 'none'"
             (selectionChanging)="onReturnFieldSelectChanging($event)"
-            (opening)="exitEditAddMode()"
+            (opening)="exitEditAddMode(true)"
         >
             <ng-template igxComboHeader>
                 <div
