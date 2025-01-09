@@ -264,8 +264,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         if(!this._preventInit) {
             this.init();
-
-            this._preventInit = false;
         }
     }
 
@@ -1439,7 +1437,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public clickExpressionAdd(expressionItem: ExpressionOperandItem, targetButton: HTMLElement) {
+    public clickExpressionAdd(targetButton: HTMLElement) {
         if (this._editedExpression) {
             this.exitOperandEdit();
             this.cancelOperandAdd();
@@ -1447,13 +1445,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._preventInit = true;
         }
         this.cdr.detectChanges();
-        this.openExpressionAddDialog(expressionItem, targetButton);
+        this.openExpressionAddDialog(targetButton);
     }
 
     /**
      * @hidden @internal
      */
-    public openExpressionAddDialog(expressionItem: ExpressionOperandItem, targetButton: HTMLElement) {
+    public openExpressionAddDialog(targetButton: HTMLElement) {
         this.addExpressionDropDownOverlaySettings.target = targetButton;
         this.addExpressionDropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
             horizontalDirection: HorizontalAlignment.Right,
