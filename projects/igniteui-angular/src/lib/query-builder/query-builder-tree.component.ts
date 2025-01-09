@@ -921,6 +921,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     /**
      * @hidden @internal
+     */
+    public exitEditAddMode() {
+        if(this._editedExpression) {
+            this.exitOperandEdit();
+            this.cancelOperandAdd();
+
+            this._preventInit = true;
+        }
+    }
+
+    /**
+     * @hidden @internal
      *
      * used by the grid
      */
@@ -1423,12 +1435,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
-        if (this._editedExpression) {
-            this.exitOperandEdit();
-            this.cancelOperandAdd();
-
-            this._preventInit = true;
-        }
+        this.exitEditAddMode();
         this.cdr.detectChanges();
         this.enterEditMode(expressionItem);
     }
@@ -1438,12 +1445,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public clickExpressionAdd(targetButton: HTMLElement) {
-        if (this._editedExpression) {
-            this.exitOperandEdit();
-            this.cancelOperandAdd();
-
-            this._preventInit = true;
-        }
+        this.exitEditAddMode();
         this.cdr.detectChanges();
         this.openExpressionAddDialog(targetButton);
     }
@@ -1583,6 +1585,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onGroupClick(groupItem: ExpressionGroupItem) {
+        if(this._editedExpression) {
+            this.exitOperandEdit();
+            this.cancelOperandAdd();
+        }
     }
 
     /**
