@@ -102,6 +102,7 @@ import { IgxTextHighlightService } from '../../directives/text-highlight/text-hi
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
+import { IgxGridRow } from '../grid-public-row';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -2512,5 +2513,21 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             // Trigger pipes to recalc heights for the horizontal layout mrl rows.
             this.regroupTrigger++;
         }
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public createRow(index: number, data?: any): RowType {
+        let row: RowType;
+
+        const dataIndex = this._getDataViewIndex(index);
+        const rec = data ?? this.dataView[dataIndex];
+
+
+        if (!row && rec) {
+            row = new IgxGridRow(this, index, rec);
+        }
+        return row;
     }
 }
