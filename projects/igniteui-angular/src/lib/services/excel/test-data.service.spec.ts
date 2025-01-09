@@ -5,7 +5,6 @@ import { IFileContent } from './zip-verification-wrapper.spec';
 @Injectable()
 export class ExportTestDataService {
 
-    /* eslint-disable  max-len */
     private _differentTypesData = [
         { Number: 1, String: '1', Boolean: true, Date: new Date(2018, 3, 3) },
         { Number: 2, String: '2', Boolean: false, Date: new Date(2018, 5, 6) },

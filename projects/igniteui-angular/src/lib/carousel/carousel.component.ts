@@ -1,4 +1,4 @@
-import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgIf, NgClass, NgFor, NgTemplateOutlet, DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectorRef,
@@ -84,7 +84,6 @@ export class CarouselHammerConfig extends HammerGestureConfig {
         display: block;
         outline-style: none;
     }`],
-    standalone: true,
     imports: [IgxButtonDirective, IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 
@@ -584,7 +583,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         private iterableDiffers: IterableDiffers,
         @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private platformUtil: PlatformUtil,
-        private dir: IgxDirectionality
+        private dir: IgxDirectionality,
+        @Inject(DOCUMENT) private document: any
     ) {
         super(animationService, cdr);
         this.differ = this.iterableDiffers.find([]).create(null);
@@ -1003,7 +1003,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     private focusElement() {
-        const focusedElement = document.activeElement;
+        const focusedElement = this.document.activeElement;
 
         if (focusedElement.classList.contains('igx-carousel-indicators__indicator')) {
             this.indicatorsElements[this.current].nativeElement.focus();

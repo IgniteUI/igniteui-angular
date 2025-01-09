@@ -15,7 +15,6 @@ import { filter, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SafeHtml } from "@angular/platform-browser";
 import { NgIf, NgTemplateOutlet } from "@angular/common";
-import { ThemeService } from "../services/theme/theme.service";
 
 /**
  * Icon provides a way to include material icons to markup
@@ -42,8 +41,7 @@ import { ThemeService } from "../services/theme/theme.service";
 @Component({
     selector: "igx-icon",
     templateUrl: "icon.component.html",
-    standalone: true,
-    imports: [NgTemplateOutlet, NgIf],
+    imports: [NgTemplateOutlet, NgIf]
 })
 export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     private _iconRef: IconReference;
@@ -66,22 +64,6 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     private clearIconClasses() {
         this._iconClasses.clear();
     }
-
-    /**
-     *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
-     *
-     * @example
-     * ```typescript
-     * @ViewChild("MyIcon") public icon: IgxIconComponent;
-     * constructor(private cdRef:ChangeDetectorRef) {}
-     * ngAfterViewInit() {
-     *     this.icon.ariaHidden = false;
-     *     this.cdRef.detectChanges();
-     * }
-     * ```
-     */
-    @HostBinding("attr.aria-hidden")
-    public ariaHidden = true;
 
     /**
      *  An accessor that returns inactive property.
@@ -108,7 +90,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      * <igx-icon family="material">settings</igx-icon>
      * ```
      */
-    @Input("family")
+    @Input()
     public family: string;
 
     /**
@@ -119,7 +101,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      * <igx-icon name="contains" family="filter-icons"></igx-icon>
      * ```
      */
-    @Input("name")
+    @Input()
     public name: string;
 
     /**
@@ -130,17 +112,15 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      * <igx-icon [active]="false">settings</igx-icon>
      * ```
      */
-    @Input({ alias: "active", transform: booleanAttribute })
+    @Input({ transform: booleanAttribute })
     public active = true;
 
     constructor(
         public el: ElementRef,
         private iconService: IgxIconService,
-        private themeService: ThemeService,
         private ref: ChangeDetectorRef,
     ) {
         this.family = this.iconService.defaultFamily.name;
-        this.iconService.setRefsByTheme(this.themeService.globalTheme);
 
         this.iconService.iconLoaded
             .pipe(

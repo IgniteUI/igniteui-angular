@@ -60,7 +60,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * </div>
      * ```
      */
-    @Input('cssClass')
+    @Input()
     public cssClass: string;
 
     /**
@@ -74,13 +74,13 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * </div>
      * ```
      */
-    @Input('activeCssClass')
+    @Input()
     public activeCssClass: string;
 
     /**
      * @hidden
      */
-    @Input('containerClass')
+    @Input()
     public containerClass: string;
 
     /**
@@ -95,7 +95,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * </div>
      * ```
      */
-    @Input('groupName')
+    @Input()
     public groupName = '';
 
     /**
@@ -136,7 +136,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * </div>
      * ```
      */
-    @Input('row')
+    @Input()
     public row: any;
 
     /**
@@ -149,7 +149,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * </div>
      * ```
      */
-    @Input('column')
+    @Input()
     public column: any;
 
     /**
@@ -435,7 +435,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
                 const end = foundIndex + searchTextResolved.length;
 
                 this.appendText(stringValue.substring(previousMatchEnd, start));
-                // eslint-disable-next-line max-len
                 this.appendSpan(`<span class="${this._defaultCssClass} ${this.cssClass ? this.cssClass : ''}">${stringValue.substring(start, end)}</span>`);
 
                 previousMatchEnd = end;

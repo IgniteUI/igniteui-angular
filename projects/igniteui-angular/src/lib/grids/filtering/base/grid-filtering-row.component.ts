@@ -54,7 +54,6 @@ import { Size } from '../../common/enums';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid-filtering-row.component.html',
-    standalone: true,
     imports: [NgFor, IgxDropDownComponent, IgxDropDownItemComponent, IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxDropDownItemNavigationDirective, IgxInputDirective, NgIf, IgxSuffixDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, IgxButtonDirective, NgClass, IgxRippleDirective, IgxIconButtonDirective]
 })
 export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
@@ -512,7 +511,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             return;
         }
         requestAnimationFrame(() => {
-            const focusedElement = document.activeElement;
+            const focusedElement = this.column?.grid.document.activeElement;
 
             if (focusedElement.classList.contains('igx-chip__remove')) {
                 return;
@@ -606,7 +605,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
 
     public onChipPointerdown(args, chip: IgxChipComponent) {
-        const activeElement = document.activeElement;
+        const activeElement = this.column?.grid.document.activeElement;
         this._cancelChipClick = chip.selected
             && activeElement && this.editorFocused(activeElement);
     }

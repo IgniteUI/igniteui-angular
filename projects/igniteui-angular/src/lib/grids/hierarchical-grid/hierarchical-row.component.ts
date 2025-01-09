@@ -24,7 +24,6 @@ import { NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common
     selector: 'igx-hierarchical-grid-row',
     templateUrl: './hierarchical-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }],
-    standalone: true,
     imports: [NgTemplateOutlet, IgxIconComponent, NgIf, IgxRowDragDirective, NgClass, IgxGridForOfDirective, IgxHierarchicalGridCellComponent, NgStyle, IgxCheckboxComponent, NgFor, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe]
 })
 export class IgxHierarchicalRowComponent extends IgxRowDirective {

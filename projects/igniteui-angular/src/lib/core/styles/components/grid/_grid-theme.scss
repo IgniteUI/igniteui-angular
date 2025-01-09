@@ -1434,15 +1434,15 @@
         }
 
         &%igx-grid__tr--ghost {
+            background: var-get($theme, 'row-ghost-background');
+            color: var-get($theme, 'row-drag-color');
+            z-index: 10002;
+
             @include css-vars((
                 name: 'igx-grid-row',
                 row-ghost-background: map.get($theme, 'row-ghost-background'),
                 row-drag-color: map.get($theme, 'row-drago-color')
             ));
-
-            background: var-get($theme, 'row-ghost-background');
-            color: var-get($theme, 'row-drag-color');
-            z-index: 10002;
         }
     }
 
@@ -2797,9 +2797,9 @@
             compact: calc(#{$i * map.get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width})
         );
 
-        $level--comfortable: map-get($row-indentation-level, 'comfortable');
-        $level--cosy: map-get($row-indentation-level, 'cosy');
-        $level--compact: map-get($row-indentation-level, 'compact');
+        $level--comfortable: map.get($row-indentation-level, 'comfortable');
+        $level--cosy: map.get($row-indentation-level, 'cosy');
+        $level--compact: map.get($row-indentation-level, 'compact');
 
         %igx-grid__row-indentation--level-#{$i} {
             --indicator-inline-inset: #{sizable(
@@ -3245,6 +3245,14 @@
     %igx-grid__tr-action {
         &:last-of-type {
             border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        }
+    }
+
+    igx-child-grid-row {
+        igx-child-grid-row {
+            %igx-grid__tr-action {
+                border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+            }
         }
     }
 

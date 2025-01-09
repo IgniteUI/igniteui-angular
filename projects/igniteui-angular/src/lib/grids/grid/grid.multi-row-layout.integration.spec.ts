@@ -1238,7 +1238,6 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent, NgIf, NgFor]
 })
 export class ColumnLayouHidingTestComponent {
@@ -1287,7 +1286,6 @@ export class ColumnLayouHidingTestComponent {
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent, NgFor, NgIf]
 })
 export class ColumnLayoutPinningTestComponent {
@@ -1331,7 +1329,6 @@ export class ColumnLayoutPinningTestComponent {
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestComponent {
@@ -1347,7 +1344,6 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestComponent {
@@ -1388,7 +1384,6 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutResizingTestComponent {

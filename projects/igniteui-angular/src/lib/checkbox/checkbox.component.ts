@@ -12,15 +12,18 @@ import {
     Renderer2,
     Optional,
     Self,
-    booleanAttribute
+    booleanAttribute,
+    inject,
+    DestroyRef,
+    Inject
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseEventArgs, getComponentTheme, mkenum } from '../core/utils';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxTheme, ThemeService } from '../services/theme/theme.service';
+import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token';
 
 export const LabelPosition = /*@__PURE__*/mkenum({
     BEFORE: 'before',
@@ -59,13 +62,12 @@ let nextId = 0;
 @Component({
     selector: 'igx-checkbox',
     providers: [{
-        provide: EDITOR_PROVIDER,
-        useExisting: IgxCheckboxComponent,
-        multi: true
-    }],
+            provide: EDITOR_PROVIDER,
+            useExisting: IgxCheckboxComponent,
+            multi: true
+        }],
     preserveWhitespaces: false,
     templateUrl: 'checkbox.component.html',
-    standalone: true,
     imports: [IgxRippleDirective]
 })
 export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, ControlValueAccessor {
@@ -288,6 +290,58 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
     public cssClass = 'igx-checkbox';
 
     /**
+     * Returns if the component is of type `material`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.material;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--material')
+    protected get material() {
+        return this.theme === 'material';
+    }
+
+    /**
+     * Returns if the component is of type `indigo`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.indigo;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--indigo')
+    protected get indigo() {
+        return this.theme === 'indigo';
+    }
+
+    /**
+     * Returns if the component is of type `bootstrap`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.bootstrap;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--bootstrap')
+    protected get bootstrap() {
+        return this.theme === 'bootstrap';
+    }
+
+    /**
+     * Returns if the component is of type `fluent`.
+     *
+     * @example
+     * ```typescript
+     * let checkbox = this.checkbox.fluent;
+     * ```
+     */
+    @HostBinding('class.igx-checkbox--fluent')
+    protected get fluent() {
+        return this.theme === 'fluent';
+    }
+
+    /**
      * Sets/gets whether the checkbox component is on focus.
      * Default value is `false`.
      *
@@ -410,41 +464,68 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * @internal
      */
     public inputId = `${this.id}-input`;
+
     /**
      * @hidden
      */
     protected _onChangeCallback: (_: any) => void = noop;
+
     /**
      * @hidden
      */
     private _onTouchedCallback: () => void = noop;
+
     /**
      * @hidden
      * @internal
      */
     protected _checked = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected theme: IgxTheme;
+
     /**
      * @hidden
      * @internal
      */
     private _required = false;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected theme: IgxTheme = 'material';
+    private elRef = inject(ElementRef);
+    private destroyRef = inject(DestroyRef);
 
     constructor(
         protected cdr: ChangeDetectorRef,
         protected renderer: Renderer2,
-        protected themeService: ThemeService,
+        @Inject(THEME_TOKEN)
+        protected themeToken: ThemeToken,
         @Optional() @Self() public ngControl: NgControl,
     ) {
-        this.theme = this.themeService?.globalTheme;
-
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
+        }
+
+        this.theme = this.themeToken.theme;
+
+        const { unsubscribe } = this.themeToken.onChange((theme) => {
+            if (this.theme !== theme) {
+                this.theme = theme;
+                this.cdr.detectChanges();
+            }
+        });
+
+        this.destroyRef.onDestroy(() => unsubscribe);
+    }
+
+    private setComponentTheme() {
+        if(!this.themeToken.preferToken) {
+            const theme = getComponentTheme(this.elRef.nativeElement);
+
+            if (theme && theme !== this.theme) {
+                this.theme = theme;
+                this.cdr.markForCheck();
+            }
         }
     }
 
@@ -461,6 +542,8 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
                 this.cdr.detectChanges();
             }
         }
+
+        this.setComponentTheme();
     }
 
     /** @hidden @internal */

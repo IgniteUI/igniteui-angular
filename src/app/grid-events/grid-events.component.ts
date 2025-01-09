@@ -19,8 +19,7 @@ import {
     IgxColumnComponent,
     IgxPaginatorComponent,
     IgxButtonDirective,
-    IgxIconComponent,
-    FilteringLogic
+    IgxIconComponent
 } from 'igniteui-angular';
 import { data } from '../shared/data';
 
@@ -28,7 +27,6 @@ import { data } from '../shared/data';
     selector: 'app-grid-events',
     styleUrls: ['grid-events.component.scss'],
     templateUrl: 'grid-events.component.html',
-    standalone: true,
     imports: [IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxPaginatorComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class GridEventsComponent {
@@ -52,15 +50,6 @@ export class GridEventsComponent {
 
     public filter(term) {
         this.grid.filter('ProductName', term, IgxStringFilteringOperand.instance().condition('contains'));
-    }
-
-    public filterGlobal(term) {
-        if (term) {
-            this.grid.filteringLogic = FilteringLogic.Or;
-            this.grid.filterGlobal(term, IgxStringFilteringOperand.instance().condition('contains'));
-        } else {
-            this.grid.clearFilter();
-        }
     }
 
     public columnMovingStart(event: IColumnMovingStartEventArgs) {

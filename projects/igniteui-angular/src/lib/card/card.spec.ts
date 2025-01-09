@@ -68,6 +68,7 @@ describe('Card', () => {
                 InitCardComponent,
                 InitOutlinedCardComponent,
                 CardWithHeaderComponent,
+                CardContentIconComponent,
                 VerticalCardComponent,
                 HorizontalCardComponent
             ]
@@ -182,6 +183,16 @@ describe('Card', () => {
         expect(actions).not.toHaveClass(classes.actions.vertical);
     });
 
+    it('Should use Material Icons font-family for igx-icon in card content', () => {
+        const fixture = TestBed.createComponent(CardContentIconComponent);
+        fixture.detectChanges();
+
+        const iconElement = fixture.debugElement.query(By.css('igx-icon')).nativeElement;
+        const computedStyle = window.getComputedStyle(iconElement);
+
+        expect(computedStyle.fontFamily).toBe('"Material Icons"');
+    });
+
     it('Should automatically align actions vertically when in horizontal layout', () => {
         const fixture = TestBed.createComponent(HorizontalCardComponent);
         fixture.detectChanges();
@@ -225,14 +236,12 @@ describe('Card', () => {
 
 @Component({
     template: `<igx-card></igx-card>`,
-    standalone: true,
     imports: [IgxCardComponent]
 })
 class InitCardComponent { }
 
 @Component({
     template: `<igx-card type="outlined"></igx-card>`,
-    standalone: true,
     imports: [IgxCardComponent]
 })
 class InitOutlinedCardComponent {
@@ -244,10 +253,19 @@ class InitOutlinedCardComponent {
     template: `<igx-card>
         <igx-card-header></igx-card-header>
     <igx-card>`,
-    standalone: true,
     imports: [IgxCardComponent, IgxCardHeaderComponent]
 })
 class CardWithHeaderComponent { }
+
+@Component({
+    template: `<igx-card class="ig-typography">
+            <igx-card-content>
+                <igx-icon>face</igx-icon>
+            </igx-card-content>
+        <igx-card>`,
+    imports: [IgxCardComponent, IgxCardContentDirective, IgxIconComponent]
+})
+class CardContentIconComponent { }
 
 @Component({
     template: `<igx-card>
@@ -270,7 +288,6 @@ class CardWithHeaderComponent { }
             </button>
         </igx-card-actions>
     <igx-card>`,
-    standalone: true,
     imports: [
         IgxCardComponent,
         IgxCardMediaDirective,
@@ -299,7 +316,6 @@ class VerticalCardComponent {
             </button>
         </igx-card-actions>
     </igx-card>`,
-    standalone: true,
     imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 class HorizontalCardComponent {
