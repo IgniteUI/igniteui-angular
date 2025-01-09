@@ -232,10 +232,6 @@
             @extend %igx-checkbox--indeterminate-fluent !optional;
         }
 
-        @include mx(material, indeterminate) {
-            @extend %igx-checkbox--indeterminate-material !optional;
-        }
-
         @include mx(invalid, indeterminate) {
             @extend %igx-checkbox--indeterminate--invalid !optional;
 
@@ -244,6 +240,14 @@
                     @extend %cbx-composite--x--hover !optional;
                 }
             }
+        }
+
+        @include mx(material, disabled, indeterminate) {
+            @extend %igx-checkbox--disabled-indeterminate-material !optional;
+        }
+
+        @include mx(fluent, disabled, indeterminate) {
+            @extend %igx-checkbox--disabled-indeterminate-fluent !optional;
         }
 
         @include mx(indigo, focused, indeterminate) {
