@@ -25,8 +25,6 @@ import {
     IgxComboHeaderDirective,
     IgxHintDirective,
     IgxIconComponent,
-    IgxInputDirective,
-    IgxInputGroupComponent,
     IgxLabelDirective,
     IgxPrefixDirective,
     IgxRippleDirective,
@@ -45,8 +43,6 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
     templateUrl: './combo.sample.html',
     styleUrls: ['combo.sample.scss'],
     imports: [
-        IgxInputGroupComponent,
-        IgxInputDirective,
         FormsModule,
         IgxSimpleComboComponent,
         IgxLabelDirective,

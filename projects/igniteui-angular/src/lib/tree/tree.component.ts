@@ -391,7 +391,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      * Returns all of the nodes that match the passed searchTerm.
      * Accepts a custom comparer function for evaluating the search term against the nodes.
      *
-     * @remark
+     * @remarks
      * Default search compares the passed `searchTerm` against the node's `data` Input.
      * When using `findNodes` w/o a `comparer`, make sure all nodes have `data` passed.
      *

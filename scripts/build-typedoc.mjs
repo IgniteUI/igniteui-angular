@@ -1,6 +1,6 @@
 import path from "path";
 import { fileURLToPath } from "url";
-import TypeDoc from "typedoc";
+import { Application } from "typedoc";
 import getArgs from "./get-args.mjs";
 
 const product = "ignite-ui-angular";
@@ -52,9 +52,9 @@ const CONFIG = {
     plugin: [
         path.resolve(
             __dirname,
-            "../node_modules/typedoc-plugin-localization/dist/",
+            "../node_modules/typedoc-plugin-localization/dist/index.js",
         ),
-        path.resolve(__dirname, "../node_modules/ig-typedoc-theme/dist/"),
+        path.resolve(__dirname, "../node_modules/ig-typedoc-theme/dist/index.js"),
     ],
     theme: "igtheme",
     excludePrivate: true,
@@ -66,7 +66,7 @@ const CONFIG = {
 };
 
 async function main() {
-    const app = await TypeDoc.Application.bootstrapWithPlugins(CONFIG);
+    const app = await Application.bootstrapWithPlugins(CONFIG);
 
     app.options.setValue("localize", localize ?? "en");
     app.options.setValue("product", product);

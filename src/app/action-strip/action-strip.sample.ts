@@ -7,7 +7,6 @@ import {
     IgxActionStripComponent,
     IgxActionStripMenuItemDirective,
     IgxButtonDirective,
-    IgxButtonGroupComponent,
     IgxCellTemplateDirective,
     IgxColumnComponent,
     IgxGridComponent,
@@ -65,7 +64,6 @@ class User {
     imports: [
         NgIf,
         NgFor,
-        IgxButtonGroupComponent,
         IgxButtonDirective,
         IgxActionStripComponent,
         IgxIconComponent,
