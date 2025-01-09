@@ -131,6 +131,10 @@
 
     grid1.data = northwindProducts;
     grid2.data = northwindProducts;
+    grid1.addEventListener('contentChildrenReady', () => {
+            console.log("Ready!");
+            restoreState();
+    });
     const categories = Array.from(new Set(northwindProducts.map(x => x.CategoryName)));
 
     let groupingExpression1 = [];
@@ -206,10 +210,7 @@
         document.getElementById("saveState").addEventListener("click", saveState);
         document.getElementById("restoreState").addEventListener("click", restoreState);
         document.getElementById("toggleIcon").addEventListener("click", toggleIcon);
-        const stateComponent = document.getElementById('state');
-        stateComponent.options = {
-            paging: false
-        };
+
     });
 
     buttonGroup.addEventListener("igcSelect", (e) => {

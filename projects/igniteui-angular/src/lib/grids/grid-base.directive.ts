@@ -1000,6 +1000,14 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public selectedRowsChange = new EventEmitter<any[]>();
 
+    /* blazorInclude */
+    /** @hidden @internal */
+    /**
+     * Emitted when content children are attached and collections in grid are updated.
+     */
+    @Output()
+    public contentChildrenReady = new EventEmitter<void>();
+
     /**
      * Emitted when the expanded state of a row gets changed.
      *
@@ -4930,7 +4938,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @param value
      * @param condition
      * @param ignoreCase
-     * @deprecated in version 19.0.0. 
+     * @deprecated in version 19.0.0.
      */
     public filterGlobal(value: any, condition, ignoreCase?) {
         this.filteringService.filterGlobal(value, condition, ignoreCase);
