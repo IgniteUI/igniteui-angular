@@ -3001,6 +3001,12 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public filteringPipeTrigger = 0;
+
+    /**
+     * @hidden @internal
+     */
+    public isColumnWidthSum = false;
+
     /**
      * @hidden @internal
      */
@@ -3201,6 +3207,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
+
     private _currencyPositionLeft: boolean;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
@@ -3233,7 +3240,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    protected get minColumnWidth() {
+    public get minColumnWidth() {
         return MINIMUM_COLUMN_WIDTH;
     }
 
@@ -4015,7 +4022,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.onPinnedRowsChanged(change);
             });
 
-        this.addRowSnackbar?.clicked.subscribe(() => {
+        this.addRowSnackbar?.clicked.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const rec = this.filteredSortedData[this.lastAddedRowIndex];
             this.scrollTo(rec, 0);
             this.addRowSnackbar.close();
@@ -6487,7 +6494,10 @@ export abstract class IgxGridBaseDirective implements GridType,
 
 
         if (this.width === null || !width) {
+            this.isColumnWidthSum = true;
             width = this.getColumnWidthSum();
+        } else {
+            this.isColumnWidthSum = false;
         }
 
         if (this.hasVerticalScroll() && this.width !== null) {
@@ -7311,6 +7321,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.resetCachedWidths();
             this.cdr.detectChanges();
         }
+
+        if (this.isColumnWidthSum) {
+            this.calcWidth = this.getColumnWidthSum();
+        }
     }
 
     protected extractDataFromColumnsSelection(source: any[], formatters = false, headers = false): any[] {
@@ -7504,7 +7518,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected get renderedActualRowHeight() {
         let border = 1;
         if (this.rowList.toArray().length > 0) {
-            const rowStyles = document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
+            const rowStyles = this.document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
             border = rowStyles.borderBottomWidth ? Math.ceil(parseFloat(rowStyles.borderBottomWidth)) : border;
         }
         return this.rowHeight + border;
@@ -7769,7 +7783,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else {
                 this._shouldRecalcRowHeight = true;
             }
-        } 
+        }
     }
 
     // TODO: About to Move to CRUD
