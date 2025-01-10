@@ -9,7 +9,7 @@ import {
     OnDestroy,
     OnInit,
 } from "@angular/core";
-import { NgIf, NgStyle, NgTemplateOutlet, DatePipe } from "@angular/common";
+import { NgIf, NgTemplateOutlet, DatePipe } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { IgxMonthsViewComponent } from "../months-view/months-view.component";
@@ -40,7 +40,6 @@ let NEXT_ID = 0;
     standalone: true,
     imports: [
         NgIf,
-        NgStyle,
         NgTemplateOutlet,
         DatePipe,
         IgxIconComponent,
