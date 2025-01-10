@@ -15,9 +15,7 @@ import {
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IPivotDimension, IPivotDimensionData, IPivotGridRecord } from './pivot-grid.interface';
-import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from '../headers/pipes';
-import { IgxIconComponent } from '../../icon/icon.component';
-import { NgClass, NgFor, NgStyle } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridHorizontalRowCellMerging } from './pivot-grid.pipes';
 
@@ -33,8 +31,7 @@ import { IgxPivotGridHorizontalRowCellMerging } from './pivot-grid.pipes';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-mrl-row',
     templateUrl: './pivot-row-dimension-mrl-row.component.html',
-    imports: [NgClass, NgStyle, NgFor, IgxIconComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe,
-        IgxPivotRowDimensionContentComponent, IgxPivotGridHorizontalRowCellMerging]
+    imports: [NgFor, IgxPivotRowDimensionContentComponent, IgxPivotGridHorizontalRowCellMerging]
 })
 export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowComponent {
 
