@@ -62,7 +62,7 @@
             </igx-column>
             <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width"
                 [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type"
-                [cellClasses]="c.cellClasses" [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
+                [cellClasses]="c.cellClasses" [cellTemplate]="c.bodyTemplate" [groupable]="c.groupable">
             </igx-column>
         </igx-grid>
     </div>
@@ -94,7 +94,7 @@
             </igx-column>
             <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width"
                 [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type"
-                [cellClasses]="c.cellClasses" [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
+                [cellClasses]="c.cellClasses" [cellTemplate]="c.bodyTemplate" [groupable]="c.groupable">
             </igx-column>
         </igx-grid>
     </div>
@@ -126,7 +126,7 @@
             </igx-column>
             <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width"
                 [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type"
-                [cellClasses]="c.cellClasses" [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
+                [cellClasses]="c.cellClasses" [cellTemplate]="c.bodyTemplate" [groupable]="c.groupable">
             </igx-column>
         </igx-grid>
     </div>
@@ -159,10 +159,12 @@
             </igx-column>
             <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width"
                 [sortable]="c.sortable" [filterable]="c.filterable" [dataType]="c.type" [cellClasses]="c.cellClasses"
-                [bodyTemplate]="c.bodyTemplate" [groupable]="c.groupable">
+                [cellTemplate]="c.bodyTemplate" [groupable]="c.groupable">
             </igx-column>
         </igx-grid>
     </div>
     <ng-template #host gridHost>
     </ng-template>
 </igc-dockmanager>
+
+<div igxOverlayOutlet #filteringOverlayOutlet="overlay-outlet"></div>
