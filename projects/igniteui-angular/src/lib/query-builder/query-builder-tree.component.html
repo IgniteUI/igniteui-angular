@@ -112,7 +112,7 @@
                 [draggable]="canBeDragged() ? 'true' : 'false'" 
                 [hideBaseOnDrag] = "false"    
                 [animateOnRelease] = "false"
-                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem): null" 
+                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem, false): null" 
                 (moveEnd)="onMoveEnd()"
                 (dragEnter)="onChipEnter(dragRef, expressionItem, false)"
                 (dragOver)="onChipOver(dragRef, false)"
@@ -129,8 +129,8 @@
             >
                 <igx-icon igxPrefix 
                     tabindex="0"
-                    (focus)="onChipFocus(dragRef, expressionItem)" 
-                    (focusout)="onChipFocusOut()"    
+                    (focus)="onChipDragIndicatorFocus(dragRef, expressionItem)" 
+                    (focusout)="onChipDragIndicatorFocusOut()"    
                 >
                     drag_indicator
                 </igx-icon>
