@@ -484,13 +484,13 @@
         (keydown)="onKeyDown($event)"
         (closed)="contextMenuClosed()"
     >
-        <button type="button"
+        <!-- <button type="button"
             igxIconButton="flat"
             class="igx-filter-contextual-menu__close-btn"
             (click)="clearSelection()"
         >
             <ng-container *ngTemplateOutlet="closeIcon"></ng-container>
-        </button>
+        </button> -->
 
         <ng-container *ngIf="contextualGroup">
             <igx-buttongroup
