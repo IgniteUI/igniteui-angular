@@ -2496,7 +2496,7 @@
     }
 
     %igx-group-label__icon {
-        &igx-icon {
+        @at-root igx-icon#{&} {
             --component-size: #{if($variant == 'indigo', 2, 1)};
 
             color: var-get($theme, 'group-label-icon');
