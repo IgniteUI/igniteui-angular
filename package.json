@@ -72,7 +72,7 @@
     "@igniteui/material-icons-extended": "^3.1.0",
     "@lit-labs/ssr-dom-shim": "^1.2.1",
     "@types/source-map": "0.5.2",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "fflate": "^0.8.1",
     "igniteui-theming": "^14.3.1",
     "igniteui-trial-watermark": "^3.0.2",
