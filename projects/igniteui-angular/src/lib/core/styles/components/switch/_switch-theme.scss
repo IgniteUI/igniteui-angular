@@ -290,7 +290,6 @@
         border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius-track');
         background: var-get($theme, 'track-off-color');
-        cursor: pointer;
         user-select: none;
         transition: $input-transition;
 
@@ -557,7 +556,6 @@
     %switch-label {
         display: inline-block;
         color: var-get($theme, 'label-color');
-        cursor: pointer;
         user-select: none;
         word-wrap: break-all;
 
