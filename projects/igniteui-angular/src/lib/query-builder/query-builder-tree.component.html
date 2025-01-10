@@ -99,9 +99,9 @@
         <div
             #dragRef 
             igxDrop
-            (enter)="onDivEnter(dragRef, expressionItem)"
+            (enter)="onChipEnter(dragRef, expressionItem, true)"
             (over)="onDivOver(dragRef, expressionItem)"
-            (leave)="onDivLeave()"
+            (leave)="onChipLeave()"
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="!expressionItem.inEditMode"
             class="igx-filter-tree__expression-item"            
@@ -114,7 +114,7 @@
                 [draggable]="canBeDragged() ? 'true' : 'false'" 
                 [hideBaseOnDrag] = "false"    
                 [animateOnRelease] = "false"
-                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem): null" 
+                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem, false): null" 
                 (moveEnd)="onMoveEnd()"
                 (dragEnter)="onChipEnter(dragRef, expressionItem, false)"
                 (dragOver)="onChipOver(dragRef, false)"
@@ -131,8 +131,8 @@
             >
                 <igx-icon igxPrefix 
                     tabindex="0"
-                    (focus)="onChipFocus(dragRef, expressionItem)" 
-                    (focusout)="onChipFocusOut()"    
+                    (focus)="onChipDragIndicatorFocus(dragRef, expressionItem)" 
+                    (focusout)="onChipDragIndicatorFocusOut()"    
                 >
                     drag_indicator
                 </igx-icon>
