@@ -3,12 +3,10 @@ import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interface
 import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from '../core/i18n/paginator-resources';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { IgxSelectItemComponent } from '../select/select-item.component';
-import { IgxLabelDirective } from '../directives/label/label.directive';
 import { FormsModule } from '@angular/forms';
 import { IgxSelectComponent } from '../select/select.component';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
@@ -359,7 +357,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
 @Component({
     selector: 'igx-page-size',
     templateUrl: 'page-size-selector.component.html',
-    imports: [IgxSelectComponent, FormsModule, IgxLabelDirective, NgFor, IgxSelectItemComponent]
+    imports: [IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent]
 })
 export class IgxPageSizeSelectorComponent {
     /**
@@ -376,7 +374,7 @@ export class IgxPageSizeSelectorComponent {
 @Component({
     selector: 'igx-page-nav',
     templateUrl: 'pager.component.html',
-    imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
+    imports: [IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxPageNavigationComponent {
     /**
