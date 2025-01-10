@@ -974,19 +974,25 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public targetExpressionItem: ExpressionItem;
     public targetElement: HTMLElement;
     public dropUnder: boolean;
-    public ghostChip: Node;
+    public dropGhostChipNode: Node;
     private ghostChipMousemoveSubscription$: Subscription;
     private keyboardSubscription$: Subscription;
     private keyDragOffsetIndex: number = 0;
     private keyDragFirstMove: boolean = true;
-    //hysteresis used when dragging towards and away from chip, to prevent drop area chip flickering  
-    private vicinityHysteresis = {
-        entering: 30,
-        leaving: 100,
-    }
     private isKeyboardDrag: boolean;
     private chipsList: HTMLElement[];   //stores a flat ordered list of all chips, including +Condition button, while performing the keyboard drag&drop
     private expressionsList: ExpressionItem[]; //stores a flat ordered list of all expressions, including +Condition button, while performing the keyboard drag&drop
+    private dropGhostClass = 'igx-filter-tree__expression-item-drop-ghost';
+
+    //Get the dragged ghost as a HTMLElement
+    private get dragGhostElement(): HTMLElement {
+        return (document.querySelector('.igx-chip__ghost[ghostclass="igx-chip__ghost"]') as HTMLElement);
+    }
+
+    //Get the drop ghost as a HTMLElement
+    private get dropGhostElement(): HTMLElement {
+        return (document.querySelector(`.${this.dropGhostClass}`) as HTMLElement);
+    }
 
     //Chip can be dragged if it's tree is in edit mode and there is no inner query that's been edited
     public canBeDragged(): boolean {
@@ -1013,7 +1019,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         // console.log('Let go:');
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
-        if (this.ghostChip) {
+        if (this.dropGhostChipNode) {
             //If there is a ghost chip presented to the user, execute drop
             this.onChipDropped();
         } else {
@@ -1026,13 +1032,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     //On entering a drop area of another chip 
     public onDivEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
-        //If entering the div, at least close to the contained chip, behave like the chip was entered
-        if (this.chipsAreNearBy(targetDragElement.children[0] as HTMLElement, this.ghostChipElement, this.vicinityHysteresis.entering)) {
-            this.onChipEnter(targetDragElement, targetExpressionItem, true)
-        } else if (this.targetElement) {
-            this.onChipLeave();
-        }
+        this.onChipEnter(targetDragElement, targetExpressionItem, true)
     }
+
     public onChipEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem, fromDiv: boolean) {
         // console.log('Entering:', targetDragElement, targetExpressionItem, 'from div:', fromDiv);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
@@ -1051,22 +1053,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         //Determine the middle point of the chip. (fromDiv - get the div's chip) 
         const appendUnder = fromDiv ? this.ghostInLowerPart(targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(targetDragElement);
 
-        this.createDropGhostChip(targetDragElement, appendUnder);
+        this.renderDropGhostChip(targetDragElement, appendUnder);
     }
 
     //On moving the dragged chip in a drop area
     public onDivOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
-        //If over the div, at least close to the contained chip, behave like chipOver. If not behave like chipLeave
-        if (this.chipsAreNearBy(targetDragElement.children[0] as HTMLElement,
-            this.ghostChipElement,
-            (this.targetExpressionItem === targetExpressionItem ? this.vicinityHysteresis.leaving : this.vicinityHysteresis.entering))) {
-            if (this.targetExpressionItem === targetExpressionItem) {
-                this.onChipOver(targetDragElement, true)
-            } else {
-                this.onChipEnter(targetDragElement, targetExpressionItem, true);
-            }
+        if (this.targetExpressionItem === targetExpressionItem) {
+            this.onChipOver(targetDragElement, true)
         } else {
-            this.onChipLeave();
+            this.onChipEnter(targetDragElement, targetExpressionItem, true);
         }
     }
     public onChipOver(targetDragElement: HTMLElement, fromDiv: boolean): void {
@@ -1076,22 +1071,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         //Determine the middle point of the chip. (fromDiv - get the div's chip) 
         const appendUnder = fromDiv ? this.ghostInLowerPart(targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(targetDragElement);
 
-        this.createDropGhostChip(targetDragElement, appendUnder);
+        this.renderDropGhostChip(targetDragElement, appendUnder);
     }
 
-    //On leaving a drop area of another chip
-    public onDivLeave() {
-        this.onChipLeave();
-    }
     public onChipLeave() {
         if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
         //console.log('Leaving:', targetDragElement.textContent.trim());
 
-        const ghostCoordinates = (this.ghostChip?.firstChild as HTMLElement)?.getBoundingClientRect();
-
-        //if there is ghost chip and the mouse is still close enough to it don't trigger leave
-        if (ghostCoordinates &&
-            this.chipsAreNearBy(this.ghostChip?.firstChild as HTMLElement, this.ghostChipElement, this.vicinityHysteresis.leaving)) {
+        //if the drag ghost is on the drop ghost row don't trigger leave
+        if (this.dragGhostIsOnDropGhostRow(this.dragGhostElement, this.dropGhostChipNode?.firstChild as HTMLElement)) {
             return;
         }
 
@@ -1106,6 +1094,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.onChipDropped();
         }
     }
+
     public onChipDropped() {
         if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
 
@@ -1120,7 +1109,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         const lastElement = this.getPreviousChip(addConditionElement.parentElement);
-        if (lastElement == this.ghostChip) return;
+        if (lastElement == this.dropGhostChipNode) return;
 
         //simulate entering in the lower part of the last chip/group
         this.onChipEnter(lastElement as HTMLElement,
@@ -1143,56 +1132,62 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    //Check if one element is overlapping or close to another one
-    private chipsAreNearBy(chip1: HTMLElement, chip2: HTMLElement, maxDistance: number) {
-        const chip1Bounds = chip1.getBoundingClientRect();
-        const chip2Bounds = chip2.getBoundingClientRect();
+    //Checks if the dragged ghost is horizontally on the same line with the drop ghost
+    private dragGhostIsOnDropGhostRow(dragGhost: HTMLElement, dropGhost: HTMLElement) {
+        const dragGhostBounds = dragGhost.getBoundingClientRect();
+        const dropGhostBounds = dropGhost.getBoundingClientRect();
 
-        return !(chip1Bounds.right < chip2Bounds.left - maxDistance ||
-            chip1Bounds.left > chip2Bounds.right + maxDistance ||
-            chip1Bounds.bottom < chip2Bounds.top - maxDistance ||
-            chip1Bounds.top > chip2Bounds.bottom + maxDistance);
+        if (!dragGhostBounds || !dropGhostBounds) return false;
+
+        const ghostHeight = dragGhostBounds.bottom - dragGhostBounds.top;
+
+        return !(dragGhostBounds.bottom < dropGhostBounds.top - ghostHeight || dragGhostBounds.top > dropGhostBounds.bottom + ghostHeight);
     }
 
     //Checks if the dragged ghost is north or south of a target element's center
     private ghostInLowerPart(ofElement: HTMLElement) {
         //if (event == null) return true;
-        const ghostBounds = this.ghostChipElement.getBoundingClientRect();
+        const ghostBounds = this.dragGhostElement.getBoundingClientRect();
         const targetBounds = ofElement.getBoundingClientRect();
 
         return ((ghostBounds.top + ghostBounds.bottom) / 2) >= ((targetBounds.top + targetBounds.bottom) / 2);
     }
 
-    //Make a copy of the drag chip and place it in the DOM north or south of the drop chip
-    private createDropGhostChip(appendToElement: HTMLElement, appendUnder: boolean, keyboardMode?: boolean): void {
-        //Define the ghost
+    //Create the drop ghost node based on the base chip that's been dragged
+    private createDropGhost() {
         const dragCopy = this.sourceElement.cloneNode(true);
-        (dragCopy as HTMLElement).classList.add('igx-filter-tree__expression-item-drop-ghost');
-        //TODO move as css -> row 331 _query-builder-theme.scss 
+        (dragCopy as HTMLElement).classList.add(this.dropGhostClass);
         (dragCopy as HTMLElement).style.display = '';
         (dragCopy.firstChild as HTMLElement).style.visibility = 'visible';
         (dragCopy.firstChild as HTMLElement).style.opacity = '0.5';
+
+        return dragCopy;
+    }
+
+    //Make a copy of the drag chip and place it in the DOM north or south of the drop chip
+    private renderDropGhostChip(appendToElement: HTMLElement, appendUnder: boolean, keyboardMode?: boolean): void {
+        const dragCopy = this.createDropGhost();
 
         //Append the ghost
         if ((!appendUnder && this.dropUnder !== false) || //mouse mode
             (keyboardMode && !appendUnder)) {
             //over
-            (this.ghostChip as HTMLElement)?.remove();
-            this.ghostChip = dragCopy;
+            (this.dropGhostChipNode as HTMLElement)?.remove();
+            this.dropGhostChipNode = dragCopy;
             this.dropUnder = false;
-            appendToElement.parentNode.insertBefore(this.ghostChip, appendToElement);
+            appendToElement.parentNode.insertBefore(this.dropGhostChipNode, appendToElement);
         } else if ((appendUnder && this.dropUnder !== true) || //mouse mode
             (keyboardMode && appendUnder)) {
             //under
-            (this.ghostChip as HTMLElement)?.remove();
-            this.ghostChip = dragCopy;
+            (this.dropGhostChipNode as HTMLElement)?.remove();
+            this.dropGhostChipNode = dragCopy;
             this.dropUnder = true;
-            appendToElement.parentNode.insertBefore(this.ghostChip, appendToElement.nextSibling);
+            appendToElement.parentNode.insertBefore(this.dropGhostChipNode, appendToElement.nextSibling);
         }
 
         //Attach a mousemove event listener (if not already in place) to the dragged ghost (if present)
-        if (this.ghostChipElement && (!this.ghostChipMousemoveSubscription$ || this.ghostChipMousemoveSubscription$?.closed === true)) {
-            const mouseMoves = fromEvent<MouseEvent>(this.ghostChipElement, 'mousemove');
+        if (this.dragGhostElement && (!this.ghostChipMousemoveSubscription$ || this.ghostChipMousemoveSubscription$?.closed === true)) {
+            const mouseMoves = fromEvent<MouseEvent>(this.dragGhostElement, 'mousemove');
 
             this.ghostChipMousemoveSubscription$ = mouseMoves.pipe(sampleTime(100)).subscribe(() => {
                 this.onChipLeave();
@@ -1202,20 +1197,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.setDragCursor('grab');
     }
 
-    //Get the dragged ghost as a HTMLElement
-    private get ghostChipElement(): HTMLElement {
-        return (document.querySelector('.igx-chip__ghost[ghostclass="igx-chip__ghost"]') as HTMLElement);
-    }
-
-    //Get the drop ghost as a HTMLElement
-    private get dropGhostChipElement(): HTMLElement {
-        return (document.querySelector('.igx-filter-tree__expression-item-drop-ghost') as HTMLElement);
-    }
-
     //Set the cursor when dragging a ghost
     private setDragCursor(cursor: string) {
-        if (this.ghostChipElement) {
-            this.ghostChipElement.style.cursor = cursor;
+        if (this.dragGhostElement) {
+            this.dragGhostElement.style.cursor = cursor;
         }
     }
 
@@ -1238,8 +1223,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.targetExpressionItem = null;
         this.targetElement = null;
         this.dropUnder = null;
-        (this.ghostChip as HTMLElement)?.remove();
-        this.ghostChip = null;
+        (this.dropGhostChipNode as HTMLElement)?.remove();
+        this.dropGhostChipNode = null;
         this.keyDragOffsetIndex = 0;
         this.keyDragFirstMove = true;
         this.setDragCursor('no-drop');
@@ -1311,22 +1296,22 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 const under = this.keyDragOffsetIndex < 0 ? this.keyDragOffsetIndex % 2 == 0 ? true : false
                     : this.keyDragOffsetIndex % 2 == 0 ? false : true;
 
-                const before = this.getPreviousChip(this.dropGhostChipElement);
-                const after = this.getNextChip(this.dropGhostChipElement);
+                const before = this.getPreviousChip(this.dropGhostElement);
+                const after = this.getNextChip(this.dropGhostElement);
 
-                this.createDropGhostChip(this.targetElement, under, true);
+                this.renderDropGhostChip(this.targetElement, under, true);
 
                 //If it's the first arrow hit OR drop ghost is not displayed OR hasn't actually moved, move one more step in the same direction
                 if (this.keyDragFirstMove ||
-                    !this.dropGhostChipElement ||
-                    (this.getPreviousChip(this.dropGhostChipElement) === before && this.getNextChip(this.dropGhostChipElement) === after)) {
+                    !this.dropGhostElement ||
+                    (this.getPreviousChip(this.dropGhostElement) === before && this.getNextChip(this.dropGhostElement) === after)) {
                     this.keyDragFirstMove = false;
                     this.arrowDrag(key);
                 }
             } else {
                 //Dropping on '+ Condition button' => simulate entering in the lower part of the last chip/group
                 let lastElement = this.getPreviousChip(this.chipsList[this.chipsList.length - 1].parentElement);
-                lastElement = lastElement === this.ghostChip ? this.getPreviousChip(lastElement as HTMLElement) : lastElement;
+                lastElement = lastElement === this.dropGhostChipNode ? this.getPreviousChip(lastElement as HTMLElement) : lastElement;
 
                 const getParentExpression = (expression: ExpressionItem) => {
                     return expression.parent ? getParentExpression(expression.parent) : expression
@@ -1336,7 +1321,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this.targetElement = lastElement as HTMLElement;
                 this.targetExpressionItem = rootGroup.children[rootGroup.children.length - 1];
 
-                this.createDropGhostChip(lastElement as HTMLElement, true, true);
+                this.renderDropGhostChip(lastElement as HTMLElement, true, true);
             }
         }
 
@@ -1345,7 +1330,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     //Get previous chip area taking into account a possible hidden sub-tree or collapsed base chip
     private getPreviousChip(chipSubject: HTMLElement) {
+        //TODO optimize
         let prevElement = chipSubject?.previousElementSibling;
+        prevElement = prevElement?.classList?.contains('igx-query-builder-tree') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
         prevElement = prevElement?.classList?.contains('igx-query-builder-tree') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
 
         return prevElement;
@@ -1355,6 +1342,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private getNextChip(chipSubject: HTMLElement) {
         //Get next and prev chip area taking into account a possible hidden sub-tree
         let nextElement = chipSubject?.nextElementSibling;
+        nextElement = nextElement?.classList?.contains('igx-query-builder-tree') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
         nextElement = nextElement?.classList?.contains('igx-query-builder-tree') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
 
         return nextElement;
@@ -1377,7 +1365,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     //Gets all chip elements owned by this tree (discard child trees)  flatten out as a list of HTML elements
     private getListedChips(): HTMLElement[] {
-        const viableDropAreaSelector = '.igx-filter-tree__expression-item:not([style*="display:none"]):not(.igx-filter-tree__expression-item-drop-ghost),.igx-filter-tree__inputs:not(.igx-query-builder__main > .igx-filter-tree__inputs),.igx-filter-tree__buttons > .igx-button:first-of-type';
+        const viableDropAreaSelector = `.igx-filter-tree__expression-item:not([style*="display:none"]):not(.${this.dropGhostClass}),.igx-filter-tree__inputs:not(.igx-query-builder__main > .igx-filter-tree__inputs),.igx-filter-tree__buttons > .igx-button:first-of-type`;
         const expressionElementList = (this.el.nativeElement as HTMLElement).querySelectorAll(viableDropAreaSelector);
         const ownChipElements = [];
 
@@ -1646,7 +1634,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public invokeClick(eventArgs: KeyboardEvent) {
-        if (!this.ghostChip && this.platform.isActivationKey(eventArgs)) {
+        if (!this.dropGhostChipNode && this.platform.isActivationKey(eventArgs)) {
             eventArgs.preventDefault();
             (eventArgs.currentTarget as HTMLElement).click();
         }

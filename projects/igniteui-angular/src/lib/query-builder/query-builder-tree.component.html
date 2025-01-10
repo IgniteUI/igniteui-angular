@@ -97,9 +97,9 @@
         <div
             #dragRef 
             igxDrop
-            (enter)="onDivEnter(dragRef, expressionItem)"
+            (enter)="onChipEnter(dragRef, expressionItem, true)"
             (over)="onDivOver(dragRef, expressionItem)"
-            (leave)="onDivLeave()"
+            (leave)="onChipLeave()"
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="!expressionItem.inEditMode"
             class="igx-filter-tree__expression-item"            
