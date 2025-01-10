@@ -349,8 +349,10 @@ export class IgxOverlayService implements OnDestroy {
         // Get the size before moving the container into the overlay so that it does not forget about inherited styles.
         this.getComponentSize(info); 
         this.moveElementToOverlay(info);
-        // Update the container size after moving.
-        info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
+        // Update the container size after moving if there is size.
+        if (info.size) {
+            info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
+        }
         this.contentAppended.emit({ id: info.id, componentRef: info.componentRef });
         info.settings.scrollStrategy.initialize(this._document, this, info.id);
         info.settings.scrollStrategy.attach();
