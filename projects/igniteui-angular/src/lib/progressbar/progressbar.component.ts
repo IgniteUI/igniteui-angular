@@ -42,6 +42,7 @@ export interface IChangeProgressEventArgs extends IBaseEventArgs {
     previousValue: number;
     currentValue: number;
 }
+export const valueInRange = (value: number, max: number, min = 0): number => Math.max(Math.min(value, max), min);
 
 /**
  * @hidden
@@ -82,21 +83,14 @@ export abstract class BaseProgressDirective {
      */
     @Input()
     public animationDuration = 2000;
-    public _interval;
 
-    protected _initValue = 0;
     protected _contentInit = false;
     protected _max = 100;
     protected _value = MIN_VALUE;
-    protected _newVal = MIN_VALUE;
     protected _animate = true;
-    protected _step;
-    protected _animation;
-    protected _valueInPercent;
-    protected _internalState = {
-        oldVal: 0,
-        newVal: 0
-    };
+    protected _step: number;
+    private _fraction = 0;
+    private _integer = 0;
 
     constructor() { }
 
@@ -145,11 +139,6 @@ export abstract class BaseProgressDirective {
     @Input({ transform: booleanAttribute })
     public set animate(animate: boolean) {
         this._animate = animate;
-        if (animate) {
-            this.animationDuration = 2000;
-        } else {
-            this.animationDuration = 0;
-        }
     }
 
     /**
@@ -177,19 +166,17 @@ export abstract class BaseProgressDirective {
     @HostBinding('attr.aria-valuemax')
     @Input()
     public set max(maxNum: number) {
-        if (maxNum < MIN_VALUE || this._max === maxNum ||
-            (this._animation && this._animation.playState !== 'finished')) {
-            return;
+        if (maxNum < MIN_VALUE || this._max === maxNum) {
+            return; // Ignore invalid or unchanged max
         }
 
-        this._internalState.newVal = Math.round(toValue(toPercent(this.value, maxNum), maxNum));
-        this._value = this._internalState.oldVal = Math.round(toValue(this.valueInPercent, maxNum));
-        this._max = maxNum;
-        this.triggerProgressTransition(this._internalState.oldVal, this._internalState.newVal, true);
+        this._max = maxNum; // Update max value
+        this._value = valueInRange(this._value, this._max); // Revalidate current value
+        this._updateProgressValues(); // Refresh CSS variables
     }
 
     /**
-     * Returns the the maximum progress value of the `progress bar`.
+     * Returns the maximum progress value of the `progress bar`.
      * ```typescript
      * @ViewChild("MyProgressBar")
      * public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
@@ -201,6 +188,24 @@ export abstract class BaseProgressDirective {
      */
     public get max() {
         return this._max;
+    }
+
+    @HostBinding('style')
+    public get hostStyles(): { [key: string]: string } {
+        return {
+            '--_progress-integer': this._integer.toString(),
+            '--_progress-fraction': this._fraction.toString(),
+            '--_progress-whole': this.valueInPercent.toFixed(2),
+            '--_transition-duration': `${this.animationDuration}ms`,
+        };
+    }
+
+    protected get hasFraction(): boolean {
+        const percentage = this.valueInPercent;
+        const integerPart = Math.floor(percentage);
+        const fractionalPart = percentage - integerPart;
+
+        return fractionalPart > 0;
     }
 
     /**
@@ -215,8 +220,8 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public get valueInPercent(): number {
-        const val = toPercent(this._value, this._max);
-        return val;
+        const result = this.max > 0 ? (this._value / this.max) * 100 : 0;
+        return Math.round(result * 100) / 100; // Round to two decimal places
     }
 
     /**
@@ -236,6 +241,18 @@ export abstract class BaseProgressDirective {
         return this._value;
     }
 
+    protected _updateProgressValues(): void {
+        const percentage = this.valueInPercent;
+        const integerPart = Math.floor(percentage);
+        const fractionalPart = Math.round((percentage % 1) * 100);
+
+        // Set CSS variables for animation
+        setTimeout(() => {
+            this._integer = integerPart;
+            this._fraction = fractionalPart;
+        }, 0);
+    }
+
     /**
      * Set value that indicates the current `IgxLinearProgressBarComponent` position.
      * ```html
@@ -243,81 +260,14 @@ export abstract class BaseProgressDirective {
      * ```
      */
     public set value(val) {
-        if (this._animation && this._animation.playState !== 'finished' || val < 0) {
-            return;
+        const valInRange = valueInRange(val, this.max); // Ensure value is in range
+
+        if (isNaN(valInRange) || this._value === valInRange || this.indeterminate) {
+            return; // Avoid redundant updates
         }
 
-        const valInRange = valueInRange(val, this.max);
-
-        if (isNaN(valInRange) || this._value === val || this.indeterminate) {
-            return;
-        }
-
-        if (this._contentInit) {
-            this.triggerProgressTransition(this._value, valInRange);
-        } else {
-            this._initValue = valInRange;
-        }
-    }
-
-    protected triggerProgressTransition(oldVal, newVal, maxUpdate = false) {
-        if (oldVal === newVal) {
-            return;
-        }
-
-        const changedValues = {
-            currentValue: newVal,
-            previousValue: oldVal
-        };
-
-        const stepDirection = this.directionFlow(oldVal, newVal);
-        if (this._animate) {
-            const newToPercent = toPercent(newVal, this.max);
-            const oldToPercent = toPercent(oldVal, this.max);
-            const duration = this.animationDuration / Math.abs(newToPercent - oldToPercent) / (this._step ? this._step : 1);
-            this.runAnimation(newVal);
-            this._interval = setInterval(() => this.increase(newVal, stepDirection), duration);
-        } else {
-            this.updateProgress(newVal);
-        }
-
-        if (maxUpdate) {
-            return;
-        }
-        this.progressChanged.emit(changedValues);
-    }
-
-    /**
-     * @hidden
-     */
-    protected increase(newValue: number, step: number) {
-        const targetValue = toPercent(newValue, this._max);
-        this._value = valueInRange(this._value, this._max) + step;
-        if ((step > 0 && this.valueInPercent >= targetValue) || (step < 0 && this.valueInPercent <= targetValue)) {
-            if (this._value !== newValue) {
-                this._value = newValue;
-            }
-            return clearInterval(this._interval);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    protected directionFlow(currentValue: number, prevValue: number): number {
-        return currentValue < prevValue ? this.step : -this.step;
-    }
-
-    protected abstract runAnimation(value: number);
-
-    /**
-     * @hidden
-     * @param step
-     */
-    private updateProgress(val: number) {
-        this._value = valueInRange(val, this._max);
-        // this.valueInPercent = toPercent(val, this._max);
-        this.runAnimation(val);
+        this._value = valInRange; // Update internal value
+        this._updateProgressValues(); // Refresh CSS variables
     }
 }
 let NEXT_LINEAR_ID = 0;
@@ -374,6 +324,16 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     @Input()
     public id = `igx-linear-bar-${NEXT_LINEAR_ID++}`;
 
+    @HostBinding('class.igx-linear-bar--animation-none')
+    public get disableAnimationClass(): boolean {
+        return !this._animate;
+    }
+
+    @HostBinding('class.igx-linear-bar--hide-counter')
+    public get hasText(): boolean {
+        return !!this.text;
+    }
+
     /**
      * Set the position that defines where the text is aligned.
      * Possible options - `IgxTextAlign.START` (default), `IgxTextAlign.CENTER`, `IgxTextAlign.END`.
@@ -427,13 +387,6 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     @Input()
     public type = 'default';
 
-    @ViewChild('indicator', { static: true })
-    private _progressIndicator: ElementRef;
-
-    private animationState = {
-        width: '0%'
-    };
-
     /**
      * @hidden
      */
@@ -467,32 +420,8 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     }
 
     public ngAfterContentInit() {
-        this.triggerProgressTransition(MIN_VALUE, this._initValue);
+        this._updateProgressValues();
         this._contentInit = true;
-    }
-
-    public runAnimation(value: number) {
-        if (this._animation && this._animation.playState !== 'finished') {
-            return;
-        }
-
-        const valueInPercent = this.max <= 0 ? 0 : toPercent(value, this.max);
-
-        const FRAMES = [];
-        FRAMES[0] = {
-            ...this.animationState
-        };
-
-        this.animationState.width = valueInPercent + '%';
-        FRAMES[1] = {
-            ...this.animationState
-        };
-
-        this._animation = this._progressIndicator.nativeElement.animate(FRAMES, {
-            easing: 'ease-out',
-            fill: 'forwards',
-            duration: this.animationDuration
-        });
     }
 }
 
@@ -502,7 +431,6 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     imports: [NgTemplateOutlet, NgIf]
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterViewInit, AfterContentInit {
-
     /** @hidden */
     @HostBinding('class.igx-circular-bar')
     public cssClass = 'igx-circular-bar';
@@ -520,10 +448,20 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     /**
      * @hidden
      */
-    @HostBinding('class.igx-circular-bar--indeterminate')
+    @HostBinding('class.igx-circular-bar--animation-none')
     @Input()
     public get isIndeterminate() {
         return this.indeterminate;
+    }
+
+    @HostBinding('class.igx-circular-bar--animation-none')
+    public get disableAnimationClass(): boolean {
+        return !this._animate;
+    }
+
+    @HostBinding('class.igx-circular-bar--hide-counter')
+    public get hasText(): boolean {
+        return !!this.text;
     }
 
     /**
@@ -570,23 +508,12 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
         };
     }
 
-    private _circleRadius = 46;
-    private _circumference = 2 * Math.PI * this._circleRadius;
-
-    private readonly STROKE_OPACITY_DVIDER = 100;
-    private readonly STROKE_OPACITY_ADDITION = .2;
-
-    private animationState = {
-        strokeDashoffset: 289,
-        strokeOpacity: 1
-    };
-
-    constructor(private renderer: Renderer2, private _directionality: IgxDirectionality) {
+    constructor(private renderer: Renderer2) {
         super();
     }
 
     public ngAfterContentInit() {
-        this.triggerProgressTransition(MIN_VALUE, this._initValue);
+        this._updateProgressValues();
         this._contentInit = true;
     }
 
@@ -604,42 +531,4 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     public get textContent(): string {
         return this.text;
     }
-
-    public runAnimation(value: number) {
-        if (this._animation && this._animation.playState !== 'finished') {
-            return;
-        }
-
-        const valueInPercent = this.max <= 0 ? 0 : toPercent(value, this.max);
-
-        const FRAMES = [];
-        FRAMES[0] = { ...this.animationState };
-
-        this.animationState.strokeDashoffset = this.getProgress(valueInPercent);
-        this.animationState.strokeOpacity = toPercent(value, this.max) / this.STROKE_OPACITY_DVIDER + this.STROKE_OPACITY_ADDITION;
-
-        FRAMES[1] = {
-            ...this.animationState
-        };
-
-        this._animation = this._svgCircle.nativeElement.animate(FRAMES, {
-            easing: 'ease-out',
-            fill: 'forwards',
-            duration: this.animationDuration
-        });
-    }
-
-    private getProgress(percentage: number) {
-        return this._directionality.rtl ?
-            this._circumference + (percentage * this._circumference / 100) :
-            this._circumference - (percentage * this._circumference / 100);
-    }
 }
-
-export const valueInRange = (value: number, max: number, min = 0): number => Math.max(Math.min(value, max), min);
-
-export const toPercent = (value: number, max: number) => !max ? 0 : Math.floor(100 * value / max);
-
-export const toValue = (value: number, max: number) => max * value / 100;
-
-

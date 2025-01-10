@@ -1,0 +1,63 @@
+@use '../../../base' as *;
+@use 'sass:string';
+
+
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+@mixin component {
+    @include b(igx-circular-bar) {
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: ()
+        );
+
+        @extend %circular-display !optional;
+
+        @include e(inner) {
+            @extend %circular-inner !optional;
+        }
+
+        @include e(outer) {
+            @extend %circular-outer !optional;
+        }
+
+        @include e(text) {
+            @extend %circular-text !optional;
+        }
+
+        @include e(value, $m: fraction) {
+            @extend %circular-text--fraction !optional;
+        }
+
+        @include e(gradient-start) {
+            @extend %circular-gradient-start !optional;
+        }
+
+        @include e(gradient-end) {
+            @extend %circular-gradient-end !optional;
+        }
+
+        @include m(indeterminate) {
+            @extend %circular-display--indeterminate !optional;
+
+            @include e(outer) {
+                @extend %circular-outer--indeterminate !optional;
+            }
+
+            @include e(text) {
+                @extend %circular-text--hidden !optional;
+            }
+        }
+
+        @include m(animation-none) {
+            @extend %animation-none !optional;
+        }
+
+        @include m(hide-counter) {
+            @include e(text) {
+                @extend %hide-counter !optional;
+            }
+        }
+    }
+}
