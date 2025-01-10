@@ -346,8 +346,11 @@ export class IgxOverlayService implements OnDestroy {
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
         info.initialSize = { width: elementRect.width, height: elementRect.height };
-        this.addComponentSize(info);
+        // Get the size before moving the container into the overlay so that it does not forget about inherited styles.
+        this.getComponentSize(info); 
         this.moveElementToOverlay(info);
+        // Update the container size after moving.
+        info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
         this.contentAppended.emit({ id: info.id, componentRef: info.componentRef });
         info.settings.scrollStrategy.initialize(this._document, this, info.id);
         info.settings.scrollStrategy.attach();
@@ -670,11 +673,6 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private updateSize(info: OverlayInfo) {
-        // set content div size
-        if (info.size) {
-            info.elementRef.nativeElement.parentElement.style.setProperty('--ig-size', info.size);
-        }
-        
         if (info.componentRef) {
             //  if we are positioning component this is first time it gets visible
             //  and we can finally get its size
@@ -984,7 +982,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private addComponentSize(info: OverlayInfo) {
+    private getComponentSize(info: OverlayInfo) {
         if (info.elementRef?.nativeElement instanceof Element) {
             const styles = this._document.defaultView.getComputedStyle(info.elementRef.nativeElement);
             const componentSize = styles.getPropertyValue('--component-size');

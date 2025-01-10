@@ -222,7 +222,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     @Input()
     public get itemsMaxHeight(): number {
         if (this.itemHeight && !this._itemsMaxHeight) {
-            return this.itemHeight * this.itemsInCointaner;
+            return this.itemHeight * this.itemsInContainer;
         }
         return this._itemsMaxHeight;
     }
@@ -950,7 +950,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
     private _filteringOptions: IComboFilteringOptions;
     private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false };
-    private itemsInCointaner = 10;
+    private itemsInContainer = 10;
 
     public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
@@ -1011,7 +1011,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
             this.dataPreLoad.emit(eventArgs);
         });
-        this.dropdown?.animationStarting.subscribe((_args: ToggleViewEventArgs) => {
+        this.dropdown?.opening.subscribe((_args: IBaseCancelableBrowserEventArgs) => {
             // calculate the container size and item size based on the sizes from the DOM
             const dropdownContainerHeight = this.dropdownContainer.nativeElement.getBoundingClientRect().height;
             if (dropdownContainerHeight) {
