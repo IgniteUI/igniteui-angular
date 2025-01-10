@@ -1,14 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CarouselIndicatorsOrientation, IgxButtonDirective, IgxCarouselComponent, IgxCarouselIndicatorDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxSlideComponent, IgxSwitchComponent, IgxToggleActionDirective } from 'igniteui-angular';
+import { CarouselIndicatorsOrientation, IGX_CAROUSEL_DIRECTIVES, IgxButtonDirective, IgxCarouselComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxSwitchComponent, IgxToggleActionDirective } from 'igniteui-angular';
 
 
 @Component({
     selector: 'app-carousel-sample',
     styleUrls: ['carousel.sample.scss'],
     templateUrl: 'carousel.sample.html',
-    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective, NgIf]
+    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IGX_CAROUSEL_DIRECTIVES]
 })
 export class CarouselSampleComponent {
     @ViewChild('car', { static: true })

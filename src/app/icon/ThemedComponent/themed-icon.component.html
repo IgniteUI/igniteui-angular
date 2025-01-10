@@ -1,0 +1,17 @@
+<div class="sample-icons">
+  <igx-icon family="default" name="arrow_prev"></igx-icon>
+  <igx-icon family="default" name="arrow_next"></igx-icon>
+  <igx-icon family="default" name="expand_more"></igx-icon>
+</div>
+
+<igx-buttongroup selectionMode="singleRequired">
+  @for (theme of themes; track theme) {
+    <button
+      igxButton
+      [selected]="theme === themeToken.theme"
+      (click)="setTheme(theme)"
+    >
+      {{ theme }}
+    </button>
+  }
+</igx-buttongroup>
