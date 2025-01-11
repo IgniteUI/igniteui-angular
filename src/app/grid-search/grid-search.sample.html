@@ -19,10 +19,12 @@
                         </igx-grid-toolbar-exporter>
                     </igx-grid-toolbar-actions>
                 </igx-grid-toolbar>
-                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [groupable]="true"
-                    [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
-                    [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth" [dataType]="c.type">
-                </igx-column>
+                @for (c of columns; track c) {
+                    <igx-column [field]="c.field" [header]="c.field" [groupable]="true"
+                        [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
+                        [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth" [dataType]="c.type">
+                    </igx-column>
+                }
             </igx-grid>
             <div class="sample-buttons">
                 <button igxButton="contained" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>

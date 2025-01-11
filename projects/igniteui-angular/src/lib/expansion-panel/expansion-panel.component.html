@@ -1,2 +1,4 @@
 <ng-content select="igx-expansion-panel-header"></ng-content>
-<ng-content *ngIf="!collapsed" select="igx-expansion-panel-body"></ng-content>
+@if (!collapsed) {
+    <ng-content select="igx-expansion-panel-body"></ng-content>
+}

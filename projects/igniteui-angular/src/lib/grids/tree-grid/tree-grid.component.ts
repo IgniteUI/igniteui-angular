@@ -23,7 +23,7 @@ import {
     CUSTOM_ELEMENTS_SCHEMA,
     booleanAttribute
 } from '@angular/core';
-import { DOCUMENT, NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
+import { DOCUMENT, NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -133,8 +133,6 @@ let NEXT_ID = 0;
         IgxForOfScrollSyncService
     ],
     imports: [
-        NgIf,
-        NgFor,
         NgClass,
         NgStyle,
         NgTemplateOutlet,
@@ -1074,6 +1072,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     protected override getGroupAreaHeight(): number {
         return this.treeGroupArea ? this.getComputedHeight(this.treeGroupArea.nativeElement) : 0;
+    }
+
+    /** {@link triggerPipes} will re-create pinnedData on CRUD operations */
+    protected trackPinnedRowData(record: ITreeGridRecord) {
+        // TODO FIX: pipeline data doesn't match end interface (¬_¬ )
+        // return record.key || (record as any).rowID;
+        return record;
     }
 
     /**

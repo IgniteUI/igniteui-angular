@@ -21,10 +21,14 @@
 <div class="preview">
     <button class="dd-button" igxButton="contained" [igxToggleAction]="dropdown">Dropdown</button>
     <igx-drop-down #dropdown>
-        <igx-drop-down-item *ngFor="let item of ddItems">
-            <span>{{ item.field }}</span>
-            <igx-icon *ngIf="item.icon" igxSuffix>{{item.icon}}</igx-icon>
-        </igx-drop-down-item>
+        @for (item of ddItems; track item) {
+            <igx-drop-down-item>
+                <span>{{ item.field }}</span>
+                @if (item.icon) {
+                    <igx-icon igxSuffix>{{item.icon}}</igx-icon>
+                }
+            </igx-drop-down-item>
+        }
     </igx-drop-down>
 </div>
 
@@ -50,9 +54,11 @@
 
     <igx-select checked [disabled]="isInputDisabled">
         <label igxLabel>Select</label>
-        <igx-select-item *ngFor="let item of items" [value]="item">
-            {{item}}
-        </igx-select-item>
+        @for (item of items; track item) {
+            <igx-select-item [value]="item">
+                {{item}}
+            </igx-select-item>
+        }
     </igx-select>
 
     <igx-combo
@@ -61,7 +67,7 @@
             [displayKey]="'field'"
             [valueKey]="'field'"
             [disabled]="isInputDisabled"
-               placeholder="Location(s)">
+            placeholder="Location(s)">
         <label igxLabel>Combo</label>
     </igx-combo>
 

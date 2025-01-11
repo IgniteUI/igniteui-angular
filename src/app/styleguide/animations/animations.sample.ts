@@ -1,5 +1,4 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { NgFor } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import {
     AbsolutePosition,
@@ -31,7 +30,7 @@ import {
     selector: 'app-animations-sample',
     styleUrls: ['animations.sample.scss'],
     templateUrl: 'animations.sample.html',
-    imports: [IgxListComponent, NgFor, IgxListItemComponent, IgxRippleDirective, IgxDialogComponent]
+    imports: [IgxListComponent, IgxListItemComponent, IgxRippleDirective, IgxDialogComponent]
 })
 export class AnimationsSampleComponent {
     @ViewChild('dialog', { static: true, read: IgxDialogComponent })

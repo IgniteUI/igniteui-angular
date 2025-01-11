@@ -4,7 +4,7 @@ import {
     CUSTOM_ELEMENTS_SCHEMA,
     ChangeDetectionStrategy,
 } from "@angular/core";
-import { NgFor, DatePipe, DATE_PIPE_DEFAULT_OPTIONS } from "@angular/common";
+import { DatePipe, DATE_PIPE_DEFAULT_OPTIONS } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import {
     DateRangeType,
@@ -84,7 +84,6 @@ defineComponents(IgcCalendarComponent);
         FormsModule,
         IgxSwitchComponent,
         IgxIconComponent,
-        NgFor,
         DatePipe
     ]
 })

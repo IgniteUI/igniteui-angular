@@ -58,24 +58,26 @@
         </div>
 
         <div class="toggles-container">
-            <div class="toggle-group" *ngFor="let col of grid1.columns">
-                <h4 class="sample-title">{{ col.field }}</h4>
-                <div class="switch-group">
-                    <igx-switch [(ngModel)]="col.filterable">Filtering</igx-switch>
+            @for (col of grid1.columns; track col) {
+                <div class="toggle-group">
+                    <h4 class="sample-title">{{ col.field }}</h4>
+                    <div class="switch-group">
+                        <igx-switch [(ngModel)]="col.filterable">Filtering</igx-switch>
+                    </div>
+                    <div class="switch-group">
+                        <igx-switch [(ngModel)]="col.sortable">Sorting</igx-switch>
+                    </div>
+                    <div class="switch-group">
+                        <igx-switch [(ngModel)]="col.editable">Editable</igx-switch>
+                    </div>
+                    <div class="switch-group">
+                        <igx-switch [(ngModel)]="col.hidden">Hidden</igx-switch>
+                    </div>
+                    <div class="switch-group">
+                        <igx-switch [(ngModel)]="col.disableHiding">Disable Hiding</igx-switch>
+                    </div>
                 </div>
-                <div class="switch-group">
-                    <igx-switch [(ngModel)]="col.sortable">Sorting</igx-switch>
-                </div>
-                <div class="switch-group">
-                    <igx-switch [(ngModel)]="col.editable">Editable</igx-switch>
-                </div>
-                <div class="switch-group">
-                    <igx-switch [(ngModel)]="col.hidden">Hidden</igx-switch>
-                </div>
-                <div class="switch-group">
-                    <igx-switch [(ngModel)]="col.disableHiding">Disable Hiding</igx-switch>
-                </div>
-            </div>
+            }
         </div>
 
         <igx-grid #grid1 [data]="localData" primaryKey="ID" [autoGenerate]="true" (columnInit)="initColumns($event)" (selected)="selectCell($event)">
@@ -94,24 +96,26 @@
                     >
                     </igx-column-actions>
                 </div>
-                <div class="toggle-group" *ngFor="let col of grid2.columns">
-                    <h4 h4 class="sample-title">{{ col.field }}</h4>
-                    <div class="switch-group">
-                        <igx-switch [(ngModel)]="col.filterable">Filtering</igx-switch>
+                @for (col of grid2.columns; track col) {
+                    <div class="toggle-group">
+                        <h4 h4 class="sample-title">{{ col.field }}</h4>
+                        <div class="switch-group">
+                            <igx-switch [(ngModel)]="col.filterable">Filtering</igx-switch>
+                        </div>
+                        <div class="switch-group">
+                            <igx-switch [(ngModel)]="col.sortable">Sorting</igx-switch>
+                        </div>
+                        <div class="switch-group">
+                            <igx-switch [(ngModel)]="col.editable">Editable</igx-switch>
+                        </div>
+                        <div class="switch-group">
+                            <igx-switch [(ngModel)]="col.hidden">Hidden</igx-switch>
+                        </div>
+                        <div class="switch-group">
+                            <igx-switch [(ngModel)]="col.disableHiding">Disable Hiding</igx-switch>
+                        </div>
                     </div>
-                    <div class="switch-group">
-                        <igx-switch [(ngModel)]="col.sortable">Sorting</igx-switch>
-                    </div>
-                    <div class="switch-group">
-                        <igx-switch [(ngModel)]="col.editable">Editable</igx-switch>
-                    </div>
-                    <div class="switch-group">
-                        <igx-switch [(ngModel)]="col.hidden">Hidden</igx-switch>
-                    </div>
-                    <div class="switch-group">
-                        <igx-switch [(ngModel)]="col.disableHiding">Disable Hiding</igx-switch>
-                    </div>
-                </div>
+                }
             </div>
         </div>
 
@@ -139,12 +143,15 @@
             <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'">
                 <!--
                 <ng-template igxCell let-col="column" let-ri="rowIndex" let-item="item">
-                    <span *ngIf="!showInput(ri, col.field)">{{ item }}</span>
-                    <igx-input-group *ngIf="showInput(ri, col.field)">
-                        <input igxInput [value]="item" (blur)="editCell = null" (change)="grid2.updateCell(ri, col.field, $event.target.value); editCell = null">
-                    </igx-input-group>
+                    @if (showInput(ri, col.field)) {
+                        <igx-input-group>
+                            <input igxInput [value]="item" (blur)="editCell = null" (change)="grid2.updateCell(ri, col.field, $event.target.value); editCell = null">
+                        </igx-input-group>
+                    } @else {
+                        <span>{{ item }}</span>
+                    }
                 </ng-template>
-            -->
+                -->
             </igx-column>
             <igx-column [field]="'Discontinued'">
                 <ng-template igxHeader let-column="column">
@@ -154,7 +161,9 @@
                     <igx-checkbox [checked]="value" (change)="grid2.updateCell($event.checked, cell.row.key, cell.column.field)"></igx-checkbox>
                 </ng-template>
             </igx-column>
-            <igx-paginator *ngIf="gridPaging" [(perPage)]="perPage"></igx-paginator>
+            @if (gridPaging) {
+                <igx-paginator [(perPage)]="perPage"></igx-paginator>
+            }
         </igx-grid>
 
     </article>
