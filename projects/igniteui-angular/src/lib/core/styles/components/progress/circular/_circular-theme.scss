@@ -109,7 +109,8 @@
         }
 
         @if $variant == 'indigo' {
-            --scale-factor: 3;
+            --stroke-thickness: 3px;
+            --scale-factor: 3.4;
         }
 
         display: inline-flex;
@@ -212,6 +213,10 @@
 
         %outer {
             stroke-dashoffset: calc(#{$circumference} + var(--_progress-percentage) * #{$circumference});
+
+            @if $variant != 'fluent' {
+                animation-direction: reverse;
+            }
         }
     }
 
@@ -232,10 +237,6 @@
     %outer--indeterminate {
         stroke-dasharray: 289;
         @include animation(indeterminate-accordion 1.5s cubic-bezier(0, .085, .68, .53) normal infinite);
-
-        [dir='rtl'] & {
-            animation-direction: reverse;
-        }
     }
 
     %inner,
