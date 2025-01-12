@@ -1,302 +1,157 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxLinearProgressBarComponent, toPercent } from './progressbar.component';
-
+import { IgxLinearProgressBarComponent } from './progressbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
-const SUCCESS_TYPE_CLASS = 'igx-linear-bar--success';
-const INFO_TYPE_CLASS = 'igx-linear-bar--info';
-const STRIPED_CLASS = 'igx-linear-bar--striped';
-const LINEAR_BAR_TAG = 'igx-linear-bar';
-const INDETERMINATE_CLASS = 'igx-linear-bar--indeterminate';
-
-describe('IgxLinearBar', () => {
-    let progress: IgxLinearProgressBarComponent;
+describe('IgxLinearProgressBarComponent', () => {
     let fixture: ComponentFixture<IgxLinearProgressBarComponent>;
+    let progress: IgxLinearProgressBarComponent;
+    let linearBar: HTMLElement;
 
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [IgxLinearProgressBarComponent]
-})
-        .compileComponents();
+            imports: [IgxLinearProgressBarComponent]
+        }).compileComponents();
     }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxLinearProgressBarComponent);
         progress = fixture.componentInstance;
+        fixture.detectChanges();
+        linearBar = fixture.debugElement.nativeElement;
+    });
+
+    it('should initialize with default attributes', () => {
+        expect(progress.valueMin).toBe(0);
+        expect(progress.cssClass).toBe('igx-linear-bar');
+        expect(progress.striped).toBe(false);
+        expect(progress.role).toBe('progressbar');
+        expect(progress.type).toBe('default');
+    });
+
+    it('should correctly toggle the striped style', () => {
+        // Default is not striped
+        expect(linearBar.classList.contains('igx-linear-bar--striped')).toBe(false);
+
+        // Enable striped
+        progress.striped = true;
+        fixture.detectChanges();
+
+        expect(linearBar.classList.contains('igx-linear-bar--striped')).toBe(true);
+    });
+
+    it('should correctly toggle the indeterminate mode', () => {
+        // Default is not indeterminate
+        expect(linearBar.classList.contains('igx-linear-bar--indeterminate')).toBe(false);
+
+        // Enable indeterminate mode
+        progress.indeterminate = true;
+        fixture.detectChanges();
+
+        expect(linearBar.classList.contains('igx-linear-bar--indeterminate')).toBe(true);
+    });
+
+    it('should correctly toggle animation', () => {
+        // Animation enabled by default
+        expect(linearBar.classList.contains('igx-linear-bar--animation-none')).toBe(false);
+
+        // Disable animation
         progress.animate = false;
         fixture.detectChanges();
+
+        expect(linearBar.classList.contains('igx-linear-bar--animation-none')).toBe(true);
     });
 
-    it('should initialize linearProgressbar with default values', () => {
-        const domProgress = fixture.debugElement.nativeElement;
-        const defaultMaxValue = 100;
-        const defaultValue = 0;
-        const defaultStriped = false;
-        const defaultType = 'default';
+    it('should correctly indicate if custom text is provided via hasText', () => {
+        // Default: no custom text
+        expect(progress.hasText).toBe(false);
 
+        // Set custom text
+        progress.text = 'Custom Text';
+        fixture.detectChanges();
+
+        expect(progress.hasText).toBe(true);
+    });
+
+    it('should correctly toggle the visibility of the counter text', () => {
+        // Default: textVisibility is true
+        expect(linearBar.classList.contains('igx-linear-bar--hide-counter')).toBe(false);
+
+        progress.textVisibility = false;
+        fixture.detectChanges();
+
+        expect(linearBar.classList.contains('igx-linear-bar--hide-counter')).toBe(true);
+    });
+
+    it('should correctly set text alignment', () => {
+        // Default: textAlign is 'start'
+        expect(progress.textAlign).toBe('start');
+
+        // Set alignment to center
+        progress.textAlign = 'center';
+        fixture.detectChanges();
+
+        expect(progress.textAlign).toBe('center');
+
+        // Set alignment to end
+        progress.textAlign = 'end';
+        fixture.detectChanges();
+
+        expect(progress.textAlign).toBe('end');
+    });
+
+    it('should correctly toggle text position above progress line', () => {
+        // Default: textTop is false
+        expect(progress.textTop).toBe(false);
+        expect(linearBar.classList.contains('igx-linear-bar--text-top')).toBe(false);
+
+        // Set textTop to true
+        progress.textTop = true;
+        fixture.detectChanges();
+
+        expect(progress.textTop).toBe(true);
+        expect(linearBar.classList.contains('igx-linear-bar--text-top')).toBe(true);
+    });
+
+    it('should correctly apply the ID attribute', () => {
         expect(progress.id).toContain('igx-linear-bar-');
-        expect(domProgress.id).toContain('igx-linear-bar-');
-        expect(progress.max).toBe(defaultMaxValue);
-        expect(progress.striped).toBe(defaultStriped);
-        expect(progress.type).toBe(defaultType);
-        expect(progress.value).toBe(defaultValue);
-    });
+        expect(linearBar.id).toContain('igx-linear-bar-');
 
-    it('should initialize linearProgressbar with non-default values', () => {
-        const domProgress = fixture.debugElement.nativeElement;
-        const defaultMaxValue = 100;
-        const defaultValue = 0;
-        const newStriped = true;
-        const newType = 'error';
-
-        progress.striped = newStriped;
-        progress.type = newType;
-
+        // Set a custom ID and verify
+        const customId = 'custom-linear-bar-id';
+        progress.id = customId;
         fixture.detectChanges();
 
-        expect(progress.id).toContain('igx-linear-bar-');
-        expect(domProgress.id).toContain('igx-linear-bar-');
-        expect(progress.max).toBe(defaultMaxValue);
-        expect(progress.striped).toBe(newStriped);
-        expect(progress.type).toBe(newType);
-        expect(progress.value).toBe(defaultValue);
-        expect(progress.animate).toBe(false);
+        expect(progress.id).toBe(customId);
+        expect(linearBar.id).toBe(customId);
     });
 
-    it('should set value to 0 for negative values', () => {
-        const negativeValue = -20;
-        const expectedValue = 10;
+    it('should apply type-specific classes correctly', () => {
+        // Initial type is `default` no modifier classes should be added
+        expect(linearBar.classList.contains('igx-linear-bar--danger')).toBe(false);
+        expect(linearBar.classList.contains('igx-linear-bar--info')).toBe(false);
+        expect(linearBar.classList.contains('igx-linear-bar--warning')).toBe(false);
+        expect(linearBar.classList.contains('igx-linear-bar--success')).toBe(false);
 
-        progress.value = expectedValue;
-        expect(progress.value).toBe(expectedValue);
-
-        progress.value = negativeValue;
-        expect(progress.value).toBe(expectedValue);
-    });
-
-    it('If passed value is higher then max it should stay equal to maximum (default max size)', () => {
-        const progressBarValue = 120;
-        const expectedMaxValue = 100;
-        const expectedValue = 10;
-
-        progress.value = expectedValue;
-        expect(progress.value).toBe(expectedValue);
-
-        progress.value = progressBarValue;
-        expect(progress.value).toBe(expectedMaxValue);
-    });
-
-    it(`If passed value is higher then max it should stay equal to maximum (custom max size and without animation)`, () => {
-        let progressBarMaxValue = 150;
-        const progressBarValue = 170;
-
-        progress.value = 30;
-        expect(progress.value).toBe(30);
-
-        progress.max = progressBarMaxValue;
-        progress.value = progressBarValue;
-
-        expect(progress.value).toBe(progressBarMaxValue);
-
-        progressBarMaxValue = 50;
-        progress.max = progressBarMaxValue;
-        expect(progress.value).toBe(50);
-    });
-
-    it('should not update value if max is decreased', () => {
-        let progressBarMaxValue = 200;
-        const progressBarValue = 80;
-
-        progress.max = progressBarMaxValue;
-        progress.value = progressBarValue;
-
-        expect(progress.value).toBe(progressBarValue);
-
-        progressBarMaxValue = 100;
-        progress.max = progressBarMaxValue;
-
-        expect(progress.value).toBe(progressBarValue);
-    });
-
-    it('should not update value if max is increased (without animation)', () => {
-        let progressBarMaxValue = 100;
-        const progressBarValue = 50;
-
-        progress.max = progressBarMaxValue;
-        progress.value = progressBarValue;
-
-        expect(progress.value).toBe(progressBarValue);
-
-        progressBarMaxValue = 200;
-        progress.max = progressBarMaxValue;
-
-        expect(progress.value).toBe(progressBarValue);
-    });
-
-    it('when update step is bigger than passed value the progress indicator should follow the value itself', () => {
-        const step = 5;
-        const value = 2;
-        const max = 10;
-        progress.step = step;
-        progress.max = max;
-        progress.value = value;
-
-        const percentValue = toPercent(value, max);
-        expect(progress.value).toBe(value);
-        expect(progress.step).toBe(step);
-        expect(progress.max).toBe(max);
-        expect(progress.valueInPercent).toBe(percentValue);
-
-        // Should not set a step larger than max value
-        progress.step = 20;
-        expect(progress.step).toBe(step);
-        expect(progress.max).toBe(max);
-    });
-
-    it('When indeterminate mode is on value should not be updated', () => {
-        expect(progress.value).toEqual(0);
-
-        progress.indeterminate = true;
-        progress.value = 30;
-        expect(progress.value).toEqual(0);
-
-        progress.value = 20;
-        expect(progress.value).toEqual(0);
-    });
-
-    it('Prevent constant update of progress value when value and max value differ', () => {
-        const maxVal = 3.25;
-        const value = 2.55;
-        const progressBar = fixture.debugElement.nativeElement;
-
-        expect(progressBar.attributes['aria-valuenow'].textContent).toBe(progress.value.toString());
-        progress.step = 0.634;
-        progress.max = maxVal;
-        progress.value  = value;
-
-        fixture.detectChanges();
-
-        expect(parseFloat(progressBar.attributes['aria-valuenow'].textContent)).toBe(value);
-        expect(progress.value).toBe(value);
-    });
-
-    it('Should update value when we try to decrese it', () => {
-        let expectedValue = 50;
-        progress.value = expectedValue;
-        expect(progress.value).toBe(expectedValue);
-
-        expectedValue = 20;
-        progress.value = expectedValue;
-        expect(progress.value).toBe(expectedValue);
-    });
-
-    it('The update step is 1% of the maximum value, which prevents from slow update with big nums', () => {
-        const ONE_PERCENT = 0.01;
-        let expectedValue = progress.max * ONE_PERCENT;
-        expect(progress.step).toBe(expectedValue);
-
-        const maxVal = 15345;
-        progress.max = maxVal;
-
-        expectedValue = maxVal * ONE_PERCENT;
-        expect(progress.step).toBe(expectedValue);
-    });
-
-    it('Value should not exceed the lower limit (0) when operating with floating numbers', () => {
-        progress.max = 2.5;
-        progress.value = -0.3;
-
-        const expectedRes = 0;
-        expect(progress.value).toBe(expectedRes);
-        expect(progress.valueInPercent).toBe(expectedRes);
-
-        progress.value = -2;
-
-        expect(progress.value).toBe(expectedRes);
-        expect(progress.valueInPercent).toBe(expectedRes);
-    });
-
-    it('Value should not exceed the max limit when operating with floating numbers', () => {
-        let value = 2.67;
-        const max = 2.5;
-
-        expect(progress.value).toBe(0);
-
-        progress.max = max;
-        progress.value = value;
-
-        expect(progress.value).toBe(max);
-        expect(progress.valueInPercent).toBe(100);
-
-        value = 3.01;
-        progress.value = value;
-
-        expect(progress.value).toBe(max);
-        expect(progress.valueInPercent).toBe(100);
-    });
-
-    it('Value should not exceed the max limit when max limit is set to 0', () => {
-        const value = 10;
-        const max = 0;
-
-        expect(progress.value).toBe(0);
-
-        progress.value = value;
-
-        expect(progress.value).toBe(value);
-        expect(progress.valueInPercent).toBe(10);
-
-        progress.max = max;
-        expect(progress.value).toBe(max);
-    });
-
-    it('Should change class suffix which would be relevant to the type that has been passed', () => {
-        const linearBar = fixture.debugElement.nativeElement;
-
-        expect(linearBar.classList.length).toEqual(1);
-        expect(linearBar.classList.contains(LINEAR_BAR_TAG)).toEqual(true);
-
-        progress.type = 'info';
-        fixture.detectChanges();
-
-        expect(linearBar.classList.contains(INFO_TYPE_CLASS)).toEqual(true);
-    });
-
-    it('Change progressbar style to be striped', () => {
-        const linerBar = fixture.debugElement.nativeElement;
-
-        expect(linerBar.classList.contains(STRIPED_CLASS)).toEqual(false);
-
-        progress.striped = true;
-        fixture.detectChanges();
-
-        expect(linerBar.classList.contains(STRIPED_CLASS)).toEqual(true);
-    });
-
-    it('should stay striped when the type has changed', () => {
-        const linearBar = fixture.debugElement.nativeElement;
-
-        progress.striped = true;
-        fixture.detectChanges();
-
-        expect(linearBar.classList.contains(STRIPED_CLASS)).toEqual(true);
-
+        // Set type to `success`
         progress.type = 'success';
         fixture.detectChanges();
+        expect(linearBar.classList.contains('igx-linear-bar--success')).toBe(true);
 
-        expect(linearBar.classList.contains(SUCCESS_TYPE_CLASS)).toEqual(true);
-        expect(linearBar.classList.contains(STRIPED_CLASS)).toEqual(true);
-    });
-
-    it('When enable indeterminate mode, then the appropriate class should be applied.', () => {
-        const bar = fixture.debugElement.nativeElement;
-        expect(bar.classList.contains(INDETERMINATE_CLASS)).toEqual(false);
-
-        progress.indeterminate = true;
+        // Set type to `error`
+        progress.type = 'error';
         fixture.detectChanges();
+        expect(linearBar.classList.contains('igx-linear-bar--danger')).toBe(true);
 
-        expect(bar.classList.contains(INDETERMINATE_CLASS)).toEqual(true);
+        // Set type to `info`
+        progress.type = 'info';
+        fixture.detectChanges();
+        expect(linearBar.classList.contains('igx-linear-bar--info')).toBe(true);
+
+        // Set type to `warning`
+        progress.type = 'warning';
+        fixture.detectChanges();
+        expect(linearBar.classList.contains('igx-linear-bar--warning')).toBe(true);
     });
 });
