@@ -94,7 +94,7 @@
             <div class="circular-container">
                 <igx-circular-bar class="circular-sample" [value]="30"></igx-circular-bar>
             </div>
-            <div class="circular-container">
+            <div class="circular-container" dir="rtl">
                 <igx-circular-bar class="circular-sample custom-gradient" [indeterminate]="true"></igx-circular-bar>
             </div>
         </div>
@@ -107,7 +107,7 @@
                 </igx-circular-bar>
             </div>
             <div class="circular-container" #gradient>
-                <igx-circular-bar class="circular-sample" [value]="77" [text]="'Test'">
+                <igx-circular-bar class="circular-sample" [indeterminate]="true" [value]="77" [text]="'Test'">
                     <ng-template igxProgressBarGradient let-id>
                         <svg:linearGradient [id]="id" gradientTransform="rotate(90)">
                             <stop offset="0%"   stop-color="#ff9a40"/>
@@ -118,7 +118,15 @@
                 </igx-circular-bar>
             </div>
             <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="44"></igx-circular-bar>
+                <igx-circular-bar class="circular-sample" [value]="77" [text]="'Test'">
+                    <ng-template igxProgressBarGradient let-id>
+                        <svg:linearGradient [id]="id" gradientTransform="rotate(90)">
+                            <stop offset="0%"   stop-color="#ff9a40"/>
+                            <stop offset="50%" stop-color="#1eccd4"/>
+                            <stop offset="100%" stop-color="#ff0079"/>
+                        </svg:linearGradient>
+                    </ng-template>
+                </igx-circular-bar>
             </div>
         </div>
     </article>
