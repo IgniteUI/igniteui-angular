@@ -16,11 +16,19 @@ describe('IgxLinearProgressBarComponent', () => {
     }));
 
     beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [IgxLinearProgressBarComponent]
+        }).compileComponents();
+
         fixture = TestBed.createComponent(IgxLinearProgressBarComponent);
         progress = fixture.componentInstance;
         fixture.detectChanges();
         linearBar = fixture.debugElement.nativeElement;
     });
+
+    function clasListContains(element: HTMLElement, className: string, expected: boolean) {
+        expect(element.classList.contains(className)).toBe(expected);
+    }
 
     it('should initialize with default attributes', () => {
         expect(progress.valueMin).toBe(0);
@@ -31,94 +39,110 @@ describe('IgxLinearProgressBarComponent', () => {
     });
 
     it('should correctly toggle the striped style', () => {
-        // Default is not striped
-        expect(linearBar.classList.contains('igx-linear-bar--striped')).toBe(false);
+        clasListContains(linearBar, 'igx-linear-bar--striped', false);
 
-        // Enable striped
         progress.striped = true;
         fixture.detectChanges();
 
-        expect(linearBar.classList.contains('igx-linear-bar--striped')).toBe(true);
+        clasListContains(linearBar, 'igx-linear-bar--striped', true);
     });
 
     it('should correctly toggle the indeterminate mode', () => {
-        // Default is not indeterminate
-        expect(linearBar.classList.contains('igx-linear-bar--indeterminate')).toBe(false);
+        clasListContains(linearBar, 'igx-linear-bar--indeterminate', false);
 
-        // Enable indeterminate mode
         progress.indeterminate = true;
         fixture.detectChanges();
 
-        expect(linearBar.classList.contains('igx-linear-bar--indeterminate')).toBe(true);
+        clasListContains(linearBar, 'igx-linear-bar--indeterminate', true);
     });
 
     it('should correctly toggle animation', () => {
-        // Animation enabled by default
-        expect(linearBar.classList.contains('igx-linear-bar--animation-none')).toBe(false);
+        clasListContains(linearBar, 'igx-linear-bar--animation-none', false);
 
-        // Disable animation
         progress.animate = false;
         fixture.detectChanges();
 
-        expect(linearBar.classList.contains('igx-linear-bar--animation-none')).toBe(true);
+        clasListContains(linearBar, 'igx-linear-bar--animation-none', true);
     });
 
     it('should correctly indicate if custom text is provided via hasText', () => {
-        // Default: no custom text
         expect(progress.hasText).toBe(false);
 
-        // Set custom text
         progress.text = 'Custom Text';
         fixture.detectChanges();
 
         expect(progress.hasText).toBe(true);
     });
 
-    it('should correctly toggle the visibility of the counter text', () => {
-        // Default: textVisibility is true
-        expect(linearBar.classList.contains('igx-linear-bar--hide-counter')).toBe(false);
+    it('should toggle counter visibility when custom text is provided', () => {
+        // Default state: no custom text
+        expect(progress.hasText).toBe(false);
+        clasListContains(linearBar, 'igx-linear-bar--hide-counter', false);
 
-        progress.textVisibility = false;
+        // Provide custom text
+        progress.text = 'Custom Text';
         fixture.detectChanges();
+        expect(progress.hasText).toBe(true);
+        clasListContains(linearBar, 'igx-linear-bar--hide-counter', true);
 
-        expect(linearBar.classList.contains('igx-linear-bar--hide-counter')).toBe(true);
+        // Remove custom text
+        progress.text = null;
+        fixture.detectChanges();
+        expect(progress.hasText).toBe(false);
+        clasListContains(linearBar, 'igx-linear-bar--hide-counter', false);
+    });
+
+    it('should toggle text visibility when textVisibility is changed', () => {
+        const valueElement = linearBar.querySelector('.igx-linear-bar__value') as HTMLElement;
+
+        // Default state: textVisibility is true
+        clasListContains(valueElement, 'igx-linear-bar__value--hidden', false);
+
+        // Set textVisibility to false
+        progress.textVisibility = false;
+        fixture.detectChanges(); // Ensure bindings are updated
+        clasListContains(valueElement, 'igx-linear-bar__value--hidden', true);
+
+        // Set textVisibility back to true
+        progress.textVisibility = true;
+        fixture.detectChanges(); // Ensure bindings are updated
+        clasListContains(valueElement, 'igx-linear-bar__value--hidden', false);
     });
 
     it('should correctly set text alignment', () => {
-        // Default: textAlign is 'start'
         expect(progress.textAlign).toBe('start');
 
-        // Set alignment to center
         progress.textAlign = 'center';
         fixture.detectChanges();
-
         expect(progress.textAlign).toBe('center');
 
-        // Set alignment to end
         progress.textAlign = 'end';
         fixture.detectChanges();
-
         expect(progress.textAlign).toBe('end');
     });
 
     it('should correctly toggle text position above progress line', () => {
-        // Default: textTop is false
-        expect(progress.textTop).toBe(false);
-        expect(linearBar.classList.contains('igx-linear-bar--text-top')).toBe(false);
+        const valueElement = linearBar.querySelector('.igx-linear-bar__value') as HTMLElement;
 
-        // Set textTop to true
+        // Default state: textTop is false, and class should not be present
+        clasListContains(valueElement, 'igx-linear-bar__value--top', false);
+
+        // Enable textTop
         progress.textTop = true;
-        fixture.detectChanges();
+        fixture.detectChanges(); // Ensure bindings are updated
+        clasListContains(valueElement, 'igx-linear-bar__value--top', true);
 
-        expect(progress.textTop).toBe(true);
-        expect(linearBar.classList.contains('igx-linear-bar--text-top')).toBe(true);
+        // Disable textTop
+        progress.textTop = false;
+        fixture.detectChanges(); // Ensure bindings are updated
+        clasListContains(valueElement, 'igx-linear-bar__value--top', false);
     });
+
 
     it('should correctly apply the ID attribute', () => {
         expect(progress.id).toContain('igx-linear-bar-');
         expect(linearBar.id).toContain('igx-linear-bar-');
 
-        // Set a custom ID and verify
         const customId = 'custom-linear-bar-id';
         progress.id = customId;
         fixture.detectChanges();
@@ -128,30 +152,25 @@ describe('IgxLinearProgressBarComponent', () => {
     });
 
     it('should apply type-specific classes correctly', () => {
-        // Initial type is `default` no modifier classes should be added
-        expect(linearBar.classList.contains('igx-linear-bar--danger')).toBe(false);
-        expect(linearBar.classList.contains('igx-linear-bar--info')).toBe(false);
-        expect(linearBar.classList.contains('igx-linear-bar--warning')).toBe(false);
-        expect(linearBar.classList.contains('igx-linear-bar--success')).toBe(false);
+        clasListContains(linearBar, 'igx-linear-bar--danger', false);
+        clasListContains(linearBar, 'igx-linear-bar--info', false);
+        clasListContains(linearBar, 'igx-linear-bar--warning', false);
+        clasListContains(linearBar, 'igx-linear-bar--success', false);
 
-        // Set type to `success`
         progress.type = 'success';
         fixture.detectChanges();
-        expect(linearBar.classList.contains('igx-linear-bar--success')).toBe(true);
+        clasListContains(linearBar, 'igx-linear-bar--success', true);
 
-        // Set type to `error`
         progress.type = 'error';
         fixture.detectChanges();
-        expect(linearBar.classList.contains('igx-linear-bar--danger')).toBe(true);
+        clasListContains(linearBar, 'igx-linear-bar--danger', true);
 
-        // Set type to `info`
         progress.type = 'info';
         fixture.detectChanges();
-        expect(linearBar.classList.contains('igx-linear-bar--info')).toBe(true);
+        clasListContains(linearBar, 'igx-linear-bar--info', true);
 
-        // Set type to `warning`
         progress.type = 'warning';
         fixture.detectChanges();
-        expect(linearBar.classList.contains('igx-linear-bar--warning')).toBe(true);
+        clasListContains(linearBar, 'igx-linear-bar--warning', true);
     });
 });

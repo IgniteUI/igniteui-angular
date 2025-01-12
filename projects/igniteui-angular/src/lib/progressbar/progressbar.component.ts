@@ -49,6 +49,8 @@ export const valueInRange = (value: number, max: number, min = 0): number => Mat
  */
 @Directive()
 export abstract class BaseProgressDirective {
+    private _indeterminate = false;
+
     /**
      * An event, which is triggered after progress is changed.
      * ```typescript
@@ -66,14 +68,32 @@ export abstract class BaseProgressDirective {
     public progressChanged = new EventEmitter<IChangeProgressEventArgs>();
 
     /**
-     * Sets/Gets progressbar in indeterminate. By default, it is set to false.
+     * Sets progressbar in indeterminate. By default, it is set to false.
      * ```html
      * <igx-linear-bar [indeterminate]="true"></igx-linear-bar>
      * <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public indeterminate = false;
+    public set indeterminate(val: boolean) {
+        if (this._indeterminate === val) {
+            return;
+        }
+
+        this._indeterminate = val;
+
+        if (val) {
+            // Reset the value to 0 and refresh progress-related variables
+            this._value = 0;
+            this._integer = 0;
+            this._fraction = 0;
+            this._updateProgressValues();
+        }
+    }
+
+    public get indeterminate(): boolean {
+        return this._indeterminate;
+    }
 
     /**
      * Sets/Gets progressbar animation duration. By default, it is 2000ms.
@@ -167,13 +187,19 @@ export abstract class BaseProgressDirective {
     @HostBinding('attr.aria-valuemax')
     @Input()
     public set max(maxNum: number) {
+
+        // Ignore invalid or unchanged max
         if (maxNum < MIN_VALUE || this._max === maxNum) {
-            return; // Ignore invalid or unchanged max
+            return;
         }
 
-        this._max = maxNum; // Update max value
-        this._value = valueInRange(this._value, this._max); // Revalidate current value
-        this._updateProgressValues(); // Refresh CSS variables
+        this._max = maxNum;
+
+        // Revalidate current value
+        this._value = valueInRange(this._value, this._max);
+
+        // Refresh CSS variables
+        this._updateProgressValues();
     }
 
     /**
@@ -250,11 +276,8 @@ export abstract class BaseProgressDirective {
         const integerPart = Math.floor(percentage);
         const fractionalPart = Math.round((percentage % 1) * 100);
 
-        // Set CSS variables for animation
-        setTimeout(() => {
-            this._integer = integerPart;
-            this._fraction = fractionalPart;
-        }, 0);
+        this._integer = integerPart;
+        this._fraction = fractionalPart;
     }
 
     /**
@@ -264,15 +287,31 @@ export abstract class BaseProgressDirective {
      * <igx-circular-bar [value]="50"></igx-circular-bar>
      * ```
      */
-    public set value(val) {
-        const valInRange = valueInRange(val, this.max); // Ensure value is in range
-
-        if (isNaN(valInRange) || this._value === valInRange || this.indeterminate) {
-            return; // Avoid redundant updates
+    public set value(val: number) {
+        if (this.indeterminate) {
+            return;
         }
 
-        this._value = valInRange; // Update internal value
-        this._updateProgressValues(); // Refresh CSS variables
+        const valInRange = valueInRange(val, this.max); // Ensure value is in range
+
+        // Avoid redundant updates
+        if (this._value === valInRange) {
+            return;
+        }
+
+        const previousValue = this._value;
+
+        // Update internal value
+        this._value = valInRange;
+
+        // Refresh CSS variables
+        this._updateProgressValues();
+
+        // Emit the progressChanged event
+        this.progressChanged.emit({
+            previousValue,
+            currentValue: this._value,
+        });
     }
 }
 let NEXT_LINEAR_ID = 0;

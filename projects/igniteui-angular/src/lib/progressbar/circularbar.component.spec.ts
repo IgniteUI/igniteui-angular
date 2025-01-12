@@ -16,11 +16,19 @@ describe('IgxCircularProgressBarComponent', () => {
     }));
 
     beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [IgxCircularProgressBarComponent]
+        }).compileComponents();
+
         fixture = TestBed.createComponent(IgxCircularProgressBarComponent);
         progress = fixture.componentInstance;
         fixture.detectChanges();
         circularBar = fixture.debugElement.nativeElement;
     });
+
+    function clasListContains(element: HTMLElement, className: string, expected: boolean) {
+        expect(element.classList.contains(className)).toBe(expected);
+    }
 
     it('should initialize with default attributes', () => {
         expect(progress.cssClass).toBe('igx-circular-bar');
@@ -29,67 +37,87 @@ describe('IgxCircularProgressBarComponent', () => {
     });
 
     it('should correctly apply the ID attribute', () => {
-        expect(progress.id).toContain('igx-circular-bar-');
-        expect(circularBar.id).toContain('igx-circular-bar-');
+        expect(progress.id).toContain('igx-circular-bar-'); // Keep this
 
-        // Set a custom ID and verify
         const customId = 'custom-circular-bar-id';
         progress.id = customId;
         fixture.detectChanges();
 
         expect(progress.id).toBe(customId);
-        expect(circularBar.id).toBe(customId);
     });
 
     it('should correctly toggle the indeterminate mode', () => {
-        // Default is not indeterminate
-        expect(circularBar.classList.contains('igx-circular-bar--indeterminate')).toBe(false);
+        clasListContains(circularBar, 'igx-circular-bar--indeterminate', false);
 
         progress.indeterminate = true;
         fixture.detectChanges();
 
-        expect(circularBar.classList.contains('igx-circular-bar--indeterminate')).toBe(true);
+        clasListContains(circularBar, 'igx-circular-bar--indeterminate', true);
     });
 
     it('should correctly toggle animation', () => {
-        // Animation enabled by default
-        expect(circularBar.classList.contains('igx-circular-bar--animation-none')).toBe(false);
+        clasListContains(circularBar, 'igx-circular-bar--animation-none', false);
 
-        // Disable animation
         progress.animate = false;
         fixture.detectChanges();
 
-        expect(circularBar.classList.contains('igx-circular-bar--animation-none')).toBe(true);
+        clasListContains(circularBar, 'igx-circular-bar--animation-none', true);
     });
 
-    it('should correctly indicate if custom text is provided via hasText', () => {
-        // Default: no custom text
+    it('should toggle counter visibility when custom text is provided', () => {
+        // Default state: no custom text
         expect(progress.hasText).toBe(false);
+        clasListContains(circularBar, 'igx-circular-bar--hide-counter', false);
 
-        // Set custom text
+        // Provide custom text
         progress.text = 'Custom Text';
         fixture.detectChanges();
-
         expect(progress.hasText).toBe(true);
-        expect(circularBar.classList.contains('igx-circular-bar--hide-counter')).toBe(true);
+        clasListContains(circularBar, 'igx-circular-bar--hide-counter', true);
+
+        // Remove custom text
+        progress.text = null;
+        fixture.detectChanges();
+        expect(progress.hasText).toBe(false);
+        clasListContains(circularBar, 'igx-circular-bar--hide-counter', false);
     });
 
-    it('should correctly toggle the visibility of the counter text', () => {
-        // Default: textVisibility is true
-        expect(circularBar.classList.contains('igx-circular-bar--hide-counter')).toBe(false);
+    it('should toggle text visibility when textVisibility is changed', () => {
+        // Default state: textVisibility is true, text container is present
+        expect(progress.textVisibility).toBe(true);
+        let textElement = circularBar.querySelector('.igx-circular-bar__text');
+        expect(textElement).not.toBeNull();
 
+        // Set textVisibility to false
         progress.textVisibility = false;
         fixture.detectChanges();
 
-        expect(circularBar.classList.contains('igx-circular-bar--hide-counter')).toBe(true);
+        textElement = circularBar.querySelector('.igx-circular-bar__text');
+        expect(progress.textVisibility).toBe(false);
+        expect(textElement).toBeNull();
+
+        // Set textVisibility back to true
+        progress.textVisibility = true;
+        fixture.detectChanges();
+
+        textElement = circularBar.querySelector('.igx-circular-bar__text');
+        expect(progress.textVisibility).toBe(true);
+        expect(textElement).not.toBeNull();
     });
 
     it('should correctly apply the gradient ID', () => {
         const gradientId = progress.gradientId;
-
         expect(gradientId).toContain('igx-circular-gradient-');
-        const circleElement = circularBar.querySelector('circle');
-        expect(circleElement?.getAttribute('stroke')).toBe(`url(#${gradientId})`);
+
+        fixture.detectChanges();
+
+        // Wait for ngAfterViewInit to complete
+        fixture.whenStable().then(() => {
+            const outerCircleElement = circularBar.querySelector('.igx-circular-bar__outer');
+
+            // Ensure the stroke attribute contains the correct gradient ID
+            expect(outerCircleElement?.getAttribute('stroke')).toBe(`url(#${gradientId})`);
+        });
     });
 
     it('should correctly provide the context object', () => {

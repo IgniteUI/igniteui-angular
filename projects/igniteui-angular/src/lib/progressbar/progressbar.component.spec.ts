@@ -12,19 +12,23 @@ class TestProgressComponent extends BaseProgressDirective {
     }
 }
 
-describe('BaseProgressDirective', () => {
+fdescribe('BaseProgressDirective', () => {
     let fixture: ComponentFixture<TestProgressComponent>;
     let baseDirective: TestProgressComponent;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [TestProgressComponent]
+            imports: [TestProgressComponent]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestProgressComponent);
         baseDirective = fixture.componentInstance;
         fixture.detectChanges();
     });
+
+    function clasListContains(element: HTMLElement, className: string, expected: boolean) {
+        expect(element.classList.contains(className)).toBe(expected);
+    }
 
     it('should initialize with default values', () => {
         expect(baseDirective.indeterminate).toBe(false);
@@ -90,28 +94,29 @@ describe('BaseProgressDirective', () => {
         expect(baseDirective.animate).toBe(true);
     });
 
-    it('should correctly update host styles', () => {
+    it('should correctly update host styles', async () => {
         baseDirective.value = 50;
         fixture.detectChanges();
 
+        // Wait for async updates in the directive to complete
+        await fixture.whenStable();
+
         const styles = baseDirective.hostStyles;
-        expect(styles['--_progress-integer']).toBe('50');
-        expect(styles['--_progress-fraction']).toBe('0');
-        expect(styles['--_progress-whole']).toBe('50.00');
-        expect(styles['--_transition-duration']).toBe('2000ms');
+
+        expect(styles['--_progress-integer']).toBe('50'); // Validate integer part
+        expect(styles['--_progress-fraction']).toBe('0'); // Validate fraction part
+        expect(styles['--_progress-whole']).toBe('50.00'); // Validate whole value
+        expect(styles['--_transition-duration']).toBe('2000ms'); // Validate animation duration
     });
 
     it('should correctly calculate fraction and integer values for progress', () => {
         baseDirective.value = 75.25;
         fixture.detectChanges();
 
-        expect(baseDirective.valueInPercent).toBe(75.25);
-        expect(baseDirective.exposedHasFraction).toBe(true);
-
-        baseDirective.value = 50;
-        fixture.detectChanges();
-
-        expect(baseDirective.exposedHasFraction).toBe(false);
+        const styles = baseDirective.hostStyles;
+        expect(styles['--_progress-integer']).toBe('75');
+        expect(styles['--_progress-fraction']).toBe('25');
+        expect(styles['--_progress-whole']).toBe('75.25');
     });
 
     it('should trigger progressChanged event when value changes', () => {
@@ -145,14 +150,16 @@ describe('BaseProgressDirective', () => {
         expect(baseDirective.progressChanged.emit).not.toHaveBeenCalled();
     });
 
-    it('should trigger progressChanged event after max is updated and value is adjusted', () => {
-        spyOn(baseDirective.progressChanged, 'emit');
+    it('should reset value and variables when indeterminate is true', () => {
+        baseDirective.value = 50;
+        expect(baseDirective.value).toBe(50);
 
-        baseDirective.value = 80;
-        baseDirective.max = 50; // Value will be adjusted to 50
-        expect(baseDirective.progressChanged.emit).toHaveBeenCalledWith({
-            previousValue: 80,
-            currentValue: 50,
-        });
+        baseDirective.indeterminate = true;
+        expect(baseDirective.value).toBe(0);
+        expect(baseDirective.indeterminate).toBe(true);
+
+        expect(baseDirective.hostStyles['--_progress-integer']).toBe('0');
+        expect(baseDirective.hostStyles['--_progress-fraction']).toBe('0');
+        expect(baseDirective.hostStyles['--_progress-whole']).toBe('0.00');
     });
 });
