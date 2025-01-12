@@ -19,7 +19,6 @@ import {
     IgxProgressBarGradientDirective,
 } from './progressbar.common';
 import { IBaseEventArgs, mkenum } from '../core/utils';
-import { IgxDirectionality } from '../services/direction/directionality';
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
 

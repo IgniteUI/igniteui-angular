@@ -26,10 +26,6 @@ fdescribe('BaseProgressDirective', () => {
         fixture.detectChanges();
     });
 
-    function clasListContains(element: HTMLElement, className: string, expected: boolean) {
-        expect(element.classList.contains(className)).toBe(expected);
-    }
-
     it('should initialize with default values', () => {
         expect(baseDirective.indeterminate).toBe(false);
         expect(baseDirective.animationDuration).toBe(2000);
