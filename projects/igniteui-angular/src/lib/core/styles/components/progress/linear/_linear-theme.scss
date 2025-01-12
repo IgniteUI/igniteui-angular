@@ -87,7 +87,6 @@
     }
 }
 
-// Animation easing curves
 $easing-curves: (
     // Primary translate easing curves
     primary-translate-start: cubic-bezier(0.5, 0, 0.7017, 0.4958),
@@ -115,7 +114,6 @@ $easing-curves: (
     }
     @return map.get($easing-curves, $curve);
 }
-
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
@@ -146,7 +144,7 @@ $easing-curves: (
         'indigo': rem(16px),
     ), $variant);
 
-    %display {
+    %display-linear {
         --stripe-size: #{$strip-size};
         --linear-animation-duration: var(--_transition-duration);
         position: relative;
@@ -211,7 +209,7 @@ $easing-curves: (
         }
     }
 
-    %display:not(%display--indeterminate) {
+    %display-linear:not(%display-linear--indeterminate) {
         %indicator {
             animation: initial-width var(--_transition-duration) linear;
         }
@@ -273,7 +271,7 @@ $easing-curves: (
         }
     }
 
-    %display:not(%display--indeterminate) {
+    %display-linear:not(%display-linear--indeterminate) {
         %indicator {
             background-color: var-get($theme, 'fill-color-default')
         }
@@ -286,14 +284,14 @@ $easing-curves: (
     }
 
     @each $mod in ('success','info','warning','danger') {
-        %display--#{$mod}:not(%display--indeterminate) {
+        %display-linear--#{$mod}:not(%display-linear--indeterminate) {
             %indicator,
             %indicator__secondary {
                 background-color: var-get($theme, 'fill-color-#{$mod}')
             }
         }
 
-        %display--#{$mod} {
+        %display-linear--#{$mod} {
             @if $variant != 'fluent' {
                 %indicator,
                 %indicator__secondary {

@@ -1,9 +1,8 @@
 @use '../../../base' as *;
 @use 'sass:string';
 
-
 /// @access private
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 @mixin component {
     @include b(igx-circular-bar) {
         $this: bem--selector-to-string(&);
@@ -12,41 +11,41 @@
             $deps: ()
         );
 
-        @extend %circular-display !optional;
+        @extend %display-circular !optional;
 
         @include e(inner) {
-            @extend %circular-inner !optional;
+            @extend %inner !optional;
         }
 
         @include e(outer) {
-            @extend %circular-outer !optional;
+            @extend %outer !optional;
         }
 
         @include e(text) {
-            @extend %circular-text !optional;
+            @extend %text !optional;
         }
 
         @include e(value, $m: fraction) {
-            @extend %circular-text--fraction !optional;
+            @extend %text--fraction !optional;
         }
 
         @include e(gradient-start) {
-            @extend %circular-gradient-start !optional;
+            @extend %gradient-start !optional;
         }
 
         @include e(gradient-end) {
-            @extend %circular-gradient-end !optional;
+            @extend %gradient-end !optional;
         }
 
         @include m(indeterminate) {
-            @extend %circular-display--indeterminate !optional;
+            @extend %display-circular--indeterminate !optional;
 
             @include e(outer) {
-                @extend %circular-outer--indeterminate !optional;
+                @extend %outer--indeterminate !optional;
             }
 
             @include e(text) {
-                @extend %circular-text--hidden !optional;
+                @extend %text--hidden !optional;
             }
         }
 
