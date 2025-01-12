@@ -196,8 +196,6 @@
             %outer {
                 @if $variant == 'fluent' {
                     animation-name: indeterminate-circular-fluent-rtl;
-                } @else {
-                    animation-name: indeterminate-accordion-rtl;
                 }
 
                 @if $variant == 'bootstrap' {

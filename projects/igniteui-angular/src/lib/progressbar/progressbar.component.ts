@@ -49,8 +49,6 @@ export const valueInRange = (value: number, max: number, min = 0): number => Mat
  */
 @Directive()
 export abstract class BaseProgressDirective {
-    private _indeterminate = false;
-
     /**
      * An event, which is triggered after progress is changed.
      * ```typescript
@@ -68,32 +66,14 @@ export abstract class BaseProgressDirective {
     public progressChanged = new EventEmitter<IChangeProgressEventArgs>();
 
     /**
-     * Sets progressbar in indeterminate. By default, it is set to false.
+     * Sets/Gets progressbar in indeterminate. By default, it is set to false.
      * ```html
      * <igx-linear-bar [indeterminate]="true"></igx-linear-bar>
      * <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public set indeterminate(val: boolean) {
-        if (this._indeterminate === val) {
-            return;
-        }
-
-        this._indeterminate = val;
-
-        if (val) {
-            // Reset the value to 0 and refresh progress-related variables
-            this._value = 0;
-            this._integer = 0;
-            this._fraction = 0;
-            this._updateProgressValues();
-        }
-    }
-
-    public get indeterminate(): boolean {
-        return this._indeterminate;
-    }
+    public indeterminate = false;
 
     /**
      * Sets/Gets progressbar animation duration. By default, it is 2000ms.
@@ -287,15 +267,11 @@ export abstract class BaseProgressDirective {
      * <igx-circular-bar [value]="50"></igx-circular-bar>
      * ```
      */
-    public set value(val: number) {
-        if (this.indeterminate) {
-            return;
-        }
-
+    public set value(val) {
         const valInRange = valueInRange(val, this.max); // Ensure value is in range
 
         // Avoid redundant updates
-        if (this._value === valInRange) {
+        if (isNaN(valInRange) || this._value === valInRange || this.indeterminate) {
             return;
         }
 

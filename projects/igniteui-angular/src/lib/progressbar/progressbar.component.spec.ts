@@ -149,17 +149,4 @@ fdescribe('BaseProgressDirective', () => {
         baseDirective.value = 30; // Attempting to change value
         expect(baseDirective.progressChanged.emit).not.toHaveBeenCalled();
     });
-
-    it('should reset value and variables when indeterminate is true', () => {
-        baseDirective.value = 50;
-        expect(baseDirective.value).toBe(50);
-
-        baseDirective.indeterminate = true;
-        expect(baseDirective.value).toBe(0);
-        expect(baseDirective.indeterminate).toBe(true);
-
-        expect(baseDirective.hostStyles['--_progress-integer']).toBe('0');
-        expect(baseDirective.hostStyles['--_progress-fraction']).toBe('0');
-        expect(baseDirective.hostStyles['--_progress-whole']).toBe('0.00');
-    });
 });
