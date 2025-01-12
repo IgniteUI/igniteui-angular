@@ -12,7 +12,7 @@ class TestProgressComponent extends BaseProgressDirective {
     }
 }
 
-fdescribe('BaseProgressDirective', () => {
+describe('BaseProgressDirective', () => {
     let fixture: ComponentFixture<TestProgressComponent>;
     let baseDirective: TestProgressComponent;
 
