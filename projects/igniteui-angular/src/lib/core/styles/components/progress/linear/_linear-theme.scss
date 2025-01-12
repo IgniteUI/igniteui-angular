@@ -295,9 +295,11 @@ $easing-curves: (
             @if $variant != 'fluent' {
                 %indicator,
                 %indicator__secondary {
+                    /* stylelint-disable max-nesting-depth */
                     &::after {
                         background-color: var-get($theme, 'fill-color-#{$mod}');
                     }
+                    /* stylelint-enable max-nesting-depth */
                 }
             } @else {
                 %indicator {
@@ -354,7 +356,7 @@ $easing-curves: (
 
     %animation-none {
         animation-duration: 0s !important;
-        animation: none !important;
+        animation-name: none !important;
     }
 
     // Primary animation

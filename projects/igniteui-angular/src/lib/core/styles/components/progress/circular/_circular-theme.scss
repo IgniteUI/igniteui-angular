@@ -228,7 +228,7 @@
         stroke-dasharray: #{$circumference} #{$circumference};
         stroke-dashoffset: calc(#{$circumference} - var(--_progress-whole, 0) * #{$circumference});
         transition: stroke-dashoffset var(--_transition-duration) linear;
-        stroke-width: calc(#{var(--stroke-thickness)} + rem(0.75px));
+        stroke-width: calc(var(--stroke-thickness) + rem(0.75px));
     }
 
     %outer--indeterminate {
@@ -389,8 +389,8 @@
     }
 
     %animation-none {
+        animation-name: none;
         animation-duration: 0s;
-        animation: none;
     }
 
     %hide-counter {
