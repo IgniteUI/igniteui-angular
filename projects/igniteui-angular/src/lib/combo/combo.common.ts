@@ -46,7 +46,6 @@ import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/comb
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { DOCUMENT } from '@angular/common';
 import { isEqual } from 'lodash-es';
-import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
