@@ -14,7 +14,7 @@ import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { filter, fromEvent, sampleTime, Subject, Subscription } from 'rxjs';
+import { filter, fromEvent, sampleTime, Subject, Subscription, tap } from 'rxjs';
 import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
@@ -1243,11 +1243,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     private listenToKeyboard() {
         this.keyboardSubscription$?.unsubscribe();
-        //this.el.nativeElement.firstElementChild.firstElementChild.nextElementSibling
-        this.keyboardSubscription$ = fromEvent<KeyboardEvent>(document, 'keydown') //TODO listen to QB element, not document
+        this.keyboardSubscription$ = fromEvent<KeyboardEvent>(document, 'keydown')
             .pipe(filter(event => !event.repeat))
-            .pipe(filter(key => ['ArrowUp', 'ArrowDown', 'Enter', 'Space', 'Escape'].includes(key.code)))
-            //.pipe(tap(e=> e.preventDefault()))
+            .pipe(filter(key => ['ArrowUp', 'ArrowDown', 'Enter', 'Space', 'Escape', 'Tab'].includes(key.code)))
+            .pipe(tap(e => e.preventDefault()))
             .subscribe(key => {
                 if (key.code == 'Escape') {
                     //TODO cancel mouse drag
@@ -1258,6 +1257,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     //this.platform.isActivationKey(eventArgs) Maybe use this rather that Enter/Space?
                     this.onChipDropped();
                     this.keyboardSubscription$.unsubscribe();
+                } else if (key.code == 'Tab') {
+                    //inhibit tabs while drag&drop is in process
                 }
             });
     }
