@@ -72,6 +72,67 @@ describe('BaseProgressDirective', () => {
         expect(baseDirective.value).toBe(50);
     });
 
+    it('should handle floating-point numbers correctly', () => {
+        baseDirective.max = 2.5;
+        baseDirective.value = 2.67;
+
+        // Expect value to be clamped to max
+        expect(baseDirective.value).toBe(2.5);
+        expect(baseDirective.valueInPercent).toBe(100);
+
+        baseDirective.value = -0.3;
+
+        // Expect value to be clamped to 0
+        expect(baseDirective.value).toBe(0);
+        expect(baseDirective.valueInPercent).toBe(0);
+    });
+
+    it('should handle max set to 0 correctly', () => {
+        baseDirective.max = 0;
+
+        // Expect value to be clamped to max
+        baseDirective.value = 10;
+        expect(baseDirective.value).toBe(0);
+        expect(baseDirective.valueInPercent).toBe(0);
+    });
+
+    it('should calculate step as 1% of max by default', () => {
+        const defaultStep = baseDirective.max * 0.01;
+        expect(baseDirective.step).toBe(defaultStep);
+    });
+
+    it('should not allow step larger than max', () => {
+        baseDirective.step = 150;
+        expect(baseDirective.step).toBe(baseDirective.max * 0.01);
+    });
+
+    it('should not constantly update progress value when value and max differ', () => {
+        baseDirective.max = 3.25;
+        baseDirective.value = 2.55;
+
+        fixture.detectChanges();
+
+        const progressBar = fixture.debugElement.nativeElement;
+        expect(parseFloat(progressBar.attributes['aria-valuenow'].textContent)).toBe(baseDirective.value);
+        expect(baseDirective.value).toBe(2.55);
+    });
+
+    it('should adjust value correctly when max is decreased', () => {
+        baseDirective.max = 100;
+        baseDirective.value = 80;
+
+        baseDirective.max = 50; // Decrease max below value
+        expect(baseDirective.value).toBe(50);
+    });
+
+    it('should not adjust value when max is increased', () => {
+        baseDirective.max = 50;
+        baseDirective.value = 40;
+
+        baseDirective.max = 100; // Increase max
+        expect(baseDirective.value).toBe(40);
+    });
+
     it('should correctly calculate step based on max', () => {
         expect(baseDirective.step).toBe(1); // Default step is 1% of max (100)
 

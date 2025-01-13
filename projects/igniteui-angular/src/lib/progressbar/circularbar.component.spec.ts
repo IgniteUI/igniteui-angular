@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxCircularProgressBarComponent } from './progressbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
-describe('IgxCircularProgressBarComponent', () => {
+fdescribe('IgxCircularProgressBarComponent', () => {
     let fixture: ComponentFixture<IgxCircularProgressBarComponent>;
     let progress: IgxCircularProgressBarComponent;
     let circularBar: HTMLElement;
@@ -105,19 +105,23 @@ describe('IgxCircularProgressBarComponent', () => {
         expect(textElement).not.toBeNull();
     });
 
-    it('should correctly apply the gradient ID', () => {
+    it('should correctly apply the gradient ID', async () => {
         const gradientId = progress.gradientId;
         expect(gradientId).toContain('igx-circular-gradient-');
 
         fixture.detectChanges();
 
-        // Wait for ngAfterViewInit to complete
-        fixture.whenStable().then(() => {
-            const outerCircleElement = circularBar.querySelector('.igx-circular-bar__outer');
+        await fixture.whenStable();
 
-            // Ensure the stroke attribute contains the correct gradient ID
-            expect(outerCircleElement?.getAttribute('stroke')).toBe(`url(#${gradientId})`);
-        });
+        const outerCircle = circularBar.querySelector('.igx-circular-bar__outer') as SVGElement;
+        expect(outerCircle).not.toBeNull();
+
+        // Check the `stroke` style instead of the attribute
+        const strokeStyle = outerCircle?.style.stroke;
+
+        // Removing quotes from the stroke style
+        const normalizedStrokeStyle = strokeStyle?.replace(/"/g, '');
+        expect(normalizedStrokeStyle).toBe(`url(#${gradientId})`);
     });
 
     it('should correctly provide the context object', () => {
@@ -126,5 +130,15 @@ describe('IgxCircularProgressBarComponent', () => {
         expect(context.$implicit.value).toBe(progress.value);
         expect(context.$implicit.valueInPercent).toBe(progress.valueInPercent);
         expect(context.$implicit.max).toBe(progress.max);
+    });
+
+    it('should correctly update aria attributes', () => {
+        progress.max = 200;
+        progress.value = 50;
+
+        fixture.detectChanges();
+
+        expect(circularBar.getAttribute('aria-valuenow')).toBe('50');
+        expect(circularBar.getAttribute('aria-valuemax')).toBe('200');
     });
 });

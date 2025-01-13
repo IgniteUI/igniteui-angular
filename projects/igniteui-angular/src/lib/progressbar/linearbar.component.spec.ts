@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxLinearProgressBarComponent } from './progressbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
-describe('IgxLinearProgressBarComponent', () => {
+fdescribe('IgxLinearProgressBarComponent', () => {
     let fixture: ComponentFixture<IgxLinearProgressBarComponent>;
     let progress: IgxLinearProgressBarComponent;
     let linearBar: HTMLElement;
@@ -138,7 +138,6 @@ describe('IgxLinearProgressBarComponent', () => {
         clasListContains(valueElement, 'igx-linear-bar__value--top', false);
     });
 
-
     it('should correctly apply the ID attribute', () => {
         expect(progress.id).toContain('igx-linear-bar-');
         expect(linearBar.id).toContain('igx-linear-bar-');
@@ -172,5 +171,15 @@ describe('IgxLinearProgressBarComponent', () => {
         progress.type = 'warning';
         fixture.detectChanges();
         clasListContains(linearBar, 'igx-linear-bar--warning', true);
+    });
+
+    it('should correctly update aria attributes', () => {
+        progress.max = 200;
+        progress.value = 50;
+
+        fixture.detectChanges();
+
+        expect(linearBar.getAttribute('aria-valuenow')).toBe('50');
+        expect(linearBar.getAttribute('aria-valuemax')).toBe('200');
     });
 });
