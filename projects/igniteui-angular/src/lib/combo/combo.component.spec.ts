@@ -101,6 +101,8 @@ describe('igxCombo', () => {
 
             combo.ngOnInit();
             expect(mockInjector.get).toHaveBeenCalledWith(NgControl, null);
+            combo.data = [{ id: 'test', name: 'test' }];
+            combo.valueKey = 'id';
             combo.registerOnChange(mockNgControl.registerOnChangeCb);
             combo.registerOnTouched(mockNgControl.registerOnTouchedCb);
 
@@ -121,6 +123,8 @@ describe('igxCombo', () => {
             expect(combo.disabled).toBe(false);
 
             // OnChange callback
+            combo.data = [{ id: 'simpleValue', name: 'simpleValue' }];
+            combo.valueKey = 'id';
             mockSelection.add_items.and.returnValue(new Set(['simpleValue']));
             combo.select(['simpleValue']);
             expect(mockSelection.add_items).toHaveBeenCalledWith(combo.id, ['simpleValue'], undefined);
@@ -253,7 +257,7 @@ describe('igxCombo', () => {
             // Calling "select_items" through the writeValue accessor should clear the previous values;
             // Select items is called with the invalid value and it is written in selection, though no item is selected
             // Controlling the selection is up to the user
-            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['EXAMPLE'], true);
+            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, [], true);
             combo.writeValue(combo.data[0]);
             // When value key is specified, the item's value key is stored in the selection
             expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, [], true);
@@ -2548,6 +2552,32 @@ describe('igxCombo', () => {
                 expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
                 expect(input.nativeElement.value).toEqual(expectedDisplayText);
             });
+            it('should only select and display existing values in the data when programmatically selecting non existing items with ngModel', fakeAsync(() => {
+                fixture = TestBed.createComponent(ComboInvalidValuesComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+                const component = fixture.componentInstance;
+
+                component.selectedItems = ['SF', 'LA', 'NY']; // 'SF' is invalid, 'LA' and 'NY' are valid
+                fixture.detectChanges();
+                tick();
+
+                expect(combo.selection).toEqual([{ name: 'Los Angeles', id: 'LA' }, { name: 'New York', id: 'NY' }]);
+                expect(combo.value).toEqual(['LA', 'NY']);
+                expect(combo.displayValue).toEqual('Los Angeles, New York');
+            }));
+            it('should only select and display existing values in the data when programmatically selecting non existing items with ngModel', fakeAsync(() => {
+                fixture = TestBed.createComponent(ComboInvalidValuesComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+
+                combo.select(['SF', 'LA', 'NY']); // 'SF' is invalid, 'LA' and 'NY' are valid
+                fixture.detectChanges();
+
+                expect(combo.selection).toEqual([{ name: 'Los Angeles', id: 'LA' }, { name: 'New York', id: 'NY' }]);
+                expect(combo.value).toEqual(['LA', 'NY']);
+                expect(combo.displayValue).toEqual('Los Angeles, New York');
+            }));
         });
         describe('Grouping tests: ', () => {
             beforeEach(() => {
@@ -3280,7 +3310,7 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INVALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
-                    combo.select([combo.dropdown.items[0], combo.dropdown.items[1]]);
+                    combo.select([combo.dropdown.items[0].value, combo.dropdown.items[1].value]);
                     expect(combo.valid).toEqual(IgxInputState.VALID);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
@@ -4043,5 +4073,35 @@ export class ComboWithIdComponent {
                 value: "Option3",
             }
         ];
+    }
+}
+
+@Component({
+    template: `
+        <igx-combo
+            [(ngModel)]="selectedItems"
+            [data]="cities"
+            [valueKey]="'id'"
+            [displayKey]="'name'">
+        </igx-combo>`,
+    standalone: true,
+    imports: [IgxComboComponent, FormsModule]
+})
+export class ComboInvalidValuesComponent implements OnInit {
+    @ViewChild(IgxComboComponent, { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+
+    public cities: any[] = [];
+    public selectedItems: any[] = [];
+
+    constructor(private cdr: ChangeDetectorRef) { }
+
+    public ngOnInit() {
+        this.cities = [
+            { name: 'New York', id: 'NY' },
+            { name: 'Los Angeles', id: 'LA' },
+            { name: 'Chicago', id: 'CHI' }
+        ];
+        this.cdr.detectChanges();
     }
 }
