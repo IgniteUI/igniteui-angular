@@ -64,7 +64,8 @@
 @use '../components/navdrawer/navdrawer-component' as navdrawer;
 @use '../components/overlay/overlay-component' as overlay;
 @use '../components/paginator/paginator-component' as paginator;
-@use '../components/progress/progress-component' as progress;
+@use '../components/progress/linear/linear-component' as linear-progress;
+@use '../components/progress/circular/circular-component' as circular-progress;
 @use '../components/radio/radio-component' as radio;
 @use '../components/query-builder/query-builder-component' as query-builder;
 @use '../components/scrollbar/scrollbar-component' as scrollbar;
@@ -109,6 +110,18 @@
         *::after {
             box-sizing: border-box;
         }
+    }
+
+    @property --_progress-integer {
+        syntax: '<integer>';
+        initial-value: 0;
+        inherits: true;
+    }
+
+    @property --_progress-fraction {
+        syntax: '<integer>';
+        initial-value: 0;
+        inherits: true;
     }
 
     // Component styles
@@ -161,7 +174,8 @@
     @include navdrawer.component();
     @include overlay.component();
     @include paginator.component();
-    @include progress.component();
+    @include linear-progress.component();
+    @include circular-progress.component();
     @include radio.component();
     @include query-builder.component();
     @include scrollbar.component();
@@ -177,7 +191,7 @@
     @include tree.component();
     @include watermark.component();
 
-    // Build the component dependecy-tree
+    // Build the component dependency-tree
     @include base.dependecy-tree(base.$components);
 
     @if $print-layout == true {

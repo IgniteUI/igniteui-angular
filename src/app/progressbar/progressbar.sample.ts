@@ -1,12 +1,21 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { IgxButtonDirective, IgxCircularProgressBarComponent, IgxIconComponent, IgxLinearProgressBarComponent, IgxProgressBarGradientDirective, IgxProgressBarTextTemplateDirective, IgxRippleDirective, IgxTextAlign } from 'igniteui-angular';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+    IgxButtonDirective,
+    IgxCircularProgressBarComponent,
+    IgxIconComponent,
+    IgxLinearProgressBarComponent,
+    IgxProgressBarGradientDirective,
+    IgxProgressBarTextTemplateDirective,
+    IgxRippleDirective,
+    IgxTextAlign
+} from 'igniteui-angular';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'app-progressbar-sample',
     styleUrls: ['progressbar.sample.scss'],
     templateUrl: 'progressbar.sample.html',
-    imports: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent, IgxProgressBarTextTemplateDirective, IgxProgressBarGradientDirective, IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
+    imports: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent, IgxProgressBarTextTemplateDirective, IgxProgressBarGradientDirective, IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxLinearProgressBarComponent, IgxLinearProgressBarComponent]
 })
 
 export class ProgressbarSampleComponent implements OnInit {
@@ -21,9 +30,7 @@ export class ProgressbarSampleComponent implements OnInit {
     }
 
     public generateNewProgressValues() {
-        const value = this.randomIntFromInterval(this.currentValue, 100);
-
-        this.currentValue = value;
+        this.currentValue = this.randomIntFromInterval(0, 100);
     }
 
     public randomIntFromInterval(min: number, max: number) {
