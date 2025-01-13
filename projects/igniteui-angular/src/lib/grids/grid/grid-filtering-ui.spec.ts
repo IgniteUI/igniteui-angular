@@ -6274,7 +6274,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 [true, true, true, true]);
         }));
 
-        it('Bug 15193 - "Clear Filter" button should clear all filters in the custom dialog.', fakeAsync(() => {
+        it('should clear all filters in the custom dialog when clicking "Clear Filter" button', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
             tick(100);
             fix.detectChanges();
