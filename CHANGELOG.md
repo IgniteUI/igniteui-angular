@@ -6,6 +6,12 @@ All notable changes for each version of this project will be documented in this 
 - `IgxBanner`
     - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. This property allows the banner to be programmatically set as expanded (visible) or collapsed (hidden) both initially and during runtime.
 
+## 19.1.0
+### General
+- `IgxCarousel`
+    - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
+    - **Deprecation** - `CarouselIndicatorsOrientation` enum members `top` and `bottom` have been deprecated and will be removed in a future version. Use `start` and `end` instead.
+
 ## 19.0.0
 ### General
 - `IgxFilteringService`, `IgxGridBaseDirective`
@@ -13,6 +19,27 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxColumn`
     - Introduced the `disabledSummaries` property, allowing users to specify which summaries should be disabled for a given column. This property accepts an array of strings corresponding to the summary keys, enabling selective control over both default summaries (e.g., 'Count', 'Min') and any custom summaries created by the user.
+- `Themes`
+    - **Deprecation** The utility mixins `light-theme`, `dark-theme`, `bootstrap-light-theme`, `bootstrap-dark-theme`, `fluent-light-theme`, `fluent-dark-theme`, `indigo-light-theme`, and `indigo-dark-theme` have been deprecated and will be removed in version 20 of Ignite UI for Angular. Switch to the more generic `theme` mixin instead.
+    Example:
+    ```scss
+    $my-light-palette: palette(
+        $primary: navy,
+        $secondary: rebeccapurple,
+        $surface: white,
+    );
+
+    // Before:
+    @include light-theme(
+        $palette: $my-light-palette
+    );
+
+    // After:
+    @include theme(
+        $palette: $my-light-palette,
+        $schema: $light-material-schema,
+    );
+    ```
 
 ## 18.2.0
 ### General

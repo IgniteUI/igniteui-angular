@@ -1,6 +1,6 @@
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import {  IgxAvatarComponent, IgxColumnComponent, IgxGridComponent, IgxIconComponent, IgxListComponent, IgxListItemComponent, IgxPageNavigationComponent, IgxPageSizeSelectorComponent, IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular';
+import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 
 
 @Component({
@@ -10,8 +10,7 @@ import {  IgxAvatarComponent, IgxColumnComponent, IgxGridComponent, IgxIconCompo
     standalone: true,
     providers: [
     ],
-    imports: [NgIf, NgFor, IgxGridComponent, IgxColumnComponent,IgxListComponent, IgxListItemComponent, IgxAvatarComponent, IgxIconComponent,
-         IgxPaginatorComponent, IgxPaginatorContentDirective, IgxPageSizeSelectorComponent,  IgxPageNavigationComponent]
+    imports: [NgIf, IgxGridComponent, IgxColumnComponent]
 })
 export class GridRecreateSampleComponent implements OnInit {
     public data = [] as any[];

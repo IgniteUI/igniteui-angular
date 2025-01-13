@@ -15,7 +15,6 @@
 ////
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $header-background [null] - The table header background color.
 /// @param {Color} $header-text-color [null] - The table header text color.
 /// @param {String} $header-border-width [null] - The border width used for header borders.
@@ -110,7 +109,6 @@
 ///   @include css-vars($my-grid-theme);
 @function grid-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $header-background: null,
     $header-text-color: null,
@@ -1206,7 +1204,7 @@
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
 
-            %igx-icon-display {
+            igx-icon {
                 opacity: if($theme-variant == 'light', .75, .85);
 
                 &:hover {
@@ -1460,12 +1458,12 @@
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
 
-            %igx-icon-display {
+            igx-icon {
                 opacity: if($theme-variant == 'light', .75, .85);
             }
 
             &:hover {
-                %igx-icon-display {
+                igx-icon {
                     opacity: 1;
                 }
             }
@@ -2037,13 +2035,10 @@
             position: relative;
             display: flex;
 
-            igx-icon {
-                @if $variant == 'indigo' {
-                    --component-size: 2;
-                } @else {
-                    width: var(--igx-icon-size, #{rem(15px)});
-                    height: var(--igx-icon-size, #{rem(15px)});
-                    font-size: var(--igx-icon-size, #{rem(15px)});
+
+            @if $variant != 'indigo' {
+                igx-icon {
+                    --size: var(--igx-icon-size, #{rem(15px)});
                 }
             }
 
@@ -2149,7 +2144,7 @@
             %grid-excel-icon {
                 color: var-get($theme, 'header-selected-text-color');
 
-                %igx-icon-display {
+                igx-icon {
                     color: var-get($theme, 'header-selected-text-color');
                 }
 
@@ -2157,7 +2152,7 @@
                 &:hover {
                     color: var-get($theme, 'header-selected-text-color');
 
-                    %igx-icon-display {
+                    igx-icon {
                         color: var-get($theme, 'header-selected-text-color');
                     }
                 }
@@ -2501,7 +2496,7 @@
     }
 
     %igx-group-label__icon {
-        &.igx-icon {
+        @at-root igx-icon#{&} {
             --component-size: #{if($variant == 'indigo', 2, 1)};
 
             color: var-get($theme, 'group-label-icon');
@@ -3248,6 +3243,14 @@
         }
     }
 
+    igx-child-grid-row {
+        igx-child-grid-row {
+            %igx-grid__tr-action {
+                border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+            }
+        }
+    }
+
     // Pivot grid
     %igx-grid__pivot--super-compact {
         --ig-size: 1 !important;
@@ -3441,9 +3444,8 @@
             }
 
             @if $variant == 'indigo' {
-                %igx-icon-display {
+                igx-icon {
                     opacity: if($theme-variant == 'light', .75, .85);
-
 
                     &:hover {
                         opacity: 1;
