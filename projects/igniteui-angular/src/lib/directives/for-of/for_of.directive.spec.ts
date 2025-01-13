@@ -372,6 +372,16 @@ describe('IgxForOf directive -', () => {
             await wait(200);
             expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 130, 130, 130]);
         });
+
+        it('should render no more that initial chunk size elements when set if no containerSize', () => {
+            fix.componentInstance.height = undefined;
+            fix.componentInstance.initialChunkSize = 3;
+            fix.detectChanges();
+            expect(displayContainer).not.toBeNull();
+            expect(verticalScroller).not.toBeNull();
+            expect(horizontalScroller).toBeNull();
+            expect(displayContainer.children.length).toBe(3);
+        });
     });
 
     describe('vertical virtual component no data', () => {
@@ -407,7 +417,6 @@ describe('IgxForOf directive -', () => {
             rowsRendered = displayContainer.querySelectorAll('div');
             expect(rowsRendered.length).not.toBe(0);
         });
-
     });
 
     describe('vertical and horizontal virtual component', () => {
@@ -1471,7 +1480,8 @@ export class VirtualComponent {
             <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
-                [igxForItemSize]='itemSize'>
+                [igxForItemSize]='itemSize'
+                [igxForInitialChunkSize]='initialChunkSize'>
                 <div [style.display]="'flex'"
                     [style.height]="rowData.height || itemSize || '50px'"
                     [style.margin-top]="rowData.margin || '0px'">
@@ -1499,6 +1509,7 @@ export class VerticalVirtualComponent extends VirtualComponent {
     ];
     public override data = [];
     public itemSize = '50px';
+    public initialChunkSize;
 }
 
 @Component({
