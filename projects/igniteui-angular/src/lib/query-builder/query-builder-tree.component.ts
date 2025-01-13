@@ -1154,19 +1154,28 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //Create the drop ghost node based on the base chip that's been dragged
-    private createDropGhost() {
+    //TODO refactor this using angular and css?
+    private createDropGhost(keyboardMode?: boolean) {
         const dragCopy = this.sourceElement.cloneNode(true);
         (dragCopy as HTMLElement).classList.add(this.dropGhostClass);
         (dragCopy as HTMLElement).style.display = '';
         (dragCopy.firstChild as HTMLElement).style.visibility = 'visible';
         (dragCopy.firstChild as HTMLElement).style.opacity = '0.5';
+        dragCopy.removeChild(dragCopy.childNodes[3]);
 
+        if (!keyboardMode) {
+            dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
+            dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
+            (dragCopy.firstChild.firstChild.firstChild as HTMLElement).innerText = "DROP CONDITION HERE";
+            (dragCopy.firstChild.firstChild as HTMLElement).style.border = '1px';
+            (dragCopy.firstChild.firstChild as HTMLElement).style.borderStyle = 'dashed';
+        }
         return dragCopy;
     }
 
     //Make a copy of the drag chip and place it in the DOM north or south of the drop chip
     private renderDropGhostChip(appendToElement: HTMLElement, appendUnder: boolean, keyboardMode?: boolean): void {
-        const dragCopy = this.createDropGhost();
+        const dragCopy = this.createDropGhost(keyboardMode);
 
         //Append the ghost
         if ((!appendUnder && this.dropUnder !== false) || //mouse mode
