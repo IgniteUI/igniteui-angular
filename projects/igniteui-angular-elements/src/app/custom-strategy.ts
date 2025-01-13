@@ -66,9 +66,22 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         (this as any).componentRef = {};
 
         const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
+        const contentChildren = Array.from(element.children).filter(x => this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
         for (const iterator of toBeOrphanedChildren) {
             // TODO: special registration OR config for custom
         }
+
+        const promises = [];
+        for (const contentChild of contentChildren) {
+            // these resolve after the parent, both the components needs to be initialized and the parent query schedule should complete before it is really ready.
+            const child = contentChild as IgcNgElement;
+            const promiseComponentReady = this.waitForCondition(() => (child.ngElementStrategy as any)?.componentRef && this.schedule.size == 0);
+            promises.push(promiseComponentReady);
+        }
+        Promise.all(promises).then(() => {
+            (this as any).componentRef?.instance.contentChildrenReady.emit();
+        });
+
         let parentInjector: Injector;
         let parentAnchor: ViewContainerRef;
         const parents: IgcNgElement[] = [];
@@ -209,6 +222,19 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         if (['igc-grid', 'igc-tree-grid', 'igc-hierarchical-grid'].includes(element.tagName.toLocaleLowerCase())) {
             this.patchGridPopups();
         }
+    }
+
+    public waitForCondition(conditionFn: any, interval = 10) {
+        return new Promise<void>((resolve) => {
+            function checkCondition() {
+                if (conditionFn()) {
+                    resolve();
+                } else {
+                    setTimeout(checkCondition, interval);
+                }
+            }
+            checkCondition();
+        });
     }
 
     public override setInputValue(property: string, value: any, transform?: (value: any) => any): void {
