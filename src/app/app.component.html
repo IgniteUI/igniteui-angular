@@ -77,7 +77,7 @@
                 [dirMode]="dirMode()"
                 (toggleDirection)="toggleDirection()"
         ></app-page-header>
-        <div #dirTarget class="sample-wrapper">
+        <div #dirTarget class="sample-wrapper" [attr.dir]="dirMode()">
             <router-outlet></router-outlet>
         </div>
     </div>

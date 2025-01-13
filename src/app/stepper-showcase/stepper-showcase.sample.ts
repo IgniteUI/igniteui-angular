@@ -43,6 +43,7 @@ import {
     IgcButtonComponent,
     IgcInputComponent,
     registerIconFromText,
+    IgcActiveStepChangingArgs,
 } from 'igniteui-webcomponents';
 import {Properties, PropertyChangeService, PropertyPanelConfig} from '../properties-panel/property-change.service';
 import {NgTemplateOutlet} from "@angular/common";
@@ -287,10 +288,10 @@ export class IgxStepperShowcaseSampleComponent {
     }
 
     // Handle changes from Web Component Stepper
-    public onWcStepperChange(event: CustomEvent<{ owner: any; oldIndex: number; newIndex: number }>): void {
+    public onWcStepperChange(event: CustomEvent<IgcActiveStepChangingArgs>): void {
         if (this.isSyncing) return;
 
-        const targetIndex = event.detail?.newIndex;
+        const targetIndex = event.detail.newIndex; // IgcActiveStepChangingArgs has `newIndex` property
 
         if (targetIndex == null || targetIndex < 0 || targetIndex >= this.angularStepper.steps.length) {
             console.warn(`Invalid step index in Angular Stepper: ${targetIndex}`);

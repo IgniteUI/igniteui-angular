@@ -31,7 +31,7 @@ import {
     IgxSwitchComponent,
     IgxToastComponent,
     OverlaySettings,
-    VerticalAlignment
+    VerticalAlignment, IGX_COMBO_DIRECTIVES
 } from 'igniteui-angular';
 import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
 
@@ -56,7 +56,8 @@ import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
         IgxIconComponent,
         IgxSwitchComponent,
         IgxButtonGroupComponent,
-        AsyncPipe
+        AsyncPipe,
+        IGX_COMBO_DIRECTIVES
     ]
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {

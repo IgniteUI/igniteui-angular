@@ -50,12 +50,6 @@ export class AppComponent implements OnInit {
 
     public toggleDirection(): void {
         this.dirMode.update((current) => (current === 'ltr' ? 'rtl' : 'ltr'));
-
-        if (this.dirTarget?.nativeElement) {
-            this.dirTarget.nativeElement.setAttribute('dir', this.dirMode());
-        } else {
-            console.error('dirTarget is not defined or does not have nativeElement');
-        }
     }
 
     protected propertyChangeService = inject(PropertyChangeService);
