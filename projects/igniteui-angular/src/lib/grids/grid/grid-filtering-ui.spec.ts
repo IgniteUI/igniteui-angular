@@ -7012,6 +7012,30 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         }));
 
+        it('should discard filters through esf menu properly on cancel button click', fakeAsync(() => {
+            grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+
+            expect(fix.debugElement.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(2);
+            tick(200);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.setOperatorESF(fix, 1, 0);
+            GridFunctions.setInputValueESF(fix, 1, 'Angular');
+            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+
+            expect(fix.debugElement.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(2);
+        }));
+
     });
 });
 
