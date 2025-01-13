@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IgxButtonDirective, IgxIconComponent, IgxSwitchComponent } from 'igniteui-angular';
-import { defineComponents, IgcButtonComponent, IgcIconComponent, registerIconFromText } from "igniteui-webcomponents";
+import { IgxButtonDirective, IgxIconComponent, IgxSwitchComponent, IgSizeDirective } from 'igniteui-angular';
+import { defineComponents, IgcButtonComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcButtonComponent, IgcIconComponent);
@@ -15,7 +15,7 @@ registerIconFromText("face", face );
     templateUrl: 'button.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
-    imports: [ FormsModule, IgxSwitchComponent, IgxButtonDirective, IgxIconComponent]
+    imports: [ FormsModule, IgxSwitchComponent, IgxButtonDirective, IgxIconComponent, IgSizeDirective]
 })
 export class ButtonSampleComponent implements OnInit {
     @ViewChild('customControls', { static: true })
@@ -48,12 +48,14 @@ export class ButtonSampleComponent implements OnInit {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     public ngOnInit(): void {

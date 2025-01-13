@@ -1,20 +1,28 @@
-<div class="wrapper" [ngStyle]="{'--ig-size': 'var(--ig-size-' + properties.size + ')'}">
+<div class="wrapper" [igSize]="properties.size">
     <article class="avatars-wrapper">
         <div class="avatars">
             <h3 class="sample-title">Angular Avatars</h3>
             <div class="avatar">
                 <p>Avatar with an image</p>
-                <igx-avatar [src]="properties.src" [shape]="properties.shape"></igx-avatar>
+                <igx-avatar
+                    [src]="properties.src"
+                    [shape]="properties.shape"
+                ></igx-avatar>
             </div>
 
             <div class="avatar">
                 <p>Avatar with initials</p>
-                <igx-avatar [initials]="properties.initials" [shape]="properties.shape"></igx-avatar>
+                <igx-avatar
+                    [initials]="properties.initials"
+                    [shape]="properties.shape"
+                ></igx-avatar>
             </div>
 
             <div class="avatar">
                 <p>Avatar with an icon</p>
-                <igx-avatar [shape]="properties.shape"><igx-icon>tag_faces</igx-icon></igx-avatar>
+                <igx-avatar [shape]="properties.shape"
+                    ><igx-icon>tag_faces</igx-icon></igx-avatar
+                >
             </div>
         </div>
 
@@ -22,17 +30,25 @@
             <h3 class="sample-title">WebComponents Avatars</h3>
             <div class="avatar">
                 <p>Avatar with an image</p>
-                <igc-avatar [src]="properties.src" [shape]="properties.shape"></igc-avatar>
+                <igc-avatar
+                    [src]="properties.src"
+                    [shape]="properties.shape"
+                ></igc-avatar>
             </div>
 
             <div class="avatar">
                 <p>Avatar with initials</p>
-                <igc-avatar [initials]="properties.initials" [shape]="properties.shape"></igc-avatar>
+                <igc-avatar
+                    [initials]="properties.initials"
+                    [shape]="properties.shape"
+                ></igc-avatar>
             </div>
 
             <div class="avatar">
                 <p>Avatar with an icon</p>
-                <igc-avatar [shape]="properties.shape"><igc-icon name="mood"></igc-icon></igc-avatar>
+                <igc-avatar [shape]="properties.shape"
+                    ><igc-icon name="mood"></igc-icon
+                ></igc-avatar>
             </div>
         </div>
     </article>

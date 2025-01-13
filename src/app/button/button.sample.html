@@ -4,26 +4,32 @@
         <h4 class="sample-title">WC Button</h4>
     </article>
 
-    <div class="buttons-sample" [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+    <div class="buttons-sample" [igSize]="properties.size">
         <div class="button-sample">
-            <button [igxButton]="properties.variant" [disabled]="properties.disabled">
+            <button
+                [igxButton]="properties.variant"
+                [disabled]="properties.disabled"
+            >
                 @if(hasPrefix) {
-                    <igx-icon>face</igx-icon>
+                <igx-icon>face</igx-icon>
                 }
-                <span>Button</span>
+                    <span>Button</span>
                 @if(hasSuffix) {
-                    <igx-icon>face</igx-icon>
+                <igx-icon>face</igx-icon>
                 }
             </button>
         </div>
         <div class="button-sample">
-            <igc-button [variant]="properties.variant" [disabled]="properties.disabled">
+            <igc-button
+                [variant]="properties.variant"
+                [disabled]="properties.disabled"
+            >
                 @if(hasPrefix) {
-                    <igc-icon slot="prefix" name="face"></igc-icon>
+                <igc-icon slot="prefix" name="face"></igc-icon>
                 }
-                Button
+                    Button
                 @if(hasSuffix) {
-                    <igc-icon slot="suffix" name="face"></igc-icon>
+                <igc-icon slot="suffix" name="face"></igc-icon>
                 }
             </igc-button>
         </div>

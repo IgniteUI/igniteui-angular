@@ -1,6 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent } from 'igniteui-angular';
-import { defineComponents, IgcButtonGroupComponent, IgcIconComponent, IgcToggleButtonComponent, registerIconFromText } from "igniteui-webcomponents";
+import { defineComponents, IgcButtonGroupComponent, IgcIconComponent, IgcToggleButtonComponent, registerIconFromText } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcButtonGroupComponent, IgcIconComponent, IgcToggleButtonComponent);
@@ -76,7 +76,7 @@ export class ButtonGroupSampleComponent {
         selection: {
             control: {
                 type: 'select',
-                options: ['single', 'singleRequired', 'multiple'],
+                options: ['single', 'single-required', 'multi'],
                 defaultValue: 'single'
             }
         },
@@ -90,22 +90,24 @@ export class ButtonGroupSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
-    private selectionMap = {
-        single: 'single',
-        multiple: 'multi',
-        singleRequired: 'single-required'
-    };
+    private selectionMap = new Map<string, string>([
+        ['single', 'single'],
+        ['single-required', 'singleRequired'],
+        ['multi', 'multiple']
+    ]);
 
-    public get angularSelection() {
+    public get wcSelection() {
         const selection = this.propertyChangeService.getProperty('selection');
-        return this.selectionMap[selection];
+        return this.selectionMap.get(selection) || 'single';
     }
 }

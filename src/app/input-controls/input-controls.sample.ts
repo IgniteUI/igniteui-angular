@@ -1,6 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import { IgxCheckboxComponent, IgxSwitchComponent, IgxRadioComponent, RadioGroupAlignment, IgxRadioGroupDirective } from 'igniteui-angular';
-import { defineComponents, IgcCheckboxComponent, IgcSwitchComponent, IgcRadioComponent, IgcRadioGroupComponent } from "igniteui-webcomponents";
+import { defineComponents, IgcCheckboxComponent, IgcSwitchComponent, IgcRadioComponent, IgcRadioGroupComponent } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcCheckboxComponent, IgcSwitchComponent, IgcRadioComponent, IgcRadioGroupComponent);
@@ -80,21 +80,23 @@ export class InputControlsSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
-    private alignmentMap = {
-        vertical: RadioGroupAlignment.vertical,
-        horizontal: RadioGroupAlignment.horizontal,
-    };
+    private alignmentMap = new Map<string, RadioGroupAlignment>([
+        ['vertical', RadioGroupAlignment.vertical],
+        ['horizontal', RadioGroupAlignment.horizontal],
+    ]);
 
     public get alignment(): RadioGroupAlignment {
         const alignment = this.propertyChangeService.getProperty('alignment');
-        return this.alignmentMap[alignment] || RadioGroupAlignment.vertical;
+        return this.alignmentMap.get(alignment) || RadioGroupAlignment.vertical;
     }
 }

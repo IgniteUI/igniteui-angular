@@ -2,59 +2,74 @@
     <div class="preview sample-min-width">
         <div class="preview__sample">
             <h6>Angular Chip</h6>
-            <igx-chip #me
+            <igx-chip
+                #me
                 [variant]="properties.variant"
-                [style.--ig-size]="'var(--ig-size-' + properties.size + ')'"
+                [igSize]="properties.size"
                 [disabled]="properties.disabled"
                 [selectable]="properties.selectable"
                 [removable]="properties.removable"
                 [selected]="properties.selected"
                 [removeIcon]="customIcons ? myRemoveIcon : null"
                 [selectIcon]="customIcons ? mySelectIcon : null"
-                (remove)="removeChip(me)">
+                (remove)="removeChip(me)"
+            >
                 @if (hasAvatar) {
-                    <igx-avatar igxPrefix class="chip-area-avatar" [shape]="'circle'" initials="MP"></igx-avatar>
-                }
-                @if (hasPrefix) {
-                    <igx-icon igxPrefix>face</igx-icon>
-                }
-                @if (hasSuffix) {
-                    <igx-icon igxSuffix>face</igx-icon>
-                }
-                @if (hasProgressbar) {
-                    <igx-circular-bar igxSuffix class="circular-sample" [indeterminate]="true"></igx-circular-bar>
-                }
-                    Chip component
+                <igx-avatar
+                    igxPrefix
+                    class="chip-area-avatar"
+                    [shape]="'circle'"
+                    initials="MP"
+                ></igx-avatar>
+                } @if (hasPrefix) {
+                <igx-icon igxPrefix>face</igx-icon>
+                } @if (hasSuffix) {
+                <igx-icon igxSuffix>face</igx-icon>
+                } @if (hasProgressbar) {
+                <igx-circular-bar
+                    igxSuffix
+                    class="circular-sample"
+                    [indeterminate]="true"
+                ></igx-circular-bar>
+                } Chip component
             </igx-chip>
 
             <h6>WC Chip</h6>
-            <igc-chip #wc
+            <igc-chip
+                #wc
                 [variant]="properties.variant"
-                [style.--ig-size]="'var(--ig-size-' + properties.size + ')'"
+                [igSize]="properties.size"
                 [disabled]="properties.disabled"
                 [selectable]="properties.selectable"
                 [removable]="properties.removable"
-                [selected]="properties.selected">
+                [selected]="properties.selected"
+            >
                 @if (hasAvatar) {
-                    <igc-avatar class="chip-area-avatar" slot="prefix" initials="MP" shape="circle"></igc-avatar>
-                }
-                @if (hasPrefix) {
-                    <span slot="prefix"><igc-icon name="face"></igc-icon></span>
-                }
-                @if (customIcons) {
-                    <span slot="select"><igc-icon name="check_circle"></igc-icon></span>
-                    <span slot="remove"><igc-icon name="delete"></igc-icon></span>
-                }
-                @if (hasSuffix) {
-                    <span slot="suffix"><igc-icon name="face"></igc-icon></span>
-                }
-                @if (hasProgressbar) {
-                    <igc-circular-progress class="circular-sample" slot="suffix" [indeterminate]="true"></igc-circular-progress>
-                }
-                    Chip component
+                <igc-avatar
+                    class="chip-area-avatar"
+                    slot="prefix"
+                    initials="MP"
+                    shape="circle"
+                ></igc-avatar>
+                } @if (hasPrefix) {
+                <span slot="prefix"><igc-icon name="face"></igc-icon></span>
+                } @if (customIcons) {
+                <span slot="select"
+                    ><igc-icon name="check_circle"></igc-icon
+                ></span>
+                <span slot="remove"><igc-icon name="delete"></igc-icon></span>
+                } @if (hasSuffix) {
+                <span slot="suffix"><igc-icon name="face"></igc-icon></span>
+                } @if (hasProgressbar) {
+                <igc-circular-progress
+                    class="circular-sample"
+                    slot="suffix"
+                    [indeterminate]="true"
+                ></igc-circular-progress>
+                } Chip component
             </igc-chip>
 
-            <ng-template #mySelectIcon >
+            <ng-template #mySelectIcon>
                 <igx-icon>check_circle</igx-icon>
             </ng-template>
 
@@ -66,9 +81,9 @@
         <ng-template #customControls>
             <div class="custom-controls">
                 @if (properties.removable) {
-                    <igx-switch id="customIcons" [(ngModel)]="customIcons">
-                        <label for="customIcons">Custom Icons</label>
-                    </igx-switch>
+                <igx-switch id="customIcons" [(ngModel)]="customIcons">
+                    <label for="customIcons">Custom Icons</label>
+                </igx-switch>
                 }
 
                 <igx-switch id="addPrefix" [(ngModel)]="hasPrefix">

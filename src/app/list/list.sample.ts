@@ -1,4 +1,4 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation} from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IGX_LIST_DIRECTIVES,
@@ -7,6 +7,7 @@ import {
     IgxCheckboxComponent,
     IgxIconComponent,
     IgxButtonModule,
+    IgSizeDirective,
 } from 'igniteui-angular';
 import { defineComponents, IgcListComponent, IgcAvatarComponent, IgcListHeaderComponent, IgcListItemComponent, IgcIconComponent, IgcCheckboxComponent, IgcButtonComponent, registerIconFromText } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
@@ -43,13 +44,14 @@ interface Employee {
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
+        IGX_LIST_DIRECTIVES,
         FormsModule,
         IgxIconComponent,
         IgxCheckboxComponent,
         IgxAvatarComponent,
         IgxButtonModule,
         IgxButtonDirective,
-        IGX_LIST_DIRECTIVES,
+        IgSizeDirective
     ]
 })
 export class ListSampleComponent {
@@ -120,12 +122,14 @@ export class ListSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     public employeeItems: Employee[] = [{

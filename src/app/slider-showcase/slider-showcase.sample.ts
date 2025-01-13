@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import { TicksOrientation, IgxSliderComponent, TickLabelsOrientation } from 'igniteui-angular';
 import { defineComponents, IgcSliderComponent, IgcSliderLabelComponent } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
@@ -109,33 +109,35 @@ export class SliderShowcaseSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
-    private ticksOrientationMap = {
-        start: TicksOrientation.Top,
-        end: TicksOrientation.Bottom,
-        mirror: TicksOrientation.Mirror
-    };
+    private ticksOrientationMap = new Map<string, TicksOrientation>([
+        ['start', TicksOrientation.Top],
+        ['end', TicksOrientation.Bottom],
+        ['mirror', TicksOrientation.Mirror],
+    ]);
 
-    private tickLabelOrientationMap: { [key: string]: TickLabelsOrientation } = {
-        '0': TickLabelsOrientation.Horizontal,
-        '90': TickLabelsOrientation.TopToBottom,
-        '-90': TickLabelsOrientation.BottomToTop,
-    };
+    private tickLabelOrientationMap = new Map<string, TickLabelsOrientation>([
+        ['0', TickLabelsOrientation.Horizontal],
+        ['90', TickLabelsOrientation.TopToBottom],
+        ['-90', TickLabelsOrientation.BottomToTop],
+    ]);
 
     protected get angularTickLabelOrientation(): TickLabelsOrientation {
         const orientation = this.propertyChangeService.getProperty('tickLabelOrientation');
-        return this.tickLabelOrientationMap[orientation] ?? TickLabelsOrientation.Horizontal;
+        return this.tickLabelOrientationMap.get(orientation) ?? TickLabelsOrientation.Horizontal;
     }
 
     protected get ticksOrientationAngular(): TicksOrientation {
         const orientation = this.propertyChangeService.getProperty('ticksOrientation');
-        return this.ticksOrientationMap[orientation] || TicksOrientation.Bottom;
+        return this.ticksOrientationMap.get(orientation) || TicksOrientation.Bottom;
     }
 }

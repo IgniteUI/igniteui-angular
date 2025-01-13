@@ -1,7 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from 'igniteui-angular';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { IGX_EXPANSION_PANEL_DIRECTIVES } from 'igniteui-angular';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
-import { defineComponents, IgcExpansionPanelComponent} from "igniteui-webcomponents";
+import { defineComponents, IgcExpansionPanelComponent} from 'igniteui-webcomponents';
 
 defineComponents(IgcExpansionPanelComponent);
 
@@ -11,16 +11,16 @@ defineComponents(IgcExpansionPanelComponent);
     templateUrl: './expansion-panel-sample.html',
     styleUrls: ['expansion-panel-sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelBodyComponent]
+    imports: [IGX_EXPANSION_PANEL_DIRECTIVES]
 })
 export class ExpansionPanelSampleComponent {
     public panelConfig: PropertyPanelConfig = {
-        indicatorPosition: {
+        iconPosition: {
             label: 'Indicator Position',
             control: {
                 type: 'radio-inline',
-                options: ['start', 'end'],
-                defaultValue: 'start'
+                options: ['left', 'right'],
+                defaultValue: 'left'
             }
         },
         open: {
@@ -38,21 +38,23 @@ export class ExpansionPanelSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
-    private indicatorPositionMap = {
-        start: 'left',
-        end: 'right'
-    };
+    private iconPositionMap = new Map<string, string>([
+        ['left', 'start'],
+        ['right', 'end']
+    ]);
 
-    protected get indicatorPositionAngular(){
-        const position = this.propertyChangeService.getProperty('indicatorPosition');
-        return this.indicatorPositionMap[position];
+    protected get iconPositionWC() {
+        const position = this.propertyChangeService.getProperty('iconPosition');
+        return this.iconPositionMap.get(position);
     }
 }

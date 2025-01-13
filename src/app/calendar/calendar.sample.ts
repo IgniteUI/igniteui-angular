@@ -1,6 +1,7 @@
 import {
     Component,
     CUSTOM_ELEMENTS_SCHEMA,
+    DestroyRef,
     OnInit,
     TemplateRef,
     ViewChild,
@@ -21,7 +22,7 @@ import {
 } from "igniteui-angular";
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
-import { defineComponents, IgcCalendarComponent } from "igniteui-webcomponents";
+import { defineComponents, IgcCalendarComponent } from 'igniteui-webcomponents';
 
 defineComponents(IgcCalendarComponent);
 
@@ -129,25 +130,27 @@ export class CalendarSampleComponent implements OnInit {
         }
     }
 
-    private weekStartMap = {
-        monday: 1,
-        sunday: 7
-    };
+    private weekStartMap = new Map<string, number>([
+        ['monday', 1],
+        ['sunday', 7]
+    ]);
 
-    private selectionMap = {
-        single: 'single',
-        multiple: 'multi',
-        range: 'range'
-    };
+    private selectionMap = new Map<string, string>([
+        ['single', 'single'],
+        ['multiple', 'multi'],
+        ['range', 'range']
+    ]);
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     public ngOnInit(): void {
@@ -156,12 +159,12 @@ export class CalendarSampleComponent implements OnInit {
 
     protected get weekStartAngular() {
         const weekStart = this.propertyChangeService.getProperty('weekStart') || 'monday';
-        return this.weekStartMap[weekStart];
+        return this.weekStartMap.get(weekStart) || 1;
     }
 
     protected get selectionAngular() {
         const selection = this.propertyChangeService.getProperty('selection');
-        return this.selectionMap[selection];
+        return this.selectionMap.get(selection) || 'single';
     }
 
     protected onSelection(event: Date | Date[]) {

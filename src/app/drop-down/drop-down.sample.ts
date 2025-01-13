@@ -1,30 +1,31 @@
-import { Component, OnInit, ViewChild, ElementRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import { foods } from './foods';
 import {
     BlockScrollStrategy,
     CloseScrollStrategy,
-	ConnectedPositioningStrategy,
-	HorizontalAlignment,
-	IgxButtonDirective,
-	IgxButtonGroupComponent,
-	IgxDropDownComponent,
-	IgxDropDownGroupComponent,
-	IgxDropDownItemComponent,
-	IgxDropDownItemNavigationDirective,
-	IgxIconComponent,
-	IgxInputDirective,
-	IgxInputGroupComponent,
-	IgxOverlayOutletDirective,
-	IgxRippleDirective,
-	IgxToggleActionDirective,
-	IgxToggleDirective,
-	NoOpScrollStrategy,
-	OverlaySettings,
+    ConnectedPositioningStrategy,
+    HorizontalAlignment,
+    IgSizeDirective,
+    IgxButtonDirective,
+    IgxButtonGroupComponent,
+    IgxDropDownComponent,
+    IgxDropDownGroupComponent,
+    IgxDropDownItemComponent,
+    IgxDropDownItemNavigationDirective,
+    IgxIconComponent,
+    IgxInputDirective,
+    IgxInputGroupComponent,
+    IgxOverlayOutletDirective,
+    IgxRippleDirective,
+    IgxToggleActionDirective,
+    IgxToggleDirective,
+    NoOpScrollStrategy,
+    OverlaySettings,
     PositionSettings,
     ScrollStrategy,
     VerticalAlignment,
 } from 'igniteui-angular';
-import { defineComponents, IgcDropdownComponent, IgcButtonComponent, IgcIconComponent, registerIconFromText} from "igniteui-webcomponents";
+import { defineComponents, IgcDropdownComponent, IgcButtonComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcDropdownComponent, IgcButtonComponent, IgcIconComponent);
@@ -38,11 +39,11 @@ const icons = [
         name: 'location_on',
         url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
     },
-  ];
+];
 
-  icons.forEach((icon) => {
+icons.forEach((icon) => {
     registerIconFromText(icon.name, icon.url);
-  });
+});
 
 @Component({
     selector: 'drop-down-sample',
@@ -62,6 +63,7 @@ const icons = [
         IgxRippleDirective,
         IgxOverlayOutletDirective,
         IgxIconComponent,
+        IgSizeDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -78,7 +80,7 @@ export class DropDownSampleComponent implements OnInit {
     public items: any[] = [];
     public foods = foods;
 
-    public panelConfig : PropertyPanelConfig = {
+    public panelConfig: PropertyPanelConfig = {
         size: {
             control: {
                 type: 'button-group',
@@ -124,12 +126,14 @@ export class DropDownSampleComponent implements OnInit {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     public ngOnInit() {
@@ -250,80 +254,73 @@ export class DropDownSampleComponent implements OnInit {
     }
 
     private getPositionStrategy(): ConnectedPositioningStrategy {
-        // Retrieve the currently selected placement option
-        const selectedPosition = this.propertyChangeService.getProperty('placement') || 'bottom'; // Default to 'top'
+        const selectedPosition = this.propertyChangeService.getProperty('placement') || 'bottom'; // Default to 'bottom'
 
-        const positionSettings: PositionSettings = {};
+        const positionMap: { [key: string]: Partial<PositionSettings> } = {
+            'top': {
+                horizontalDirection: HorizontalAlignment.Center,
+                verticalDirection: VerticalAlignment.Top
+            },
+            'top-start': {
+                horizontalDirection: HorizontalAlignment.Left,
+                verticalDirection: VerticalAlignment.Top,
+                horizontalStartPoint: HorizontalAlignment.Left
+            },
+            'top-end': {
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Top,
+                horizontalStartPoint: HorizontalAlignment.Right
+            },
+            'bottom': {
+                horizontalDirection: HorizontalAlignment.Center,
+                verticalDirection: VerticalAlignment.Bottom
+            },
+            'bottom-start': {
+                horizontalDirection: HorizontalAlignment.Left,
+                verticalDirection: VerticalAlignment.Bottom,
+                horizontalStartPoint: HorizontalAlignment.Left
+            },
+            'bottom-end': {
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Bottom,
+                horizontalStartPoint: HorizontalAlignment.Right
+            },
+            'right': {
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Middle
+            },
+            'right-start': {
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Top,
+                verticalStartPoint: VerticalAlignment.Top
+            },
+            'right-end': {
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Bottom,
+                verticalStartPoint: VerticalAlignment.Bottom
+            },
+            'left': {
+                horizontalDirection: HorizontalAlignment.Left,
+                verticalDirection: VerticalAlignment.Middle
+            },
+            'left-start': {
+                horizontalDirection: HorizontalAlignment.Left,
+                verticalDirection: VerticalAlignment.Top,
+                verticalStartPoint: VerticalAlignment.Top
+            },
+            'left-end': {
+                horizontalDirection: HorizontalAlignment.Left,
+                verticalDirection: VerticalAlignment.Bottom,
+                verticalStartPoint: VerticalAlignment.Bottom
+            },
+        };
 
-        // Map the selected position to enum values for HorizontalAlignment and VerticalAlignment
-        switch (selectedPosition) {
-            case 'top':
-                positionSettings.horizontalDirection = HorizontalAlignment.Center;
-                positionSettings.verticalDirection = VerticalAlignment.Top;
-                break;
-            case 'top-start':
-                positionSettings.horizontalDirection = HorizontalAlignment.Left;
-                positionSettings.verticalDirection = VerticalAlignment.Top;
-                positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
-                break;
-            case 'top-end':
-                positionSettings.horizontalDirection = HorizontalAlignment.Right;
-                positionSettings.verticalDirection = VerticalAlignment.Top;
-                positionSettings.horizontalStartPoint = HorizontalAlignment.Right;
-                break;
-            case 'bottom':
-                positionSettings.horizontalDirection = HorizontalAlignment.Center;
-                positionSettings.verticalDirection = VerticalAlignment.Bottom;
-                break;
-            case 'bottom-start':
-                positionSettings.horizontalDirection = HorizontalAlignment.Left;
-                positionSettings.verticalDirection = VerticalAlignment.Bottom;
-                positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
-                break;
-            case 'bottom-end':
-                positionSettings.horizontalDirection = HorizontalAlignment.Right;
-                positionSettings.verticalDirection = VerticalAlignment.Bottom;
-                positionSettings.horizontalStartPoint = HorizontalAlignment.Right;
-                break;
-            case 'right':
-                positionSettings.horizontalDirection = HorizontalAlignment.Right;
-                positionSettings.verticalDirection = VerticalAlignment.Middle;
-                break;
-            case 'right-start':
-                positionSettings.horizontalDirection = HorizontalAlignment.Right;
-                positionSettings.verticalDirection = VerticalAlignment.Top;
-                positionSettings.verticalStartPoint = VerticalAlignment.Top;
-                break;
-            case 'right-end':
-                positionSettings.horizontalDirection = HorizontalAlignment.Right;
-                positionSettings.verticalDirection = VerticalAlignment.Bottom;
-                positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
-                break;
-            case 'left':
-                positionSettings.horizontalDirection = HorizontalAlignment.Left;
-                positionSettings.verticalDirection = VerticalAlignment.Middle;
-                break;
-            case 'left-start':
-                positionSettings.horizontalDirection = HorizontalAlignment.Left;
-                positionSettings.verticalDirection = VerticalAlignment.Top;
-                positionSettings.verticalStartPoint = VerticalAlignment.Top;
-                break;
-            case 'left-end':
-                positionSettings.horizontalDirection = HorizontalAlignment.Left;
-                positionSettings.verticalDirection = VerticalAlignment.Bottom;
-                positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
-                break;
-            default:
-                // Default to 'bottom' if no valid position is selected
-                positionSettings.horizontalDirection = HorizontalAlignment.Center;
-                positionSettings.verticalDirection = VerticalAlignment.Bottom;
-                break;
-        }
+        // Get the selected settings or default to 'bottom'
+        const settings = positionMap[selectedPosition] || positionMap['bottom'];
 
-        // Return a ConnectedPositioningStrategy using the settings
-        return new ConnectedPositioningStrategy(positionSettings);
+        // Return the ConnectedPositioningStrategy using the selected settings
+        return new ConnectedPositioningStrategy(settings);
     }
-
 
     private getScrollStrategy(): ScrollStrategy {
         const selectedStrategy = this.propertyChangeService.getProperty('scrollStrategy') || 'scroll';

@@ -56,7 +56,7 @@
         </ng-template>
     </igx-nav-drawer>
 
-    @let config = (propertyChangeService.panelConfig$ | async | keyvalue)?.length > 0;
+    @let config = (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
 
     <igx-nav-drawer
         *ngIf="config"

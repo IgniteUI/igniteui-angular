@@ -1,46 +1,62 @@
-<div class="preview" [style.--ig-size]="'var(--ig-size-' + properties.size + ')'">
+<div class="preview" [igSize]="properties.size">
     <h6>Angular Date Picker</h6>
     <igx-date-picker
-    #dpAng
-    [mode]="modeAngular"
-    type="box"
-    [value]="properties.value"
-    [displayFormat]="properties.displayFormat"
-    [inputFormat]="properties.inputFormat"
-    [required]="properties.required"
-    [disabled]="properties.disabled"
-    [placeholder]="properties.placeholder"
-    showWeekNumbers="true"
-    headerOrientation="vertical">
+        #dpAng
+        [mode]="modeAngular"
+        type="box"
+        [value]="properties.value"
+        [displayFormat]="properties.displayFormat"
+        [inputFormat]="properties.inputFormat"
+        [required]="properties.required"
+        [disabled]="properties.disabled"
+        [placeholder]="properties.placeholder"
+        showWeekNumbers="true"
+        headerOrientation="vertical"
+    >
         <label igxLabel>Select a Date</label>
         <igx-suffix (click)="dpAng.open()">
             <igx-icon>alarm</igx-icon>
         </igx-suffix>
         <ng-template igxPickerActions let-calendar>
-            <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
-            <button igxButton="flat" (click)="calendar.viewDate = nextYear">Next Year</button>
-            <button igxButton="flat" (click)="dpAng.selectToday()">Select Today</button>
+            <button igxButton="flat" (click)="calendar.viewDate = today">
+                Today
+            </button>
+            <button igxButton="flat" (click)="calendar.viewDate = nextYear">
+                Next Year
+            </button>
+            <button igxButton="flat" (click)="dpAng.selectToday()">
+                Select Today
+            </button>
         </ng-template>
     </igx-date-picker>
 
     <h6>WC Date Picker</h6>
     <igc-date-picker
-    #dpWC
-    label="Select a Date"
-    [mode]="properties.mode"
-    [value]="properties.value"
-    [displayFormat]="properties.displayFormat"
-    [inputFormat]="properties.inputFormat"
-    [required]="properties.required"
-    [disabled]="properties.disabled"
-    [placeholder]="properties.placeholder"
-    show-week-numbers="true"
-    header-orientation="vertical">
-        <span (click)="dpWC.show()" slot="suffix"><igc-icon name="alarm"></igc-icon></span>
+        #dpWC
+        label="Select a Date"
+        [mode]="properties.mode"
+        [value]="properties.value"
+        [displayFormat]="properties.displayFormat"
+        [inputFormat]="properties.inputFormat"
+        [required]="properties.required"
+        [disabled]="properties.disabled"
+        [placeholder]="properties.placeholder"
+        show-week-numbers="true"
+        header-orientation="vertical"
+    >
+        <span (click)="dpWC.show()" slot="suffix"
+            ><igc-icon name="alarm"></igc-icon
+        ></span>
         <div slot="actions">
-            <igc-button variant="flat" (click)="dpWC.activeDate = today;">Today</igc-button>
-            <igc-button variant="flat" (click)="dpWC.activeDate = nextYear;">Next Year</igc-button>
-            <igc-button variant="flat" (click)="selectToday(dpWC)">Select Today</igc-button>
+            <igc-button variant="flat" (click)="dpWC.activeDate = today;"
+                >Today</igc-button
+            >
+            <igc-button variant="flat" (click)="dpWC.activeDate = nextYear;"
+                >Next Year</igc-button
+            >
+            <igc-button variant="flat" (click)="selectToday(dpWC)"
+                >Select Today</igc-button
+            >
         </div>
     </igc-date-picker>
 </div>

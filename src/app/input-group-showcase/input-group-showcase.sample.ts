@@ -1,4 +1,4 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, computed, ViewChild, viewChild} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, computed, viewChild, DestroyRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators} from '@angular/forms';
 import {
     defineComponents,
@@ -151,17 +151,18 @@ export class InputGroupShowcaseSampleComponent {
         fieldFile: [this.properties()?.value || '']
     });
 
-    constructor() {
+    constructor(private destroyRef: DestroyRef) {
         this.pcs.setPanelConfig(this.panelConfig);
 
-        // Listen for property changes and update form controls
-        this.pcs.propertyChanges.subscribe((updatedProperties) => {
+        const { unsubscribe } = this.pcs.propertyChanges.subscribe((updatedProperties) => {
             const mergedProperties = this.mergeProperties(updatedProperties);
 
             this.properties.set(mergedProperties);
             this.updateFormControls();
             this.getPlaceholder();
         });
+
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     // Merge incoming property updates with the default configuration

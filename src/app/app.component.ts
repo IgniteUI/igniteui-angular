@@ -9,11 +9,10 @@ import {
 } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective } from 'igniteui-angular';
+import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective, IGX_NAVIGATION_DRAWER_DIRECTIVES } from 'igniteui-angular';
 import { PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { CommonModule } from '@angular/common';
-import { IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective } from '../../projects/igniteui-angular/src/lib/navigation-drawer/navigation-drawer.directives';
 import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
 import { PropertyChangeService } from './properties-panel/property-change.service';
 
@@ -23,13 +22,11 @@ import { PropertyChangeService } from './properties-panel/property-change.servic
     styleUrls: ['./app.component.scss'],
     imports: [
         IgxNavigationDrawerComponent,
-        IgxNavDrawerTemplateDirective,
-        IgxNavDrawerItemDirective,
+        IGX_NAVIGATION_DRAWER_DIRECTIVES,
         CommonModule,
         RouterLinkActive,
         RouterLink,
         IgxIconComponent,
-        IgxNavDrawerMiniTemplateDirective,
         PageHeaderComponent,
         RouterOutlet,
         IgxRippleDirective,

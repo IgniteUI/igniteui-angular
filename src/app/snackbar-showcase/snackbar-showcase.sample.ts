@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 // eslint-disable-next-line max-len
 import { IgxButtonDirective, IgxOverlayOutletDirective, IgxSnackbarComponent } from 'igniteui-angular';
 import { defineComponents, IgcSnackbarComponent } from 'igniteui-webcomponents';
@@ -40,11 +40,13 @@ export class SnackbarShowcaseSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 }

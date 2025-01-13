@@ -6,18 +6,14 @@ import {
     ViewChild,
     ViewEncapsulation,
     OnInit,
-    ElementRef, ChangeDetectorRef
+    ElementRef, ChangeDetectorRef,
+    DestroyRef
 } from '@angular/core';
 
 import {
     IgxButtonDirective,
     IgxIconComponent,
-    IgxTabContentComponent,
-    IgxTabHeaderComponent,
-    IgxTabHeaderIconDirective,
-    IgxTabHeaderLabelDirective,
-    IgxTabItemComponent,
-    IgxTabsComponent
+    IGX_TABS_DIRECTIVES
 } from 'igniteui-angular';
 import {defineComponents, IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent} from 'igniteui-webcomponents';
 import {PropertyChangeService, Properties} from '../properties-panel/property-change.service';
@@ -31,7 +27,7 @@ defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [IgxButtonDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxIconComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabContentComponent]
+    imports: [IgxButtonDirective, IgxIconComponent, IGX_TABS_DIRECTIVES]
 })
 export class TabsShowcaseSampleComponent implements OnInit {
     @ViewChild('angularTabs', {static: false}) public angularTabsRef!: ElementRef;
@@ -53,7 +49,7 @@ export class TabsShowcaseSampleComponent implements OnInit {
     private pcs = inject(PropertyChangeService);
     private cdr = inject(ChangeDetectorRef);
 
-    constructor() {
+    constructor(private destroyRef: DestroyRef) {
         this.pcs.setPanelConfig({
             alignment: {
                 control: {
@@ -79,9 +75,11 @@ export class TabsShowcaseSampleComponent implements OnInit {
             }
         });
 
-        this.pcs.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.pcs.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     public ngOnInit() {

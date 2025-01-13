@@ -1,5 +1,5 @@
 <h3 class="sample-title">Angular Accordion</h3>
-<igx-accordion #accordion id="igx-accordion" [singleBranchExpand]="properties.singleExpand">
+<igx-accordion #accordion [singleBranchExpand]="properties.singleExpand">
     <igx-expansion-panel>
         <igx-expansion-panel-header>
             <igx-expansion-panel-title>HTML5</igx-expansion-panel-title>
@@ -8,22 +8,22 @@
             <igx-accordion>
                 <igx-expansion-panel>
                     <igx-expansion-panel-header>
-                        <igx-expansion-panel-title>First</igx-expansion-panel-title>
+                        <igx-expansion-panel-title
+                            >First</igx-expansion-panel-title
+                        >
                     </igx-expansion-panel-header>
                     <igx-expansion-panel-body>
-                        <div>
-                            Content1
-                        </div>
+                        <div>Content1</div>
                     </igx-expansion-panel-body>
                 </igx-expansion-panel>
                 <igx-expansion-panel>
                     <igx-expansion-panel-header>
-                        <igx-expansion-panel-title>Second</igx-expansion-panel-title>
+                        <igx-expansion-panel-title
+                            >Second</igx-expansion-panel-title
+                        >
                     </igx-expansion-panel-header>
                     <igx-expansion-panel-body>
-                        <div>
-                            Content2
-                        </div>
+                        <div>Content2</div>
                     </igx-expansion-panel-body>
                 </igx-expansion-panel>
             </igx-accordion>
@@ -36,8 +36,8 @@
         <igx-expansion-panel-body>
             <div class="example-content">
                 Cascading Style Sheets (CSS) is a style sheet language used for
-                describing the presentation of a document written in a markup language
-                like HTML
+                describing the presentation of a document written in a markup
+                language like HTML
             </div>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
@@ -56,21 +56,21 @@
 
 <h3 class="sample-title">WC Accordion</h3>
 <igc-accordion #accordion [singleExpand]="properties.singleExpand">
-    <igc-expansion-panel class="my-expansion-panel" id="html5" [collapsed]="false">
+    <igc-expansion-panel
+        class="my-expansion-panel"
+        id="html5"
+        [collapsed]="false"
+    >
         <span slot="title">HTML5</span>
         <div>
             <igc-accordion>
                 <igc-expansion-panel>
                     <span slot="title">First</span>
-                    <div>
-                        Content1
-                    </div>
+                    <div>Content1</div>
                 </igc-expansion-panel>
                 <igc-expansion-panel>
                     <span slot="title">Second</span>
-                    <div>
-                        Content2
-                    </div>
+                    <div>Content2</div>
                 </igc-expansion-panel>
             </igc-accordion>
         </div>
@@ -79,11 +79,16 @@
         <span slot="title">CSS3</span>
         <div class="example-content">
             Cascading Style Sheets (CSS) is a style sheet language used for
-            describing the presentation of a document written in a markup language
-            like HTML
+            describing the presentation of a document written in a markup
+            language like HTML
         </div>
     </igc-expansion-panel>
-    <igc-expansion-panel class="my-expansion-panel" class="my-expansion-panel" id="scss" [collapsed]="false">
+    <igc-expansion-panel
+        class="my-expansion-panel"
+        class="my-expansion-panel"
+        id="scss"
+        [collapsed]="false"
+    >
         <span slot="title">SASS/SCSS</span>
         <div class="example-content">
             Sass is a preprocessor scripting language that is interpreted or

@@ -1,7 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-    IChipsAreaSelectEventArgs,
     IgxAvatarComponent,
     IgxChipComponent,
     IgxIconComponent,
@@ -9,8 +8,9 @@ import {
     IgxSuffixDirective,
     IgxSwitchComponent,
     IgxCircularProgressBarComponent,
+    IgSizeDirective,
 } from 'igniteui-angular';
-import { defineComponents, IgcChipComponent, IgcAvatarComponent, IgcIconComponent, IgcCircularProgressComponent, registerIconFromText } from "igniteui-webcomponents";
+import { defineComponents, IgcChipComponent, IgcAvatarComponent, IgcIconComponent, IgcCircularProgressComponent, registerIconFromText } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcChipComponent, IgcAvatarComponent, IgcIconComponent, IgcCircularProgressComponent);
@@ -48,6 +48,7 @@ icons.forEach((icon) => {
         IgxSwitchComponent,
         FormsModule,
         IgxAvatarComponent,
+        IgSizeDirective
     ]
 })
 export class ChipsSampleComponent implements OnInit {
@@ -95,12 +96,14 @@ export class ChipsSampleComponent implements OnInit {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     public ngOnInit() {
@@ -115,9 +118,5 @@ export class ChipsSampleComponent implements OnInit {
 
     public removeChip(chip: IgxChipComponent) {
         chip.nativeElement.remove();
-    }
-
-    public onChipsSelected(event: IChipsAreaSelectEventArgs) {
-        console.log(event);
     }
 }

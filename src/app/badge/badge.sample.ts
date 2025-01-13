@@ -1,6 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import { IgxBadgeComponent, IgxAvatarComponent, IgxIconComponent} from 'igniteui-angular';
-import { defineComponents, IgcBadgeComponent, IgcAvatarComponent, IgcIconComponent, registerIconFromText } from "igniteui-webcomponents";
+import { defineComponents, IgcBadgeComponent, IgcAvatarComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcBadgeComponent, IgcAvatarComponent, IgcIconComponent);
@@ -45,25 +45,27 @@ export class BadgeSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
-    private variantMap = {
-        default: 'primary',
-        info: 'info',
-        success: 'success',
-        warning: 'warning',
-        error: 'danger',
-    };
+    private variantMap = new Map<string, string>([
+        ['default', 'primary'],
+        ['info', 'info'],
+        ['success', 'success'],
+        ['warning', 'warning'],
+        ['error', 'danger'],
+    ]);
 
     public get wcVariant() {
         const variant = this.propertyChangeService.getProperty('variant');
-        return this.variantMap[variant] || 'primary';
+        return this.variantMap.get(variant) || 'primary';
     }
 }
 

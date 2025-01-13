@@ -1,6 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IgxButtonDirective, IgxDialogActionsDirective, IgxDialogComponent, IgxDialogTitleDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective } from 'igniteui-angular';
-import { defineComponents, IgcDialogComponent, IgcInputComponent, IgcButtonComponent, IgcIconComponent, registerIconFromText } from "igniteui-webcomponents";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { IgxButtonDirective, IGX_DIALOG_DIRECTIVES, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective } from 'igniteui-angular';
+import { defineComponents, IgcDialogComponent, IgcInputComponent, IgcButtonComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(IgcDialogComponent, IgcInputComponent, IgcButtonComponent, IgcIconComponent);
@@ -25,7 +25,7 @@ icons.forEach((icon) => {
     templateUrl: 'dialog.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
-    imports: [IgxButtonDirective, IgxRippleDirective, IgxDialogComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxDialogTitleDirective, IgxDialogActionsDirective]
+    imports: [IGX_DIALOG_DIRECTIVES, IgxButtonDirective, IgxRippleDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective]
 })
 export class DialogSampleComponent {
     public panelConfig : PropertyPanelConfig = {
@@ -51,12 +51,14 @@ export class DialogSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     protected onDialogOKSelected(args) {

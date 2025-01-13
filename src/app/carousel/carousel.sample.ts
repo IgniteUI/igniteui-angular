@@ -1,5 +1,5 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IgxCarouselComponent, IgxSlideComponent } from 'igniteui-angular';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { IGX_CAROUSEL_DIRECTIVES } from 'igniteui-angular';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 import {
     IgcButtonComponent,
@@ -48,7 +48,7 @@ import {
     styleUrls: ['carousel.sample.scss'],
     templateUrl: 'carousel.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IgxCarouselComponent, IgxSlideComponent]
+    imports: [IGX_CAROUSEL_DIRECTIVES]
 })
 export class CarouselSampleComponent {
     public panelConfig: PropertyPanelConfig = {
@@ -100,8 +100,8 @@ export class CarouselSampleComponent {
             label: 'Indicators Orientation',
             control: {
                 type: 'button-group',
-                options: ['start', 'end'],
-                defaultValue: 'end'
+                options: ['top', 'bottom'],
+                defaultValue: 'bottom'
             }
         },
         maximumIndicatorsCount: {
@@ -115,27 +115,30 @@ export class CarouselSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.addNewSlide();
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
-    private indicatorsOrientationMap = {
-        start: 'top',
-        end: 'bottom',
-    };
+    private indicatorsOrientationMap = new Map<string, string>([
+        ['top', 'start'],
+        ['bottom', 'end'],
+    ]);
 
-    protected get angularIndicatorsOrientation() {
+    protected get wcIndicatorsOrientation() {
         const orientation = this.propertyChangeService.getProperty('indicatorsOrientation');
-        return this.indicatorsOrientationMap[orientation] || 'bottom';
+        return this.indicatorsOrientationMap.get(orientation) || 'end';
     }
 
     public slides = [];
 
+    //TODO
     public addNewSlide() {
         this.slides.push(
             {image: 'assets/images/carousel/slide1@x2.jpg', active: true},

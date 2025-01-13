@@ -40,12 +40,8 @@ export type Properties = {
 })
 export class PropertyChangeService {
     public propertyChanges = new BehaviorSubject<PropertyPanelConfig>({});
-
     public panelConfig = new BehaviorSubject<PropertyPanelConfig>({});
-    public panelConfig$ = this.panelConfig.asObservable();
-
     public customControlsSource = new BehaviorSubject<TemplateRef<any> | null>(null);
-    public customControls$ = this.customControlsSource.asObservable();
 
     constructor(private router: Router) {
         this.router.events.subscribe(event => {

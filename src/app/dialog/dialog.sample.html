@@ -11,8 +11,8 @@
         leftButtonLabel="Cancel"
         (leftButtonSelect)="dialog.close()"
         rightButtonLabel="OK"
-        (rightButtonSelect)="onDialogOKSelected($event)"
-        message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
+        (rightButtonSelect)="onDialogOKSelected($event)">
+            Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?
         </igx-dialog>
     </article>
 
@@ -25,7 +25,7 @@
         [title]="properties.title"
         [keepOpenOnEscape]="properties.keepOpenOnEscape"
         [closeOnOutsideClick]="properties.closeOnOutsideClick">
-            <span>Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?</span>
+            Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?
             <igc-button slot="footer" (click)="dialogWC.hide()" variant="flat">Cancel</igc-button>
             <igc-button slot="footer" (click)="dialogWC.hide()" variant="flat">OK</igc-button>
         </igc-dialog>

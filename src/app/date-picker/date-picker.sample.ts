@@ -1,6 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IgxDatePickerComponent, IgxButtonDirective, IgxIconComponent, IgxLabelDirective, IgxPickerActionsDirective, IgxSuffixDirective, PickerInteractionMode } from 'igniteui-angular';
-import { defineComponents, IgcDatePickerComponent, IgcButtonComponent, IgcIconComponent, registerIconFromText } from "igniteui-webcomponents";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { IGX_DATE_PICKER_DIRECTIVES, IgxButtonDirective, IgxIconComponent, IgxLabelDirective, IgxSuffixDirective, PickerInteractionMode, IgSizeDirective } from 'igniteui-angular';
+import { defineComponents, IgcDatePickerComponent, IgcButtonComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
 import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
 
 defineComponents(IgcDatePickerComponent, IgcButtonComponent, IgcIconComponent);
@@ -13,7 +13,7 @@ registerIconFromText('alarm', alarm);
     styleUrls: ['date-picker.sample.scss'],
     templateUrl: 'date-picker.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IgxDatePickerComponent, IgxButtonDirective, IgxLabelDirective, IgxSuffixDirective, IgxIconComponent, IgxPickerActionsDirective]
+    imports: [IGX_DATE_PICKER_DIRECTIVES, IgxButtonDirective, IgxLabelDirective, IgxSuffixDirective, IgxIconComponent, IgSizeDirective]
 })
 
 export class DatePickerSampleComponent {
@@ -81,12 +81,14 @@ export class DatePickerSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     protected get modeAngular() {

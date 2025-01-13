@@ -1,8 +1,8 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
 import { useAnimation } from '@angular/animations';
-import { IgxBannerActionsDirective, IgxBannerComponent, IgxIconComponent, IgxRippleDirective, IgxNavbarModule, IgxButtonModule } from 'igniteui-angular';
+import { IGX_BANNER_DIRECTIVES, IgxIconComponent, IgxRippleDirective, IgxNavbarModule, IgxButtonModule, IgxBannerComponent } from 'igniteui-angular';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
-import { defineComponents, IgcIconButtonComponent, IgcNavbarComponent, IgcBannerComponent, IgcIconComponent, registerIconFromText } from "igniteui-webcomponents";
+import { defineComponents, IgcIconButtonComponent, IgcNavbarComponent, IgcBannerComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
 
 defineComponents(IgcIconButtonComponent, IgcNavbarComponent, IgcBannerComponent, IgcIconComponent);
 
@@ -30,7 +30,7 @@ icons.forEach((icon) => {
     templateUrl: `banner.sample.html`,
     styleUrls: [`banner.sample.scss`],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IgxBannerComponent, IgxIconComponent, IgxBannerActionsDirective, IgxRippleDirective, IgxNavbarModule, IgxButtonModule]
+    imports: [IGX_BANNER_DIRECTIVES, IgxIconComponent, IgxRippleDirective, IgxNavbarModule, IgxButtonModule]
 })
 export class BannerSampleComponent {
     @ViewChild('bannerNoSafeConnection', { static: true })

@@ -1,23 +1,13 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-    IgxButtonGroupComponent,
-    IgxComboAddItemDirective,
-    IgxComboComponent,
-    IgxComboFooterDirective,
-    IgxComboHeaderDirective,
+    IGX_COMBO_DIRECTIVES,
     IgxHintDirective,
-    IgxIconComponent,
-    IgxInputDirective,
-    IgxInputGroupComponent,
     IgxLabelDirective,
-    IgxPrefixDirective,
-    IgxSimpleComboComponent,
-    IgxSwitchComponent,
     SortingDirection,
+    IgSizeDirective
 } from 'igniteui-angular';
-import { SizeSelectorComponent } from '../size-selector/size-selector.component';
-import { defineComponents, IgcComboComponent } from "igniteui-webcomponents";
+import { defineComponents, IgcComboComponent } from 'igniteui-webcomponents';
 import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
 
 defineComponents(IgcComboComponent);
@@ -30,21 +20,11 @@ defineComponents(IgcComboComponent);
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
     imports: [
-        IgxInputGroupComponent,
-        IgxInputDirective,
         FormsModule,
-        IgxSimpleComboComponent,
         IgxLabelDirective,
         IgxHintDirective,
-        IgxComboComponent,
-        IgxComboHeaderDirective,
-        IgxComboFooterDirective,
-        IgxComboAddItemDirective,
-        IgxPrefixDirective,
-        IgxIconComponent,
-        IgxSwitchComponent,
-        IgxButtonGroupComponent,
-        SizeSelectorComponent,
+        IGX_COMBO_DIRECTIVES,
+        IgSizeDirective
     ]
 })
 export class ComboShowcaseSampleComponent {
@@ -114,7 +94,8 @@ export class ComboShowcaseSampleComponent {
     public properties: Properties;
 
     constructor(
-        private propertyChangeService: PropertyChangeService) {
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef) {
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
@@ -146,9 +127,11 @@ export class ComboShowcaseSampleComponent {
 
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     protected get groupSortingAngular() {

@@ -18,7 +18,7 @@
                 [specialDates]="specialDates"
                 (selected)="onSelection($event)"
                 (viewDateChanged)="viewDateChanged($event)"
-                (activeViewChanged)="activeViewChanged($event)">
+                (activeViewChanged)="activeViewChanged($event)"
             >
             </igx-calendar>
         </div>
@@ -54,28 +54,29 @@
             <label>Weekday format</label>
             <igx-buttongroup selectionMode="singleRequired">
                 @for(option of ['narrow', 'short', 'long']; track option) {
-                    <button
+                <button
                     igxButton
                     value="option"
                     (click)="setWeekDayFormat(option)"
                     [selected]="option === formatOptions['weekday']"
-                    >
-                        {{option}}
-                    </button>
+                >
+                    {{option}}
+                </button>
                 }
             </igx-buttongroup>
 
             <label>Month format</label>
             <igx-buttongroup selectionMode="singleRequired">
-                @for(option of ['numeric', '2-digit', 'narrow', 'short', 'long']; track option) {
-                    <button
+                @for(option of ['numeric', '2-digit', 'narrow', 'short',
+                'long']; track option) {
+                <button
                     igxButton
                     value="option"
                     (click)="setMonthFormat(option)"
                     [selected]="option === formatOptions['month']"
-                    >
-                        {{option}}
-                    </button>
+                >
+                    {{option}}
+                </button>
                 }
             </igx-buttongroup>
         </div>

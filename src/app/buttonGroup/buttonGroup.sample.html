@@ -5,16 +5,18 @@
         <div class="button-group">
             <strong>Button Group With Text</strong>
             <igx-buttongroup
-            [selectionMode]="angularSelection"
-            [alignment]="properties.alignment"
-            [disabled]="properties.disabled">
+                [selectionMode]="properties.selection"
+                [alignment]="properties.alignment"
+                [disabled]="properties.disabled"
+            >
                 @for(city of cities; track city) {
-                    <button
+                <button
                     igxButton
                     [selected]="city.selected"
-                    [disabled]="city.disabled">
-                        {{ city.label }}
-                    </button>
+                    [disabled]="city.disabled"
+                >
+                    {{ city.label }}
+                </button>
                 }
             </igx-buttongroup>
         </div>
@@ -22,8 +24,9 @@
         <div class="button-group">
             <strong>Button Group With Icons</strong>
             <igx-buttongroup
-            [selectionMode]="angularSelection"
-            [disabled]="properties.disabled">
+                [selectionMode]="properties.selection"
+                [disabled]="properties.disabled"
+            >
                 <button igxButton>
                     <igx-icon>format_bold</igx-icon>
                 </button>
@@ -39,8 +42,9 @@
         <div class="button-group">
             <strong>Button Group With Templated Buttons</strong>
             <igx-buttongroup
-            [selectionMode]="angularSelection"
-            [disabled]="properties.disabled">
+                [selectionMode]="properties.selection"
+                [disabled]="properties.disabled"
+            >
                 <button igxButton>
                     <igx-icon>alarm_on</igx-icon>
                     <span>Button 1 text</span>
@@ -59,24 +63,27 @@
         <div class="button-group">
             <strong>Button Group With Text</strong>
             <igc-button-group
-            [selection]="properties.selection"
-            [alignment]="properties.alignment"
-            [disabled]="properties.disabled">
+                [selection]="wcSelection"
+                [alignment]="properties.alignment"
+                [disabled]="properties.disabled"
+            >
                 @for(city of cities; track city){
-                    <igc-toggle-button
+                <igc-toggle-button
                     [value]="city"
                     [selected]="city.selected"
-                    [disabled]="city.disabled">
-                        {{ city.label }}
-                    </igc-toggle-button>
+                    [disabled]="city.disabled"
+                >
+                    {{ city.label }}
+                </igc-toggle-button>
                 }
             </igc-button-group>
         </div>
         <div class="button-group">
             <strong>Button Group With Icons</strong>
             <igc-button-group
-            [selection]="properties.selection"
-            [disabled]="properties.disabled">
+                [selection]="wcSelection"
+                [disabled]="properties.disabled"
+            >
                 <igc-toggle-button value="bold">
                     <igc-icon name="bold"></igc-icon>
                 </igc-toggle-button>
@@ -93,8 +100,9 @@
         <div class="button-group">
             <strong>Button Group With Templated Buttons</strong>
             <igc-button-group
-            [selection]="properties.selection"
-            [disabled]="properties.disabled">
+                [selection]="wcSelection"
+                [disabled]="properties.disabled"
+            >
                 <igc-toggle-button value="alarm_on">
                     <igc-icon name="alarm_on"></igc-icon>
                     <span>Button 1 text</span>

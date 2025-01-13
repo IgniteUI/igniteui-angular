@@ -1,6 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IgxIconButtonDirective, IgxIconComponent } from 'igniteui-angular';
-import { defineComponents, IgcIconButtonComponent, registerIconFromText} from "igniteui-webcomponents";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { IgxIconButtonDirective, IgxIconComponent, IgSizeDirective } from 'igniteui-angular';
+import { defineComponents, IgcIconButtonComponent, registerIconFromText} from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents( IgcIconButtonComponent);
@@ -13,7 +13,7 @@ registerIconFromText("favorite", favorite );
     styleUrls: ['icon-button.sample.scss'],
     templateUrl: 'icon-button.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IgxIconComponent, IgxIconButtonDirective]
+    imports: [IgxIconComponent, IgxIconButtonDirective, IgSizeDirective]
 })
 export class IconButtonSampleComponent {
     public panelConfig: PropertyPanelConfig = {
@@ -40,11 +40,13 @@ export class IconButtonSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 }

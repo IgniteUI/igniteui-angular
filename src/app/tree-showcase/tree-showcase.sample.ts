@@ -1,8 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
-import { cloneDeep } from 'lodash-es';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
-import { IgxTreeComponent, IgxTreeNodeComponent, IgxTreeSelectionType } from 'igniteui-angular';
+import { IGX_TREE_DIRECTIVES, IgxTreeSelectionType, IgSizeDirective } from 'igniteui-angular';
 import { defineComponents, IgcTreeComponent, IgcTreeItemComponent } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
@@ -20,7 +18,7 @@ interface CompanyData {
     styleUrls: ['tree-showcase.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
-    imports: [NgFor, NgIf, IgxTreeComponent, IgxTreeNodeComponent]
+    imports: [ IGX_TREE_DIRECTIVES, IgSizeDirective]
 })
 export class TreeShowcaseSampleComponent {
     public data: CompanyData[];
@@ -56,13 +54,15 @@ export class TreeShowcaseSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService) {
-        this.data = cloneDeep(HIERARCHICAL_SAMPLE_DATA);
+    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
+        this.data = structuredClone(HIERARCHICAL_SAMPLE_DATA);
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     public angSelection = IgxTreeSelectionType.None;
@@ -76,14 +76,14 @@ export class TreeShowcaseSampleComponent {
         });
     }
 
-    private selectionMap = {
-        none: IgxTreeSelectionType.None,
-        multiple: IgxTreeSelectionType.BiState,
-        cascade: IgxTreeSelectionType.Cascading
-    };
+    private selectionMap = new Map<string, IgxTreeSelectionType>([
+        ['none', IgxTreeSelectionType.None],
+        ['multiple', IgxTreeSelectionType.BiState],
+        ['cascade', IgxTreeSelectionType.Cascading]
+    ]);
 
-    protected get selectionAngular() : IgxTreeSelectionType {
-        const selection = this.propertyChangeService.getProperty('selection');
-        return this.selectionMap[selection];
+    protected get selectionAngular(): IgxTreeSelectionType {
+        const selection = this.propertyChangeService.getProperty('selection') as string;
+        return this.selectionMap.get(selection) ?? IgxTreeSelectionType.None;
     }
 }

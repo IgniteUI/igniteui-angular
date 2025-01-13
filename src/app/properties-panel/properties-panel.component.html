@@ -1,9 +1,9 @@
-<div id="properties-panel" [formGroup]="form">
-    <h5 class="panel-title">Properties Panel</h5>
+<div class="properties-panel" [formGroup]="form">
+    <h5 class="properties-panel__title">Properties Panel</h5>
     @for( key of getConfigKeys(); track key ) {
         <div>
             @if (getControlType(key) !== 'boolean') {
-            <label class="property-label">
+            <label class="properties-panel__property-label">
                 {{ config[key]?.label || (key | titlecase) }}
             </label>
             }
@@ -34,7 +34,7 @@
 
             <!-- Boolean Switch -->
             @if (getControlType(key) === 'boolean') {
-            <div class="switch-container">
+            <div class="properties-panel__switch-container">
                 <igx-switch [formControlName]="key">
                     <label>{{ config[key]?.label || (key | titlecase) }}</label>
                 </igx-switch>
@@ -53,7 +53,7 @@
 
             <!-- Date Time Editor Input -->
             @if (getControlType(key) === 'date-time') {
-            <div id="date-time" [formControlName]="key">
+            <div class="properties-panel__date-time" [formControlName]="key">
                 <igx-date-picker mode="dialog"></igx-date-picker>
                 <igx-time-picker></igx-time-picker>
             </div>
