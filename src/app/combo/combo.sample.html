@@ -114,7 +114,9 @@
                 <button igxButton="flat" igxRipple>Add VERY CUSTOM item</button>
             </ng-template>
             <label igxLabel>States</label>
-            <igx-icon igx-prefix>home</igx-icon>
+            <igx-prefix>
+                <igx-icon>home</igx-icon>
+            </igx-prefix>
             <igx-hint>Please select the states you've visited</igx-hint>
         </igx-combo>
         <ng-template #customItemTemplate let-display let-key="valueKey">

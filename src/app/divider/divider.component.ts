@@ -1,6 +1,5 @@
 import { Component, QueryList, ViewChildren } from '@angular/core';
 import {
-	IgxButtonDirective,
 	IgxDividerDirective, IgxHintDirective,
 	IgxIconComponent,
 	IgxInputDirective,
@@ -22,7 +21,6 @@ import {
         CommonModule,
         FormsModule,
         IgxSwitchComponent,
-        IgxButtonDirective,
         IgxDividerDirective,
         IgxInputGroupComponent,
         IgxInputDirective,
