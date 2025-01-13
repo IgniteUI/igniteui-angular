@@ -1,97 +1,179 @@
 <section class="sample-content">
+    <div class="sample-wrapper">
+        <strong>Angular DropDown</strong>
+        <button
+            igxButton="contained"
+            #button
+            (click)="toggleDropDown()"
+            [igxDropDownItemNavigation]="dropdown1"
+        >
+            Toggle
+        </button>
+        <igx-drop-down
+            #dropdown1
+            [igSize]="properties.size"
+            [closeOnOutsideClick]="!properties.keepOpenOnOutsideClick"
+        >
+            @for(item of items; track item) {
+            <igx-drop-down-item
+                [disabled]="item.disabled"
+                [isHeader]="item.header"
+            >
+                @if(!item.header && !properties.hidePrefix){
+                <igx-icon igxPrefix>location_city</igx-icon>
+                } {{ item.field }} @if(!item.header && !properties.hideSuffix){
+                <igx-icon igxSuffix>location_on</igx-icon>
+                }
+            </igx-drop-down-item>
+            }
+        </igx-drop-down>
+    </div>
+
+    <div class="sample-wrapper">
+        <strong>WC DropDown</strong>
+        <igc-dropdown
+            id="dropdownWC"
+            [igSize]="properties.size"
+            [placement]="properties.placement"
+            [scrollStrategy]="properties.scrollStrategy"
+            [keepOpenOnOutsideClick]="properties.keepOpenOnOutsideClick"
+        >
+            <igc-button [style.--ig-size]="'var(--ig-size-3)'" slot="target"
+                >Toggle</igc-button
+            >
+            @for(item of items; track item) { @if(item.header) {
+            <igc-dropdown-header> {{ item.field }} </igc-dropdown-header>
+            } @else {
+            <igc-dropdown-item
+                [disabled]="item.disabled"
+                [value]="item.selected"
+            >
+                @if(!properties.hidePrefix) {
+                <igx-icon slot="prefix">location_city</igx-icon>
+                } {{ item.field }} @if(!properties.hideSuffix) {
+                <igx-icon slot="suffix">location_on</igx-icon>
+                }
+            </igc-dropdown-item>
+            } }
+        </igc-dropdown>
+    </div>
+</section>
+
+<section class="sample-content">
     <div class="sample-button-group">
-        <h5>Action</h5>
+        <h5>Angular Dropdown With Action directive</h5>
         <igx-buttongroup>
-            <button igxButton #button (click)="toggleDropDown()" [igxDropDownItemNavigation]="dropdown1">Toggle</button>
-            <button igxButton (click)="open()">Open</button>
-            <button igxButton (click)="close()">Close</button>
-        </igx-buttongroup>
-
-        <h5>With Action directive</h5>
-        <igx-buttongroup>
-            <button igxButton [igxToggleAction]="dropdown2" [igxDropDownItemNavigation]="dropdown2">Drop-down</button>
-            <button igxButton [igxToggleAction]="toggle" [igxToggleOutlet]="outlet">Outlet</button>
-            <button igxButton [igxToggleAction]="menu" [igxDropDownItemNavigation]="menu">Menu</button>
-            <button igxButton [igxToggleAction]="group" [igxDropDownItemNavigation]="group">Group</button>
-        </igx-buttongroup>
-
-        <h5>Size types - Prefix/suffix</h5>
-        <igx-buttongroup>
-            <button igxButton [igxToggleAction]="dropDownLarge" [igxDropDownItemNavigation]="dropDownLarge">Large</button>
-            <button igxButton [igxToggleAction]="dropDownMedium" [igxDropDownItemNavigation]="dropDownMedium">Medium</button>
-            <button igxButton [igxToggleAction]="dropDownSmall" [igxDropDownItemNavigation]="dropDownSmall">Small</button>
+            <button
+                igxButton
+                [igxToggleAction]="dropdown2"
+                [igxDropDownItemNavigation]="dropdown2"
+            >
+                Drop-down
+            </button>
+            <button
+                igxButton
+                [igxToggleAction]="toggle"
+                [igxToggleOutlet]="outlet"
+            >
+                Outlet
+            </button>
+            <button
+                igxButton
+                [igxToggleAction]="menu"
+                [igxDropDownItemNavigation]="menu"
+            >
+                Menu
+            </button>
+            <button
+                igxButton
+                [igxToggleAction]="group"
+                [igxDropDownItemNavigation]="group"
+            >
+                Group
+            </button>
         </igx-buttongroup>
     </div>
 
-    <igx-drop-down #dropdown1 (selectionChanging)="onSelection($event)" (opening)="onOpening()">
-        <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header"
-                            [selected]="item.selected">
-                {{ item.field }}
+    <igx-drop-down
+        #dropdown2
+        (selectionChanging)="onSelection($event)"
+        (opening)="onOpening()"
+        height="400px"
+    >
+        @for(item of items; track item) {
+        <igx-drop-down-item [disabled]="item.disabled" [isHeader]="item.header">
+            {{ item.field }}
         </igx-drop-down-item>
-    </igx-drop-down>
-
-    <igx-drop-down #dropdown2 (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px'>
-        <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
-                {{ item.field }}
-        </igx-drop-down-item>
+        }
     </igx-drop-down>
 
     <div igxToggle #toggle="toggle" style="height: 300px; overflow: auto">
-        <div *ngFor="let item of items">
-                {{ item.field }}
-        </div>
+        @for(item of items; track item) {
+        <div>{{ item.field }}</div>
+        }
     </div>
 
-    <igx-drop-down #menu (selectionChanging)="onSelectionMenu($event)" height='400px'>
-        <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
-                {{ item.field }}
+    <igx-drop-down
+        #menu
+        (selectionChanging)="onSelectionMenu($event)"
+        height="400px"
+    >
+        @for(item of items; track item) {
+        <igx-drop-down-item [disabled]="item.disabled" [isHeader]="item.header">
+            {{ item.field }}
         </igx-drop-down-item>
+        }
     </igx-drop-down>
 
-    <igx-drop-down #group (selectionChanging)="onSelection($event)" height='400px'>
-        <igx-drop-down-item-group *ngFor="let foodGroup of foods" [label]="foodGroup.name">
-            <igx-drop-down-item *ngFor="let food of foodGroup.entries" [value]='food.refNo'>
+    <igx-drop-down
+        #group
+        (selectionChanging)="onSelection($event)"
+        height="400px"
+    >
+        @for(foodGroup of foods; track foodGroup) {
+        <igx-drop-down-item-group [label]="foodGroup.name">
+            @for(food of foodGroup.entries; track food) {
+            <igx-drop-down-item [value]="food.refNo">
                 {{ food.name }}
             </igx-drop-down-item>
+            }
         </igx-drop-down-item-group>
-    </igx-drop-down>
-
-    <igx-drop-down #dropDownLarge (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px' [style.--ig-size]="'var(--ig-size-large)'">
-        <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
-            <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
-            {{ item.field }}
-            <igx-icon *ngIf="!item.header" igxSuffix>location_on</igx-icon>
-        </igx-drop-down-item>
-    </igx-drop-down>
-
-    <igx-drop-down #dropDownMedium (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px' [style.--ig-size]="'var(--ig-size-medium)'">
-        <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
-            <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
-            {{ item.field }}
-            <igx-icon *ngIf="!item.header" igxSuffix>location_on</igx-icon>
-        </igx-drop-down-item>
-    </igx-drop-down>
-
-    <igx-drop-down #dropDownSmall (selectionChanging)="onSelection($event)" (opening)="onOpening()" height='400px' [style.--ig-size]="'var(--ig-size-small)'">
-        <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
-            <igx-icon *ngIf="!item.header" igxPrefix>location_city</igx-icon>
-            {{ item.field }}
-            <igx-icon *ngIf="!item.header" igxSuffix>location_on</igx-icon>
-        </igx-drop-down-item>
+        }
     </igx-drop-down>
 </section>
 <section class="sample-content">
     <igx-input-group class="input-group">
-        <input type="text" [igxToggleAction]="dropdown3" [igxDropDownItemNavigation]="dropdown3" igxInput
-            readonly="true" [value]="dropdown3.selectedItem?.value.field" />
+        <input
+            type="text"
+            [igxToggleAction]="dropdown3"
+            [igxDropDownItemNavigation]="dropdown3"
+            igxInput
+            readonly="true"
+            [value]="dropdown3.selectedItem?.value.field"
+        />
     </igx-input-group>
-    <igx-drop-down #dropdown3 (opening)="onOpening()" (selectionChanging)="onSelectionLogger($event)" height='400px'>
-        <igx-drop-down-item *ngFor="let item of items" [value]="item" [disabled]="item.disabled"
-            [isHeader]="item.header">
-                {{ item.field }}
+    <igx-drop-down
+        #dropdown3
+        (opening)="onOpening()"
+        (selectionChanging)="onSelectionLogger($event)"
+        height="400px"
+    >
+        @for(item of items; track item) {
+        <igx-drop-down-item
+            [value]="item"
+            [disabled]="item.disabled"
+            [isHeader]="item.header"
+        >
+            {{ item.field }}
         </igx-drop-down-item>
+        }
     </igx-drop-down>
-    <button igxButton="contained" igxRipple (click)="clearSelection()" style="display: block">
+    <button
+        igxButton="contained"
+        igxRipple
+        (click)="clearSelection()"
+        style="display: block"
+    >
         Clear selection
     </button>
 </section>

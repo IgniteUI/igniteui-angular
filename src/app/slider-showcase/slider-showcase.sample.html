@@ -1,0 +1,42 @@
+<article class="sample-item">
+    <strong>Angular Slider</strong>
+    <igx-slider
+        [value]="properties.value"
+        [disabled]="properties.disabled"
+        [minValue]="properties.minValue"
+        [maxValue]="properties.maxValue"
+        [step]="properties.step"
+        [primaryTickLabels]="!properties.primaryTickLabels"
+        [secondaryTickLabels]="!properties.secondaryTickLabels"
+        [ticksOrientation]="ticksOrientationAngular"
+        [tickLabelsOrientation]="angularTickLabelOrientation"
+        [primaryTicks]="properties.primaryTicks"
+        [secondaryTicks]="properties.secondaryTicks"
+        [lowerBound]="properties.lowerBound"
+        [upperBound]="properties.upperBound"
+        [showTicks]="properties.primaryTicks || properties.secondaryTicks">
+    </igx-slider>
+</article>
+
+<article class="sample-item">
+    <strong>WC Slider</strong>
+    <igc-slider
+    [value]="properties.value"
+    [disabled]="properties.disabled"
+    [min]="properties.minValue"
+    [max]="properties.maxValue"
+    [step]="properties.step"
+    [tickOrientation]="properties.ticksOrientation"
+    [tickLabelRotation]="properties.tickLabelOrientation"
+    [primaryTicks]="properties.primaryTicks"
+    [secondaryTicks]="properties.secondaryTicks"
+    [lowerBound]="properties.lowerBound"
+    [upperBound]="properties.upperBound"
+    [hidePrimaryLabels]="properties.primaryTickLabels"
+    [hideSecondaryLabels]="properties.secondaryTickLabels"
+    [attr.discrete-track]="properties.step > 1 ? true : null">
+    </igc-slider>
+</article>
+
+<!-- TODO: Slider tick have different floating number formating -->
+<!-- TODO: Disabled colors are different -->

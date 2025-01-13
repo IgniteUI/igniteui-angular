@@ -1,30 +1,3 @@
-$padding: 2rem;
-
-::ng-deep {
-    #igniteui-demo-app .sample-wrapper {
-        padding: 0
-    }
-
-    #igniteui-demo-app .content {
-        overflow: hidden;
-    }
-}
-
-:host {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 90px);
-    overflow: hidden;
-}
-
-small {
-    font-size: .8rem;
-
-    &:not(:first-child) {
-        margin-block-start: 1rem;
-    }
-}
-
 .calendar-wrapper {
     flex-basis: 100px;
     display: flex;
@@ -32,7 +5,6 @@ small {
     flex-grow: 1;
 
     strong {
-        color: hsla(var(--ig-secondary-500));
         display: block;
         text-align: center;
         padding: 10px;
@@ -47,88 +19,16 @@ small {
     &__sample {
         display: flex;
         flex-wrap: wrap;
-        padding: $padding;
-        gap: $padding;
+        padding: 2rem;
+        gap: 2rem;
         overflow: auto;
         flex-grow: 1;
     }
-
-    &__settings {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        background: hsla(var(--ig-gray-50));
-        border-left: 1px solid hsla(var(--ig-gray-300));
-        padding: $padding;
-        overflow-x: auto;
-    }
-
-    &__comp-size {
-        margin-block-end: 16px;
-    }
-
-    &__variant-select {
-        margin-block-end: 16px;
-    }
-
-    &__info {
-        display: flex;
-        flex-direction: column;
-        align-self: flex-start;
-        margin-block-start: 1rem;
-        gap: .5rem;
-    }
-
-    a {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        text-decoration: none;
-        color: hsla(var(--ig-secondary-600));
-        outline: none;
-
-        &:focus,
-        &:hover {
-            color: hsla(var(--ig-secondary-300));
-        }
-    }
 }
 
-igx-input-group,
-igx-date-range-picker {
-    --ig-size: 1;
-    flex-grow: 1;
-
-    [igxSuffix] {
-        padding: 0;
-    }
-}
-
-.row {
-    display: flex;
-
-    > * {
-        align-self: center;
-        flex-grow: 1;
-    }
-}
-
-.column {
-    display: flex;
-    flex-direction: column;
-    margin-block-end: 1rem;
-}
-
-.gap {
-    gap: 1rem;
-}
-
-.selected-dates {
-    margin: 0;
-    padding-inline: 1rem;
-
-    &:not(.multiple) {
-        padding: 0;
-        list-style: none;
+.custom-controls {
+    > *:not(label) {
+        display: block;
+        margin-bottom: 16px;
     }
 }

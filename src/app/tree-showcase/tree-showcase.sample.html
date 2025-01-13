@@ -1,0 +1,57 @@
+<size-selector #sizeSelector></size-selector>
+
+<div class="wrapper">
+    <div class="tree-container">
+        <strong>Angular Tree</strong>
+        <igx-tree
+            [igSize]="properties.size"
+            [toggleNodeOnClick]="properties.toggleNodeOnClick"
+            [singleBranchExpand]="properties.singleBranchExpand"
+            [selection]="selectionAngular"
+        >
+            @for(node of data; track data) {
+            <igx-tree-node [data]="node">
+                {{ node.CompanyName }}
+
+                @for(child of node.ChildCompanies; track child) {
+                <igx-tree-node [data]="child">
+                    {{ child.CompanyName }}
+
+                    @for(leafchild of child.ChildCompanies; track leafchild) {
+                    <igx-tree-node [data]="leafchild">
+                        {{ leafchild.CompanyName }}
+                    </igx-tree-node>
+                    }
+                </igx-tree-node>
+                }
+            </igx-tree-node>
+            }
+        </igx-tree>
+    </div>
+
+    <div class="tree-container">
+        <strong>WC Tree</strong>
+        <igc-tree
+            [igSize]="properties.size"
+            [toggleNodeOnClick]="properties.toggleNodeOnClick"
+            [singleBranchExpand]="properties.singleBranchExpand"
+            [selection]="properties.selection"
+        >
+            @for(node of data; track node) {
+            <igc-tree-item [label]="node.CompanyName">
+
+                @for(child of node.ChildCompanies; track child) {
+                <igc-tree-item [label]="child.CompanyName">
+
+                    @for(leafchild of child.ChildCompanies; track leafchild) {
+                    <igc-tree-item
+                        [label]="leafchild.CompanyName"
+                    ></igc-tree-item>
+                    }
+                </igc-tree-item>
+                }
+            </igc-tree-item>
+        }
+        </igc-tree>
+    </div>
+</div>

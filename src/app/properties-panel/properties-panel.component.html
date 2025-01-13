@@ -1,0 +1,106 @@
+<div class="properties-panel" [formGroup]="form">
+    <h5 class="properties-panel__title">Properties Panel</h5>
+    @for( key of getConfigKeys(); track key ) {
+        <div>
+            @if (getControlType(key) !== 'boolean') {
+            <label class="properties-panel__property-label">
+                {{ config[key]?.label || (key | titlecase) }}
+            </label>
+            }
+
+            <!-- Text Input -->
+            @if (getControlType(key) === 'text') {
+            <igx-input-group type="border">
+                <input [formControlName]="key" igxInput type="text" />
+            </igx-input-group>
+            }
+
+            <!-- Number Input -->
+            @if (getControlType(key) === 'number') {
+            <igx-input-group type="border">
+                <input [formControlName]="key" igxInput type="number" [min]="config[key]?.control?.min ?? 0"
+                    [max]="config[key]?.control?.max" />
+            </igx-input-group>
+            }
+
+            <!-- Range Input -->
+            @if (getControlType(key) === 'range') {
+            <igx-slider [formControlName]="key" type="range" [lowerValue]="config[key]?.control?.min ?? 0"
+                [upperValue]="config[key]?.control?.max ?? 100" [minValue]="config[key]?.control?.min ?? 0"
+                [maxValue]="config[key]?.control?.max ?? 100" [step]="config[key]?.control?.step ?? 1" [primaryTicks]="3"
+                [secondaryTicks]="3">
+            </igx-slider>
+            }
+
+            <!-- Boolean Switch -->
+            @if (getControlType(key) === 'boolean') {
+            <div class="properties-panel__switch-container">
+                <igx-switch [formControlName]="key">
+                    <label>{{ config[key]?.label || (key | titlecase) }}</label>
+                </igx-switch>
+            </div>
+            }
+
+            <!-- Date Picker -->
+            @if (getControlType(key) === 'date') {
+            <igx-date-picker [formControlName]="key" mode="dialog"></igx-date-picker>
+            }
+
+            <!-- Time Picker -->
+            @if (getControlType(key) === 'time') {
+            <igx-time-picker [formControlName]="key"></igx-time-picker>
+            }
+
+            <!-- Date Time Editor Input -->
+            @if (getControlType(key) === 'date-time') {
+            <div class="properties-panel__date-time" [formControlName]="key">
+                <igx-date-picker mode="dialog"></igx-date-picker>
+                <igx-time-picker></igx-time-picker>
+            </div>
+            }
+
+            <!-- Radio Group -->
+            @if (
+            getControlType(key) === 'radio' || getControlType(key) === 'radio-inline'
+            ) {
+            <igx-radio-group [formControlName]="key" [alignment]="
+            getControlType(key) === 'radio-inline' ? null : radioAlignment
+            ">
+                @for (option of getControlOptions(key); track option) {
+                    <igx-radio [value]="option">
+                      {{ getControlLabels(key)[getControlOptions(key).indexOf(option)] }}
+                    </igx-radio>
+                }
+            </igx-radio-group>
+            }
+
+            <!-- Button Group -->
+            @if (getControlType(key) === 'button-group') {
+            <igx-buttongroup [selectionMode]="'single'">
+                @for (option of getControlOptions(key); track option) {
+                    <button igxButton
+                            [selected]="form.controls[key].value === option"
+                            (click)="form.controls[key].setValue(option)">
+                      {{ getControlLabels(key)[getControlOptions(key).indexOf(option)] }}
+                    </button>
+                }
+            </igx-buttongroup>
+            }
+
+            <!-- Select Dropdown -->
+            @if (getControlType(key) === 'select') {
+            <igx-select [placeholder]="'Pick One'" [type]="'border'" [formControlName]="key">
+                @for (option of getControlOptions(key); track option) {
+                    <igx-select-item [value]="option">
+                      {{ option }}
+                    </igx-select-item>
+                }
+            </igx-select>
+            }
+        </div>
+    }
+
+    @if (customControls) {
+        <ng-container *ngTemplateOutlet="customControls"></ng-container>
+    }
+</div>

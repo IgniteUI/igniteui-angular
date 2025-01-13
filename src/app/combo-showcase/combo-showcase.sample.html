@@ -1,0 +1,49 @@
+<div class="combo-sample">
+    <section class="combo-sample__section">
+        <h1 class="combo-sample__title">
+            Angular and WC combo next to each other
+        </h1>
+        <form class="combo-sample__form" [igSize]="properties.size">
+            <div class="combo-sample__row combo-sample__row--stretch">
+                <igx-combo
+                    [name]="properties.name"
+                    [required]="properties.required"
+                    [disabled]="properties.disabled"
+                    [showSearchCaseIcon]="properties.caseSensitiveIcon"
+                    [disableFiltering]="properties.disableFiltering"
+                    [groupSortingDirection]="groupSortingAngular"
+                    [placeholder]="properties.placeholder"
+                    [searchPlaceholder]="properties.placeholderSearch"
+                    type="border"
+                    [disabled]="properties.disabled"
+                    [data]="items"
+                    [displayKey]="valueKeyVar"
+                    [valueKey]="valueKeyVar"
+                    [groupKey]="valueKeyVar ? 'region' : ''"
+                >
+                    <label igxLabel>Angular Combo</label>
+                    <igx-hint>Select a unique falsy value</igx-hint>
+                </igx-combo>
+                <igc-combo
+                    [name]="properties.name"
+                    [required]="properties.required"
+                    [disabled]="properties.disabled"
+                    [caseSensitiveIcon]="properties.caseSensitiveIcon"
+                    [disableFiltering]="properties.disableFiltering"
+                    [groupSorting]="properties.groupSorting"
+                    [placeholder]="properties.placeholder"
+                    [placeholderSearch]="properties.placeholderSearch"
+                    outlined="true"
+                    [disabled]="properties.disabled"
+                    label="WC Combo"
+                    [data]="items"
+                    [displayKey]="valueKeyVar"
+                    [valueKey]="valueKeyVar"
+                    [groupKey]="valueKeyVar ? 'region' : ''"
+                >
+                    <span slot="helper-text">Select a unique falsy value</span>
+                </igc-combo>
+            </div>
+        </form>
+    </section>
+</div>

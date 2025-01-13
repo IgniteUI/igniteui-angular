@@ -1,0 +1,68 @@
+:host {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(320px, 1fr));
+    grid-template-rows: auto auto;
+    column-gap: 2rem;
+
+
+    code {
+        background: var(--ig-gray-100);
+        padding: .2rem
+    }
+}
+
+::ng-deep {
+    [dir='rtl'] {
+        .showcase--angular {
+            order: 2;
+        }
+
+        .showcase--web-components {
+            order: 1;
+        }
+    }
+}
+
+.showcase__header,
+.showcase__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.showcase {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: 1 / -1;
+
+    gap: 1rem;
+}
+
+.showcase__header {
+    --ig-h1-font-size: 1.2em;
+    --ig-h1-font-weight: bold;
+    --ig-h1-letter-spacing: 0;
+    --ig-h1-margin-top: 0;
+    --ig-h1-margin-bottom: 0;
+    --ig-h1-line-height: normal;
+
+    grid-row: 1;
+}
+
+.showcase__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.showcase__placeholder {
+    height: var(--size);
+    padding: 12px;
+    background: var(--ig-gray-50);
+    color: var(--ig-gray-50-contrast);
+}
+
+.showcase__warn {
+    color: var(--ig-warn-500);
+}
+

@@ -1,0 +1,30 @@
+<div class="columns-container">
+    <article class="column">
+        <h4 class="sample-title">Angular Toast vs WebComponents Toast</h4>
+        <div class="btn-group">
+            <button
+                igxButton="contained"
+                igxRipple="white"
+                (click)="toastWC.toggle(); toast.toggle()"
+            >
+            Toggle Toasts
+            </button>
+        </div>
+    </article>
+</div>
+
+<div igxOverlayOutlet #outlet="overlay-outlet"></div>
+
+<igx-toast #toast
+[outlet]="outlet"
+[autoHide]="!properties.keepOpen"
+[displayTime]="properties.displayTime">
+    Angular Toast will self-destruct in 4 seconds.
+</igx-toast>
+
+<igc-toast #toastWC
+position="middle"
+[keepOpen]="properties.keepOpen"
+[displayTime]="properties.displayTime">
+    WebCom Toast will self-destruct in 4 seconds.
+</igc-toast>

@@ -1,0 +1,25 @@
+<div class="columns-container">
+    <article class="title">
+        <h4 class="sample-title">Angular Icon Button</h4>
+        <h4 class="sample-title">WC Icon Button</h4>
+    </article>
+
+    <div class="buttons-sample" [igSize]="properties.size">
+        <div class="button-sample">
+            <button
+                [igxIconButton]="properties.variant"
+                [disabled]="properties.disabled"
+            >
+                <igx-icon>favorite</igx-icon>
+            </button>
+        </div>
+        <div class="button-sample">
+            <igc-icon-button
+                name="favorite"
+                [variant]="properties.variant"
+                [disabled]="properties.disabled"
+            >
+            </igc-icon-button>
+        </div>
+    </div>
+</div>

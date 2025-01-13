@@ -1,0 +1,208 @@
+<!-- ANGULAR -->
+<section class="showcase showcase--angular">
+    <header class="showcase__header">
+        <h1 class="showcase__title">Angular</h1>
+
+        @if (isRequired()) {
+            <small class="showcase__warn">
+                Angular uses Reactive form.
+            </small>
+        }
+    </header>
+    <form class="showcase__fields" [formGroup]="reactiveForm">
+        <!-- Angular Input Group -->
+        <igx-input-group
+            #field
+            [type]="getInputGroupType()"
+            [style.--ig-size]="getSize()">
+            @if (getLabel()) {
+                <label igxLabel>{{ getLabel() }}</label>
+            }
+            <igx-icon igxPrefix [hidden]="hidePrefix()">face</igx-icon>
+            <input
+                formControlName="field"
+                [type]="getNativeInputType()"
+                [readOnly]="isReadonly()"
+                [attr.placeholder]="getPlaceholder()"
+                igxInput
+            />
+            <igx-suffix [hidden]="hideSuffix()">
+                <igx-icon>face</igx-icon>
+            </igx-suffix>
+            <igx-hint>Type your web address</igx-hint>
+        </igx-input-group>
+
+        <!-- Angular Textarea Group -->
+        <igx-input-group
+            #fieldTextarea
+            [type]="getInputGroupType()"
+            [style.--ig-size]="getSize()">
+            @if (getLabel()) {
+                <label igxLabel>{{ getLabel() }}</label>
+            }
+            <igx-icon igxPrefix [hidden]="hidePrefix()">face</igx-icon>
+            <textarea
+                formControlName="fieldTextarea"
+                [required]="isRequired()"
+                [readOnly]="isReadonly()"
+                [attr.placeholder]="getPlaceholder()"
+                igxInput>
+            </textarea>
+            <igx-suffix [hidden]="hideSuffix()">
+                <igx-icon>face</igx-icon>
+            </igx-suffix>
+            <igx-hint>Hint text</igx-hint>
+        </igx-input-group>
+
+        <!-- Angular Select -->
+        <igx-select
+            #selectReactive
+            formControlName="angularSelect"
+            [placeholder]="getPlaceholder()"
+            [type]="getInputGroupType()"
+            [style.--ig-size]="getSize()">
+            @if (getLabel()) {
+                <label igxLabel>{{ getLabel() }}</label>
+            }
+            <igx-icon igxPrefix [hidden]="hidePrefix()">favorite</igx-icon>
+            <igx-hint>
+                I am a Hint
+            </igx-hint>
+            <igx-suffix [hidden]="hideSuffix()">
+                <igx-icon>favorite</igx-icon>
+            </igx-suffix>
+            <igx-select-item [value]="'Apple'" [disabled]="true">Apple</igx-select-item>
+            <igx-select-item [value]="'Orange'">Orange</igx-select-item>
+            <igx-select-item [value]="'Grapes'">Grapes</igx-select-item>
+            <igx-select-item [value]="'Banana'">Banana</igx-select-item>
+        </igx-select>
+
+        <!-- Angular Combo -->
+        <igx-combo
+            #comboReactive
+            formControlName="angularCombo"
+            [placeholder]="getPlaceholder()"
+            [type]="getInputGroupType()"
+            [style.--ig-size]="getSize()">
+            @if (getLabel()) {
+                <label igxLabel>{{ getLabel() }}</label>
+            }
+            <igx-hint>Select a unique falsy value</igx-hint>
+        </igx-combo>
+
+        <!-- Angular File Input -->
+        <igx-input-group
+            #fieldFile
+            [type]="getInputGroupType()"
+            [style.--ig-size]="getSize()">
+            @if (getLabel()) {
+                <label igxLabel>{{ getLabel() }} ("No file chosen" is not an actual value)</label>
+            }
+            <igx-icon igxPrefix [hidden]="hidePrefix()">face</igx-icon>
+            <input
+                formControlName="fieldFile"
+                [required]="isRequired()"
+                [type]="'file'"
+                [readOnly]="isReadonly()"
+                igxInput
+            />
+            <igx-suffix [hidden]="hideSuffix()">
+                <igx-icon>face</igx-icon>
+            </igx-suffix>
+            <igx-hint>Type your web address</igx-hint>
+        </igx-input-group>
+    </form>
+</section>
+
+<!-- WEB COMPONENTS -->
+<section class="showcase showcase--web-components">
+    <header class="showcase__header">
+        <h1 class="showcase__title">Web components</h1>
+        @if (getInputGroupType() === 'line') {
+            <small class="showcase__warn">
+                <code>line</code> type is not supported
+            </small>
+        }
+
+        @if (getInputGroupType() === 'search') {
+            <small class="showcase__warn">
+                The type <code>search</code> has to be set from the <strong>{{ panelConfig.type.label }}</strong> field
+            </small>
+        }
+
+        @if (getInputGroupType() === 'border' && getNativeInputType() === 'search') {
+            <small class="showcase__warn">
+                Invalid combination between type <code>search</code> and type <code>border</code>
+            </small>
+        }
+
+        @if (isRequired()) {
+            <small class="showcase__warn">
+                <code>required</code> is set as input property on <code>igc-input</code>
+            </small>
+        }
+    </header>
+    <div class="showcase__fields">
+        <!-- Web Component Input -->
+        <igc-input
+                [style.--ig-size]="getSize()"
+                [label]="getLabel()"
+                [required]="isRequired()"
+                [disabled]="isDisabled()"
+                [readOnly]="isReadonly()"
+                [attr.value]="getValue()"
+                [attr.placeholder]="getPlaceholder()"
+                [type]="getNativeInputType()"
+                [outlined]="isOutlined()">
+            <span slot="prefix" [hidden]="hidePrefix()"><igc-icon name="face"></igc-icon></span>
+            <span slot="suffix" [hidden]="hideSuffix()"><igc-icon name="face"></igc-icon></span>
+            <span slot="helper-text">Type your web address</span>
+        </igc-input>
+
+        <igc-textarea
+                [style.--ig-size]="getSize()"
+                [label]="getLabel()"
+                [required]="isRequired()"
+                [disabled]="isDisabled()"
+                [readOnly]="isReadonly()"
+                [attr.value]="getValue()"
+                [attr.placeholder]="getPlaceholder()"
+                [outlined]="isOutlined()">
+            <span slot="prefix" [hidden]="hidePrefix()"><igc-icon name="face"></igc-icon></span>
+            <span slot="suffix" [hidden]="hideSuffix()"><igc-icon name="face"></igc-icon></span>
+            <span slot="helper-text">Hint text</span>
+        </igc-textarea>
+
+        <igc-select
+            [required]="isRequired()"
+            [attr.placeholder]="getPlaceholder()"
+            [label]="getLabel()"
+            [disabled]="isDisabled()"
+            [outlined]="isOutlined()"
+            [style.--ig-size]="getSize()">
+            <igc-icon slot="prefix" [hidden]="hidePrefix()" name="favorite"></igc-icon>
+            <igc-icon slot="suffix" [hidden]="hideSuffix()" name="favorite"></igc-icon>
+            <span slot="helper-text">I am a Hint</span>
+            <igc-select-item [value]="'Apple'" [disabled]="true">Apple</igc-select-item>
+            <igc-select-item [value]="'Orange'" [selected]="getValue()">Orange</igc-select-item>
+            <igc-select-item [value]="'Grapes'">Grapes</igc-select-item>
+            <igc-select-item [value]="'Banana'">Banana</igc-select-item>
+        </igc-select>
+
+        <igc-combo
+                [required]="isRequired()"
+                [label]="getLabel()"
+                [attr.placeholder]="getPlaceholder()"
+                [outlined]="isOutlined()"
+                [disabled]="isDisabled()"
+                [style.--ig-size]="getSize()">
+            <span slot="helper-text">I am a Hint</span>
+        </igc-combo>
+
+
+        <div class="showcase__placeholder">
+            NO file type in web components
+        </div>
+    </div>
+</section>
+

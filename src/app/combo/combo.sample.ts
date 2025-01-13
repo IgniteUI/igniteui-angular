@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { cloneDeep } from 'lodash-es';
 import { take } from 'rxjs/operators';
 
@@ -26,16 +26,14 @@ import {
     IgxHintDirective,
     IgxIconComponent,
     IgxLabelDirective,
-    IgxPrefixDirective,
     IgxRippleDirective,
     IgxSimpleComboComponent,
     IgxSwitchComponent,
     IgxToastComponent,
     OverlaySettings,
-    VerticalAlignment
+    VerticalAlignment, IGX_COMBO_DIRECTIVES
 } from 'igniteui-angular';
 import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
-import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 
 
 @Component({
@@ -51,17 +49,15 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
         IgxButtonDirective,
         ReactiveFormsModule,
         IgxToastComponent,
-        NgIf,
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
         IgxComboAddItemDirective,
         IgxRippleDirective,
-        IgxPrefixDirective,
         IgxIconComponent,
         IgxSwitchComponent,
         IgxButtonGroupComponent,
-        SizeSelectorComponent,
-        AsyncPipe
+        AsyncPipe,
+        IGX_COMBO_DIRECTIVES
     ]
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {

@@ -1,0 +1,56 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+
+    ::ng-deep {
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+
+            > * {
+                width: 100%;
+            }
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+    }
+}
+
+:host(.vertical-stepper) {
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+::ng-deep {
+    [dir='rtl'] {
+        .showcase--web-components {
+            order: 1;
+        }
+
+        .showcase--angular {
+            order: 2;
+        }
+    }
+}
+
+.sample-stepper-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    padding: 16px;
+    border: 1px solid var(--ig-gray-400);
+}
+
+strong {
+    display: block;
+    text-align: center;
+}
