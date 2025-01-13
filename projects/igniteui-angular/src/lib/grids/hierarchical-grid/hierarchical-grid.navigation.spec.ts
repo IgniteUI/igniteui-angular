@@ -975,7 +975,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 rowIslandKey: 'childData2',
                 rowID: 10
             };
-            (hierarchicalGrid.navigation as IgxHierarchicalGridNavigationService).navigateToChildGrid([path], () => {
+            hierarchicalGrid.navigation.navigateToChildGrid([path], () => {
                 fixture.detectChanges();
                 const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([path]).nativeElement;
                 expect(childGrid).not.toBe(undefined);
@@ -1003,7 +1003,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 rowID: 5
             };
 
-            (hierarchicalGrid.navigation as IgxHierarchicalGridNavigationService).navigateToChildGrid([targetRoot, targetNested], () => {
+            hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested], () => {
                 fixture.detectChanges();
                 const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot]).nativeElement;
                 expect(childGrid).not.toBe(undefined);
