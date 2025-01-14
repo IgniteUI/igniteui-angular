@@ -71,16 +71,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // TODO: special registration OR config for custom
         }
 
-        const promises = [];
-        for (const contentChild of contentChildren) {
-            // these resolve after the parent, both the components needs to be initialized and the parent query schedule should complete before it is really ready.
-            const child = contentChild as IgcNgElement;
-            const promiseComponentReady = this.waitForCondition(() => (child.ngElementStrategy as any)?.componentRef && this.schedule.size == 0);
-            promises.push(promiseComponentReady);
+        if (contentChildren.length === 0) {
+            // no content children, emit event immediately, since there's nothing to be attached.
+            (this as any).componentRef?.instance?.childrenAttached?.emit();
         }
-        Promise.all(promises).then(() => {
-            (this as any).componentRef?.instance.contentChildrenReady.emit();
-        });
 
         let parentInjector: Injector;
         let parentAnchor: ViewContainerRef;
@@ -224,19 +218,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
     }
 
-    public waitForCondition(conditionFn: any, interval = 10) {
-        return new Promise<void>((resolve) => {
-            function checkCondition() {
-                if (conditionFn()) {
-                    resolve();
-                } else {
-                    setTimeout(checkCondition, interval);
-                }
-            }
-            checkCondition();
-        });
-    }
-
     public override setInputValue(property: string, value: any, transform?: (value: any) => any): void {
         if ((this as any).componentRef === null ||
             !(this as any).componentRef.instance) {
@@ -332,6 +313,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             const list = (this as any).componentRef.instance[query.property] as QueryList<any>;
             list.reset(childRefs);
             list.notifyOnChanges();
+        }
+        if (this.schedule.size === 0) {
+            // children are attached and collections are updated, emit event.
+            (this as any).componentRef?.instance?.childrenAttached?.emit();
         }
     }
 

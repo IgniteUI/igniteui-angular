@@ -1006,7 +1006,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * Emitted when content children are attached and collections in grid are updated.
      */
     @Output()
-    public contentChildrenReady = new EventEmitter<void>();
+    public childrenAttached = new EventEmitter<void>();
 
     /**
      * Emitted when the expanded state of a row gets changed.

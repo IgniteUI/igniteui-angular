@@ -131,7 +131,7 @@
 
     grid1.data = northwindProducts;
     grid2.data = northwindProducts;
-    grid1.addEventListener('contentChildrenReady', () => {
+    grid1.addEventListener('childrenAttached', () => {
             console.log("Ready!");
             restoreState();
     });
