@@ -96,12 +96,12 @@ export class FormControlSyncDirective implements OnInit {
 }
 
 @Component({
-    templateUrl: 'stepper-showcase.sample.html',
-    styleUrls: ['stepper-showcase.sample.scss'],
+    templateUrl: 'stepper.sample.html',
+    styleUrls: ['stepper.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [IgxButtonDirective, FormControlSyncDirective, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxStepperComponent, IgxStepComponent, IgxStepTitleDirective, IgxStepSubtitleDirective, IgxStepContentDirective, ReactiveFormsModule, IgxHintDirective, IgxIconComponent, IgxPrefixDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStepActiveIndicatorDirective, IgxStepIndicatorDirective, IgxSuffixDirective, NgTemplateOutlet]
 })
-export class IgxStepperShowcaseSampleComponent {
+export class IgxStepperSampleComponent {
     @ViewChild('stepper', {static: true}) public angularStepper!: IgxStepperComponent;
     @ViewChild('stepper2', {static: true}) public webComponentStepper!: ElementRef;
 

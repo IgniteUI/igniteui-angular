@@ -558,7 +558,7 @@ export class AppComponent implements OnInit {
         {
             link: '/stepper',
             icon: 'format_list_bulleted',
-            name: 'Stepper (showcase)'
+            name: 'Stepper'
         },
         {
             link: '/tabs',
