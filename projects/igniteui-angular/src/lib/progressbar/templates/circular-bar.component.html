@@ -1,33 +1,38 @@
-<svg #svg
-    role="progressbar"
-    aria-valuemin="0"
-    [attr.aria-valuemax]="max"
-    [attr.aria-valuenow]="value">
-    <svg:circle class="igx-circular-bar__inner" />
-    <svg:circle #circle class="igx-circular-bar__outer"/>
+<div class="igx-circular-bar__base" [ngStyle]="getStyles()">
+    <svg #svg
+         role="progressbar"
+         aria-valuemin="0"
+         [attr.aria-valuemax]="max"
+         [attr.aria-valuenow]="value">
+        <svg:circle class="igx-circular-bar__inner" />
+        <svg:circle #circle class="igx-circular-bar__outer"/>
 
-    <svg:defs>
-        <ng-container
-            *ngTemplateOutlet="gradientTemplate ? gradientTemplate.template : defaultGradientTemplate;
+        <svg:defs>
+            <ng-container
+                    *ngTemplateOutlet="gradientTemplate ? gradientTemplate.template : defaultGradientTemplate;
             context: { $implicit: gradientId }">
-        </ng-container>
-    </svg:defs>
+            </ng-container>
+        </svg:defs>
 
-    <ng-template #defaultGradientTemplate>
-        <svg:linearGradient [id]="gradientId" gradientTransform="rotate(90)">
-          <stop offset="0%"   class="igx-circular-bar__gradient-start" />
-          <stop offset="100%" class="igx-circular-bar__gradient-end" />
-        </svg:linearGradient>
+        <ng-template #defaultGradientTemplate>
+            <svg:linearGradient [id]="gradientId" gradientTransform="rotate(90)">
+                <stop offset="0%"   class="igx-circular-bar__gradient-start" />
+                <stop offset="100%" class="igx-circular-bar__gradient-end" />
+            </svg:linearGradient>
+        </ng-template>
+    </svg>
+
+    @if(textVisibility) {
+        <span class="igx-circular-bar__text">
+            <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate;
+                context: context">
+            </ng-container>
+        </span>
+    }
+
+
+    <ng-template #defaultTextTemplate>
+        {{textContent}}
     </ng-template>
-</svg>
-
-<span class="igx-circular-bar__text" *ngIf="textVisibility">
-    <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate;
-            context: context">
-    </ng-container>
-</span>
-
-<ng-template #defaultTextTemplate>
-    {{textContent}}
-</ng-template>
+</div>
 

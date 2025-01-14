@@ -136,6 +136,13 @@
         }
     }
 
+    %circular-base {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
     %display-circular:not(%display-circular--indeterminate) {
         svg {
             %outer {

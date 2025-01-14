@@ -139,8 +139,6 @@ $easing-curves: (
     ), $variant);
 
     %display-linear {
-        --stripe-size: #{$strip-size};
-        --linear-animation-duration: var(--_transition-duration);
         position: relative;
         display: flex;
         width: 100%;
@@ -155,6 +153,9 @@ $easing-curves: (
     }
 
     %base {
+        --stripe-size: #{$strip-size};
+        --linear-animation-duration: var(--_transition-duration);
+
         position: relative;
         width: inherit;
         height: $bar-height;

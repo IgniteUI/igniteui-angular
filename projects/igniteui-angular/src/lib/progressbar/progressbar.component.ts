@@ -1,4 +1,4 @@
-import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
+import {NgClass, NgTemplateOutlet, NgStyle} from '@angular/common';
 import {
     Component,
     ElementRef,
@@ -196,8 +196,10 @@ export abstract class BaseProgressDirective {
         return this._max;
     }
 
-    @HostBinding('style')
-    public get hostStyles(): { [key: string]: string } {
+    /**
+     * @hidden
+     */
+    public getStyles() {
         return {
             '--_progress-integer': this._integer.toString(),
             '--_progress-fraction': this._fraction.toString(),
@@ -295,7 +297,7 @@ let NEXT_GRADIENT_ID = 0;
 @Component({
     selector: 'igx-linear-bar',
     templateUrl: 'templates/linear-bar.component.html',
-    imports: [NgClass]
+    imports: [NgClass, NgStyle]
 })
 export class IgxLinearProgressBarComponent extends BaseProgressDirective implements AfterContentInit {
     @HostBinding('attr.aria-valuemin')
@@ -456,7 +458,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 @Component({
     selector: 'igx-circular-bar',
     templateUrl: 'templates/circular-bar.component.html',
-    imports: [NgTemplateOutlet, NgIf]
+    imports: [NgTemplateOutlet, NgStyle]
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterViewInit, AfterContentInit {
     /**
