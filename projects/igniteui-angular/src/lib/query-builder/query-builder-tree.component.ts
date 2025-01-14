@@ -1203,7 +1203,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         //Put focus on the drag icon of the ghost while performing keyboard drag
         if (this.isKeyboardDrag) {
-            ((this.dropGhostChipNode as HTMLElement).firstElementChild.firstElementChild.firstElementChild.firstElementChild as HTMLElement).focus();
+            ((this.dropGhostChipNode as HTMLElement).querySelector('.igx-drag-indicator') as HTMLElement).focus();
         }
 
         //Attach a mousemove event listener (if not already in place) to the dragged ghost (if present)
@@ -1410,6 +1410,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         return ownChipElements;
+    }
+
+    public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
+        (sourceDragElement.querySelector('.igx-drag-indicator') as HTMLElement).setAttribute('aria-hidden', 'false'); //Temp solution for aria-hidden bug #35759
+        this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
+    }
+
+    public onChipDragIndicatorFocusOut() {
+        if (this.sourceElement?.style?.display !== 'none') {
+            this.resetDragAndDrop(true);
+            this.keyboardSubscription$?.unsubscribe();
+        }
     }
 
     /* DRAG AND DROP END*/
@@ -1736,16 +1748,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         };
     }
 
-    public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
-        this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
-    }
-
-    public onChipDragIndicatorFocusOut() {
-        if (this.sourceElement?.style?.display !== 'none') {
-            this.resetDragAndDrop(true);
-            this.keyboardSubscription$?.unsubscribe();
-        }
-    }
     public formatReturnFields(innerTree: IFilteringExpressionsTree) {
         const returnFields = innerTree.returnFields;
         let text = returnFields.join(', ');
