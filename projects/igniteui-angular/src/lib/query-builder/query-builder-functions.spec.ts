@@ -76,6 +76,55 @@ export class QueryBuilderFunctions {
         return tree;
     }
 
+    public static generateDragAndDropExpressionTree(): FilteringExpressionsTree {
+        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Products', ['OrderId']);
+        innerTree.filteringOperands.push({
+            fieldName: 'Id',
+            condition: IgxNumberFilteringOperand.instance().condition('equals'),
+            conditionName: IgxNumberFilteringOperand.instance().condition('equals').name,
+            searchVal: 123
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'ProductName',
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
+            conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
+            searchVal: 'abc'
+        });
+
+
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, null, 'Orders', ['*']);
+        tree.filteringOperands.push({
+            fieldName: 'OrderName',
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
+            conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
+            searchVal: 'foo'
+        });
+
+        tree.filteringOperands.push({
+            fieldName: 'OrderId',
+            condition: IgxStringFilteringOperand.instance().condition('in'),
+            conditionName: IgxStringFilteringOperand.instance().condition('in').name,
+            searchTree: innerTree
+        });
+
+        const subGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Orders', ['*']);
+        subGroup.filteringOperands.push({
+            fieldName: 'OrderName',
+            condition: IgxStringFilteringOperand.instance().condition('endsWith'),
+            conditionName: IgxStringFilteringOperand.instance().condition('endsWith').name,
+            searchVal: 'a'
+        });
+        subGroup.filteringOperands.push({
+            fieldName: 'OrderDate',
+            condition: IgxDateFilteringOperand.instance().condition('today'),
+            conditionName: IgxDateFilteringOperand.instance().condition('today').name
+        });        
+        tree.filteringOperands.push(subGroup);
+
+        return tree;
+    }
+
+
     public static getQueryBuilderHeader(fix: ComponentFixture<any>) {
         const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
         const header = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_HEADER}`);

@@ -2208,6 +2208,63 @@ describe('IgxQueryBuilder', () => {
     describe('Overlay settings', () => {
         it('', () => { });
     });
+
+    
+    describe('Drag and drop', () => {
+      it('Should render custom header properly.', () => {
+
+      });
+
+      it('Should render custom input template properly.', fakeAsync(() => {
+          queryBuilder.expressionTree = QueryBuilderFunctions.generateDragAndDropExpressionTree();
+          fix.detectChanges();
+          tick(100);
+          fix.detectChanges();
+
+          const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
+
+          const dragIcon = chip.children[0].children[0].children[0];
+          dragIcon.nativeElement.focus();
+          tick(200);
+          fix.detectChanges();
+          tick(200);
+          fix.detectChanges();
+
+          
+          QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, 'ArrowDown', dragIcon.nativeElement, 200);
+          tick(200);
+          fix.detectChanges();
+
+          //Verify that expressionTree is correct
+          const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+          expect(exprTree).toBe(`{
+"filteringOperands": [
+  {
+    "fieldName": "OrderId",
+    "condition": {
+      "name": "greaterThan",
+      "isUnary": false,
+      "iconName": "filter_greater_than"
+    },
+    "conditionName": "greaterThan",
+    "searchVal": 5,
+    "searchTree": null,
+    "ignoreCase": true
+  }
+],
+"operator": 0,
+"entity": "Orders",
+"returnFields": [
+  "OrderId",
+  "OrderName",
+  "OrderDate",
+  "Delivered"
+]
+}`);
+      }));
+
+
+  });
 });
 
 @Component({
