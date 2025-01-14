@@ -138,6 +138,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     public onClearButtonClick() {
         this.filteringService.clearFilter(this.column.field);
+        this.selectedOperator = null;
         this.createInitialExpressionUIElement();
         this.cdr.detectChanges();
     }
