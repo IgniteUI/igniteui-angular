@@ -207,6 +207,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         const columns = [];
         const topLevelCols = cols.filter(c => c.level === 0);
         topLevelCols.forEach((col) => {
+            col.grid = this;
             const ref = this._createColumn(col);
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
