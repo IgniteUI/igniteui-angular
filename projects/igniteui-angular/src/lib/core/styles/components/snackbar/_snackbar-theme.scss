@@ -13,7 +13,6 @@
 /// If you specify a background color, but do not specify colors for either the
 /// button or the text, their colors will be set automatically to a contrasting color.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The background color used in the snackbar.
 /// @param {Color} $text-color [null] - The text color used in the snackbar.
 /// @param {Color} $button-color [null] - The button color used in the snackbar.
@@ -26,7 +25,6 @@
 ///   @include css-vars($my-snackbar-theme);
 @function snackbar-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $border-radius: null,
     $background: null,

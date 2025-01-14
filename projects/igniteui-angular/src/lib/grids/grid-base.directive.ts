@@ -4266,7 +4266,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Gets/Sets the outlet used to attach the grid's overlays to.
      *
-     * @remark
+     * @remarks
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
     @Input()
@@ -7524,7 +7524,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected get renderedActualRowHeight() {
         let border = 1;
         if (this.rowList.toArray().length > 0) {
-            const rowStyles = document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
+            const rowStyles = this.document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
             border = rowStyles.borderBottomWidth ? Math.ceil(parseFloat(rowStyles.borderBottomWidth)) : border;
         }
         return this.rowHeight + border;
