@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxCircularProgressBarComponent } from './progressbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
-fdescribe('IgxCircularProgressBarComponent', () => {
+describe('IgxCircularProgressBarComponent', () => {
     let fixture: ComponentFixture<IgxCircularProgressBarComponent>;
     let progress: IgxCircularProgressBarComponent;
     let circularBar: HTMLElement;
