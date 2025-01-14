@@ -206,18 +206,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     @Input({ transform: booleanAttribute }) public override vertical = false;
 
     /**
-     * Controls whether the carousel should support keyboard navigation.
-     * Default value is `false`.
-     * ```html
-     * <igx-carousel [keyboardSupport]="true"></igx-carousel>
-     * ```
-     *
-     * @memberOf IgxCarouselComponent
-     * @deprecated in version 18.2.0.
-     */
-    @Input({ transform: booleanAttribute }) public keyboardSupport = false;
-
-    /**
      * Controls whether the carousel should support gestures.
      * Default value is `true`.
      * ```html
@@ -590,27 +578,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 
-
-    /** @hidden */
-    @HostListener('keydown.arrowright', ['$event'])
-    public onKeydownArrowRight(event) {
-        if (this.keyboardSupport) {
-            event.preventDefault();
-            this.next();
-            this.focusElement();
-        }
-    }
-
-    /** @hidden */
-    @HostListener('keydown.arrowleft', ['$event'])
-    public onKeydownArrowLeft(event) {
-        if (this.keyboardSupport) {
-            event.preventDefault();
-            this.prev();
-            this.focusElement();
-        }
-    }
-
     /** @hidden */
     @HostListener('tap', ['$event'])
     public onTap(event) {
@@ -624,26 +591,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             } else if (this.stoppedByInteraction) {
                 this.play();
             }
-        }
-    }
-
-    /** @hidden */
-    @HostListener('keydown.home', ['$event'])
-    public onKeydownHome(event) {
-        if (this.keyboardSupport && this.slides.length > 0) {
-            event.preventDefault();
-            this.slides.first.active = true;
-            this.focusElement();
-        }
-    }
-
-    /** @hidden */
-    @HostListener('keydown.end', ['$event'])
-    public onKeydownEnd(event) {
-        if (this.keyboardSupport && this.slides.length > 0) {
-            event.preventDefault();
-            this.slides.last.active = true;
-            this.focusElement();
         }
     }
 
@@ -800,9 +747,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /** @hidden */
     public handleKeydown(event: KeyboardEvent): void {
-        if (this.keyboardSupport) {
-            return;
-        }
         const { key } = event;
         const slides = this.slides.toArray();
 

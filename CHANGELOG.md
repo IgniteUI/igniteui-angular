@@ -5,8 +5,11 @@ All notable changes for each version of this project will be documented in this 
 ## 19.1.0
 ### General
 - `IgxCarousel`
+    - Removed deprecated property `keyboardSupport`.
     - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
     - **Deprecation** - `CarouselIndicatorsOrientation` enum members `top` and `bottom` have been deprecated and will be removed in a future version. Use `start` and `end` instead.
+- `IgxSlide`
+    - **Deprecation** - `tabIndex` has been deprecated and will be removed in a future version.
 
 ## 19.0.0
 ### General

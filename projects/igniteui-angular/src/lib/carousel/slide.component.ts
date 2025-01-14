@@ -55,10 +55,11 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * ```
      *
      * @memberof IgxSlideComponent
+     * @deprecated in version 19.1.0.
      */
     @HostBinding('attr.tabindex')
     public get tabIndex() {
-        return this.active && this.carousel.keyboardSupport ? 0 : null;
+        return this.active ? 0 : null;
     }
 
     /**

@@ -36,4 +36,24 @@ describe(`Update to ${version}`, () => {
             );
         });
     });
+
+    it('should remove igx-caroursel property `keyboardSupport` in template', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-carousel [keyboardSupport]="true"></igx-carousel>
+        <igx-carousel [keyboardSupport]="false"></igx-carousel>
+        <igx-carousel [keyboardSupport]="myProp"></igx-carousel>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-carousel></igx-carousel>
+        <igx-carousel></igx-carousel>
+        <igx-carousel></igx-carousel>
+        `
+        );
+    });
 });
