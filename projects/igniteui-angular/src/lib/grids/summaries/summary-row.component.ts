@@ -25,7 +25,6 @@ import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
     selector: 'igx-grid-summary-row',
     templateUrl: './summary-row.component.html',
     providers: [IgxForOfSyncService],
-    standalone: true,
     imports: [NgIf, NgTemplateOutlet, IgxGridForOfDirective, IgxSummaryCellComponent, NgFor, IgxGridNotGroupedPipe]
 })
 export class IgxSummaryRowComponent implements DoCheck  {

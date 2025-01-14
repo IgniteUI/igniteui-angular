@@ -273,7 +273,6 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`updateRow(value: any, rowIndex: number)`|Updates the row object and the data source record with the passed value.|
 |`updateCell(value: any, rowIndex: number, column: string)`|Updates the cell object and the record field in the data source.|
 |`filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean)`|Filters a single column. A filtering condition or filtering expressions tree could be used. Check the available [filtering conditions](#filtering-conditions)|
-|`filterGlobal(value: any, condition?, ignoreCase?)`|Filters all the columns in the grid with the same condition.|
 |`clearFilter(name?: string)`|If `name` is provided, clears the filtering state of the corresponding column, otherwise clears the filtering state of all columns.|
 |`sort(expression: ISortingExpression)`|Sorts a single column.|
 |`sort(expressions: Array)`|Sorts the grid columns based on the provided array of sorting expressions.|

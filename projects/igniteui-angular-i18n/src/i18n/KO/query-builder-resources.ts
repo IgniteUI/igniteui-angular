@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsKO_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Korean resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsKO = {
     igx_query_builder_date_placeholder: '픽업 날짜',
     igx_query_builder_time_placeholder: '인도 시간',
     igx_query_builder_datetime_placeholder: '날짜 및 시간 선택',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsKO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: '작거나 같음',
     igx_query_builder_filter_true: '참',
     igx_query_builder_filter_false: '거짓',
-    igx_query_builder_filter_all: '모두',    
+    igx_query_builder_filter_all: '모두',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '그룹 "그리고"',
     igx_query_builder_or_group: '그룹 "또는"',
@@ -61,15 +64,11 @@ const QueryBuilderResourceStringsKO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: '검색',
     igx_query_builder_select_all: '모두 선택',
     igx_query_builder_select_entity: '엔터티 선택',
+    igx_query_builder_select_return_field_single: '반환 필드를 선택',
     igx_query_builder_select_return_fields: '반환 필드 선택',
     igx_query_builder_dialog_title: '반환 필드 선택',
     igx_query_builder_dialog_message: '엔터티를 변경하면 현재 설정이 손실됩니다. 계속하시겠습니까?',
     igx_query_builder_dialog_checkbox_text: '이 대화 상자를 다시 표시하지 않기',
     igx_query_builder_dialog_cancel: '취소',
     igx_query_builder_dialog_confirm: '확인',
-};
-
-/**
- * Korean resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsKO = QueryBuilderResourceStringsKO_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

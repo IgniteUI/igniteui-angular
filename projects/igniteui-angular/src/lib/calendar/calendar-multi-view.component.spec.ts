@@ -1113,7 +1113,6 @@ describe('Multi-View Calendar - ', () => {
     template: `
         <igx-calendar [monthsViewNumber]="monthViews"></igx-calendar>
     `,
-    standalone: true,
     imports: [IgxCalendarComponent]
 })
 export class MultiViewCalendarSampleComponent {
@@ -1125,7 +1124,6 @@ export class MultiViewCalendarSampleComponent {
     template: `
         <igx-date-picker [value]="date" [displayMonthsCount]="monthViews" [hideOutsideDays]="true"></igx-date-picker>
     `,
-    standalone: true,
     imports: [IgxDatePickerComponent]
 })
 export class MultiViewDatePickerSampleComponent {
@@ -1138,7 +1136,6 @@ export class MultiViewDatePickerSampleComponent {
     template: `
         <igx-calendar [monthsViewNumber]="monthViews" selection="multi" [(ngModel)]="model"></igx-calendar>
     `,
-    standalone: true,
     imports: [IgxCalendarComponent, FormsModule]
 })
 export class MultiViewNgModelSampleComponent {

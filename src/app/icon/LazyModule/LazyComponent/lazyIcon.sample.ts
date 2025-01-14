@@ -6,7 +6,6 @@ import { IgxIconComponent } from 'igniteui-angular';
     selector: 'app-lazy-icon-sample',
     styleUrls: ['./lazyIcon.sample.css'],
     templateUrl: 'lazyIcon.sample.html',
-    standalone: true,
     imports: [IgxIconComponent]
 })
 export class LazyIconSampleComponent implements OnInit {

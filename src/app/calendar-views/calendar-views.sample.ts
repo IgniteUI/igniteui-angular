@@ -7,7 +7,6 @@ import { DateRangeType, IgxButtonDirective, IgxCardComponent, IgxDaysViewCompone
     selector: 'app-calendar-views-sample',
     templateUrl: 'calendar-views.sample.html',
     styleUrls: ['calendar-views.sample.scss'],
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormsModule,

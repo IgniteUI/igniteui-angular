@@ -36,7 +36,7 @@ import {
     Validator
 } from '@angular/forms';
 import {
-    IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective,
+    IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective,
      IFormattingViews, IFormattingOptions
 } from '../calendar/public_api';
 import { isDateInRanges } from '../calendar/common/helpers';
@@ -92,7 +92,6 @@ let NEXT_ID = 0;
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
     styles: [':host { display: block; }'],
-    standalone: true,
     imports: [
         NgIf,
         IgxInputGroupComponent,
@@ -410,6 +409,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
+
+    @ContentChild(IgxCalendarHeaderTitleTemplateDirective)
+    private headerTitleTemplate: IgxCalendarHeaderTitleTemplateDirective;
 
     @ContentChild(IgxCalendarHeaderTemplateDirective)
     private headerTemplate: IgxCalendarHeaderTemplateDirective;
@@ -972,6 +974,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._calendar.locale = this.locale;
         this._calendar.weekStart = this.weekStart;
         this._calendar.specialDates = this.specialDates;
+        this._calendar.headerTitleTemplate = this.headerTitleTemplate;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
         this._calendar.headerOrientation = this.headerOrientation;

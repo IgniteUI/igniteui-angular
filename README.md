@@ -160,7 +160,8 @@ Some of the Angular chart types included are: [Polar chart](https://www.infragis
 |17.2.0|29-Apr-24|[Milestone #31](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-31-version-172-released-apr-29th-2024)|
 |18.0.0|07-Jun-24|[Milestone #32](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-32-version-180-released-jun-07th-2024)|
 |18.1.0|22-Jul-24|[Milestone #33](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-33-due-by-jul-2024)|
-|18.2.0|25-Oct-24|[Milestone #34]()|
+|18.2.0|25-Oct-24|[Milestone #34](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-34-version-182-released-oct-25th-2024)|
+|19.0.0|25-Nov-24|[Milestone #35](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md#milestone-35-version-190-released-nov-25th-2024)|
 
 
 ### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)

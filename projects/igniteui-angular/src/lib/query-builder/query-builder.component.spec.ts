@@ -109,6 +109,19 @@ describe('IgxQueryBuilder', () => {
                 ControlsFunction.verifyButtonIsDisabled(button as HTMLElement, false);
             }
         }));
+
+        it('Should render combo for main entity return fields and select for nested entity return field.', fakeAsync(() => {
+            QueryBuilderFunctions.selectEntityAndClickInitialAddGroup(fix, 1, 0);
+
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+
+            const mainEntityContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, true, 0);
+            const nestedEntityContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, true, 1);
+
+            expect(mainEntityContainer.children[1].tagName).toBe('IGX-COMBO');
+            expect(nestedEntityContainer.children[1].tagName).toBe('IGX-SELECT');
+        }));
     });
 
     describe('Interactions', () => {
@@ -828,10 +841,7 @@ describe('IgxQueryBuilder', () => {
         "operator": 1,
         "entity": "Products",
         "returnFields": [
-          "Id",
-          "ProductName",
-          "OrderId",
-          "Released"
+          "Id"
         ]
       }
     }
@@ -903,10 +913,7 @@ describe('IgxQueryBuilder', () => {
         "operator": 1,
         "entity": "Products",
         "returnFields": [
-          "Id",
-          "ProductName",
-          "OrderId",
-          "Released"
+          "Id"
         ]
       }
     }
@@ -1568,10 +1575,24 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
+            let commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, true);
+
             // Enter values in the nested query
             QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 1); // Select 'Products' entity
             tick(100);
             fix.detectChanges();
+
+            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, true);
+
+            // Select return field
+            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
+            tick(100);
+            fix.detectChanges();
+
+            commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+            ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
 
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
@@ -1597,10 +1618,7 @@ describe('IgxQueryBuilder', () => {
         "operator": 0,
         "entity": "Products",
         "returnFields": [
-          "Id",
-          "ProductName",
-          "OrderId",
-          "Released"
+          "Id"
         ]
       }
     }

@@ -1416,7 +1416,6 @@ describe('Row Pinning #grid', () => {
             <igx-paginator *ngIf="paging"></igx-paginator>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
 })
 export class GridRowPinningComponent {
@@ -1443,7 +1442,6 @@ export class GridRowPinningComponent {
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
@@ -1478,7 +1476,6 @@ export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
         </ng-template>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxGridDetailTemplateDirective]
 })
 export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
@@ -1496,7 +1493,6 @@ export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
             [autoGenerate]="true">
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent]
 })
 export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent { }
@@ -1513,7 +1509,6 @@ export class GridRowPinningWithTransactionsComponent extends GridRowPinningCompo
             [autoGenerate]="true">
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent]
 })
 export class GridRowPinningWithInitialPinningComponent implements OnInit {

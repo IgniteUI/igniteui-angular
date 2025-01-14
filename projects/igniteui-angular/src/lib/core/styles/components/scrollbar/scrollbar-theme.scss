@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:meta';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 
@@ -80,6 +81,7 @@
         sb-corner-bg: $sb-corner-bg,
         sb-corner-border-color: $sb-corner-border-color,
         sb-corner-border-size: $sb-corner-border-size,
+        theme: map.get($schema, '_meta', 'theme'),
     ));
 }
 
@@ -98,7 +100,7 @@
         }
 
         ::-webkit-scrollbar {
-            @if type-of(map.get($theme, 'sb-size') == 'string') {
+            @if meta.type-of(map.get($theme, 'sb-size') == 'string') {
                 width: var-get($theme, 'sb-size');
                 height: var-get($theme, 'sb-size');
             }
