@@ -262,7 +262,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._selectedReturnFields = [];
         }
 
-        if(!this._preventInit) {
+        if (!this._preventInit) {
             this.init();
         }
     }
@@ -925,11 +925,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public exitEditAddMode() {
-        if(this._editedExpression) {
-            this.exitOperandEdit();
-            this.cancelOperandAdd();
+    public exitEditAddMode(shouldPreventInit = false) {
+        if (!this._editedExpression) {
+            return;
+        }
 
+        this.exitOperandEdit();
+        this.cancelOperandAdd();
+
+        if (shouldPreventInit) {
             this._preventInit = true;
         }
     }
@@ -983,10 +987,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onChipRemove(expressionItem: ExpressionItem) {
-        if(this._editedExpression) {
-            this.exitOperandEdit();
-            this.cancelOperandAdd();
-        }
+        this.exitEditAddMode();
         this.deleteItem(expressionItem);
     }
 
@@ -1024,11 +1025,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     //When we pick up a chip
     public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean): void {
         //console.log('Picked up:', event, sourceDragElement);
-        if(this._editedExpression) {
-            this.exitOperandEdit();
-            this.cancelOperandAdd();
-        }
-
+        this.exitEditAddMode();
         this.resetDragAndDrop(true);
         this.isKeyboardDrag = isKeyboardDrag;
         this.sourceExpressionItem = sourceExpressionItem;
@@ -1447,7 +1444,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
-        this.exitEditAddMode();
+        this.exitEditAddMode(true);
         this.cdr.detectChanges();
         this.enterEditMode(expressionItem);
     }
@@ -1457,7 +1454,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public clickExpressionAdd(targetButton: HTMLElement) {
-        this.exitEditAddMode();
+        this.exitEditAddMode(true);
         this.cdr.detectChanges();
         this.openExpressionAddDialog(targetButton);
     }
@@ -1599,10 +1596,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onGroupClick(groupItem: ExpressionGroupItem) {
-        if(this._editedExpression) {
-            this.exitOperandEdit();
-            this.cancelOperandAdd();
-        }
+        this.exitEditAddMode();
     }
 
     /**
