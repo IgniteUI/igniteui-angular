@@ -2,15 +2,15 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 19.1.0
-### New Features
-- `IgxBanner`
-    - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. This property allows the banner to be programmatically set as expanded (visible) or collapsed (hidden) both initially and during runtime.
-
-## 19.1.0
 ### General
 - `IgxCarousel`
     - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
     - **Deprecation** - `CarouselIndicatorsOrientation` enum members `top` and `bottom` have been deprecated and will be removed in a future version. Use `start` and `end` instead.
+### New Features
+- `IgxBanner`
+    - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. The banner can now be programmatically set to expanded (visible) or collapsed (hidden) both initially and at runtime. Animations will trigger during runtime updates — the **open animation** plays when `expanded` is set to `true`, and the **close animation** plays when set to `false`. However, no animations will trigger when the property is set initially.
+    - The banner's event lifecycle (`opening`, `opened`, `closing`, `closed`) only triggers through **user interactions** (e.g., clicking to open/close). Programmatic updates using the `expanded` property will not fire any events.
+    - If the `expanded` property changes during an ongoing animation, the current animation will **cancel immediately**, applying the new state without additional animations or events.
 
 ## 19.0.0
 ### General

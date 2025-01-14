@@ -142,13 +142,12 @@ export class IgxBannerComponent implements IToggleView {
         return this._animationSettings ? this._animationSettings : this._expansionPanel.animationSettings;
     }
 
-        /**
+    /**
      * Gets/Sets the resource strings.
      *
      * @remarks
      * By default it uses EN resources.
      */
-
     @Input()
     public set resourceStrings(value: IBannerResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
@@ -186,7 +185,7 @@ export class IgxBannerComponent implements IToggleView {
         }
 
         this._expanded = value;
-        this._isProgrammaticExpanded = true;
+        this._shouldFireEvent = true;
 
         if (value) {
             this._expansionPanel.open();
@@ -201,7 +200,7 @@ export class IgxBannerComponent implements IToggleView {
      * ```typescript
      * const isCollapsed: boolean = banner.collapsed;
      * ```
-    */
+     */
     public get collapsed(): boolean {
         return this._expansionPanel.collapsed;
     }
@@ -234,7 +233,7 @@ export class IgxBannerComponent implements IToggleView {
     private _bannerActionTemplate: IgxBannerActionsDirective;
 
     private _expanded: boolean = false;
-    private _isProgrammaticExpanded = false;
+    private _shouldFireEvent: boolean = false;
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
     private _resourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
@@ -268,7 +267,7 @@ export class IgxBannerComponent implements IToggleView {
         }
         this._expansionPanel.open(event);
         this._expanded = true;
-        this._isProgrammaticExpanded = false;
+        this._shouldFireEvent = false;
     }
 
     /**
@@ -298,7 +297,7 @@ export class IgxBannerComponent implements IToggleView {
         }
         this._expansionPanel.close(event);
         this._expanded = false;
-        this._isProgrammaticExpanded = false;
+        this._shouldFireEvent = false;
     }
 
     /**
@@ -325,7 +324,7 @@ export class IgxBannerComponent implements IToggleView {
 
     /** @hidden */
     public onExpansionPanelOpen() {
-        if (this._isProgrammaticExpanded) {
+        if (this._shouldFireEvent) {
             return;
         }
         this.opened.emit(this._bannerEvent);
@@ -333,7 +332,7 @@ export class IgxBannerComponent implements IToggleView {
 
     /** @hidden */
     public onExpansionPanelClose() {
-        if (this._isProgrammaticExpanded) {
+        if (this._shouldFireEvent) {
             return;
         }
         this.closed.emit(this._bannerEvent);
