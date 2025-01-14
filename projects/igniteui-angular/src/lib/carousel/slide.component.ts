@@ -1,6 +1,6 @@
 import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, Inject } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Direction, IgxSlideComponentBase } from './carousel-base';
+import { Direction, ICarouselComponentBase, IGX_CAROUSEL_COMPONENT, IgxSlideComponentBase } from './carousel-base';
 import { IgxCarouselComponent } from './carousel.component';
 
 /**
@@ -132,7 +132,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
 
     constructor(
         private elementRef: ElementRef,
-        @Inject(IgxCarouselComponent) private carousel: IgxCarouselComponent
+        @Inject(IGX_CAROUSEL_COMPONENT) private carousel: ICarouselComponentBase,
     ) { }
 
     /**
