@@ -1,11 +1,9 @@
-import { Component } from '@angular/core';
+import { Directive } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BaseProgressDirective } from './progressbar.component';
 
-@Component({
-    template: '',
-})
-class TestProgressComponent extends BaseProgressDirective {
+@Directive()
+class TestProgressDirective extends BaseProgressDirective {
     // Expose the protected property for testing
     public get exposedHasFraction(): boolean {
         return this.hasFraction;
@@ -13,15 +11,15 @@ class TestProgressComponent extends BaseProgressDirective {
 }
 
 describe('BaseProgressDirective', () => {
-    let fixture: ComponentFixture<TestProgressComponent>;
-    let baseDirective: TestProgressComponent;
+    let fixture: ComponentFixture<TestProgressDirective>;
+    let baseDirective: TestProgressDirective;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [TestProgressComponent]
+            imports: [TestProgressDirective]
         }).compileComponents();
 
-        fixture = TestBed.createComponent(TestProgressComponent);
+        fixture = TestBed.createComponent(TestProgressDirective);
         baseDirective = fixture.componentInstance;
         fixture.detectChanges();
     });
