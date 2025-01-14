@@ -246,9 +246,9 @@
         <div
             #editingInputsContainer
             igxDrop
-            (enter)="onDivEnter(editingInputsContainer, expressionItem)"
+            (enter)="onChipEnter(editingInputsContainer, expressionItem, true)"
             (over)="onDivOver(editingInputsContainer, expressionItem)"
-            (leave)="onDivLeave()"
+            (leave)="onChipLeave()"
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="expressionItem.inEditMode"
             class="igx-filter-tree__inputs"

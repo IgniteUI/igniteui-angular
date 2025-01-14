@@ -318,7 +318,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('entitySelect', { read: IgxSelectComponent })
     protected entitySelect: IgxSelectComponent;
-    
+
     @ViewChild('returnFieldsCombo', { read: IgxComboComponent })
     private returnFieldsCombo: IgxComboComponent;
 
@@ -997,6 +997,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return (document.querySelector(`.${this.dropGhostClass}`) as HTMLElement);
     }
 
+    private get mainExpressionTree(): HTMLElement {
+        return this.el.nativeElement.firstElementChild.firstElementChild.nextElementSibling;
+    }
+
     //Chip can be dragged if it's tree is in edit mode and there is no inner query that's been edited
     public canBeDragged(): boolean {
         return this.isInEditMode && (!this.innerQueries || this.innerQueries.length == 0 || !this.innerQueries?.some(q => q.isInEditMode()))
@@ -1197,6 +1201,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             appendToElement.parentNode.insertBefore(this.dropGhostChipNode, appendToElement.nextSibling);
         }
 
+        //Put focus on the drag icon of the ghost while performing keyboard drag
+        if (this.isKeyboardDrag) {
+            ((this.dropGhostChipNode as HTMLElement).firstElementChild.firstElementChild.firstElementChild.firstElementChild as HTMLElement).focus();
+        }
+
         //Attach a mousemove event listener (if not already in place) to the dragged ghost (if present)
         if (this.dragGhostElement && (!this.ghostChipMousemoveSubscription$ || this.ghostChipMousemoveSubscription$?.closed === true)) {
             const mouseMoves = fromEvent<MouseEvent>(this.dragGhostElement, 'mousemove');
@@ -1255,22 +1264,27 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     private listenToKeyboard() {
         this.keyboardSubscription$?.unsubscribe();
-        this.keyboardSubscription$ = fromEvent<KeyboardEvent>(document, 'keydown')
-            .pipe(filter(event => !event.repeat))
+        this.keyboardSubscription$ = fromEvent<KeyboardEvent>(this.mainExpressionTree, 'keydown')
             .pipe(filter(key => ['ArrowUp', 'ArrowDown', 'Enter', 'Space', 'Escape', 'Tab'].includes(key.code)))
-            .pipe(tap(e => e.preventDefault()))
+            .pipe(tap(e => {
+                //Inhibit Tabs if keyboard drag is underway
+                if (e.key !== 'Tab' || this.dropGhostElement) e.preventDefault();
+            }))
+            .pipe(filter(event => !event.repeat))
             .subscribe(key => {
                 if (key.code == 'Escape') {
                     //TODO cancel mouse drag
                     this.resetDragAndDrop(false);
+                    //Regain focus on the drag icon after keyboard drag cancel
+                    if (this.isKeyboardDrag) {
+                        (this.sourceElement.firstElementChild.firstElementChild.firstElementChild.firstElementChild as HTMLElement).focus();
+                    }
                 } else if (key.code == 'ArrowUp' || key.code == 'ArrowDown') {
                     this.arrowDrag(key);
                 } else if (key.code == 'Enter' || key.code == 'Space') {
                     //this.platform.isActivationKey(eventArgs) Maybe use this rather that Enter/Space?
                     this.onChipDropped();
                     this.keyboardSubscription$.unsubscribe();
-                } else if (key.code == 'Tab') {
-                    //inhibit tabs while drag&drop is in process
                 }
             });
     }
@@ -1723,14 +1737,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
-        if (this.canBeDragged()) {
-            //this.provideArrowDrag(sourceDragElement, sourceExpressionItem);
-            this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
-        }
+        this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
     }
 
     public onChipDragIndicatorFocusOut() {
-        if (this.sourceElement.style.display !== 'none') {
+        if (this.sourceElement?.style?.display !== 'none') {
             this.resetDragAndDrop(true);
             this.keyboardSubscription$?.unsubscribe();
         }
