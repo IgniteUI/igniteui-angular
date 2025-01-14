@@ -148,8 +148,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Double-click the existing chip to enter edit mode.
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+            // Click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
             tick(50);
             fix.detectChanges();
             // Edit the filter value.
@@ -866,7 +866,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [0, 0], 'ProductName', 'Contains', 'angular');
 
             // Edit the first expression in the inner 'or' group.
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0, 0], true); // Double-click the chip
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0, 0]); // Click the chip
             tick(200);
             fix.detectChanges();
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
@@ -931,7 +931,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [0, 0], 'ProductName', 'Contains', 'angular');
 
             // Edit the first expression in the inner 'or' group.
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0, 0], true); // Double-click the chip
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0, 0]); // Click the chip
             tick(200);
             fix.detectChanges();
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
