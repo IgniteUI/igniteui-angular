@@ -262,7 +262,6 @@ describe('IgxRadio', () => {
 
 @Component({
     template: `<igx-radio #radio>Radio</igx-radio>`,
-    standalone: true,
     imports: [IgxRadioComponent]
 })
 class InitRadioComponent {
@@ -274,7 +273,6 @@ class InitRadioComponent {
         <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']"
                     [value]="item"
                     name="group" [(ngModel)]="selected">{{item}}</igx-radio>`,
-    standalone: true,
     imports: [FormsModule, IgxRadioComponent, NgFor]
 })
 class RadioWithModelComponent {
@@ -291,7 +289,6 @@ class RadioWithModelComponent {
         [disabled]="item.disabled">
         {{item.value}}
     </igx-radio>`,
-    standalone: true,
     imports: [FormsModule, IgxRadioComponent, NgFor]
 })
 class DisabledRadioComponent {
@@ -316,7 +313,6 @@ class DisabledRadioComponent {
         required>
         {{item}}
     </igx-radio>`,
-    standalone: true,
     imports: [FormsModule, IgxRadioComponent, NgFor]
 })
 class RequiredRadioComponent {
@@ -326,7 +322,6 @@ class RequiredRadioComponent {
 @Component({
     template: `<p id="my-label">{{label}}</p>
     <igx-radio #radio aria-labelledby="my-label"></igx-radio>`,
-    standalone: true,
     imports: [IgxRadioComponent]
 })
 class RadioExternalLabelComponent {
@@ -336,7 +331,6 @@ class RadioExternalLabelComponent {
 
 @Component({
     template: `<igx-radio #radio [aria-label]="label"></igx-radio>`,
-    standalone: true,
     imports: [IgxRadioComponent]
 })
 class RadioInvisibleLabelComponent {
@@ -351,7 +345,6 @@ class RadioInvisibleLabelComponent {
         <button type="submit" [disabled]="!form.valid">Submit</button>
     </form>
 `,
-    standalone: true,
     imports: [FormsModule, IgxRadioComponent]
 })
 class RadioFormComponent {
@@ -368,7 +361,6 @@ class RadioFormComponent {
     template: `<form [formGroup]="reactiveForm">
         <igx-radio #radio formControlName="radio">Radio</igx-radio>
     </form>`,
-    standalone: true,
     imports: [ReactiveFormsModule, IgxRadioComponent]
 })
 class ReactiveFormComponent {

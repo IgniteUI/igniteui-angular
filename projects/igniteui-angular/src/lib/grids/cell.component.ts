@@ -71,7 +71,6 @@ import { IgxChipComponent } from '../chips/chip.component';
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html',
     providers: [HammerGesturesManager],
-    standalone: true,
     imports: [
         NgIf,
         NgClass,

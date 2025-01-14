@@ -51,7 +51,6 @@ export interface IgxExporterEvent {
 @Component({
     selector: 'igx-grid-toolbar-exporter',
     templateUrl: './grid-toolbar-exporter.component.html',
-    standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, NgIf, IgxToggleDirective, IgxExcelTextDirective, NgTemplateOutlet, IgxCSVTextDirective]
 })
 export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {

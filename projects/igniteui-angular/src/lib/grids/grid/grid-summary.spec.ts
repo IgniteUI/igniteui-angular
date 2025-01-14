@@ -134,6 +134,77 @@ describe('IgxGrid - Summaries #grid', () => {
                     fixture.detectChanges();
                 }).not.toThrow();
             });
+
+            it('should not display initially disabled summaries in the summary output', fakeAsync(() => {
+                grid.enableSummaries([{ fieldName: 'UnitsInStock' }]);
+                fixture.detectChanges();
+                tick();
+
+                const column = grid.getColumnByName('UnitsInStock');
+
+                column.disabledSummaries = ['count', 'min', 'max'];
+                fixture.detectChanges();
+                tick();
+
+                GridSummaryFunctions.verifyColumnSummaries(
+                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
+                    ['Sum', 'Avg'],
+                    ['39,004', '3,900.4']
+                );
+            }));
+
+            it('should apply disabled summaries dynamically at runtime', fakeAsync(() => {
+                grid.enableSummaries([{ fieldName: 'UnitsInStock' }]);
+                fixture.detectChanges();
+                tick();
+
+                const column = grid.getColumnByName('UnitsInStock');
+
+                column.disabledSummaries = [];
+                fixture.detectChanges();
+                tick();
+                GridSummaryFunctions.verifyColumnSummaries(
+                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
+                    ['Count', 'Min', 'Max', 'Sum', 'Avg'],
+                    ['10', '0', '20,000', '39,004', '3,900.4']
+                );
+
+                column.disabledSummaries = ['count'];
+                fixture.detectChanges();
+                tick();
+                GridSummaryFunctions.verifyColumnSummaries(
+                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
+                    ['Min', 'Max', 'Sum', 'Avg'],
+                    ['0', '20,000', '39,004', '3,900.4']
+                );
+
+                column.disabledSummaries = ['count', 'sum'];
+                fixture.detectChanges();
+                tick();
+                GridSummaryFunctions.verifyColumnSummaries(
+                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
+                    ['Min', 'Max', 'Avg'],
+                    ['0', '20,000', '3,900.4']
+                );
+
+                column.disabledSummaries = ['count', 'sum', 'average'];
+                fixture.detectChanges();
+                tick();
+                GridSummaryFunctions.verifyColumnSummaries(
+                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
+                    ['Min', 'Max'],
+                    ['0', '20,000']
+                );
+
+                column.disabledSummaries = ['min', 'max'];
+                fixture.detectChanges();
+                tick();
+                GridSummaryFunctions.verifyColumnSummaries(
+                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
+                    ['Count', 'Sum', 'Avg'],
+                    ['10', '39,004', '3,900.4']
+                );
+            }));
         });
 
         describe('custom summaries: ', () => {
@@ -238,6 +309,33 @@ describe('IgxGrid - Summaries #grid', () => {
                 expect(lastColumnSummaryCellRect.right).toBe(lastColumnNormalCellRect.right,
                     'summary cell and data cell are not right aligned');
             });
+
+            it('should apply disabledSummaries with custom summary', fakeAsync(() => {
+                grid.enableSummaries([{ fieldName: 'UnitsInStock' }]);
+                fixture.detectChanges();
+                tick();
+
+                const column = grid.getColumnByName('UnitsInStock');
+                column.summaries = fixture.componentInstance.inStockSummary;
+                fixture.detectChanges();
+                tick();
+
+                GridSummaryFunctions.verifyColumnSummaries(
+                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
+                    ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
+                    ['10', '0', '20,000', '39,004', '3,900.4', '6']
+                );
+
+                column.disabledSummaries = ['test'];
+                fixture.detectChanges();
+                tick();
+
+                GridSummaryFunctions.verifyColumnSummaries(
+                    GridSummaryFunctions.getRootSummaryRow(fixture), 3,
+                    ['Count', 'Min', 'Max', 'Sum', 'Avg'],
+                    ['10', '0', '20,000', '39,004', '3,900.4']
+                );
+            }));
         });
 
         describe('specific data: ', () => {
@@ -2665,7 +2763,6 @@ class AllDataAvgSummary extends IgxSummaryOperand {
         </igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 

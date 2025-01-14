@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsSV_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Swedish resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsSV = {
     igx_query_builder_date_placeholder: 'Upphämtningsdatum',
     igx_query_builder_time_placeholder: 'Upphämtningstid',
     igx_query_builder_datetime_placeholder: 'Välj datum och tid',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsSV_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Mindre än eller lika med',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'Allt',    
+    igx_query_builder_filter_all: 'Allt',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"Och" -grupp',
     igx_query_builder_or_group: '"Eller" -grupp',
@@ -61,15 +64,11 @@ const QueryBuilderResourceStringsSV_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Sök',
     igx_query_builder_select_all: 'Välj alla',
     igx_query_builder_select_entity: 'Välj enhet',
+    igx_query_builder_select_return_field_single: 'Välj returfält',
     igx_query_builder_select_return_fields: 'Välj returfält',
     igx_query_builder_dialog_title: 'Bekräftelse',
     igx_query_builder_dialog_message: 'Genom att ändra entitet förlorar du dina nuvarande inställningar. Vill du fortsätta?',
     igx_query_builder_dialog_checkbox_text: 'Visa inte den här dialogrutan igen',
     igx_query_builder_dialog_cancel: 'Avbryt',
     igx_query_builder_dialog_confirm: 'Bekräfta',
-};
-
-/**
- * Swedish resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsSV = QueryBuilderResourceStringsSV_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

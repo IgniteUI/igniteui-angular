@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsJA_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Japanese resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsJA = {
     igx_query_builder_date_placeholder: '日付の選択',
     igx_query_builder_time_placeholder: 'ピックアップ時間',
     igx_query_builder_datetime_placeholder: '日付と時間の選択',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsJA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: '以下',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'すべて',    
+    igx_query_builder_filter_all: 'すべて',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"And" グループ',
     igx_query_builder_or_group: '"Or" グループ',
@@ -61,15 +64,11 @@ const QueryBuilderResourceStringsJA_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: '検索',
     igx_query_builder_select_all: 'すべて選択',
     igx_query_builder_select_entity: 'エンティティの選択',
+    igx_query_builder_select_return_field_single: '返却フィールドを選択',
     igx_query_builder_select_return_fields: '返却フィールドの選択',
     igx_query_builder_dialog_title: '確認',
     igx_query_builder_dialog_message: 'エンティティを変更すると、現在の設定は失われます。続行しますか？',
     igx_query_builder_dialog_checkbox_text: '今後このダイアログを表示しない',
     igx_query_builder_dialog_cancel: 'キャンセル',
     igx_query_builder_dialog_confirm: '確認',
-};
-
-/**
- * Japanese resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsJA = QueryBuilderResourceStringsJA_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;
