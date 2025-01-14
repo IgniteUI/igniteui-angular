@@ -59,6 +59,7 @@
         toggle-button-foreground-disabled: $toggle-button-foreground-disabled,
         toggle-button-foreground-filled: $toggle-button-foreground-filled,
         toggle-button-background-focus--border: $toggle-button-background-focus--border,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),

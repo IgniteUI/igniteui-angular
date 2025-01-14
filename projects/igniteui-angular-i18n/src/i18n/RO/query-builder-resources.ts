@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsRO_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Romanian resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsRO = {
     igx_query_builder_date_placeholder: 'Data ridicării',
     igx_query_builder_time_placeholder: 'Ora preluării',
     igx_query_builder_datetime_placeholder: 'Selectează data și ora',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsRO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Mai mic sau egal cu',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'Toate',    
+    igx_query_builder_filter_all: 'Toate',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"Și" Grup',
     igx_query_builder_or_group: '"Sau" grup',
@@ -61,15 +64,11 @@ const QueryBuilderResourceStringsRO_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Căutare',
     igx_query_builder_select_all: 'Selectează tot',
     igx_query_builder_select_entity: 'Selectează entitate',
+    igx_query_builder_select_return_field_single: 'Selectați câmpul de returnare',
     igx_query_builder_select_return_fields: 'Selectează câmpuri de returnare',
     igx_query_builder_dialog_title: 'Confirmare',
     igx_query_builder_dialog_message: 'Prin modificarea entității, veți pierde setările curente. Ești sigur că vrei să faci asta?',
     igx_query_builder_dialog_checkbox_text: 'Nu se mai afișează această casetă de dialog',
     igx_query_builder_dialog_cancel: 'Anulare',
     igx_query_builder_dialog_confirm: 'Confirmare',
-};
-
-/**
- * Romanian resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsRO = QueryBuilderResourceStringsRO_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

@@ -14,7 +14,6 @@ import { DateRange, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePi
             useValue: 'border'
         }
     ],
-    standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxDateRangePickerComponent, IgxPickerToggleComponent, IgxSuffixDirective, IgxIconComponent, IgxDateRangeStartComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxDateRangeEndComponent, FormsModule, IgxLabelDirective, NgFor, IgxRadioComponent, ReactiveFormsModule, JsonPipe]
 })
 export class DateRangeSampleComponent {

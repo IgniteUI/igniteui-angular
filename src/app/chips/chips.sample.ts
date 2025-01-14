@@ -25,7 +25,6 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
     selector: 'app-chips-sample',
     styleUrls: ['chips.sample.scss', '../app.component.scss'],
     templateUrl: 'chips.sample.html',
-    standalone: true,
     imports: [
         IgxButtonGroupComponent,
         IgxChipComponent,

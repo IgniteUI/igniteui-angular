@@ -8,7 +8,6 @@ import { CarouselIndicatorsOrientation, IgxButtonDirective, IgxCarouselComponent
     selector: 'app-carousel-sample',
     styleUrls: ['carousel.sample.scss'],
     templateUrl: 'carousel.sample.html',
-    standalone: true,
     imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective, NgIf]
 })
 export class CarouselSampleComponent {
@@ -42,10 +41,10 @@ export class CarouselSampleComponent {
     }
 
     public changeOrientation() {
-        if (this.car.indicatorsOrientation === CarouselIndicatorsOrientation.top) {
-            this.car.indicatorsOrientation = CarouselIndicatorsOrientation.bottom;
+        if (this.car.indicatorsOrientation === CarouselIndicatorsOrientation.start) {
+            this.car.indicatorsOrientation = CarouselIndicatorsOrientation.end;
         } else {
-            this.car.indicatorsOrientation = CarouselIndicatorsOrientation.top;
+            this.car.indicatorsOrientation = CarouselIndicatorsOrientation.start;
         }
     }
 

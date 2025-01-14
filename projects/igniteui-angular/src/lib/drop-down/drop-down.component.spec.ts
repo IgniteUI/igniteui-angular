@@ -1279,7 +1279,6 @@ describe('IgxDropDown ', () => {
             {{item.field}}
         </igx-drop-down-item>
     </igx-drop-down>`,
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, NgFor]
 })
 class IgxDropDownTestComponent {
@@ -1324,7 +1323,6 @@ class IgxDropDownTestComponent {
         </igx-drop-down-item>
     </igx-drop-down>
     `,
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, NgFor]
 })
 class DoubleIgxDropDownComponent implements OnInit {
@@ -1381,7 +1379,6 @@ class DoubleIgxDropDownComponent implements OnInit {
             {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>`,
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, NgFor]
 })
 class IgxDropDownAnchorTestComponent {
@@ -1418,7 +1415,6 @@ class IgxDropDownAnchorTestComponent {
             {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>`,
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, NgFor]
 })
 class InputWithDropDownDirectiveComponent {
@@ -1444,7 +1440,6 @@ class InputWithDropDownDirectiveComponent {
             </igx-drop-down-item>
         </igx-drop-down-item-group>
     </igx-drop-down>`,
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, NgFor]
 })
 class GroupDropDownComponent {
@@ -1492,7 +1487,6 @@ class GroupDropDownComponent {
         height: 400px;
     }
     `],
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxForOfDirective, IgxButtonDirective, IgxDropDownItemNavigationDirective, IgxToggleActionDirective]
 })
 class VirtualizedDropDownComponent {

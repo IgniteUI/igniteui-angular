@@ -31,7 +31,6 @@ import {
     selector: 'app-animations-sample',
     styleUrls: ['animations.sample.scss'],
     templateUrl: 'animations.sample.html',
-    standalone: true,
     imports: [IgxListComponent, NgFor, IgxListItemComponent, IgxRippleDirective, IgxDialogComponent]
 })
 export class AnimationsSampleComponent {

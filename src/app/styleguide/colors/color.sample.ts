@@ -5,7 +5,6 @@ import { NgFor, NgIf } from '@angular/common';
     selector: 'app-colors-sample',
     styleUrls: ['color.sample.scss'],
     templateUrl: 'color.sample.html',
-    standalone: true,
     imports: [NgFor, NgIf]
 })
 export class ColorsSampleComponent {
