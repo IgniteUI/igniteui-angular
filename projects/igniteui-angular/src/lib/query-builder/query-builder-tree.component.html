@@ -8,70 +8,76 @@
 
 <ng-template #selectFromTemplate>
     <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && !this.isAdvancedFiltering()) ? 'flex' : 'none'">
-        <igx-select #entitySelect
-            type="box"
-            (selectionChanging)="onEntitySelectChanging($event)"
-            [overlaySettings]="entitySelectOverlaySettings"
-            [ngModel]="selectedEntity"
-            [style.display]="isInEditMode() ? 'block' : 'none'"
-        >
-            <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_entity }}</label>
-            <igx-select-item *ngFor="let entity of entities" [value]="entity">
-                {{entity.name}}
-            </igx-select-item>
-        </igx-select>
-
-        @if(!parentExpression) {
-            <igx-combo
-                #returnFieldsCombo
-                [itemsMaxHeight]="250"
-                [data]="fields"
-                [displayKey]="'field'"
-                [valueKey]="'field'"
-                [disabled]="!selectedEntity"
-                [(ngModel)]="selectedReturnFields"
-                [overlaySettings]="returnFieldSelectOverlaySettings"
-                searchPlaceholder="{{ this.resourceStrings.igx_query_builder_search }}"
-                [style.display]="isInEditMode() ? 'block' : 'none'"
-                (selectionChanging)="onReturnFieldSelectChanging($event)"
-            >
-                <ng-template igxComboHeader>
-                    <div
-                        class="igx-drop-down__item igx-drop-down__item--query-builder"
-                        (click)="onSelectAllClicked($event)"                
-                        [ngClass]="{'igx-drop-down__item--selected': this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length}"
-                    >
-                        <igx-checkbox
-                                [checked]="this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length"
-                                [indeterminate]="this.selectedEntity && this.selectedReturnFields && this.selectedReturnFields.length > 0 && this.selectedReturnFields.length < this.selectedEntity.fields?.length"
-                                [readonly]="true"
-                                [disableRipple]="true"
-                                [tabindex]="-1"
-                                class="igx-combo__checkbox">
-                        </igx-checkbox>
-                        <div class="igx-drop-down__inner">
-                            {{ this.resourceStrings.igx_query_builder_select_all }}
-                        </div>
-                    </div>
-                </ng-template>
-                <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_return_fields }}</label>
-            </igx-combo>
-        }
-        @else {
-            <igx-select #returnFieldSelect
+        <div>
+            <span>From</span>
+            <igx-select #entitySelect
                 type="box"
-                (selectionChanging)="onReturnFieldSelectChanging($event)"
-                [overlaySettings]="returnFieldSelectOverlaySettings"
-                [disabled]="!selectedEntity"
-                [ngModel]="selectedReturnFields[0]"
+                (selectionChanging)="onEntitySelectChanging($event)"
+                [overlaySettings]="entitySelectOverlaySettings"
+                [ngModel]="selectedEntity"
                 [style.display]="isInEditMode() ? 'block' : 'none'"
+                [placeholder]="this.resourceStrings.igx_query_builder_select_entity"
             >
-                <label igxLabel>{{ this.resourceStrings.igx_query_builder_select_return_field_single }}</label>
-                <igx-select-item *ngFor="let field of fields" [value]="field.field">
-                    {{ field.field }}
+                <igx-select-item *ngFor="let entity of entities" [value]="entity">
+                    {{entity.name}}
                 </igx-select-item>
             </igx-select>
-        }
+        </div>
+
+        <div>
+            <span>Select</span>            
+            @if(!parentExpression) {
+                <igx-combo
+                    #returnFieldsCombo
+                    [itemsMaxHeight]="250"
+                    [data]="fields"
+                    [displayKey]="'field'"
+                    [valueKey]="'field'"
+                    [disabled]="!selectedEntity"
+                    [(ngModel)]="selectedReturnFields"
+                    [overlaySettings]="returnFieldSelectOverlaySettings"
+                    [placeholder]="this.resourceStrings.igx_query_builder_select_return_fields"
+                    searchPlaceholder="{{ this.resourceStrings.igx_query_builder_search }}"
+                    [style.display]="isInEditMode() ? 'block' : 'none'"
+                    (selectionChanging)="onReturnFieldSelectChanging($event)"
+                >
+                    <ng-template igxComboHeader>
+                        <div
+                            class="igx-drop-down__item igx-drop-down__item--query-builder"
+                            (click)="onSelectAllClicked($event)"                
+                            [ngClass]="{'igx-drop-down__item--selected': this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length}"
+                        >
+                            <igx-checkbox
+                                    [checked]="this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length"
+                                    [indeterminate]="this.selectedEntity && this.selectedReturnFields && this.selectedReturnFields.length > 0 && this.selectedReturnFields.length < this.selectedEntity.fields?.length"
+                                    [readonly]="true"
+                                    [disableRipple]="true"
+                                    [tabindex]="-1"
+                                    class="igx-combo__checkbox">
+                            </igx-checkbox>
+                            <div class="igx-drop-down__inner">
+                                {{ this.resourceStrings.igx_query_builder_select_all }}
+                            </div>
+                        </div>
+                    </ng-template>
+                </igx-combo>
+            }
+            @else {
+                <igx-select #returnFieldSelect
+                    type="box"
+                    (selectionChanging)="onReturnFieldSelectChanging($event)"
+                    [overlaySettings]="returnFieldSelectOverlaySettings"
+                    [disabled]="!selectedEntity"
+                    [ngModel]="selectedReturnFields[0]"
+                    [placeholder]="this.resourceStrings.igx_query_builder_select_return_field_single"
+                    [style.display]="isInEditMode() ? 'block' : 'none'"
+                >
+                    <igx-select-item *ngFor="let field of fields" [value]="field.field">
+                        {{ field.field }}
+                    </igx-select-item>
+                </igx-select>
+            }
+        </div>
     </div>
 </ng-template>
 
@@ -100,14 +106,16 @@
             }}</span>
         </button>
 
-        <button type="button"
-            igxButton="outlined"
-            [disabled]="hasEditedExpression"
-            (click)="addReverseGroup(expressionItem, afterExpression)"
-        >
-            <ng-container *ngTemplateOutlet="addIcon"></ng-container>
-            <span>{{ this.resourceStrings.igx_query_builder_add_group_root }}</span>
-        </button>
+        @if(this.rootGroup) {
+            <button type="button"
+                igxButton="outlined"
+                [disabled]="hasEditedExpression"
+                (click)="addReverseGroup(expressionItem, afterExpression)"
+            >
+                <ng-container *ngTemplateOutlet="addIcon"></ng-container>
+                <span>{{ this.resourceStrings.igx_query_builder_add_group_root }}</span>
+            </button>
+        }
     </ng-template>
 
     <ng-template #operandTemplate let-expressionItem>
@@ -445,7 +453,7 @@
             <div
                 class="igx-filter-tree__line"
                 [ngClass]="{
-                    'igx-filter-tree__line--and': expressionItem?.operator === 0,
+                    'igx-filter-tree__line--and': !expressionItem || expressionItem?.operator === 0,
                     'igx-filter-tree__line--or': expressionItem?.operator === 1
                 }"
             ></div>
@@ -455,7 +463,7 @@
                         (keydown)="invokeClick($event)"
                         (click)="onGroupClick(expressionItem)"
                 >
-                <span> {{expressionItem?.operator === 0? 'AND':'OR'}}</span>
+                <span> {{!expressionItem || expressionItem?.operator === 0? 'AND':'OR'}}</span>
                 <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>                   
                 </button>   
                 <ng-container *ngFor="let expr of expressionItem?.children">
@@ -486,7 +494,8 @@
         </div>
     </ng-template>
 
-    <ng-container *ngIf="rootGroup">
+    <ng-container *ngIf="rootGroup || (!rootGroup && (selectedEntity || (entities?.length === 1 && !entities[0]?.name)))">
+        <span>Where</span>
         <ng-container
             *ngTemplateOutlet="
                 expressionGroupTemplate;

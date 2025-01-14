@@ -758,11 +758,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             searchVal: null
         }, parent);
 
-        if (afterExpression) {
-            const index = parent.children.indexOf(afterExpression);
-            parent.children.splice(index + 1, 0, operandItem);
+        const groupItem = new ExpressionGroupItem(FilteringLogic.And, parent);
+
+        if (parent) {
+            if (afterExpression) {
+                const index = parent.children.indexOf(afterExpression);
+                parent.children.splice(index + 1, 0, operandItem);
+            } else {
+                parent.children.push(operandItem);
+            }
         } else {
-            parent.children.push(operandItem);
+            this.rootGroup = groupItem;
+            this.rootGroup.children.push(operandItem);
         }
 
         this.enterExpressionEdit(operandItem);
