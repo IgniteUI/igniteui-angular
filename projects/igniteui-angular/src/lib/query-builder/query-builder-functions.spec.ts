@@ -278,7 +278,7 @@ export class QueryBuilderFunctions {
     public static getQueryBuilderTreeRootGroupButtons(fix: ComponentFixture<any>, buttonsIndex: number) {
         const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
         const childrenContainer = group.querySelector('.igx-filter-tree__expression');
-        const buttonsContainers = Array.from(childrenContainer.querySelectorAll('.igx-filter-tree__buttons'));
+        const buttonsContainers = Array.from(childrenContainer.querySelectorAll(':scope > .igx-filter-tree__buttons'));
         const buttonsContainer: any = buttonsContainers[buttonsIndex];
         const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
         return buttons;
@@ -458,13 +458,10 @@ export class QueryBuilderFunctions {
     /**
      * (Double)Click the underlying chip of the expression that is located on the provided 'path'.
      */
-    public static clickQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[], dblClick = false, level = 0) {
+    public static clickQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[], level = 0) {
         const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path, level) as HTMLElement;
-        if (dblClick) {
-            chip.dispatchEvent(new MouseEvent('dblclick'));
-        } else {
-            chip.click();
-        }
+
+        chip.click();
     }
 
     /**
@@ -494,6 +491,12 @@ export class QueryBuilderFunctions {
     public static clickQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>, path = 0) {
         const contextMenuCloseButton = QueryBuilderFunctions.getQueryBuilderContextMenuCloseButton(fix, path);
         contextMenuCloseButton.click();
+    }
+
+    public static changeGroupType(group: HTMLElement) {
+        const childrenContainer = group.querySelector(':scope > .igx-filter-tree__expression');
+        const groupToggleButton = childrenContainer.querySelector(":scope > .igx-button") as HTMLElement;
+        groupToggleButton.click();        
     }
 
     /*
@@ -544,7 +547,7 @@ export class QueryBuilderFunctions {
         expect(!fieldInputGroup.classList.contains('igx-input-group--disabled')).toBe(fieldComboEnabled,
             'incorrect fields combo state');
 
-        if(columnSelectEnabled || operatorSelectEnabled ||  valueInputEnabled || commitButtonEnabled){
+        if (columnSelectEnabled || operatorSelectEnabled || valueInputEnabled || commitButtonEnabled) {
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, columnSelectEnabled, operatorSelectEnabled, valueInputEnabled, commitButtonEnabled, level);
         }
     };
@@ -592,7 +595,7 @@ export class QueryBuilderFunctions {
         expect(entityInput.value).toBe(entityText);
         expect(fieldInput.value).toBe(fieldsText);
 
-        if(columnText ||  operatorText ||  valueText){
+        if (columnText || operatorText || valueText) {
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, columnText, operatorText, valueText, level);
         }
     };
@@ -671,20 +674,21 @@ export class QueryBuilderFunctions {
             switch (i) {
                 case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 2: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('AND'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
-                case 4: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 5: expect(element).toHaveClass('igx-filter-tree__details-button'); break;
+                case 4: expect(element).toHaveClass('igx-icon'); break;
+                case 5: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 6: expect(element).toHaveClass('igx-chip'); break;
-                case 7: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 8: expect(element).toHaveClass('igx-chip'); break;
-                case 9: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 10: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('Condition'); break;
-                case 11: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('"And" Group'); break;
+                case 7: expect(element).toHaveClass('igx-icon'); break;
+                case 8: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 9: expect(element).toHaveClass('igx-chip'); break;
+                case 10: expect(element).toHaveClass('igx-icon'); break;
+                case 11: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 12: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('"Or" Group'); break;
+                    expect(element.innerText).toContain('Condition'); break;
+                case 13: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('Group'); break;
             }
             i++;
         });
@@ -832,7 +836,7 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-     public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
+    public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
         // Enter values in the nested query
         QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
         tick(100);
@@ -890,7 +894,7 @@ export class QueryBuilderFunctions {
     }
 
     public static selectEntityAndClickInitialAddGroup(fix: ComponentFixture<any>, entityIndex: number, groupIndex: number) {
-        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex); 
+        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex);
         tick(100);
         fix.detectChanges();
 
