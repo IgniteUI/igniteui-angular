@@ -185,11 +185,14 @@ export class IgxStepperShowcaseSampleComponent {
     private fb = inject(UntypedFormBuilder);
     private pcs = inject(PropertyChangeService);
 
-    constructor() {
+    constructor(private destroyRef: DestroyRef) {
         this.pcs.setPanelConfig(this.panelConfig);
-        this.pcs.propertyChanges.subscribe(properties => {
+
+        const { unsubscribe } = this.pcs.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
+
+         this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     // Reactive forms initialization

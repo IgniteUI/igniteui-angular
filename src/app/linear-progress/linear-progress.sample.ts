@@ -91,15 +91,22 @@ export class LinearProgressSampleComponent {
     }
 
     protected getTextAlignmentConfig(labelAlign: string): { textTop: boolean; textAlign: IgxTextAlign } {
-        const alignMap: { [key: string]: { textTop: boolean; textAlign: IgxTextAlign } } = {
-          'top-start': { textTop: true, textAlign: IgxTextAlign.START },
-          'top': { textTop: true, textAlign: IgxTextAlign.CENTER },
-          'top-end': { textTop: true, textAlign: IgxTextAlign.END },
-          'bottom-start': { textTop: false, textAlign: IgxTextAlign.START },
-          'bottom': { textTop: false, textAlign: IgxTextAlign.CENTER },
-          'bottom-end': { textTop: false, textAlign: IgxTextAlign.END },
-        };
+        const top = { textTop: true };
+        const bottom = { textTop: false };
 
-        return alignMap[labelAlign] || { textTop: true, textAlign: IgxTextAlign.START };
-      }
+        const start = { textAlign: IgxTextAlign.START };
+        const center = { textAlign: IgxTextAlign.CENTER };
+        const end = { textAlign: IgxTextAlign.END };
+
+        const alignMap = new Map<string, { textTop: boolean; textAlign: IgxTextAlign }>([
+            ['top-start', { ...top, ...start }],
+            ['top', { ...top, ...center }],
+            ['top-end', { ...top, ...end }],
+            ['bottom-start', { ...bottom, ...start }],
+            ['bottom', { ...bottom, ...center }],
+            ['bottom-end', { ...bottom, ...end }],
+        ]);
+
+        return alignMap.get(labelAlign) || { textTop: true, textAlign: IgxTextAlign.START };
+    }
 }

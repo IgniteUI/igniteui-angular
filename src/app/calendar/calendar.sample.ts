@@ -18,7 +18,7 @@ import {
     IFormattingOptions,
     DateRange,
     DateRangeDescriptor,
-    DateRangeType,
+    DateRangeType
 } from "igniteui-angular";
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 

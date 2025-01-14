@@ -254,73 +254,41 @@ export class DropDownSampleComponent implements OnInit {
     }
 
     private getPositionStrategy(): ConnectedPositioningStrategy {
-        const selectedPosition = this.propertyChangeService.getProperty('placement') || 'bottom'; // Default to 'bottom'
+        const left = { horizontalDirection: HorizontalAlignment.Left };
+        const center = { horizontalDirection: HorizontalAlignment.Center };
+        const right = { horizontalDirection: HorizontalAlignment.Right };
 
-        const positionMap: { [key: string]: Partial<PositionSettings> } = {
-            'top': {
-                horizontalDirection: HorizontalAlignment.Center,
-                verticalDirection: VerticalAlignment.Top
-            },
-            'top-start': {
-                horizontalDirection: HorizontalAlignment.Left,
-                verticalDirection: VerticalAlignment.Top,
-                horizontalStartPoint: HorizontalAlignment.Left
-            },
-            'top-end': {
-                horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Top,
-                horizontalStartPoint: HorizontalAlignment.Right
-            },
-            'bottom': {
-                horizontalDirection: HorizontalAlignment.Center,
-                verticalDirection: VerticalAlignment.Bottom
-            },
-            'bottom-start': {
-                horizontalDirection: HorizontalAlignment.Left,
-                verticalDirection: VerticalAlignment.Bottom,
-                horizontalStartPoint: HorizontalAlignment.Left
-            },
-            'bottom-end': {
-                horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Bottom,
-                horizontalStartPoint: HorizontalAlignment.Right
-            },
-            'right': {
-                horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Middle
-            },
-            'right-start': {
-                horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Top,
-                verticalStartPoint: VerticalAlignment.Top
-            },
-            'right-end': {
-                horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Bottom,
-                verticalStartPoint: VerticalAlignment.Bottom
-            },
-            'left': {
-                horizontalDirection: HorizontalAlignment.Left,
-                verticalDirection: VerticalAlignment.Middle
-            },
-            'left-start': {
-                horizontalDirection: HorizontalAlignment.Left,
-                verticalDirection: VerticalAlignment.Top,
-                verticalStartPoint: VerticalAlignment.Top
-            },
-            'left-end': {
-                horizontalDirection: HorizontalAlignment.Left,
-                verticalDirection: VerticalAlignment.Bottom,
-                verticalStartPoint: VerticalAlignment.Bottom
-            },
-        };
+        const top = { verticalDirection: VerticalAlignment.Top };
+        const middle = { verticalDirection: VerticalAlignment.Middle };
+        const bottom = { verticalDirection: VerticalAlignment.Bottom };
 
-        // Get the selected settings or default to 'bottom'
-        const settings = positionMap[selectedPosition] || positionMap['bottom'];
+        const horizontalStartPointLeft = { horizontalStartPoint: HorizontalAlignment.Left };
+        const horizontalStartPointRight = { horizontalStartPoint: HorizontalAlignment.Right };
 
-        // Return the ConnectedPositioningStrategy using the selected settings
+        const verticalStartPointTop = { verticalStartPoint: VerticalAlignment.Top };
+        const verticalStartPointBottom = { verticalStartPoint: VerticalAlignment.Bottom };
+
+        const positionMap = new Map<string, Partial<PositionSettings>>([
+            ['top', { ...center, ...top }],
+            ['top-start', { ...left, ...top, ...horizontalStartPointLeft }],
+            ['top-end', { ...right, ...top, ...horizontalStartPointRight }],
+            ['bottom', { ...center, ...bottom }],
+            ['bottom-start', { ...left, ...bottom, ...horizontalStartPointLeft }],
+            ['bottom-end', { ...right, ...bottom, ...horizontalStartPointRight }],
+            ['right', { ...right, ...middle }],
+            ['right-start', { ...right, ...top, ...verticalStartPointTop }],
+            ['right-end', { ...right, ...bottom, ...verticalStartPointBottom }],
+            ['left', { ...left, ...middle }],
+            ['left-start', { ...left, ...top, ...verticalStartPointTop }],
+            ['left-end', { ...left, ...bottom, ...verticalStartPointBottom }],
+        ]);
+
+        const selectedPosition = this.propertyChangeService.getProperty('placement') || 'bottom';
+        const settings = positionMap.get(selectedPosition) || positionMap.get('bottom')!;
+
         return new ConnectedPositioningStrategy(settings);
     }
+
 
     private getScrollStrategy(): ScrollStrategy {
         const selectedStrategy = this.propertyChangeService.getProperty('scrollStrategy') || 'scroll';
