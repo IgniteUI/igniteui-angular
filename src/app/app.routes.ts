@@ -134,7 +134,7 @@ import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample
 import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-grid-hierarchy.sample';
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
-import { IgxStepperShowcaseSampleComponent } from './stepper-showcase/stepper-showcase.sample';
+import { IgxStepperShowcaseSampleComponent } from './stepper-showcase/stepper.sample';
 import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 import { QueryBuilderComponent } from './query-builder/query-builder.sample';

@@ -14,31 +14,29 @@
             [maximumIndicatorsCount]="properties.maximumIndicatorsCount"
         >
             @for(slide of slides; track slide) {
-            <igx-slide [active]="slide.active">
-                <img [src]="slide.image" />
-            </igx-slide>
+                <igx-slide [active]="slide.active">
+                    <img [src]="slide.image" alt="">
+                </igx-slide>
             }
 
-            <!-- <ng-template igxCarouselIndicator let-slide>
-                <img *ngIf="!slide.active" [src]="slides[slide.index].image" style="width: 100px;  ">
-                <img *ngIf="slide.active" [src]="slides[slide.index].image" style="width: 120px;  ">
-            </ng-template> -->
+            @if(properties.indicatorTemplate) {
+                <ng-template igxCarouselIndicator let-slide>
+                    <img [ngClass]="slide.active? 'indicator-active': 'indicator-inactive'" [src]="slides[slide.index].image" alt="">
+                </ng-template>
 
-            <!-- <ng-template igxCarouselNextButton let-disabled>
-                <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-                    <igx-icon>add</igx-icon>
-                </button>
-            </ng-template>
+                <ng-template igxCarouselNextButton let-disabled>
+                        <igx-icon>add</igx-icon>
+                </ng-template>
 
-            <ng-template igxCarouselPrevButton let-disabled>
-                <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-                    <igx-icon>remove</igx-icon>
-                </button>
-            </ng-template> TODO-->
+                <ng-template igxCarouselPrevButton let-disabled>
+                        <igx-icon>remove</igx-icon>
+                </ng-template>
+            }
         </igx-carousel>
 
         <h4 class="sample-title">WC Carousel</h4>
         <igc-carousel
+            [ngClass]="properties.indicatorTemplate ? 'wc-indicator-template' : null"
             [disableLoop]="properties.disableLoop"
             [disablePauseOnInteraction]="properties.disablePauseOnInteraction"
             [hideIndicators]="properties.hideIndicators"
@@ -49,10 +47,40 @@
             [indicatorsOrientation]="wcIndicatorsOrientation"
             [maximumIndicatorsCount]="properties.maximumIndicatorsCount"
         >
+
+            @if(properties.indicatorTemplate) {
+                <igc-icon
+                    slot="previous-button"
+                    name="previous"
+                    collection="material">
+                </igc-icon>
+                <igc-icon
+                    slot="next-button"
+                    name="next"
+                    collection="material">
+                </igc-icon>
+            }
+
             @for(slide of slides; track slide) {
             <igc-carousel-slide [active]="slide.active">
                 <img [src]="slide.image" />
             </igc-carousel-slide>
+                @if(properties.indicatorTemplate) {
+                    <igc-carousel-indicator>
+                        <img
+                            [src]="slide.image"
+                            class="image-indicator"
+                            alt="Thumbnail"
+                        />
+
+                        <img
+                            slot="active"
+                            class="image-indicator"
+                            [src]="slide.image"
+                            alt="Active Thumbnail"
+                        />
+                    </igc-carousel-indicator>
+                }
             }
         </igc-carousel>
     </section>

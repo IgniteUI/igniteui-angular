@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
-import { IGX_CAROUSEL_DIRECTIVES } from 'igniteui-angular';
+import { IGX_CAROUSEL_DIRECTIVES, IgxIconComponent} from 'igniteui-angular';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 import {
     IgcButtonComponent,
@@ -10,6 +10,7 @@ import {
     defineComponents,
     registerIconFromText,
   } from 'igniteui-webcomponents';
+import {NgClass} from "@angular/common";
 
   defineComponents(
     IgcCarouselComponent,
@@ -48,7 +49,7 @@ import {
     styleUrls: ['carousel.sample.scss'],
     templateUrl: 'carousel.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IGX_CAROUSEL_DIRECTIVES]
+    imports: [IGX_CAROUSEL_DIRECTIVES, IgxIconComponent, NgClass]
 })
 export class CarouselSampleComponent {
     public panelConfig: PropertyPanelConfig = {
@@ -77,6 +78,13 @@ export class CarouselSampleComponent {
             }
         },
         vertical: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        indicatorTemplate: {
+            label: 'Show Template',
             control: {
                 type: 'boolean',
                 defaultValue: false
@@ -138,7 +146,6 @@ export class CarouselSampleComponent {
 
     public slides = [];
 
-    //TODO
     public addNewSlide() {
         this.slides.push(
             {image: 'assets/images/carousel/slide1@x2.jpg', active: true},
