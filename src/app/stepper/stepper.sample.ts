@@ -19,23 +19,14 @@ import {
     IgxInputGroupComponent,
     IgxLabelDirective,
     IgxInputDirective,
-    IgxStepComponent,
-    IgxStepTitleDirective,
-    IgxStepSubtitleDirective,
-    IgxStepContentDirective,
-    IgxStepperComponent,
-    IgxStepperOrientation,
-    IgxStepperTitlePosition,
-    IgxStepType,
     IgxHintDirective,
     IgxIconComponent,
     IgxPrefixDirective,
     IgxSelectComponent,
     IgxSelectItemComponent,
-    IgxStepActiveIndicatorDirective,
-    IgxStepIndicatorDirective,
     IgxSuffixDirective,
-    IStepChangedEventArgs
+    IStepChangedEventArgs,
+    IGX_STEPPER_DIRECTIVES, IgxStepType, IgxStepperTitlePosition, IgxStepperOrientation, IgxStepperComponent
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -99,11 +90,30 @@ export class FormControlSyncDirective implements OnInit {
     templateUrl: 'stepper.sample.html',
     styleUrls: ['stepper.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [IgxButtonDirective, FormControlSyncDirective, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxStepperComponent, IgxStepComponent, IgxStepTitleDirective, IgxStepSubtitleDirective, IgxStepContentDirective, ReactiveFormsModule, IgxHintDirective, IgxIconComponent, IgxPrefixDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStepActiveIndicatorDirective, IgxStepIndicatorDirective, IgxSuffixDirective, NgTemplateOutlet]
+    imports: [
+        IgxButtonDirective,
+        FormControlSyncDirective,
+        IgxInputGroupComponent,
+        IgxLabelDirective,
+        FormsModule,
+        IgxInputDirective,
+        ReactiveFormsModule,
+        IgxHintDirective,
+        IgxIconComponent,
+        IgxPrefixDirective,
+        IgxSelectComponent,
+        IgxSelectItemComponent,
+        IgxSuffixDirective,
+        NgTemplateOutlet,
+        IGX_STEPPER_DIRECTIVES
+    ]
 })
 export class IgxStepperSampleComponent {
-    @ViewChild('stepper', {static: true}) public angularStepper!: IgxStepperComponent;
-    @ViewChild('stepper2', {static: true}) public webComponentStepper!: ElementRef;
+    @ViewChild('stepper', {static: true, read: IgxStepperComponent})
+    public angularStepper!: IgxStepperComponent;
+
+    @ViewChild('stepper2', {static: true})
+    public webComponentStepper!: ElementRef;
 
     @HostBinding('class.vertical-stepper')
     public get isVertical() {
