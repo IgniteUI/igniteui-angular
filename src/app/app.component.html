@@ -31,10 +31,10 @@
             <!--Style guide-->
             <span igxDrawerItem [isHeader]="true">Style</span>
 
-                <span *ngFor="let item of styleLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
-                    <igx-icon>{{item.icon}}</igx-icon>
-                    <span class="navdrawer-ellipsis">{{item.name}}</span>
-                </span>
+            <span *ngFor="let item of styleLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
+                <igx-icon>{{item.icon}}</igx-icon>
+                <span class="navdrawer-ellipsis">{{item.name}}</span>
+            </span>
         </ng-template>
 
         <ng-template *ngIf="drawerState.miniVariant" igxDrawerMini>
@@ -58,18 +58,19 @@
 
     @let config = (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
 
+    @if(config) {
     <igx-nav-drawer
-        *ngIf="config"
         #paneldrawer
         [pin]="true"
         position="right"
         [isOpen]="config"
         id="paneldrawer">
-
         <ng-template igxDrawer>
             <app-properties-panel></app-properties-panel>
         </ng-template>
     </igx-nav-drawer>
+    }
+
 
     <div [style.paddingLeft]="drawerState.miniVariant && !drawerState.pin ? '60px' : null" class="content">
         <app-page-header
