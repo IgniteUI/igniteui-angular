@@ -1,7 +1,6 @@
 import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, Inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Direction, ICarouselComponentBase, IGX_CAROUSEL_COMPONENT, IgxSlideComponentBase } from './carousel-base';
-import { IgxCarouselComponent } from './carousel.component';
 
 /**
  * A slide component that usually holds an image and/or a caption text.
