@@ -65,16 +65,12 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // TODO: Fail handling or cancellation needed?
         (this as any).componentRef = {};
 
+        const contentChildrenTags = Array.from(element.children).filter(x => this._componentFactory.ngContentSelectors.some(sel => x.matches(sel))).map(x => x.tagName.toLocaleLowerCase());
         const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
-        const contentChildren = Array.from(element.children).filter(x => this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
         for (const iterator of toBeOrphanedChildren) {
             // TODO: special registration OR config for custom
         }
 
-        if (contentChildren.length === 0) {
-            // no content children, emit event immediately, since there's nothing to be attached.
-            (this as any).componentRef?.instance?.childrenAttached?.emit();
-        }
 
         let parentInjector: Injector;
         let parentAnchor: ViewContainerRef;
@@ -156,6 +152,15 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         this.initializeOutputs((this as any).componentRef);
 
         this.detectChanges();
+
+        // check if there are any content children associated with a content query collection.
+        // if no, then just emit the event, otherwise we wait for the collection to be updated in updateQuery.
+        const contentChildrenTypes = this.config.filter(x => contentChildrenTags.indexOf(x.selector) !== -1).map(x => x.provideAs ?? x.component);
+        const contentQueryChildrenCollection = componentConfig.contentQueries.filter(x => contentChildrenTypes.includes(x.childType));
+        if (contentQueryChildrenCollection.length === 0) {
+            // no content children, emit event immediately, since there's nothing to be attached.
+            (this as any).componentRef?.instance?.childrenAttached?.emit();
+        }
 
         if (parentAnchor && parentInjector) {
             // attempt to attach the newly created ViewRef to the parents's instead of the App global
