@@ -136,10 +136,6 @@
         @include ripple($ripple-theme-map);
     }
 
-    igx-avatar {
-        --theme: var(--ig-theme);
-    }
-
     // @if is-used('igx-avatar', $exclude) {
     //     $avatar-theme-map: avatar-theme(
     //         $schema: $schema,
@@ -324,13 +320,13 @@
         @include  css-vars($shape-chart-theme-map);
     }
 
-    @if is-used('igx-checkbox', $exclude) {
-        $checkbox-theme-map: checkbox-theme(
-            $schema: $schema,
-        );
-        $checkbox-theme-map: meta.call($theme-handler, $checkbox-theme-map);
-        @include checkbox($checkbox-theme-map);
-    }
+    // @if is-used('igx-checkbox', $exclude) {
+    //     $checkbox-theme-map: checkbox-theme(
+    //         $schema: $schema,
+    //     );
+    //     $checkbox-theme-map: meta.call($theme-handler, $checkbox-theme-map);
+    //     @include checkbox($checkbox-theme-map);
+    // }
 
     @if is-used('igx-chip', $exclude) {
         $chip-theme-map: chip-theme(

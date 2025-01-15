@@ -6,7 +6,7 @@
 $theme: $bootstrap;
 
 @include b(igx-avatar) {
-    @container style(--ig-theme: bootstrap) {
+    @container style(--theme: bootstrap) {
         &::after {
             position: absolute;
             content: '';

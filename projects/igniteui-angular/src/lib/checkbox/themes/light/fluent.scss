@@ -6,7 +6,9 @@
 $theme: $fluent;
 
 @container style(--theme: fluent) {
-    @include b(igx-avatar) {
-        @include css-vars-from-theme(diff($base, $theme), 'igx-avatar');
+    @include b(igx-checkbox) {
+        color-scheme: light;
+
+        @include css-vars-from-theme(diff($base, $theme), 'igx-checkbox');
     }
 }

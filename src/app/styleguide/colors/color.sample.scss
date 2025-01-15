@@ -9,11 +9,6 @@
     color: color($palette, primary, 200);
 }
 
-.test-100-contrast {
-    color: contrast-color($palette, primary, 100);
-}
-
-
 .sample-wrapper {
     display: grid;
     grid-template-columns: 1fr;

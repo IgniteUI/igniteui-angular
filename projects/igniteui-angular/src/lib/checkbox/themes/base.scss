@@ -1,0 +1,858 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use './light/themes' as *;
+
+$theme: $material;
+
+$theme-variant: map.get($theme, '_meta', 'theme-variant');
+$variant: map.get($theme, '_meta', 'variant');
+
+@include scale-in-out($start-scale: 0.9);
+@include scale-in-center();
+
+%cbx-display {
+    position: relative;
+    display: inline-flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    outline-style: none;
+    cursor: pointer;
+}
+
+%cbx-display--disabled {
+    user-select: none;
+    pointer-events: none;
+    cursor: initial;
+}
+
+%cbx-input {
+    @include hide-default();
+}
+
+%cbx-composite-wrapper {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    position: relative;
+    width: var(--size);
+    height: var(--size);
+
+    // @if $variant == 'material' {
+    //     padding: rem(20px);
+    // }
+
+    //ripple color
+    --color: #{var-get($theme, 'empty-color')};
+}
+
+%cbx-composite-wrapper--x {
+    //ripple color
+    --color: #{var-get($theme, 'fill-color')};
+}
+
+%cbx-composite {
+    position: relative;
+    display: inline-block;
+    width: var(--size);
+    height: var(--size);
+    min-width: var(--size);
+    background: var-get($theme, 'empty-fill-color');
+    border-width: var(--border-width);
+    border-style: solid;
+    border-color: var-get($theme, 'empty-color');
+    border-radius: var-get($theme, 'border-radius');
+    -webkit-tap-highlight-color: transparent;
+    transition:
+        border-color 0.2s $ease-out-quad,
+        background 0.2s $ease-out-quad;
+    overflow: hidden;
+}
+
+%cbx-composite--hover {
+    border-color: var-get($theme, 'empty-color-hover');
+}
+
+%cbx-composite--x {
+    border-color: var-get($theme, 'fill-color');
+    background: var-get($theme, 'fill-color');
+}
+
+%cbx-composite--invalid {
+    border-color: var-get($theme, 'error-color');
+
+    // @if $variant == 'bootstrap' and $theme-variant == 'dark' {
+    //     %cbx-composite-mark {
+    //         stroke: black;
+    //     }
+    // }
+}
+
+%cbx-composite-wrapper--invalid {
+    //ripple color
+    --color: #{var-get($theme, 'error-color')};
+}
+
+%cbx-composite--invalid--hover {
+    border-color: var-get($theme, 'error-color-hover');
+}
+
+%cbx-composite--x--invalid {
+    border-color: var-get($theme, 'error-color');
+    background: var-get($theme, 'error-color');
+}
+
+%cbx-composite--x--hover {
+    border-color: var-get($theme, 'fill-color-hover');
+    background: var-get($theme, 'fill-color-hover');
+}
+
+%cbx-composite--x--invalid--hover {
+    border-color: var-get($theme, 'error-color-hover');
+    background: var-get($theme, 'error-color-hover');
+}
+
+%cbx-composite--disabled {
+    border-color: var-get($theme, 'disabled-color');
+
+    // @if $variant == 'bootstrap' and $theme-variant == 'dark' {
+    //     background: color($color: 'surface', $variant: 500);
+    // }
+}
+
+%cbx-composite--x--disabled {
+    // @if $variant == 'material' or $variant == 'fluent' {
+    //     background: var-get($theme, 'disabled-color');
+    // }
+
+    // @if $variant == 'indigo' or $variant == 'bootstrap' {
+    //     background: var-get($theme, 'disabled-indeterminate-color');
+    //     border-color: transparent;
+    // }
+
+    // @if $variant != 'indigo' {
+    //     %cbx-composite-mark {
+    //         stroke: var-get($theme, 'disabled-tick-color');
+    //     }
+    // } @else {
+    //     %cbx-composite-mark {
+    //         stroke: unset;
+    //         fill: var-get($theme, 'disabled-tick-color');
+    //     }
+    // }
+}
+
+%cbx-composite-mark {
+    position: absolute;
+    inset: 0;
+    stroke: var-get($theme, 'tick-color');
+    stroke-linecap: square;
+    stroke-width: var(--mark-stroke);
+    stroke-dasharray: var(--mark-length);
+    stroke-dashoffset: var(--mark-length);
+    fill: none;
+    opacity: 0;
+    z-index: 1;
+}
+
+%cbx-composite-mark-material {
+    inset-inline-start: -0.5px;
+}
+
+%cbx-composite-mark-indigo {
+    stroke: unset;
+    stroke-linecap: unset;
+    stroke-width: unset;
+    stroke-dasharray: unset;
+    stroke-dashoffset: unset;
+    fill: var-get($theme, 'tick-color');
+    transition: none !important;
+
+    rect {
+        fill: none;
+    }
+}
+
+%igx-checkbox--indeterminate {
+    %cbx-composite-mark {
+        top: var(--mark-offset);
+        margin-inline-start: var(--mark-offset);
+    }
+
+    &:hover {
+        %cbx-composite {
+            border-color: var-get($theme, 'fill-color-hover');
+            background: var-get($theme, 'fill-color-hover');
+
+            &::before {
+                background: var-get($theme, 'fill-color-hover');
+            }
+
+            // @if $variant == 'fluent' {
+            //     background: transparent;
+            // }
+        }
+    }
+}
+
+%igx-checkbox--indeterminate-indigo {
+    %cbx-composite-mark {
+        fill: none !important;
+        stroke-dashoffset: unset !important;
+        transform: none !important;
+
+        rect {
+            fill: var-get($theme, 'tick-color');
+            opacity: 1;
+        }
+    }
+}
+
+%igx-checkbox--disabled-indeterminate-indigo {
+    @extend %igx-checkbox--indeterminate-indigo;
+
+    %cbx-composite-mark {
+        rect {
+            fill: var-get($theme, 'disabled-tick-color');
+        }
+    }
+}
+
+%igx-checkbox--indeterminate-fluent {
+    %cbx-composite-mark {
+        stroke: transparent;
+    }
+
+    %cbx-composite {
+        background: transparent;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: calc(var(--size) / 2 - rem(6px));
+            inset-inline-start: calc(var(--size) / 2 - rem(6px));
+            width: rem(10px);
+            height: rem(10px);
+            border-radius: border-radius(rem(2px));
+            background: var-get($theme, 'fill-color');
+            z-index: 1;
+        }
+    }
+}
+
+%igx-checkbox--disabled-indeterminate-fluent {
+    %cbx-composite-mark {
+        stroke: transparent;
+    }
+
+    %cbx-composite--x--disabled {
+        background: transparent;
+
+        &::before {
+            background: var-get($theme, 'disabled-color');
+        }
+    }
+}
+
+%igx-checkbox--disabled-indeterminate-material {
+    %cbx-composite--x--disabled {
+        border-color: var-get($theme, 'disabled-indeterminate-color');
+        background: var-get($theme, 'disabled-indeterminate-color');
+    }
+}
+
+%igx-checkbox--indeterminate--invalid {
+    %cbx-composite--x {
+        border-color: var-get($theme, 'error-color');
+        background: var-get($theme, 'error-color');
+    }
+
+    %cbx-composite--x--hover {
+        border-color: var-get($theme, 'error-color-hover');
+        background: var-get($theme, 'error-color-hover');
+    }
+
+    // @if $variant == 'fluent' {
+    //     %cbx-composite {
+    //         border-color: var-get($theme, 'error-color');
+
+    //         &::before {
+    //             background: var-get($theme, 'error-color');
+    //         }
+    //     }
+
+    //     %cbx-composite--x {
+    //         background: transparent;
+    //     }
+
+    //     &:hover {
+    //         %cbx-composite {
+    //             background: transparent;
+    //             border-color: var-get($theme, 'error-color-hover');
+
+    //             &::before {
+    //                 background: var-get($theme, 'error-color-hover');
+    //             }
+    //         }
+    //     }
+    // }
+}
+
+%cbx-composite-mark--x {
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transition:
+        all 0.2s $ease-out-quad,
+        opacity 0.2s $ease-out-quad;
+}
+
+%cbx-composite-mark--in {
+    stroke-dashoffset: 41; /* length of path - adjacent line length */
+    opacity: 1;
+    rotate: 45deg;
+    transform: translateX(calc(var(--mark-stroke) / var(--mark-length) * -1em));
+}
+
+%cbx-composite-mark--fluent {
+    // @if $variant == 'fluent' {
+    //     @extend %cbx-composite-mark;
+    //     @extend %cbx-composite-mark--x;
+    //     stroke: var-get($theme, 'tick-color-hover');
+    // }
+}
+
+%cbx-composite-mark--x--fluent {
+    // @if $variant == 'fluent' {
+    //     stroke: var-get($theme, 'tick-color');
+    // }
+}
+
+%cbx-composite-mark--invalid--fluent {
+    // @if $variant == 'fluent' {
+    //     stroke: var-get($theme, 'error-color');
+    // }
+
+    // @if $variant == 'fluent' and $theme-variant == 'dark' {
+    //     stroke: color($color: 'error', $variant: 500);
+    // }
+}
+
+%cbx-composite-mark--in--fluent {
+    // @if $variant == 'fluent' {
+    //     stroke: transparent;
+    // }
+}
+
+%cbx-label {
+    display: inline-block;
+    color: var-get($theme, 'label-color');
+    user-select: none;
+    word-wrap: break-all;
+    transition: color 0.2s $ease-out-quad;
+
+    &:empty {
+        margin: 0;
+    }
+}
+
+%cbx-label--hover {
+    color: var-get($theme, 'label-color-hover');
+}
+
+%cbx-label-pos--before,
+%cbx-label-pos--after {
+    &:empty {
+        margin: 0;
+    }
+}
+
+%cbx-label-pos--after {
+    margin-inline-start: var(--label-margin);
+}
+
+%cbx-label-pos--before {
+    margin-inline-end: var(--label-margin);
+    order: -1;
+}
+
+%cbx-label--invalid {
+    color: var-get($theme, 'error-color');
+}
+
+%cbx-label--disabled {
+    color: var-get($theme, 'disabled-color-label');
+}
+
+%cbx-ripple {
+    --_ripple-size: #{rem(40px)};
+
+    display: none;
+    position: absolute;
+    top: calc(50% - calc(var(--_ripple-size) / 2));
+    width: var(--_ripple-size);
+    aspect-ratio: 1;
+    border-radius: var-get($theme, 'border-radius-ripple');
+    overflow: hidden;
+    pointer-events: none;
+    filter: opacity(1);
+}
+
+%cbx-ripple--hover {
+    background: var-get($theme, 'empty-color');
+    transition: background 0.2s $ease-out-quad;
+    opacity: 0.06;
+
+    @media (prefers-color-scheme: dark) {
+        opacity: 0.12;
+    }
+}
+
+%cbx-ripple--hover-checked {
+    background: var-get($theme, 'fill-color');
+}
+
+%cbx-ripple--hover-invalid {
+    background: var-get($theme, 'error-color');
+}
+
+%igx-checkbox--focused-indigo {
+    %cbx-composite {
+        border-radius: var-get($theme, 'border-radius');
+        box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
+    }
+}
+
+%igx-checkbox--focused-fluent {
+    position: relative;
+    $focus-outline-offset: rem(2px);
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: -$focus-outline-offset;
+        box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
+    }
+}
+
+%igx-checkbox--focused-bootstrap {
+    %cbx-composite {
+        border-radius: var-get($theme, 'border-radius');
+        border-color: color($color: 'primary', $variant: 200);
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
+    }
+}
+
+%igx-checkbox--focused-hovered {
+    %cbx-composite {
+        border-color: color($color: 'primary', $variant: 300);
+    }
+}
+
+%igx-checkbox--focused-checked-indigo {
+    %cbx-composite {
+        border-radius: var-get($theme, 'border-radius');
+        box-shadow: 0 0 0 rem(3px)
+            var-get($theme, 'focus-outline-color-focused');
+    }
+}
+
+%igx-checkbox--focused-checked-bootstrap {
+    %cbx-composite {
+        border-color: transparent;
+    }
+}
+
+%igx-checkbox--focused-invalid-indigo {
+    %cbx-composite {
+        box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-error');
+    }
+}
+
+%igx-checkbox--focused-invalid-bootstrap {
+    %cbx-composite {
+        border-color: var-get($theme, 'error-color');
+        box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color-error');
+    }
+
+    &:hover {
+        %cbx-composite {
+            border-color: var-get($theme, 'error-color-hover');
+        }
+    }
+}
+
+%cbx-ripple--focused {
+    background: var-get($theme, 'empty-color');
+    transition: background 0.2s $ease-out-quad;
+    opacity: 0.12;
+
+    @media (prefers-color-scheme: dark) {
+        opacity: 0.24;
+    }
+}
+
+%cbx-ripple--focused-checked {
+    background: var-get($theme, 'fill-color');
+}
+
+%cbx-ripple--focused-invalid {
+    background: var-get($theme, 'error-color');
+}
+
+%cbx-ripple--pressed {
+    opacity: 0.12;
+
+    @media (prefers-color-scheme: dark) {
+        opacity: 0.24;
+    }
+}
+
+%cbx-display--plain {
+    %cbx-composite,
+    %cbx-composite::after,
+    %cbx-composite-mark,
+    %cbx-composite-mark--x {
+        transition: none;
+    }
+}
+
+@include b(igx-checkbox) {
+    @include css-vars-from-theme($base, 'igx-checkbox');
+    @extend %cbx-display !optional;
+
+    &:hover {
+        @include e(ripple) {
+            @extend %cbx-ripple--hover !optional;
+        }
+
+        @include e(composite-mark) {
+            @extend %cbx-composite-mark--fluent !optional;
+        }
+    }
+
+    &:active {
+        @include e(ripple) {
+            @extend %cbx-ripple--hover !optional;
+            @extend %cbx-ripple--pressed !optional;
+        }
+    }
+
+    @include e(input) {
+        @extend %cbx-input !optional;
+    }
+
+    @include e(label) {
+        @extend %cbx-label !optional;
+        @extend %cbx-label-pos--after !optional;
+    }
+
+    @include e(label, $m: before) {
+        @extend %cbx-label !optional;
+        @extend %cbx-label-pos--before !optional;
+    }
+
+    @include e(composite-wrapper) {
+        @extend %cbx-composite-wrapper !optional;
+    }
+
+    @include e(composite) {
+        @extend %cbx-composite !optional;
+    }
+
+    @include e(composite-mark) {
+        @extend %cbx-composite-mark !optional;
+    }
+
+    @include e(ripple) {
+        @extend %cbx-ripple !optional;
+    }
+
+    @include m(bootstrap) {
+        @include e(composite) {
+            &:hover {
+                @extend %cbx-composite--hover !optional;
+            }
+        }
+    }
+
+    @include m(indigo) {
+        @include e(composite) {
+            &:hover {
+                @extend %cbx-composite--hover !optional;
+            }
+        }
+
+        @include e(composite-mark) {
+            @extend %cbx-composite-mark-indigo !optional;
+        }
+
+        @include e(label) {
+            &:hover {
+                @extend %cbx-label--hover !optional;
+            }
+        }
+    }
+
+    @include m(invalid) {
+        @include e(composite) {
+            @extend %cbx-composite--invalid !optional;
+        }
+
+        @include e(composite-wrapper) {
+            @extend %cbx-composite-wrapper--invalid !optional;
+        }
+
+        @include e(label) {
+            @extend %cbx-label--invalid !optional;
+        }
+
+        &:hover {
+            @include e(ripple) {
+                @extend %cbx-ripple--hover !optional;
+                @extend %cbx-ripple--hover-invalid !optional;
+            }
+
+            @include e(composite) {
+                @extend %cbx-composite--invalid--hover !optional;
+            }
+
+            @include e(composite-mark) {
+                @extend %cbx-composite-mark--invalid--fluent !optional;
+            }
+        }
+
+        &:active {
+            @include e(ripple) {
+                @extend %cbx-ripple--hover-invalid !optional;
+            }
+        }
+    }
+
+    @include mx(invalid, checked) {
+        @include e(composite) {
+            @extend %cbx-composite--x--invalid !optional;
+        }
+
+        &:hover {
+            @include e(composite) {
+                @extend %cbx-composite--x--invalid--hover !optional;
+            }
+
+            @include e(composite-mark) {
+                @extend %cbx-composite-mark--x--fluent !optional;
+            }
+        }
+    }
+
+    @include m(focused) {
+        @extend %igx-checkbox--focused !optional;
+
+        @include e(ripple) {
+            @extend %cbx-ripple--focused !optional;
+        }
+
+        &:hover {
+            @include e(ripple) {
+                @extend %cbx-ripple--focused !optional;
+            }
+        }
+    }
+
+    @include mx(indigo, focused) {
+        @extend %igx-checkbox--focused-indigo !optional;
+    }
+
+    @include mx(fluent, focused) {
+        @extend %igx-checkbox--focused-fluent !optional;
+    }
+
+    @include mx(bootstrap, focused) {
+        @extend %igx-checkbox--focused-bootstrap !optional;
+
+        &:hover {
+            @extend %igx-checkbox--focused-hovered !optional;
+        }
+    }
+
+    @include mx(indigo, focused, checked) {
+        @extend %igx-checkbox--focused-checked-indigo !optional;
+    }
+
+    @include mx(bootstrap, focused, checked) {
+        @extend %igx-checkbox--focused-checked-bootstrap !optional;
+    }
+
+    @include mx(focused, checked) {
+        @extend %igx-checkbox--focused-checked !optional;
+    }
+
+    @include mx(focused, invalid) {
+        @include e(ripple) {
+            @extend %cbx-ripple--focused-invalid !optional;
+        }
+    }
+
+    @include mx(indigo, focused, invalid) {
+        @extend %igx-checkbox--focused-invalid-indigo !optional;
+    }
+
+    @include mx(bootstrap, focused, invalid) {
+        @extend %igx-checkbox--focused-invalid-bootstrap !optional;
+    }
+
+    @include m(indeterminate) {
+        @extend %igx-checkbox--indeterminate !optional;
+
+        @include e(composite) {
+            @extend %cbx-composite--x !optional;
+        }
+
+        @include e(composite-mark) {
+            @extend %cbx-composite-mark--in !optional;
+        }
+
+        &:hover {
+            @include e(ripple) {
+                @extend %cbx-ripple--hover !optional;
+                @extend %cbx-ripple--hover-checked !optional;
+            }
+
+            @include e(composite-mark) {
+                @extend %cbx-composite-mark--in--fluent !optional;
+            }
+        }
+
+        &:active {
+            @include e(ripple) {
+                @extend %cbx-ripple--hover !optional;
+                @extend %cbx-ripple--hover-checked !optional;
+                @extend %cbx-ripple--pressed !optional;
+            }
+        }
+    }
+
+    @include mx(indigo, indeterminate) {
+        @extend %igx-checkbox--indeterminate-indigo !optional;
+    }
+
+    @include mx(fluent, indeterminate) {
+        @extend %igx-checkbox--indeterminate-fluent !optional;
+    }
+
+    @include mx(invalid, indeterminate) {
+        @extend %igx-checkbox--indeterminate--invalid !optional;
+
+        &:hover {
+            @include e(composite) {
+                @extend %cbx-composite--x--hover !optional;
+            }
+        }
+    }
+
+    @include mx(material, disabled, indeterminate) {
+        @extend %igx-checkbox--disabled-indeterminate-material !optional;
+    }
+
+    @include mx(fluent, disabled, indeterminate) {
+        @extend %igx-checkbox--disabled-indeterminate-fluent !optional;
+    }
+
+    @include mx(indigo, disabled, indeterminate) {
+        @extend %igx-checkbox--disabled-indeterminate-indigo !optional;
+    }
+
+    @include mx(indigo, focused, indeterminate) {
+        @extend %igx-checkbox--focused-checked-indigo !optional;
+    }
+
+    @include mx(bootstrap, focused, indeterminate) {
+        @extend %igx-checkbox--focused-checked-bootstrap !optional;
+    }
+
+    @include m(checked) {
+        @include e(composite) {
+            @extend %cbx-composite--x !optional;
+        }
+
+        @include e(composite-mark) {
+            @extend %cbx-composite-mark--x !optional;
+        }
+
+        @include e(composite-wrapper) {
+            @extend %cbx-composite-wrapper--x !optional;
+        }
+
+        &:hover {
+            @include e(ripple) {
+                @extend %cbx-ripple--hover !optional;
+                @extend %cbx-ripple--hover-checked !optional;
+            }
+
+            @include e(composite) {
+                @extend %cbx-composite--x--hover !optional;
+            }
+
+            @include e(composite-mark) {
+                @extend %cbx-composite-mark--x--fluent !optional;
+            }
+        }
+
+        &:active {
+            @include e(ripple) {
+                @extend %cbx-ripple--hover !optional;
+                @extend %cbx-ripple--hover-checked !optional;
+                @extend %cbx-ripple--pressed !optional;
+            }
+        }
+    }
+
+    @include m(disabled) {
+        @extend %cbx-display--disabled !optional;
+
+        @include e(label) {
+            @extend %cbx-label--disabled !optional;
+        }
+
+        @include e(label, $m: before) {
+            @extend %cbx-label--disabled !optional;
+        }
+
+        @include e(composite) {
+            @extend %cbx-composite--disabled !optional;
+        }
+    }
+
+    @include m(plain) {
+        @extend %cbx-display--plain !optional;
+    }
+
+    @include mx(focused, checked) {
+        @include e(ripple) {
+            @extend %cbx-ripple--focused !optional;
+            @extend %cbx-ripple--focused-checked !optional;
+        }
+    }
+
+    @include mx(focused, indeterminate) {
+        @include e(ripple) {
+            @extend %cbx-ripple--focused !optional;
+            @extend %cbx-ripple--focused-checked !optional;
+        }
+    }
+
+    @include mx(indeterminate, disabled) {
+        @include e(composite) {
+            @extend %cbx-composite--x--disabled !optional;
+        }
+    }
+
+    @include mx(checked, disabled) {
+        @include e(composite) {
+            @extend %cbx-composite--x--disabled !optional;
+        }
+    }
+}

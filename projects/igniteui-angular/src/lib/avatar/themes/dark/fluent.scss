@@ -5,6 +5,8 @@
 
 $theme: $fluent;
 
-igx-avatar {
-    @include css-vars-from-theme(diff(light.$base, $theme), 'igx-avatar');
+@container style(--theme: fluent) {
+    igx-avatar {
+        @include css-vars-from-theme(diff(light.$base, $theme), 'igx-avatar');
+    }
 }

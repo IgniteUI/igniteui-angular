@@ -11,10 +11,6 @@ body {
     color: $foreground-color;
 }
 
-:root {
-    --some-dynamic-color: hsl(#{math.random(360)}, 100%, 50%);
-}
-
 @include core();
 @include typography($font-family: $typeface, $type-scale: $type-scale);
 @include theme(
@@ -22,9 +18,7 @@ body {
     $schema: $schema,
 );
 
-
-.avatar-theme {
-    --ig-theme: bootstrap;
+.bootstrap-avatar {
     @include palette($light-bootstrap-palette);
 
     @include css-vars(avatar-theme(
@@ -32,6 +26,13 @@ body {
     ));
 }
 
+.material-avatar {
+    @include palette($light-material-palette);
+
+    @include css-vars(avatar-theme(
+        $schema: $light-material-schema,
+    ));
+}
 
 .custom-palette {
     @include palette(palette(
@@ -48,6 +49,11 @@ body {
 
 .dock {
     @include css-vars(dock-manager-theme());
+}
+
+.custom-avatar {
+    --color: blue;
+    outline-color: blue;
 }
 
 .nav-header {
