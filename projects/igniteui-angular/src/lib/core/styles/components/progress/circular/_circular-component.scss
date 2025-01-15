@@ -13,10 +13,6 @@
 
         @extend %display-circular !optional;
 
-        @include e(base) {
-            @extend %circular-base !optional;
-        }
-
         @include e(inner) {
             @extend %inner !optional;
         }

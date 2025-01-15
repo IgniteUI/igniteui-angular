@@ -17,6 +17,10 @@
             @extend %base !optional;
         }
 
+        @include e(track) {
+            @extend %track !optional;
+        }
+
         @include e(indicator) {
             @extend %indicator !optional;
         }

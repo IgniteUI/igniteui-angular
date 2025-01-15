@@ -156,6 +156,8 @@ $easing-curves: (
         --stripe-size: #{$strip-size};
         --linear-animation-duration: var(--_transition-duration);
 
+        display: flex;
+        flex-direction: column;
         position: relative;
         width: inherit;
         height: $bar-height;
@@ -194,7 +196,7 @@ $easing-curves: (
 
     %indicator--indeterminate:dir(rtl) {
         @if $variant != 'fluent' {
-            %base {
+            %track {
                 transform: rotateY(180deg);
             }
         } @else {
@@ -207,6 +209,15 @@ $easing-curves: (
     %display-linear:not(%display-linear--indeterminate) {
         %indicator {
             animation: initial-width var(--_transition-duration) linear;
+            background-color: var-get($theme, 'fill-color-default')
+        }
+    }
+
+    %display-linear--indeterminate {
+        %value {
+            &::before {
+                display: none;
+            }
         }
     }
 
@@ -263,12 +274,6 @@ $easing-curves: (
 
         @if $variant == 'fluent' {
             display: none;
-        }
-    }
-
-    %display-linear:not(%display-linear--indeterminate) {
-        %indicator {
-            background-color: var-get($theme, 'fill-color-default')
         }
     }
 

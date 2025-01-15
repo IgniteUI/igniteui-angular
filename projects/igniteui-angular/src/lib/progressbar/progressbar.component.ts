@@ -1,4 +1,4 @@
-import {NgClass, NgTemplateOutlet, NgStyle} from '@angular/common';
+import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
 import {
     Component,
     ElementRef,
@@ -89,10 +89,10 @@ export abstract class BaseProgressDirective {
     protected _value = MIN_VALUE;
     protected _animate = true;
     protected _step: number;
-    private _fraction = 0;
-    private _integer = 0;
+    protected _fraction = 0;
+    protected _integer = 0;
 
-    constructor() { }
+    constructor() {}
 
     /**
      * Returns the value which update the progress indicator of the `progress bar`.
@@ -196,16 +196,24 @@ export abstract class BaseProgressDirective {
         return this._max;
     }
 
-    /**
-     * @hidden
-     */
-    public getStyles() {
-        return {
-            '--_progress-integer': this._integer.toString(),
-            '--_progress-fraction': this._fraction.toString(),
-            '--_progress-whole': this.valueInPercent.toFixed(2),
-            '--_transition-duration': `${this.animationDuration}ms`,
-        };
+    @HostBinding('style.--_progress-integer')
+    private get progressInteger() {
+        return this._integer.toString();
+    }
+
+    @HostBinding('style.--_progress-fraction')
+    private get progressFraction() {
+        return this._fraction.toString();
+    }
+
+    @HostBinding('style.--_progress-whole')
+    private get progressWhole() {
+        return this.valueInPercent.toFixed(2);
+    }
+
+    @HostBinding('style.--_transition-duration')
+    private get transitionDuration() {
+        return `${this.animationDuration}ms`;
     }
 
     /**
@@ -252,6 +260,9 @@ export abstract class BaseProgressDirective {
         return this._value;
     }
 
+    /**
+     * @hidden
+     */
     protected _updateProgressValues(): void {
         const percentage = this.valueInPercent;
         const integerPart = Math.floor(percentage);
@@ -271,8 +282,11 @@ export abstract class BaseProgressDirective {
     public set value(val) {
         const valInRange = valueInRange(val, this.max); // Ensure value is in range
 
+        console.log(`Setting value: ${valInRange}, Current value: ${this._value}, Indeterminate: ${this.indeterminate}`);
+
         // Avoid redundant updates
         if (isNaN(valInRange) || this._value === valInRange || this.indeterminate) {
+            console.log("No change in value or indeterminate state, update not required.");
             return;
         }
 
@@ -281,8 +295,9 @@ export abstract class BaseProgressDirective {
         // Update internal value
         this._value = valInRange;
 
-        // Refresh CSS variables
-        this._updateProgressValues();
+        setTimeout(() => {
+            this._updateProgressValues();
+        }, 0)
 
         // Emit the progressChanged event
         this.progressChanged.emit({
@@ -290,6 +305,7 @@ export abstract class BaseProgressDirective {
             currentValue: this._value,
         });
     }
+
 }
 let NEXT_LINEAR_ID = 0;
 let NEXT_CIRCULAR_ID = 0;
@@ -297,7 +313,7 @@ let NEXT_GRADIENT_ID = 0;
 @Component({
     selector: 'igx-linear-bar',
     templateUrl: 'templates/linear-bar.component.html',
-    imports: [NgClass, NgStyle]
+    imports: [NgClass]
 })
 export class IgxLinearProgressBarComponent extends BaseProgressDirective implements AfterContentInit {
     @HostBinding('attr.aria-valuemin')
@@ -450,7 +466,6 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     }
 
     public ngAfterContentInit() {
-        this._updateProgressValues();
         this._contentInit = true;
     }
 }
@@ -458,7 +473,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 @Component({
     selector: 'igx-circular-bar',
     templateUrl: 'templates/circular-bar.component.html',
-    imports: [NgTemplateOutlet, NgStyle]
+    imports: [NgTemplateOutlet, NgClass]
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterViewInit, AfterContentInit {
     /**
@@ -557,7 +572,6 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     }
 
     public ngAfterContentInit() {
-        this._updateProgressValues();
         this._contentInit = true;
     }
 
