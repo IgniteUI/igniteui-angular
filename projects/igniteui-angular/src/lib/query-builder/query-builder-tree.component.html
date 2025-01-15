@@ -442,7 +442,8 @@
     </ng-template>
 
     <ng-template #expressionGroupTemplate let-expressionItem>
-        <div class="igx-filter-tree">
+        <div class="igx-filter-tree"
+            (focusout)="parentExpression? null : onDragFocusOut()">
             <div
                 class="igx-filter-tree__line"
                 [ngClass]="{

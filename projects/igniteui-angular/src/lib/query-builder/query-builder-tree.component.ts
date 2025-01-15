@@ -1424,6 +1424,19 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    //Upon blurring the tree, if Keyboard drag is underway and the next active item is not the drop ghost's drag indicator icon, cancel the drag&drop procedure
+    public onDragFocusOut() {
+        if (this.isKeyboardDrag && this.dropGhostElement) {
+            //have to wait a tick because upon blur, the next activeElement is always body, right before the next element gains focus
+            setTimeout(() => {
+                if(document.activeElement.className.indexOf("igx-drag-indicator") === -1){
+                    this.resetDragAndDrop(true);
+                    this.keyboardSubscription$?.unsubscribe();
+                }
+            }, 0);
+        }
+    }
+
     /* DRAG AND DROP END*/
 
     /**
