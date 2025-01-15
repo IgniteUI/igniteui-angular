@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxCircularProgressBarComponent } from './progressbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { classListContains } from "./helper-utils.spec";
+import { hasClass } from "./helper-utils.spec";
 
 describe('IgxCircularProgressBarComponent', () => {
     let fixture: ComponentFixture<IgxCircularProgressBarComponent>;
@@ -44,39 +44,39 @@ describe('IgxCircularProgressBarComponent', () => {
     });
 
     it('should correctly toggle the indeterminate mode', () => {
-        classListContains(circularBar, 'igx-circular-bar--indeterminate', false);
+        hasClass(circularBar, 'igx-circular-bar--indeterminate', false);
 
         progress.indeterminate = true;
         fixture.detectChanges();
 
-        classListContains(circularBar, 'igx-circular-bar--indeterminate', true);
+        hasClass(circularBar, 'igx-circular-bar--indeterminate', true);
     });
 
     it('should correctly toggle animation', () => {
-        classListContains(circularBar, 'igx-circular-bar--animation-none', false);
+        hasClass(circularBar, 'igx-circular-bar--animation-none', false);
 
         progress.animate = false;
         fixture.detectChanges();
 
-        classListContains(circularBar, 'igx-circular-bar--animation-none', true);
+        hasClass(circularBar, 'igx-circular-bar--animation-none', true);
     });
 
     it('should toggle counter visibility when custom text is provided', () => {
         // Default state: no custom text
         expect(progress.hasText).toBe(false);
-        classListContains(circularBar, 'igx-circular-bar--hide-counter', false);
+        hasClass(circularBar, 'igx-circular-bar--hide-counter', false);
 
         // Provide custom text
         progress.text = 'Custom Text';
         fixture.detectChanges();
         expect(progress.hasText).toBe(true);
-        classListContains(circularBar, 'igx-circular-bar--hide-counter', true);
+        hasClass(circularBar, 'igx-circular-bar--hide-counter', true);
 
         // Remove custom text
         progress.text = null;
         fixture.detectChanges();
         expect(progress.hasText).toBe(false);
-        classListContains(circularBar, 'igx-circular-bar--hide-counter', false);
+        hasClass(circularBar, 'igx-circular-bar--hide-counter', false);
     });
 
     it('should toggle text visibility when textVisibility is changed', () => {

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxLinearProgressBarComponent } from './progressbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { classListContains } from "./helper-utils.spec";
+import { hasClass } from "./helper-utils.spec";
 
 describe('IgxLinearProgressBarComponent', () => {
     let fixture: ComponentFixture<IgxLinearProgressBarComponent>;
@@ -36,30 +36,30 @@ describe('IgxLinearProgressBarComponent', () => {
     });
 
     it('should correctly toggle the striped style', () => {
-        classListContains(linearBar, 'igx-linear-bar--striped', false);
+        hasClass(linearBar, 'igx-linear-bar--striped', false);
 
         progress.striped = true;
         fixture.detectChanges();
 
-        classListContains(linearBar, 'igx-linear-bar--striped', true);
+        hasClass(linearBar, 'igx-linear-bar--striped', true);
     });
 
     it('should correctly toggle the indeterminate mode', () => {
-        classListContains(linearBar, 'igx-linear-bar--indeterminate', false);
+        hasClass(linearBar, 'igx-linear-bar--indeterminate', false);
 
         progress.indeterminate = true;
         fixture.detectChanges();
 
-        classListContains(linearBar, 'igx-linear-bar--indeterminate', true);
+        hasClass(linearBar, 'igx-linear-bar--indeterminate', true);
     });
 
     it('should correctly toggle animation', () => {
-        classListContains(linearBar, 'igx-linear-bar--animation-none', false);
+        hasClass(linearBar, 'igx-linear-bar--animation-none', false);
 
         progress.animate = false;
         fixture.detectChanges();
 
-        classListContains(linearBar, 'igx-linear-bar--animation-none', true);
+        hasClass(linearBar, 'igx-linear-bar--animation-none', true);
     });
 
     it('should correctly indicate if custom text is provided via hasText', () => {
@@ -74,36 +74,36 @@ describe('IgxLinearProgressBarComponent', () => {
     it('should toggle counter visibility when custom text is provided', () => {
         // Default state: no custom text
         expect(progress.hasText).toBe(false);
-        classListContains(linearBar, 'igx-linear-bar--hide-counter', false);
+        hasClass(linearBar, 'igx-linear-bar--hide-counter', false);
 
         // Provide custom text
         progress.text = 'Custom Text';
         fixture.detectChanges();
         expect(progress.hasText).toBe(true);
-        classListContains(linearBar, 'igx-linear-bar--hide-counter', true);
+        hasClass(linearBar, 'igx-linear-bar--hide-counter', true);
 
         // Remove custom text
         progress.text = null;
         fixture.detectChanges();
         expect(progress.hasText).toBe(false);
-        classListContains(linearBar, 'igx-linear-bar--hide-counter', false);
+        hasClass(linearBar, 'igx-linear-bar--hide-counter', false);
     });
 
     it('should toggle text visibility when textVisibility is changed', () => {
         const valueElement = linearBar.querySelector('.igx-linear-bar__value') as HTMLElement;
 
         // Default state: textVisibility is true
-        classListContains(valueElement, 'igx-linear-bar__value--hidden', false);
+        hasClass(valueElement, 'igx-linear-bar__value--hidden', false);
 
         // Set textVisibility to false
         progress.textVisibility = false;
         fixture.detectChanges(); // Ensure bindings are updated
-        classListContains(valueElement, 'igx-linear-bar__value--hidden', true);
+        hasClass(valueElement, 'igx-linear-bar__value--hidden', true);
 
         // Set textVisibility back to true
         progress.textVisibility = true;
         fixture.detectChanges(); // Ensure bindings are updated
-        classListContains(valueElement, 'igx-linear-bar__value--hidden', false);
+        hasClass(valueElement, 'igx-linear-bar__value--hidden', false);
     });
 
     it('should correctly set text alignment', () => {
@@ -122,17 +122,17 @@ describe('IgxLinearProgressBarComponent', () => {
         const valueElement = linearBar.querySelector('.igx-linear-bar__value') as HTMLElement;
 
         // Default state: textTop is false, and class should not be present
-        classListContains(valueElement, 'igx-linear-bar__value--top', false);
+        hasClass(valueElement, 'igx-linear-bar__value--top', false);
 
         // Enable textTop
         progress.textTop = true;
         fixture.detectChanges(); // Ensure bindings are updated
-        classListContains(valueElement, 'igx-linear-bar__value--top', true);
+        hasClass(valueElement, 'igx-linear-bar__value--top', true);
 
         // Disable textTop
         progress.textTop = false;
         fixture.detectChanges(); // Ensure bindings are updated
-        classListContains(valueElement, 'igx-linear-bar__value--top', false);
+        hasClass(valueElement, 'igx-linear-bar__value--top', false);
     });
 
     it('should correctly apply the ID attribute', () => {
@@ -148,26 +148,26 @@ describe('IgxLinearProgressBarComponent', () => {
     });
 
     it('should apply type-specific classes correctly', () => {
-        classListContains(linearBar, 'igx-linear-bar--danger', false);
-        classListContains(linearBar, 'igx-linear-bar--info', false);
-        classListContains(linearBar, 'igx-linear-bar--warning', false);
-        classListContains(linearBar, 'igx-linear-bar--success', false);
+        hasClass(linearBar, 'igx-linear-bar--danger', false);
+        hasClass(linearBar, 'igx-linear-bar--info', false);
+        hasClass(linearBar, 'igx-linear-bar--warning', false);
+        hasClass(linearBar, 'igx-linear-bar--success', false);
 
         progress.type = 'success';
         fixture.detectChanges();
-        classListContains(linearBar, 'igx-linear-bar--success', true);
+        hasClass(linearBar, 'igx-linear-bar--success', true);
 
         progress.type = 'error';
         fixture.detectChanges();
-        classListContains(linearBar, 'igx-linear-bar--danger', true);
+        hasClass(linearBar, 'igx-linear-bar--danger', true);
 
         progress.type = 'info';
         fixture.detectChanges();
-        classListContains(linearBar, 'igx-linear-bar--info', true);
+        hasClass(linearBar, 'igx-linear-bar--info', true);
 
         progress.type = 'warning';
         fixture.detectChanges();
-        classListContains(linearBar, 'igx-linear-bar--warning', true);
+        hasClass(linearBar, 'igx-linear-bar--warning', true);
     });
 
     it('should correctly update aria attributes', () => {
