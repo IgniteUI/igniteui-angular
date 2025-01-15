@@ -33,6 +33,7 @@ import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { NgClass, NgIf, NgFor } from '@angular/common';
+import { BaseFilteringComponent } from './base-filtering.component';
 
 /**
  * @hidden
@@ -96,6 +97,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         protected overlayService: IgxOverlayService,
         private cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
+        public esf: BaseFilteringComponent
     ) { }
 
     public ngAfterViewInit(): void {
@@ -149,6 +151,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         } else {
             this.toggle.close();
         }
+    }
+
+    public cancelDialog() {
+        this.esf.cancel();
+        this.closeDialog();
     }
 
     public onApplyButtonClick() {
