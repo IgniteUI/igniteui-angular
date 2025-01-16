@@ -75,8 +75,7 @@
     <div [style.paddingLeft]="drawerState.miniVariant && !drawerState.pin ? '60px' : null" class="content">
         <app-page-header
                 [title]="urlString"
-                [dirMode]="dirMode()"
-                (toggleDirection)="toggleDirection()"
+                (toggleDirection)="onDirectionToggle($event)"
         ></app-page-header>
         <div #dirTarget class="sample-wrapper" [attr.dir]="dirMode()">
             <router-outlet></router-outlet>

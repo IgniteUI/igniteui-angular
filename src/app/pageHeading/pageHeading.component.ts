@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output, signal} from '@angular/core';
 import { AsyncPipe, KeyValuePipe } from '@angular/common';
 import { IgxIconButtonDirective, IgxIconComponent, IgxRippleDirective, IgxToggleActionDirective } from 'igniteui-angular';
 import { PropertyChangeService } from '../properties-panel/property-change.service';
@@ -12,11 +12,13 @@ import { PropertyChangeService } from '../properties-panel/property-change.servi
 export class PageHeaderComponent {
     @Input() public title: string;
 
-    @Input() public dirMode!: string;
+    public dirMode: 'ltr' | 'rtl' = 'ltr';
 
-    @Output() public toggleDirection = new EventEmitter<void>();
+    @Output() public toggleDirection = new EventEmitter<'ltr' | 'rtl'>();
+
     public onToggleDirectionClick(): void {
-        this.toggleDirection.emit();
+        this.dirMode = this.dirMode === 'ltr' ? 'rtl' : 'ltr';
+        this.toggleDirection.emit(this.dirMode);
     }
 
     protected propertyChangeService = inject(PropertyChangeService);

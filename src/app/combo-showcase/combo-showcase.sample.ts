@@ -13,12 +13,10 @@ import { PropertyPanelConfig, PropertyChangeService, Properties } from '../prope
 defineComponents(IgcComboComponent);
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'combo-showcase-sample',
     templateUrl: './combo-showcase.sample.html',
     styleUrls: ['combo-showcase.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    standalone: true,
     imports: [
         FormsModule,
         IgxLabelDirective,

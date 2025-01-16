@@ -40,13 +40,11 @@ export class AppComponent implements OnInit {
     @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
     public navdrawer;
 
-    @ViewChild('dirTarget', { static: true })
-    public dirTarget!: ElementRef<HTMLDivElement>;
-
     public dirMode = signal<'ltr' | 'rtl'>('ltr');
 
-    public toggleDirection(): void {
-        this.dirMode.update((current) => (current === 'ltr' ? 'rtl' : 'ltr'));
+    // This method will be triggered by PageHeaderComponent's toggleDirection event
+    public onDirectionToggle(newDirection: 'ltr' | 'rtl'): void {
+        this.dirMode.update(() => newDirection);
     }
 
     protected propertyChangeService = inject(PropertyChangeService);
