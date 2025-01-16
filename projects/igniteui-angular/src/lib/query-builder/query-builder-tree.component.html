@@ -91,8 +91,7 @@
             (click)="addCondition(expressionItem, afterExpression)"
             igxDrop 
             (enter)="onAddConditionEnter(addConditionButton, expressionItem)"
-            (leave)="onAddConditionLeave()"
-            (dropped)="onAddConditionDropped()"
+            (leave)="onChipLeave()"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{
@@ -453,13 +452,29 @@
             ></div>
 
             <div class="igx-filter-tree__expression">     
-                <button igxButton="flat"
-                        (keydown)="invokeClick($event)"
-                        (click)="onGroupClick(expressionItem)"
+                <div style="width: 100%;"
+                    #groupRef 
+                    igxDrop
+                    (enter)="onGroupRootOver(groupRef, expressionItem)"
+                    (over)="onGroupRootOver(groupRef, expressionItem)"
+                    (leave)="onChipLeave()"
                 >
-                <span> {{expressionItem?.operator === 0? 'AND':'OR'}}</span>
-                <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>                   
-                </button>   
+                    <button igxButton="flat"
+                            (keydown)="invokeClick($event)"
+                            (click)="onGroupClick(expressionItem)"
+                    >                    
+                    <span 
+                        
+                        igxDrop
+                        (enter)="onGroupRootOver(groupRef, expressionItem)"
+                        (over)="onGroupRootOver(groupRef, expressionItem)"
+                        (leave)="onChipLeave()"
+                    > 
+                        {{expressionItem?.operator === 0? 'AND':'OR'}}
+                    </span>
+                    <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>                   
+                    </button>   
+                </div>
                 <ng-container *ngFor="let expr of expressionItem?.children">
                     <ng-container
                         *ngTemplateOutlet="

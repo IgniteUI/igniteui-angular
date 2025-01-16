@@ -1042,6 +1042,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.onChipEnter(targetDragElement, targetExpressionItem, true)
     }
 
+    //TODO remove fromDiv: boolean -> targetDragElement is always the div
     public onChipEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem, fromDiv: boolean) {
         // console.log('Entering:', targetDragElement, targetExpressionItem, 'from div:', fromDiv);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
@@ -1071,6 +1072,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.onChipEnter(targetDragElement, targetExpressionItem, true);
         }
     }
+
+    //TODO remove fromDiv: boolean -> targetDragElement is always the div
     public onChipOver(targetDragElement: HTMLElement, fromDiv: boolean): void {
         //console.log('Over:', targetDragElement, 'type: ', typeof event);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
@@ -1106,9 +1109,34 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
 
         //console.log('Move: [', this.sourceElement.children[0].textContent.trim(), (this.dropUnder ? '] under: [' : '] over: ['), this.targetElement.textContent.trim() + ']')
-
         this.moveDraggedChipToNewLocation(this.targetExpressionItem)
         this.resetDragAndDrop(true);
+    }
+
+
+    public onGroupRootOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionGroupItem) {
+        //console.log('Entering:', targetDragElement, targetExpressionItem);
+        if (!this.sourceElement || !this.sourceExpressionItem) return;
+
+        let newTargetElement, newTargetExpressionItem;
+
+        if (this.ghostInLowerPart(targetDragElement)) {
+            newTargetElement = targetDragElement.nextElementSibling;
+            newTargetElement = (newTargetElement.className.indexOf(this.dropGhostClass) !== -1) ? newTargetElement.nextElementSibling : newTargetElement;
+            newTargetExpressionItem = targetExpressionItem.children[0];
+        } else if (targetExpressionItem.parent) {
+            newTargetElement = targetDragElement.parentElement.parentElement;
+            newTargetExpressionItem = targetExpressionItem;
+        } else {
+            this.onChipLeave();
+        }
+
+        if (newTargetElement && (this.targetElement !== newTargetElement || this.targetExpressionItem !== newTargetExpressionItem)) {
+            this.resetDragAndDrop(false);
+            this.targetElement = newTargetElement;
+            this.targetExpressionItem = newTargetExpressionItem;
+            this.renderDropGhostChip(this.targetElement, false);
+        }
     }
 
     public onAddConditionEnter(addConditionElement: HTMLElement, rootGroup: ExpressionGroupItem) {
@@ -1125,18 +1153,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     public onAddConditionLeave() {
-        if (!this.sourceElement || !this.sourceExpressionItem) return;
-
-        this.onChipLeave()
-    }
-
-    public onAddConditionDropped() {
-        //console.log('onAddConditionDropped',targetExpressionItem, this.sourceExpressionItem,targetExpressionItem == this.sourceExpressionItem);
-        if (!this.sourceElement || !this.sourceExpressionItem) return;
-
-        if (this.targetExpressionItem) {
-            this.onChipDropped();
-        }
+        this.onChipLeave();
     }
 
     //Checks if the dragged ghost is horizontally on the same line with the drop ghost
@@ -1433,7 +1450,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this.isKeyboardDrag && this.dropGhostElement) {
             //have to wait a tick because upon blur, the next activeElement is always body, right before the next element gains focus
             setTimeout(() => {
-                if(document.activeElement.className.indexOf("igx-drag-indicator") === -1){
+                if (document.activeElement.className.indexOf("igx-drag-indicator") === -1) {
                     this.resetDragAndDrop(true);
                     this.keyboardSubscription$?.unsubscribe();
                 }
