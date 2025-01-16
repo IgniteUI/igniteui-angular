@@ -69,6 +69,7 @@
         tree-border-color: $tree-border-color,
         tree-border-radius: $tree-border-radius,
         border-radius: $border-radius,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),

@@ -2083,7 +2083,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             let calendar = outlet.getElementsByClassName('igx-calendar')[0];
             const todayDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date--current');
-            todayDayItem.firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayDayItem.firstChild);
             grid.filteringRow.onInputGroupFocusout();
             tick(100);
             fix.detectChanges();
@@ -2135,7 +2135,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Select the first day
             const firstDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date:not(.igx-days-view__date--inactive)');
 
-            firstDayItem.firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(firstDayItem.firstChild);
             grid.filteringRow.onInputGroupFocusout();
             tick(200);
             fix.detectChanges();
@@ -2235,7 +2235,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const currentDay = document.querySelector('.igx-days-view__date--current');
 
-            currentDay.firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(currentDay.firstChild);
             tick();
             fix.detectChanges();
 
@@ -2759,6 +2759,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
                 GridFunctions.clickFilterCellChip(fix, 'AnotherField');
                 fix.detectChanges();
+                grid.cdr.detectChanges();
 
                 // check if it is positioned at the bottom of the thead.
                 const theadWrapper = grid.theadRow.nativeElement.firstElementChild;
@@ -2962,7 +2963,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const currentDay = calendar.querySelector('.igx-days-view__date--current');
 
-            currentDay.firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(currentDay.firstChild);
 
             flush();
             fix.detectChanges();
@@ -5048,7 +5049,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
             tick(100);
             fix.detectChanges();
             flush();
@@ -5130,7 +5131,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
             tick(100);
             fix.detectChanges();
             flush();
@@ -5177,7 +5178,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
             tick(100);
             fix.detectChanges();
             flush();
@@ -5344,7 +5345,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
             tick(100);
             fix.detectChanges();
             flush();
@@ -5397,7 +5398,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
             tick();
             fix.detectChanges();
 
@@ -5841,6 +5842,32 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(gridCellValues).toEqual(listItems);
         }));
 
+        it('Should filter grid correctly with case insensitive duplicates', fakeAsync(() => {
+            grid.data = SampleTestData.excelFilteringDataDuplicateValues();
+            fix.detectChanges();
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'cust', fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Get the results and verify their count.
+            const gridCellValues = GridFunctions.getColumnCells(fix, 'AnotherField')
+                .map(c => c.nativeElement.innerText)
+                .sort();
+
+            expect(gridCellValues.length).toEqual(5);
+        }));
+
         it('Should disable the apply button when there are no results.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
@@ -6259,6 +6286,41 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 ['Select All', '1:00:00 AM', '12:00:00 PM', '11:00:00 PM'],
                 [true, true, true, true]);
         }));
+
+        it('should clear all filters in the custom dialog when clicking "Clear Filter" button', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 5);
+            tick();
+            fix.detectChanges();
+
+            const expressions = GridFunctions.getExcelCustomFilteringDateExpressions(fix);
+            const lastExpression = expressions[expressions.length - 1];
+            (lastExpression.querySelector('igx-select').querySelector('igx-input-group') as HTMLElement).click();
+            tick();
+            fix.detectChanges();
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+ 
+            const todayItem = dropdownList.children[0].children.find(item => item.nativeElement?.innerText === 'Today');
+            todayItem.nativeElement.click();
+            tick();
+            fix.detectChanges();
+            
+            GridFunctions.clickClearFilterExcelStyleCustomFiltering(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.getExcelCustomFilteringDateExpressions(fix).forEach(expr => {
+                const input = expr.children[0].querySelector('input');
+                expect(input.value).toBe('');
+            });
+        }));
     });
 
     describe('Templates: ', () => {
@@ -6479,31 +6541,31 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Select column
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Scroll the search list to the bottom.
             let scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
             scrollbar.scrollTop = 3000;
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Select another column
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Update scrollbar
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
-            // Get the display container and its parent and verify if the display contaier is at start
+            // Get the display container and its parent and verify that the display container is at start
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
             const parentContainerRect = displayContainer.parentElement.getBoundingClientRect();
-
+            
             expect(displayContainerRect.top - parentContainerRect.top <= 1).toBe(true, 'search scrollbar did not reset');
         });
     });

@@ -422,10 +422,13 @@
         }
 
         input,
-        textarea,
-        span {
+        textarea {
             font: inherit;
             margin: 0;
+        }
+
+        span {
+            font-family: inherit;
         }
 
         input[type='file'] {
@@ -1262,6 +1265,7 @@
 
     %form-group-textarea--disabled {
         color: var-get($theme, 'disabled-text-color') !important;
+        cursor: default;
 
         &::placeholder {
             color: var-get($theme, 'disabled-placeholder-color');

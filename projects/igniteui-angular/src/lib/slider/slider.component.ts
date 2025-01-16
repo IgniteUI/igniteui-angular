@@ -99,12 +99,6 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    @HostBinding(`attr.role`)
-    public role = 'slider';
-
-    /**
-     * @hidden
-     */
     @HostBinding('class.igx-slider')
     public slierClass = true;
 
@@ -127,30 +121,6 @@ export class IgxSliderComponent implements
      */
     @Input()
     public thumbLabelVisibilityDuration = 750;
-
-    /**
-     * @hidden
-     */
-    @HostBinding(`attr.aria-valuemin`)
-    public get valuemin() {
-        return this.minValue;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostBinding(`attr.aria-valuemax`)
-    public get valuemax() {
-        return this.maxValue;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostBinding(`attr.aria-readonly`)
-    public get readonly() {
-        return this.disabled;
-    }
 
     /**
      * @hidden
@@ -1353,7 +1323,7 @@ export class IgxSliderComponent implements
     }
 
     private changeThumbFocusableState(state: boolean) {
-        const value = state ? -1 : 1;
+        const value = state ? -1 : 0;
 
         if (this.isRange) {
             this.thumbFrom.tabindex = value;
@@ -1384,11 +1354,11 @@ export class IgxSliderComponent implements
     private normalizeByStep(value: IRangeSliderValue | number) {
         if (this.isRange) {
             this._value = {
-                lower: (value as IRangeSliderValue).lower - ((value as IRangeSliderValue).lower % this.step),
-                upper: (value as IRangeSliderValue).upper - ((value as IRangeSliderValue).upper % this.step)
+                lower: Math.floor((value as IRangeSliderValue).lower / this.step) * this.step,
+                upper: Math.floor((value as IRangeSliderValue).upper / this.step) * this.step
             };
         } else {
-            this._value = (value as number) - ((value as number) % this.step);
+            this._value = Math.floor((value as number) / this.step) * this.step;
         }
     }
 

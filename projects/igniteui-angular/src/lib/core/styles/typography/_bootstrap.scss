@@ -64,14 +64,14 @@
     ));
     @include dock-manager-typography();
     @include drop-down-typography($categories: (
-        header: 'body-1',
-        item: 'body-1',
-        select-item: 'body-1'
+        header: 'overline',
+        item: 'body-2',
+        select-item: 'body-2'
     ));
     @include expansion-panel-typography($categories: (
         title: 'h5',
-        description: 'body-2',
-        body: 'body-1'
+        description: 'subtitle-2',
+        body: 'body-2'
     ));
     @include excel-filtering-typography();
     @include icon-button-typography();
@@ -103,7 +103,6 @@
     ));
     @include tabs-typography();
     @include time-picker-typography($categories: (
-        header-time-period: 'subtitle-1',
         header-hour: 'h4',
         selected-time: 'h4'
     ));
