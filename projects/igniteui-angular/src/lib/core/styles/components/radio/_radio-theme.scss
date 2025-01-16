@@ -212,7 +212,6 @@
         height: $size;
         min-width: $size;
         line-height: $size;
-        cursor: pointer;
         color: var-get($theme, 'label-color');
         user-select: none;
 
@@ -400,7 +399,6 @@
 
     %radio-label {
         color: var-get($theme, 'label-color');
-        cursor: pointer;
         user-select: none;
         word-wrap: break-all;
 
