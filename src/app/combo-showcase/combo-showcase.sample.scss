@@ -1,4 +1,6 @@
-.combo-sample {
+@use 'igniteui-theming/sass/bem' as *;
+
+@include b(combo-sample) {
     display: flex;
     flex-direction: column;
     gap: 28px;
@@ -6,33 +8,32 @@
     margin: 0 auto;
     padding: 32px 16px;
 
-    &__section,
-    &__row {
+    @include e(section) {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+        border: 1px dashed var(--ig-gray-300);
+    }
+
+    @include e(row) {
         display: flex;
         gap: 16px
     }
 
-    &__row {
-        &--stretch {
-            > * {
-                flex: 1;
-            }
+    @include e(row, $m: 'stretch') {
+        > * {
+            flex: 1;
         }
     }
 
-    &__section {
-        flex-direction: column;
-        padding: 16px;
-        border: 1px dashed (var(--ig-gray-300));
-    }
-
-    &__form {
+    @include e(form) {
         display: flex;
         flex-direction: column;
         gap: 16px;
     }
 
-    &__title {
+    @include e(title) {
         font-weight: 600;
         font-size: 20px;
         letter-spacing: .4px;
@@ -51,6 +52,6 @@
 .custom-combo-header {
     text-align: center;
     padding: 8px 16px;
-    background: (var(--ig-gray-100));
+    background: var(--ig-gray-100);
 }
 
