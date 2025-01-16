@@ -990,6 +990,11 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
 
+    /* blazorInclude */
+    /** @hidden @internal */
+    @Output()
+    public selectedRowsChange = new EventEmitter<any[]>();
+
     /**
      * Emitted when the expanded state of a row gets changed.
      *
@@ -2265,9 +2270,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._allowFiltering = value;
             this.filteringService.registerSVGIcons();
 
-            if (!this._init) {
-                this.calcGridHeadRow();
-            }
 
             this.filteringService.isFilterRowVisible = false;
             this.filteringService.filteredColumn = null;
@@ -2458,7 +2460,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /* blazorByValueArray */
     /* blazorAlwaysWriteback */
-    /* @tsTwoWayProperty (true, "RowSelectionChanging", "Detail.NewSelection", false) */
+    /* @tsTwoWayProperty (true, "SelectedRowsChange", "Detail", false) */
     /* blazorPrimitiveValue */
     /**
      * Gets/Sets the current selection state.
@@ -2999,6 +3001,12 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public filteringPipeTrigger = 0;
+
+    /**
+     * @hidden @internal
+     */
+    public isColumnWidthSum = false;
+
     /**
      * @hidden @internal
      */
@@ -3199,6 +3207,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
+
     private _currencyPositionLeft: boolean;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
@@ -3231,7 +3240,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    protected get minColumnWidth() {
+    public get minColumnWidth() {
         return MINIMUM_COLUMN_WIDTH;
     }
 
@@ -3412,6 +3421,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
+        this.selectionService.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe((args: any[]) => {
+            this.selectedRowsChange.emit(args);
+        });
         IgcTrialWatermark.register();
     }
 
@@ -3598,16 +3610,14 @@ export abstract class IgxGridBaseDirective implements GridType,
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
-            if (!this.crudService.cell &&
-                !!this.navigation.activeNode &&
-                ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
-                    this.navigation.activeNode.row < this.dataView.length)
-                    || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                    || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
+            const activeNode = this.navigation.activeNode;
+            if (!this.crudService.cell && !!activeNode &&
+                ((event.target === this.tbody.nativeElement && activeNode.row >= 0 &&
+                    activeNode.row < this.dataView.length)
+                    || (event.target === this.theadRow.nativeElement && activeNode.row === -1)
+                    || (event.target === this.tfoot.nativeElement && activeNode.row === this.dataView.length)) &&
                 !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
-                this.navigation.lastActiveNode = this.navigation.activeNode;
-                this.navigation.activeNode = {} as IActiveNode;
-                this.notifyChanges();
+                this.clearActiveNode();
             }
         });
         this.rowAddedNotifier.pipe(destructor).subscribe(args => this.refreshGridState(args));
@@ -4012,7 +4022,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.onPinnedRowsChanged(change);
             });
 
-        this.addRowSnackbar?.clicked.subscribe(() => {
+        this.addRowSnackbar?.clicked.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const rec = this.filteredSortedData[this.lastAddedRowIndex];
             this.scrollTo(rec, 0);
             this.addRowSnackbar.close();
@@ -6059,10 +6069,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             return true;
         }
 
-        const activeCell = this.gridAPI.grid.navigation.activeNode;
-        if (activeCell && activeCell.row !== -1) {
-            this.tbody.nativeElement.focus();
-        }
+        this.navigation.restoreActiveNodeFocus();
     }
 
     /**
@@ -6249,7 +6256,20 @@ export abstract class IgxGridBaseDirective implements GridType,
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     /* blazorCSSuppress */
     public endEdit(commit = true, event?: Event): boolean {
-        return this.crudService.endEdit(commit, event);
+        const document = this.nativeElement?.getRootNode() as Document | ShadowRoot;
+        const focusWithin = this.nativeElement?.contains(document.activeElement);
+
+        const success = this.crudService.endEdit(commit, event);
+
+        if (focusWithin) {
+            // restore focus for navigation
+            this.navigation.restoreActiveNodeFocus();
+        } else if (this.navigation.activeNode) {
+            // grid already lost focus, clear active node
+            this.clearActiveNode();
+        }
+
+        return success;
     }
 
     /**
@@ -6474,7 +6494,10 @@ export abstract class IgxGridBaseDirective implements GridType,
 
 
         if (this.width === null || !width) {
+            this.isColumnWidthSum = true;
             width = this.getColumnWidthSum();
+        } else {
+            this.isColumnWidthSum = false;
         }
 
         if (this.hasVerticalScroll() && this.width !== null) {
@@ -6829,23 +6852,9 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * @hidden
-     * @internal
-     */
-    protected calcGridHeadRow() {
-        if (this.maxLevelHeaderDepth) {
-            this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
-            const hasFilterRow = this._allowFiltering && this._filterMode === FilterMode.quickFilter;
-            const minSize = (this.maxLevelHeaderDepth + 1 + (hasFilterRow ? 1 : 0)) * this.defaultRowHeight / this._baseFontSize;
-            this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
-        }
-    }
-
-    /**
-     * @hidden
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        this.calcGridHeadRow();
 
         this.calcHeight = this._calculateGridBodyHeight();
         if (this.pinnedRowHeight && this.calcHeight) {
@@ -7315,6 +7324,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.resetCachedWidths();
             this.cdr.detectChanges();
         }
+
+        if (this.isColumnWidthSum) {
+            this.calcWidth = this.getColumnWidthSum();
+        }
     }
 
     protected extractDataFromColumnsSelection(source: any[], formatters = false, headers = false): any[] {
@@ -7508,7 +7521,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected get renderedActualRowHeight() {
         let border = 1;
         if (this.rowList.toArray().length > 0) {
-            const rowStyles = document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
+            const rowStyles = this.document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
             border = rowStyles.borderBottomWidth ? Math.ceil(parseFloat(rowStyles.borderBottomWidth)) : border;
         }
         return this.rowHeight + border;
@@ -7836,5 +7849,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (!oldData || !oldData.length) return true;
         if (!newData || !newData.length) return false;
         return Object.keys(oldData[0]).join() !== Object.keys(newData[0]).join();
+    }
+
+    /**
+     * Clears the current navigation service active node
+     */
+    private clearActiveNode() {
+        this.navigation.lastActiveNode = this.navigation.activeNode;
+        this.navigation.activeNode = {} as IActiveNode;
+        this.notifyChanges();
     }
 }

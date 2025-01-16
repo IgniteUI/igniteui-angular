@@ -33,7 +33,7 @@ export class IgxGridSelectionService {
     /**
      * @hidden @internal
      */
-    public selectedRowsChange = new Subject<void>();
+    public selectedRowsChange = new Subject<any[]>();
 
     /**
      * Toggled when a pointerdown event is triggered inside the grid body (cells).
@@ -248,7 +248,7 @@ export class IgxGridSelectionService {
         this.pointerState.ctrl = ctrl;
         this.pointerState.shift = shift;
         this.pointerEventInGridBody = true;
-        document.body.addEventListener('pointerup', this.pointerOriginHandler);
+        this.grid.document.body.addEventListener('pointerup', this.pointerOriginHandler);
 
         // No ctrl key pressed - no multiple selection
         if (!ctrl) {
@@ -385,7 +385,7 @@ export class IgxGridSelectionService {
     public restoreTextSelection(): void {
         const selection = window.getSelection();
         if (!selection.rangeCount) {
-            selection.addRange(this._selectionRange || document.createRange());
+            selection.addRange(this._selectionRange || this.grid.document.createRange());
         }
     }
 
@@ -561,14 +561,14 @@ export class IgxGridSelectionService {
         }
         rowIDs.forEach(rowID => this.rowSelection.add(rowID));
         this.clearHeaderCBState();
-        this.selectedRowsChange.next();
+        this.selectedRowsChange.next(rowIDs);
     }
 
     /** Deselect specified rows. No event is emitted. */
     public deselectRowsWithNoEvent(rowIDs: any[]): void {
         this.clearHeaderCBState();
         rowIDs.forEach(rowID => this.rowSelection.delete(rowID));
-        this.selectedRowsChange.next();
+        this.selectedRowsChange.next(this.getSelectedRows());
     }
 
     public isRowSelected(rowID): boolean {
@@ -689,7 +689,7 @@ export class IgxGridSelectionService {
         this.rowSelection.clear();
         this.indeterminateRows.clear();
         this.clearHeaderCBState();
-        this.selectedRowsChange.next();
+        this.selectedRowsChange.next([]);
     }
 
     /** Returns all data in the grid, with applied filtering and sorting and without deleted rows. */
@@ -855,7 +855,7 @@ export class IgxGridSelectionService {
 
     private pointerOriginHandler = (event) => {
         this.pointerEventInGridBody = false;
-        document.body.removeEventListener('pointerup', this.pointerOriginHandler);
+        this.grid.document.body.removeEventListener('pointerup', this.pointerOriginHandler);
 
         const targetTagName = event.target.tagName.toLowerCase();
         if (targetTagName !== 'igx-grid-cell' && targetTagName !== 'igx-tree-grid-cell') {
