@@ -12,7 +12,10 @@ import {
     AfterViewInit,
     AfterContentInit,
     Directive,
-    booleanAttribute
+    booleanAttribute,
+    inject,
+    ChangeDetectorRef,
+    NgZone,
 } from '@angular/core';
 import {
     IgxProgressBarTextTemplateDirective,
@@ -91,8 +94,8 @@ export abstract class BaseProgressDirective {
     protected _step: number;
     protected _fraction = 0;
     protected _integer = 0;
-
-    constructor() {}
+    protected _cdr = inject(ChangeDetectorRef);
+    protected _zone = inject(NgZone);
 
     /**
      * Returns the value which update the progress indicator of the `progress bar`.
@@ -292,9 +295,12 @@ export abstract class BaseProgressDirective {
         // Update internal value
         this._value = valInRange;
 
-        setTimeout(() => {
-            this._updateProgressValues();
-        }, 0)
+        this._zone.runOutsideAngular(() => {
+            requestAnimationFrame(() => {
+                this._updateProgressValues();
+                this._cdr.markForCheck();
+            });
+        });
 
         // Emit the progressChanged event
         this.progressChanged.emit({
@@ -302,7 +308,6 @@ export abstract class BaseProgressDirective {
             currentValue: this._value,
         });
     }
-
 }
 let NEXT_LINEAR_ID = 0;
 let NEXT_CIRCULAR_ID = 0;

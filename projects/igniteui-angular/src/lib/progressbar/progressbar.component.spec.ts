@@ -1,6 +1,6 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import { Component } from '@angular/core';
-import { BaseProgressDirective } from './progressbar.component';  // Your original BaseProgressDirective
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { BaseProgressDirective } from './progressbar.component';
 
 @Component({
     template: ``,
@@ -150,9 +150,8 @@ describe('BaseProgressDirective', () => {
 
     it('should correctly update host styles', fakeAsync(() => {
         component.value = 50;
-        fixture.detectChanges();
 
-        tick(0);
+        tick(50);
 
         fixture.detectChanges();
 
@@ -164,10 +163,8 @@ describe('BaseProgressDirective', () => {
 
     it('should correctly calculate fraction and integer values for progress', fakeAsync(() => {
         component.value = 75.25;
-        fixture.detectChanges();
 
-        tick(0);
-
+        tick(50);
         fixture.detectChanges();
 
         expect(nativeElement.style.getPropertyValue('--_progress-integer')).toBe('75');
