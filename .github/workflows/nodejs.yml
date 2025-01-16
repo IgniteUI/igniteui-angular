@@ -66,6 +66,8 @@ jobs:
             fi
       - name: Test Elements
         run: npm run test:elements
+      - name: Build Demos
+        run: npm run build
       - name: Bundle Tree-Shake & SSR Test
         run: npm run build:bundletest
       - name: Publish to coveralls.io

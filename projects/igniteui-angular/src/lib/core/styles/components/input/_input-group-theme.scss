@@ -11,7 +11,6 @@
 ////
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $idle-text-color [null] - The input text color in the idle state.
 /// @param {Color} $filled-text-color [null] - The input text color in the filled state.
 /// @param {Color} $filled-text-hover-color [null] - The input text color in the filled state on hover.
@@ -67,7 +66,6 @@
 ///   @include css-vars($my-input-group-theme);
 @function input-group-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $box-background: null,
     $box-background-hover: null,
@@ -422,10 +420,13 @@
         }
 
         input,
-        textarea,
-        span {
+        textarea {
             font: inherit;
             margin: 0;
+        }
+
+        span {
+            font-family: inherit;
         }
 
         input[type='file'] {

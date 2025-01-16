@@ -12,7 +12,6 @@
 
 /// Generates a drop-down theme.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The drop-down background color.
 /// @param {Color} $header-text-color [null] - The drop-down header text color.
 /// @param {Color} $item-text-color [null] - The drop-down item text color.
@@ -45,7 +44,6 @@
 ///   @include css-vars($my-dropdown-theme);
 @function drop-down-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $border-radius: null,
     $item-border-radius: null,
