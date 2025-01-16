@@ -1,4 +1,4 @@
-import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     Component,
     ElementRef,
@@ -282,11 +282,8 @@ export abstract class BaseProgressDirective {
     public set value(val) {
         const valInRange = valueInRange(val, this.max); // Ensure value is in range
 
-        console.log(`Setting value: ${valInRange}, Current value: ${this._value}, Indeterminate: ${this.indeterminate}`);
-
         // Avoid redundant updates
         if (isNaN(valInRange) || this._value === valInRange || this.indeterminate) {
-            console.log("No change in value or indeterminate state, update not required.");
             return;
         }
 
