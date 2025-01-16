@@ -1171,9 +1171,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         dragCopy.removeChild(dragCopy.childNodes[3]);
 
         if (!keyboardMode) {
+            var span = document.createElement('span')
+            //TODO Localize string
+            span.innerHTML = "DROP CONDITION HERE";
+
             dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
             dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
-            (dragCopy.firstChild.firstChild.firstChild as HTMLElement).innerText = "DROP CONDITION HERE";
+            (dragCopy.firstChild.firstChild.firstChild as HTMLElement).replaceChildren(span);
             (dragCopy.firstChild.firstChild as HTMLElement).style.border = '1px';
             (dragCopy.firstChild.firstChild as HTMLElement).style.borderStyle = 'dashed';
         }

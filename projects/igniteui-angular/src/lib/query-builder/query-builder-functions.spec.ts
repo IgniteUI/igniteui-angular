@@ -960,4 +960,24 @@ export class QueryBuilderFunctions {
         tick(100);
         fix.detectChanges();
     }
+
+    public static GetChipsContentAsArray(fix: ComponentFixture<any>){
+        const contents: string[] = [];
+
+        const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;        
+        
+        queryTreeElement.querySelectorAll('.igx-chip').forEach(chip => {
+            if(chip.checkVisibility()){
+            let text:string = '';
+            
+            Array.from(chip.querySelectorAll('span')).forEach(element => {
+                if(element?.textContent) text +=element.textContent;
+            });
+
+            contents.push(text.trim());
+        }
+        });
+
+        return contents;
+    }
 }
