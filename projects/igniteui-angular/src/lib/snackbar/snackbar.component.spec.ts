@@ -47,7 +47,7 @@ describe('IgxSnackbar', () => {
     });
 
     it('should auto hide 1 second after is open', fakeAsync(() => {
-        spyOn(snackbar.closing, 'emit');
+        spyOn(snackbar.toggleClosing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         fixture.detectChanges();
@@ -60,11 +60,11 @@ describe('IgxSnackbar', () => {
         tick(1000);
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeFalsy();
-        expect(snackbar.closing.emit).toHaveBeenCalled();
+        expect(snackbar.toggleClosing.emit).toHaveBeenCalled();
     }));
 
     it('should not auto hide 1 second after is open', fakeAsync(() => {
-        spyOn(snackbar.closing, 'emit');
+        spyOn(snackbar.toggleClosing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         snackbar.autoHide = false;
@@ -77,7 +77,7 @@ describe('IgxSnackbar', () => {
         tick(1000);
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
-        expect(snackbar.closing.emit).not.toHaveBeenCalled();
+        expect(snackbar.toggleClosing.emit).not.toHaveBeenCalled();
         snackbar.close();
     }));
 
@@ -115,11 +115,11 @@ describe('IgxSnackbar', () => {
         snackbar.close();
     }));
 
-    it('should emit closing when snackbar is hidden', () => {
-        spyOn(snackbar.closing, 'emit');
+    it('should emit toggleClosing when snackbar is hidden', () => {
+        spyOn(snackbar.toggleClosing, 'emit');
         snackbar.open();
         snackbar.close();
-        expect(snackbar.closing.emit).toHaveBeenCalled();
+        expect(snackbar.toggleClosing.emit).toHaveBeenCalled();
     });
 
     it('should emit onClosed when snackbar is closed', fakeAsync(() => {
