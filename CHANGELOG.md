@@ -10,7 +10,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxBanner`
     - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. The banner can now be programmatically set to expanded (visible) or collapsed (hidden) both initially and at runtime. Animations will trigger during runtime updates — the **open animation** plays when `expanded` is set to `true`, and the **close animation** plays when set to `false`. However, no animations will trigger when the property is set initially.
     - The banner's event lifecycle (`opening`, `opened`, `closing`, `closed`) only triggers through **user interactions** (e.g., clicking to open/close). Programmatic updates using the `expanded` property will not fire any events.
-    - If the `expanded` property changes during an ongoing animation, the current animation will **cancel immediately**, applying the new state without additional animations or events.
+    - If the `expanded` property changes during an ongoing animation, the current animation will **stop** and the opposite animation will begin from the **point where the previous animation left off**. For instance, if the open animation (10 seconds) is interrupted at 6 seconds and `expanded` is set to `false`, the close animation (5 seconds) will start from its 3rd second.
 
 ## 19.0.0
 ### General
