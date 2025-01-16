@@ -152,7 +152,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
             toggleRef.opening.pipe(first(), takeUntil(this.$destroy)).subscribe((event) => this.opening.emit(event));
             toggleRef.opened.pipe(first(), takeUntil(this.$destroy)).subscribe((event) => this.opened.emit(event));
         } else {
-            toggleRef.closing.pipe(first(), takeUntil(this.$destroy)).subscribe((event) => this.closing.emit(event));
+            toggleRef.toggleClosing.pipe(first(), takeUntil(this.$destroy)).subscribe((event) => this.closing.emit(event));
             toggleRef.closed.pipe(first(), takeUntil(this.$destroy)).subscribe((event) => this.closed.emit(event));
         }
     }

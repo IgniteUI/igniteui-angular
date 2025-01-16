@@ -1271,7 +1271,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 this.closed.emit({ owner: this });
             });
 
-            this.toggleRef.closing.pipe(takeUntil(this._destroy$)).subscribe((e) => {
+            this.toggleRef.toggleClosing.pipe(takeUntil(this._destroy$)).subscribe((e) => {
                 const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: false };
                 this.closing.emit(args);
                 e.cancel = args.cancel;
