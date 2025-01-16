@@ -3001,6 +3001,12 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public filteringPipeTrigger = 0;
+
+    /**
+     * @hidden @internal
+     */
+    public isColumnWidthSum = false;
+
     /**
      * @hidden @internal
      */
@@ -3201,7 +3207,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
-    protected isColumnWidthSum = false;
+
     private _currencyPositionLeft: boolean;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
@@ -3234,7 +3240,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    protected get minColumnWidth() {
+    public get minColumnWidth() {
         return MINIMUM_COLUMN_WIDTH;
     }
 
@@ -6488,8 +6494,10 @@ export abstract class IgxGridBaseDirective implements GridType,
 
 
         if (this.width === null || !width) {
-            width = this.getColumnWidthSum();
             this.isColumnWidthSum = true;
+            width = this.getColumnWidthSum();
+        } else {
+            this.isColumnWidthSum = false;
         }
 
         if (this.hasVerticalScroll() && this.width !== null) {
