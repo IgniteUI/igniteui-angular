@@ -286,6 +286,7 @@ export class IgxFilteringService implements OnDestroy {
 
     /**
      * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
+     * @deprecated in version 19.0.0.
      */
     public filterGlobal(value: any, condition, ignoreCase?) {
         if (!condition) {

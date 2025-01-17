@@ -6,7 +6,6 @@ export class SampleTestData {
 
     public static timeGenerator: Calendar = new Calendar();
     public static today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
-    // eslint-disable-next-line max-len
     public static todayFullDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 10,  15, 35);
 
     public static stringArray = () => ([
@@ -423,7 +422,6 @@ export class SampleTestData {
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string;
         27 items, sorted by ID. */
-    /* eslint-disable max-len */
 
     public static contactInfoDataFull = () => ([
         { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
@@ -454,13 +452,11 @@ export class SampleTestData {
         { ID: 'FRANR', CompanyName: 'France restauration', ContactName: 'Carine Schmitt', ContactTitle: 'Marketing Manager', Address: '54, rue Royale', City: 'Nantes', Region: null, PostalCode: '44000', Country: 'France', Phone: '40.32.21.21', Fax: '40.32.21.20' },
         { ID: 'FRANS', CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261' }
     ]);
-    /* eslint-enable max-len */
 
 
     /* Data fields: ID: number, PTODays: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string;
         27 items, sorted by ID. */
-    /* eslint-disable max-len */
 
     public static contactInfoWithPTODaysData = () => ([
         { ID: 'ALFKI', PTODays: 20, CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
@@ -491,7 +487,6 @@ export class SampleTestData {
         { ID: 'FRANR', PTODays: 26, CompanyName: 'France restauration', ContactName: 'Carine Schmitt', ContactTitle: 'Marketing Manager', Address: '54, rue Royale', City: 'Nantes', Region: null, PostalCode: '44000', Country: 'France', Phone: '40.32.21.21', Fax: '40.32.21.20', Shipped: true },
         { ID: 'FRANS', PTODays: 18, CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261', Shipped: true }
     ]);
-    /* eslint-enable max-len */
 
     public static contactInfoDataTwoRecords = () => ([
         { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
@@ -1984,6 +1979,75 @@ export class SampleTestData {
             ReleaseTime: SampleTestData.todayFullDate,
             Released: undefined,
             AnotherField: 'custom',
+            Revenue: 50000
+        }
+    ]);
+
+    public static excelFilteringDataDuplicateValues = () => ([
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: 'Ignite UI for JavaScript',
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 1),
+            ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
+            ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
+            Released: false,
+            AnotherField: 'a',
+            Revenue: 100000
+        },
+        {
+            Downloads: 702,
+            ID: 2,
+            ProductName: 'Some other item with Script',
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 1),
+            ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'second', 20),
+            ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'second', 20),
+            Released: null,
+            AnotherField: 'Custom',
+            Revenue: 60000
+        },
+        {
+            Downloads: 0,
+            ID: 3,
+            ProductName: null,
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1),
+            ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', +10),
+            ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', +10),
+            Released: true,
+            AnotherField: 'custoM',
+            Revenue: 10000
+        },
+        {
+            Downloads: 1000,
+            ID: 4,
+            ProductName: null,
+            ReleaseDate: SampleTestData.today,
+            ReleaseDateTime: SampleTestData.todayFullDate,
+            ReleaseTime: SampleTestData.todayFullDate,
+            Released: undefined,
+            AnotherField: 'custom',
+            Revenue: 50000
+        },
+        {
+            Downloads: 1000,
+            ID: 5,
+            ProductName: null,
+            ReleaseDate: SampleTestData.today,
+            ReleaseDateTime: SampleTestData.todayFullDate,
+            ReleaseTime: SampleTestData.todayFullDate,
+            Released: undefined,
+            AnotherField: 'custom_1',
+            Revenue: 50000
+        },
+        {
+            Downloads: 1000,
+            ID: 6,
+            ProductName: null,
+            ReleaseDate: SampleTestData.today,
+            ReleaseDateTime: SampleTestData.todayFullDate,
+            ReleaseTime: SampleTestData.todayFullDate,
+            Released: undefined,
+            AnotherField: 'custom_A',
             Revenue: 50000
         }
     ]);
@@ -4689,8 +4753,6 @@ export class SampleTestData {
         }
     }
 }
-
-/* eslint-enable @typescript-eslint/quotes */
 
 export class DataParent {
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);

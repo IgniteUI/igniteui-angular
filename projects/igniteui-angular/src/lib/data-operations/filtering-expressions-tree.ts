@@ -22,15 +22,17 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
     /* alternateName: treeType */
     type?: FilteringExpressionsTreeType;
 
+    /* blazorSuppress */
     /**
      * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.find` instead.
      */
-    find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
+    find?: (fieldName: string) => IFilteringExpressionsTree | IFilteringExpression;
 
+    /* blazorSuppress */
     /**
      * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.findIndex` instead.
      */
-    findIndex(fieldName: string): number;
+    findIndex?: (fieldName: string) => number;
 }
 
 /* marshalByValue */
@@ -141,6 +143,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
         return !expressionTree || !expressionTree.filteringOperands || !expressionTree.filteringOperands.length;
     }
 
+    /* blazorSuppress */
     /**
      * Returns the filtering expression for a column with the provided fieldName.
      * ```typescript
@@ -154,6 +157,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
         return ExpressionsTreeUtil.find(this, fieldName);
     }
 
+    /* blazorSuppress */
     /**
      * Returns the index of the filtering expression for a column with the provided fieldName.
      * ```typescript

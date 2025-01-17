@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsZHHANT_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Traditional Chinese (zh-Hant) resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsZHHANT = {
     igx_query_builder_date_placeholder: '領取日期',
     igx_query_builder_time_placeholder: '取車時間',
     igx_query_builder_datetime_placeholder: '選取日期和時間',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsZHHANT_: ExpandRequire<IQueryBuilderResourceStr
     igx_query_builder_filter_lessThanOrEqualTo: '小於或等於',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: '全部',    
+    igx_query_builder_filter_all: '全部',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '“And” 群組',
     igx_query_builder_or_group: '“Or” 群組',
@@ -60,15 +63,11 @@ const QueryBuilderResourceStringsZHHANT_: ExpandRequire<IQueryBuilderResourceStr
     igx_query_builder_search: '搜尋',
     igx_query_builder_select_all: '全選',
     igx_query_builder_select_entity: '選取實體',
+    igx_query_builder_select_return_field_single: '選擇返回欄位',
     igx_query_builder_select_return_fields: '選取返回欄位',
     igx_query_builder_dialog_title: '確認',
     igx_query_builder_dialog_message: '透過變更實體，您將遺失目前設定。確定要繼續？',
     igx_query_builder_dialog_checkbox_text: '不要再顯示這個對話方塊',
     igx_query_builder_dialog_cancel: '取消',
     igx_query_builder_dialog_confirm: '確認',
-};
-
-/**
- * Traditional Chinese (zh-Hant) resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsZHHANT = QueryBuilderResourceStringsZHHANT_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

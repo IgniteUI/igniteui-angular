@@ -7,7 +7,6 @@ import { GridSelectionMode, IgxColumnComponent, IgxGridComponent, IgxGridToolbar
     selector: 'app-grid-performance-sample',
     templateUrl: 'grid-performance.sample.html',
     styleUrls: ['grid-performance.sample.scss'],
-    standalone: true,
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgFor, IgxColumnComponent]
 })
 

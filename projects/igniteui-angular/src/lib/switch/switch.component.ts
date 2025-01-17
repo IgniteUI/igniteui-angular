@@ -34,13 +34,12 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
  */
 @Component({
     providers: [{
-        provide: EDITOR_PROVIDER,
-        useExisting: IgxSwitchComponent,
-        multi: true
-    }],
+            provide: EDITOR_PROVIDER,
+            useExisting: IgxSwitchComponent,
+            multi: true
+        }],
     selector: 'igx-switch',
     templateUrl: 'switch.component.html',
-    standalone: true,
     imports: [IgxRippleDirective]
 })
 export class IgxSwitchComponent extends IgxCheckboxComponent implements ControlValueAccessor, EditorProvider, AfterViewInit {

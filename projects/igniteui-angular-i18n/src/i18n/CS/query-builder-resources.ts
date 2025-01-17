@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsCS_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Czech resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsCS = {
     igx_query_builder_date_placeholder: 'Datum výdeje',
     igx_query_builder_time_placeholder: 'Čas vyzvednutí',
     igx_query_builder_datetime_placeholder: 'Vyberte datum a čas',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsCS_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Méně než nebo rovno',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'Všechno',    
+    igx_query_builder_filter_all: 'Všechno',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"A" skupina',
     igx_query_builder_or_group: '"Nebo" skupina',
@@ -60,15 +63,11 @@ const QueryBuilderResourceStringsCS_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Vyhledávání',
     igx_query_builder_select_all: 'Vybrat vše',
     igx_query_builder_select_entity: 'Vyberte entitu',
+    igx_query_builder_select_return_field_single: 'Vyberte návratové pole',
     igx_query_builder_select_return_fields: 'Vyberte pole pro vrácení',
     igx_query_builder_dialog_title: 'Potvrzení',
     igx_query_builder_dialog_message: 'Změnou entity ztratíte svá aktuální nastavení. Opravdu to chcete udělat?',
     igx_query_builder_dialog_checkbox_text: 'Tento dialog již příště nezobrazovat',
     igx_query_builder_dialog_cancel: 'Zrušení',
     igx_query_builder_dialog_confirm: 'Potvrdit',
-};
-
-/**
- * Czech resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsCS = QueryBuilderResourceStringsCS_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

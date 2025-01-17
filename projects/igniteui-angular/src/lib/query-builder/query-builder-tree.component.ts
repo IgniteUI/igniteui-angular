@@ -169,20 +169,35 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return `igx-query-builder-tree--level-${this.level}`;
     }
 
+    /**
+     * Sets/gets the entities.
+     */
     @Input()
     public entities: EntityType[];
 
+    /**
+     * Sets/gets the parent query builder component.
+     */
     @Input()
     public queryBuilder: IgxQueryBuilderComponent;
 
+    /**
+     * Sets/gets the search value template.
+     */
     @Input()
     public searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueTemplateDirective> = null;
 
+    /**
+    * Returns the parent expression operand.
+    */
     @Input()
     public get parentExpression(): ExpressionOperandItem {
         return this._parentExpression;
     }
 
+    /**
+     * Sets the parent expression operand.
+     */
     public set parentExpression(value: ExpressionOperandItem) {
         this._parentExpression = value;
     }
@@ -283,14 +298,20 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Output()
     public expressionTreeChange = new EventEmitter<IExpressionTree>();
 
+    /**
+     * Event fired if a nested query builder tree is being edited.
+     */
     @Output()
     public inEditModeChange = new EventEmitter<ExpressionOperandItem>();
 
     @ViewChild('entitySelect', { read: IgxSelectComponent })
     protected entitySelect: IgxSelectComponent;
+    
+    @ViewChild('returnFieldsCombo', { read: IgxComboComponent })
+    private returnFieldsCombo: IgxComboComponent;
 
-    @ViewChild('selectedReturnFieldsCombo', { read: IgxComboComponent })
-    private selectedReturnFieldsCombo: IgxComboComponent;
+    @ViewChild('returnFieldSelect', { read: IgxSelectComponent })
+    protected returnFieldSelect: IgxSelectComponent;
 
     @ViewChild('fieldSelect', { read: IgxSelectComponent })
     private fieldSelect: IgxSelectComponent;
@@ -516,6 +537,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return this.entities?.length === 1 && !this.entities[0]?.name;
     }
 
+    /** @hidden */
+    protected isSearchValueInputDisabled(): boolean {
+        return !this.selectedField ||
+                !this.selectedCondition ||
+                (this.selectedField &&
+                    (this.selectedField.filters.condition(this.selectedCondition).isUnary ||
+                    this.selectedField.filters.condition(this.selectedCondition).isNestedQuery));
+    }
+
     constructor(public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
         protected el: ElementRef,
@@ -601,7 +631,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._selectedEntity.fields = [];
         }
         this.fields = this._entityNewValue ? this._entityNewValue.fields : [];
-        this._selectedReturnFields = this._entityNewValue.fields?.map(f => f.field);
+
+        this._selectedReturnFields = this.parentExpression ? [] : this._entityNewValue.fields?.map(f => f.field);
 
         if (this._expressionTree) {
             this._expressionTree.entity = this._entityNewValue.name;
@@ -641,7 +672,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this._expressionTree.returnFields = value;
                 this.expressionTreeChange.emit(this._expressionTree);
             }
-
         }
     }
 
@@ -773,7 +803,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             }
             this.innerQueryNewExpressionTree = null;
 
-            if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary) {
+            if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary || this.selectedField.filters.condition(this.selectedCondition)?.isNestedQuery) {
                 this._editedExpression.expression.searchVal = null;
             }
 
@@ -966,10 +996,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.entitySelectOverlaySettings.target = this.entitySelect.element;
         this.entitySelectOverlaySettings.excludeFromOutsideClick = [this.entitySelect.element as HTMLElement];
         this.entitySelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
-        this.returnFieldSelectOverlaySettings.target = this.selectedReturnFieldsCombo.getEditElement();
-        this.returnFieldSelectOverlaySettings.excludeFromOutsideClick = [this.selectedReturnFieldsCombo.getEditElement() as HTMLElement];
-        this.returnFieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
 
+        if (this.returnFieldSelect) {
+            this.returnFieldSelectOverlaySettings.target = this.returnFieldSelect.element;
+            this.returnFieldSelectOverlaySettings.excludeFromOutsideClick = [this.returnFieldSelect.element as HTMLElement];
+            this.returnFieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        }
         if (this.fieldSelect) {
             this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
             this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
@@ -980,7 +1012,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.conditionSelectOverlaySettings.excludeFromOutsideClick = [this.conditionSelect.element as HTMLElement];
             this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         }
-
 
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
@@ -1109,10 +1140,26 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public deleteGroup() {
         const selectedGroup = this.contextualGroup;
-        const parent = selectedGroup.parent;
+        let parent = selectedGroup.parent;
         if (parent) {
-            const index = parent.children.indexOf(selectedGroup);
+            let index = parent.children.indexOf(selectedGroup);
             parent.children.splice(index, 1);
+
+            if (parent.children.length === 0) {
+                let childGroup = parent;
+                parent = parent.parent;
+                while (parent && parent.children.length === 1) {
+                    childGroup = parent;
+                    parent = parent.parent;
+                }
+
+                if (parent) {
+                    index = parent.children.indexOf(childGroup);
+                    parent.children.splice(index, 1);
+                } else {
+                    this.rootGroup = null;
+                }
+            }
         } else {
             this.rootGroup = null;
         }
@@ -1311,14 +1358,22 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             (this._selectedReturnFields.length > 0 && this._selectedReturnFields.length < this._selectedEntity.fields.length) ||
             this._selectedReturnFields.length == this._selectedEntity.fields.length
         ) {
-            this.selectedReturnFieldsCombo.deselectAllItems();
+            this.returnFieldsCombo.deselectAllItems();
         } else {
-            this.selectedReturnFieldsCombo.selectAllItems();
+            this.returnFieldsCombo.selectAllItems();
         }
     }
 
-    public onReturnFieldSelectChanging(event: IComboSelectionChangingEventArgs) {
-        this.initExpressionTree(this.selectedEntity.name, event.newSelection.map(item => item.field))
+    public onReturnFieldSelectChanging(event: IComboSelectionChangingEventArgs | ISelectionEventArgs) {
+        let newSelection = [];
+        if (event.newSelection instanceof Array) {
+            newSelection = event.newSelection.map(item => item.field)
+        } else {
+            newSelection.push(event.newSelection.value);
+            this._selectedReturnFields = newSelection;
+        }
+
+        this.initExpressionTree(this.selectedEntity.name, newSelection);
     }
 
     public initExpressionTree(selectedEntityName: string, selectedReturnFields: string[]) {
@@ -1684,4 +1739,3 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 }
-

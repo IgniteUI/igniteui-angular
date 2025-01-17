@@ -4475,7 +4475,6 @@ describe('igxOverlay', () => {
 });
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: `simple - dynamic - component`,
     template: `<div style='width:100px; height: 100px; background-color: red;'></div>`,
     standalone: true
@@ -4528,7 +4527,6 @@ export class SimpleBigSizeComponent {
                     <p> AAAAA </p>
                 </div>
             </div>`,
-    standalone: true,
     imports: [NgIf, IgxToggleDirective]
 })
 export class SimpleDynamicWithDirectiveComponent {
@@ -4746,7 +4744,6 @@ export class WidthTestOverlayComponent {
             <p>AAAAA</p>
         </div>
     </div>`,
-    standalone: true,
     imports: [NgIf]
 })
 export class ScrollableComponent {

@@ -84,7 +84,6 @@ export class CarouselHammerConfig extends HammerGestureConfig {
         display: block;
         outline-style: none;
     }`],
-    standalone: true,
     imports: [IgxButtonDirective, IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 
@@ -231,36 +230,36 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /**
      * Controls the maximum indexes that can be shown.
-     * Default value is `5`.
+     * Default value is `10`.
      * ```html
-     * <igx-carousel [maximumIndicatorsCount]="10"></igx-carousel>
+     * <igx-carousel [maximumIndicatorsCount]="5"></igx-carousel>
      * ```
      *
      * @memberOf IgxCarouselComponent
      */
-    @Input() public maximumIndicatorsCount = 5;
+    @Input() public maximumIndicatorsCount = 10;
 
     /**
-     * Gets/sets the display mode of carousel indicators. It can be top or bottom.
-     * Default value is `bottom`.
+     * Gets/sets the display mode of carousel indicators. It can be `start` or `end`.
+     * Default value is `end`.
      * ```html
-     * <igx-carousel indicatorsOrientation='top'>
+     * <igx-carousel indicatorsOrientation="start">
      * <igx-carousel>
      * ```
      *
-     * @memberOf IgxSlideComponent
+     * @memberOf IgxCarouselComponent
      */
-    @Input() public indicatorsOrientation: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom;
+    @Input() public indicatorsOrientation: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.end;
 
     /**
      * Gets/sets the animation type of carousel.
      * Default value is `slide`.
      * ```html
-     * <igx-carousel animationType='none'>
+     * <igx-carousel animationType="none">
      * <igx-carousel>
      * ```
      *
-     * @memberOf IgxSlideComponent
+     * @memberOf IgxCarouselComponent
      */
     @Input() public override animationType: CarouselAnimationType = CarouselAnimationType.slide;
 
@@ -473,7 +472,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     public get indicatorsClass() {
         return {
             ['igx-carousel-indicators--focused']: this._hasKeyboardFocusOnIndicators,
-            [`igx-carousel-indicators--${this.indicatorsOrientation}`]: true
+            [`igx-carousel-indicators--${this.getIndicatorsClass()}`]: true
         };
     }
 
@@ -1009,6 +1008,17 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             this.indicatorsElements[this.current].nativeElement.focus();
         } else {
             this.focusSlideElement();
+        }
+    }
+
+    private getIndicatorsClass(): string {
+        switch (this.indicatorsOrientation) {
+            case CarouselIndicatorsOrientation.top:
+                return CarouselIndicatorsOrientation.start;
+            case CarouselIndicatorsOrientation.bottom:
+                return CarouselIndicatorsOrientation.end;
+            default:
+                return this.indicatorsOrientation;
         }
     }
 

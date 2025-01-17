@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsDE_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * German resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsDE = {
     igx_query_builder_date_placeholder: 'Wähle Datum',
     igx_query_builder_time_placeholder: 'Abholungszeit',
     igx_query_builder_datetime_placeholder: 'Datum und Uhrzeit auswählen',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsDE_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Kleiner als oder gleich',
     igx_query_builder_filter_true: 'Wahr',
     igx_query_builder_filter_false: 'Falsch',
-    igx_query_builder_filter_all: 'Alle',    
+    igx_query_builder_filter_all: 'Alle',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"Und" Gruppe',
     igx_query_builder_or_group: '"Oder" Gruppe',
@@ -60,15 +63,11 @@ const QueryBuilderResourceStringsDE_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Suchen',
     igx_query_builder_select_all: 'Alle auswählen',
     igx_query_builder_select_entity: 'Entität auswählen',
+    igx_query_builder_select_return_field_single: 'Rückgabefeld auswählen',
     igx_query_builder_select_return_fields: 'Rückgabefelder auswählen',
     igx_query_builder_dialog_title: 'Bestätigung',
     igx_query_builder_dialog_message: 'Durch das Ändern der Entität gehen Ihre aktuellen Einstellungen verloren.  Möchten Sie wirklich fortfahren?',
     igx_query_builder_dialog_checkbox_text: 'Dieses Dialogfeld nicht mehr anzeigen',
     igx_query_builder_dialog_cancel: 'Abbrechen',
     igx_query_builder_dialog_confirm: 'Bestätigen',
-};
-
-/**
- * German resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsDE = QueryBuilderResourceStringsDE_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

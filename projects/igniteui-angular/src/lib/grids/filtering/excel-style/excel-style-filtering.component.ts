@@ -70,7 +70,6 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     providers: [{ provide: BaseFilteringComponent, useExisting: forwardRef(() => IgxGridExcelStyleFilteringComponent) }],
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './excel-style-filtering.component.html',
-    standalone: true,
     imports: [IgxExcelStyleHeaderComponent, NgIf, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
 export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewInit, OnDestroy {
@@ -510,6 +509,11 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     private renderValues() {
         this.filterValues = this.generateFilterValues();
         this.generateListData();
+        this.expressionsList.forEach(expr => {
+            if (this.column.dataType === GridColumnDataType.String && this.column.filteringIgnoreCase && expr.expression.searchVal) {
+                this.modifyExpression(expr);
+            }
+        });
     }
 
     private generateFilterValues() {
@@ -538,6 +542,16 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const filterValues = new Set<any>(this.expressionsList.reduce(processExpression, []));
 
         return filterValues;
+    }
+
+    private modifyExpression(expr: ExpressionUI) {
+        const lowerCaseFilterValues = new Set(Array.from(expr.expression.searchVal).map((value: string) => value.toLowerCase()));
+
+        this.grid.data.forEach(item => {
+            if (lowerCaseFilterValues.has(item[this.column.field]?.toLowerCase())) {
+                expr.expression.searchVal.add(item[this.column.field]);
+            }
+        });
     }
 
     private generateListData() {

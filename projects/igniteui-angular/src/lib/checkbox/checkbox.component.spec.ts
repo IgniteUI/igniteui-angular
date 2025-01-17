@@ -414,7 +414,6 @@ describe('IgxCheckbox', () => {
 
 @Component({
     template: `<igx-checkbox #cb>Init</igx-checkbox>`,
-    standalone: true,
     imports: [IgxCheckboxComponent]
 })
 class InitCheckboxComponent {
@@ -424,7 +423,6 @@ class InitCheckboxComponent {
 @Component({
     template: `<igx-checkbox #cb (change)="onChange()" (click)="onClick()"
                             [(ngModel)]="subscribed">Simple</igx-checkbox>`,
-    standalone: true,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxSimpleComponent {
@@ -444,7 +442,6 @@ class CheckboxSimpleComponent {
                                 [(ngModel)]="subscribed"
                                 [indeterminate]="true"
                                 >Indeterminate</igx-checkbox>`,
-    standalone: true,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxIndeterminateComponent {
@@ -455,7 +452,6 @@ class CheckboxIndeterminateComponent {
 
 @Component({
     template: `<igx-checkbox #cb required>Required</igx-checkbox>`,
-    standalone: true,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxRequiredComponent {
@@ -468,7 +464,6 @@ class CheckboxRequiredComponent {
                                 [checked]="subscribed"
                                 [indeterminate]="true"
                                 [readonly]="true">Readonly</igx-checkbox>`,
-    standalone: true,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxReadonlyComponent {
@@ -480,7 +475,6 @@ class CheckboxReadonlyComponent {
 @Component({
     template: `<p id="my-label">{{label}}</p>
     <igx-checkbox #cb aria-labelledby="my-label"></igx-checkbox>`,
-    standalone: true,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxExternalLabelComponent {
@@ -490,7 +484,6 @@ class CheckboxExternalLabelComponent {
 
 @Component({
     template: `<igx-checkbox #cb [aria-label]="label"></igx-checkbox>`,
-    standalone: true,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxInvisibleLabelComponent {
@@ -500,7 +493,6 @@ class CheckboxInvisibleLabelComponent {
 
 @Component({
     template: `<igx-checkbox #cb [disableTransitions]="true"></igx-checkbox>`,
-    standalone: true,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxDisabledTransitionsComponent {
@@ -509,7 +501,6 @@ class CheckboxDisabledTransitionsComponent {
 
 @Component({
     template: `<form [formGroup]="myForm"><igx-checkbox #cb formControlName="checkbox">Form Group</igx-checkbox></form>`,
-    standalone: true,
     imports: [IgxCheckboxComponent, ReactiveFormsModule]
 })
 class CheckboxFormGroupComponent {
@@ -525,7 +516,6 @@ class CheckboxFormGroupComponent {
         <igx-checkbox #checkbox [(ngModel)]="subscribed" name="checkbox" required>Checkbox</igx-checkbox>
     </form>
     `,
-    standalone: true,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxFormComponent {

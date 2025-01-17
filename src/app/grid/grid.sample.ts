@@ -12,7 +12,6 @@ import { CsvFileTypes, DefaultSortingStrategy, GridSelectionMode, IgxBaseExporte
     selector: 'app-grid-sample',
     styleUrls: ['grid.sample.scss'],
     templateUrl: 'grid.sample.html',
-    standalone: true,
     providers: [
         LocalService,
         RemoteService

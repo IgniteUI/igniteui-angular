@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsTR_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Turkish resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsTR = {
     igx_query_builder_date_placeholder: 'Alma tarihi',
     igx_query_builder_time_placeholder: 'Alma saati',
     igx_query_builder_datetime_placeholder: 'Tarih ve saat seç',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsTR_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Küçüktür veya Eşittir',
     igx_query_builder_filter_true: 'Doğru',
     igx_query_builder_filter_false: 'Yanlış',
-    igx_query_builder_filter_all: 'Tümü',    
+    igx_query_builder_filter_all: 'Tümü',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: '"Ve" Grubu',
     igx_query_builder_or_group: '"Veya" Grubu',
@@ -60,15 +63,11 @@ const QueryBuilderResourceStringsTR_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Arama',
     igx_query_builder_select_all: 'Tümünü seç',
     igx_query_builder_select_entity: 'Varlık seç',
+    igx_query_builder_select_return_field_single: 'Dönüş alanını seçin',
     igx_query_builder_select_return_fields: 'Dönüş alanlarını seç',
     igx_query_builder_dialog_title: 'Onay',
     igx_query_builder_dialog_message: 'Varlığı değiştirdiğinizde mevcut ayarlarınızı kaybedersiniz. Devam etmek istiyor musunuz?',
     igx_query_builder_dialog_checkbox_text: 'Bu iletişim kutusunu bir daha gösterme',
     igx_query_builder_dialog_cancel: 'İptal',
     igx_query_builder_dialog_confirm: 'Onayla',
-};
-
-/**
- * Turkish resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsTR = QueryBuilderResourceStringsTR_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;

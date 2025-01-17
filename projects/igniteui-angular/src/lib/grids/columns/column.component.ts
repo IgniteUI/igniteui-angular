@@ -1077,6 +1077,33 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             this.grid.summaryService.resetSummaryHeight();
         }
     }
+
+    /**
+     * Sets/gets the summary operands to exclude from display.
+     * Accepts an array of string keys representing the summary types to disable, such as 'Min', 'Max', 'Count' etc.
+     * ```typescript
+     * let disabledSummaries = this.column.disabledSummaries;
+     * ```
+     * ```html
+     * <igx-column [disabledSummaries]="['min', 'max', 'average']"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public get disabledSummaries(): string[] {
+        return this._disabledSummaries;
+    }
+
+    public set disabledSummaries(value: string[]) {
+        this._disabledSummaries = value;
+        if (this.grid) {
+            this.grid.summaryService.removeSummariesCachePerColumn(this.field);
+            this.grid.summaryPipeTrigger++;
+            this.grid.summaryService.resetSummaryHeight();
+        }
+    }
+
     /**
      * Gets the column `filters`.
      * ```typescript
@@ -1410,7 +1437,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
+         
         let col = this;
         let vIndex = -1;
 
@@ -1743,6 +1770,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _summaries = null;
+    /**
+     * @hidden
+     */
+    private _disabledSummaries: string[] = [];
     /**
      * @hidden
      */
@@ -2295,10 +2326,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             columns = columns.filter(c => c.level >= this.level && c !== this && c.parent !== this &&
                 c.topLevelParent === this.topLevelParent);
         }
-        /* eslint-disable max-len */
+         
         // If isPreceding, find a target such that when the current column is placed after it, current colummn will receive a visibleIndex === index. This takes into account visible children of the columns.
         // If !isPreceding, finds a column of the same level and visible index that equals the passed index agument (c.visibleIndex === index). No need to consider the children here.
-        /* eslint-enable max-len */
+         
         if (isPreceding) {
             columns = columns.filter(c => c.visibleIndex > this.visibleIndex);
             target = columns.find(c => c.level === this.level && c.visibleIndex + (c as any).calcChildren() - this.calcChildren() === index);

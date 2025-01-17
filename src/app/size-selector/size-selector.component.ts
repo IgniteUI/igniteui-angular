@@ -5,7 +5,6 @@ import { IgxButtonGroupModule } from 'igniteui-angular';
     selector: 'size-selector',
     styleUrls: ['size-selector.component.scss'],
     templateUrl: 'size-selector.component.html',
-    standalone: true,
     imports: [
         IgxButtonGroupModule
     ]

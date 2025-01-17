@@ -1,6 +1,9 @@
 import { IQueryBuilderResourceStrings } from 'igniteui-angular';
 
-const QueryBuilderResourceStringsIT_: ExpandRequire<IQueryBuilderResourceStrings> = {
+/**
+ * Italian resource strings for IgxQueryBuilder
+ */
+export const QueryBuilderResourceStringsIT = {
     igx_query_builder_date_placeholder: 'Data di prelievo',
     igx_query_builder_time_placeholder: 'Ora ritiro',
     igx_query_builder_datetime_placeholder: 'Seleziona data e ora',
@@ -38,7 +41,7 @@ const QueryBuilderResourceStringsIT_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_filter_lessThanOrEqualTo: 'Minore o uguale a',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'Tutto',    
+    igx_query_builder_filter_all: 'Tutto',
     igx_query_builder_title: 'Query Builder',
     igx_query_builder_and_group: 'Gruppo "And"',
     igx_query_builder_or_group: 'Gruppo "Or"',
@@ -60,15 +63,11 @@ const QueryBuilderResourceStringsIT_: ExpandRequire<IQueryBuilderResourceStrings
     igx_query_builder_search: 'Cerca',
     igx_query_builder_select_all: 'Seleziona tutto',
     igx_query_builder_select_entity: 'Seleziona entità',
+    igx_query_builder_select_return_field_single: 'Seleziona il campo di ritorno',
     igx_query_builder_select_return_fields: 'Seleziona campi di ritorno',
     igx_query_builder_dialog_title: 'Conferma',
     igx_query_builder_dialog_message: 'Modificando l\'entità, perderai le impostazioni correnti. Procedere?',
     igx_query_builder_dialog_checkbox_text: 'Non visualizzare più questo messaggio',
     igx_query_builder_dialog_cancel: 'Annulla',
     igx_query_builder_dialog_confirm: 'Conferma',
-};
-
-/**
- * Italian resource strings for IgxQueryBuilder
- */
-export const QueryBuilderResourceStringsIT = QueryBuilderResourceStringsIT_ as ExpandRequire<IQueryBuilderResourceStrings>;
+} satisfies MakeRequired<IQueryBuilderResourceStrings>;
