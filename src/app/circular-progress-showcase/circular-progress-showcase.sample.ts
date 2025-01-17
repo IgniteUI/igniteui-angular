@@ -1,7 +1,14 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular';
-import { IgcCircularProgressComponent, defineComponents } from 'igniteui-webcomponents';
-import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import {
+    IgcCircularProgressComponent,
+    defineComponents,
+} from 'igniteui-webcomponents';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from '../properties-panel/property-change.service';
 
 defineComponents(IgcCircularProgressComponent);
 
@@ -54,13 +61,19 @@ export class CircularProgressSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
-            this.properties = properties;
-        });
+        const { unsubscribe } =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 }

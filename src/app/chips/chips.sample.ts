@@ -1,4 +1,11 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    DestroyRef,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxAvatarComponent,
@@ -10,10 +17,26 @@ import {
     IgxCircularProgressBarComponent,
     IgSizeDirective,
 } from 'igniteui-angular';
-import { defineComponents, IgcChipComponent, IgcAvatarComponent, IgcIconComponent, IgcCircularProgressComponent, registerIconFromText } from 'igniteui-webcomponents';
-import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import {
+    defineComponents,
+    IgcChipComponent,
+    IgcAvatarComponent,
+    IgcIconComponent,
+    IgcCircularProgressComponent,
+    registerIconFromText,
+} from 'igniteui-webcomponents';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from '../properties-panel/property-change.service';
 
-defineComponents(IgcChipComponent, IgcAvatarComponent, IgcIconComponent, IgcCircularProgressComponent);
+defineComponents(
+    IgcChipComponent,
+    IgcAvatarComponent,
+    IgcIconComponent,
+    IgcCircularProgressComponent
+);
 
 const icons = [
     {
@@ -52,13 +75,21 @@ icons.forEach((icon) => {
     ]
 })
 export class ChipsSampleComponent implements OnInit {
-    @ViewChild('customControls', { static: true }) public customControlsTemplate!: TemplateRef<any>;
+    @ViewChild('customControls', { static: true })
+    public customControlsTemplate!: TemplateRef<any>;
 
-    public panelConfig : PropertyPanelConfig = {
+    public panelConfig: PropertyPanelConfig = {
         variant: {
             control: {
                 type: 'select',
-                options: ['default', 'primary', 'info', 'success', 'warning', 'danger']
+                options: [
+                    'default',
+                    'primary',
+                    'info',
+                    'success',
+                    'warning',
+                    'danger'
+                ]
             }
         },
         size: {
@@ -92,22 +123,30 @@ export class ChipsSampleComponent implements OnInit {
                 defaultValue: false
             }
         },
-    }
+    };
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
-            this.properties = properties;
-        });
+        const { unsubscribe } =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     public ngOnInit() {
-        this.propertyChangeService.setCustomControls(this.customControlsTemplate)
+        this.propertyChangeService.setCustomControls(
+            this.customControlsTemplate
+        );
     }
 
     public hasSuffix = false;

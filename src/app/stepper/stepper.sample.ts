@@ -3,13 +3,15 @@ import {
     CUSTOM_ELEMENTS_SCHEMA,
     DestroyRef,
     Directive,
-    ElementRef, HostBinding,
+    ElementRef,
+    HostBinding,
     inject,
     OnInit,
     ViewChild
 } from '@angular/core';
 import {
-    FormsModule, NgControl,
+    FormsModule,
+    NgControl,
     ReactiveFormsModule,
     UntypedFormBuilder,
     Validators
@@ -26,7 +28,11 @@ import {
     IgxSelectItemComponent,
     IgxSuffixDirective,
     IStepChangedEventArgs,
-    IGX_STEPPER_DIRECTIVES, IgxStepType, IgxStepperTitlePosition, IgxStepperOrientation, IgxStepperComponent
+    IGX_STEPPER_DIRECTIVES,
+    IgxStepType,
+    IgxStepperTitlePosition,
+    IgxStepperOrientation,
+    IgxStepperComponent
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -36,9 +42,13 @@ import {
     registerIconFromText,
     IgcActiveStepChangingArgs,
 } from 'igniteui-webcomponents';
-import {Properties, PropertyChangeService, PropertyPanelConfig} from '../properties-panel/property-change.service';
-import {NgTemplateOutlet} from "@angular/common";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from '../properties-panel/property-change.service';
+import { NgTemplateOutlet } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 defineComponents(IgcStepperComponent, IgcButtonComponent, IgcInputComponent);
 
@@ -73,7 +83,7 @@ icons.forEach((icon) => {
 // This is a fix for value synchronisation otherwise only the state is in sync
 // note: Don't remove the FormControlSyncDirective from the component imports
 @Directive({
-    selector: "[formControlName]"
+    selector: '[formControlName]',
 })
 export class FormControlSyncDirective implements OnInit {
     private controlDirective = inject(NgControl);
@@ -82,8 +92,10 @@ export class FormControlSyncDirective implements OnInit {
     public ngOnInit() {
         this.controlDirective?.control.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(value => {
-                this.controlDirective.control.setValue(value, { emitEvent: false });
+            .subscribe((value) => {
+                this.controlDirective.control.setValue(value, {
+                    emitEvent: false,
+                });
             });
     }
 }
@@ -111,10 +123,10 @@ export class FormControlSyncDirective implements OnInit {
     ]
 })
 export class IgxStepperSampleComponent {
-    @ViewChild('stepper', {static: true, read: IgxStepperComponent})
+    @ViewChild('stepper',{ static: true, read: IgxStepperComponent })
     public angularStepper!: IgxStepperComponent;
 
-    @ViewChild('stepper2', {static: true})
+    @ViewChild('stepper2', { static: true })
     public webComponentStepper!: ElementRef;
 
     @HostBinding('class.vertical-stepper')
@@ -191,7 +203,7 @@ export class IgxStepperSampleComponent {
                 defaultValue: 320
             }
         },
-    }
+    };
     public properties: Properties;
 
     private fb = inject(UntypedFormBuilder);
@@ -200,11 +212,13 @@ export class IgxStepperSampleComponent {
     constructor(private destroyRef: DestroyRef) {
         this.pcs.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.pcs.propertyChanges.subscribe(properties => {
-            this.properties = properties;
-        });
+        const { unsubscribe } = this.pcs.propertyChanges.subscribe(
+            (properties) => {
+                this.properties = properties;
+            }
+        );
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     // Reactive forms initialization
@@ -303,13 +317,21 @@ export class IgxStepperSampleComponent {
     }
 
     // Handle changes from Web Component Stepper
-    public onWcStepperChange(event: CustomEvent<IgcActiveStepChangingArgs>): void {
+    public onWcStepperChange(
+        event: CustomEvent<IgcActiveStepChangingArgs>
+    ): void {
         if (this.isSyncing) return;
 
         const targetIndex = event.detail.newIndex; // IgcActiveStepChangingArgs has `newIndex` property
 
-        if (targetIndex == null || targetIndex < 0 || targetIndex >= this.angularStepper.steps.length) {
-            console.warn(`Invalid step index in Angular Stepper: ${targetIndex}`);
+        if (
+            targetIndex == null ||
+            targetIndex < 0 ||
+            targetIndex >= this.angularStepper.steps.length
+        ) {
+            console.warn(
+                `Invalid step index in Angular Stepper: ${targetIndex}`
+            );
             return;
         }
 
@@ -333,4 +355,3 @@ export class IgxStepperSampleComponent {
         this.webComponentStepper.nativeElement.next();
     }
 }
-

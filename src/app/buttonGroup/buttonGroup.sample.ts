@@ -1,9 +1,27 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
-import { IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent } from 'igniteui-angular';
-import { defineComponents, IgcButtonGroupComponent, IgcIconComponent, IgcToggleButtonComponent, registerIconFromText } from 'igniteui-webcomponents';
-import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import {
+    IgxButtonDirective,
+    IgxButtonGroupComponent,
+    IgxIconComponent,
+} from 'igniteui-angular';
+import {
+    defineComponents,
+    IgcButtonGroupComponent,
+    IgcIconComponent,
+    IgcToggleButtonComponent,
+    registerIconFromText,
+} from 'igniteui-webcomponents';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from '../properties-panel/property-change.service';
 
-defineComponents(IgcButtonGroupComponent, IgcIconComponent, IgcToggleButtonComponent);
+defineComponents(
+    IgcButtonGroupComponent,
+    IgcIconComponent,
+    IgcToggleButtonComponent
+);
 
 const icons = [
     {
@@ -20,17 +38,17 @@ const icons = [
     },
     {
         name: 'alarm_on',
-        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7zm-1.46-5.47L8.41 12.4l-1.06 1.06 3.18 3.18 6-6-1.06-1.06-4.93 4.95z"/></svg>'
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7zm-1.46-5.47L8.41 12.4l-1.06 1.06 3.18 3.18 6-6-1.06-1.06-4.93 4.95z"/></svg>',
     },
     {
         name: 'autorenew',
-        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"/></svg>'
-    }
-  ];
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"/></svg>',
+    },
+];
 
-  icons.forEach((icon) => {
+icons.forEach((icon) => {
     registerIconFromText(icon.name, icon.url);
-  });
+});
 
 @Component({
     selector: 'app-buttongroup-sample',
@@ -90,21 +108,29 @@ export class ButtonGroupSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
-            this.properties = properties;
-        });
+        const { unsubscribe } =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
-    private selectionMap = new Map<string, string>([
-        ['single', 'single'],
-        ['single-required', 'singleRequired'],
-        ['multi', 'multiple']
-    ]);
+    private selectionMap = new Map<string, string>(
+        Object.entries({
+            single: 'single',
+            'single-required': 'singleRequired',
+            multi: 'multiple',
+        })
+    );
 
     public get wcSelection() {
         const selection = this.propertyChangeService.getProperty('selection');

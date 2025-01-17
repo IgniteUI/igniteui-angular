@@ -1,4 +1,9 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    DestroyRef,
+    ViewEncapsulation,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IGX_LIST_DIRECTIVES,
@@ -9,10 +14,32 @@ import {
     IgxButtonModule,
     IgSizeDirective,
 } from 'igniteui-angular';
-import { defineComponents, IgcListComponent, IgcAvatarComponent, IgcListHeaderComponent, IgcListItemComponent, IgcIconComponent, IgcCheckboxComponent, IgcButtonComponent, registerIconFromText } from 'igniteui-webcomponents';
-import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import {
+    defineComponents,
+    IgcListComponent,
+    IgcAvatarComponent,
+    IgcListHeaderComponent,
+    IgcListItemComponent,
+    IgcIconComponent,
+    IgcCheckboxComponent,
+    IgcButtonComponent,
+    registerIconFromText,
+} from 'igniteui-webcomponents';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from '../properties-panel/property-change.service';
 
-defineComponents(IgcListComponent, IgcListHeaderComponent, IgcListItemComponent, IgcAvatarComponent, IgcIconComponent, IgcCheckboxComponent, IgcButtonComponent);
+defineComponents(
+    IgcListComponent,
+    IgcListHeaderComponent,
+    IgcListItemComponent,
+    IgcAvatarComponent,
+    IgcIconComponent,
+    IgcCheckboxComponent,
+    IgcButtonComponent
+);
 
 const icons = [
     {
@@ -25,8 +52,8 @@ const icons = [
     }
 ];
 
-icons.forEach(icon => {
-    registerIconFromText(icon.name, icon.url)
+icons.forEach((icon) => {
+    registerIconFromText(icon.name, icon.url);
 });
 
 interface Employee {
@@ -122,35 +149,50 @@ export class ListSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
-            this.properties = properties;
-        });
+        const { unsubscribe } =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
-    public employeeItems: Employee[] = [{
-        imageURL: 'assets/images/avatar/18.jpg',
-        name: 'Marin Popov',
-        position: 'Web designer',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
-    }, {
-        imageURL: 'assets/images/avatar/2.jpg',
-        name: 'Simeon Simeonov',
-        position: 'Front-end Developer',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
-    }, {
-        imageURL: 'assets/images/avatar/7.jpg',
-        name: 'Stefan ivanov',
-        position: 'UX Architect',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
-    }, {
-        imageURL: 'assets/images/avatar/6.jpg',
-        name: 'Svilen Dimchevski',
-        position: 'Graphic designer',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel, consectetur adipisicing elit. Aperiam, vel??'
-    }];
+    public employeeItems: Employee[] = [
+        {
+            imageURL: 'assets/images/avatar/18.jpg',
+            name: 'Marin Popov',
+            position: 'Web designer',
+            description:
+                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?',
+        },
+        {
+            imageURL: 'assets/images/avatar/2.jpg',
+            name: 'Simeon Simeonov',
+            position: 'Front-end Developer',
+            description:
+                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?',
+        },
+        {
+            imageURL: 'assets/images/avatar/7.jpg',
+            name: 'Stefan ivanov',
+            position: 'UX Architect',
+            description:
+                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?',
+        },
+        {
+            imageURL: 'assets/images/avatar/6.jpg',
+            name: 'Svilen Dimchevski',
+            position: 'Graphic designer',
+            description:
+                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel, consectetur adipisicing elit. Aperiam, vel??',
+        },
+    ];
 }

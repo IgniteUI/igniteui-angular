@@ -1,7 +1,14 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
 import { IgxLinearProgressBarComponent, IgxTextAlign } from 'igniteui-angular';
-import { IgcLinearProgressComponent, defineComponents } from 'igniteui-webcomponents';
-import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import {
+    IgcLinearProgressComponent,
+    defineComponents
+} from 'igniteui-webcomponents';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig
+} from '../properties-panel/property-change.service';
 
 defineComponents(IgcLinearProgressComponent);
 
@@ -39,7 +46,14 @@ export class LinearProgressSampleComponent {
             label: 'Align Label',
             control: {
                 type: 'select',
-                options: ['top-start', 'top', 'top-end', 'bottom-start', 'bottom', 'bottom-end'],
+                options: [
+                    'top-start',
+                    'top',
+                    'top-end',
+                    'bottom-start',
+                    'bottom',
+                    'bottom-end'
+                ],
                 defaultValue: 'top-start'
             }
         },
@@ -59,7 +73,13 @@ export class LinearProgressSampleComponent {
         variant: {
             control: {
                 type: 'select',
-                options: ['primary', 'info', 'success', 'warning', 'danger'],
+                options: [
+                    'primary',
+                    'info',
+                    'success',
+                    'warning',
+                    'danger'
+                ],
                 defaultValue: 'primary'
             }
         }
@@ -67,14 +87,20 @@ export class LinearProgressSampleComponent {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
-            this.properties = properties;
-        });
+        const { unsubscribe } =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     protected get variantAngular() {
@@ -90,7 +116,10 @@ export class LinearProgressSampleComponent {
         }
     }
 
-    protected getTextAlignmentConfig(labelAlign: string): { textTop: boolean; textAlign: IgxTextAlign } {
+    protected getTextAlignmentConfig(labelAlign: string): {
+        textTop: boolean;
+        textAlign: IgxTextAlign;
+    } {
         const top = { textTop: true };
         const bottom = { textTop: false };
 
@@ -98,15 +127,46 @@ export class LinearProgressSampleComponent {
         const center = { textAlign: IgxTextAlign.CENTER };
         const end = { textAlign: IgxTextAlign.END };
 
-        const alignMap = new Map<string, { textTop: boolean; textAlign: IgxTextAlign }>([
-            ['top-start', { ...top, ...start }],
-            ['top', { ...top, ...center }],
-            ['top-end', { ...top, ...end }],
-            ['bottom-start', { ...bottom, ...start }],
-            ['bottom', { ...bottom, ...center }],
-            ['bottom-end', { ...bottom, ...end }],
-        ]);
+        const alignEntries = {
+            'top-start': {
+                ...top,
+                ...start,
+            },
+            top: {
+                ...top,
+                ...center,
+            },
+            'top-end': {
+                ...top,
+                ...end,
+            },
+            'bottom-start': {
+                ...bottom,
+                ...start,
+            },
+            bottom: {
+                ...bottom,
+                ...center,
+            },
+            'bottom-end': {
+                ...bottom,
+                ...end,
+            },
+        };
 
-        return alignMap.get(labelAlign) || { textTop: true, textAlign: IgxTextAlign.START };
+        const alignMap = new Map<
+            string,
+            {
+                textTop: boolean;
+                textAlign: IgxTextAlign;
+            }
+        >(Object.entries(alignEntries));
+
+        return (
+            alignMap.get(labelAlign) || {
+                textTop: true,
+                textAlign: IgxTextAlign.START,
+            }
+        );
     }
 }

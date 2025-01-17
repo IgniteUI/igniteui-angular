@@ -1,7 +1,16 @@
-import { ChangeDetectorRef, Component, DestroyRef, TemplateRef, inject } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    DestroyRef,
+    TemplateRef,
+    inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { PropertyChangeService, PropertyPanelConfig } from './property-change.service';
+import {
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from './property-change.service';
 import {
     IgxButtonGroupComponent,
     IgxButtonDirective,
@@ -56,27 +65,31 @@ export class PropertiesPanelComponent {
     constructor() {
         let subscription: any;
 
-        const panelSubscription = this.propertyChangeService.panelConfig.subscribe((config) => {
-            this.config = config;
+        const panelSubscription =
+            this.propertyChangeService.panelConfig.subscribe((config) => {
+                this.config = config;
 
-            if (this.form) {
-                subscription.unsubscribe();
-            }
-
-            this.form = this.createFormGroup(config);
-            subscription = this.form.valueChanges.subscribe(this.onFormValueChange.bind(this));
-        });
-
-        const customControlsSubscription = this.propertyChangeService.customControlsSource.subscribe(
-            (template: TemplateRef<any>) => {
-                if (template) {
-                    this.customControls = template;
-                    this.cdRef.detectChanges();
-                } else {
-                    this.customControls = undefined;
+                if (this.form) {
+                    subscription.unsubscribe();
                 }
-            }
-        )
+
+                this.form = this.createFormGroup(config);
+                subscription = this.form.valueChanges.subscribe(
+                    this.onFormValueChange.bind(this)
+                );
+            });
+
+        const customControlsSubscription =
+            this.propertyChangeService.customControlsSource.subscribe(
+                (template: TemplateRef<any>) => {
+                    if (template) {
+                        this.customControls = template;
+                        this.cdRef.detectChanges();
+                    } else {
+                        this.customControls = undefined;
+                    }
+                }
+            );
 
         this.destroyRef.onDestroy(() => {
             panelSubscription.unsubscribe();
@@ -114,6 +127,8 @@ export class PropertiesPanelComponent {
     protected getControlLabels(key: string): string[] {
         const labels = this.config[key].control.labels || [];
         const options = this.getControlOptions(key);
-        return labels.length > 0 ? labels : options.map(option => option.toString());
+        return labels.length > 0
+            ? labels
+            : options.map((option) => option.toString());
     }
 }

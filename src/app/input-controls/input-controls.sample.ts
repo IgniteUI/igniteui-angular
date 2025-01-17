@@ -1,9 +1,30 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
-import { IgxCheckboxComponent, IgxSwitchComponent, IgxRadioComponent, RadioGroupAlignment, IgxRadioGroupDirective } from 'igniteui-angular';
-import { defineComponents, IgcCheckboxComponent, IgcSwitchComponent, IgcRadioComponent, IgcRadioGroupComponent } from 'igniteui-webcomponents';
-import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import {
+    IgxCheckboxComponent,
+    IgxSwitchComponent,
+    IgxRadioComponent,
+    RadioGroupAlignment,
+    IgxRadioGroupDirective,
+} from 'igniteui-angular';
+import {
+    defineComponents,
+    IgcCheckboxComponent,
+    IgcSwitchComponent,
+    IgcRadioComponent,
+    IgcRadioGroupComponent,
+} from 'igniteui-webcomponents';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from '../properties-panel/property-change.service';
 
-defineComponents(IgcCheckboxComponent, IgcSwitchComponent, IgcRadioComponent, IgcRadioGroupComponent);
+defineComponents(
+    IgcCheckboxComponent,
+    IgcSwitchComponent,
+    IgcRadioComponent,
+    IgcRadioGroupComponent
+);
 
 @Component({
     selector: 'app-input-controls-sample',
@@ -18,7 +39,7 @@ defineComponents(IgcCheckboxComponent, IgcSwitchComponent, IgcRadioComponent, Ig
     ]
 })
 export class InputControlsSampleComponent {
-    public panelConfig : PropertyPanelConfig = {
+    public panelConfig: PropertyPanelConfig = {
         indeterminate: {
             label: 'Indeterminate Checkbox',
             control: {
@@ -76,18 +97,24 @@ export class InputControlsSampleComponent {
                 type: 'text'
             }
         },
-    }
+    };
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
-            this.properties = properties;
-        });
+        const { unsubscribe } =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     private alignmentMap = new Map<string, RadioGroupAlignment>([

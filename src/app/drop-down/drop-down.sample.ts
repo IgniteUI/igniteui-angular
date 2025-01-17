@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ViewChild,
+    ElementRef,
+    CUSTOM_ELEMENTS_SCHEMA,
+    DestroyRef,
+} from '@angular/core';
 import { foods } from './foods';
 import {
     BlockScrollStrategy,
@@ -25,8 +32,18 @@ import {
     ScrollStrategy,
     VerticalAlignment,
 } from 'igniteui-angular';
-import { defineComponents, IgcDropdownComponent, IgcButtonComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
-import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+import {
+    defineComponents,
+    IgcDropdownComponent,
+    IgcButtonComponent,
+    IgcIconComponent,
+    registerIconFromText,
+} from 'igniteui-webcomponents';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from '../properties-panel/property-change.service';
 
 defineComponents(IgcDropdownComponent, IgcButtonComponent, IgcIconComponent);
 
@@ -90,7 +107,20 @@ export class DropDownSampleComponent implements OnInit {
         placement: {
             control: {
                 type: 'select',
-                options: ['top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'right', 'right-start', 'right-end', 'left', 'left-start', 'left-end'],
+                options: [
+                    'top',
+                    'top-start',
+                    'top-end',
+                    'bottom',
+                    'bottom-start',
+                    'bottom-end',
+                    'right',
+                    'right-start',
+                    'right-end',
+                    'left',
+                    'left-start',
+                    'left-end'
+                ],
                 defaultValue: 'bottom'
             }
         },
@@ -126,14 +156,20 @@ export class DropDownSampleComponent implements OnInit {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
-            this.properties = properties;
-        });
+        const { unsubscribe } =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     public ngOnInit() {
@@ -200,7 +236,8 @@ export class DropDownSampleComponent implements OnInit {
             'California',
             'Hawaii',
             'Oregon',
-            'Washington'];
+            'Washington'
+        ];
 
         const areas = [
             'New England',
@@ -262,36 +299,95 @@ export class DropDownSampleComponent implements OnInit {
         const middle = { verticalDirection: VerticalAlignment.Middle };
         const bottom = { verticalDirection: VerticalAlignment.Bottom };
 
-        const horizontalStartPointLeft = { horizontalStartPoint: HorizontalAlignment.Left };
-        const horizontalStartPointRight = { horizontalStartPoint: HorizontalAlignment.Right };
+        const horizontalStartPointLeft = {
+            horizontalStartPoint: HorizontalAlignment.Left,
+        };
+        const horizontalStartPointRight = {
+            horizontalStartPoint: HorizontalAlignment.Right,
+        };
 
-        const verticalStartPointTop = { verticalStartPoint: VerticalAlignment.Top };
-        const verticalStartPointBottom = { verticalStartPoint: VerticalAlignment.Bottom };
+        const verticalStartPointTop = {
+            verticalStartPoint: VerticalAlignment.Top,
+        };
+        const verticalStartPointBottom = {
+            verticalStartPoint: VerticalAlignment.Bottom,
+        };
 
-        const positionMap = new Map<string, Partial<PositionSettings>>([
-            ['top', { ...center, ...top }],
-            ['top-start', { ...left, ...top, ...horizontalStartPointLeft }],
-            ['top-end', { ...right, ...top, ...horizontalStartPointRight }],
-            ['bottom', { ...center, ...bottom }],
-            ['bottom-start', { ...left, ...bottom, ...horizontalStartPointLeft }],
-            ['bottom-end', { ...right, ...bottom, ...horizontalStartPointRight }],
-            ['right', { ...right, ...middle }],
-            ['right-start', { ...right, ...top, ...verticalStartPointTop }],
-            ['right-end', { ...right, ...bottom, ...verticalStartPointBottom }],
-            ['left', { ...left, ...middle }],
-            ['left-start', { ...left, ...top, ...verticalStartPointTop }],
-            ['left-end', { ...left, ...bottom, ...verticalStartPointBottom }],
-        ]);
+        const positionEntries = {
+            top: {
+                ...center,
+                ...top,
+            },
+            'top-start': {
+                ...left,
+                ...top,
+                ...horizontalStartPointLeft,
+            },
+            'top-end': {
+                ...right,
+                ...top,
+                ...horizontalStartPointRight,
+            },
+            bottom: {
+                ...center,
+                ...bottom,
+            },
+            'bottom-start': {
+                ...left,
+                ...bottom,
+                ...horizontalStartPointLeft,
+            },
+            'bottom-end': {
+                ...right,
+                ...bottom,
+                ...horizontalStartPointRight,
+            },
+            right: {
+                ...right,
+                ...middle,
+            },
+            'right-start': {
+                ...right,
+                ...top,
+                ...verticalStartPointTop,
+            },
+            'right-end': {
+                ...right,
+                ...bottom,
+                ...verticalStartPointBottom,
+            },
+            left: {
+                ...left,
+                ...middle,
+            },
+            'left-start': {
+                ...left,
+                ...top,
+                ...verticalStartPointTop,
+            },
+            'left-end': {
+                ...left,
+                ...bottom,
+                ...verticalStartPointBottom,
+            },
+        };
 
-        const selectedPosition = this.propertyChangeService.getProperty('placement') || 'bottom';
-        const settings = positionMap.get(selectedPosition) || positionMap.get('bottom')!;
+        const positionMap = new Map<string, Partial<PositionSettings>>(
+            Object.entries(positionEntries)
+        );
+
+        const selectedPosition =
+            this.propertyChangeService.getProperty('placement') || 'bottom';
+        const settings =
+            positionMap.get(selectedPosition) || positionMap.get('bottom')!;
 
         return new ConnectedPositioningStrategy(settings);
     }
 
-
     private getScrollStrategy(): ScrollStrategy {
-        const selectedStrategy = this.propertyChangeService.getProperty('scrollStrategy') || 'scroll';
+        const selectedStrategy =
+            this.propertyChangeService.getProperty('scrollStrategy') ||
+            'scroll';
 
         switch (selectedStrategy) {
             case 'scroll':
@@ -309,7 +405,9 @@ export class DropDownSampleComponent implements OnInit {
         const overlaySettings: OverlaySettings = {
             positionStrategy: this.getPositionStrategy(),
             scrollStrategy: this.getScrollStrategy(),
-            closeOnOutsideClick: !this.propertyChangeService.getProperty('keepOpenOnOutsideClick'),
+            closeOnOutsideClick: !this.propertyChangeService.getProperty(
+                'keepOpenOnOutsideClick'
+            ),
             outlet: this.igxOverlayOutlet,
             target: this.button.nativeElement
         };

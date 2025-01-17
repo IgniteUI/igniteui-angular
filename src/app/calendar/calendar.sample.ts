@@ -5,9 +5,9 @@ import {
     OnInit,
     TemplateRef,
     ViewChild,
-} from "@angular/core";
-import { DATE_PIPE_DEFAULT_OPTIONS } from "@angular/common";
-import { FormsModule } from "@angular/forms";
+} from '@angular/core';
+import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
     IgxButtonDirective,
     IgxButtonGroupComponent,
@@ -18,18 +18,22 @@ import {
     IFormattingOptions,
     DateRange,
     DateRangeDescriptor,
-    DateRangeType
-} from "igniteui-angular";
-import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
+    DateRangeType,
+} from 'igniteui-angular';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from '../properties-panel/property-change.service';
 
 import { defineComponents, IgcCalendarComponent } from 'igniteui-webcomponents';
 
 defineComponents(IgcCalendarComponent);
 
 @Component({
-    selector: "app-calendar-sample",
-    templateUrl: "calendar.sample.html",
-    styleUrls: ["calendar.sample.scss"],
+    selector: 'app-calendar-sample',
+    templateUrl: 'calendar.sample.html',
+    styleUrls: ['calendar.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [
         {
@@ -52,10 +56,10 @@ export class CalendarSampleComponent implements OnInit {
     private _today = new Date();
 
     private _formatOptions: IFormattingOptions = {
-        day: "numeric",
-        month: "long",
-        weekday: "narrow",
-        year: "numeric",
+        day: 'numeric',
+        month: 'long',
+        weekday: 'narrow',
+        year: 'numeric',
     };
 
     public panelConfig: PropertyPanelConfig = {
@@ -143,22 +147,31 @@ export class CalendarSampleComponent implements OnInit {
 
     public properties: Properties;
 
-    constructor(private propertyChangeService: PropertyChangeService, private destroyRef: DestroyRef) {
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
-            this.properties = properties;
-        });
+        const { unsubscribe } =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     public ngOnInit(): void {
-        this.propertyChangeService.setCustomControls(this.customControlsTemplate);
+        this.propertyChangeService.setCustomControls(
+            this.customControlsTemplate
+        );
     }
 
     protected get weekStartAngular() {
-        const weekStart = this.propertyChangeService.getProperty('weekStart') || 'monday';
+        const weekStart =
+            this.propertyChangeService.getProperty('weekStart') || 'monday';
         return this.weekStartMap.get(weekStart) || 1;
     }
 
@@ -187,17 +200,17 @@ export class CalendarSampleComponent implements OnInit {
         return this._formatOptions;
     }
 
-    protected setWeekDayFormat(format: IFormattingOptions["weekday"] | string) {
+    protected setWeekDayFormat(format: IFormattingOptions['weekday'] | string) {
         this.formatOptions = {
             ...this.formatOptions,
-            weekday: format as IFormattingOptions["weekday"],
+            weekday: format as IFormattingOptions['weekday'],
         };
     }
 
-    protected setMonthFormat(format: IFormattingOptions["month"] | string) {
+    protected setMonthFormat(format: IFormattingOptions['month'] | string) {
         this.formatOptions = {
             ...this.formatOptions,
-            month: format as IFormattingOptions["month"],
+            month: format as IFormattingOptions['month'],
         };
     }
 
@@ -231,16 +244,21 @@ export class CalendarSampleComponent implements OnInit {
     protected set specialRange(value: DateRange) {
         this.specialDates = value;
         this._specialRange = value;
-    };
+    }
 
     protected get specialRange(): DateRange {
         return this._specialRange;
     }
 
-    private _specialDates: DateRangeDescriptor[] = [{
-        type: DateRangeType.Between,
-        dateRange: [this.specialRange.start as Date, this.specialRange.end as Date]
-    }]
+    private _specialDates: DateRangeDescriptor[] = [
+        {
+            type: DateRangeType.Between,
+            dateRange: [
+                this.specialRange.start as Date,
+                this.specialRange.end as Date,
+            ],
+        },
+    ];
 
     protected get specialDates(): DateRangeDescriptor[] {
         return this._specialDates;
@@ -252,6 +270,6 @@ export class CalendarSampleComponent implements OnInit {
                 type: DateRangeType.Between,
                 dateRange: [dates.start as Date, dates.end as Date]
             }
-        ]
+        ];
     }
 }

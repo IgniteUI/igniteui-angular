@@ -6,17 +6,26 @@ import {
     ViewChild,
     ViewEncapsulation,
     OnInit,
-    ElementRef, ChangeDetectorRef,
-    DestroyRef
+    ElementRef,
+    ChangeDetectorRef,
+    DestroyRef,
 } from '@angular/core';
 
 import {
     IgxButtonDirective,
     IgxIconComponent,
-    IGX_TABS_DIRECTIVES
+    IGX_TABS_DIRECTIVES,
 } from 'igniteui-angular';
-import {defineComponents, IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent} from 'igniteui-webcomponents';
-import {PropertyChangeService, Properties} from '../properties-panel/property-change.service';
+import {
+    defineComponents,
+    IgcTabsComponent,
+    IgcTabComponent,
+    IgcTabPanelComponent,
+} from 'igniteui-webcomponents';
+import {
+    PropertyChangeService,
+    Properties,
+} from '../properties-panel/property-change.service';
 
 defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
 
@@ -30,17 +39,20 @@ defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
     imports: [IgxButtonDirective, IgxIconComponent, IGX_TABS_DIRECTIVES]
 })
 export class TabsShowcaseSampleComponent implements OnInit {
-    @ViewChild('angularTabs', {static: false}) public angularTabsRef!: ElementRef;
-    @ViewChild('webComponentsTabs', {static: false}) public webComponentsTabsRef!: ElementRef;
-    @ViewChild('customControlsTemplate', {static: true}) public customControlsTemplate!: TemplateRef<any>;
+    @ViewChild('angularTabs', { static: false })
+    public angularTabsRef!: ElementRef;
+    @ViewChild('webComponentsTabs', { static: false })
+    public webComponentsTabsRef!: ElementRef;
+    @ViewChild('customControlsTemplate', { static: true })
+    public customControlsTemplate!: TemplateRef<any>;
 
     public properties: Properties;
 
     public contacts: any[] = [
-        {id: '1', text: 'Terrance Orta', phone: '770-504-2217'},
-        {id: '2', text: 'Richard Mahoney', phone: '423-676-2869'},
-        {id: '3', text: 'Donna Price', phone: '859-496-2817'},
-        {id: '4', text: 'Lisa Landers', phone: '901-747-3428'}
+        { id: '1', text: 'Terrance Orta', phone: '770-504-2217' },
+        { id: '2', text: 'Richard Mahoney', phone: '423-676-2869' },
+        { id: '3', text: 'Donna Price', phone: '859-496-2817' },
+        { id: '4', text: 'Lisa Landers', phone: '901-747-3428' },
     ];
 
     public selectedTabId = this.contacts[0]?.id;
@@ -67,17 +79,25 @@ export class TabsShowcaseSampleComponent implements OnInit {
             },
             hideIcon: {
                 label: 'Hide icons',
-                control: {type: 'boolean', defaultValue: false}
+                control: {
+                    type: 'boolean',
+                    defaultValue: false
+                },
             },
             hideText: {
                 label: 'Hide Text',
-                control: {type: 'boolean', defaultValue: false}
-            }
+                control: {
+                    type: 'boolean',
+                    defaultValue: false
+                },
+            },
         });
 
-        const { unsubscribe } = this.pcs.propertyChanges.subscribe(properties => {
-            this.properties = properties;
-        });
+        const { unsubscribe } = this.pcs.propertyChanges.subscribe(
+            (properties) => {
+                this.properties = properties;
+            }
+        );
 
         this.destroyRef.onDestroy(() => unsubscribe);
     }
@@ -129,7 +149,9 @@ export class TabsShowcaseSampleComponent implements OnInit {
      * Use modular arithmetic for circular navigation.
      */
     private updateTabIndex(forward: boolean) {
-        const currentIndex = this.contacts.findIndex(contact => contact.id === this.selectedTabId);
+        const currentIndex = this.contacts.findIndex(
+            (contact) => contact.id === this.selectedTabId
+        );
         if (currentIndex !== -1) {
             const nextIndex = forward
                 // Move forward, loop to start
@@ -157,4 +179,3 @@ export class TabsShowcaseSampleComponent implements OnInit {
         }
     }
 }
-
