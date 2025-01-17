@@ -22,7 +22,7 @@ export class IgxHeaderGroupWidthPipe implements PipeTransform {
 
     public transform(width: any, minWidth: any, hasLayout: boolean) {
         const isFitContent = width === 'fit-content';
-        return hasLayout ? '' : isFitContent ? width : `${Math.max(parseInt(width), minWidth)}px`;
+        return hasLayout ? '' : isFitContent ? width : `${Math.max(parseFloat(width), minWidth)}px`;
     }
 }
 
