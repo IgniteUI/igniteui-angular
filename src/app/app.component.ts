@@ -503,11 +503,6 @@ export class AppComponent implements OnInit {
             name: 'Overlay Animation'
         },
         {
-            link: '/progressbar',
-            icon: 'poll',
-            name: 'Progress Indicators'
-        },
-        {
             link: '/pagination',
             icon: 'menu',
             name: 'Paginator'

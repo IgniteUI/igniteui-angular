@@ -25,7 +25,6 @@ import { ListPerformanceSampleComponent } from './list-performance/list-performa
 import { LinearProgressSampleComponent } from './linear-progress/linear-progress.sample';
 import { NavbarSampleComponent } from './navbar/navbar.sample';
 import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
-import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
 import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
 import { SliderShowcaseSampleComponent } from './slider-showcase/slider-showcase.sample';
@@ -321,10 +320,6 @@ export const appRoutes: Routes = [
     {
         path: 'overlay-animation',
         component: OverlayAnimationSampleComponent
-    },
-    {
-        path: 'progressbar',
-        component: ProgressbarSampleComponent
     },
     {
         path: 'radio',
