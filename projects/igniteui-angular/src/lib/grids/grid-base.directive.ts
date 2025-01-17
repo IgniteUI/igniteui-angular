@@ -4554,7 +4554,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
-            totalWidth += parseInt(cols[i].calcWidth, 10) || 0;
+            totalWidth += parseFloat(cols[i].calcWidth) || 0;
         }
         this._totalWidth = totalWidth;
         return totalWidth;
@@ -5400,7 +5400,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             computedWidth = baseWidth;
         } else {
             computedWidth = this.calcWidth ||
-                parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
+                parseFloat(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'));
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
@@ -5424,7 +5424,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
                 const colWidth = curr.width;
-                let widthValue = parseInt(colWidth, 10);
+                let widthValue = parseFloat(colWidth);
                 if (isNaN(widthValue)) {
                     widthValue = MINIMUM_COLUMN_WIDTH;
                 }
@@ -5440,9 +5440,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
         computedWidth -= this.featureColumnsWidth();
 
-        const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
+        const columnWidth = !Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth));
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth);
 
         return columnWidth + 'px';
     }
@@ -6526,8 +6526,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : this.minColumnWidth + 'px';
         }
         this._columns.forEach((column: IgxColumnComponent) => {
-            if (this.hasColumnLayouts && parseInt(this._columnWidth, 10)) {
-                const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
+            if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
+                const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
                 // D.K. March 29th, 2021 #9145 Consider min/max width when setting defaultWidth property
