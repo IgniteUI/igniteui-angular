@@ -320,7 +320,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('entitySelect', { read: IgxSelectComponent })
     protected entitySelect: IgxSelectComponent;
-    
+
     @ViewChild('returnFieldsCombo', { read: IgxComboComponent })
     private returnFieldsCombo: IgxComboComponent;
 
@@ -1017,6 +1017,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return (document.querySelector(`.${this.dropGhostClass}`) as HTMLElement);
     }
 
+    private get mainExpressionTree(): HTMLElement {
+        return this.el.nativeElement.firstElementChild.firstElementChild.nextElementSibling;
+    }
+
     //Chip can be dragged if it's tree is in edit mode and there is no inner query that's been edited
     public canBeDragged(): boolean {
         return this.isInEditMode && (!this.innerQueries || this.innerQueries.length == 0 || !this.innerQueries?.some(q => q.isInEditMode()))
@@ -1059,6 +1063,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.onChipEnter(targetDragElement, targetExpressionItem, true)
     }
 
+    //TODO remove fromDiv: boolean -> targetDragElement is always the div
     public onChipEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem, fromDiv: boolean) {
         // console.log('Entering:', targetDragElement, targetExpressionItem, 'from div:', fromDiv);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
@@ -1088,6 +1093,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.onChipEnter(targetDragElement, targetExpressionItem, true);
         }
     }
+
+    //TODO remove fromDiv: boolean -> targetDragElement is always the div
     public onChipOver(targetDragElement: HTMLElement, fromDiv: boolean): void {
         //console.log('Over:', targetDragElement, 'type: ', typeof event);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
@@ -1123,9 +1130,34 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
 
         //console.log('Move: [', this.sourceElement.children[0].textContent.trim(), (this.dropUnder ? '] under: [' : '] over: ['), this.targetElement.textContent.trim() + ']')
-
         this.moveDraggedChipToNewLocation(this.targetExpressionItem)
         this.resetDragAndDrop(true);
+    }
+
+
+    public onGroupRootOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionGroupItem) {
+        //console.log('Entering:', targetDragElement, targetExpressionItem);
+        if (!this.sourceElement || !this.sourceExpressionItem) return;
+
+        let newTargetElement, newTargetExpressionItem;
+
+        if (this.ghostInLowerPart(targetDragElement)) {
+            newTargetElement = targetDragElement.nextElementSibling;
+            newTargetElement = (newTargetElement.className.indexOf(this.dropGhostClass) !== -1) ? newTargetElement.nextElementSibling : newTargetElement;
+            newTargetExpressionItem = targetExpressionItem.children[0];
+        } else if (targetExpressionItem.parent) {
+            newTargetElement = targetDragElement.parentElement.parentElement;
+            newTargetExpressionItem = targetExpressionItem;
+        } else {
+            this.onChipLeave();
+        }
+
+        if (newTargetElement && (this.targetElement !== newTargetElement || this.targetExpressionItem !== newTargetExpressionItem)) {
+            this.resetDragAndDrop(false);
+            this.targetElement = newTargetElement;
+            this.targetExpressionItem = newTargetExpressionItem;
+            this.renderDropGhostChip(this.targetElement, false);
+        }
     }
 
     public onAddConditionEnter(addConditionElement: HTMLElement, rootGroup: ExpressionGroupItem) {
@@ -1142,18 +1174,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     public onAddConditionLeave() {
-        if (!this.sourceElement || !this.sourceExpressionItem) return;
-
-        this.onChipLeave()
-    }
-
-    public onAddConditionDropped() {
-        //console.log('onAddConditionDropped',targetExpressionItem, this.sourceExpressionItem,targetExpressionItem == this.sourceExpressionItem);
-        if (!this.sourceElement || !this.sourceExpressionItem) return;
-
-        if (this.targetExpressionItem) {
-            this.onChipDropped();
-        }
+        this.onChipLeave();
     }
 
     //Checks if the dragged ghost is horizontally on the same line with the drop ghost
@@ -1188,9 +1209,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         dragCopy.removeChild(dragCopy.childNodes[3]);
 
         if (!keyboardMode) {
+            var span = document.createElement('span')
+            //TODO Localize string
+            span.innerHTML = "DROP CONDITION HERE";
+
             dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
             dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
-            (dragCopy.firstChild.firstChild.firstChild as HTMLElement).innerText = "DROP CONDITION HERE";
+            (dragCopy.firstChild.firstChild.firstChild as HTMLElement).replaceChildren(span);
             (dragCopy.firstChild.firstChild as HTMLElement).style.border = '1px';
             (dragCopy.firstChild.firstChild as HTMLElement).style.borderStyle = 'dashed';
         }
@@ -1216,6 +1241,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.dropGhostChipNode = dragCopy;
             this.dropUnder = true;
             appendToElement.parentNode.insertBefore(this.dropGhostChipNode, appendToElement.nextSibling);
+        }
+
+        //Put focus on the drag icon of the ghost while performing keyboard drag
+        if (this.isKeyboardDrag) {
+            ((this.dropGhostChipNode as HTMLElement).querySelector('.igx-drag-indicator') as HTMLElement).focus();
         }
 
         //Attach a mousemove event listener (if not already in place) to the dragged ghost (if present)
@@ -1276,22 +1306,27 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     private listenToKeyboard() {
         this.keyboardSubscription$?.unsubscribe();
-        this.keyboardSubscription$ = fromEvent<KeyboardEvent>(document, 'keydown')
-            .pipe(filter(event => !event.repeat))
+        this.keyboardSubscription$ = fromEvent<KeyboardEvent>(this.mainExpressionTree, 'keydown')
             .pipe(filter(key => ['ArrowUp', 'ArrowDown', 'Enter', 'Space', 'Escape', 'Tab'].includes(key.code)))
-            .pipe(tap(e => e.preventDefault()))
+            .pipe(tap(e => {
+                //Inhibit Tabs if keyboard drag is underway
+                if (e.key !== 'Tab' || this.dropGhostElement) e.preventDefault();
+            }))
+            .pipe(filter(event => !event.repeat))
             .subscribe(key => {
                 if (key.code == 'Escape') {
                     //TODO cancel mouse drag
                     this.resetDragAndDrop(false);
+                    //Regain focus on the drag icon after keyboard drag cancel
+                    if (this.isKeyboardDrag) {
+                        (this.sourceElement.firstElementChild.firstElementChild.firstElementChild.firstElementChild as HTMLElement).focus();
+                    }
                 } else if (key.code == 'ArrowUp' || key.code == 'ArrowDown') {
                     this.arrowDrag(key);
                 } else if (key.code == 'Enter' || key.code == 'Space') {
                     //this.platform.isActivationKey(eventArgs) Maybe use this rather that Enter/Space?
                     this.onChipDropped();
                     this.keyboardSubscription$.unsubscribe();
-                } else if (key.code == 'Tab') {
-                    //inhibit tabs while drag&drop is in process
                 }
             });
     }
@@ -1417,6 +1452,31 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         return ownChipElements;
+    }
+
+    public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
+        (sourceDragElement.querySelector('.igx-drag-indicator') as HTMLElement).setAttribute('aria-hidden', 'false'); //Temp solution for aria-hidden bug #35759
+        this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
+    }
+
+    public onChipDragIndicatorFocusOut() {
+        if (this.sourceElement?.style?.display !== 'none') {
+            this.resetDragAndDrop(true);
+            this.keyboardSubscription$?.unsubscribe();
+        }
+    }
+
+    //Upon blurring the tree, if Keyboard drag is underway and the next active item is not the drop ghost's drag indicator icon, cancel the drag&drop procedure
+    public onDragFocusOut() {
+        if (this.isKeyboardDrag && this.dropGhostElement) {
+            //have to wait a tick because upon blur, the next activeElement is always body, right before the next element gains focus
+            setTimeout(() => {
+                if (document.activeElement.className.indexOf("igx-drag-indicator") === -1) {
+                    this.resetDragAndDrop(true);
+                    this.keyboardSubscription$?.unsubscribe();
+                }
+            }, 0);
+        }
     }
 
     /* DRAG AND DROP END*/
@@ -1758,19 +1818,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         };
     }
 
-    public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
-        if (this.canBeDragged()) {
-            //this.provideArrowDrag(sourceDragElement, sourceExpressionItem);
-            this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
-        }
-    }
-
-    public onChipDragIndicatorFocusOut() {
-        if (this.sourceElement.style.display !== 'none') {
-            this.resetDragAndDrop(true);
-            this.keyboardSubscription$?.unsubscribe();
-        }
-    }
     public formatReturnFields(innerTree: IFilteringExpressionsTree) {
         const returnFields = innerTree.returnFields;
         let text = returnFields.join(', ');

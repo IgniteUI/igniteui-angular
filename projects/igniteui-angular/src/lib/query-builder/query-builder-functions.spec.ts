@@ -76,6 +76,55 @@ export class QueryBuilderFunctions {
         return tree;
     }
 
+    public static generateDragAndDropExpressionTree(): FilteringExpressionsTree {
+        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Products', ['OrderId']);
+        innerTree.filteringOperands.push({
+            fieldName: 'Id',
+            condition: IgxNumberFilteringOperand.instance().condition('equals'),
+            conditionName: IgxNumberFilteringOperand.instance().condition('equals').name,
+            searchVal: 123
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'ProductName',
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
+            conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
+            searchVal: 'abc'
+        });
+
+
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, null, 'Orders', ['*']);
+        tree.filteringOperands.push({
+            fieldName: 'OrderName',
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
+            conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
+            searchVal: 'foo'
+        });
+
+        tree.filteringOperands.push({
+            fieldName: 'OrderId',
+            condition: IgxStringFilteringOperand.instance().condition('in'),
+            conditionName: IgxStringFilteringOperand.instance().condition('in').name,
+            searchTree: innerTree
+        });
+
+        const subGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Orders', ['*']);
+        subGroup.filteringOperands.push({
+            fieldName: 'OrderName',
+            condition: IgxStringFilteringOperand.instance().condition('endsWith'),
+            conditionName: IgxStringFilteringOperand.instance().condition('endsWith').name,
+            searchVal: 'a'
+        });
+        subGroup.filteringOperands.push({
+            fieldName: 'OrderDate',
+            condition: IgxDateFilteringOperand.instance().condition('today'),
+            conditionName: IgxDateFilteringOperand.instance().condition('today').name
+        });        
+        tree.filteringOperands.push(subGroup);
+
+        return tree;
+    }
+
+
     public static getQueryBuilderHeader(fix: ComponentFixture<any>) {
         const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
         const header = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_HEADER}`);
@@ -278,7 +327,7 @@ export class QueryBuilderFunctions {
     public static getQueryBuilderTreeRootGroupButtons(fix: ComponentFixture<any>, buttonsIndex: number) {
         const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
         const childrenContainer = group.querySelector('.igx-filter-tree__expression');
-        const buttonsContainers = Array.from(childrenContainer.querySelectorAll('.igx-filter-tree__buttons'));
+        const buttonsContainers = Array.from(childrenContainer.querySelectorAll(':scope > .igx-filter-tree__buttons'));
         const buttonsContainer: any = buttonsContainers[buttonsIndex];
         const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
         return buttons;
@@ -458,13 +507,10 @@ export class QueryBuilderFunctions {
     /**
      * (Double)Click the underlying chip of the expression that is located on the provided 'path'.
      */
-    public static clickQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[], dblClick = false, level = 0) {
+    public static clickQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[], level = 0) {
         const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path, level) as HTMLElement;
-        if (dblClick) {
-            chip.dispatchEvent(new MouseEvent('dblclick'));
-        } else {
-            chip.click();
-        }
+
+        chip.click();
     }
 
     /**
@@ -494,6 +540,12 @@ export class QueryBuilderFunctions {
     public static clickQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>, path = 0) {
         const contextMenuCloseButton = QueryBuilderFunctions.getQueryBuilderContextMenuCloseButton(fix, path);
         contextMenuCloseButton.click();
+    }
+
+    public static changeGroupType(group: HTMLElement) {
+        const childrenContainer = group.querySelector(':scope > .igx-filter-tree__expression');
+        const groupToggleButton = childrenContainer.querySelector(":scope > .igx-button") as HTMLElement;
+        groupToggleButton.click();        
     }
 
     /*
@@ -671,20 +723,21 @@ export class QueryBuilderFunctions {
             switch (i) {
                 case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 2: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('AND'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
-                case 4: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 5: expect(element).toHaveClass('igx-filter-tree__details-button'); break;
+                case 4: expect(element).toHaveClass('igx-icon'); break;
+                case 5: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 6: expect(element).toHaveClass('igx-chip'); break;
-                case 7: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 8: expect(element).toHaveClass('igx-chip'); break;
-                case 9: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 10: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('Condition'); break;
-                case 11: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('"And" Group'); break;
+                case 7: expect(element).toHaveClass('igx-icon'); break;
+                case 8: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 9: expect(element).toHaveClass('igx-chip'); break;
+                case 10: expect(element).toHaveClass('igx-icon'); break;
+                case 11: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 12: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('"Or" Group'); break;
+                    expect(element.innerText).toContain('Condition'); break;
+                case 13: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('Group'); break;
             }
             i++;
         });
@@ -906,5 +959,25 @@ export class QueryBuilderFunctions {
         QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, groupIndex);
         tick(100);
         fix.detectChanges();
+    }
+
+    public static GetChipsContentAsArray(fix: ComponentFixture<any>){
+        const contents: string[] = [];
+
+        const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;        
+        
+        queryTreeElement.querySelectorAll('.igx-chip').forEach(chip => {
+            if(chip.checkVisibility()){
+            let text:string = '';
+            
+            Array.from(chip.querySelectorAll('span')).forEach(element => {
+                if(element?.textContent) text +=element.textContent;
+            });
+
+            contents.push(text.trim());
+        }
+        });
+
+        return contents;
     }
 }

@@ -93,8 +93,7 @@
             (click)="addCondition(expressionItem, afterExpression)"
             igxDrop 
             (enter)="onAddConditionEnter(addConditionButton, expressionItem)"
-            (leave)="onAddConditionLeave()"
-            (dropped)="onAddConditionDropped()"
+            (leave)="onChipLeave()"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{
@@ -147,6 +146,7 @@
                 
             >
                 <igx-icon igxPrefix 
+                    class="igx-drag-indicator"
                     tabindex="0"
                     (focus)="onChipDragIndicatorFocus(dragRef, expressionItem)" 
                     (focusout)="onChipDragIndicatorFocusOut()"    
@@ -248,9 +248,9 @@
         <div
             #editingInputsContainer
             igxDrop
-            (enter)="onDivEnter(editingInputsContainer, expressionItem)"
+            (enter)="onChipEnter(editingInputsContainer, expressionItem, true)"
             (over)="onDivOver(editingInputsContainer, expressionItem)"
-            (leave)="onDivLeave()"
+            (leave)="onChipLeave()"
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="expressionItem.inEditMode"
             class="igx-filter-tree__inputs"
@@ -443,7 +443,8 @@
     </ng-template>
 
     <ng-template #expressionGroupTemplate let-expressionItem>
-        <div class="igx-filter-tree">
+        <div class="igx-filter-tree"
+            (focusout)="parentExpression? null : onDragFocusOut()">
             <div
                 class="igx-filter-tree__line"
                 [ngClass]="{
@@ -453,13 +454,29 @@
             ></div>
 
             <div class="igx-filter-tree__expression">     
-                <button igxButton="flat"
-                        (keydown)="invokeClick($event)"
-                        (click)="onGroupClick(expressionItem)"
+                <div style="width: 100%;"
+                    #groupRef 
+                    igxDrop
+                    (enter)="onGroupRootOver(groupRef, expressionItem)"
+                    (over)="onGroupRootOver(groupRef, expressionItem)"
+                    (leave)="onChipLeave()"
                 >
-                <span> {{expressionItem?.operator === 0? 'AND':'OR'}}</span>
-                <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>                   
-                </button>   
+                    <button igxButton="flat"
+                            (keydown)="invokeClick($event)"
+                            (click)="onGroupClick(expressionItem)"
+                    >                    
+                    <span 
+                        
+                        igxDrop
+                        (enter)="onGroupRootOver(groupRef, expressionItem)"
+                        (over)="onGroupRootOver(groupRef, expressionItem)"
+                        (leave)="onChipLeave()"
+                    > 
+                        {{expressionItem?.operator === 0? 'AND':'OR'}}
+                    </span>
+                    <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>                   
+                    </button>   
+                </div>
                 <ng-container *ngFor="let expr of expressionItem?.children">
                     <ng-container
                         *ngTemplateOutlet="
