@@ -17,10 +17,6 @@
             @extend %base !optional;
         }
 
-        @include e(track) {
-            @extend %track !optional;
-        }
-
         @include e(indicator) {
             @extend %indicator !optional;
         }
@@ -54,9 +50,7 @@
         }
 
         @include m(striped) {
-            @include e(indicator) {
-                @extend %indicator--striped !optional;
-            }
+            @extend %display-linear--striped !optional;
         }
 
         @include m(indeterminate) {
