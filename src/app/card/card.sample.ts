@@ -100,7 +100,6 @@ const cardFactory = (params: any): ICard => ({
     styleUrls: ['card.sample.scss'],
     templateUrl: 'card.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    standalone: true,
     imports: [
         FormsModule,
         IgxButtonDirective,

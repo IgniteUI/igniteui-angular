@@ -4,11 +4,15 @@ import { Directive, HostBinding, Input } from '@angular/core';
     selector: '[igSize]',
 })
 export class IgSizeDirective {
-    @Input('igSize')
-    public size: 'small' | 'medium' | 'large' = 'medium';
+    private _size: string;
 
+    @Input()
     @HostBinding('style.--ig-size')
-    public get styleValue(): string {
-      return `var(--ig-size-${this.size})`;
+    public get igSize(): string {
+        return this._size;
+    }
+
+    public set igSize(value: 'small' | 'medium' | 'large') {
+        this._size = `var(--ig-size-${value})`;
     }
 }
