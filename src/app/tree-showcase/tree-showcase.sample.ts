@@ -62,7 +62,7 @@ export class TreeShowcaseSampleComponent {
             this.properties = properties;
         });
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     public angSelection = IgxTreeSelectionType.None;

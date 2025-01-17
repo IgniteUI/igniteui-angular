@@ -80,9 +80,11 @@ export class FormControlSyncDirective implements OnInit {
     private destroyRef = inject(DestroyRef);
 
     public ngOnInit() {
-        this.controlDirective?.control.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
-            this.controlDirective.control.setValue(value, {emitEvent: false});
-        });
+        this.controlDirective?.control.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(value => {
+                this.controlDirective.control.setValue(value, { emitEvent: false });
+            });
     }
 }
 

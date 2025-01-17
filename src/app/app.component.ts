@@ -5,12 +5,11 @@ import {
     HostBinding,
     inject,
     signal,
-    ElementRef
 } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective, IGX_NAVIGATION_DRAWER_DIRECTIVES } from 'igniteui-angular';
-import { PageHeaderComponent } from './pageHeading/pageHeading.component';
+import { DocumentDirection, PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { CommonModule } from '@angular/common';
 import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
@@ -38,13 +37,13 @@ export class AppComponent implements OnInit {
     public appId = 'igniteui-demo-app';
 
     @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
-    public navdrawer;
+    public navdrawer: IgxNavigationDrawerComponent;
 
     public dirMode = signal<'ltr' | 'rtl'>('ltr');
 
     // This method will be triggered by PageHeaderComponent's toggleDirection event
-    public onDirectionToggle(newDirection: 'ltr' | 'rtl'): void {
-        this.dirMode.update(() => newDirection);
+    public onDirectionToggle(dir: DocumentDirection): void {
+        this.dirMode.set(dir);
     }
 
     protected propertyChangeService = inject(PropertyChangeService);

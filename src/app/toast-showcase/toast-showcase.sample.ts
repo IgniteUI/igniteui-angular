@@ -38,6 +38,6 @@ export class ToastShowcaseSampleComponent {
             this.properties = properties;
         });
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 }

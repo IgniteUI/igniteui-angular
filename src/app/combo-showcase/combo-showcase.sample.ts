@@ -108,12 +108,13 @@ export class ComboShowcaseSampleComponent {
             'East South Central 01': ['Alabama', 'Kentucky'],
             'East South Central 02': ['Mississippi', 'Tennessee'],
             'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
-            Mountain: ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            'Mountain': ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
             'Pacific 01': ['Alaska', 'California'],
             'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
         };
 
         const keys = Object.keys(division);
+
         for (const key of keys) {
             division[key].map((e) => {
                 this.items.push({
@@ -129,7 +130,7 @@ export class ComboShowcaseSampleComponent {
             this.properties = properties;
         });
 
-         this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 
     protected get groupSortingAngular() {
