@@ -1,8 +1,19 @@
 <section class="sample-content">
     <article class="linear-samples sample-column">
         <h4 class="sample-title">Linear progress bar</h4>
+
         <div class="linear-container">
-            <igx-linear-bar [striped]="false" [value]="currentValue" [max]="100">
+            <igx-linear-bar [animate]="false" [value]="99.05" [max]="100">
+            </igx-linear-bar>
+        </div>
+
+        <div class="linear-container">
+            <igx-linear-bar [value]="55.5">
+            </igx-linear-bar>
+        </div>
+
+        <div class="linear-container">
+            <igx-linear-bar [value]="currentValue" [max]="100">
             </igx-linear-bar>
         </div>
 
@@ -12,21 +23,26 @@
         </div>
 
         <div class="linear-container">
-            <igx-linear-bar type="danger" [textAlign]="positionCenter" [striped]="false" [value]="currentValue">
+            <igx-linear-bar type="error" [textAlign]="positionCenter" [striped]="false" [value]="currentValue">
             </igx-linear-bar>
         </div>
 
         <div class="linear-container">
-            <igx-linear-bar type="warning" [textTop]="true" [value]="20">
+            <igx-linear-bar type="warning" [textTop]="true" [value]="currentValue">
             </igx-linear-bar>
         </div>
 
         <div class="linear-container">
-            <igx-linear-bar type="info" [striped]="false" [value]="currentValue">
+            <igx-linear-bar type="info" [value]="currentValue">
             </igx-linear-bar>
         </div>
 
-        <div class="linear-container">
+        <div class="linear-container" >
+            <igx-linear-bar [indeterminate]="true">
+            </igx-linear-bar>
+        </div>
+
+        <div class="linear-container" dir="rtl">
             <igx-linear-bar [indeterminate]="true">
             </igx-linear-bar>
         </div>
@@ -45,7 +61,7 @@
         </div>
 
         <div class="linear-container">
-            <igx-linear-bar type="danger" [striped]="true" [value]="currentValue">
+            <igx-linear-bar type="error" [striped]="true" [value]="currentValue">
             </igx-linear-bar>
         </div>
 
@@ -67,34 +83,36 @@
                 <igx-circular-bar class="circular-sample" [indeterminate]="true"></igx-circular-bar>
             </div>
             <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="24"></igx-circular-bar>
+                <igx-circular-bar class="circular-sample" [value]="24.50"></igx-circular-bar>
             </div>
             <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="32"></igx-circular-bar>
+                <igx-circular-bar class="circular-sample" [value]="currentValue"></igx-circular-bar>
+            </div>
+            <div class="circular-container">
+                <igx-circular-bar class="circular-sample" [value]="currentValue"></igx-circular-bar>
             </div>
         </div>
         <div class="circular-samples">
             <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="53"></igx-circular-bar>
+                <igx-circular-bar class="circular-sample" [value]="currentValue"></igx-circular-bar>
             </div>
             <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="30"></igx-circular-bar>
+                <igx-circular-bar class="circular-sample" [value]="currentValue"></igx-circular-bar>
             </div>
-            <div class="circular-container">
+            <div class="circular-container" dir="rtl">
                 <igx-circular-bar class="circular-sample custom-gradient" [indeterminate]="true"></igx-circular-bar>
             </div>
         </div>
         <div class="circular-samples">
             <div class="circular-container">
-                 <igx-circular-bar class="circular-sample" [value]="currentValue" [textVisibility]="true">
+                 <igx-circular-bar class="circular-sample" [value]="currentValue" [textVisibility]="false">
                     <ng-template igxProgressBarText let-process>
-                        <div>{{process.value}}</div>
                         <small class="sample-label">TOTAL%</small>
                     </ng-template>
                 </igx-circular-bar>
             </div>
             <div class="circular-container" #gradient>
-                <igx-circular-bar class="circular-sample" [value]="77" [text]="'Test'">
+                <igx-circular-bar class="circular-sample" [indeterminate]="true" [value]="77" [text]="'Test'">
                     <ng-template igxProgressBarGradient let-id>
                         <svg:linearGradient [id]="id" gradientTransform="rotate(90)">
                             <stop offset="0%"   stop-color="#ff9a40"/>
@@ -105,7 +123,15 @@
                 </igx-circular-bar>
             </div>
             <div class="circular-container">
-                <igx-circular-bar class="circular-sample" [value]="44"></igx-circular-bar>
+                <igx-circular-bar class="circular-sample" [value]="77" [text]="'Test'">
+                    <ng-template igxProgressBarGradient let-id>
+                        <svg:linearGradient [id]="id" gradientTransform="rotate(90)">
+                            <stop offset="0%"   stop-color="#ff9a40"/>
+                            <stop offset="50%" stop-color="#1eccd4"/>
+                            <stop offset="100%" stop-color="#ff0079"/>
+                        </svg:linearGradient>
+                    </ng-template>
+                </igx-circular-bar>
             </div>
         </div>
     </article>
