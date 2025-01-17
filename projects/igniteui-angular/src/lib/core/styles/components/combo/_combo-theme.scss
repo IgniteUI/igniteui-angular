@@ -189,6 +189,7 @@
     %igx-combo__content {
         position: relative;
         overflow: hidden;
+        max-height: calc(var(--size) * 10);
 
         &:focus {
             outline: transparent;
