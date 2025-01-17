@@ -37,6 +37,13 @@ export function setElementSize(element: HTMLElement, size: string) {
     element.style.setProperty('--ig-size', size);
 }
 
+/**
+ * Checks if an element contains a given class and compares it with the expected result.
+ */
+export function hasClass(element: HTMLElement, className: string, expected: boolean) {
+    expect(element.classList.contains(className)).toBe(expected);
+}
+
 @Injectable()
 export class TestNgZone extends NgZone {
     public override onStable: EventEmitter<any> = new EventEmitter(false);
