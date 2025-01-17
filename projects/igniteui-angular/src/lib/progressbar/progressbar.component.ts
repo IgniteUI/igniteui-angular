@@ -296,7 +296,7 @@ export abstract class BaseProgressDirective {
         this._value = valInRange;
 
         this._zone.runOutsideAngular(() => {
-            requestAnimationFrame(() => {
+            setTimeout(() => {
                 this._updateProgressValues();
                 this._cdr.markForCheck();
             });
