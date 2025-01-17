@@ -7,7 +7,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
   imports: [IgSizeDirective],
 })
 class TestComponent {
-  size: 'small' | 'medium' | 'large';
+  public size: 'small' | 'medium' | 'large';
 }
 
 fdescribe('IgSizeDirective', () => {
