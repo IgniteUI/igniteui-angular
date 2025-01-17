@@ -10,7 +10,7 @@ class TestComponent {
   public size: 'small' | 'medium' | 'large';
 }
 
-fdescribe('IgSizeDirective', () => {
+describe('IgSizeDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
   let testComponent: TestComponent;
   let divElement: HTMLElement;
