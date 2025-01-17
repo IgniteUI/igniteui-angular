@@ -48,6 +48,7 @@ export const QueryBuilderResourceStringsCS = {
     igx_query_builder_end_group: 'Ukončit skupina',
     igx_query_builder_and_label: 'a',
     igx_query_builder_or_label: 'nebo',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: 'Vytvořte stav',
     igx_query_builder_add_group: 'Vytvořte skupina',
     igx_query_builder_add_condition_root: 'Stav',

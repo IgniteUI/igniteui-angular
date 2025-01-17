@@ -48,6 +48,7 @@ export const QueryBuilderResourceStringsFR = {
     igx_query_builder_end_group: 'Quitter le groupe',
     igx_query_builder_and_label: 'et',
     igx_query_builder_or_label: 'ou',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: 'Créer un condition',
     igx_query_builder_add_group: 'Créer un groupe',
     igx_query_builder_add_condition_root: 'Condition',

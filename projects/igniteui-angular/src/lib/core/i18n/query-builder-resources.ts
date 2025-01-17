@@ -43,6 +43,7 @@ export interface IQueryBuilderResourceStrings {
     igx_query_builder_end_group?: string;
     igx_query_builder_and_label?: string;
     igx_query_builder_or_label?: string;
+    igx_query_builder_switch_group?: string;
     igx_query_builder_add_condition?: string;
     igx_query_builder_add_group?: string;
     igx_query_builder_add_condition_root?: string;
@@ -113,6 +114,7 @@ export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
     igx_query_builder_end_group: 'End Group',
     igx_query_builder_and_label: 'and',
     igx_query_builder_or_label: 'or',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: 'Add condition',
     igx_query_builder_add_group: 'Add group',
     igx_query_builder_add_condition_root: 'Condition',

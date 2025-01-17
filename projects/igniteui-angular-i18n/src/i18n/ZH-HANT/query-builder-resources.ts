@@ -48,6 +48,7 @@ export const QueryBuilderResourceStringsZHHANT = {
     igx_query_builder_end_group: '結束群組',
     igx_query_builder_and_label: '和',
     igx_query_builder_or_label: '或',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: '建立 條件',
     igx_query_builder_add_group: '建立 群組',
     igx_query_builder_add_condition_root: '條件',

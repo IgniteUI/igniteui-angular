@@ -48,6 +48,7 @@ export const QueryBuilderResourceStringsJA = {
     igx_query_builder_end_group: 'End グループ',
     igx_query_builder_and_label: 'and',
     igx_query_builder_or_label: 'or',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: '条件の作成',
     igx_query_builder_add_group: 'グループの作成',
     igx_query_builder_add_condition_root: '条件',

@@ -48,6 +48,7 @@ export const QueryBuilderResourceStringsES = {
     igx_query_builder_end_group: 'Grupo Fin',
     igx_query_builder_and_label: 'y',
     igx_query_builder_or_label: 'o',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: 'Crear condición',
     igx_query_builder_add_group: 'Crear grupo',
     igx_query_builder_add_condition_root: 'Condición',

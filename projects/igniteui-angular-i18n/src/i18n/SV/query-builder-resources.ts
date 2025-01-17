@@ -48,6 +48,7 @@ export const QueryBuilderResourceStringsSV = {
     igx_query_builder_end_group: 'Slutgrupp',
     igx_query_builder_and_label: 'och',
     igx_query_builder_or_label: 'eller',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: 'Skapa villkor',
     igx_query_builder_add_group: 'Skapa grupp',
     igx_query_builder_add_condition_root: 'Villkor',
