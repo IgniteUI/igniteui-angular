@@ -1034,9 +1034,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //When we pick up a chip
-    public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean): void {
+    public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean, shouldExitEdit = false): void {
         //console.log('Picked up:', event, sourceDragElement);
-        this.exitEditAddMode();
+        if(shouldExitEdit) {
+            this.exitEditAddMode();
+        }
         this.resetDragAndDrop(true);
         this.isKeyboardDrag = isKeyboardDrag;
         this.sourceExpressionItem = sourceExpressionItem;

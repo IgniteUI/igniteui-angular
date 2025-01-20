@@ -138,7 +138,7 @@
                 [draggable]="canBeDragged() ? 'true' : 'false'" 
                 [hideBaseOnDrag] = "false"    
                 [animateOnRelease] = "false"
-                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem, false): null" 
+                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem, false, true): null" 
                 (moveEnd)="onMoveEnd()"
                 (dragEnter)="onChipEnter(dragRef, expressionItem, false)"
                 (dragOver)="onChipOver(dragRef, false)"
