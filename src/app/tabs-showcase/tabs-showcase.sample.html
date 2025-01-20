@@ -1,0 +1,85 @@
+<div class="items-wrapper">
+    <div class="sample-wrapper">
+        <strong>Angular</strong>
+        <igx-tabs
+            [tabAlignment]="properties.alignment"
+            [activation]="properties.activation">
+
+            @for (contact of contacts; track contact.id) {
+                <igx-tab-item [selected]="contact.id === selectedTabId">
+                    <igx-tab-header>
+                        @if(!properties.hideIcon) {
+                            <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                        }
+                        @if(!properties.hideText) {
+                            <span igxTabHeaderLabel>{{ contact.text }}</span>
+                        }
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        Phone: {{ contact.phone }}
+                    </igx-tab-content>
+                </igx-tab-item>
+            }
+        </igx-tabs>
+    </div>
+
+    <div class="sample-wrapper">
+        <strong>Web components</strong>
+        <igc-tabs
+            [alignment]="properties.alignment"
+            [activation]="properties.activation">
+
+            @for (contact of contacts; track contact.id) {
+                <igc-tab [selected]="contact.id === selectedTabId" [panel]="contact.i">
+                    @if(!properties.hideIcon) {
+                        <igx-icon>folder</igx-icon>
+                    }
+                    @if(!properties.hideText) {
+                    <span>{{ contact.text }}</span>
+                    }
+                </igc-tab>
+
+                <igc-tab-panel [id]="contact.id">
+                    Phone: {{ contact.phone }}
+                </igc-tab-panel>
+            }
+        </igc-tabs>
+    </div>
+</div>
+
+<ng-template #customControlsTemplate>
+        <p>Item actions</p>
+        <div class="panel-actions panel-actions--col">
+            <section class="panel-actions">
+                <button igxButton="outlined" (click)="addTab()">Add item</button>
+                <button igxButton="contained" (click)="removeTab()">Remove item</button>
+            </section>
+
+            <section class="panel-actions panel-actions--col">
+                <p>Move selection</p>
+
+                <div class="panel-actions">
+                    <button igxButton="outlined" (click)="previousTab()">
+                        <igx-icon>chevron_left</igx-icon>
+                        <span>Previous item</span>
+
+                    </button>
+                    <button igxButton="outlined" (click)="nextTab()">
+                        <span>Next item</span>
+                        <igx-icon>chevron_right</igx-icon>
+                    </button>
+                </div>
+            </section>
+
+            <section class="panel-actions panel-actions--col">
+                <p>Select by index</p>
+
+                <div class="panel-actions panel-actions--col">
+                    <button class="select-index" igxButton="outlined" (click)="selectTabAtIndex(2)">Select by index</button>
+                    @if (indexMessage) {
+                        <small class="warning-message">{{ indexMessage }}</small>
+                    }
+                </div>
+            </section>
+        </div>
+</ng-template>
