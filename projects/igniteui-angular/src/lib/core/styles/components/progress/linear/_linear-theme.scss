@@ -79,10 +79,10 @@
     & {
         background-image: repeating-linear-gradient(
             $gradient-orientation,
-            $fill-color-default 0,
-            $fill-color-default var(--stripe-size),
+            $stripes-color,
             $stripes-color var(--stripe-size),
-            $stripes-color calc(var(--stripe-size) * 2)
+            $fill-color-default var(--stripe-size),
+            $fill-color-default calc(var(--stripe-size) * 2)
         );
     }
 }
@@ -152,28 +152,28 @@ $easing-curves: (
         }
     }
 
-    %display-linear--striped {
+    %display-linear--striped:not(%display-linear--indeterminate) {
         $gradient-orientation: map.get((
-            'material': -45deg,
-            'fluent': -45deg,
-            'bootstrap': 45deg,
-            'indigo': 45deg,
-        ), $variant);
+            'material': 45deg,
+            'fluent': 45deg,
+            'bootstrap': -45deg,
+            'indigo': -45deg,
+        ), $variant) ;
 
         &:dir(rtl) {
             $gradient-orientation: map.get((
-                'material': 45deg,
-                'fluent': 45deg,
-                'bootstrap': -45deg,
-                'indigo': -45deg,
-            ), $variant) ;
+                'material': -45deg,
+                'fluent': -45deg,
+                'bootstrap': 45deg,
+                'indigo': 45deg,
+            ), $variant);
         }
 
         %indicator {
             @include striped-gradient(
-                    map.get($theme, 'variant'),
-                    $gradient-orientation,
-                    var-get($theme, 'stripes-color')
+                map.get($theme, 'variant'),
+                $gradient-orientation,
+                var-get($theme, 'stripes-color')
             );
         }
     }
@@ -222,6 +222,9 @@ $easing-curves: (
     }
 
     %display-linear--indeterminate {
+        --_progress-integer : 0 !important;
+        --_progress-whole : 0 !important;
+
         %value {
             &::before {
                 display: none;

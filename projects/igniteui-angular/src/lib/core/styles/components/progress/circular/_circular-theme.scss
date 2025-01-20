@@ -86,7 +86,6 @@
     $stroke-width: rem(4px);
 
     $font-size: round(calc(#{var-get($theme, 'diameter')} / var(--scale-factor) - var(--stroke-thickness)), 1px);
-    $font-size-fraction: round(calc(#{var-get($theme, 'diameter')} / var(--scale-factor) - var(--stroke-thickness) - rem(2px)), 1px);
 
     %display-circular {
         --circular-size: calc(#{var-get($theme, 'diameter')} - var(--stroke-thickness));
@@ -159,6 +158,14 @@
     }
 
     %display-circular--indeterminate {
+        /*
+            !Important is needed in order to override the inline styles that are set with .ts
+            This makes sure that when switching form indeterminate to normal state the counter
+            value is animated.
+         */
+        --_progress-integer : 0 !important;
+        --_progress-whole : 0 !important;
+
         svg {
             animation: 3s linear 0s infinite $animation-direction none running rotate-center;
 
@@ -181,7 +188,7 @@
                     stroke-linecap: round;
                     animation: 2s linear 0s infinite normal none running indeterminate-circular-fluent
                 } @else {
-                    animation: indeterminate-accordion 1.5s cubic-bezier(0, 0.085, 0.68, 0.53) $animation-direction infinite;
+                    animation: indeterminate-accordion var(--_transition-duration) cubic-bezier(0, 0.085, 0.68, 0.53) $animation-direction infinite;
                 }
 
                 @if $variant == 'bootstrap' {
@@ -238,7 +245,7 @@
 
     %outer--indeterminate {
         stroke-dasharray: 289;
-        @include animation(indeterminate-accordion 1.5s cubic-bezier(0, .085, .68, .53) normal infinite);
+        @include animation(indeterminate-accordion var(--_transition-duration) cubic-bezier(0, .085, .68, .53) normal infinite);
     }
 
     %inner,
@@ -255,7 +262,7 @@
     %text {
         position: absolute;
         color: var-get($theme, 'text-color');
-
+        font-size: #{$font-size};
         line-height: normal;
         text-align: center;
         font-weight: 600;
@@ -273,16 +280,12 @@
     }
 
     %text:not(%text--fraction) {
-        font-size: #{$font-size};
-
         &::before {
             content: counter(progress-integer) '%';
         }
     }
 
     %text--fraction {
-        font-size: #{$font-size-fraction};
-
         &::before {
             content: counter(progress-integer) '.' counter(progress-fraction, decimal-leading-zero) '%';
         }
@@ -378,6 +381,17 @@
             // Positive offset for opposite direction
             stroke-dashoffset: calc(#{$circumference} / 4);
             transform: rotate(-990deg);
+        }
+    }
+
+    @keyframes initial-dashoffset {
+        from {
+            /* Start with no progress (0%) */
+            stroke-dashoffset: #{$circumference};
+        }
+
+        to {
+            stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
         }
     }
 

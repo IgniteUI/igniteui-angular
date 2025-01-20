@@ -3,6 +3,7 @@
         <h4 class="sample-title">Circular progress Angular</h4>
         <div class="circular-container">
             <igx-circular-bar
+            [animationDuration]="properties.animationDuration"
             [indeterminate]="properties.indeterminate"
             [value]="properties.value"
             [textVisibility]="!properties.hideLabel">
@@ -12,6 +13,7 @@
         <h4 class="sample-title">Circular progress WC</h4>
         <div class="circular-container">
             <igc-circular-progress
+            [animationDuration]="properties.animationDuration"
             [indeterminate]="properties.indeterminate"
             [value]="properties.value"
             [variant]="properties.variant"

@@ -64,10 +64,10 @@ export class LinearProgressSampleComponent {
             }
         },
         animationDuration: {
-            label: 'Animation Duration',
+            label: 'Animation Duration in (ms)',
             control: {
                 type: 'number',
-                defaultValue: 300
+                defaultValue: 2000
             }
         },
         variant: {
