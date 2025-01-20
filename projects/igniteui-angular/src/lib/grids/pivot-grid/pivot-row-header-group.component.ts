@@ -8,7 +8,6 @@ import { IPivotDimension, PivotRowHeaderGroupType } from './pivot-grid.interface
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxHeaderGroupStylePipe } from '../headers/pipes';
 import { IgxPivotResizeHandleDirective } from '../resizing/pivot-grid/pivot-resize-handle.directive';
-import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { NgClass, NgStyle } from '@angular/common';
@@ -22,7 +21,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-header-group',
     templateUrl: './pivot-row-dimension-header-group.component.html',
-    imports: [IgxIconComponent, IgxPivotRowDimensionHeaderComponent, NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxGridFilteringCellComponent, IgxPivotResizeHandleDirective, IgxHeaderGroupStylePipe]
+    imports: [IgxIconComponent, IgxPivotRowDimensionHeaderComponent, NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxPivotResizeHandleDirective, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent implements PivotRowHeaderGroupType {
 

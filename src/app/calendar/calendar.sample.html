@@ -1,65 +1,59 @@
 <div class="preview sample-min-width">
     <div class="preview__sample">
         <div class="calendar-wrapper">
-            <strong>Angular</strong>
+            <strong>Angular Calendar</strong>
             <igx-calendar
                 #calendar
-                [selection]="selectionType.ng"
-                [locale]="locale"
-                (viewDateChanged)="viewDateChanged($event)"
-                (activeViewChanged)="activeViewChanged($event)"
-                (selected)="onSelection($event)"
+                [selection]="selectionAngular"
+                [locale]="properties.locale"
+                [hideOutsideDays]="properties.hideOutsideDays"
+                [monthsViewNumber]="properties.monthsViewNumber"
+                [weekStart]="weekStartAngular"
+                [headerOrientation]="properties.headerOrientation"
+                [orientation]="properties.viewOrientation"
+                [showWeekNumbers]="properties.showWeekNumbers"
+                [hasHeader]="!properties.hideHeader"
                 [formatOptions]="formatOptions"
                 [disabledDates]="disabledDates"
                 [specialDates]="specialDates"
-                [hideOutsideDays]="outsideDays"
-                [monthsViewNumber]="visibleMonths"
-                [weekStart]="getWeekDayNumber(weekStart)"
-                [headerOrientation]="headerOrientation"
-                [orientation]="orientation"
-                [(ngModel)]="date"
-                [ngModelOptions]="{updateOn: 'blur'}"
+                (selected)="onSelection($event)"
+                (viewDateChanged)="viewDateChanged($event)"
+                (activeViewChanged)="activeViewChanged($event)"
             >
             </igx-calendar>
         </div>
 
         <div class="calendar-wrapper">
-            <strong>Web Components</strong>
+            <strong>WC Calendar</strong>
             <igc-calendar
-                [visibleMonths]="visibleMonths"
-                [showWeekNumbers]="weekNumber"
-                [selection]="selectionType.wc"
-                [locale]="locale"
-                [hideHeader]="calendarHeader"
+                [locale]="properties.locale"
+                [visibleMonths]="properties.monthsViewNumber"
+                [showWeekNumbers]="properties.showWeekNumbers"
+                [selection]="properties.selection"
+                [hideHeader]="properties.hideHeader"
+                [hideOutsideDays]="properties.hideOutsideDays"
+                [headerOrientation]="properties.headerOrientation"
+                [orientation]="properties.viewOrientation"
+                [weekStart]="properties.weekStart"
                 [formatOptions]="formatOptions"
-                [hideOutsideDays]="outsideDays"
                 [disabledDates]="disabledDates"
                 [specialDates]="specialDates"
-                [weekStart]="weekStart"
-                [headerOrientation]="headerOrientation"
-                [orientation]="orientation"
             >
             </igc-calendar>
         </div>
     </div>
 
-    <div class="preview__settings">
-        <small>Change locale</small>
-        <igx-buttongroup selectionMode="singleRequired">
-            @for (item of locales; track item) {
-                <button
-                    igxButton
-                    [selected]="locale === item.iso"
-                    (click)="changeLocale(item.text)"
-                >
-                    {{ item.text }}
-                </button>
-            }
-        </igx-buttongroup>
+    <ng-template #customControls>
+        <div class="custom-controls">
+            <label>Special Dates</label>
+            <igx-date-range-picker
+                mode="dialog"
+                [(ngModel)]="specialRange"
+            ></igx-date-range-picker>
 
-        <small>Weekday format</small>
-        <igx-buttongroup selectionMode="singleRequired">
-            @for (option of ['narrow', 'short', 'long']; track option) {
+            <label>Weekday format</label>
+            <igx-buttongroup selectionMode="singleRequired">
+                @for (option of ['narrow', 'short', 'long']; track option) {
                 <button
                     igxButton
                     value="option"
@@ -68,12 +62,13 @@
                 >
                     {{option}}
                 </button>
-            }
-        </igx-buttongroup>
+                }
+            </igx-buttongroup>
 
-        <small>Month format</small>
-        <igx-buttongroup selectionMode="singleRequired">
-            @for (option of ['numeric', '2-digit', 'narrow', 'short', 'long']; track option) {
+            <label>Month format</label>
+            <igx-buttongroup selectionMode="singleRequired">
+                @for (option of ['numeric', '2-digit', 'narrow', 'short',
+                'long']; track option) {
                 <button
                     igxButton
                     value="option"
@@ -82,138 +77,8 @@
                 >
                     {{option}}
                 </button>
-            }
-        </igx-buttongroup>
-
-        <small>Week Start</small>
-        <igx-buttongroup selectionMode="singleRequired">
-            @for (ws of ['monday', 'sunday']; track ws) {
-                <button
-                    igxButton
-                    (click)="changeWeekStart(ws)"
-                    [selected]="ws === weekStart"
-                >
-                    {{ ws }}
-                </button>
-            }
-        </igx-buttongroup>
-
-        <small>Selection type</small>
-        <igx-buttongroup selectionMode="singleRequired">
-            @for (type of selectionTypes; track type) {
-                <button
-                    igxButton
-                    (click)="setSelectionType(type)"
-                    [selected]="type === selectionType"
-                >
-                    {{ type.wc }}
-                </button>
-            }
-        </igx-buttongroup>
-
-        <small>Header orientation</small>
-        <igx-buttongroup selectionMode="singleRequired">
-            @for (ho of orientations; track ho) {
-                <button
-                    igxButton
-                    (click)="setHeaderOrientation(ho)"
-                    [selected]="ho === headerOrientation"
-                >
-                    {{ ho }}
-                </button>
-            }
-        </igx-buttongroup>
-
-        <small>View orientation</small>
-        <igx-buttongroup selectionMode="singleRequired">
-            @for (vo of orientations; track vo) {
-                <button
-                    igxButton
-                    (click)="setOrientation(vo)"
-                    [selected]="vo === orientation"
-                >
-                    {{ vo }}
-                </button>
-            }
-        </igx-buttongroup>
-
-        <small>Special Dates</small>
-        <igx-date-range-picker
-            mode="dialog"
-            [(ngModel)]="specialRange"
-        ></igx-date-range-picker>
-
-        <small>Toggle options</small>
-        <div class="column gap">
-            <igx-switch (click)="hideHeader()">Hide header</igx-switch>
-            <igx-switch (click)="toggleLeadingTrailing()"
-                >Hide leading/trailing days</igx-switch
-            >
-            <igx-switch (click)="hideWeekNumber()"
-                >Show week numbers</igx-switch
-            >
+                }
+            </igx-buttongroup>
         </div>
-
-        <small>Programmatic Selection</small>
-        <div class="row gap">
-            <button igxButton="outlined" (click)="select()">Select</button>
-            <button igxButton="outlined" (click)="deselect()">Deselect</button>
-        </div>
-
-        <small>Number of months</small>
-        <div class="row gap">
-            <igx-input-group type="border">
-                <input
-                    igxInput
-                    name="visible-months"
-                    type="number"
-                    #numMonths
-                    [value]="visibleMonths"
-                    (focus)="numMonths.select()"
-                    (keydown.enter)="setMonthsViewNumber(numMonths.value)"
-                />
-                <div igxHint>Enter the number of months to be visible</div>
-            </igx-input-group>
-        </div>
-
-        <small>Active date</small>
-        <span>{{calendar.activeDate | date }}</span>
-
-        <small>Selected date(s)</small>
-
-        <ol class="selected-dates" [class.multiple]="selection.length > 1">
-            @for (item of selection; track item.valueOf()) {
-                <li>{{item | date }}</li>
-            }
-        </ol>
-
-        <div class="preview__info">
-            <a
-                href="https://www.figma.com/file/6M8cbmxScEGL2pje8lVQgR/Calendar%2C-Date-Picker%2C-Time-Picker?node-id=301:13735&mode=dev"
-                target="_blank"
-            >
-                <igx-icon>link</igx-icon> View Handoff.
-            </a>
-            <a
-                href="https://www.figma.com/file/rPQFTo4Ktj4tMDncnwPtHk/Indigo.Design-UI-Kit-for-Material-1.4-Workfile?type=design&node-id=3264-183625&mode=design&t=gVdJQcROFyukhaUq-0"
-                target="_blank"
-            >
-                <igx-icon>link</igx-icon> View UI Kit.
-            </a>
-
-            <a
-                href="https://github.com/IgniteUI/igniteui-angular/wiki/Calendar-Views-Specification"
-                target="_blank"
-            >
-                <igx-icon>link</igx-icon> View Spec.
-            </a>
-
-            <a
-                href="https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar"
-                target="_blank"
-            >
-                <igx-icon>link</igx-icon> View Docs.
-            </a>
-        </div>
-    </div>
+    </ng-template>
 </div>

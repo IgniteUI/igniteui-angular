@@ -6,7 +6,6 @@ import {
     IgxActionStripComponent,
     IgxActionStripMenuItemDirective,
     IgxButtonDirective,
-    IgxButtonGroupComponent,
     IgxCellTemplateDirective,
     IgxColumnComponent,
     IgxGridComponent,
@@ -62,7 +61,6 @@ class User {
     styleUrls: ['action-strip.sample.scss'],
     templateUrl: `action-strip.sample.html`,
     imports: [
-        IgxButtonGroupComponent,
         IgxButtonDirective,
         IgxActionStripComponent,
         IgxIconComponent,

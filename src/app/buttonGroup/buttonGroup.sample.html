@@ -1,208 +1,117 @@
 <section class="sample-content">
     <article class="sample-column">
-        <h4 class="sample-title">
-            Exclusive Selection <i class="light">Horizontal</i>
-        </h4>
-        <igx-buttongroup
-            [selectionMode]="'single'"
-            [values]="alignOptions"
-            [style.--ig-size]="'var(--ig-size-small)'"
-        ></igx-buttongroup>
-        <br />
-        <span class="ig-typography__body-2"
-            ><b>First button is selected: </b
-            >{{ alignOptions[0].selected }}</span
-        >
-    </article>
+        <h5 class="sample-title">Angular Button Group</h5>
 
-    <article class="sample-column">
-        <h4 class="sample-title">
-            Multiple Selection <i class="light">Horizontal</i>
-        </h4>
-        <igx-buttongroup
-            [selectionMode]="'multi'"
-            [values]="fontOptions"
-            [disabled]="false"
-        >
-        </igx-buttongroup>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">
-            Multiple Selection <i class="light">Horizontal Disabled</i>
-        </h4>
-        <igx-buttongroup
-            [selectionMode]="'multi'"
-            [values]="fontOptions"
-            [disabled]="true"
-        >
-        </igx-buttongroup>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">
-            Exclusive Selection <i class="light">Vertical</i>
-        </h4>
-        <igx-buttongroup
-            [selectionMode]="'single'"
-            [values]="cities"
-            alignment="vertical"
-        >
-        </igx-buttongroup>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">
-            Multiple Selection <i class="light">Vertical</i>
-        </h4>
-        <igx-buttongroup
-            [selectionMode]="'multi'"
-            [values]="borders"
-            [alignment]="alignment"
-        >
-        </igx-buttongroup>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">Custom class to style the content</h4>
-        <igx-buttongroup
-            [selectionMode]="'multi'"
-            [values]="fontOptions"
-            [disabled]="false"
-            itemContentCssClass="customContentStyle"
-        >
-        </igx-buttongroup>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">Templated buttons.</h4>
-        <igx-buttongroup [selectionMode]="'single'">
-            <button igxButton>
-                <igx-icon>alarm_on</igx-icon>
-                <span>Button 1 text</span>
-            </button>
-            <button igxButton>
-                <igx-icon>autorenew</igx-icon>
-                <span>Button 2 text</span>
-            </button>
-        </igx-buttongroup>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">
-            Templated buttons. <i class="light">Vertical</i>
-        </h4>
-        <igx-buttongroup
-            [selectionMode]="'single'"
-            [alignment]="alignment"
-            [style.--ig-size]="'var(--ig-size-small)'"
-        >
-            <button igxButton [style.--ig-size]="'var(--ig-size-large)'">
-                <igx-icon>alarm_on</igx-icon>
-                <span>Button 1 text</span>
-            </button>
-            <button igxButton>
-                <igx-icon>autorenew</igx-icon>
-                <span>Button 2 text</span>
-            </button>
-        </igx-buttongroup>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">
-            Templated buttons. <i class="light">Multiple selection</i>
-        </h4>
-        <igx-buttongroup [selectionMode]="'multi'" [alignment]="alignment">
-            <button igxButton [selected]="true">
-                <igx-icon>alarm_on</igx-icon>
-                <span>Button 1 text</span>
-            </button>
-            <button igxButton>
-                <igx-icon>autorenew</igx-icon>
-                <span>Button 2 text</span>
-            </button>
-        </igx-buttongroup>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">
-            Selection Mode <i class="light">Single</i>
-        </h4>
-        <igx-buttongroup [selectionMode]="'single'">
-            <button igxButton>
-                <span>Button 1</span>
-            </button>
-            <button igxButton>
-                <span>Button 2</span>
-            </button>
-            <button igxButton>
-                <span>Button 3</span>
-            </button>
-        </igx-buttongroup>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">
-            Selection Mode <i class="light">Single Required</i>
-        </h4>
-        <igx-buttongroup [selectionMode]="'singleRequired'">
-            <button igxButton>
-                <span>Button 1</span>
-            </button>
-            <button igxButton>
-                <span>Button 2</span>
-            </button>
-            <button igxButton>
-                <span>Button 3</span>
-            </button>
-        </igx-buttongroup>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">
-            Selection Mode <i class="light">Multi</i>
-        </h4>
-        <igx-buttongroup [selectionMode]="'multi'">
-            <button igxButton>
-                <span>Button 1</span>
-            </button>
-            <button igxButton>
-                <span>Button 2</span>
-            </button>
-            <button igxButton>
-                <span>Button 3</span>
-            </button>
-        </igx-buttongroup>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">Programmatic Selection</h4>
-        <igx-buttongroup #programmatic>
-            @for (button of buttons; track button; let i = $index) {
+        <div class="button-group">
+            <strong>Button Group With Text</strong>
+            <igx-buttongroup
+                [selectionMode]="properties.selection"
+                [alignment]="properties.alignment"
+                [disabled]="properties.disabled"
+            >
+                @for (city of cities; track city) {
                 <button
                     igxButton
-                    [selected]="i === selectedIndex"
-                    (click)="selectedIndex = i"
+                    [selected]="city.selected"
+                    [disabled]="city.disabled"
                 >
-                    {{ button }}
+                    {{ city.label }}
                 </button>
-            }
-        </igx-buttongroup>
-        <div igxLayout igxLayoutJustify="flex-end">
-            <button
-                igxButton="contained"
-                (click)="switchContent()"
-                style="margin: 16px 8px 0 0"
+                }
+            </igx-buttongroup>
+        </div>
+
+        <div class="button-group">
+            <strong>Button Group With Icons</strong>
+            <igx-buttongroup
+                [selectionMode]="properties.selection"
+                [disabled]="properties.disabled"
             >
-                Move Selection
-            </button>
-            <button
-                igxButton="contained"
-                (click)="selectLast()"
-                style="margin: 16px 0 0 8px"
+                <button igxButton>
+                    <igx-icon>format_bold</igx-icon>
+                </button>
+                <button igxButton>
+                    <igx-icon>format_italic</igx-icon>
+                </button>
+                <button igxButton>
+                    <igx-icon>format_underline</igx-icon>
+                </button>
+            </igx-buttongroup>
+        </div>
+
+        <div class="button-group">
+            <strong>Button Group With Templated Buttons</strong>
+            <igx-buttongroup
+                [selectionMode]="properties.selection"
+                [disabled]="properties.disabled"
             >
-                Select Last
-            </button>
+                <button igxButton>
+                    <igx-icon>alarm_on</igx-icon>
+                    <span>Button 1 text</span>
+                </button>
+                <button igxButton>
+                    <igx-icon>autorenew</igx-icon>
+                    <span>Button 2 text</span>
+                </button>
+            </igx-buttongroup>
+        </div>
+    </article>
+
+    <article class="sample-column">
+        <h5 class="sample-title">WC Button Group</h5>
+
+        <div class="button-group">
+            <strong>Button Group With Text</strong>
+            <igc-button-group
+                [selection]="wcSelection"
+                [alignment]="properties.alignment"
+                [disabled]="properties.disabled"
+            >
+                @for (city of cities; track city){
+                <igc-toggle-button
+                    [value]="city"
+                    [selected]="city.selected"
+                    [disabled]="city.disabled"
+                >
+                    {{ city.label }}
+                </igc-toggle-button>
+                }
+            </igc-button-group>
+        </div>
+        <div class="button-group">
+            <strong>Button Group With Icons</strong>
+            <igc-button-group
+                [selection]="wcSelection"
+                [disabled]="properties.disabled"
+            >
+                <igc-toggle-button value="bold">
+                    <igc-icon name="bold"></igc-icon>
+                </igc-toggle-button>
+
+                <igc-toggle-button value="italic">
+                    <igc-icon name="italic"></igc-icon>
+                </igc-toggle-button>
+
+                <igc-toggle-button value="underline">
+                    <igc-icon name="underline"></igc-icon>
+                </igc-toggle-button>
+            </igc-button-group>
+        </div>
+        <div class="button-group">
+            <strong>Button Group With Templated Buttons</strong>
+            <igc-button-group
+                [selection]="wcSelection"
+                [disabled]="properties.disabled"
+            >
+                <igc-toggle-button value="alarm_on">
+                    <igc-icon name="alarm_on"></igc-icon>
+                    <span>Button 1 text</span>
+                </igc-toggle-button>
+                <igc-toggle-button value="autorenew">
+                    <igc-icon name="autorenew"></igc-icon>
+                    <span>Button 2 text</span>
+                </igc-toggle-button>
+            </igc-button-group>
         </div>
     </article>
 </section>

@@ -1068,6 +1068,23 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(hierarchicalGrid.childLayoutList.first.columns.length).toEqual(0, 'Columns length should be 0 after toggle');
             expect(hierarchicalGrid.childLayoutList.first.columnList.length).toEqual(0, 'ColumnList length should be 0 after toggle');
         }));
+
+        it('should resolve child grid cols default editable prop correctly based on row island\'s rowEditable.', () => {
+            hierarchicalGrid.rowEditable = false;
+            hierarchicalGrid.childLayoutList.first.rowEditable = true;
+            fixture.detectChanges();
+            // expand row
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+
+            //check child grid column are editable
+            const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const childGrid1 = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+            expect(childGrid1.columns[0].editable).toBeTrue();
+            expect(childGrid1.columns[1].editable).toBeTrue();
+        });
     });
 
     describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {

@@ -10,7 +10,6 @@
 ////
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The toolbar background color.
 /// @param {Color} $title-text-color [null] - The toolbar title text color.
 /// @param {Color} $dropdown-background [null] - The toolbar drop-down background color.
@@ -29,7 +28,6 @@
 ///   @include css-vars($my-toolbar-theme);
 @function grid-toolbar-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $background-color: null,
     $title-text-color: null,
@@ -83,7 +81,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        elevations: $elevations,
         background-color: $background-color,
         title-text-color: $title-text-color,
         item-text-color: $item-text-color,

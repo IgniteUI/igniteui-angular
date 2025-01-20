@@ -1,0 +1,32 @@
+.items-wrapper {
+    height: 400px;
+}
+
+strong {
+    color: hsla(var(--ig-secondary-500));
+    display: block;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+
+.panel-actions {
+    display: flex;
+}
+
+.panel-actions:not(.panel-actions--col) {
+    gap: 8px;
+}
+
+.panel-actions--col {
+    flex-direction: column;
+}
+
+.select-index {
+    align-self: flex-start;
+}
+
+.warning-message {
+    margin-block-start: 8px;
+    color: var(--ig-warn-700);
+}

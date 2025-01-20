@@ -12,7 +12,6 @@
 ////
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $slide-background [null] - The slide background color.
 /// @param {Color} $button-background [null] - The previous/next buttons idle background color.
 /// @param {Color} $button-hover-background [null] - The previous/next buttons hover background color.
@@ -44,7 +43,6 @@
 ///   @include css-vars($my-carousel-theme);
 @function carousel-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $border-radius: null,
     $button-shadow: null,
@@ -320,11 +318,11 @@
         }
     }
 
-    %igx-carousel-indicators--bottom {
+    %igx-carousel-indicators--end {
         bottom: 0;
     }
 
-    %igx-carousel-indicators--top {
+    %igx-carousel-indicators--start {
         top: 0;
     }
 
@@ -563,15 +561,18 @@
             }
         }
 
+
         %igx-carousel-arrow--prev {
             inset-block-start: 0;
             margin-block-start: rem(16px);
         }
 
+
         %igx-carousel-arrow--next {
             inset-block-end: 0;
             margin-block-end: rem(16px);
         }
+
 
         %igx-carousel-indicators {
             inset-inline-end: 0;
@@ -590,7 +591,7 @@
             padding: rem(4px) rem(6px);
         }
 
-        %igx-carousel-indicators--top {
+        %igx-carousel-indicators--start {
             inset-inline-end: unset;
             inset-inline-start: 0;
             margin-inline-start: rem(16px);
@@ -603,12 +604,13 @@
                 padding: rem(6px);
             }
 
+
             %igx-carousel-label-indicator {
                 padding: rem(4px) rem(6px);
                 margin-inline-end: rem(16px);
             }
 
-            %igx-carousel-indicators--top {
+            %igx-carousel-indicators--start {
                 margin-inline-start: rem(16px);
             }
         }

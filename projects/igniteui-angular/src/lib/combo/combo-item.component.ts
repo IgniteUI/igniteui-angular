@@ -32,7 +32,9 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     /** @hidden @internal */
     @HostBinding('style.height.rem')
     public get _itemHeightToRem() {
-        return rem(this.itemHeight);
+        if (this.itemHeight) {
+            return rem(this.itemHeight);
+        }
     }
 
     @HostBinding('attr.aria-label')

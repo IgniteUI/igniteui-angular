@@ -21,14 +21,14 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $primary: color($palette, 'primary');
-    $secondary: color($palette, 'secondary');
-    $gray: color($light-indigo-palette, 'gray');
-    $surface: color($light-indigo-palette, 'surface');
-    $info: color($palette, 'info');
-    $success: color($palette, 'success');
-    $warn: color($palette, 'warn');
-    $error: color($palette, 'error');
+    $primary: color($palette, primary);
+    $secondary: color($palette, secondary);
+    $gray: color($light-indigo-palette, gray);
+    $surface: color($light-indigo-palette, surface);
+    $info: color($palette, info);
+    $success: color($palette, success);
+    $warn: color($palette, warn);
+    $error: color($palette, error);
 
     @include theme(
         $palette: palette(
@@ -60,14 +60,14 @@
     $roundness: null,
     $elevation: true,
 ) {
-    $primary: color($palette, 'primary');
-    $secondary: color($palette, 'secondary');
-    $gray: color($dark-indigo-palette, 'gray');
-    $surface: color($dark-indigo-palette, 'surface');
-    $info: color($palette, 'info');
-    $success: color($palette, 'success');
-    $warn: color($palette, 'warn');
-    $error: color($palette, 'error');
+    $primary: color($palette, primary);
+    $secondary: color($palette, secondary);
+    $gray: color($dark-indigo-palette, gray);
+    $surface: color($dark-indigo-palette, surface);
+    $info: color($palette, info);
+    $success: color($palette, success);
+    $warn: color($palette, warn);
+    $error: color($palette, error);
 
     @include theme(
         $palette: palette(

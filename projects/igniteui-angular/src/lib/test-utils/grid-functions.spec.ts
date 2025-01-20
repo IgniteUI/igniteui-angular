@@ -737,7 +737,7 @@ export class GridFunctions {
     public static getApplyButtonExcelStyleFiltering(fix: ComponentFixture<any>, menu = null, grid = 'igx-grid') {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix, grid);
         const containedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--contained'));
-        const applyButton: any = containedButtons.find((rb: any) => rb.innerText === 'apply');
+        const applyButton: any = containedButtons.find((rb: any) => rb.innerText.toLowerCase() === 'apply');
         return applyButton;
     }
 
@@ -749,7 +749,7 @@ export class GridFunctions {
     public static clickCancelExcelStyleFiltering(fix: ComponentFixture<any>, menu = null) {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const flatButtons = Array.from(excelMenu.querySelectorAll('.igx-button--flat'));
-        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
+        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText.toLowerCase() === 'cancel');
         cancelButton.click();
     }
 
@@ -770,7 +770,7 @@ export class GridFunctions {
     public static getApplyExcelStyleCustomFiltering(fix: ComponentFixture<any>): HTMLElement {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
         const containedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--contained'));
-        const applyButton = containedButtons.find((rb: any) => rb.innerText === 'apply');
+        const applyButton = containedButtons.find((rb: any) => rb.innerText.toLowerCase() === 'apply');
         return applyButton as HTMLElement;
     }
 
@@ -803,7 +803,7 @@ export class GridFunctions {
     public static clickCancelExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
         const flatButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--flat'));
-        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
+        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText.toLowerCase() === 'cancel');
         cancelButton.click();
     }
 
@@ -2054,7 +2054,7 @@ export class GridFunctions {
                     }
                 }
                 const expectedWidth = Math.max(parseFloat(cell.column.calcWidth) * cell.column.gridColumnSpan, sum);
-                expect(cellElem.clientWidth - expectedWidth).toBeLessThan(1);
+                expect(cellElem.getBoundingClientRect().width - expectedWidth).toBeLessThan(1);
                 // check height
                 const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
                 expect(cellElem.offsetHeight).toBe(expectedHeight);

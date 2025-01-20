@@ -24,7 +24,6 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { IgxToggleActionDirective } from '../directives/toggle/toggle.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
@@ -76,7 +75,6 @@ export class IgxActionStripMenuItemDirective {
     templateUrl: 'action-strip.component.html',
     imports: [
         NgTemplateOutlet,
-        IgxButtonDirective,
         IgxIconButtonDirective,
         IgxRippleDirective,
         IgxToggleActionDirective,

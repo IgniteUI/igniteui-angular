@@ -70,9 +70,27 @@
         }
     </igx-nav-drawer>
 
+    @let config = (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
+
+    @if(config) {
+    <igx-nav-drawer
+        #paneldrawer
+        [pin]="true"
+        position="right"
+        [isOpen]="config"
+        id="paneldrawer">
+        <ng-template igxDrawer>
+            <app-properties-panel></app-properties-panel>
+        </ng-template>
+    </igx-nav-drawer>
+    }
+
     <div [style.paddingLeft]="drawerState.miniVariant && !drawerState.pin ? '60px' : null" class="content">
-        <app-page-header [title]="urlString"></app-page-header>
-        <div class="sample-wrapper">
+        <app-page-header
+                [title]="urlString"
+                (toggleDirection)="onDirectionToggle($event)"
+        ></app-page-header>
+        <div #dirTarget class="sample-wrapper" [attr.dir]="dirMode()">
             <router-outlet></router-outlet>
         </div>
     </div>

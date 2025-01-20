@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 19.1.0
+### General
+- `IgxCarousel`
+    - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
+    - **Deprecation** - `CarouselIndicatorsOrientation` enum members `top` and `bottom` have been deprecated and will be removed in a future version. Use `start` and `end` instead.
+
 ## 19.0.0
 ### General
 - `IgxFilteringService`, `IgxGridBaseDirective`

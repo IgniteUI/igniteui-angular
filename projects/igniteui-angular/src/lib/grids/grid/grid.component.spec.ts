@@ -1900,6 +1900,21 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(grid.hostWidth, 10)).toBe(30 * 136);
         });
 
+        it('should render grid and columns with correct width when all are in % and inside a hidden container.', () => {
+            // in this case since the grid width is 0, the grid will use the sum of the columns
+            // those should resolve to 136px, as per the docs
+            const fix = TestBed.createComponent(IgxGridColumnHiddenPercentageWidthComponent);
+            const grid = fix.componentInstance.grid;
+            grid.width = '100%';
+            // 4 cols - 10% width
+            fix.componentInstance.initColumnsRows(5, 4);
+            fix.detectChanges();
+
+            expect(grid.calcWidth).toBe(136*4);
+            expect(grid.columns[0].calcWidth).toBe(136);
+            expect(grid.columns[1].calcWidth).toBe(136);
+        });
+
         it('should retain column with in % after hiding/showing grid with 100% width', () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
             fix.componentInstance.initColumnsRows(5, 3);
@@ -3129,6 +3144,17 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
             column.width = '40%';
         }
     }
+}
+
+@Component({
+    template: `<igx-grid #grid [hidden]="hidden" [data]="data" [autoGenerate]="false">
+        <igx-column *ngFor="let col of columns" [width]="'10%'" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
+        </igx-column>
+    </igx-grid>`,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class IgxGridColumnHiddenPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
+    public hidden = true;
 }
 
 @Component({

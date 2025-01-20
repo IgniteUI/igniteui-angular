@@ -650,7 +650,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * Applies display format to cell values in the column. Does not modify the underlying data.
      *
-     * @remark
+     * @remarks
      * Note: As the formatter is used in places like the Excel style filtering dialog, in certain
      * scenarios (remote filtering for example), the row data argument can be `undefined`.
      *
@@ -1984,7 +1984,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -2013,7 +2013,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -2027,7 +2027,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                         columnSizes[i] = {
                             ref: col,
                             width: col.width === 'fit-content' ? col.autoSize :
-                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                             colSpan: col.gridColumnSpan,
                             colEnd: col.colStart + col.gridColumnSpan,
                             widthSetByUser: col.widthSetByUser
@@ -2091,7 +2091,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             if (size && !!size.width) {
                 result.push(size.width + 'px');
             } else {
-                result.push(parseInt(this.grid.getPossibleColumnWidth(), 10) + 'px');
+                result.push(parseFloat(this.grid.getPossibleColumnWidth()) + 'px');
             }
         }
         return result;
@@ -2561,15 +2561,17 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         const isAutoWidth = colWidth && typeof colWidth === 'string' && colWidth === 'fit-content';
-        if (isPercentageWidth) {
-            this._calcWidth = Math.floor(parseFloat(colWidth) / 100 * this.grid.calcWidth);
+        if (isPercentageWidth && this.grid.isColumnWidthSum) {
+            this._calcWidth = this.grid.minColumnWidth;
+        } else if (isPercentageWidth) {
+            this._calcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
             this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
         } else {
             this._calcWidth = this.width;
         }
-        this.calcPixelWidth = parseInt(this._calcWidth, 10);
+        this.calcPixelWidth = parseFloat(this._calcWidth);
     }
 
     /**

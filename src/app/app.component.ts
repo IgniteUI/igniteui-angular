@@ -1,10 +1,19 @@
-import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ViewChild,
+    HostBinding,
+    inject,
+    signal,
+} from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective } from 'igniteui-angular';
-import { PageHeaderComponent } from './pageHeading/pageHeading.component';
+import { IgxNavigationDrawerComponent, IgxIconService, IgxRippleDirective, IGX_NAVIGATION_DRAWER_DIRECTIVES } from 'igniteui-angular';
+import { DocumentDirection, PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { IgxIconComponent } from '../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective } from '../../projects/igniteui-angular/src/lib/navigation-drawer/navigation-drawer.directives';
+import { CommonModule } from '@angular/common';
+import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
+import { PropertyChangeService } from './properties-panel/property-change.service';
 
 @Component({
     selector: 'app-root',
@@ -12,15 +21,15 @@ import { IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective, IgxNavDrawerM
     styleUrls: ['./app.component.scss'],
     imports: [
         IgxNavigationDrawerComponent,
-        IgxNavDrawerTemplateDirective,
-        IgxNavDrawerItemDirective,
+        IGX_NAVIGATION_DRAWER_DIRECTIVES,
+        CommonModule,
         RouterLinkActive,
         RouterLink,
         IgxIconComponent,
-        IgxNavDrawerMiniTemplateDirective,
         PageHeaderComponent,
         RouterOutlet,
         IgxRippleDirective,
+        PropertiesPanelComponent
     ]
 })
 export class AppComponent implements OnInit {
@@ -28,7 +37,16 @@ export class AppComponent implements OnInit {
     public appId = 'igniteui-demo-app';
 
     @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
-    public navdrawer;
+    public navdrawer: IgxNavigationDrawerComponent;
+
+    public dirMode = signal<'ltr' | 'rtl'>('ltr');
+
+    // This method will be triggered by PageHeaderComponent's toggleDirection event
+    public onDirectionToggle(dir: DocumentDirection): void {
+        this.dirMode.set(dir);
+    }
+
+    protected propertyChangeService = inject(PropertyChangeService);
 
     public urlString: string;
 
@@ -115,9 +133,19 @@ export class AppComponent implements OnInit {
             name: 'Chips'
         },
         {
+            link: '/circular-progress',
+            icon: 'poll',
+            name: 'Circular Progress'
+        },
+        {
             link: '/combo',
             icon: 'arrow_drop_down_circle',
             name: 'Combo'
+        },
+        {
+            link: '/combo-showcase',
+            icon: 'arrow_drop_down_circle',
+            name: 'Combo (showcase)'
         },
         {
             link: '/datePicker',
@@ -153,11 +181,6 @@ export class AppComponent implements OnInit {
             link: '/virtual-dropdown',
             icon: 'horizontal_split',
             name: 'DropDown - Virtual'
-        },
-        {
-            link: '/dropDown-density',
-            icon: 'horizontal_split',
-            name: 'DropDown - Density'
         },
         {
             link: '/expansionPanel',
@@ -289,7 +312,7 @@ export class AppComponent implements OnInit {
             name: 'Grid Auto Size'
         },
         {
-            link: '/gridDocManager',
+            link: '/gridDockManager',
             icon: 'view_column',
             name: 'Grid in DockManager'
         },
@@ -419,6 +442,21 @@ export class AppComponent implements OnInit {
             name: 'Icon'
         },
         {
+            link: '/icon-button',
+            icon: 'favorite',
+            name: 'Icon Button'
+        },
+        {
+            link: '/input-controls',
+            icon: 'check_box',
+            name: 'Input Controls'
+        },
+        {
+            link: '/linear-progress',
+            icon: 'poll',
+            name: 'Linear Progress'
+        },
+        {
             link: '/list',
             icon: 'list',
             name: 'List'
@@ -465,11 +503,6 @@ export class AppComponent implements OnInit {
             name: 'Overlay Animation'
         },
         {
-            link: '/progressbar',
-            icon: 'poll',
-            name: 'Progress Indicators'
-        },
-        {
             link: '/pagination',
             icon: 'menu',
             name: 'Paginator'
@@ -490,11 +523,6 @@ export class AppComponent implements OnInit {
             name: 'Reactive Form'
         },
         {
-            link: '/select',
-            icon: 'arrow_drop_down_circle',
-            name: 'Select'
-        },
-        {
             link: '/slider',
             icon: 'tab',
             name: 'Slider'
@@ -502,7 +530,12 @@ export class AppComponent implements OnInit {
         {
             link: '/range-slider',
             icon: 'open_in_full',
-            name: 'Range Slider'
+            name: 'Slider (Range)'
+        },
+        {
+            link: '/slider-showcase',
+            icon: 'tune',
+            name: 'Slider (showcase)'
         },
         {
             link: '/splitter',
@@ -536,9 +569,10 @@ export class AppComponent implements OnInit {
         },
         {
             link: '/toast',
-            icon: 'android',
+            icon: 'notifications',
             name: 'Toast'
-        }, {
+        },
+        {
             link: '/hierarchicalGrid',
             icon: 'view_column',
             name: 'Hierarchical Grid'
@@ -564,6 +598,11 @@ export class AppComponent implements OnInit {
             link: '/tree',
             icon: 'account_tree',
             name: 'Tree'
+        },
+        {
+            link: '/tree-showcase',
+            icon: 'account_tree',
+            name: 'Tree (showcase)'
         },
         {
             link: '/treeGrid',

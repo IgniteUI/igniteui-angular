@@ -1,5 +1,4 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { Observable } from 'rxjs';
@@ -14,7 +13,6 @@ import { data } from '../shared/data';
     styleUrls: ['grid-selection.sample.scss'],
     providers: [RemoteService],
     imports: [
-        AsyncPipe,
         FormsModule,
         IGX_INPUT_GROUP_DIRECTIVES,
         IGX_SELECT_DIRECTIVES,

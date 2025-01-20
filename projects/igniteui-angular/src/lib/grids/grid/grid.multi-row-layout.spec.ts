@@ -42,10 +42,10 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const firstRowCellsArr = gridFirstRow.cells.toArray();
         // the last cell is spaned as much as the first 3 cells
-        const firstThreeCellsWidth = firstRowCellsArr[0].nativeElement.offsetWidth +
-            firstRowCellsArr[1].nativeElement.offsetWidth +
-            firstRowCellsArr[2].nativeElement.offsetWidth;
-        const lastCellWidth = firstRowCellsArr[3].nativeElement.offsetWidth;
+        const firstThreeCellsWidth = firstRowCellsArr[0].nativeElement.getBoundingClientRect().width +
+            firstRowCellsArr[1].nativeElement.getBoundingClientRect().width +
+            firstRowCellsArr[2].nativeElement.getBoundingClientRect().width;
+        const lastCellWidth = firstRowCellsArr[3].nativeElement.getBoundingClientRect().width;
         expect(2 * firstRowCellsArr[0].nativeElement.offsetHeight).toEqual(firstRowCellsArr[3].nativeElement.offsetHeight);
         expect(firstThreeCellsWidth).toEqual(lastCellWidth);
     }));
@@ -96,7 +96,10 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
 
         // verify block style
-        expect(grid.columnList.first.getGridTemplate(false)).toBe('200px 200px 200px');
+        let sizes = grid.columnList.first.getGridTemplate(false).split(' ').map(width => parseFloat(width).toFixed(2) + "px").join(' ');
+        
+
+        expect(sizes).toBe('200.33px 200.33px 200.33px');
         expect(grid.columnList.first.getGridTemplate(true)).toBe('repeat(3,1fr)');
 
         // creating an incomplete layout 2
@@ -111,8 +114,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         }];
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
-
-        expect(grid.columnList.first.getGridTemplate(false)).toBe('200px 200px 200px');
+        sizes = grid.columnList.first.getGridTemplate(false).split(' ').map(width => parseFloat(width).toFixed(2) + "px").join(' ');
+        expect(sizes).toBe('200.33px 200.33px 200.33px');
         expect(grid.columnList.first.getGridTemplate(true)).toBe('repeat(3,1fr)');
 
     }));
@@ -128,11 +131,13 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.offsetWidth).toBe(200);
         expect(grid.gridAPI.get_cell_by_index(0, 'CompanyName').nativeElement.offsetWidth).toBe(200);
         expect(grid.gridAPI.get_cell_by_index(0, 'ContactName').nativeElement.offsetWidth).toBe(200);
-        expect(grid.gridAPI.get_cell_by_index(0, 'ContactTitle').nativeElement.offsetWidth).toBe(200 * 3);
+        expect(+grid.gridAPI.get_cell_by_index(0, 'ContactTitle').nativeElement.getBoundingClientRect().width.toFixed(3))
+            .toBe(+(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.getBoundingClientRect().width * 3).toFixed(3));
 
         // check group blocks
         let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid-thead')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
-        expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(200 * 3);
+        expect(+groupHeaderBlocks[0].nativeElement.getBoundingClientRect().width.toFixed(3))
+            .toBe(+(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.getBoundingClientRect().width * 3).toFixed(3));
         expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(51 * 3);
 
         let gridFirstRow = grid.rowList.first;
@@ -1052,7 +1057,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
-        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('118px 118px 118px 118px 118px 118px');
+        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('118.4px 118.4px 118.4px 118.4px 118.4px 118.4px');
     }));
 
     it('should disregard hideGroupedColumns option and not hide columns when grouping when having column layouts.', fakeAsync(() => {
