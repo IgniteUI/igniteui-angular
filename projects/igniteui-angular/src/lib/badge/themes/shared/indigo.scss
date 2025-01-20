@@ -1,0 +1,20 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use '../light/themes' as *;
+
+$theme: $indigo;
+
+@container style(--theme: indigo) {
+    @include b(igx-badge) {
+        @include type-style(button) {
+            margin: 0;
+        }
+
+        igx-icon {
+            $icon-size: rem(12px);
+            --ig-icon-size: #{$icon-size};
+            --igx-icon-size: #{$icon-size};
+        }
+    }
+}
