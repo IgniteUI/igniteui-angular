@@ -11,9 +11,7 @@ export const QueryBuilderConstants = {
     QUERY_BUILDER_TREE: 'igx-query-builder-tree',
     QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS: 'igx-filter-tree__line--and',
     QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS: 'igx-filter-tree__line--or',
-    QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS: 'igx-filter-tree__line--selected',
     CSS_CLASS_DROPDOWN_LIST_SCROLL: 'igx-drop-down__list-scroll',
-    CHIP_SELECT_CLASS: '.igx-chip__select',
     QUERY_CONTEXT_MENU: 'igx-filter-contextual-menu',
     QUERY_BUILDER_BODY: 'igx-query-builder__main',
     QUERY_BUILDER_EXPRESSION_ITEM_CLASS: 'igx-filter-tree__expression-item'
@@ -149,12 +147,6 @@ export class QueryBuilderFunctions {
         return orLegendItem;
     }
 
-    public static getQueryBuilderEmptyPrompt(fix: ComponentFixture<any>) {
-        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
-        const emptyPrompt = queryBuilderElement.querySelector('.igx-filter-empty');
-        return emptyPrompt;
-    }
-
     /**
      * Get the expressions container that contains all groups and expressions.
      */
@@ -166,12 +158,12 @@ export class QueryBuilderFunctions {
     }
 
     /**
-     * Get the initial group adding buttons when the dialog does not contain any filters.
+     * Get the initial condition adding buttons when the dialog does not contain any filters.
      */
-    public static getQueryBuilderInitialAddGroupButtons(fix: ComponentFixture<any>, level = 0) {
+    public static getQueryBuilderInitialAddConditionBtn(fix: ComponentFixture<any>, level = 0) {
         const exprContainer = this.getQueryBuilderExpressionsContainer(fix, level);
-        const initialButtons = Array.from(exprContainer.querySelectorAll('button'));
-        return initialButtons;
+        const initialButton = Array.from(exprContainer.querySelectorAll('button')).filter(item => item.checkVisibility()).at(-1);
+        return initialButton;
     }
 
     public static getQueryBuilderAllGroups(fix: ComponentFixture<any>): any[] {
@@ -374,7 +366,7 @@ export class QueryBuilderFunctions {
     }
 
     /**
-     * Get the specified icon (add, edit, close) of the expression that is located on the provided 'path'.
+     * Get the specified icon (add, close) of the expression that is located on the provided 'path'.
      */
     public static getQueryBuilderTreeExpressionIcon(fix: ComponentFixture<any>, path: number[], iconType: string) {
         const actionsContainer = QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, path);
@@ -438,10 +430,9 @@ export class QueryBuilderFunctions {
         );
     }
 
-    public static clickQueryBuilderInitialAddGroupButton(fix: ComponentFixture<any>, buttonIndex: number, level = 0) {
-        const exprContainer = this.getQueryBuilderInitialAddGroupButtons(fix, level);
-        const andOrAddGroupButton = exprContainer[buttonIndex] as HTMLElement;
-        andOrAddGroupButton.click();
+    public static clickQueryBuilderInitialAddConditionBtn(fix: ComponentFixture<any>, level = 0) {
+        const btn = this.getQueryBuilderInitialAddConditionBtn(fix, level);
+        btn.click();
     }
 
     /**
@@ -522,20 +513,13 @@ export class QueryBuilderFunctions {
     }
 
     /**
-     * Click the specified icon (add, edit, close )of the expression that is located on the provided 'path'.
+     * Click the specified icon (add, close) of the expression that is located on the provided 'path'.
      */
     public static clickQueryBuilderTreeExpressionChipIcon(fix: ComponentFixture<any>, path: number[], iconType: string) {
         const chipIcon = QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, path, iconType);
         chipIcon.click();
     }
 
-    /**
-     * Click the operator line of the group that is located on the provided 'path'.
-     */
-    public static clickQueryBuilderTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
-        const operatorLine = QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, path) as HTMLElement;
-        operatorLine.click();
-    }
 
     public static clickQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>, path = 0) {
         const contextMenuCloseButton = QueryBuilderFunctions.getQueryBuilderContextMenuCloseButton(fix, path);
@@ -572,11 +556,6 @@ export class QueryBuilderFunctions {
             expect(operatorLine.classList.contains(QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS)).toBe(false, 'incorrect operator line');
             expect(operatorLine.classList.contains(QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS)).toBe(true, 'incorrect operator line');
         }
-    }
-
-    public static verifyOperatorLineSelection(operatorLine: HTMLElement, shouldBeSelected: boolean) {
-        expect(operatorLine.classList.contains(QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS))
-            .toBe(shouldBeSelected, 'incorrect selection state of the operator line');
     }
 
     public static verifyEditModeQueryExpressionInputStates(fix,
@@ -675,46 +654,7 @@ export class QueryBuilderFunctions {
             expect(wrapper.length).toBeLessThanOrEqual(0);
         }
     };
-
-
-    public static verifyChipSelectedState = (chip: HTMLElement, shouldBeSelected: boolean) => {
-        const chipItem = chip.querySelector('.igx-chip__item');
-        if (shouldBeSelected) {
-            expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(true, "Chip should have been selected");
-            expect(chipItem.querySelector(QueryBuilderConstants.CHIP_SELECT_CLASS)).not.toBeNull();
-        } else {
-            expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(false, "Chip should have been deselected");
-            expect(chipItem.querySelector(QueryBuilderConstants.CHIP_SELECT_CLASS)).toBeNull();
-        }
-    };
-
-    public static verifyExpressionChipSelection(fix, path: number[], shouldBeSelected: boolean) {
-        const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path) as HTMLElement;
-        QueryBuilderFunctions.verifyChipSelectedState(chip, shouldBeSelected);
-    };
-
-    /**
-     * Verifies that all children (operator lines and expression chips) of the provided 'parent' are selected.
-     */
-    public static verifyChildrenSelection(parent: HTMLElement, shouldBeSelected: boolean) {
-        const allOperatorLines: any[] = Array.from(parent.querySelectorAll('.igx-filter-tree__line'));
-        const allExpressionChips: any[] = Array.from(parent.querySelectorAll(`.igx-filter-tree__expression-item`));
-        for (const operatorLine of allOperatorLines) {
-            if (operatorLine.checkVisibility()) {
-                QueryBuilderFunctions.verifyOperatorLineSelection(operatorLine, shouldBeSelected);
-            } else {
-                QueryBuilderFunctions.verifyOperatorLineSelection(operatorLine, false);
-            }
-        }
-        for (const expressionChip of allExpressionChips) {
-            if (expressionChip.checkVisibility()) {
-                QueryBuilderFunctions.verifyChipSelectedState(expressionChip, shouldBeSelected);
-            } else {
-                QueryBuilderFunctions.verifyChipSelectedState(expressionChip, false);
-            }
-        }
-    };
-
+    
     public static verifyQueryBuilderTabbableElements = (fixture: ComponentFixture<any>) => {
         const tabElements = QueryBuilderFunctions.getTabbableElements(fixture.nativeElement);
 
@@ -750,9 +690,6 @@ export class QueryBuilderFunctions {
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
                 case 0: expect(element.firstChild).toHaveClass('igx-icon');
-                    expect(element.firstChild.textContent).toContain('edit');
-                    break;
-                case 1: expect(element.firstChild).toHaveClass('igx-icon');
                     expect(element.firstChild.textContent).toContain('add');
                     break;
             }
@@ -783,19 +720,18 @@ export class QueryBuilderFunctions {
             switch (i) {
                 case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 2: expect(element).toHaveClass('igx-button'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
-                case 4: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 5: expect(element).toHaveClass('igx-chip'); break;
-                case 6: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 7: expect(element).toHaveClass('igx-button');
+                case 4: expect(element).toHaveClass('igx-icon'); break;
+                case 5: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 6: expect(element).toHaveClass('igx-chip'); break;
+                case 7: expect(element).toHaveClass('igx-icon'); break;
+                case 8: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 9: expect(element).toHaveClass('igx-button');
                     expect(element.innerText).toContain('Condition');
                     break;
-                case 8: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('"And" Group');
-                    break;
-                case 9: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('"Or" Group');
+                case 10: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('Group');
                     break;
             }
             i++;
@@ -888,7 +824,7 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
+    public static addAndValidateChildGroup(fix: ComponentFixture<any>, level: number) {
         // Enter values in the nested query
         QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
         tick(100);
@@ -899,8 +835,8 @@ export class QueryBuilderFunctions {
         tick(100);
         fix.detectChanges();
 
-        // Click the initial 'Add Or Group' button.
-        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, groupType, level);
+        // Click the initial 'Add Condition' button.
+        QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, level);
         tick(100);
         fix.detectChanges();
 
@@ -931,32 +867,13 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static createGroupFromBottomTwoChips(fix: ComponentFixture<any>, operator: string) {
-        //Select bottom two chips
-        const chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[3].nativeElement, 200);
-        QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[4].nativeElement, 200);
-
-        //context menu should have opened
-        const contextMenus = QueryBuilderFunctions.getQueryBuilderContextMenus(fix);
-        expect(contextMenus.length).toBe(2);
-
-        //Click 'create OR group'
-        const operatorButton = operator.toUpperCase() === "AND" ? 0 :
-            operator.toUpperCase() === "OR" ? 1 : null;
-        const orButton = contextMenus[1].queryAll(By.css('.igx-button'))[operatorButton];
-        orButton.nativeElement.click();
-        tick();
-        fix.detectChanges();
-    }
-
-    public static selectEntityAndClickInitialAddGroup(fix: ComponentFixture<any>, entityIndex: number, groupIndex: number) {
+    public static selectEntityAndClickInitialAddCondition(fix: ComponentFixture<any>, entityIndex: number, groupIndex = 0) {
         QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex);
         tick(100);
         fix.detectChanges();
 
-        // Click the initial 'Add Or Group' button.
-        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, groupIndex);
+        // Click the initial 'Add Condition' button.
+        QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, groupIndex);
         tick(100);
         fix.detectChanges();
     }
