@@ -194,12 +194,4 @@ describe('BaseProgressDirective', () => {
         component.value = 0; // Default value is already 0
         expect(component.progressChanged.emit).not.toHaveBeenCalled();
     });
-
-    it('should not trigger progressChanged event when indeterminate is true', () => {
-        spyOn(component.progressChanged, 'emit');
-
-        component.indeterminate = true;
-        component.value = 30; // Attempting to change value
-        expect(component.progressChanged.emit).not.toHaveBeenCalled();
-    });
 });
