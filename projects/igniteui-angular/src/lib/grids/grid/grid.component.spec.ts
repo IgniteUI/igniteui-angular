@@ -3148,10 +3148,12 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
 
 @Component({
     template: `<igx-grid #grid [hidden]="hidden" [data]="data" [autoGenerate]="false">
-        <igx-column *ngFor="let col of columns" [width]="'10%'" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
-        </igx-column>
+        @for (col of columns; track col) {
+            <igx-column [width]="'10%'" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
+            </igx-column>
+        }
     </igx-grid>`,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridColumnHiddenPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
     public hidden = true;
