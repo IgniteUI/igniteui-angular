@@ -7,8 +7,6 @@ $theme: $bootstrap;
 
 @container style(--theme: bootstrap) {
     @include b(igx-checkbox) {
-        color-scheme: light;
-
         @include css-vars-from-theme(diff($base, $theme), 'igx-checkbox');
     }
 }

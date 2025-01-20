@@ -8,8 +8,6 @@ $theme: $indigo;
 
 @container style(--ig-theme: indigo) {
     @include b(igx-checkbox) {
-        color-scheme: dark;
-
         @include css-vars-from-theme(diff(light.$base, $theme), 'igx-checkbox');
     }
 }

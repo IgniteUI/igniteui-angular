@@ -7,8 +7,6 @@ $theme: $material;
 
 @container style(--theme: material) {
     @include b(igx-checkbox) {
-        color-scheme: light;
-
         @include css-vars-from-theme(diff($base, $theme), 'igx-checkbox');
     }
 }

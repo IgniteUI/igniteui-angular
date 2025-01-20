@@ -406,7 +406,7 @@ $variant: map.get($theme, '_meta', 'variant');
     transition: background 0.2s $ease-out-quad;
     opacity: 0.06;
 
-    @media (prefers-color-scheme: dark) {
+    @container style(--ig-theme-variant: dark) {
         opacity: 0.12;
     }
 }
@@ -490,7 +490,7 @@ $variant: map.get($theme, '_meta', 'variant');
     transition: background 0.2s $ease-out-quad;
     opacity: 0.12;
 
-    @media (prefers-color-scheme: dark) {
+    @container style(--ig-theme-variant: dark) {
         opacity: 0.24;
     }
 }
@@ -506,7 +506,7 @@ $variant: map.get($theme, '_meta', 'variant');
 %cbx-ripple--pressed {
     opacity: 0.12;
 
-    @media (prefers-color-scheme: dark) {
+    @container style(--ig-theme-variant: dark) {
         opacity: 0.24;
     }
 }
