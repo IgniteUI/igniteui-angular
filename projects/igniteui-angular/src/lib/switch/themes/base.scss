@@ -11,8 +11,6 @@ $theme: $material;
 
 @include scale-in-out($start-scale: .9);
 
-$variant: map.get($theme, '_meta', 'variant');
-
 $input-transition: all .2s $ease-in-out-quad;
 
 %switch-display {
@@ -74,11 +72,9 @@ $input-transition: all .2s $ease-in-out-quad;
 %switch-composite--x--hover {
     background: var-get($theme, 'track-on-hover-color');
     border-color: var-get($theme, 'border-on-hover-color');
-    @if $variant != 'material' {
-        %switch-thumb {
-            //double check if it is duplicated
-            background: var-get($theme, 'thumb-on-color');
-        }
+
+    %switch-thumb {
+        background: var-get($theme, 'thumb-on-color');
     }
 }
 
@@ -165,7 +161,7 @@ $input-transition: all .2s $ease-in-out-quad;
     transition: background .2s $ease-out-quad;
     opacity: .12;
 
-    @media (prefers-color-scheme: dark) {
+    @container style(--ig-theme-variant: dark) {
         opacity: .24;
     }
 }
@@ -224,7 +220,7 @@ $input-transition: all .2s $ease-in-out-quad;
         opacity: .06;
         inset: 0;
 
-        @media (prefers-color-scheme: dark) {
+        @container style(--ig-theme-variant: dark) {
             opacity: .12;
         }
     }
@@ -258,7 +254,7 @@ $input-transition: all .2s $ease-in-out-quad;
     &::after {
         opacity: .12;
 
-        @media (prefers-color-scheme: dark) {
+        @container style(--ig-theme-variant: dark) {
             opacity: .24;
         }
     }
