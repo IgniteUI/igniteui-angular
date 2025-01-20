@@ -24,18 +24,17 @@ $theme: $fluent;
         @include m(focused) {
             @include e(composite) {
                 position: relative;
-                $focus-outline-offset: rem(3px);
 
                 &::after {
                     content: '';
                     position: absolute;
-                    inset: -$focus-outline-offset;
+                    inset: rem(-3px);
                     box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
                 }
+            }
 
-                &.igx-checkbox--focused::after {
-                    opacity: 0;
-                }
+            &.igx-checkbox--focused::after {
+                opacity: 0;
             }
         }
 
