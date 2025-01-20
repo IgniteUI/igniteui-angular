@@ -2,7 +2,7 @@
     igxToggle
     (appended)="onToggleContentAppended($event)"
     (opening)="onToggleOpening($event)" (opened)="onToggleOpened()"
-    (closing)="onToggleClosing($event)" (closed)="onToggleClosed()">
+    (toggleClosing)="onToggleClosing($event)" (closed)="onToggleClosed()">
     <div class="igx-drop-down__list-scroll" #scrollContainer [attr.id]="listId" role="listbox" [attr.aria-labelledby]="labelledBy"
     [style.height]="height"
     [style.maxHeight]="maxHeight">
