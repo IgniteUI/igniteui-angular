@@ -38,6 +38,9 @@ export interface IQueryBuilderResourceStrings {
     igx_query_builder_filter_false?: string;
     igx_query_builder_filter_all?: string;    
     igx_query_builder_title?: string;
+    igx_query_builder_from_label?: string;
+    igx_query_builder_select_label?: string;
+    igx_query_builder_where_label?: string;
     igx_query_builder_and_group?: string;
     igx_query_builder_or_group?: string;
     igx_query_builder_end_group?: string;
@@ -109,6 +112,9 @@ export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
     igx_query_builder_filter_false: 'False',
     igx_query_builder_filter_all: 'All',    
     igx_query_builder_title: 'Query Builder',
+    igx_query_builder_from_label: 'From',
+    igx_query_builder_select_label: 'Select',
+    igx_query_builder_where_label: 'Where',
     igx_query_builder_and_group: '"And" Group',
     igx_query_builder_or_group: '"Or" Group',
     igx_query_builder_end_group: 'End Group',
