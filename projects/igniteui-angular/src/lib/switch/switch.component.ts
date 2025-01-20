@@ -3,12 +3,14 @@ import {
     HostBinding,
     Input,
     AfterViewInit,
-    booleanAttribute
+    booleanAttribute,
+    OnInit
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import themes from './themes/index';
 
 /**
  *
@@ -42,7 +44,7 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
     templateUrl: 'switch.component.html',
     imports: [IgxRippleDirective]
 })
-export class IgxSwitchComponent extends IgxCheckboxComponent implements ControlValueAccessor, EditorProvider, AfterViewInit {
+export class IgxSwitchComponent extends IgxCheckboxComponent implements ControlValueAccessor, EditorProvider, OnInit, AfterViewInit {
     /**
      * Returns the class of the switch component.
      *
@@ -110,4 +112,9 @@ export class IgxSwitchComponent extends IgxCheckboxComponent implements ControlV
      */
     @HostBinding('class.igx-switch--focused')
     public override focused = false;
+
+    /** @hidden @internal */
+    public override ngOnInit() {
+        this.themeService.adoptStyles(IgxSwitchComponent, themes);
+    }
 }
