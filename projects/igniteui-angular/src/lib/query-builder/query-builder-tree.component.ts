@@ -1504,6 +1504,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
+        if (this.shouldPreventExitEdit(expressionItem)) {
+            this.focusLastEditedExpressionInput();
+            return;
+        }
         this.exitEditAddMode(true);
         this.cdr.detectChanges();
         this.enterEditMode(expressionItem);
@@ -1513,7 +1517,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public clickExpressionAdd(targetButton: HTMLElement) {
+    public clickExpressionAdd(expressionItem: ExpressionOperandItem, targetButton: HTMLElement) {
+        if (this.shouldPreventExitEdit(expressionItem)) {
+            this.focusLastEditedExpressionInput();
+            return;
+        }
         this.exitEditAddMode(true);
         this.cdr.detectChanges();
         this.openExpressionAddDialog(targetButton);
@@ -1904,6 +1912,21 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             defaultSearchValueTemplate: defaultSearchValueTemplate
         };
         return ctx;
+    }
+
+    private shouldPreventExitEdit(expressionItem: ExpressionOperandItem): boolean {
+       const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0]
+       return this._editedExpression && 
+            innerQuery && innerQuery.hasEditedExpression &&
+            this._editedExpression.expression.searchTree != expressionItem.expression.searchTree;
+    }
+
+    private focusLastEditedExpressionInput() {
+        const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
+        const expressionToScroll = innerQuery._editingInputsContainer?.nativeElement as Element;
+        const itemToFocus = Array.from(expressionToScroll.children).filter(input => input.querySelector('input') && !input.querySelector('input').disabled).pop().querySelector('input') as HTMLElement;
+        expressionToScroll.scrollIntoView();
+        itemToFocus.focus();
     }
 
     private setFormat(field: FieldType) {
