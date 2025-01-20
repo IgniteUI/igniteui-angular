@@ -172,6 +172,7 @@
         flex-flow: row nowrap;
         align-items: center;
         outline-style: none;
+        cursor: pointer;
     }
 
     %cbx-display--disabled {
@@ -208,7 +209,6 @@
     %cbx-composite {
         position: relative;
         display: inline-block;
-        cursor: pointer;
         width: $size;
         height: $size;
         min-width: $size;
@@ -482,7 +482,6 @@
     %cbx-label {
         display: inline-block;
         color: var-get($theme, 'label-color');
-        cursor: pointer;
         user-select: none;
         word-wrap: break-all;
         transition: color .2s $ease-out-quad;
