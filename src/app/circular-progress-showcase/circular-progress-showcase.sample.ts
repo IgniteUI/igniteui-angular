@@ -29,11 +29,17 @@ export class CircularProgressSampleComponent {
                 defaultValue: false
             }
         },
-        hideLabel: {
-            label: 'Hide Label',
+        animationDuration: {
+            label: 'Animation Duration',
             control: {
-                type: 'boolean',
-                defaultValue: false
+                type: 'number',
+                defaultValue: 300
+            }
+        },
+        max: {
+            control: {
+                type: 'number',
+                defaultValue: 100
             }
         },
         value: {
@@ -42,11 +48,17 @@ export class CircularProgressSampleComponent {
                 defaultValue: 66
             }
         },
-        animationDuration: {
-            label: 'Animation Duration',
+        text: {
             control: {
-                type: 'number',
-                defaultValue: 300
+                type: 'text',
+                defaultValue: null
+            }
+        },
+        hideLabel: {
+            label: 'Hide Label',
+            control: {
+                type: 'boolean',
+                defaultValue: false
             }
         },
         variant: {

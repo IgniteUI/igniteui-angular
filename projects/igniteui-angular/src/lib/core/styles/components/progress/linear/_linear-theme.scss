@@ -153,26 +153,16 @@ $easing-curves: (
     }
 
     %display-linear--striped:not(%display-linear--indeterminate) {
-        $gradient-orientation: map.get((
-            'material': 45deg,
-            'fluent': 45deg,
-            'bootstrap': -45deg,
-            'indigo': -45deg,
-        ), $variant) ;
+        --linear-strips-orientation: -45deg;
 
         &:dir(rtl) {
-            $gradient-orientation: map.get((
-                'material': -45deg,
-                'fluent': -45deg,
-                'bootstrap': 45deg,
-                'indigo': 45deg,
-            ), $variant);
+            --linear-strips-orientation: 45deg
         }
 
         %indicator {
             @include striped-gradient(
                 map.get($theme, 'variant'),
-                $gradient-orientation,
+                var(--linear-strips-orientation),
                 var-get($theme, 'stripes-color')
             );
         }

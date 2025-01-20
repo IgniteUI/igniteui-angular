@@ -135,7 +135,7 @@ export class AppComponent implements OnInit {
         {
             link: '/circular-progress',
             icon: 'poll',
-            name: 'Circular Progress'
+            name: 'Progress (Circular)'
         },
         {
             link: '/combo',
@@ -454,7 +454,7 @@ export class AppComponent implements OnInit {
         {
             link: '/linear-progress',
             icon: 'poll',
-            name: 'Linear Progress'
+            name: 'Progress (Linear)'
         },
         {
             link: '/list',

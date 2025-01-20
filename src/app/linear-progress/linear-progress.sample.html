@@ -10,6 +10,7 @@
             [text]="properties.text"
             [animationDuration]="properties.animationDuration"
             [textVisibility]="!properties.hideLabel"
+            [max]="properties.max"
             [textTop]="getTextAlignmentConfig(properties.labelAlign).textTop"
             [textAlign]="getTextAlignmentConfig(properties.labelAlign).textAlign">
             </igx-linear-bar>
@@ -22,6 +23,7 @@
             [labelFormat]="properties.text"
             [attr.indeterminate]="properties.indeterminate ? true : null"
             [animationDuration]="properties.animationDuration"
+            [max]="properties.max"
             [value]="properties.value"
             [variant]="properties.variant"
             [hideLabel]="properties.hideLabel"

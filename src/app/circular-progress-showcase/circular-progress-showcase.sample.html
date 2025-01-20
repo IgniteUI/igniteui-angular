@@ -6,6 +6,8 @@
             [animationDuration]="properties.animationDuration"
             [indeterminate]="properties.indeterminate"
             [value]="properties.value"
+            [text]="properties.text"
+            [max]="properties.max"
             [textVisibility]="!properties.hideLabel">
             </igx-circular-bar>
         </div>
@@ -15,7 +17,9 @@
             <igc-circular-progress
             [animationDuration]="properties.animationDuration"
             [attr.indeterminate]="properties.indeterminate ? true : null"
+            [labelFormat]="properties.text"
             [value]="properties.value"
+            [max]="properties.max"
             [variant]="properties.variant"
             [hideLabel]="properties.hideLabel">
             </igc-circular-progress>
