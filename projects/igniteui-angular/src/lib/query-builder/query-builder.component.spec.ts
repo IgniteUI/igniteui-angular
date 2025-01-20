@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './query-builder-functions.spec';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 
@@ -2114,6 +2114,122 @@ describe('IgxQueryBuilder', () => {
 ]
 }`);
     }));
+
+    it('should render ghost when mouse dragged', async () => {
+       
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateDragAndDropExpressionTree();
+      fix.detectChanges();
+      await wait(100);
+      fix.detectChanges();
+
+      const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+      const secondChip = chipComponents[1].componentInstance;
+      const secondChipElem = secondChip.chipArea.nativeElement;
+
+      // UIInteractions.moveDragDirective(fix, , xDragDifference, yDragDifference, false);
+      const dragDir = secondChip.dragDirective
+      const startingTop = secondChipElem.getBoundingClientRect().top;
+      const startingLeft = secondChipElem.getBoundingClientRect().left;
+      const startingBottom = secondChipElem.getBoundingClientRect().bottom;
+      const startingRight = secondChipElem.getBoundingClientRect().right;
+
+      const startingX = (startingLeft + startingRight) / 2;
+      const startingY = (startingTop + startingBottom) / 2;
+
+      //pickup chip
+      dragDir.onPointerDown({ pointerId: 1, pageX: startingX, pageY: startingY });
+      fix.detectChanges();
+
+      //trigger ghost
+      dragDir.onPointerMove({ pointerId: 1, pageX: startingX + 10, pageY: startingY + 10 });
+      fix.detectChanges();
+
+      expect(secondChip.dragDirective.ghostElement).toBeTruthy();
+    });
+
+    it('should position ghost at the appropriate place when mouse dragged along the tree.', async () => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateDragAndDropExpressionTree();
+      fix.detectChanges();
+      await wait(100);
+      fix.detectChanges();
+
+      const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+      const secondChip = chipComponents[1].componentInstance;
+      const secondChipElem = secondChip.chipArea.nativeElement;
+
+      const xDragDifference = 500;
+      const yDragDifference = 100;
+
+      const dragDir = secondChip.dragDirective
+      const startingTop = secondChipElem.getBoundingClientRect().top;
+      const startingLeft = secondChipElem.getBoundingClientRect().left;
+      const startingBottom = secondChipElem.getBoundingClientRect().bottom;
+      const startingRight = secondChipElem.getBoundingClientRect().right;
+
+      const startingX = (startingLeft + startingRight) / 2;
+      const startingY = (startingTop + startingBottom) / 2;
+
+      //pickup chip
+      dragDir.onPointerDown({ pointerId: 1, pageX: startingX, pageY: startingY });
+      fix.detectChanges();
+
+      const initialChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+      initialChipContents.push("DROP CONDITION HERE");
+      console.log(chipComponents);
+
+      let X =100,Y =100, run =1;
+
+      for (let i = 0; i <= 20; i++) { 
+        //move mouse down a bit
+        dragDir.onPointerMove({ pointerId: 1, pageX: X, pageY: Y });
+        fix.detectChanges();
+        Y+=15;
+        
+        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+
+        //TODO for some reason when dragging over div, the mouse needs to be closer to the row, compared to when dragging over chip
+        //That's why the '+run'
+        switch(true){
+          case i < 5 + run: 
+            expect(newChipContents[0]).toEqual(initialChipContents[0]);
+            expect(newChipContents[1]).toEqual(initialChipContents[2]);
+            expect(newChipContents[2]).toEqual(initialChipContents[3]);
+            break;
+          case i < 8 + run: 
+            expect(newChipContents[0]).toEqual(initialChipContents[4]);
+            expect(newChipContents[1]).toEqual(initialChipContents[0]);
+            expect(newChipContents[2]).toEqual(initialChipContents[2]);
+            expect(newChipContents[3]).toEqual(initialChipContents[3]);
+            break;
+          case i < 14 + run: 
+            expect(newChipContents[0]).toEqual(initialChipContents[0]);
+            expect(newChipContents[1]).toEqual(initialChipContents[4]);
+            expect(newChipContents[2]).toEqual(initialChipContents[2]);
+            expect(newChipContents[3]).toEqual(initialChipContents[3]);
+            break;
+          case i < 16 + run: 
+            expect(newChipContents[0]).toEqual(initialChipContents[0]);
+            expect(newChipContents[1]).toEqual(initialChipContents[2]);
+            expect(newChipContents[2]).toEqual(initialChipContents[4]);
+            expect(newChipContents[3]).toEqual(initialChipContents[3]);
+            break;
+          default: 
+            expect(newChipContents[0]).toEqual(initialChipContents[0]);
+            expect(newChipContents[1]).toEqual(initialChipContents[2]);
+            expect(newChipContents[2]).toEqual(initialChipContents[3]);
+            expect(newChipContents[3]).toEqual(initialChipContents[4]);
+            break;  
+        }
+
+        //When done moving mouse over chips, go to the felt and test the whole chip row as well
+        if(i === 20 && run === 1) {
+          i=0;
+          X+=500;
+          Y = 100;
+          run = 2;
+        }
+      }
+    });
   });
 });
 

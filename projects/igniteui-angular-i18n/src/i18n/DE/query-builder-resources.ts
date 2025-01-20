@@ -51,6 +51,7 @@ export const QueryBuilderResourceStringsDE = {
     igx_query_builder_end_group: 'Beende Gruppe',
     igx_query_builder_and_label: 'und',
     igx_query_builder_or_label: 'oder',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: 'Erstelle bedingung',
     igx_query_builder_add_group: 'Erstelle gruppe',
     igx_query_builder_add_condition_root: 'Bedingung',

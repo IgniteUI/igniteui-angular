@@ -51,6 +51,7 @@ export const QueryBuilderResourceStringsBG = {
     igx_query_builder_end_group: 'Край на групирането',
     igx_query_builder_and_label: 'and',
     igx_query_builder_or_label: 'or',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: 'Добави условие',
     igx_query_builder_add_group: 'Добави група',
     igx_query_builder_add_condition_root: 'Условие',

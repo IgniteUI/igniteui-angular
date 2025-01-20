@@ -51,6 +51,7 @@ export const QueryBuilderResourceStringsPL = {
     igx_query_builder_end_group: 'Koniec grupy',
     igx_query_builder_and_label: 'i',
     igx_query_builder_or_label: 'lub',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: 'Utwórz Warunek',
     igx_query_builder_add_group: 'Utwórz grupuj',
     igx_query_builder_add_condition_root: 'Warunek',

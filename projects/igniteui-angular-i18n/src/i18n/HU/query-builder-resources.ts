@@ -51,6 +51,7 @@ export const QueryBuilderResourceStringsHU = {
     igx_query_builder_end_group: 'Vége csoport',
     igx_query_builder_and_label: 'és',
     igx_query_builder_or_label: 'vagy',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: 'Feltétel létrehozása',
     igx_query_builder_add_group: 'Csoport létrehozása',
     igx_query_builder_add_condition_root: 'Feltétel',

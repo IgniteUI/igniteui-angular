@@ -51,6 +51,7 @@ export const QueryBuilderResourceStringsZHHANS = {
     igx_query_builder_end_group: '结束组',
     igx_query_builder_and_label: '和',
     igx_query_builder_or_label: '或',
+    igx_query_builder_switch_group: 'Switch to {0}',
     igx_query_builder_add_condition: '创建 条件',
     igx_query_builder_add_group: '创建 组',
     igx_query_builder_add_condition_root: '条件',
