@@ -7,6 +7,7 @@
             [indeterminate]="properties.indeterminate"
             [value]="properties.value"
             [type]="variantAngular"
+            [text]="properties.text"
             [animationDuration]="properties.animationDuration"
             [textVisibility]="!properties.hideLabel"
             [textTop]="getTextAlignmentConfig(properties.labelAlign).textTop"
@@ -18,7 +19,8 @@
         <div class="linear-container">
             <igc-linear-progress
             [striped]="properties.striped"
-            [indeterminate]="properties.indeterminate"
+            [labelFormat]="properties.text"
+            [attr.indeterminate]="properties.indeterminate ? true : null"
             [animationDuration]="properties.animationDuration"
             [value]="properties.value"
             [variant]="properties.variant"

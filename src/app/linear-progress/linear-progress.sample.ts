@@ -63,6 +63,12 @@ export class LinearProgressSampleComponent {
                 defaultValue: 66
             }
         },
+        text: {
+            control: {
+                type: 'text',
+                defaultValue: null
+            }
+        },
         animationDuration: {
             label: 'Animation Duration in (ms)',
             control: {

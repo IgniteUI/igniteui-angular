@@ -14,7 +14,7 @@
         <div class="circular-container">
             <igc-circular-progress
             [animationDuration]="properties.animationDuration"
-            [indeterminate]="properties.indeterminate"
+            [attr.indeterminate]="properties.indeterminate ? true : null"
             [value]="properties.value"
             [variant]="properties.variant"
             [hideLabel]="properties.hideLabel">

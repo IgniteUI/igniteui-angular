@@ -286,7 +286,7 @@ export abstract class BaseProgressDirective {
         const valInRange = valueInRange(val, this.max); // Ensure value is in range
 
         // Avoid redundant updates
-        if (isNaN(valInRange) || this._value === valInRange || this.indeterminate) {
+        if (isNaN(valInRange) || this._value === valInRange) {
             return;
         }
 

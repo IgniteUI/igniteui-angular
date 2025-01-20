@@ -180,7 +180,7 @@ $easing-curves: (
 
     %base {
         --stripe-size: #{$strip-size};
-        --linear-animation-duration: var(--_transition-duration);
+        --linear-animation-duration: 2000ms;
 
         display: flex;
         flex-direction: column;
@@ -207,16 +207,14 @@ $easing-curves: (
             }
         } @else {
             %indicator {
-                animation-name: indeterminate-bar-fluent-rtl;
+                animation-name: igx-indeterminate-bar-fluent-rtl;
             }
         }
     }
 
-
-
     %display-linear:not(%display-linear--indeterminate) {
         %indicator {
-            animation: initial-width var(--_transition-duration) linear;
+            animation: igx-initial-width var(--_transition-duration) linear;
             background-color: var-get($theme, 'fill-color-default')
         }
     }
@@ -256,16 +254,16 @@ $easing-curves: (
     %indicator__indeterminate {
         @if $variant != 'fluent' {
             transform: scale3d(0, 1, 1);
-            animation: indeterminate-primary var(--linear-animation-duration) infinite linear;
+            animation: igx-indeterminate-primary var(--linear-animation-duration) infinite linear;
             left: -145.1666%;
 
             &::after {
-                animation: indeterminate-primary-scale var(--linear-animation-duration) infinite linear;
+                animation: igx-indeterminate-primary-scale var(--linear-animation-duration) infinite linear;
             }
         } @else {
             width: 33% !important;
             min-width: 33%;
-            animation-name: indeterminate-bar-fluent;
+            animation-name: igx-indeterminate-bar-fluent;
             animation-duration: var(--linear-animation-duration);
             animation-timing-function: ease;
             animation-iteration-count: infinite;
@@ -274,11 +272,11 @@ $easing-curves: (
     }
 
     %indicator__indeterminate-secondary {
-        animation: indeterminate-secondary var(--linear-animation-duration) infinite linear;
+        animation: igx-indeterminate-secondary var(--linear-animation-duration) infinite linear;
         left: -54.8888%;
 
         &::after {
-            animation: indeterminate-secondary-scale var(--linear-animation-duration) infinite linear;
+            animation: igx-indeterminate-secondary-scale var(--linear-animation-duration) infinite linear;
             width: 100%;
             height: inherit;
         }
@@ -322,9 +320,7 @@ $easing-curves: (
 
     %value {
         color: var-get($theme, 'text-color');
-
         animation: initial-counter var(--_transition-duration) ease-in-out;
-
         counter-reset:
             progress-integer var(--_progress-integer, 0)
             progress-fraction var(--_progress-fraction, 0);
@@ -365,13 +361,19 @@ $easing-curves: (
         display: none;
     }
 
+    %hide-counter {
+        &::before {
+            display: none;
+        }
+    }
+
     %animation-none {
         animation-duration: 0s !important;
         animation-name: none !important;
     }
 
     // Primary animation
-    @keyframes indeterminate-primary {
+    @keyframes igx-indeterminate-primary {
         0% {
             transform: translateX(0);
         }
@@ -391,7 +393,7 @@ $easing-curves: (
         }
     }
 
-    @keyframes indeterminate-primary-scale {
+    @keyframes igx-indeterminate-primary-scale {
         0% {
             transform: scaleX(0.08);
         }
@@ -412,7 +414,7 @@ $easing-curves: (
     }
 
     // Secondary animation
-    @keyframes indeterminate-secondary {
+    @keyframes igx-indeterminate-secondary {
         0% {
             animation-timing-function: get-easing('secondary-translate-start');
             transform: translateX(0);
@@ -433,7 +435,7 @@ $easing-curves: (
         }
     }
 
-    @keyframes indeterminate-secondary-scale {
+    @keyframes igx-indeterminate-secondary-scale {
         0% {
             animation-timing-function: get-easing('secondary-scale-slow-start');
             transform: scaleX(0.08);
@@ -455,7 +457,7 @@ $easing-curves: (
     }
 
     // Fluent linear animations
-    @keyframes indeterminate-bar-fluent {
+    @keyframes igx-indeterminate-bar-fluent {
         0% {
             transform: translateX(-100%);
             transform-origin: left;
@@ -467,7 +469,7 @@ $easing-curves: (
         }
     }
 
-    @keyframes indeterminate-bar-fluent-rtl {
+    @keyframes igx-indeterminate-bar-fluent-rtl {
         0% {
             transform: translateX(100%);
             transform-origin: right;
@@ -480,17 +482,7 @@ $easing-curves: (
     }
 
     // Initial animations
-    @keyframes initial-width {
-        from {
-            width: 0;
-        }
-
-        to {
-            width: calc(var(--_progress-whole, 0) * 1%);
-        }
-    }
-
-    @keyframes initial-width {
+    @keyframes igx-initial-width {
         from {
             width: 0;
         }
