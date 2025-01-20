@@ -1,5 +1,5 @@
 import { IgxComboItemComponent } from './combo-item.component';
-import { Component, HostBinding } from '@angular/core';
+import { Component } from '@angular/core';
 
 /**
  * @hidden
@@ -11,11 +11,6 @@ import { Component, HostBinding } from '@angular/core';
     standalone: true
 })
 export class IgxComboAddItemComponent extends IgxComboItemComponent {
-    @HostBinding('class.igx-drop-down__item--focused')
-    public override get focused(): boolean {
-        return false;
-    }
-
     public override get selected(): boolean {
         return false;
     }
