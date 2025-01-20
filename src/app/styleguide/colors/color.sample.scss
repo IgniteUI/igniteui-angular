@@ -53,13 +53,11 @@
 }
 
 @include color-classes(
-    $palette: $palette,
     $prop: 'background',
     $prefix: 'bg'
 );
 
 @include color-classes(
-    $palette: $palette,
     $prop: 'color',
     $prefix: 'color'
 );
