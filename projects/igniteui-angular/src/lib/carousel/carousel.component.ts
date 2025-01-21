@@ -30,7 +30,7 @@ import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18
 import { first, IBaseEventArgs, last, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
-import { Direction, ICarouselComponentBase, IGX_CAROUSEL_COMPONENT, IgxCarouselComponentBase } from './carousel-base';
+import { Direction, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -75,8 +75,7 @@ export class CarouselHammerConfig extends HammerGestureConfig {
         {
             provide: HAMMER_GESTURE_CONFIG,
             useClass: CarouselHammerConfig
-        },
-        { provide: IGX_CAROUSEL_COMPONENT, useExisting: IgxCarouselComponent }
+        }
     ],
     selector: 'igx-carousel',
     templateUrl: 'carousel.component.html',
@@ -88,7 +87,7 @@ export class CarouselHammerConfig extends HammerGestureConfig {
     imports: [IgxButtonDirective, IgxIconComponent, NgIf, NgClass, NgFor, NgTemplateOutlet]
 })
 
-export class IgxCarouselComponent extends IgxCarouselComponentBase implements ICarouselComponentBase, OnDestroy, AfterContentInit {
+export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
 
     /**
      * Sets the `id` of the carousel.
