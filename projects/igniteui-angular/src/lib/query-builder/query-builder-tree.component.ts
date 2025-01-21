@@ -1350,13 +1350,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             //If not the last drop zone (the +Condition button)
             if (index + indexOffset <= this.dropZonesList.length - 2) {
-                const groupsTillCurrent = this.dropZonesList.filter((x, ix) => ix < index + indexOffset && x.className.indexOf('igx-filter-tree-group-root') !== -1).length;
+                const groupsTillCurrent = this.dropZonesList.filter((x, ix) => ix < index + indexOffset && x.className.indexOf('igx-filter-tree-group-context-menu') !== -1).length;
 
                 let under = this.keyDragOffsetIndex < 0 ? this.keyDragOffsetIndex % 2 == 0 ? true : false : this.keyDragOffsetIndex % 2 == 0 ? false : true;
                 let overrideDropUnder;
 
                 //if the current drop zone is a condition chip
-                if (this.dropZonesList[index + indexOffset].className.indexOf('igx-filter-tree-group-root') === -1) {
+                if (this.dropZonesList[index + indexOffset].className.indexOf('igx-filter-tree-group-context-menu') === -1) {
                     this.targetElement = this.dropZonesList[index + indexOffset]
                     this.targetExpressionItem = this.expressionsList[index + indexOffset - groupsTillCurrent];
                 } else {
@@ -1452,7 +1452,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         const viableDropAreaSelector = `.igx-filter-tree__expression-item:not([style*="display:none"]):not(.${this.dropGhostClass}),
         .igx-filter-tree__inputs:not(.igx-query-builder__main > .igx-filter-tree__inputs),
         .igx-filter-tree__buttons > .igx-button:first-of-type,
-        .igx-filter-tree-group-root`;
+        .igx-filter-tree-group-context-menu`;
 
         const expressionElementList = (this.el.nativeElement as HTMLElement).querySelectorAll(viableDropAreaSelector);
         const ownChipElements = [];
