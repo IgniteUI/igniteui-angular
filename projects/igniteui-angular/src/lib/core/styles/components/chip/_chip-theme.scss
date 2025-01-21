@@ -242,6 +242,7 @@
         remove-icon-color-focus: $remove-icon-color-focus,
         focus-selected-outline-color: $focus-selected-outline-color,
         focus-outline-color: $focus-outline-color,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')
@@ -385,7 +386,7 @@
         }
 
         @if $variant == 'indigo' {
-            %igx-icon-display {
+            igx-icon {
                 --size: #{sizable(rem(14px), rem(14px), rem(16px))}
             }
         }

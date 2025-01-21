@@ -10,7 +10,6 @@ export type IgxDividerType = (typeof IgxDividerType)[keyof typeof IgxDividerType
 let NEXT_ID = 0;
 
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-divider',
     standalone: true
 })

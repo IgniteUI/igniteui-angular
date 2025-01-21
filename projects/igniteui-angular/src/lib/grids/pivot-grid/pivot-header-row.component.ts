@@ -51,7 +51,6 @@ import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-header-row',
     templateUrl: './pivot-header-row.component.html',
-    standalone: true,
     imports: [NgIf, IgxDropDirective, IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent,
         IgxPrefixDirective, IgxBadgeComponent, IgxSuffixDirective, IgxDropDownItemNavigationDirective,
         NgTemplateOutlet, IgxGridHeaderGroupComponent, NgClass, NgStyle, IgxGridForOfDirective,

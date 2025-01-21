@@ -16,6 +16,7 @@ import { IgxAvatarComponent } from '../../avatar/avatar.component';
 import { IColumnResizeEventArgs, IgxColumnComponent } from '../public_api';
 import { Size } from "../common/enums";
 import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { IgxColumnResizerDirective } from '../resizing/resizer.directive';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
@@ -131,6 +132,27 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(grid.columnList.get(1).width).toEqual('70px');
+        }));
+
+        it('should calculate correctly resizer position and column width when grid is scaled and zoomed', fakeAsync(() => {
+            grid.nativeElement.style.transform = 'scale(1.2)';
+            grid.nativeElement.style.setProperty('zoom', '1.05');
+            fixture.detectChanges();
+            headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 153, 0);
+            tick(200);
+            fixture.detectChanges();
+
+            const resizer = GridFunctions.getResizer(fixture);
+            const resizerDirective = resizer.componentInstance.resizer as IgxColumnResizerDirective;
+            const leftSetterSpy = spyOnProperty(resizerDirective, 'left', 'set').and.callThrough();
+            UIInteractions.simulateMouseEvent('mousemove', resizer.nativeElement, 200, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer.nativeElement, 200, 5);
+            fixture.detectChanges();
+
+            expect(leftSetterSpy).toHaveBeenCalled();
+            expect(parseInt(leftSetterSpy.calls.mostRecent().args[0].toFixed(0))).toEqual(200);
+            expect(parseInt(grid.columnList.get(1).headerCell.nativeElement.getBoundingClientRect().width.toFixed(0))).toEqual(173);
         }));
 
         it('should be able to resize column to the minWidth < defaultMinWidth', fakeAsync(() => {
@@ -883,7 +905,6 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``, ColumnDefinitions.resizableThreeOfFour),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ResizableColumnsComponent {
@@ -906,7 +927,6 @@ export class ResizableColumnsComponent {
         </igx-column>
         <igx-column [field]="'Downloads'" width="100px" dataType="number" [resizable]="true"></igx-column>
         <igx-column [field]="'Category'" width="100px" dataType="string" [resizable]="true"></igx-column>`),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class LargePinnedColGridComponent implements OnInit {
@@ -928,7 +948,6 @@ export class LargePinnedColGridComponent implements OnInit {
 
 @Component({
     template: GridTemplateStrings.declareGrid(``, ``, ColumnDefinitions.gridFeatures),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxAvatarComponent]
 })
 export class GridFeaturesComponent {
@@ -942,7 +961,6 @@ export class GridFeaturesComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="800px"`, ``, ColumnDefinitions.resizableColsComponent),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class NullColumnsComponent implements OnInit {
@@ -976,7 +994,6 @@ export class NullColumnsComponent implements OnInit {
          <igx-column [field]="'Test'" width="300px" dataType="string" [resizable]="true"></igx-column>
          <igx-column [field]="'Downloads'" width="300px" dataType="number" [resizable]="true"></igx-column>
          <igx-column [field]="'Category'" width="300px" dataType="string" [resizable]="true"></igx-column>`),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColGridComponent implements OnInit {
@@ -994,7 +1011,6 @@ export class ColGridComponent implements OnInit {
          <igx-column [field]="'ID'" [width]="'25%'" [header]="'ID'" [filterable]="true"></igx-column>
          <igx-column [field]="'ProductName'" [width]="'25%'" dataType="string" [filterable]="true"></igx-column>
          <igx-column [field]="'Test'"[width]="'25%'" dataType="string" [resizable]="true"></igx-column>`),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColPercentageGridComponent implements OnInit {
@@ -1008,8 +1024,7 @@ export class ColPercentageGridComponent implements OnInit {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`width="1500px" height="600px"`, ``,
-    `<igx-column [field]="'Items'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
+    template: GridTemplateStrings.declareGrid(`width="1500px" height="600px"`, ``, `<igx-column [field]="'Items'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
     <igx-column [field]="'ID'" [width]="'auto'" [header]="'ID'" [resizable]="true"></igx-column>
     <igx-column [field]="'ProductName'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
     <igx-column [field]="'Test'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
@@ -1020,9 +1035,7 @@ export class ColPercentageGridComponent implements OnInit {
     <igx-column [field]="'Category'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
     <igx-column [field]="'Released'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
     <igx-column [field]="'ReleaseDate'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
-    `
-    ),
-    standalone: true,
+    `),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColAutosizeGridComponent implements OnInit {

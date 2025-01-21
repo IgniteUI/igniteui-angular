@@ -82,7 +82,6 @@ describe('IgxIconButton', () => {
     template: `<button igxIconButton igxRipple="white">
         <igx-icon>search</igx-icon>
     </button>`,
-    standalone: true,
     imports: [IgxIconButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 class IconButtonComponent {

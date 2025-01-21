@@ -170,6 +170,7 @@
         thumb-on-error-color: $thumb-on-error-color,
         error-color: $error-color,
         error-color-hover: $error-color-hover,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')
@@ -289,7 +290,6 @@
         border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius-track');
         background: var-get($theme, 'track-off-color');
-        cursor: pointer;
         user-select: none;
         transition: $input-transition;
 
@@ -556,7 +556,6 @@
     %switch-label {
         display: inline-block;
         color: var-get($theme, 'label-color');
-        cursor: pointer;
         user-select: none;
         word-wrap: break-all;
 

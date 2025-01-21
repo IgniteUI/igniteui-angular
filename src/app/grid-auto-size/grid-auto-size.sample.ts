@@ -9,7 +9,6 @@ import { GridSelectionMode, IgxGridComponent, IGX_BUTTON_GROUP_DIRECTIVES, IGX_G
     selector: 'app-grid-column-moving-sample',
     styleUrls: ['grid-auto-size.sample.scss'],
     templateUrl: 'grid-auto-size.sample.html',
-    standalone: true,
     imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES]
 })
 
@@ -35,7 +34,6 @@ export class GridAutoSizeSampleComponent implements OnInit {
         this.grid1.moving = true;
         // this.data = SAMPLE_DATA.slice(0);
 
-        /* eslint-disable max-len */
         this.columns = [
             { field: 'ID', width: 'auto', resizable: true, sortable: false, filterable: true, groupable: true, summary: true, type: 'string' },
             { field: 'CompanyName', width: 'auto', resizable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string'},
@@ -51,7 +49,6 @@ export class GridAutoSizeSampleComponent implements OnInit {
             { field: 'DateCreated', width: 'auto', resizable: true, sortable: true, filterable: true, groupable: true, summary: false, type: 'date' },
             { field: 'Contract', width: 'auto', resizable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'boolean' }
         ];
-        /* eslint-enable max-len */
         this.selectionMode = GridSelectionMode.multiple;
     }
 

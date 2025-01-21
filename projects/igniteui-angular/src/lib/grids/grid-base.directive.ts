@@ -154,7 +154,6 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
-import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripToken } from '../action-strip/token';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import type { IgxPaginatorComponent } from '../paginator/paginator.component';
@@ -446,7 +445,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     public set primaryKey(value: string) {
         this._primaryKey = value;
-        this.checkPrimaryKeyColumn();
+        this.checkPrimaryKeyField();
     }
 
     /* blazorSuppress */
@@ -2279,9 +2278,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._allowFiltering = value;
             this.filteringService.registerSVGIcons();
 
-            if (!this._init) {
-                this.calcGridHeadRow();
-            }
 
             this.filteringService.isFilterRowVisible = false;
             this.filteringService.filteredColumn = null;
@@ -3013,6 +3009,12 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public filteringPipeTrigger = 0;
+
+    /**
+     * @hidden @internal
+     */
+    public isColumnWidthSum = false;
+
     /**
      * @hidden @internal
      */
@@ -3214,6 +3216,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
+
     private _currencyPositionLeft: boolean;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
@@ -3246,7 +3249,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    protected get minColumnWidth() {
+    public get minColumnWidth() {
         return MINIMUM_COLUMN_WIDTH;
     }
 
@@ -3776,7 +3779,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const primaryColumn = this._columns.find(col => col.field === this.primaryKey);
         const idType = this.data.length ?
             this.resolveDataTypes(this.data[0][this.primaryKey]) : primaryColumn ? primaryColumn.dataType : 'string';
-        return idType === 'string' ? uuidv4() : FAKE_ROW_ID--;
+        return idType === 'string' ? crypto.randomUUID() : FAKE_ROW_ID--;
     }
 
     /**
@@ -4028,7 +4031,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.onPinnedRowsChanged(change);
             });
 
-        this.addRowSnackbar?.clicked.subscribe(() => {
+        this.addRowSnackbar?.clicked.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const rec = this.filteredSortedData[this.lastAddedRowIndex];
             this.scrollTo(rec, 0);
             this.addRowSnackbar.close();
@@ -4553,7 +4556,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
-            totalWidth += parseInt(cols[i].calcWidth, 10) || 0;
+            totalWidth += parseFloat(cols[i].calcWidth) || 0;
         }
         this._totalWidth = totalWidth;
         return totalWidth;
@@ -4935,6 +4938,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @param value
      * @param condition
      * @param ignoreCase
+     * @deprecated in version 19.0.0.
      */
     public filterGlobal(value: any, condition, ignoreCase?) {
         this.filteringService.filterGlobal(value, condition, ignoreCase);
@@ -5398,7 +5402,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             computedWidth = baseWidth;
         } else {
             computedWidth = this.calcWidth ||
-                parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
+                parseFloat(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'));
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
@@ -5422,7 +5426,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
                 const colWidth = curr.width;
-                let widthValue = parseInt(colWidth, 10);
+                let widthValue = parseFloat(colWidth);
                 if (isNaN(widthValue)) {
                     widthValue = MINIMUM_COLUMN_WIDTH;
                 }
@@ -5438,9 +5442,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
         computedWidth -= this.featureColumnsWidth();
 
-        const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
+        const columnWidth = !Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth));
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth);
 
         return columnWidth + 'px';
     }
@@ -6500,7 +6504,10 @@ export abstract class IgxGridBaseDirective implements GridType,
 
 
         if (this.width === null || !width) {
+            this.isColumnWidthSum = true;
             width = this.getColumnWidthSum();
+        } else {
+            this.isColumnWidthSum = false;
         }
 
         if (this.hasVerticalScroll() && this.width !== null) {
@@ -6521,8 +6528,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : this.minColumnWidth + 'px';
         }
         this._columns.forEach((column: IgxColumnComponent) => {
-            if (this.hasColumnLayouts && parseInt(this._columnWidth, 10)) {
-                const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
+            if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
+                const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
                 // D.K. March 29th, 2021 #9145 Consider min/max width when setting defaultWidth property
@@ -6660,7 +6667,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
-        this.checkPrimaryKeyColumn();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
@@ -6772,16 +6778,12 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (added || removed) {
                 this.onColumnsAddedOrRemoved();
             }
-            this.checkPrimaryKeyColumn();
         }
     }
 
-    /**
-     * @hidden @internal
-     */
-    protected checkPrimaryKeyColumn() {
-        if (this.primaryKey && this.columns.length > 0 && !this.columns.find(c => c.field === this.primaryKey)) {
-            console.warn(`Primary key column "${this.primaryKey}" is not defined. Set \`primaryKey\` to a valid column.`);
+    protected checkPrimaryKeyField() {
+        if (this.primaryKey && this.data?.length && !(this.primaryKey in this.data[0])) {
+            console.warn(`Field "${this.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`);
         }
     }
 
@@ -6863,23 +6865,9 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * @hidden
-     * @internal
-     */
-    protected calcGridHeadRow() {
-        if (this.maxLevelHeaderDepth) {
-            this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
-            const hasFilterRow = this._allowFiltering && this._filterMode === FilterMode.quickFilter;
-            const minSize = (this.maxLevelHeaderDepth + 1 + (hasFilterRow ? 1 : 0)) * this.defaultRowHeight / this._baseFontSize;
-            this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
-        }
-    }
-
-    /**
-     * @hidden
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        this.calcGridHeadRow();
 
         this.calcHeight = this._calculateGridBodyHeight();
         if (this.pinnedRowHeight && this.calcHeight) {
@@ -7349,6 +7337,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.resetCachedWidths();
             this.cdr.detectChanges();
         }
+
+        if (this.isColumnWidthSum) {
+            this.calcWidth = this.getColumnWidthSum();
+        }
     }
 
     protected extractDataFromColumnsSelection(source: any[], formatters = false, headers = false): any[] {
@@ -7542,7 +7534,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected get renderedActualRowHeight() {
         let border = 1;
         if (this.rowList.toArray().length > 0) {
-            const rowStyles = document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
+            const rowStyles = this.document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
             border = rowStyles.borderBottomWidth ? Math.ceil(parseFloat(rowStyles.borderBottomWidth)) : border;
         }
         return this.rowHeight + border;

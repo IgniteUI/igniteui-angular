@@ -27,7 +27,6 @@ import { data } from '../shared/data';
     selector: 'app-grid-events',
     styleUrls: ['grid-events.component.scss'],
     templateUrl: 'grid-events.component.html',
-    standalone: true,
     imports: [IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxPaginatorComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class GridEventsComponent {
@@ -51,10 +50,6 @@ export class GridEventsComponent {
 
     public filter(term) {
         this.grid.filter('ProductName', term, IgxStringFilteringOperand.instance().condition('contains'));
-    }
-
-    public filterGlobal(term) {
-        this.grid.filterGlobal(term, IgxStringFilteringOperand.instance().condition('contains'));
     }
 
     public columnMovingStart(event: IColumnMovingStartEventArgs) {

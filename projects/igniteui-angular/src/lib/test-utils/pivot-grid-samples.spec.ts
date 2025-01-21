@@ -23,7 +23,6 @@ import { IgxGridStateDirective } from '../grids/state.directive';
      {{value.member}}
     </ng-template>
     `,
-    standalone: true,
     imports: [IgxPivotGridComponent, IgxPivotDataSelectorComponent]
 })
 export class IgxPivotGridTestBaseComponent {
@@ -131,7 +130,6 @@ export class IgxPivotGridTestBaseComponent {
         [rowSelection]="'single'" [columnSelection]="'single'"
         [defaultExpandState]='defaultExpand'>
     </igx-pivot-grid>`,
-    standalone: true,
     imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestBaseComponent {
@@ -227,7 +225,6 @@ export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestB
     <igx-pivot-grid #grid igxGridState [width]="'1500px'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy">
     </igx-pivot-grid>
     `,
-    standalone: true,
     imports: [IgxPivotGridComponent, IgxGridStateDirective]
 })
 export class IgxPivotGridPersistanceComponent {
@@ -297,7 +294,6 @@ export class IgxPivotGridPersistanceComponent {
     template: `
     <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy" [defaultExpandState]="true">
     </igx-pivot-grid>`,
-    standalone: true,
     imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseComponent {
@@ -348,6 +344,32 @@ export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseCompon
             filters: null
         };
     }
+}
+
+
+@Component({
+    styles: `
+    .pivot-container {
+    display: flex;
+    align-items: flex-start;
+    flex: 1 1 auto;
+    order: 0;
+    align-items: stretch;
+    }
+    `,
+    template: `
+    <div class="pivot-container">
+        <div>
+            <igx-pivot-grid #grid [width]="'100%'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
+                [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]="defaultExpand">
+            </igx-pivot-grid>
+        </div>
+    </div>
+    `,
+    standalone: true,
+    imports: [IgxPivotGridComponent]
+})
+export class IgxPivotGridFlexContainerComponent extends IgxPivotGridTestBaseComponent{
 }
 
 export class IgxTotalSaleAggregate {

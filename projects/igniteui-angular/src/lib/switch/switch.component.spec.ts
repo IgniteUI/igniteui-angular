@@ -306,7 +306,6 @@ describe('IgxSwitch', () => {
 
 @Component({
     template: `<igx-switch #switch>Init</igx-switch>`,
-    standalone: true,
     imports: [IgxSwitchComponent]
 })
 class InitSwitchComponent {
@@ -316,7 +315,6 @@ class InitSwitchComponent {
 @Component({
     template: `<igx-switch #switch (change)="onChange()" (click)="onClick()"
 [(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-switch>`,
-    standalone: true,
     imports: [FormsModule, IgxSwitchComponent]
 })
 class SwitchSimpleComponent {
@@ -334,7 +332,6 @@ class SwitchSimpleComponent {
 
 @Component({
     template: `<igx-switch #switch required>Required</igx-switch>`,
-    standalone: true,
     imports: [IgxSwitchComponent]
 })
 class SwitchRequiredComponent {
@@ -344,7 +341,6 @@ class SwitchRequiredComponent {
 @Component({
     template: `<p id="my-label">{{label}}</p>
     <igx-switch #switch aria-labelledby="my-label"></igx-switch>`,
-    standalone: true,
     imports: [IgxSwitchComponent]
 })
 class SwitchExternalLabelComponent {
@@ -354,7 +350,6 @@ class SwitchExternalLabelComponent {
 
 @Component({
     template: `<igx-switch #switch [aria-label]="label"></igx-switch>`,
-    standalone: true,
     imports: [IgxSwitchComponent]
 })
 class SwitchInvisibleLabelComponent {
@@ -364,7 +359,6 @@ class SwitchInvisibleLabelComponent {
 
 @Component({
     template: `<form [formGroup]="myForm"><igx-switch #switch formControlName="switch">Form Group</igx-switch></form>`,
-    standalone: true,
     imports: [ReactiveFormsModule, IgxSwitchComponent]
 })
 class SwitchFormGroupComponent {
@@ -381,7 +375,6 @@ class SwitchFormGroupComponent {
         <igx-switch #switch [(ngModel)]="subscribed" name="switch" required>Switch</igx-switch>
     </form>
     `,
-    standalone: true,
     imports: [FormsModule, IgxSwitchComponent]
 })
 class SwitchFormComponent {

@@ -404,7 +404,6 @@ describe('Rendering Tests', () => {
         <div *ngIf="divChild"></div>
     </igx-accordion>
     `,
-    standalone: true,
     imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, NgIf]
 })
 export class IgxAccordionSampleTestComponent {

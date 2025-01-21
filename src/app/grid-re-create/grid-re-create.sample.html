@@ -1,0 +1,8 @@
+<div *ngIf="create">
+    <igx-grid [moving]="true"  height="300px">
+        <igx-column [field]="'columnA'"></igx-column>
+        <igx-column [field]="'columnB'"></igx-column>
+     </igx-grid>
+</div>
+
+<button (click)="create = !create">Create/Destroy</button>

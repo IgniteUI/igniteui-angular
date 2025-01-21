@@ -2746,6 +2746,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
                 GridFunctions.clickFilterCellChip(fix, 'AnotherField');
                 fix.detectChanges();
+                grid.cdr.detectChanges();
 
                 // check if it is positioned at the bottom of the thead.
                 const theadWrapper = grid.theadRow.nativeElement.firstElementChild;
@@ -5828,6 +5829,32 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(gridCellValues).toEqual(listItems);
         }));
 
+        it('Should filter grid correctly with case insensitive duplicates', fakeAsync(() => {
+            grid.data = SampleTestData.excelFilteringDataDuplicateValues();
+            fix.detectChanges();
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'cust', fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Get the results and verify their count.
+            const gridCellValues = GridFunctions.getColumnCells(fix, 'AnotherField')
+                .map(c => c.nativeElement.innerText)
+                .sort();
+
+            expect(gridCellValues.length).toEqual(5);
+        }));
+
         it('Should disable the apply button when there are no results.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
@@ -6245,6 +6272,41 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             verifyExcelStyleFilterAvailableOptions(fix,
                 ['Select All', '1:00:00 AM', '12:00:00 PM', '11:00:00 PM'],
                 [true, true, true, true]);
+        }));
+
+        it('should clear all filters in the custom dialog when clicking "Clear Filter" button', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 5);
+            tick();
+            fix.detectChanges();
+
+            const expressions = GridFunctions.getExcelCustomFilteringDateExpressions(fix);
+            const lastExpression = expressions[expressions.length - 1];
+            (lastExpression.querySelector('igx-select').querySelector('igx-input-group') as HTMLElement).click();
+            tick();
+            fix.detectChanges();
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+ 
+            const todayItem = dropdownList.children[0].children.find(item => item.nativeElement?.innerText === 'Today');
+            todayItem.nativeElement.click();
+            tick();
+            fix.detectChanges();
+            
+            GridFunctions.clickClearFilterExcelStyleCustomFiltering(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.getExcelCustomFilteringDateExpressions(fix).forEach(expr => {
+                const input = expr.children[0].querySelector('input');
+                expect(input.value).toBe('');
+            });
         }));
     });
 
@@ -6948,6 +7010,30 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 
+        }));
+
+        it('should discard filters through esf menu properly on cancel button click', fakeAsync(() => {
+            grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+
+            expect(fix.debugElement.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(2);
+            tick(200);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.setOperatorESF(fix, 1, 0);
+            GridFunctions.setInputValueESF(fix, 1, 'Angular');
+            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+
+            expect(fix.debugElement.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(2);
         }));
 
     });

@@ -443,6 +443,7 @@ export interface ColumnType extends FieldType {
     filteringExpressionsTree: FilteringExpressionsTree;
     hasSummary: boolean;
     summaries: any;
+    disabledSummaries?: string[];
     /**
      * The template reference for a summary of the column
      * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
@@ -718,7 +719,10 @@ export interface GridType extends IGridDataBindable {
     isLoading: boolean;
     /** @hidden @internal */
     gridSize: Size;
-
+    /** @hidden @internal */
+    isColumnWidthSum: boolean;
+    /** @hidden @internal */
+    minColumnWidth: number;
     /** Strategy, used for cloning the provided data. The type has one method, that takes any type of data */
     dataCloneStrategy: IDataCloneStrategy;
 

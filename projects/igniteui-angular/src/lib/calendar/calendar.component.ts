@@ -13,7 +13,7 @@ import {
 	booleanAttribute,
     HostListener,
 } from '@angular/core';
-import { NgIf, NgTemplateOutlet, NgStyle, NgFor, DatePipe } from '@angular/common';
+import { NgIf, NgTemplateOutlet, NgFor, DatePipe } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import {
@@ -58,21 +58,20 @@ let NEXT_ID = 0;
  * ```
  */
 @Component({
-	providers: [
-		{
-			multi: true,
-			provide: NG_VALUE_ACCESSOR,
-			useExisting: IgxCalendarComponent,
-		},
+    providers: [
+        {
+            multi: true,
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: IgxCalendarComponent,
+        },
         {
             multi: false,
             provide: KeyboardNavigationService,
         },
-	],
-	selector: 'igx-calendar',
-	templateUrl: 'calendar.component.html',
-	standalone: true,
-	imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollPageDirective, NgStyle, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar],
+    ],
+    selector: 'igx-calendar',
+    templateUrl: 'calendar.component.html',
+    imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollPageDirective, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
 })
 export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit, OnDestroy {
     /**
@@ -400,7 +399,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
      * @hidden
      * @internal
      */
-    // eslint-disable-next-line max-len
     @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true })
     private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
 

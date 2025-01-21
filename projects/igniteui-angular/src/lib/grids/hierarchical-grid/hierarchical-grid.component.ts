@@ -76,7 +76,6 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-child-grid-row',
     templateUrl: './child-grid-row.component.html',
-    standalone: true,
     imports: [NgClass]
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
@@ -314,7 +313,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxForOfScrollSyncService,
         IgxRowIslandAPIService
     ],
-    standalone: true,
     imports: [
         NgIf,
         NgClass,
@@ -351,7 +349,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxGridHierarchicalPipe,
         IgxGridHierarchicalPagingPipe,
         IgxStringReplacePipe
-],
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirective
@@ -486,6 +484,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public set data(value: any[] | null) {
         this.setDataInternal(value);
         this.dataSetByUser = true;
+        this.checkPrimaryKeyField();
     }
 
     /**
@@ -1139,7 +1138,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     protected override setupColumns() {
         if (this.parentIsland && this.parentIsland.childColumns.length > 0 && !this.autoGenerate) {
             this.createColumnsList(this.parentIsland.childColumns.toArray());
-            super.checkPrimaryKeyColumn();
         } else {
             super.setupColumns();
         }
