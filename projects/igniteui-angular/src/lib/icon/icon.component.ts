@@ -8,13 +8,15 @@ import {
     OnChanges,
     ChangeDetectorRef,
     booleanAttribute,
+    inject,
 } from "@angular/core";
 import { IgxIconService } from "./icon.service";
 import type { IconReference } from "./types";
 import { filter, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SafeHtml } from "@angular/platform-browser";
-import { NgIf, NgTemplateOutlet } from "@angular/common";
+import { ThemeService } from '../services/theme/theme.service';
+import themes from './themes/index';
 
 /**
  * Icon provides a way to include material icons to markup
@@ -40,14 +42,15 @@ import { NgIf, NgTemplateOutlet } from "@angular/common";
  */
 @Component({
     selector: "igx-icon",
-    templateUrl: "icon.component.html",
-    imports: [NgTemplateOutlet, NgIf]
+    templateUrl: "icon.component.html"
 })
 export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     private _iconRef: IconReference;
     private _destroy$ = new Subject<void>();
     private _userClasses = new Set<string>();
     private _iconClasses = new Set<string>();
+
+    public themeService = inject(ThemeService);
 
     @HostBinding("class")
     protected get elementClasses() {
@@ -147,6 +150,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      */
     public ngOnChanges() {
         this.setIcon();
+        this.themeService.adoptStyles(IgxIconComponent, themes);
     }
 
     /**
