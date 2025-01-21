@@ -1,0 +1,103 @@
+<div class="wrapper">
+    <div class="angular-inputs">
+        <h4 class="sample-title">Angular Inputs</h4>
+
+        <article>
+            <strong>Angular Checkbox</strong>
+            <igx-checkbox
+            [indeterminate]="properties.indeterminate"
+            [required]="properties.required"
+            [disabled]="properties.disabled"
+            [invalid]="properties.invalid"
+            [checked]="properties.checked"
+            [labelPosition]="properties.labelPosition"
+            [name]="properties.name"
+            [value]="properties.value">
+                Label
+            </igx-checkbox>
+        </article>
+
+        <article>
+            <strong>Angular Switch</strong>
+
+            <igx-switch
+            [required]="properties.required"
+            [disabled]="properties.disabled"
+            [invalid]="properties.invalid"
+            [checked]="properties.checked"
+            [labelPosition]="properties.labelPosition"
+            [name]="properties.name"
+            [value]="properties.value">
+                Label
+            </igx-switch>
+        </article>
+
+        <article>
+            <strong>Angular Radio</strong>
+
+            <igx-radio-group [name]="properties.name? properties.name : 'angGroup'" [required]="properties.required" [alignment]="alignment">
+                <igx-radio [checked]="properties.checked"
+                [disabled]="properties.disabled"
+                [invalid]="properties.invalid"
+                [labelPosition]="properties.labelPosition"
+                [value]="properties.value? properties.value : 'Foo'">Foo</igx-radio>
+
+                <igx-radio
+                [disabled]="properties.disabled"
+                [invalid]="properties.invalid"
+                [labelPosition]="properties.labelPosition"
+                [value]="properties.value? properties.value : 'Bar'">Bar</igx-radio>
+            </igx-radio-group>
+        </article>
+    </div>
+
+    <div class="wc-inputs">
+        <h4 class="sample-title">WebComponents Inputs</h4>
+
+        <article>
+            <strong>WC Checkbox</strong>
+            <igc-checkbox
+            [indeterminate]="properties.indeterminate"
+            [required]="properties.required"
+            [disabled]="properties.disabled"
+            [invalid]="properties.invalid"
+            [checked]="properties.checked"
+            [labelPosition]="properties.labelPosition"
+            [name]="properties.name"
+            [value]="properties.value">
+                Label
+            </igc-checkbox>
+        </article>
+
+        <article>
+            <strong>WC Switch</strong>
+
+            <igc-switch
+            [required]="properties.required"
+            [disabled]="properties.disabled"
+            [invalid]="properties.invalid"
+            [checked]="properties.checked"
+            [labelPosition]="properties.labelPosition"
+            [name]="properties.name"
+            [value]="properties.value">
+                Label
+            </igc-switch>
+        </article>
+
+        <article>
+            <strong>WC Radio</strong>
+
+            <igc-radio-group [name]="properties.name? properties.name : 'wcGroup'" [alignment]="properties.alignment">
+                <igc-radio [checked]="properties.checked" [required]="properties.required"
+                [disabled]="properties.disabled" [invalid]="properties.invalid"
+                [labelPosition]="properties.labelPosition"
+                [value]="properties.value? properties.value : 'Foo'">Foo</igc-radio>
+
+                <igc-radio [disabled]="properties.disabled"
+                [invalid]="properties.invalid"
+                [labelPosition]="properties.labelPosition"
+                [value]="properties.value? properties.value : 'Bar'">Bar</igc-radio>
+            </igc-radio-group>
+        </article>
+    </div>
+</div>

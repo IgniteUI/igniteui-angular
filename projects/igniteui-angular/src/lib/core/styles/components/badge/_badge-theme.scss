@@ -13,7 +13,6 @@
 /// will be assigned automatically to a contrasting color.
 ///
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $icon-color [null] - The icon color used.
 /// @param {Color} $text-color [null] - The text color used.
 /// @param {Color} $border-color [null] - The border color used.
@@ -29,7 +28,6 @@
 ///   @include css-vars($my-badge-theme);
 @function badge-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $icon-color: null,
     $text-color: null,

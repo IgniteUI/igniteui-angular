@@ -22,9 +22,9 @@
             [filterMode]="'quickFilter'"
             [rowSelection]="'single'"
         >
-            <!-- <ng-template igxPivotRowDimensionHeader let-col>
-                <span>{{col.header}}</span>
-            </ng-template> -->
+            <ng-template igxPivotRowDimensionHeader let-col>
+                <span>{{col.header}} 📐</span>
+            </ng-template>
         </igx-pivot-grid>
     </div>
     <igx-pivot-data-selector [grid]="grid1"></igx-pivot-data-selector>

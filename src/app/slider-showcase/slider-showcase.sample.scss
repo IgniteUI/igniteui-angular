@@ -1,0 +1,18 @@
+:host {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    height: 100%;
+    align-items: center;
+    padding-inline: 2em;
+}
+
+.sample-item {
+    margin-bottom: 60px;
+    display: grid;
+    gap: 4em;
+}
+
+strong {
+    display: block;
+    text-align: center;
+}

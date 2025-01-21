@@ -69,7 +69,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /**
      * Gets/Sets whether the expand/collapse all button in the header should be rendered.
      *
-     * @remark
+     * @remarks
      * The default value is false.
      * @example
      * ```html
@@ -111,7 +111,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /**
      * Gets the outlet used to attach the grid's overlays to.
      *
-     * @remark
+     * @remarks
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
     public override get outlet() {
@@ -209,6 +209,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         const columns = [];
         const topLevelCols = cols.filter(c => c.level === 0);
         topLevelCols.forEach((col) => {
+            col.grid = this;
             const ref = this._createColumn(col);
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
