@@ -411,7 +411,7 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
         if (settings) {
-            // TODO: update attach
+            info.settings = settings;
         }
         this.updateSize(info);
         info.settings.positionStrategy.position(

@@ -1379,7 +1379,7 @@ describe('igxOverlay', () => {
             overlayInstance.detach(firstCallId);
         }));
 
-        fit('#15228 - Should use provided in show overlay settings ', fakeAsync(() => {
+        it('#15228 - Should use provided in show overlay settings ', fakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
             fixture.detectChanges();
             const overlayInstance = fixture.componentInstance.overlay;
