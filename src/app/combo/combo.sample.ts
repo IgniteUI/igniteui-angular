@@ -1,6 +1,21 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgIf, AsyncPipe } from '@angular/common';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+} from '@angular/core';
+import {
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators,
+    FormsModule,
+    ReactiveFormsModule,
+} from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
 import { cloneDeep } from 'lodash-es';
 import { take } from 'rxjs/operators';
 
@@ -26,17 +41,15 @@ import {
     IgxHintDirective,
     IgxIconComponent,
     IgxLabelDirective,
-    IgxPrefixDirective,
     IgxRippleDirective,
     IgxSimpleComboComponent,
     IgxSwitchComponent,
     IgxToastComponent,
     OverlaySettings,
-    VerticalAlignment
+    VerticalAlignment,
+    IGX_COMBO_DIRECTIVES,
 } from 'igniteui-angular';
 import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
-import { SizeSelectorComponent } from '../size-selector/size-selector.component';
-
 
 @Component({
     selector: 'combo-sample',
@@ -51,17 +64,15 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
         IgxButtonDirective,
         ReactiveFormsModule,
         IgxToastComponent,
-        NgIf,
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
         IgxComboAddItemDirective,
         IgxRippleDirective,
-        IgxPrefixDirective,
         IgxIconComponent,
         IgxSwitchComponent,
         IgxButtonGroupComponent,
-        SizeSelectorComponent,
-        AsyncPipe
+        AsyncPipe,
+        IGX_COMBO_DIRECTIVES
     ]
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
@@ -126,8 +137,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     constructor(
         private remoteService: RemoteNWindService,
         public cdr: ChangeDetectorRef,
-        fb: UntypedFormBuilder) {
-
+        fb: UntypedFormBuilder
+    ) {
         this.user = fb.group({
             date: [''],
             dateTime: [''],
@@ -139,21 +150,55 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         });
 
         this.genres = [
-            { type: 'Action', movies: ['The Matrix', 'Kill Bill: Vol.1', 'The Dark Knight Rises'] },
-            { type: 'Adventure', movies: ['Interstellar', 'Inglourious Basterds', 'Inception'] },
             {
-                type: 'Comedy', movies: ['Wild Tales', 'In Bruges', 'Three Billboards Outside Ebbing, Missouri',
-                    'Untouchable', '3 idiots']
+                type: 'Action',
+                movies: [
+                    'The Matrix',
+                    'Kill Bill: Vol.1',
+                    'The Dark Knight Rises',
+                ],
             },
-            { type: 'Crime', movies: ['Training Day', 'Heat', 'American Gangster'] },
-            { type: 'Drama', movies: ['Fight Club', 'A Beautiful Mind', 'Good Will Hunting', 'City of God'] },
+            {
+                type: 'Adventure',
+                movies: ['Interstellar', 'Inglourious Basterds', 'Inception'],
+            },
+            {
+                type: 'Comedy',
+                movies: [
+                    'Wild Tales',
+                    'In Bruges',
+                    'Three Billboards Outside Ebbing, Missouri',
+                    'Untouchable',
+                    '3 idiots',
+                ],
+            },
+            {
+                type: 'Crime',
+                movies: ['Training Day', 'Heat', 'American Gangster'],
+            },
+            {
+                type: 'Drama',
+                movies: [
+                    'Fight Club',
+                    'A Beautiful Mind',
+                    'Good Will Hunting',
+                    'City of God',
+                ],
+            },
             { type: 'Biography', movies: ['Amadeus', 'Bohemian Rhapsody'] },
-            { type: 'Mystery', movies: ['The Prestige', 'Memento', 'Cloud Atlas'] },
+            {
+                type: 'Mystery',
+                movies: ['The Prestige', 'Memento', 'Cloud Atlas'],
+            },
             { type: 'Musical', movies: ['All That Jazz'] },
-            { type: 'Romance', movies: ['Love Actually', 'In The Mood for Love'] },
+            {
+                type: 'Romance',
+                movies: ['Love Actually', 'In The Mood for Love'],
+            },
             { type: 'Sci-Fi', movies: ['The Fifth Element'] },
             { type: 'Thriller', movies: ['The Usual Suspects'] },
-            { type: 'Western', movies: ['Django Unchained'] }];
+            { type: 'Western', movies: ['Django Unchained'] },
+        ];
 
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
@@ -161,17 +206,40 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
             'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
             'East North Central 01': ['Illinois', 'Indiana'],
-            'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
+            'West North Central 01': [
+                'Missouri',
+                'Nebraska',
+                'North Dakota',
+                'South Dakota',
+            ],
             'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
             'South Atlantic 01': ['Delaware', 'Florida', 'Georgia', 'Maryland'],
-            'South Atlantic 02': ['North Carolina', 'South Carolina', 'Virginia'],
+            'South Atlantic 02': [
+                'North Carolina',
+                'South Carolina',
+                'Virginia',
+            ],
             'South Atlantic 03': ['District of Columbia', 'West Virginia'],
             'East South Central 01': ['Alabama', 'Kentucky'],
             'East South Central 02': ['Mississippi', 'Tennessee'],
-            'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
-            Mountain: ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            'West South Central': [
+                'Arkansas',
+                'Louisiana',
+                'Oklahome',
+                'Texas',
+            ],
+            Mountain: [
+                'Arizona',
+                'Colorado',
+                'Idaho',
+                'Montana',
+                'Nevada',
+                'New Mexico',
+                'Utah',
+                'Wyoming',
+            ],
             'Pacific 01': ['Alaska', 'California'],
-            'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
+            'Pacific 02': ['Hawaii', 'Oregon', 'Washington'],
         };
 
         this.uniqueFalsyData = [
@@ -242,14 +310,19 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         this.overlaySettings[1] = {
             target: this.comboRef.nativeElement,
             positionStrategy: new ElasticPositionStrategy({
-                verticalDirection: VerticalAlignment.Top, verticalStartPoint: VerticalAlignment.Bottom,
-                horizontalDirection: HorizontalAlignment.Left, horizontalStartPoint: HorizontalAlignment.Right
+                verticalDirection: VerticalAlignment.Top,
+                verticalStartPoint: VerticalAlignment.Bottom,
+                horizontalDirection: HorizontalAlignment.Left,
+                horizontalStartPoint: HorizontalAlignment.Right,
             }),
             modal: false,
             closeOnOutsideClick: true
         };
         this.overlaySettings[2] = {
-            positionStrategy: new GlobalPositionStrategy({ openAnimation: scaleInCenter, closeAnimation: scaleOutCenter }),
+            positionStrategy: new GlobalPositionStrategy({
+                openAnimation: scaleInCenter,
+                closeAnimation: scaleOutCenter,
+            }),
             modal: true,
             closeOnOutsideClick: true
         };
@@ -264,7 +337,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             chunkSize: Math.ceil(250 / this.remoteCombo.itemHeight),
         };
         this.remoteService.getData(initSize, null, (data) => {
-            this.remoteCombo.totalItemCount = this.remoteSimpleCombo.totalItemCount = data['@odata.count'];
+            this.remoteCombo.totalItemCount =
+                this.remoteSimpleCombo.totalItemCount = data['@odata.count'];
             this.itemCount = this.remoteSimpleCombo.totalItemCount;
         });
     }
@@ -274,8 +348,12 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     }
 
     public changeItemTemplate() {
-        const comboTemplate = this.initialItemTemplate ? null : this.igxCombo.itemTemplate;
-        this.igxCombo.itemTemplate = this.initialItemTemplate ? this.initialItemTemplate : this.customItemTemplate;
+        const comboTemplate = this.initialItemTemplate
+            ? null
+            : this.igxCombo.itemTemplate;
+        this.igxCombo.itemTemplate = this.initialItemTemplate
+            ? this.initialItemTemplate
+            : this.customItemTemplate;
         this.initialItemTemplate = comboTemplate;
     }
 
@@ -299,21 +377,38 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         }
     }
 
-    private customFilterFunction = (collection: any[], filterValue: any, filteringOptions: IComboFilteringOptions) => {
+    private customFilterFunction = (
+        collection: any[],
+        filterValue: any,
+        filteringOptions: IComboFilteringOptions
+    ) => {
         if (!filterValue) {
             return collection;
         }
-        const searchTerm = filteringOptions.caseSensitive ? filterValue.trim() : filterValue.toLowerCase().trim();
-        return collection.filter(i => filteringOptions.caseSensitive ?
-            i[filteringOptions.filteringKey]?.includes(searchTerm) || i[this.igxCombo.groupKey]?.includes(searchTerm) :
-            i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm) || i[this.igxCombo.groupKey]?.toString().toLowerCase().includes(searchTerm))
-    }
+        const searchTerm = filteringOptions.caseSensitive
+            ? filterValue.trim()
+            : filterValue.toLowerCase().trim();
+        return collection.filter((i) =>
+            filteringOptions.caseSensitive
+                ? i[filteringOptions.filteringKey]?.includes(searchTerm) ||
+                  i[this.igxCombo.groupKey]?.includes(searchTerm)
+                : i[filteringOptions.filteringKey]
+                      ?.toString()
+                      .toLowerCase()
+                      .includes(searchTerm) ||
+                  i[this.igxCombo.groupKey]
+                      ?.toString()
+                      .toLowerCase()
+                      .includes(searchTerm)
+        );
+    };
 
     public dataLoading() {
         if (this.prevRequest) {
             this.prevRequest.unsubscribe();
         }
-        this.loadingToast.positionSettings.verticalDirection = VerticalAlignment.Middle;
+        this.loadingToast.positionSettings.verticalDirection =
+            VerticalAlignment.Middle;
         this.loadingToast.autoHide = false;
         this.loadingToast.open('Loading Remote Data...');
         this.cdr.detectChanges();
@@ -332,7 +427,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public searchInput(searchData: IComboSearchInputEventArgs) {
         this.searchText = searchData?.searchText || '';
         this.remoteService.getData(
-            this.searchText ? this.remoteCombo.virtualizationState : this.defaultVirtState,
+            this.searchText
+                ? this.remoteCombo.virtualizationState
+                : this.defaultVirtState,
             this.searchText,
             (data) => {
                 this.remoteCombo.totalItemCount = data['@odata.count'];
@@ -342,7 +439,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public onOpening() {
         this.remoteService.getData(
-            this.hasSelection ? this.remoteCombo.virtualizationState : this.defaultVirtState,
+            this.hasSelection
+                ? this.remoteCombo.virtualizationState
+                : this.defaultVirtState,
             this.searchText,
             (data) => {
                 this.remoteCombo.totalItemCount = data['@odata.count'];
@@ -354,7 +453,11 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         this.searchText = '';
     }
 
-    public handleSelectionChanging(evt: IComboSelectionChangingEventArgs | ISimpleComboSelectionChangingEventArgs) {
+    public handleSelectionChanging(
+        evt:
+            | IComboSelectionChangingEventArgs
+            | ISimpleComboSelectionChangingEventArgs
+    ) {
         if ('added' in evt) {
             this.hasSelection = !!evt?.newSelection.length;
             return;
@@ -369,7 +472,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         if (this.simpleComboPrevRequest) {
             this.simpleComboPrevRequest.unsubscribe();
         }
-        this.loadingToast.positionSettings.verticalDirection = VerticalAlignment.Middle;
+        this.loadingToast.positionSettings.verticalDirection =
+            VerticalAlignment.Middle;
         this.loadingToast.autoHide = false;
         this.loadingToast.open('Loading Remote Data...');
         this.cdr.detectChanges();
@@ -386,8 +490,12 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     }
 
     public onSimpleComboOpened() {
-        const scroll: number = this.remoteSimpleCombo.virtualScrollContainer.getScrollForIndex(this.itemID - 1);
-        this.remoteSimpleCombo.virtualScrollContainer.scrollPosition = scroll + this.additionalScroll;
+        const scroll: number =
+            this.remoteSimpleCombo.virtualScrollContainer.getScrollForIndex(
+                this.itemID - 1
+            );
+        this.remoteSimpleCombo.virtualScrollContainer.scrollPosition =
+            scroll + this.additionalScroll;
         this.cdr.detectChanges();
     }
 
@@ -407,7 +515,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         );
     }
 
-    public onSimpleComboSelectionChanging(evt: ISimpleComboSelectionChangingEventArgs) {
+    public onSimpleComboSelectionChanging(
+        evt: ISimpleComboSelectionChangingEventArgs
+    ) {
         this.hasSelection = evt.newValue !== undefined;
 
         if (!this.hasSelection) {
@@ -416,22 +526,34 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             return;
         }
 
-        this.currentVirtState.chunkSize = Math.ceil(this.remoteSimpleCombo.itemsMaxHeight / this.remoteSimpleCombo.itemHeight);
+        this.currentVirtState.chunkSize = Math.ceil(
+            this.remoteSimpleCombo.itemsMaxHeight /
+                this.remoteSimpleCombo.itemHeight
+        );
 
-        this.itemCount === evt.newValue ?
-            this.additionalScroll = this.remoteSimpleCombo.itemHeight :
-            this.additionalScroll = 0;
+        this.itemCount === evt.newValue
+            ? (this.additionalScroll = this.remoteSimpleCombo.itemHeight)
+            : (this.additionalScroll = 0);
 
-        if (this.itemCount - evt.newValue >= this.currentVirtState.chunkSize - 1) {
+        if (
+            this.itemCount - evt.newValue >=
+            this.currentVirtState.chunkSize - 1
+        ) {
             this.itemID = this.currentVirtState.startIndex = evt.newValue;
         } else {
-            this.itemID = this.currentVirtState.startIndex = this.itemCount - (this.currentVirtState.chunkSize - 1);
+            this.itemID = this.currentVirtState.startIndex =
+                this.itemCount - (this.currentVirtState.chunkSize - 1);
         }
     }
 
-    public onSimpleComboSearchInputUpdate(searchData: IComboSearchInputEventArgs) {
+    public onSimpleComboSearchInputUpdate(
+        searchData: IComboSearchInputEventArgs
+    ) {
         this.currentVirtState.startIndex = 0;
-        this.currentVirtState.chunkSize = Math.ceil(this.remoteSimpleCombo.itemsMaxHeight / this.remoteSimpleCombo.itemHeight);
+        this.currentVirtState.chunkSize = Math.ceil(
+            this.remoteSimpleCombo.itemsMaxHeight /
+                this.remoteSimpleCombo.itemHeight
+        );
         this.searchText = searchData?.searchText || '';
         this.remoteService.getData(
             this.searchText ? this.currentVirtState : this.defaultVirtState,
