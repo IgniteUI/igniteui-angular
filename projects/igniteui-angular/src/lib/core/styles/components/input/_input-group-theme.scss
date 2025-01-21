@@ -347,7 +347,7 @@
     ), $variant);
 
     $hint-spacing-inline: map.get((
-        'material': sizable(rem(12px), rem(14px), rem(16px)),
+        'material': sizable(rem(14px), rem(16px), rem(18px)),
         'fluent': 0,
         'bootstrap': 0,
         'indigo': 0,
