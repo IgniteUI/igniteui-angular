@@ -210,9 +210,6 @@ $easing-curves: (
     }
 
     %display-linear--indeterminate {
-        --_progress-integer : 0 !important;
-        --_progress-whole : 0 !important;
-
         %value {
             &::before {
                 display: none;
@@ -357,9 +354,9 @@ $easing-curves: (
         }
     }
 
-    %animation-none {
-        animation-duration: 0s !important;
-        animation-name: none !important;
+    // Reset the transition if the animate prop is set to false.
+    %animation-none:not(%display-linear--indeterminate) {
+        --_transition-duration: 0s !important;
     }
 
     // Primary animation

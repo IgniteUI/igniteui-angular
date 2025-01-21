@@ -23,6 +23,13 @@ defineComponents(IgcLinearProgressComponent);
 
 export class LinearProgressSampleComponent {
     public panelConfig: PropertyPanelConfig = {
+        hasAnimation: {
+            label: 'Enable none indeterminate animation (Angular)',
+            control: {
+                type: 'boolean',
+                defaultValue: true
+            }
+        },
         indeterminate: {
             control: {
                 type: 'boolean',

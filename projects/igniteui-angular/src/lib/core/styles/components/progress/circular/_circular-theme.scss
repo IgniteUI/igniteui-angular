@@ -81,11 +81,7 @@
     $diameter: calc(var(--circular-size) + var(--stroke-thickness));
     $radius: calc(var(--circular-size) / 2 - var(--stroke-thickness) * .5);
     $circumference: calc(#{$radius} * 2 * 3.1416);
-
     $variant: map.get($theme, '_meta', 'variant');
-    $stroke-width: rem(4px);
-
-    $font-size: round(calc(#{var-get($theme, 'diameter')} / var(--scale-factor) - var(--stroke-thickness)), 1px);
 
     %display-circular {
         --circular-size: calc(#{var-get($theme, 'diameter')} - var(--stroke-thickness));
@@ -158,16 +154,10 @@
     }
 
     %display-circular--indeterminate {
-        /*
-            !Important is needed in order to override the inline styles that are set with .ts
-            This makes sure that when switching form indeterminate to normal state the counter
-            value is animated.
-         */
-        --_progress-integer : 0 !important;
-        --_progress-whole : 0 !important;
-
         svg {
-            animation: 3s linear 0s infinite $animation-direction none running rotate-center;
+            @if $variant != 'fluent' {
+                animation: 3s linear 0s infinite $animation-direction none running rotate-center;
+            }
 
             @if $variant != 'bootstrap' {
                 transform-origin: 50% 50%;
@@ -239,8 +229,13 @@
 
         stroke-dasharray: #{$circumference} #{$circumference};
         stroke-dashoffset: calc(#{$circumference} - var(--_progress-whole, 0) * #{$circumference});
-        transition: igx-stroke-dashoffset var(--_transition-duration) linear;
-        stroke-width: calc(var(--stroke-thickness) + rem(0.75px));
+        transition: stroke-dashoffset var(--_transition-duration) linear;
+
+        @if $variant == 'material' {
+            stroke-width: calc(var(--stroke-thickness) + rem(0.75px));
+        } @else {
+            stroke-width: var(--stroke-thickness);
+        }
     }
 
     %outer--indeterminate {
@@ -262,7 +257,7 @@
     %text {
         position: absolute;
         color: var-get($theme, 'text-color');
-        font-size: #{$font-size};
+        font-size: round(calc(#{var-get($theme, 'diameter')} / var(--scale-factor) - var(--stroke-thickness)), 1px);
         line-height: normal;
         text-align: center;
         font-weight: 600;
@@ -414,9 +409,9 @@
         }
     }
 
-    %animation-none {
-        animation-name: none;
-        animation-duration: 0s;
+    // Reset the transition if the animate prop is set to false.
+    %animation-none:not(%display-circular--indeterminate) {
+        --_transition-duration: 0s !important;
     }
 
     %hide-counter {

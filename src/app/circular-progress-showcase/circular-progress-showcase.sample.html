@@ -1,4 +1,9 @@
-<section class="sample-content">
+
+
+
+<section class="sample-content"
+    [style.--ig-circular-progress-diameter]="properties.diameter ? properties.diameter + 'px' : null"
+    [style.--igx-circular-bar-diameter]="properties.diameter ? properties.diameter + 'px' : null">
     <article class="circular-samples sample-column">
         <h4 class="sample-title">Circular progress Angular</h4>
         <div class="circular-container">
@@ -8,6 +13,7 @@
             [value]="properties.value"
             [text]="properties.text"
             [max]="properties.max"
+            [animate]="properties.hasAnimation"
             [textVisibility]="!properties.hideLabel">
             </igx-circular-bar>
         </div>

@@ -23,6 +23,13 @@ defineComponents(IgcCircularProgressComponent);
 
 export class CircularProgressSampleComponent {
     public panelConfig: PropertyPanelConfig = {
+        hasAnimation: {
+            label: 'Enable none indeterminate animation (angular)',
+            control: {
+                type: 'boolean',
+                defaultValue: true
+            }
+        },
         indeterminate: {
             control: {
                 type: 'boolean',
@@ -68,7 +75,13 @@ export class CircularProgressSampleComponent {
                 options: ['primary', 'info', 'success', 'warning', 'danger'],
                 defaultValue: 'primary'
             }
-        }
+        },
+        diameter: {
+            control: {
+                type: 'number',
+                defaultValue: null
+            }
+        },
     }
 
     public properties: Properties;
