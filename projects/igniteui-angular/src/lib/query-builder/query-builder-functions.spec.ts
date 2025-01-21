@@ -12,7 +12,7 @@ export const QueryBuilderConstants = {
     QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS: 'igx-filter-tree__line--and',
     QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS: 'igx-filter-tree__line--or',
     CSS_CLASS_DROPDOWN_LIST_SCROLL: 'igx-drop-down__list-scroll',
-    QUERY_CONTEXT_MENU: 'igx-filter-contextual-menu',
+    QUERY_BUILDER_GROUP_CONTEXT_MENU: 'igx-filter-tree-group-context-menu',
     QUERY_BUILDER_BODY: 'igx-query-builder__main',
     QUERY_BUILDER_EXPRESSION_ITEM_CLASS: 'igx-filter-tree__expression-item'
 }
@@ -74,7 +74,7 @@ export class QueryBuilderFunctions {
         return tree;
     }
 
-    public static generateDragAndDropExpressionTree(): FilteringExpressionsTree {
+    public static generateExpressionTreeWithSubGroup(): FilteringExpressionsTree {
         const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Products', ['OrderId']);
         innerTree.filteringOperands.push({
             fieldName: 'Id',
@@ -388,31 +388,28 @@ export class QueryBuilderFunctions {
         return buttons;
     }
 
-    public static getQueryBuilderContextMenus(fix: ComponentFixture<any>) {
-        return fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_CONTEXT_MENU}`));
+    public static getQueryBuilderGroupContextMenus(fix: ComponentFixture<any>) {
+        return fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_GROUP_CONTEXT_MENU}`));
     }
 
-    public static getQueryBuilderGroupContextMenuButton(contextMenu: DebugElement, buttonContent: string) {
-        return contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText.split("\n").pop().toLowerCase() === buttonContent.toLowerCase()) as DebugElement
+    public static getQueryBuilderGroupContextMenuDropDownItems(fix: ComponentFixture<any>) {
+        const dropDownItems = fix.debugElement.queryAll(By.css(`.igx-filter-tree-group-drop-down-item`));
+        return dropDownItems;
     }
 
-    public static getQueryBuilderContextMenuButtons(fix: ComponentFixture<any>) {
-        const contextMenu = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenus(fix))[0].nativeElement;
-        const buttons = Array.from(contextMenu.querySelectorAll('button'));
-        return buttons;
+    public static clickQueryBuilderGroupContextMenu(fix: ComponentFixture<any>, index = 0) {
+        const contextMenuButton = QueryBuilderFunctions.getQueryBuilderGroupContextMenus(fix)[index].queryAll(By.css('.igx-button'))[0].nativeElement;
+        contextMenuButton.click();
     }
-
-    public static getQueryBuilderContextMenuButtonGroup(fix: ComponentFixture<any>) {
-        const contextMenu = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenus(fix))[0].nativeElement;
-        const buttonGroup = contextMenu.querySelector('igx-buttongroup');
-        return buttonGroup;
+    
+    public static clickQueryBuilderGroupContextMenuSwitchGroup(fix: ComponentFixture<any>, index = 0) {
+        const dropDownItems = this.getQueryBuilderGroupContextMenuDropDownItems(fix);
+        dropDownItems[0].nativeElement.click();
     }
-
-    public static getQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>, path = 0) {
-        const contextMenu = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenus(fix))[path].nativeElement;;
-        const buttons = Array.from(contextMenu.querySelectorAll('button'));
-        const closeButton: any = buttons.find((b: any) => b.innerText.toLowerCase() === 'close');
-        return closeButton;
+    
+    public static clickQueryBuilderGroupContextMenuUngroup(fix: ComponentFixture<any>, index = 0) {
+        const dropDownItems = this.getQueryBuilderGroupContextMenuDropDownItems(fix);
+        dropDownItems[1].nativeElement.click();
     }
 
     /*
@@ -518,12 +515,6 @@ export class QueryBuilderFunctions {
     public static clickQueryBuilderTreeExpressionChipIcon(fix: ComponentFixture<any>, path: number[], iconType: string) {
         const chipIcon = QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, path, iconType);
         chipIcon.click();
-    }
-
-
-    public static clickQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>, path = 0) {
-        const contextMenuCloseButton = QueryBuilderFunctions.getQueryBuilderContextMenuCloseButton(fix, path);
-        contextMenuCloseButton.click();
     }
 
     public static changeGroupType(group: HTMLElement) {
@@ -641,20 +632,6 @@ export class QueryBuilderFunctions {
         expect(valueInput.value).toBe(valueText);
     };
 
-    public static verifyGroupContextMenuVisibility = (fix: ComponentFixture<any>, shouldBeVisible: boolean) => {
-        if (shouldBeVisible) {
-            const wrapper = fix.debugElement.queryAll(By.css('.igx-overlay__wrapper'));
-            expect(wrapper.length).toBeGreaterThan(0, 'context menu wrapper missing');
-            const contextMenu = wrapper[0].nativeElement.querySelector('.igx-filter-contextual-menu');
-            const contextMenuRect = contextMenu.getBoundingClientRect();
-            expect(contextMenu.classList.contains('igx-toggle--hidden')).toBe(false, 'incorrect context menu visibility');
-            expect(contextMenuRect.width === 0 && contextMenuRect.height === 0).toBe(false, 'incorrect context menu dimensions');
-        } else {
-            const wrapper = fix.debugElement.queryAll(By.css('.igx-overlay__wrapper'));
-            expect(wrapper.length).toBeLessThanOrEqual(0);
-        }
-    };
-    
     public static verifyQueryBuilderTabbableElements = (fixture: ComponentFixture<any>) => {
         const tabElements = QueryBuilderFunctions.getTabbableElements(fixture.nativeElement);
 

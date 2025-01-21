@@ -1513,7 +1513,6 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilder.canCommit()).withContext('Unary operator selected').toBeTrue();
     }));
 
-
     it('Should be able to commit nested query without where condition.', fakeAsync(() => {
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
@@ -1604,6 +1603,46 @@ describe('IgxQueryBuilder', () => {
       // Verify inputs values on both levels
       QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'OrderId', 'In', '', 0);
       QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Released', 'True', '', 1);
+    }));
+
+    it(`Should be able to switch group and ungroup from group context menu.`, fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+
+      // Verify there is one subgroup
+      expect(queryBuilder.expressionTree.filteringOperands.filter(o => o instanceof FilteringExpressionsTree).length).toBe(1);
+
+      // Verify the operator of the subgroup is an 'And' line.
+      QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
+      QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, [0]) as HTMLElement, 'or');
+
+      // Click the 'OR' subgroup button
+      QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 2);
+      tick(100);
+      fix.detectChanges();
+
+      // Click the 'Switch to AND' drop down item
+      QueryBuilderFunctions.clickQueryBuilderGroupContextMenuSwitchGroup(fix);
+      tick(100);
+      fix.detectChanges();
+
+      // Verify the operator of the subgroup is an 'And' line.
+      QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, [0]) as HTMLElement, 'and');
+
+      // Click the 'AND' subgroup button
+      QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 2);
+      tick(100);
+      fix.detectChanges();
+
+      // Click the 'Ungroup' drop down item
+      QueryBuilderFunctions.clickQueryBuilderGroupContextMenuUngroup(fix);
+      tick(100);
+      fix.detectChanges();
+
+      // Verify there are no subgroups anymore
+      expect(queryBuilder.expressionTree.filteringOperands.filter(o => o instanceof FilteringExpressionsTree).length).toBe(0);
     }));
   });
 
@@ -1861,7 +1900,7 @@ describe('IgxQueryBuilder', () => {
       tick(100);
       fix.detectChanges();
 
-      // Verify the there are three chip expressions.
+      // Verify there are three chip expressions.
       QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
       // Press 'Enter' on the remove icon of the second chip.
@@ -2010,6 +2049,7 @@ describe('IgxQueryBuilder', () => {
         igx_query_builder_filter_operator_or: 'My or',
         igx_query_builder_and_label: 'My and',
         igx_query_builder_or_label: 'My or',
+        igx_query_builder_switch_group: 'My switch to {0}',
         igx_query_builder_add_condition_root: 'My condition',
         igx_query_builder_add_group_root: 'My group',
         igx_query_builder_ungroup: 'My ungroup',
@@ -2042,6 +2082,15 @@ describe('IgxQueryBuilder', () => {
       expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[1] as HTMLElement).querySelector('span').innerText)
         .toBe('My group');
 
+      // Click the 'My and' group button
+      QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix);
+      tick(100);
+      fix.detectChanges();
+
+      expect((QueryBuilderFunctions.getQueryBuilderGroupContextMenuDropDownItems(fix)[0].nativeElement).querySelector('span').innerText)
+        .toBe('My switch to MY OR');
+      expect((QueryBuilderFunctions.getQueryBuilderGroupContextMenuDropDownItems(fix)[1].nativeElement).querySelector('span').innerText)
+        .toBe('My ungroup');
 
       // Show changing entity alert dialog
       QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
@@ -2068,7 +2117,7 @@ describe('IgxQueryBuilder', () => {
     });
 
     it('Should render custom input template properly.', fakeAsync(() => {
-      queryBuilder.expressionTree = QueryBuilderFunctions.generateDragAndDropExpressionTree();
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
       tick(100);
       fix.detectChanges();
@@ -2117,7 +2166,7 @@ describe('IgxQueryBuilder', () => {
 
     it('should render ghost when mouse dragged', async () => {
        
-      queryBuilder.expressionTree = QueryBuilderFunctions.generateDragAndDropExpressionTree();
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
       await wait(100);
       fix.detectChanges();
@@ -2148,7 +2197,7 @@ describe('IgxQueryBuilder', () => {
     });
 
     it('should position ghost at the appropriate place when mouse dragged along the tree.', async () => {
-      queryBuilder.expressionTree = QueryBuilderFunctions.generateDragAndDropExpressionTree();
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
       await wait(100);
       fix.detectChanges();
