@@ -208,11 +208,10 @@
     }
 
     %igx-combo__add-item {
-        padding: 0 !important;
         height: auto !important;
-        width: auto !important;
         background: var-get($theme, 'empty-list-background') !important;
-        justify-content: center !important;
+        justify-content: center;
+        outline: none !important;
     }
 
     %igx-combo__empty {
