@@ -6,10 +6,8 @@
 
 $theme: $indigo;
 
-@container style(--ig-theme: indigo) {
+@container style(--theme: indigo) {
     @include b(igx-switch) {
-        color-scheme: dark;
-
         @include css-vars-from-theme(diff(light.$base, $theme), 'igx-switch');
     }
 }

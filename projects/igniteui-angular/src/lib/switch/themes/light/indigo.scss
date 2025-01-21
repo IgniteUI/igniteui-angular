@@ -7,8 +7,6 @@ $theme: $indigo;
 
 @container style(--theme: indigo) {
     @include b(igx-switch) {
-        color-scheme: light;
-
         @include css-vars-from-theme(diff($base, $theme), 'igx-switch');
     }
 }

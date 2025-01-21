@@ -8,8 +8,6 @@ $theme: $material;
 
 @container style(--theme: material) {
     @include b(igx-switch) {
-        color-scheme: dark;
-
         @include css-vars-from-theme(diff(light.$base, $theme), 'igx-switch');
    }
 }
