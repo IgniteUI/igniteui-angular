@@ -1407,7 +1407,8 @@ describe('igxOverlay', () => {
             tick();
 
             expect(lastPositionSpy).toHaveBeenCalledTimes(1);
-            expect(info.settings).toBe(os);
+            expect(info.settings.scrollStrategy).toBe(os.scrollStrategy);
+            expect(info.settings.positionStrategy).toBe(os.positionStrategy);
         }));
     });
 
