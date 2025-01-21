@@ -194,7 +194,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
         const pathElem = pathToChildGrid.shift();
         const rowKey = pathElem.rowKey;
-        const rowIndex = this.grid.gridAPI.get_rec_index_by_id(rowKey, this.grid.dataView);
+        const rowIndex = this.grid.gridAPI.get_row_index_in_data(rowKey);
         if (rowIndex === -1) {
             if (cb) {
                 cb();
@@ -329,7 +329,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         element.getBoundingClientRect().bottom - gridBottom;
         const gridTop = this._getMaxTop(this.grid);
         const diffTop = element.getBoundingClientRect().bottom -
-        element.offsetHeight - gridTop;
+        element.getBoundingClientRect().height - gridTop;
         // Adding Math.Round because Chrome has some inconsistencies when the page is zoomed
         const isInView = isNext ? Math.round(diffBottom) <= 0 : Math.round(diffTop) >= 0;
         const calcOffset =  isNext ? diffBottom : diffTop;
