@@ -411,7 +411,9 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
         if (settings) {
-            info.settings = settings;
+            settings.positionStrategy ??= info.settings.positionStrategy;
+            settings.scrollStrategy ??= info.settings.scrollStrategy;
+            info.settings = { ...info.settings, ...settings };
         }
         this.updateSize(info);
         info.settings.positionStrategy.position(
@@ -592,7 +594,7 @@ export class IgxOverlayService implements OnDestroy {
                 const createSettings = viewContainerRefOrSettings as OverlayCreateSettings | undefined;
                 let elementInjector: Injector;
                 if (createSettings) {
-                    ({ injector: elementInjector, ...overlaySettings} = createSettings);
+                    ({ injector: elementInjector, ...overlaySettings } = createSettings);
                 }
                 dynamicComponent = createComponent(component, { environmentInjector, elementInjector });
                 this._appRef.attachView(dynamicComponent.hostView);
@@ -610,7 +612,7 @@ export class IgxOverlayService implements OnDestroy {
             info.elementRef = { nativeElement: element };
             info.componentRef = dynamicComponent;
         }
-        info.settings = Object.assign({}, this._defaultSettings, overlaySettings); 
+        info.settings = Object.assign({}, this._defaultSettings, overlaySettings);
         return info;
     }
 
