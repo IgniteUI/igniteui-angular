@@ -4,7 +4,6 @@ import {
     IgxColumnComponent,
     IgxColumnGroupComponent,
     IgxColumnLayoutComponent,
-    IgxGridComponent,
     IgxGridEditingActionsComponent,
     IgxGridPinningActionsComponent,
     IgxGridToolbarActionsComponent,
@@ -26,6 +25,7 @@ import { GridType } from 'projects/igniteui-angular/src/lib/grids/common/grid.in
 import { registerConfig } from "../analyzer/elements.config";
 import { createIgxCustomElement, withRegister } from './create-custom-element';
 import { IgxGridStateComponent } from '../lib/state.component';
+import { IgxGridElementsComponent } from '../lib/grids/grid.component';
 import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
 import { injector } from '../utils/injector-ref';
 import { registerComponent } from '../utils/register';
@@ -33,7 +33,7 @@ import { registerComponent } from '../utils/register';
 // force-create icon service, TODO: move to initializer or register/define mechanic to avoid side-effect?
 const _iconBroadcast: IgxIconBroadcastService = injector.get(IgxIconBroadcastService);
 
-const grid = createIgxCustomElement(IgxGridComponent, { injector, registerConfig });
+const grid = createIgxCustomElement(IgxGridElementsComponent, { injector, registerConfig });
 const IgcGridComponent = withRegister(grid, () => { registerComponent(IgcGridComponent) });
 
 const treeGrid = createIgxCustomElement(IgxTreeGridComponent, { injector, registerConfig });

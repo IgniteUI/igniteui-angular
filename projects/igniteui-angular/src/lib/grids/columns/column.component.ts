@@ -76,7 +76,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
  * filtering & editing are enabled at the column level.  You can also provide a template containing custom content inside
  * the column using `ng-template` which will be used for all cells within the column.
  *
- * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, IgxRowIslandComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, IgxRowIslandComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridElementsComponent
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1437,7 +1437,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
-         
+
         let col = this;
         let vIndex = -1;
 
@@ -2326,10 +2326,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             columns = columns.filter(c => c.level >= this.level && c !== this && c.parent !== this &&
                 c.topLevelParent === this.topLevelParent);
         }
-         
+
         // If isPreceding, find a target such that when the current column is placed after it, current colummn will receive a visibleIndex === index. This takes into account visible children of the columns.
         // If !isPreceding, finds a column of the same level and visible index that equals the passed index agument (c.visibleIndex === index). No need to consider the children here.
-         
+
         if (isPreceding) {
             columns = columns.filter(c => c.visibleIndex > this.visibleIndex);
             target = columns.find(c => c.level === this.level && c.visibleIndex + (c as any).calcChildren() - this.calcChildren() === index);

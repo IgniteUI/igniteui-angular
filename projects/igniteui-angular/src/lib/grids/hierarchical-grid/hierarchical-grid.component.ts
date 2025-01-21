@@ -440,9 +440,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public childRow: IgxChildGridRowComponent;
 
-    @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    protected override actionStripComponents: QueryList<IgxActionStripToken>;
-
     /** @hidden @internal */
     public override get actionStrip() {
         return this.parentIsland ? this.parentIsland.actionStrip : super.actionStrip;

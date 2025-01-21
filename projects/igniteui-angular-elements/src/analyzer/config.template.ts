@@ -1,13 +1,13 @@
 import {
-    IgxGridComponent,
     IgxHierarchicalGridComponent,
     IgxPivotDataSelectorComponent,
     IgxPivotGridComponent,
     IgxTreeGridComponent
 } from '../../../igniteui-angular/src/public_api';
+import { IgxGridElementsComponent } from '../lib/grids/grid.component';
 
 export const registerComponents = [
-    IgxGridComponent,
+    IgxGridElementsComponent,
     IgxHierarchicalGridComponent,
     IgxTreeGridComponent,
     IgxPivotGridComponent,

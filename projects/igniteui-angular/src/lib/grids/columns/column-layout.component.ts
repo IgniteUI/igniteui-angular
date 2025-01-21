@@ -18,7 +18,7 @@ import { IgxColumnGroupComponent } from './column-group.component';
 /**
  * Column layout for declaration of Multi-row Layout
  *
- * @igxParent IgxGridComponent
+ * @igxParent IgxGridComponent, IgxGridElementsComponent
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

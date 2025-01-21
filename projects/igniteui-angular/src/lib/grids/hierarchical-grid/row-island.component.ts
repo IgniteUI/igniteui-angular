@@ -181,7 +181,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /* ngQueryListName: actionStripComponents */
     /** @hidden @internal */
     @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    protected override actionStripComponents: QueryList<IgxActionStripToken>;
+    protected actionStripComponents: QueryList<IgxActionStripToken>;
 
     /**
      * @hidden
