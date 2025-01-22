@@ -1060,6 +1060,88 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'ProductName', 'Starts With', 'a', 1);
     }));
 
+    it('Should switch edit mode on click on chip on the same level.', fakeAsync(()=>{
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
+      tick(50);
+      fix.detectChanges();
+      
+      // Click the existing chip to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], 1);
+      tick(50);
+      fix.detectChanges();
+      // Verify inputs values
+      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'ProductName', 'Contains', 'a', 1);
+
+      // Click the existing chip to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], 1);
+      tick(50);
+      fix.detectChanges();
+      // Verify inputs values
+      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Released', 'True', '', 1 );
+      QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'ProductName', 'Contains', 'a', 1);
+    }));
+
+    it('Should exit edit mode on add, change group buttons, entity and fields select click.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+
+      // Click chip to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
+      tick(50);
+      fix.detectChanges();
+
+      // Hover exprssion and click add button
+      UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
+      tick(50);
+      fix.detectChanges();
+      (QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, [0], 'add') as HTMLElement).click();
+      tick(50);
+      fix.detectChanges();
+
+      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalse();
+
+      // Click chip to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
+      tick(50);
+      fix.detectChanges();
+
+      // Click change group button
+      QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 0);
+      tick(100);
+      fix.detectChanges();
+
+      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalse();
+
+      // Click chip to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
+      tick(50);
+      fix.detectChanges();
+
+      // Click fields select
+      QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
+      fix.detectChanges();
+
+      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalse();
+
+      // Click chip to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
+      tick(50);
+      fix.detectChanges();
+
+      // Click entity select
+      QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix);
+      fix.detectChanges();
+
+      expect(queryBuilder.queryTree.hasEditedExpression).toBeFalse();
+    }));
+
     it('Should display an alert dialog when the entity is changed and showEntityChangeDialog is true.', fakeAsync(() => {
       const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
       const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`);
@@ -1594,8 +1676,8 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Verify both parent and child commit buttons are enabled
-      let parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
-      let childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
+      const parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+      const childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
 
       ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement);
       ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement, false);
