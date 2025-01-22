@@ -8,3 +8,7 @@ $new-card-theme: card-theme(
 ::ng-deep {
     @include card($new-card-theme);
 }
+
+.padding {
+    gap: 2rem;
+}
