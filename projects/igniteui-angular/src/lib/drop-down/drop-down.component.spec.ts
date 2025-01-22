@@ -1265,7 +1265,7 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.closing.emit).toHaveBeenCalledTimes(3);
                 expect(dropdown.closed.emit).toHaveBeenCalledTimes(3);
             }));
-            fit('#15137 - should bind to custom target if provided', fakeAsync(() => {
+            it('#15137 - should bind to custom target if provided', fakeAsync(() => {
                 const input = fixture.debugElement.query(By.css('input'));
                 dropdown.open({ target: input.nativeElement });
                 tick();
