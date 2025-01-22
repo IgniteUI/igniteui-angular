@@ -65,7 +65,7 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
  * Row island
  *
  * @igxModule IgxHierarchicalGridModule
- * @igxParent IgxHierarchicalGridComponent, IgxRowIslandComponent
+ * @igxParent IgxGridElementsComponent, IgxHierarchicalGridElementsComponent, IgxRowIslandComponent
  *
  */
 @Component({

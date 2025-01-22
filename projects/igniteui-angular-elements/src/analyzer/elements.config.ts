@@ -1,10 +1,10 @@
 import {
-  IgxHierarchicalGridComponent,
   IgxPivotDataSelectorComponent,
   IgxPivotGridComponent,
   IgxTreeGridComponent,
 } from "../../../igniteui-angular/src/public_api";
 import { IgxGridElementsComponent } from "../lib/grids/grid.component";
+import { IgxHierarchicalGridElementsComponent } from "../lib/grids/hierarchical-grid.component";
 import { IgxPaginatorComponent } from "../../../igniteui-angular/src/lib/paginator/paginator.component";
 import { IgxPaginatorToken } from "../../../igniteui-angular/src/lib/paginator/token";
 import { IgxActionStripComponent } from "../../../igniteui-angular/src/lib/action-strip/action-strip.component";
@@ -28,7 +28,7 @@ import { IgxGridStateComponent } from "../lib/state.component";
 
 export const registerComponents = [
   IgxGridElementsComponent,
-  IgxHierarchicalGridComponent,
+  IgxHierarchicalGridElementsComponent,
   IgxTreeGridComponent,
   IgxPivotGridComponent,
   IgxPivotDataSelectorComponent,
@@ -40,10 +40,10 @@ export var registerConfig = [
     component: IgxActionStripComponent,
     selector: "igc-action-strip",
     parents: [
-      IgxTreeGridComponent,
-      IgxHierarchicalGridComponent,
-      IgxRowIslandComponent,
       IgxGridElementsComponent,
+      IgxHierarchicalGridElementsComponent,
+      IgxTreeGridComponent,
+      IgxRowIslandComponent,
     ],
     contentQueries: [
       {
@@ -61,13 +61,13 @@ export var registerConfig = [
     component: IgxColumnComponent,
     selector: "igc-column",
     parents: [
+      IgxGridElementsComponent,
+      IgxHierarchicalGridElementsComponent,
       IgxTreeGridComponent,
-      IgxHierarchicalGridComponent,
       IgxPivotGridComponent,
       IgxRowIslandComponent,
       IgxColumnGroupComponent,
       IgxColumnLayoutComponent,
-      IgxGridElementsComponent,
     ],
     contentQueries: [],
     additionalProperties: [
@@ -117,11 +117,11 @@ export var registerConfig = [
     component: IgxColumnGroupComponent,
     selector: "igc-column-group",
     parents: [
+      IgxGridElementsComponent,
+      IgxHierarchicalGridElementsComponent,
       IgxTreeGridComponent,
-      IgxHierarchicalGridComponent,
       IgxColumnGroupComponent,
       IgxRowIslandComponent,
-      IgxGridElementsComponent,
     ],
     contentQueries: [
       {
@@ -424,10 +424,10 @@ export var registerConfig = [
     component: IgxGridStateComponent,
     selector: "igc-grid-state",
     parents: [
-      IgxTreeGridComponent,
-      IgxHierarchicalGridComponent,
-      IgxPivotGridComponent,
       IgxGridElementsComponent,
+      IgxTreeGridComponent,
+      IgxHierarchicalGridElementsComponent,
+      IgxPivotGridComponent,
     ],
     contentQueries: [],
     additionalProperties: [{ name: "grid", writable: true }],
@@ -458,10 +458,10 @@ export var registerConfig = [
     component: IgxGridToolbarComponent,
     selector: "igc-grid-toolbar",
     parents: [
-      IgxTreeGridComponent,
-      IgxHierarchicalGridComponent,
-      IgxPivotGridComponent,
       IgxGridElementsComponent,
+      IgxHierarchicalGridElementsComponent,
+      IgxTreeGridComponent,
+      IgxPivotGridComponent,
     ],
     contentQueries: [
       { property: "hasActions", childType: IgxGridToolbarActionsComponent },
@@ -509,10 +509,15 @@ export var registerConfig = [
     methods: [],
   },
   {
-    component: IgxHierarchicalGridComponent,
+    component: IgxHierarchicalGridElementsComponent,
     selector: "igc-hierarchical-grid",
     parents: [],
     contentQueries: [
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripToken,
+        isQueryList: true,
+      },
       {
         property: "childLayoutList",
         childType: IgxRowIslandComponent,
@@ -545,9 +550,13 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
+      { name: "validation" },
+      { name: "gridAPI" },
+      { name: "cdr" },
+      { name: "navigation", writable: true },
+      { name: "actionStripComponents", writable: true },
       { name: "foreignKey" },
       { name: "selectedCells" },
-      { name: "gridAPI", writable: true },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
@@ -557,9 +566,6 @@ export var registerConfig = [
       { name: "lastSearchInfo" },
       { name: "filteredData" },
       { name: "filteredSortedData" },
-      { name: "validation" },
-      { name: "cdr" },
-      { name: "navigation", writable: true },
       { name: "virtualizationState" },
       { name: "nativeElement" },
       { name: "defaultRowHeight" },
@@ -681,10 +687,10 @@ export var registerConfig = [
     component: IgxPaginatorComponent,
     selector: "igc-paginator",
     parents: [
-      IgxTreeGridComponent,
-      IgxHierarchicalGridComponent,
-      IgxPivotGridComponent,
       IgxGridElementsComponent,
+      IgxHierarchicalGridElementsComponent,
+      IgxTreeGridComponent,
+      IgxPivotGridComponent,
     ],
     contentQueries: [],
     additionalProperties: [
@@ -827,7 +833,11 @@ export var registerConfig = [
   {
     component: IgxRowIslandComponent,
     selector: "igc-row-island",
-    parents: [IgxHierarchicalGridComponent, IgxRowIslandComponent],
+    parents: [
+      IgxGridElementsComponent,
+      IgxHierarchicalGridElementsComponent,
+      IgxRowIslandComponent,
+    ],
     contentQueries: [
       {
         property: "children",

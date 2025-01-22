@@ -13,7 +13,6 @@ import {
     IgxGridToolbarPinningComponent,
     IgxGridToolbarAdvancedFilteringComponent,
     IgxGridToolbarTitleComponent,
-    IgxHierarchicalGridComponent,
     IgxPaginatorComponent,
     IgxPivotGridComponent,
     IgxRowIslandComponent,
@@ -29,6 +28,7 @@ import { IgxGridElementsComponent } from '../lib/grids/grid.component';
 import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
 import { injector } from '../utils/injector-ref';
 import { registerComponent } from '../utils/register';
+import { IgxHierarchicalGridElementsComponent } from '../lib/grids/hierarchical-grid.component';
 
 // force-create icon service, TODO: move to initializer or register/define mechanic to avoid side-effect?
 const _iconBroadcast: IgxIconBroadcastService = injector.get(IgxIconBroadcastService);
@@ -39,7 +39,7 @@ const IgcGridComponent = withRegister(grid, () => { registerComponent(IgcGridCom
 const treeGrid = createIgxCustomElement(IgxTreeGridComponent, { injector, registerConfig });
 const IgcTreeGridComponent = withRegister(treeGrid, () => { registerComponent(IgcTreeGridComponent) });
 
-const hGrid = createIgxCustomElement(IgxHierarchicalGridComponent, { injector, registerConfig });
+const hGrid = createIgxCustomElement(IgxHierarchicalGridElementsComponent, { injector, registerConfig });
 const IgcHierarchicalGridComponent = withRegister(hGrid, () => { registerComponent(IgcHierarchicalGridComponent) });
 
 const pivot = createIgxCustomElement(IgxPivotGridComponent, { injector, registerConfig });
