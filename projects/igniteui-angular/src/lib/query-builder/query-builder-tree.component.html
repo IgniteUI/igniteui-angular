@@ -13,6 +13,7 @@
             <igx-select #entitySelect
                 type="box"
                 (selectionChanging)="onEntitySelectChanging($event)"
+                (opening)="exitEditAddMode(true)"
                 [overlaySettings]="entitySelectOverlaySettings"
                 [ngModel]="selectedEntity"
                 [style.display]="isInEditMode() ? 'block' : 'none'"
@@ -40,6 +41,7 @@
                     searchPlaceholder="{{ this.resourceStrings.igx_query_builder_search }}"
                     [style.display]="isInEditMode() ? 'block' : 'none'"
                     (selectionChanging)="onReturnFieldSelectChanging($event)"
+                    (opening)="exitEditAddMode()"
                 >
                     <ng-template igxComboHeader>
                         <div
@@ -71,6 +73,7 @@
                     [ngModel]="selectedReturnFields[0]"
                     [placeholder]="this.resourceStrings.igx_query_builder_select_return_field_single"
                     [style.display]="isInEditMode() ? 'block' : 'none'"
+                    (opening)="exitEditAddMode()"
                 >
                     <igx-select-item *ngFor="let field of fields" [value]="field.field">
                         {{ field.field }}
@@ -135,7 +138,7 @@
                 [draggable]="canBeDragged() ? 'true' : 'false'" 
                 [hideBaseOnDrag] = "false"    
                 [animateOnRelease] = "false"
-                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem, false): null" 
+                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem, false, true): null" 
                 (moveEnd)="onMoveEnd()"
                 (dragEnter)="onChipEnter(dragRef, expressionItem, false)"
                 (dragOver)="onChipOver(dragRef, false)"
@@ -233,7 +236,7 @@
                 <div igxDragIgnore class="igx-filter-tree__expression-actions">
                     <button #addExpressionButton igxDragIgnore igxIconButton="flat" [igxDropDownItemNavigation]="addOptionsDropDown"
                     aria-labelledby="add-expression" (keydown)="invokeClick($event)"
-                        (click)="openExpressionAdd(expressionItem, addExpressionButton)"
+                        (click)="clickExpressionAdd(expressionItem, addExpressionButton)"
                         (blur)="addExpressionBlur()">
                         <igx-icon id="add-expression">add</igx-icon>
                     </button>
@@ -259,6 +262,7 @@
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="expressionItem.inEditMode"
             class="igx-filter-tree__inputs"
+            [style.scroll-margin-top]="'30px'"
         >
             <igx-select
                 #fieldSelect

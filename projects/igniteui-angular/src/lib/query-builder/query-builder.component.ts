@@ -78,7 +78,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
             this._fields = fields;
             this.entities = [
                 {
-                    name: null, 
+                    name: null,
                     fields: fields
                 }
             ];
