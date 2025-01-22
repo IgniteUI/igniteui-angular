@@ -12,7 +12,7 @@
         [date]="date"
         [showActive]="showActive"
         (itemSelection)="selectDate($event)"
-        (mousedown)="onMouseDown();"
+        (mousedown)="onMouseDown()"
     >
         <span class="igx-calendar-view__item-inner" aria-hidden="true">
             {{ formattedMonth(month).formatted | titlecase }}
