@@ -2112,88 +2112,46 @@ describe('IgxQueryBuilder', () => {
   });
 
   describe('Drag and drop', () => {
-    it('Should render custom header properly.', () => {
-
+    beforeEach(() => {       
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+      fix.detectChanges();
     });
 
-    it('Should render custom input template properly.', fakeAsync(() => {
-      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
-      fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
-
-      const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
-
-      const dragIcon = chip.children[0].children[0].children[0];
-      dragIcon.nativeElement.focus();
-      tick(200);
-      fix.detectChanges();
-      tick(200);
-      fix.detectChanges();
-
-
-      QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, 'ArrowDown', dragIcon.nativeElement, 200);
-      tick(200);
-      fix.detectChanges();
-
-      //Verify that expressionTree is correct
-      const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
-      expect(exprTree).toBe(`{
-"filteringOperands": [
-{
-  "fieldName": "OrderId",
-  "condition": {
-    "name": "greaterThan",
-    "isUnary": false,
-    "iconName": "filter_greater_than"
-  },
-  "conditionName": "greaterThan",
-  "searchVal": 5,
-  "searchTree": null,
-  "ignoreCase": true
-}
-],
-"operator": 0,
-"entity": "Orders",
-"returnFields": [
-"OrderId",
-"OrderName",
-"OrderDate",
-"Delivered"
-]
-}`);
-    }));
-
-    it('should render ghost when mouse dragged', async () => {
-       
-      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
-      fix.detectChanges();
-      await wait(100);
-      fix.detectChanges();
+    it('should render ghost when mouse drag operation starts.', async () => {
 
       const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
       const secondChip = chipComponents[1].componentInstance;
       const secondChipElem = secondChip.chipArea.nativeElement;
 
-      // UIInteractions.moveDragDirective(fix, , xDragDifference, yDragDifference, false);
-      const dragDir = secondChip.dragDirective
-      const startingTop = secondChipElem.getBoundingClientRect().top;
-      const startingLeft = secondChipElem.getBoundingClientRect().left;
-      const startingBottom = secondChipElem.getBoundingClientRect().bottom;
-      const startingRight = secondChipElem.getBoundingClientRect().right;
+      UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 10, 10, false);
+      // const dragDir = secondChip.dragDirective;
+      // const startingTop = secondChipElem.getBoundingClientRect().top;
+      // const startingLeft = secondChipElem.getBoundingClientRect().left;
+      // const startingBottom = secondChipElem.getBoundingClientRect().bottom;
+      // const startingRight = secondChipElem.getBoundingClientRect().right;
 
-      const startingX = (startingLeft + startingRight) / 2;
-      const startingY = (startingTop + startingBottom) / 2;
+      // const startingX = (startingLeft + startingRight) / 2;
+      // const startingY = (startingTop + startingBottom) / 2;
 
-      //pickup chip
-      dragDir.onPointerDown({ pointerId: 1, pageX: startingX, pageY: startingY });
-      fix.detectChanges();
+      // //pickup chip
+      // dragDir.onPointerDown({ pointerId: 1, pageX: startingX, pageY: startingY });
+      // fix.detectChanges();
 
-      //trigger ghost
-      dragDir.onPointerMove({ pointerId: 1, pageX: startingX + 10, pageY: startingY + 10 });
-      fix.detectChanges();
+      // //trigger ghost
+      // dragDir.onPointerMove({ pointerId: 1, pageX: startingX + 10, pageY: startingY + 10 });
+      // fix.detectChanges();
 
       expect(secondChip.dragDirective.ghostElement).toBeTruthy();
+    });
+
+    it('should collapse the chip when mouse drag operation starts.', async () => {
+
+      const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+      const secondChip = chipComponents[1].componentInstance;
+      const chipBounds = secondChip.nativeElement.getBoundingClientRect();
+
+      UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 10, 10, false);
+      expect(chipComponents[1].nativeElement.getBoundingClientRect().width).toBe(0);
     });
 
     it('should position ghost at the appropriate place when mouse dragged along the tree.', async () => {
@@ -2279,6 +2237,49 @@ describe('IgxQueryBuilder', () => {
         }
       }
     });
+
+    it('should position drop ghost below the target chip on dragging down.', async () => {
+      const chipComponents = getVisibleChips(fix);
+      const secondChip = chipComponents[0].componentInstance;
+      const secondChipElem = secondChip.chipArea.nativeElement;
+
+      const dragDir = secondChip.dragDirective;
+      UIInteractions.moveDragDirective(fix, dragDir, 0, secondChipElem.offsetHeight, false);
+
+      var expressionsContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix);
+      const dropGhost = expressionsContainer.querySelector('div.igx-filter-tree__expression-item-drop-ghost');
+
+      expect(dropGhost).not.toBe(null);
+      const dropGhostBounds = dropGhost.getBoundingClientRect();
+      const targetChipBounds = chipComponents[1].nativeElement.getBoundingClientRect();
+      expect(dropGhostBounds.height).toBeCloseTo(40);
+      expect(dropGhostBounds.x).toBe(targetChipBounds.x);
+      expect(dropGhostBounds.y).toBeCloseTo(targetChipBounds.y + 40);
+    });
+
+    it('should position drop ghost above the target chip on dragging up.', async () => {
+      const chipComponents = getVisibleChips(fix);
+      const secondChip = chipComponents[1].componentInstance;
+      const secondChipElem = secondChip.chipArea.nativeElement;
+
+      const dragDir = secondChip.dragDirective;
+      UIInteractions.moveDragDirective(fix, dragDir, 0, -2* secondChipElem.offsetHeight, false);
+
+      var expressionsContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix);
+      const dropGhost = expressionsContainer.querySelector('div.igx-filter-tree__expression-item-drop-ghost');
+
+      expect(dropGhost).not.toBe(null);
+      const dropGhostBounds = dropGhost.getBoundingClientRect();
+      const targetChipBounds = chipComponents[0].nativeElement.getBoundingClientRect();
+      expect(dropGhostBounds.height).toBeCloseTo(40);
+      expect(dropGhostBounds.x).toBe(targetChipBounds.x);
+      expect(dropGhostBounds.y).toBeCloseTo(targetChipBounds.y - 40);
+    });
+
+    function getVisibleChips(fixture: ComponentFixture<any>) {
+      return fix.debugElement.queryAll(By.directive(IgxChipComponent)).filter(chip => chip.nativeElement.offsetHeight > 0);
+    }
+
   });
 });
 
