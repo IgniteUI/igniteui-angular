@@ -34,8 +34,8 @@ import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
  */
 @Component({
     providers: [{
-            provide: EDITOR_PROVIDER,
-            useExisting: IgxSwitchComponent,
+        provide: EDITOR_PROVIDER,
+        useExisting: IgxSwitchComponent,
         multi: true
     }],
     selector: 'igx-switch',
