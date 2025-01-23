@@ -351,8 +351,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChild('addOptionsDropDown', { read: IgxDropDownComponent })
     private addExpressionItemDropDown: IgxDropDownComponent;
 
-    @ViewChild('switchGroupDropDown', { read: IgxDropDownComponent })
-    private switchGroupDropDown: IgxDropDownComponent;
+    @ViewChild('groupContextMenuDropDown', { read: IgxDropDownComponent })
+    private groupContextMenuDropDown: IgxDropDownComponent;
 
     /**
      * @hidden @internal
@@ -501,7 +501,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public switchGroupDropDownOverlaySettings: OverlaySettings;
+    public groupContextMenuDropDownOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
 
     private destroy$ = new Subject<any>();
     private _parentExpression: ExpressionOperandItem;
@@ -577,6 +581,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
         this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.addExpressionDropDownOverlaySettings.outlet = this.overlayOutlet;
+        this.groupContextMenuDropDownOverlaySettings.outlet = this.overlayOutlet;
         // Trigger additional change detection cycle
         this.cdr.detectChanges();
     }
@@ -737,7 +742,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * used by the grid
      */
     public get isContextMenuVisible(): boolean {
-        return !this.switchGroupDropDown.collapsed;
+        return !this.groupContextMenuDropDown.collapsed;
     }
 
     /**
@@ -1675,18 +1680,23 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public onGroupClick(button: HTMLButtonElement, groupItem: ExpressionGroupItem) {
+    public onGroupClick(groupContextMenuDropDown: any, targetButton: HTMLButtonElement, groupItem: ExpressionGroupItem) {
         this.exitEditAddMode();
+        this.cdr.detectChanges();
+        
+        this.groupContextMenuDropDown = groupContextMenuDropDown;
+        this.groupContextMenuDropDownOverlaySettings.target = targetButton;
+        this.groupContextMenuDropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
+            horizontalDirection: HorizontalAlignment.Right,
+            horizontalStartPoint: HorizontalAlignment.Left,
+            verticalStartPoint: VerticalAlignment.Bottom
+        });
 
-        this.switchGroupDropDownOverlaySettings = IgxOverlayService.createRelativeOverlaySettings(
-            button as HTMLElement,
-            RelativePosition.Default);
-        this.switchGroupDropDownOverlaySettings.outlet = this.overlayOutlet;
-        if (this.switchGroupDropDown.collapsed) {
+        if (groupContextMenuDropDown.collapsed) {
             this.contextualGroup = groupItem;
-            this.switchGroupDropDown.open(this.switchGroupDropDownOverlaySettings);
+            groupContextMenuDropDown.open(this.groupContextMenuDropDownOverlaySettings);
         } else {
-            this.switchGroupDropDown.close();
+            groupContextMenuDropDown.close();
         }
     }
 
@@ -1696,6 +1706,17 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public getSwitchGroupText(operator: FilteringLogic) {
         const condition = operator === FilteringLogic.Or ? this.resourceStrings.igx_query_builder_and_label : this.resourceStrings.igx_query_builder_or_label
         return this.resourceStrings.igx_query_builder_switch_group.replace('{0}', condition.toUpperCase());
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onGroupContextMenuDropDownSelectionChanging(event: ISelectionEventArgs) {
+        if (event.newSelection.value === 'switchCondition') {
+            this.selectFilteringLogic(this.contextualGroup?.operator === 0 ? 1 : 0)
+        } else if (event.newSelection.value === 'ungroup') {
+            this.ungroup();
+        }
     }
 
     /**
