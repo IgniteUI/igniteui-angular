@@ -80,13 +80,12 @@ export class CheckboxBaseDirective implements AfterViewInit {
     @ViewChild('label', { static: true })
     public nativeLabel: ElementRef;
 
-    public disabled: any;
-    public readonly: any;
+    public cssClass: string;
+    public disabled: boolean;
+    public readonly: boolean;
     public indeterminate: boolean;
     public focused: boolean;
-    public cssClass: any;
     public invalid: boolean;
-    // public required: boolean;
 
     @Input({ transform: booleanAttribute })
     public get checked() {
