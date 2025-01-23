@@ -141,6 +141,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public ngOnInit() {
+        this.themeService.adoptStyles(IgxIconComponent, themes);
         this.setIcon();
     }
 
@@ -150,7 +151,6 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      */
     public ngOnChanges() {
         this.setIcon();
-        this.themeService.adoptStyles(IgxIconComponent, themes);
     }
 
     /**
