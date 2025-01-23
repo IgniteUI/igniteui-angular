@@ -324,6 +324,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     protected getElementPosition(element: HTMLElement, isNext: boolean) {
+        // Special handling for scenarios where there is css transformations applied that affects scale.
+        // getBoundingClientRect().height returns size after transformations
+        // element.offsetHeight returns size without any transformations
+        // get the ratio to figure out if anything has applied transformations
+        const scaling = element.getBoundingClientRect().height / element.offsetHeight;
+
         const gridBottom = this._getMinBottom(this.grid);
         const diffBottom =
         element.getBoundingClientRect().bottom - gridBottom;
@@ -334,7 +340,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const isInView = isNext ? Math.round(diffBottom) <= 0 : Math.round(diffTop) >= 0;
         const calcOffset =  isNext ? diffBottom : diffTop;
 
-        return { inView: isInView, offset: calcOffset };
+        return { inView: isInView, offset: calcOffset / scaling};
     }
 
     /**
