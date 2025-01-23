@@ -10,7 +10,7 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 
-describe('IgxQueryBuilder', () => {
+fdescribe('IgxQueryBuilder', () => {
   configureTestSuite();
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
   let queryBuilder: IgxQueryBuilderComponent;
@@ -51,7 +51,7 @@ describe('IgxQueryBuilder', () => {
       expect(queryTreeElement.children.length).toEqual(3);
       const bodyElement = queryTreeElement.children[0];
       expect(bodyElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_BODY);
-      expect(bodyElement.children.length).toEqual(2);
+      expect(bodyElement.children.length).toEqual(1);
 
       QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false);
       QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '');
@@ -74,7 +74,7 @@ describe('IgxQueryBuilder', () => {
       const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
       const bodyElement = queryTreeElement.children[0];
       expect(bodyElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_BODY);
-      expect(bodyElement.children.length).toEqual(4);
+      expect(bodyElement.children.length).toEqual(3);
 
       // Verify the operator line of the root group is an 'And' line.
       QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
@@ -279,7 +279,13 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
 
       // Change root group to 'Or' group
-      QueryBuilderFunctions.changeGroupType(group);
+      QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 0);
+      tick(100);
+      fix.detectChanges();
+
+      QueryBuilderFunctions.clickQueryBuilderGroupContextMenuSwitchGroup(fix);
+      tick(100);
+      fix.detectChanges();
 
       // Add new 'And' group.
       const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
@@ -363,7 +369,12 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [2, 3])
       tick(100);
       fix.detectChanges();
-      QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, false, false, false);
+      QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true);
+
+      // Click the initial 'Add Condition' button.
+      QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix);
+      tick(100);
+      fix.detectChanges();
 
       //Select Column
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
@@ -753,10 +764,6 @@ describe('IgxQueryBuilder', () => {
 
     it('Should correctly apply an \'in\' column condition through UI.', fakeAsync(() => {
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
-
-      QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
-      tick(100);
-      fix.detectChanges();
 
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
@@ -1267,6 +1274,9 @@ describe('IgxQueryBuilder', () => {
       // Verify all inputs values
       QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released', 'Id', 'Equals', '1');
 
+      // Commit the change
+      QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+
       // Change the selected entity
       QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
       tick(100);
@@ -1307,6 +1317,9 @@ describe('IgxQueryBuilder', () => {
       // Verify all inputs values
       QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released', 'Id', 'Equals', '1');
 
+      // Commit the change
+      QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+
       // Change the selected entity
       QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
       tick(100);
@@ -1321,7 +1334,8 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Verify all inputs
-      QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released', 'Id', 'Equals', '1');
+      QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, OrderId, Released');
+      QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Id', 'Equals', '1');
     }));
 
     it(`"commit" button should be enabled/disabled properly when editing an expression.`, fakeAsync(() => {
