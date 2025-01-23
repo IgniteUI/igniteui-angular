@@ -517,12 +517,6 @@ export class QueryBuilderFunctions {
         chipIcon.click();
     }
 
-    public static changeGroupType(group: HTMLElement) {
-        const childrenContainer = group.querySelector(':scope > .igx-filter-tree__expression');
-        const groupToggleButton = childrenContainer.querySelector(":scope > .igx-button") as HTMLElement;
-        groupToggleButton.click();        
-    }
-
     /*
     * Hit a keyboard button upon element, wait for the desired time and detect changes
     */
@@ -641,7 +635,7 @@ export class QueryBuilderFunctions {
                 case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 2: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('AND'); break;
+                    expect(element.innerText).toContain('and'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
                 case 4: expect(element).toHaveClass('igx-icon'); break;
                 case 5: expect(element).toHaveClass('igx-chip__remove'); break;
@@ -861,17 +855,21 @@ export class QueryBuilderFunctions {
         const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;        
         
         queryTreeElement.querySelectorAll('.igx-chip').forEach(chip => {
-            if(chip.checkVisibility()){
+            contents.push(QueryBuilderFunctions.getChipContent(chip));
+        });
+
+        return contents;
+    }
+
+    public static getChipContent(chip: Element): string {
+        if(chip.checkVisibility()){
             let text:string = '';
             
             Array.from(chip.querySelectorAll('span')).forEach(element => {
                 if(element?.textContent) text +=element.textContent;
             });
 
-            contents.push(text.trim());
+            return text.trim();
         }
-        });
-
-        return contents;
     }
 }
