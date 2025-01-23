@@ -5,12 +5,14 @@ import {
     HostBinding,
     HostListener,
     Input,
+    OnInit,
     booleanAttribute
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import themes from './themes/index';
 
 
 /**
@@ -36,7 +38,7 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
     templateUrl: 'radio.component.html',
     imports: [IgxRippleDirective]
 })
-export class IgxRadioComponent extends IgxCheckboxComponent implements AfterViewInit, ControlValueAccessor, EditorProvider {
+export class IgxRadioComponent extends IgxCheckboxComponent implements OnInit, AfterViewInit, ControlValueAccessor, EditorProvider {
     /** @hidden @internal */
     public blurRadio = new EventEmitter();
 
@@ -185,6 +187,11 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
         } else {
             this.deselect();
         }
+    }
+
+    /** @hidden @internal */
+    public override ngOnInit() {
+        this.themeService.adoptStyles(IgxRadioComponent, themes);
     }
 
     /**

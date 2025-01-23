@@ -1,0 +1,12 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/utils/map' as *;
+@use 'themes' as *;
+
+$theme: $bootstrap;
+
+@container style(--theme: bootstrap) {
+    @include b(igx-radio) {
+        @include css-vars-from-theme(diff($base, $theme), 'igx-radio');
+    }
+}
