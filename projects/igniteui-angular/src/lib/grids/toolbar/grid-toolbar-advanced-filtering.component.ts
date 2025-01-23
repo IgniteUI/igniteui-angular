@@ -46,17 +46,16 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
     @Input()
     public overlaySettings: OverlaySettings;
 
-    constructor( @Inject(IgxToolbarToken) private toolbar: IgxToolbarToken) {
-        this.grid?.advancedFilteringExpressionsTreeChange.subscribe(filteringTree => {
-            this.numberOfColumns = this.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
-        });
-    }
+    constructor( @Inject(IgxToolbarToken) private toolbar: IgxToolbarToken) { }
 
     /**
      * @hidden
      */
     public ngAfterViewInit(): void {
         this.numberOfColumns = this.grid?.advancedFilteringExpressionsTree ? this.extractUniqueFieldNamesFromFilterTree(this.grid?.advancedFilteringExpressionsTree).length : 0;
+        this.grid?.advancedFilteringExpressionsTreeChange.subscribe(filteringTree => {
+            this.numberOfColumns = this.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
+        });
     }
 
     protected extractUniqueFieldNamesFromFilterTree(filteringTree?: IFilteringExpressionsTree) : string[] {

@@ -117,6 +117,26 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
         }));
 
+        it('Should set initial Advanced Filtering', fakeAsync(() => {
+            // Set filtering expressions tree
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'ProductName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'angular',
+                ignoreCase: true
+            });
+
+            // Add filters to the grid
+            const advancedFilteringTree: FilteringExpressionsTree = tree;
+            grid.advancedFilteringExpressionsTree = advancedFilteringTree;
+            fix.detectChanges();
+
+            // Verify number of advanced filters is correct
+            const advancedFilters = grid.advancedFilteringExpressionsTree.filteringOperands;
+            expect(advancedFilters.length).toEqual(1);
+        }));
+
         it('Should close Advanced Filtering dialog through API by respecting \'applyChanges\' argument.', fakeAsync(() => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
