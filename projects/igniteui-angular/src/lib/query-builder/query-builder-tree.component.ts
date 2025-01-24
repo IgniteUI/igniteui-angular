@@ -1712,11 +1712,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onGroupContextMenuDropDownSelectionChanging(event: ISelectionEventArgs) {
+        event.cancel = true;
+
         if (event.newSelection.value === 'switchCondition') {
             this.selectFilteringLogic(this.contextualGroup?.operator === 0 ? 1 : 0)
         } else if (event.newSelection.value === 'ungroup') {
             this.ungroup();
         }
+
+        this.groupContextMenuDropDown.close();
     }
 
     /**
