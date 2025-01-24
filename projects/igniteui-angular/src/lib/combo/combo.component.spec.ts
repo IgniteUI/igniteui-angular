@@ -1025,8 +1025,6 @@ describe('igxCombo', () => {
                 expect(combo.displayKey).toEqual('field');
                 expect(combo.groupKey).toEqual('region');
                 expect(combo.width).toEqual('400px');
-                expect(combo.itemsMaxHeight).toEqual(320);
-                expect(combo.itemHeight).toEqual(32);
                 expect(combo.placeholder).toEqual('Location');
                 expect(combo.disableFiltering).toEqual(false);
                 expect(combo.allowCustomValues).toEqual(false);
@@ -1125,9 +1123,7 @@ describe('igxCombo', () => {
                 const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
 
                 const verifyDropdownItemHeight = () => {
-                    expect(combo.itemHeight).toEqual(itemHeight);
                     expect(dropdownItems[0].nativeElement.clientHeight).toEqual(itemHeight);
-                    expect(combo.itemsMaxHeight).toEqual(itemMaxHeight);
                     expect(dropdownList.nativeElement.clientHeight).toEqual(itemMaxHeight);
                 };
                 verifyDropdownItemHeight();
@@ -1764,11 +1760,10 @@ describe('igxCombo', () => {
                 });
                 it('should focus item when onFocus and onBlur are called', () => {
                     expect(dropdown.focusedItem).toEqual(null);
-                    expect(dropdown.items.length).toEqual(9);
                     dropdown.toggle();
                     fixture.detectChanges();
                     expect(dropdown.items).toBeDefined();
-                    expect(dropdown.items.length).toBeTruthy();
+                    expect(dropdown.items.length).toEqual(9);
                     dropdown.onFocus();
                     expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
                     expect(dropdown.focusedItem.focused).toEqual(true);
@@ -2015,7 +2010,8 @@ describe('igxCombo', () => {
                 expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(1);
                 let vContainerScrollHeight = virtDir.getScroll().scrollHeight;
                 expect(virtDir.getScroll().scrollTop).toEqual(0);
-                expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
+                const itemHeight = parseFloat(combo.dropdown.children.first.element.nativeElement.getBoundingClientRect().height);
+                expect(vContainerScrollHeight).toBeGreaterThan(itemHeight);
                 virtDir.getScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
                 await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
                 fixture.detectChanges();
@@ -3571,24 +3567,6 @@ describe('igxCombo', () => {
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
                     expect(ngModel.touched).toBeTrue();
                 }));
-            });
-        });
-        describe('Display density', () => {
-            beforeEach(() => {
-                fixture = TestBed.createComponent(IgxComboSampleComponent);
-                fixture.detectChanges();
-                combo = fixture.componentInstance.combo;
-            });
-            it('should scale items container depending on size (itemHeight * 10)', () => {
-                combo.toggle();
-                fixture.detectChanges();
-                expect(combo.itemsMaxHeight).toEqual(320);
-                fixture.componentInstance.size = 'small';
-                fixture.detectChanges();
-                expect(combo.itemsMaxHeight).toEqual(280);
-                fixture.componentInstance.size = 'large';
-                fixture.detectChanges();
-                expect(combo.itemsMaxHeight).toEqual(400);
             });
         });
     });

@@ -13,9 +13,8 @@ export class RemoteNWindService {
     }
 
     public getData(data?: IForOfState, searchText?: string, cb?: (any) => void): any {
-        const dataState = data;
         return this.http
-            .get(this.buildUrl(dataState, searchText))
+            .get(this.buildUrl(data, searchText))
             .subscribe((d: any) => {
                 this.remoteData.next(d.value);
                 if (cb) {
@@ -40,9 +39,5 @@ export class RemoteNWindService {
             }
         }
         return `${this.url}${qS}`;
-    }
-
-    private toTitleCase(str) {
-        return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
     }
 }

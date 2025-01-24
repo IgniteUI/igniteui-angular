@@ -1,30 +1,3 @@
-#igniteui-demo-app {
-    .list-sample-component {
-        .sample-space {
-            margin-bottom: 16px;
-        }
-
-        .sample-column.bootstrap {
-            display: none;
-        }
-    }
+.sample-title {
+    text-align: center;
 }
-
-.bootstrap-theme {
-    .bootstrap {
-        max-width: 400px
-    }
-
-    #igniteui-demo-app {
-        .list-sample-component {
-            .sample-column {
-                display: none;
-            }
-
-            .sample-column.bootstrap {
-                display: flex;
-            }
-        }
-    }
-}
-
