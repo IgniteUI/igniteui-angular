@@ -1,0 +1,37 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@forward 'igniteui-theming/sass/themes';
+@forward 'igniteui-theming/sass/bem';
+
+/// Includes a block element (@see block) for a specific component, theme, and variant.
+/// @access private
+/// @group bem
+/// @param {String} $component - The class selector of the component.
+/// @param {String} $theme - The target theme - material, bootstrap, fluent, indigo.
+/// @param {String} $variant - The target variant - light, dark.
+/// @requires {mixin} b
+/// @example scss
+@mixin themed-block($component, $theme, $variant) {
+    @container style(--theme: #{"" + $theme}) and style(--ig-theme-variant: #{$variant}) {
+        @include b($component) {
+            @content;
+        }
+    }
+}
+
+/// Includes CSS variables for all themes given a map of tokens.
+/// @access private
+/// @param {String} $component - The class selector of the component.
+/// @param {Map} $tokens - The resolved component schemas/tokens for each theme.
+/// @param {String} $variant - The target variant - light, dark.
+/// @requires {mixin} themed-block
+/// @example scss
+@mixin themes($component, $tokens, $variant) {
+    @each $theme in ('material', 'bootstrap', 'fluent', 'indigo') {
+        @include themed-block($component, $theme, $variant) {
+            $_t: map.get($tokens, $theme);
+            @include css-vars-from-theme($_t, $component);
+        }
+    }
+}

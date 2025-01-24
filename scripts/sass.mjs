@@ -7,7 +7,7 @@ import { resolve } from 'node:path';
 import { mkdirSync as makeDir } from 'fs';
 import fsExtra from 'fs-extra';
 import { fileURLToPath } from 'url';
-import { writeFile, readFile } from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import report from './report.mjs';
 
 const THEMES = {
@@ -26,11 +26,12 @@ const THEMES = {
 };
 
 const STYLES = {
-  SRC: 'projects/igniteui-angular/src/lib/**/*.scss',
+  SRC: 'projects/igniteui-angular/src/lib/**/*.component.scss',
+  DIST: './',
   IGNORE: '!projects/igniteui-angular/src/lib/core/styles/**/*.scss',
   CONFIG: {
     style: 'compressed',
-    loadPaths: ['node_modules'],
+    loadPaths: ['node_modules', 'projects/igniteui-angular/src/lib/core/'],
     sourceMap: true,
     sourceMapEmbed: true,
   },
@@ -38,7 +39,7 @@ const STYLES = {
 
 const { copySync } = fsExtra;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DEST_DIR = path.join.bind(null, path.resolve(__dirname, THEMES.DIST));
+const DEST_DIR = path.join.bind(null, resolve(__dirname, THEMES.DIST));
 
 const stripComments = () => {
   return {
@@ -59,18 +60,9 @@ const postProcessor = postcss([
   stripComments,
 ]);
 
-const _template = await readFile(
-  resolve(process.argv[1], '../styles.tmpl'),
-  'utf8'
-);
 const _postProcessor = postcss([autoprefixer, stripComments]);
 
-export function fromTemplate(content) {
-  return _template.replace(/<%\s*content\s*%>/, content);
-}
-async function createFile(fileName, content) {
-  const outputFile = DEST_DIR(fileName);
-
+async function createFile(outputFile, content) {
   makeDir(path.dirname(outputFile), { recursive: true });
   await writeFile(outputFile, content, 'utf-8');
 }
@@ -103,11 +95,49 @@ async function _buildThemes() {
 
         outCss = outCss + '\n'.repeat(2) + sourceMapComment;
 
+        const outputFile = DEST_DIR(fileName);
+        await createFile(outputFile, outCss);
+      })
+    );
+  } catch (err) {
+    await compiler.dispose();
+    report.error(err);
+    process.exit(1);
+  }
+
+  await compiler.dispose();
+}
+
+export async function buildComponentStyles() {
+  const [compiler, paths] = await Promise.all([
+    sass.initAsyncCompiler(),
+    globby([STYLES.SRC, STYLES.IGNORE]),
+  ]);
+
+  try {
+    await Promise.all(
+      paths.map(async (path) => {
+        const result = await compiler.compileAsync(path, STYLES.CONFIG);
+        const fileName = path
+          .replace(/\.scss$/, '.css')
+          .replace(STYLES.SRC, '');
+
+        const sm = JSON.stringify(result.sourceMap);
+        const smBase64 = (Buffer.from(sm, 'utf8') || '').toString('base64');
+        const sourceMapComment =
+          '/*# sourceMappingURL=data:application/json;charset=utf-8;base64,' +
+          smBase64 +
+          ' */';
+
+        let outCss = postProcessor.process(result.css).css;
+
+        if (outCss.charCodeAt(0) === 0xfeff) {
+          outCss = outCss.substring(1);
+        }
+
+        outCss = outCss + '\n'.repeat(2) + sourceMapComment;
+
         await createFile(fileName, outCss);
-        await createFile(
-          `maps/${fileName}.map`,
-          JSON.stringify(result.sourceMap)
-        );
       })
     );
   } catch (err) {
@@ -121,28 +151,8 @@ async function _buildThemes() {
 
 export async function buildComponents(isProduction = false) {
   const start = performance.now();
-  const [compiler, paths] = await Promise.all([
-    sass.initAsyncCompiler(),
-    globby([STYLES.SRC, STYLES.IGNORE]),
-  ]);
 
-  try {
-    await Promise.all(
-      paths.map(async (path) => {
-        writeFile(
-          path.replace(/\.scss$/, '.css.ts'),
-          fromTemplate(await compileSass(path, compiler, STYLES.CONFIG)),
-          'utf-8'
-        );
-      })
-    );
-  } catch (err) {
-    await compiler.dispose();
-    report.error(err);
-    process.exit(1);
-  }
-
-  await compiler.dispose();
+  await buildComponentStyles();
 
   if (!isProduction) {
     report.success(

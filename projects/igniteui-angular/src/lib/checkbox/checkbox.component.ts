@@ -16,7 +16,6 @@ import {
     inject,
     DestroyRef,
     Inject,
-    OnInit
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
@@ -25,8 +24,6 @@ import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token';
-import { ThemeService, ThemedComponent } from '../services/theme/theme.service';
-import themes from './themes/index';
 
 export const LabelPosition = /*@__PURE__*/mkenum({
     BEFORE: 'before',
@@ -73,7 +70,7 @@ let nextId = 0;
     templateUrl: 'checkbox.component.html',
     imports: [IgxRippleDirective]
 })
-export class IgxCheckboxComponent implements EditorProvider, OnInit, AfterViewInit, ControlValueAccessor {
+export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, ControlValueAccessor {
 
     /**
      * An event that is emitted after the checkbox state is changed.
@@ -477,7 +474,6 @@ export class IgxCheckboxComponent implements EditorProvider, OnInit, AfterViewIn
      * @hidden
      */
     private _onTouchedCallback: () => void = noop;
-    public themeService = inject(ThemeService);
 
     /**
      * @hidden
@@ -531,11 +527,6 @@ export class IgxCheckboxComponent implements EditorProvider, OnInit, AfterViewIn
                 this.cdr.markForCheck();
             }
         }
-    }
-
-    /** @hidden @internal */
-    public ngOnInit() {
-        this.themeService.adoptStyles(IgxCheckboxComponent, themes);
     }
 
     /**

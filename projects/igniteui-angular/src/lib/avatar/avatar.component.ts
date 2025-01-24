@@ -7,13 +7,12 @@ import {
     OnInit,
     TemplateRef,
     ViewChild,
+    ViewEncapsulation,
     inject
 } from '@angular/core';
 
 import { mkenum, normalizeURI } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
-import { ThemeService, ThemedComponent } from '../services/theme/theme.service';
-import themes from './themes/index';
 
 let NEXT_ID = 0;
 export const IgxAvatarSize = /*@__PURE__*/mkenum({
@@ -56,11 +55,12 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
 @Component({
     selector: 'igx-avatar',
     templateUrl: 'avatar.component.html',
+    styleUrl: 'avatar.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxIconComponent, NgTemplateOutlet]
 })
-export class IgxAvatarComponent implements OnInit, ThemedComponent {
+export class IgxAvatarComponent implements OnInit {
     public elementRef = inject(ElementRef);
-    public themeService = inject(ThemeService);
 
     /**
      * Returns the `aria-label` attribute of the avatar.
@@ -351,7 +351,6 @@ export class IgxAvatarComponent implements OnInit, ThemedComponent {
     /** @hidden @internal */
     public ngOnInit() {
         this.roleDescription = this.getRole();
-        this.themeService.adoptStyles(IgxAvatarComponent, themes);
     }
 
     /** @hidden @internal */
