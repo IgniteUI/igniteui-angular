@@ -6,7 +6,7 @@
 $theme: $material;
 
 @layer base {
-    %igx-avatar-display {
+    @include b(igx-avatar) {
         @include sizable();
 
         --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
@@ -34,50 +34,28 @@ $theme: $material;
             box-shadow: none;
             transition: box-shadow 0.15s $ease-in-out-quad;
         }
-    }
-
-    %igx-avatar-image {
-        width: 100%;
-        height: 100%;
-        border-radius: inherit;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-
-    %igx-avatar--circle {
-        border-radius: calc(#{var-get($theme, 'size')} / 2);
-    }
-
-    %igx-avatar--rounded {
-        border-radius: var-get($theme, 'border-radius');
-    }
-
-    %igx-avatar--initials {
-        text-transform: uppercase;
-        font-size: calc(#{var-get($theme, 'size')} / 2);
-        line-height: calc(#{var-get($theme, 'size')} / 2);
-    }
-
-    @include b(igx-avatar) {
-        // @include css-vars-from-theme($base, 'igx-avatar');
-
-        @extend %igx-avatar-display;
 
         @include e(image) {
-            @extend %igx-avatar-image;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
         }
 
         @include m(circle) {
-            @extend %igx-avatar--circle;
+            border-radius: calc(#{var-get($theme, 'size')} / 2);
         }
 
         @include m(rounded) {
-            @extend %igx-avatar--rounded;
+            border-radius: var-get($theme, 'border-radius');
         }
 
         @include m(initials) {
-            @extend %igx-avatar--initials;
+            text-transform: uppercase;
+            font-size: calc(#{var-get($theme, 'size')} / 2);
+            line-height: calc(#{var-get($theme, 'size')} / 2);
         }
     }
 }
