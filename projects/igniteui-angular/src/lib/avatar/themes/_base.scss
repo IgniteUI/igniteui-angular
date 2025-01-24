@@ -25,7 +25,7 @@ $theme: $material;
         height: var-get($theme, 'size');
 
         igx-icon {
-            --component-size: 3;
+            --ig-size: 3;
 
             color: var-get($theme, 'icon-color');
         }
