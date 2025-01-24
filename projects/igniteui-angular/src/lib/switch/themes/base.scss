@@ -68,22 +68,6 @@ $input-transition: all .2s $ease-in-out-quad;
     }
 }
 
-// all ripple styles may be moved to material only
-%switch-ripple {
-    --_ripple-size: #{rem(40px)};
-
-    display: none;
-    position: absolute;
-    top: calc(50% - calc(var(--_ripple-size) / 2));
-    inset-inline-start: calc(50% - calc(var(--_ripple-size) / 2));
-    width: var(--_ripple-size);
-    aspect-ratio: 1;
-    overflow: hidden;
-    pointer-events: none;
-    filter: opacity(1);
-    border-radius: var-get($theme, 'border-radius-ripple');
-}
-
 %switch-ripple--focused {
     background: color($color: 'gray', $variant: 600);
     transition: background .2s $ease-out-quad;
@@ -107,31 +91,6 @@ $input-transition: all .2s $ease-in-out-quad;
     }
 }
 
-%switch-ripple--hover-unchecked {
-    &::after {
-        background: color($color: 'gray', $variant: 600);
-    }
-}
-
-%switch-ripple--hover-checked {
-    &::after {
-        background: var-get($theme, 'thumb-on-color');
-    }
-}
-
-%switch-ripple--hover-invalid {
-    &::after {
-        background: var-get($theme, 'error-color-hover');
-    }
-}
-
-%switch-ripple--hover-checked-invalid {
-    &::after {
-        background: var-get($theme, 'thumb-on-color');
-    }
-}
-
-// doble check the color
 %switch-ripple--pressed {
     &::after {
         opacity: .12;
@@ -154,7 +113,10 @@ $input-transition: all .2s $ease-in-out-quad;
     &:hover {
         @include e(ripple) {
             @extend %switch-ripple--hover !optional;
-            @extend %switch-ripple--hover-unchecked !optional;
+            
+            &::after {
+                background: color($color: 'gray', $variant: 600);
+            }
         }
 
         @include e(composite) {
@@ -173,8 +135,11 @@ $input-transition: all .2s $ease-in-out-quad;
     &:active {
         @include e(ripple) {
             @extend %switch-ripple--hover !optional;
-            @extend %switch-ripple--hover-unchecked !optional;
             @extend %switch-ripple--pressed !optional;
+
+            &::after {
+                background: color($color: 'gray', $variant: 600);
+            }
         }
     }
 
@@ -215,7 +180,18 @@ $input-transition: all .2s $ease-in-out-quad;
     }
 
     @include e(ripple) {
-        @extend %switch-ripple !optional;
+        --_ripple-size: #{rem(40px)};
+
+        display: none;
+        position: absolute;
+        top: calc(50% - calc(var(--_ripple-size) / 2));
+        inset-inline-start: calc(50% - calc(var(--_ripple-size) / 2));
+        width: var(--_ripple-size);
+        aspect-ratio: 1;
+        overflow: hidden;
+        pointer-events: none;
+        filter: opacity(1);
+        border-radius: var-get($theme, 'border-radius-ripple');
     }
 
     @include e(label) {
@@ -286,7 +262,10 @@ $input-transition: all .2s $ease-in-out-quad;
         &:hover {
             @include e(ripple) {
                 @extend %switch-ripple--hover !optional;
-                @extend %switch-ripple--hover-checked !optional;
+                
+                &::after {
+                    background: var-get($theme, 'thumb-on-color');
+                }
             }
 
             @include e(composite) {
@@ -297,8 +276,11 @@ $input-transition: all .2s $ease-in-out-quad;
         &:active {
             @include e(ripple) {
                 @extend %switch-ripple--hover !optional;
-                @extend %switch-ripple--hover-checked !optional;
                 @extend %switch-ripple--pressed !optional;
+
+                &::after {
+                    background: var-get($theme, 'thumb-on-color');
+                }
             }
         }
     }
@@ -311,7 +293,10 @@ $input-transition: all .2s $ease-in-out-quad;
         &:hover {
             @include e(ripple) {
                 @extend %switch-ripple--hover !optional;
-                @extend %switch-ripple--hover-invalid !optional;
+                
+                &::after {
+                    background: var-get($theme, 'error-color-hover');
+                }
             }
 
             @include e(composite) {
@@ -322,8 +307,11 @@ $input-transition: all .2s $ease-in-out-quad;
         &:active {
             @include e(ripple) {
                 @extend %switch-ripple--hover !optional;
-                @extend %switch-ripple--hover-invalid !optional;
                 @extend %switch-ripple--pressed !optional;
+
+                &::after {
+                    background: var-get($theme, 'error-color-hover');
+                }
             }
         }
 
@@ -348,7 +336,10 @@ $input-transition: all .2s $ease-in-out-quad;
         &:hover {
             @include e(ripple) {
                 @extend %switch-ripple--hover !optional;
-                @extend %switch-ripple--hover-checked-invalid !optional;
+                
+                &::after {
+                    background: var-get($theme, 'thumb-on-color');
+                }
             }
         }
     }
