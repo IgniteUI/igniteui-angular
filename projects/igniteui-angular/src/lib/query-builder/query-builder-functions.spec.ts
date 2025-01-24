@@ -855,17 +855,21 @@ export class QueryBuilderFunctions {
         const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;        
         
         queryTreeElement.querySelectorAll('.igx-chip').forEach(chip => {
-            if(chip.checkVisibility()){
+            contents.push(QueryBuilderFunctions.getChipContent(chip));
+        });
+
+        return contents;
+    }
+
+    public static getChipContent(chip: Element): string {
+        if(chip.checkVisibility()){
             let text:string = '';
             
             Array.from(chip.querySelectorAll('span')).forEach(element => {
                 if(element?.textContent) text +=element.textContent;
             });
 
-            contents.push(text.trim());
+            return text.trim();
         }
-        });
-
-        return contents;
     }
 }
