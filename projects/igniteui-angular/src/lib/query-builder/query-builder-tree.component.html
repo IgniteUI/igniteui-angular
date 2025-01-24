@@ -493,13 +493,11 @@
                                    (selectionChanging)="onGroupContextMenuDropDownSelectionChanging($event)"
                                    [width]="'fit-content'">
                         <igx-drop-down-item [value]="'switchCondition'"
-                                            class="igx-filter-tree-group-drop-down-item"
                         >
                             {{getSwitchGroupText(contextualGroup?.operator)}}
                         </igx-drop-down-item>
                         <igx-drop-down-item [value]="'ungroup'"
                                             [disabled]="this.rootGroup === this.contextualGroup"
-                                            class="igx-filter-tree-group-drop-down-item"
                         >
                             {{this.resourceStrings.igx_query_builder_ungroup}}
                         </igx-drop-down-item>
