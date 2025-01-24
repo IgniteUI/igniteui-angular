@@ -1581,7 +1581,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.addExpressionDropDownOverlaySettings.target = targetButton;
         this.addExpressionDropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
             horizontalDirection: HorizontalAlignment.Right,
-            horizontalStartPoint: HorizontalAlignment.Right,
+            horizontalStartPoint: HorizontalAlignment.Left,
             verticalStartPoint: VerticalAlignment.Bottom
         });
 
