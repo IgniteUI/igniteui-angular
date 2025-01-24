@@ -33,6 +33,7 @@ $theme: $fluent;
                 }
             }
 
+            // should be removed after this PR is merged: https://github.com/IgniteUI/igniteui-angular/pull/15298
             &.igx-checkbox--focused::after {
                 opacity: 0;
             }

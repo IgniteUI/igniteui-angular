@@ -52,7 +52,6 @@ $theme: $bootstrap;
         }
 
         @include mx(focused, invalid) {
-            // double check
             @include e(composite) {
                 border-color: var-get($theme, 'error-color');
                 box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-color-hover');
