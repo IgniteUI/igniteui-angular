@@ -873,4 +873,18 @@ export class QueryBuilderFunctions {
             return text.trim();
         }
     }
+
+
+    public static getVisibleChips(fixture: ComponentFixture<any>) : DebugElement[] {
+        return fixture.debugElement.queryAll(By.directive(IgxChipComponent)).filter(chip => chip.nativeElement.offsetHeight > 0);
+    }
+
+    public static getDropGhost(fixture: ComponentFixture<any>) : Element {
+        var expressionsContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fixture);
+        return expressionsContainer.querySelector('div.igx-filter-tree__expression-item-drop-ghost');
+    }
+
+    public static getDropGhostBounds(fixture: ComponentFixture<any>) : DOMRect {
+        return QueryBuilderFunctions.getDropGhost(fixture)?.getBoundingClientRect();
+    }
 }
