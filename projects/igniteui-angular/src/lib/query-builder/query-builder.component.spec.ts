@@ -283,7 +283,7 @@ describe('IgxQueryBuilder', () => {
       tick(100);
       fix.detectChanges();
 
-      QueryBuilderFunctions.clickQueryBuilderGroupContextMenuSwitchGroup(fix);
+      QueryBuilderFunctions.clickContextMenuItem(fix, 0);
       tick(100);
       fix.detectChanges();
 
@@ -1701,7 +1701,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Released', 'True', '', 1);
     }));
 
-    it(`Should be able to switch group and ungroup from group context menu.`, fakeAsync(() => {
+    it(`Should be able to switch group condition and ungroup from group context menu.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
       tick(100);
@@ -1720,7 +1720,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Click the 'Switch to AND' drop down item
-      QueryBuilderFunctions.clickQueryBuilderGroupContextMenuSwitchGroup(fix);
+      QueryBuilderFunctions.clickContextMenuItem(fix, 0);
       tick(100);
       fix.detectChanges();
 
@@ -1733,12 +1733,35 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Click the 'Ungroup' drop down item
-      QueryBuilderFunctions.clickQueryBuilderGroupContextMenuUngroup(fix);
+      QueryBuilderFunctions.clickContextMenuItem(fix, 1);
       tick(100);
       fix.detectChanges();
 
       // Verify there are no subgroups anymore
       expect(queryBuilder.expressionTree.filteringOperands.filter(o => o instanceof FilteringExpressionsTree).length).toBe(0);
+    }));
+
+    it(`Should show 'Ungroup' as disabled in root group context menu.`, fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+
+      // Click the 'AND' root group button
+      QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 0);
+      tick(100);
+      fix.detectChanges();
+
+      // Verify 'Ungroup' is disabled
+      QueryBuilderFunctions.verifyContextMenuItemDisabled(fix, 1, true);
+
+      // Click the 'OR' subgroup button
+      QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 2);
+      tick(100);
+      fix.detectChanges();
+
+      // Verify 'Ungroup' is enabled
+      QueryBuilderFunctions.verifyContextMenuItemDisabled(fix, 1, false);
     }));
   });
 
@@ -2183,9 +2206,9 @@ describe('IgxQueryBuilder', () => {
       tick(100);
       fix.detectChanges();
 
-      expect((QueryBuilderFunctions.getQueryBuilderGroupContextMenuDropDownItems(fix)[0].nativeElement).querySelector('span').innerText)
+      expect((QueryBuilderFunctions.getQueryBuilderGroupContextMenuDropDownItems(fix)[0]).querySelector('span').innerText)
         .toBe('My switch to MY OR');
-      expect((QueryBuilderFunctions.getQueryBuilderGroupContextMenuDropDownItems(fix)[1].nativeElement).querySelector('span').innerText)
+      expect((QueryBuilderFunctions.getQueryBuilderGroupContextMenuDropDownItems(fix)[1]).querySelector('span').innerText)
         .toBe('My ungroup');
 
       // Show changing entity alert dialog
