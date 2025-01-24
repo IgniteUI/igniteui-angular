@@ -13,9 +13,11 @@
 /// @requires {mixin} b
 /// @example scss
 @mixin themed-block($component, $theme, $variant) {
-    @container style(--theme: #{"" + $theme}) and style(--ig-theme-variant: #{$variant}) {
-        @include b($component) {
-            @content;
+    @layer #{$theme} {
+        @container style(--ig-theme: #{"" + $theme}) and style(--ig-theme-variant: #{$variant}) {
+            @include b($component) {
+                @content;
+            }
         }
     }
 }
