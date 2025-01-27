@@ -1715,7 +1715,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         event.cancel = true;
 
         if (event.newSelection.value === 'switchCondition') {
-            this.selectFilteringLogic(this.contextualGroup?.operator === 0 ? 1 : 0)
+            this.selectFilteringLogic((this.contextualGroup ?? this._expressionTree).operator === 0 ? 1 : 0)
         } else if (event.newSelection.value === 'ungroup') {
             this.ungroup();
         }
@@ -1744,8 +1744,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public selectFilteringLogic(index: number) {
-        this.contextualGroup.operator = index as FilteringLogic;
-        this.commitOperandEdit();
+        if (this.contextualGroup) {
+            this.contextualGroup.operator = index as FilteringLogic;
+            this.commitOperandEdit();
+        } else {
+            this._expressionTree.operator = index as FilteringLogic;
+        }
     }
 
     /**
