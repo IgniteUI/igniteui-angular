@@ -40,9 +40,7 @@ export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
 
 let nextId = 0;
 
-@Directive({
-    selector: '[appCheckboxBase]'
-})
+@Directive()
 export class CheckboxBaseDirective implements AfterViewInit {
     /**
      * An event that is emitted after the checkbox state is changed.
@@ -395,7 +393,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
             return;
         }
 
-        this.nativeInput.nativeElement.focus();
+        this.nativeElement.focus();
 
         this.indeterminate = false;
         this.checked = !this.checked;

@@ -230,15 +230,4 @@ export class IgxCheckboxComponent
     @HostBinding('class.igx-checkbox--plain')
     @Input({ transform: booleanAttribute })
     public disableTransitions = false;
-
-    // constructor(
-    //     protected override cdr: ChangeDetectorRef,
-    //     protected override renderer: Renderer2,
-    //     @Inject(THEME_TOKEN) protected override themeToken: ThemeToken,
-    //     @Optional() @Self() public override ngControl: NgControl,
-    //     destroyRef: DestroyRef,
-    //   ) {
-    //     super(cdr, renderer, themeToken, ngControl);
-    //     this.destroyRef = destroyRef;
-    // }
 }
