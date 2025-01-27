@@ -236,7 +236,7 @@
                 <div igxDragIgnore class="igx-filter-tree__expression-actions">
                     <button #addExpressionButton igxDragIgnore igxIconButton="flat" [igxDropDownItemNavigation]="addOptionsDropDown"
                     aria-labelledby="add-expression" (keydown)="invokeClick($event)"
-                        (click)="clickExpressionAdd(expressionItem, addExpressionButton)"
+                        (click)="clickExpressionAdd(addExpressionButton)"
                         (blur)="addExpressionBlur()">
                         <igx-icon id="add-expression">add</igx-icon>
                     </button>
@@ -262,7 +262,6 @@
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="expressionItem.inEditMode"
             class="igx-filter-tree__inputs"
-            [style.scroll-margin-top]="'30px'"
         >
             <igx-select
                 #fieldSelect
@@ -283,8 +282,8 @@
                 [overlaySettings]="conditionSelectOverlaySettings"
                 [(ngModel)]="selectedCondition"
                 [disabled]="!selectedField"
+                [placeholder]="this.resourceStrings.igx_query_builder_condition_placeholder"
             >
-                <label igxLabel>{{this.resourceStrings.igx_query_builder_condition_placeholder}}</label>
                 <igx-prefix
                     *ngIf="
                         selectedField &&

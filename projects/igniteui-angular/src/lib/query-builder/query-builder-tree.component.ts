@@ -31,8 +31,8 @@ import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-
 import { IgxOverlayOutletDirective, IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FieldType, EntityType } from '../grids/common/grid.interface';
 import { IgxSelectComponent } from '../select/select.component';
-import { HorizontalAlignment, OverlaySettings, RelativePosition, VerticalAlignment } from '../services/overlay/utilities';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy, IgxOverlayService } from '../services/public_api';
+import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/overlay/utilities';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-common/picker-icons.common';
@@ -285,7 +285,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         // if value is invalid, set it back to _localeId
         try {
             getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
+        } catch {
             this._locale = this._localeId;
         }
     }
@@ -1030,7 +1030,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     private get mainExpressionTree(): HTMLElement {
-        return this.el.nativeElement.firstElementChild.firstElementChild.nextElementSibling;
+        return this.el.nativeElement.querySelector('.igx-filter-tree');
     }
 
     //Chip can be dragged if it's tree is in edit mode and there is no inner query that's been edited
@@ -1551,10 +1551,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
-        if (this.shouldPreventExitEdit(expressionItem)) {
-            this.focusLastEditedExpressionInput();
-            return;
-        }
         this.exitEditAddMode(true);
         this.cdr.detectChanges();
         this.enterEditMode(expressionItem);
@@ -1564,11 +1560,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public clickExpressionAdd(expressionItem: ExpressionOperandItem, targetButton: HTMLElement) {
-        if (this.shouldPreventExitEdit(expressionItem)) {
-            this.focusLastEditedExpressionInput();
-            return;
-        }
+    public clickExpressionAdd(targetButton: HTMLElement) {
         this.exitEditAddMode(true);
         this.cdr.detectChanges();
         this.openExpressionAddDialog(targetButton);
@@ -1930,21 +1922,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             defaultSearchValueTemplate: defaultSearchValueTemplate
         };
         return ctx;
-    }
-
-    private shouldPreventExitEdit(expressionItem: ExpressionOperandItem): boolean {
-       const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0]
-       return this._editedExpression && 
-            innerQuery && innerQuery.hasEditedExpression &&
-            this._editedExpression.expression.searchTree != expressionItem.expression.searchTree;
-    }
-
-    private focusLastEditedExpressionInput() {
-        const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
-        const expressionToScroll = innerQuery._editingInputsContainer?.nativeElement as Element;
-        const itemToFocus = Array.from(expressionToScroll.children).filter(input => input.querySelector('input') && !input.querySelector('input').disabled).pop().querySelector('input') as HTMLElement;
-        expressionToScroll.scrollIntoView();
-        itemToFocus.focus();
     }
 
     private setFormat(field: FieldType) {
