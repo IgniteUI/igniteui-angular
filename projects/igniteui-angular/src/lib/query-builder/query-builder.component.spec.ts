@@ -1,7 +1,7 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxComboComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxComboComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
@@ -1739,6 +1739,26 @@ describe('IgxQueryBuilder', () => {
 
       // Verify there are no subgroups anymore
       expect(queryBuilder.expressionTree.filteringOperands.filter(o => o instanceof FilteringExpressionsTree).length).toBe(0);
+    }));
+
+    it('Should disable changing a selected entity when "disableEntityChange"=true', () => {
+      queryBuilder.disableEntityChange = true;
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+      fix.detectChanges();
+
+      const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
+    });
+
+    it('Should disable changing a selected entity when "disableEntityChange"=true only after initial selection', fakeAsync(() => {
+      queryBuilder.disableEntityChange = true;
+      fix.detectChanges();
+
+      const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalse;
+      QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 0);
+
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
     }));
   });
 
