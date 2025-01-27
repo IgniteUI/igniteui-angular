@@ -41,7 +41,7 @@ export interface IGridStateInfo {
 /* jsonAPIManageCollectionInMarkup */
 /**
  * State component allows saving and restoring the state of the grid features.
- * @igxParent IgxGridElementsComponent, IgxTreeGridComponent, IgxHierarchicalGridElementsComponent, IgxPivotGridComponent, *
+ * @igxParent IgxGridElementsComponent, IgxTreeGridElementsComponent, IgxHierarchicalGridElementsComponent, IgxPivotGridComponent, *
  */
 @Component({
     selector: 'igx-grid-state',

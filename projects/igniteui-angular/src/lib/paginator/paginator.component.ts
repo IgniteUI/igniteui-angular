@@ -38,7 +38,7 @@ export class IgxPaginatorContentDirective {
 /* jsonAPIManageCollectionInMarkup */
 /**
  * Paginator component description
- * @igxParent IgxGridElementsComponent, IgxHierarchicalGridElementsComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
+ * @igxParent IgxGridElementsComponent, IgxHierarchicalGridElementsComponent, IgxTreeGridElementsComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
  */
 @Component({
     selector: 'igx-paginator',

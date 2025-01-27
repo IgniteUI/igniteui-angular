@@ -1,10 +1,10 @@
 import {
   IgxPivotDataSelectorComponent,
   IgxPivotGridComponent,
-  IgxTreeGridComponent,
 } from "../../../igniteui-angular/src/public_api";
 import { IgxGridElementsComponent } from "../lib/grids/grid.component";
 import { IgxHierarchicalGridElementsComponent } from "../lib/grids/hierarchical-grid.component";
+import { IgxTreeGridElementsComponent } from "../lib/grids/tree-grid.component";
 import { IgxPaginatorComponent } from "../../../igniteui-angular/src/lib/paginator/paginator.component";
 import { IgxPaginatorToken } from "../../../igniteui-angular/src/lib/paginator/token";
 import { IgxActionStripComponent } from "../../../igniteui-angular/src/lib/action-strip/action-strip.component";
@@ -30,7 +30,7 @@ import { IgxGridStateComponent } from "../lib/state.component";
 export const registerComponents = [
   IgxGridElementsComponent,
   IgxHierarchicalGridElementsComponent,
-  IgxTreeGridComponent,
+  IgxTreeGridElementsComponent,
   IgxPivotGridComponent,
   IgxPivotDataSelectorComponent,
 ];
@@ -43,7 +43,7 @@ export var registerConfig = [
     parents: [
       IgxGridElementsComponent,
       IgxHierarchicalGridElementsComponent,
-      IgxTreeGridComponent,
+      IgxTreeGridElementsComponent,
       IgxRowIslandElementsComponent,
     ],
     contentQueries: [
@@ -64,7 +64,7 @@ export var registerConfig = [
     parents: [
       IgxGridElementsComponent,
       IgxHierarchicalGridElementsComponent,
-      IgxTreeGridComponent,
+      IgxTreeGridElementsComponent,
       IgxPivotGridComponent,
       IgxRowIslandElementsComponent,
       IgxColumnGroupComponent,
@@ -120,7 +120,7 @@ export var registerConfig = [
     parents: [
       IgxGridElementsComponent,
       IgxHierarchicalGridElementsComponent,
-      IgxTreeGridComponent,
+      IgxTreeGridElementsComponent,
       IgxColumnGroupComponent,
       IgxRowIslandElementsComponent,
     ],
@@ -426,7 +426,7 @@ export var registerConfig = [
     selector: "igc-grid-state",
     parents: [
       IgxGridElementsComponent,
-      IgxTreeGridComponent,
+      IgxTreeGridElementsComponent,
       IgxHierarchicalGridElementsComponent,
       IgxPivotGridComponent,
     ],
@@ -461,7 +461,7 @@ export var registerConfig = [
     parents: [
       IgxGridElementsComponent,
       IgxHierarchicalGridElementsComponent,
-      IgxTreeGridComponent,
+      IgxTreeGridElementsComponent,
       IgxPivotGridComponent,
     ],
     contentQueries: [
@@ -555,6 +555,7 @@ export var registerConfig = [
       { name: "gridAPI" },
       { name: "cdr" },
       { name: "navigation", writable: true },
+      { name: "childLayoutList", writable: true },
       { name: "actionStripComponents", writable: true },
       { name: "foreignKey" },
       { name: "selectedCells" },
@@ -690,7 +691,7 @@ export var registerConfig = [
     parents: [
       IgxGridElementsComponent,
       IgxHierarchicalGridElementsComponent,
-      IgxTreeGridComponent,
+      IgxTreeGridElementsComponent,
       IgxPivotGridComponent,
     ],
     contentQueries: [],
@@ -996,6 +997,7 @@ export var registerConfig = [
     ],
     additionalProperties: [
       { name: "rowIslandAPI", writable: true },
+      { name: "childLayoutList", writable: true },
       { name: "gridAPI", writable: true },
       { name: "shouldGenerate", writable: true },
       { name: "rowList" },
@@ -1112,10 +1114,15 @@ export var registerConfig = [
     ],
   },
   {
-    component: IgxTreeGridComponent,
+    component: IgxTreeGridElementsComponent,
     selector: "igc-tree-grid",
     parents: [],
     contentQueries: [
+      {
+        property: "actionStripComponents",
+        childType: IgxActionStripToken,
+        isQueryList: true,
+      },
       {
         property: "columnList",
         childType: IgxColumnComponent,
@@ -1131,6 +1138,7 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
+      { name: "actionStripComponents", writable: true },
       { name: "rootRecords", writable: true },
       { name: "records", writable: true },
       { name: "processedRootRecords", writable: true },

@@ -98,17 +98,10 @@ export class IgxRowIslandElementsComponent extends IgxRowIslandComponent {
         });
     }
 
-    //children
-    // childLayoutList
-
     /* contentChildren */
-    /* blazorInclude */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: RowIslandCollection */
     /* ngQueryListName: childLayoutList */
-    /**
-     * @hidden
-     */
     @ContentChildren(IgxRowIslandElementsComponent, { read: IgxRowIslandElementsComponent, descendants: false })
     public override childLayoutList: QueryList<IgxRowIslandElementsComponent>;
 
@@ -126,12 +119,10 @@ export class IgxRowIslandElementsComponent extends IgxRowIslandComponent {
 
     // TODO(api-analyzer): Shouldn't need all tags to copy from base or hidden/internal due to include tag
     /* contentChildren */
-    /* blazorInclude */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: ActionStripCollection */
     /* blazorCollectionItemName: ActionStrip */
     /* ngQueryListName: actionStripComponents */
-    /** @hidden @internal */
     @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
     protected actionStripComponents: QueryList<IgxActionStripToken>;
 

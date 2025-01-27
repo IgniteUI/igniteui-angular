@@ -31,7 +31,7 @@ import { NgIf, NgTemplateOutlet } from '@angular/common';
  * Provides a context-aware container component for UI operations for the grid components.
  *
  * @igxModule IgxGridToolbarModule
- * @igxParent IgxGridElementsComponent, IgxHierarchicalGridElementsComponent, IgxTreeGridComponent, IgxPivotGridComponent,
+ * @igxParent IgxGridElementsComponent, IgxHierarchicalGridElementsComponent, IgxTreeGridElementsComponent, IgxPivotGridComponent,
  *
  */
 @Component({

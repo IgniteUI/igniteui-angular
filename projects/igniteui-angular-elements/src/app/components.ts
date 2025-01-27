@@ -15,7 +15,6 @@ import {
     IgxGridToolbarTitleComponent,
     IgxPaginatorComponent,
     IgxPivotGridComponent,
-    IgxTreeGridComponent,
     IgxPivotDataSelectorComponent
 } from 'igniteui-angular';
 import { GridType } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
@@ -29,6 +28,7 @@ import { injector } from '../utils/injector-ref';
 import { registerComponent } from '../utils/register';
 import { IgxHierarchicalGridElementsComponent } from '../lib/grids/hierarchical-grid.component';
 import { IgxRowIslandElementsComponent } from '../lib/grids/row-island.component';
+import { IgxTreeGridElementsComponent } from '../lib/grids/tree-grid.component';
 
 // force-create icon service, TODO: move to initializer or register/define mechanic to avoid side-effect?
 const _iconBroadcast: IgxIconBroadcastService = injector.get(IgxIconBroadcastService);
@@ -36,7 +36,7 @@ const _iconBroadcast: IgxIconBroadcastService = injector.get(IgxIconBroadcastSer
 const grid = createIgxCustomElement(IgxGridElementsComponent, { injector, registerConfig });
 const IgcGridComponent = withRegister(grid, () => { registerComponent(IgcGridComponent) });
 
-const treeGrid = createIgxCustomElement(IgxTreeGridComponent, { injector, registerConfig });
+const treeGrid = createIgxCustomElement(IgxTreeGridElementsComponent, { injector, registerConfig });
 const IgcTreeGridComponent = withRegister(treeGrid, () => { registerComponent(IgcTreeGridComponent) });
 
 const hGrid = createIgxCustomElement(IgxHierarchicalGridElementsComponent, { injector, registerConfig });
@@ -122,7 +122,7 @@ export {
 // TODO: Custom elements JSON as well
 declare global {
     type IgxGridElement = NgElement & WithProperties<GridType>;
-    type IgxTreeGridElement = NgElement & WithProperties<IgxTreeGridComponent>;
+    type IgxTreeGridElement = NgElement & WithProperties<IgxTreeGridElementsComponent>;
     interface HTMLElementTagNameMap {
         'igc-grid': NgElement & WithProperties<GridType>;
         'igc-tree-grid': NgElement & WithProperties<IgxTreeGridElement>;

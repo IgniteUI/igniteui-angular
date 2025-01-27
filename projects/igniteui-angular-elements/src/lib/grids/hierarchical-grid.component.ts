@@ -147,18 +147,10 @@ export class IgxHierarchicalGridElementsComponent extends IgxHierarchicalGridCom
         });
     }
 
-
-//childLayoutList
-//allLayoutList
-
     /* contentChildren */
-    /* blazorInclude */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: RowIslandCollection */
     /* ngQueryListName: childLayoutList */
-    /**
-     * @hidden
-     */
     @ContentChildren(IgxRowIslandElementsComponent, { read: IgxRowIslandElementsComponent, descendants: false })
     public override childLayoutList: QueryList<IgxRowIslandElementsComponent>;
 
