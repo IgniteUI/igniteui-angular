@@ -31,8 +31,8 @@ import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-
 import { IgxOverlayOutletDirective, IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FieldType, EntityType } from '../grids/common/grid.interface';
 import { IgxSelectComponent } from '../select/select.component';
-import { HorizontalAlignment, OverlaySettings, RelativePosition, VerticalAlignment } from '../services/overlay/utilities';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy, IgxOverlayService } from '../services/public_api';
+import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/overlay/utilities';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-common/picker-icons.common';
@@ -285,7 +285,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         // if value is invalid, set it back to _localeId
         try {
             getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
+        } catch () {
             this._locale = this._localeId;
         }
     }
