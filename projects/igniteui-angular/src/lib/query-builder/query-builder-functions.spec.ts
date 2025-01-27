@@ -12,7 +12,7 @@ export const QueryBuilderConstants = {
     QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS: 'igx-filter-tree__line--and',
     QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS: 'igx-filter-tree__line--or',
     CSS_CLASS_DROPDOWN_LIST_SCROLL: 'igx-drop-down__list-scroll',
-    QUERY_BUILDER_GROUP_CONTEXT_MENU: 'igx-filter-tree-group-context-menu',
+    QUERY_BUILDER_GROUP_CONTEXT_MENU: 'igx-filter-tree__expression-context-menu',
     CSS_CLASS_DROP_DOWN_ITEM_DISABLED: 'igx-drop-down__item--disabled',
     QUERY_BUILDER_BODY: 'igx-query-builder__main',
     QUERY_BUILDER_EXPRESSION_ITEM_CLASS: 'igx-filter-tree__expression-item'
@@ -117,7 +117,7 @@ export class QueryBuilderFunctions {
             fieldName: 'OrderDate',
             condition: IgxDateFilteringOperand.instance().condition('today'),
             conditionName: IgxDateFilteringOperand.instance().condition('today').name
-        });        
+        });
         tree.filteringOperands.push(subGroup);
 
         return tree;
@@ -395,7 +395,7 @@ export class QueryBuilderFunctions {
         const contextMenuButton = QueryBuilderFunctions.getQueryBuilderGroupContextMenus(fix)[index].queryAll(By.css('.igx-button'))[0].nativeElement;
         contextMenuButton.click();
     }
-    
+
     public static clickContextMenuItem(fix: ComponentFixture<any>, index: number) {
         const dropDownItems = this.getQueryBuilderGroupContextMenuDropDownItems(fix);
         dropDownItems[index].click();
@@ -841,8 +841,8 @@ export class QueryBuilderFunctions {
     public static GetChipsContentAsArray(fix: ComponentFixture<any>){
         const contents: string[] = [];
 
-        const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;        
-        
+        const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
+
         queryTreeElement.querySelectorAll('.igx-chip').forEach(chip => {
             contents.push(QueryBuilderFunctions.getChipContent(chip));
         });
@@ -853,7 +853,7 @@ export class QueryBuilderFunctions {
     public static getChipContent(chip: Element): string {
         if(chip.checkVisibility()){
             let text:string = '';
-            
+
             Array.from(chip.querySelectorAll('span')).forEach(element => {
                 if(element?.textContent) text +=element.textContent;
             });

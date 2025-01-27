@@ -4,7 +4,7 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin component {
-    @include _builder-legend();
+    //@include _builder-legend();
     @include _advanced-filtering-tree();
     @include _advanced-filtering-con-menu();
     @include _advanced-filtering-empty();
@@ -36,6 +36,10 @@
             @extend %advanced-filter__title !optional;
         }
 
+        @include e(label) {
+            @extend %advanced-filter__label !optional;
+        }
+
         @include e(main) {
             @extend %advanced-filter__main !optional;
         }
@@ -58,29 +62,37 @@
     }
 }
 
-@mixin _builder-legend {
-    @include b(igx-builder-legend) {
-        @extend %filter-legend !optional;
+//@mixin _builder-legend {
+//    @include b(igx-builder-legend) {
+//        @extend %filter-legend !optional;
 
-        @include e(item) {
-            @extend %filter-legend__item !optional;
-        }
+//        @include e(item) {
+//            @extend %filter-legend__item !optional;
+//        }
 
-        @include e(item, $m: 'and') {
-            @extend %filter-legend__item !optional;
-            @extend %filter-legend__item--and !optional;
-        }
+//        @include e(item, $m: 'and') {
+//            @extend %filter-legend__item !optional;
+//            @extend %filter-legend__item--and !optional;
+//        }
 
-        @include e(item, $m: 'or') {
-            @extend %filter-legend__item !optional;
-            @extend %filter-legend__item--or !optional;
-        }
-    }
-}
+//        @include e(item, $m: 'or') {
+//            @extend %filter-legend__item !optional;
+//            @extend %filter-legend__item--or !optional;
+//        }
+//    }
+//}
 
 @mixin _advanced-filtering-tree {
     @include b(igx-filter-tree) {
         @extend %filter-tree !optional;
+
+        @include e(subquery) {
+            @extend %filter-tree__subquery !optional;
+        }
+
+        @include e(section) {
+            @extend %filter-tree__section !optional;
+        }
 
         @include e(line) {
             @extend %filter-tree__line !optional;
@@ -94,20 +106,40 @@
             @extend %filter-tree__line--or !optional;
         }
 
-        @include e(line, $mods: ('selected', 'and')) {
-            @extend %filter-tree__line--and-selected !optional;
+        //@include e(line, $mods: ('selected', 'and')) {
+        //    @extend %filter-tree__line--and-selected !optional;
+        //}
+
+        //@include e(line, $mods: ('selected', 'or')) {
+        //    @extend %filter-tree__line--or-selected !optional;
+        //}
+
+        @include e(button, $m: 'and') {
+            @extend %filter-tree__button--and !optional;
         }
 
-        @include e(line, $mods: ('selected', 'or')) {
-            @extend %filter-tree__line--or-selected !optional;
+        @include e(button, $m: 'or') {
+            @extend %filter-tree__button--or !optional;
         }
 
-        @include e(expression) {
-            @extend %filter-tree__expression !optional;
+        @include e(expressions) {
+            @extend %filter-tree__expressions !optional;
+        }
+
+        @include e(expression-context-menu) {
+            @extend %filter-tree__expression-context-menu !optional;
+        }
+
+        @include e(expression-section) {
+            @extend %filter-tree__expression-section !optional;
         }
 
         @include e(expression-item) {
             @extend %filter-tree__expression-item !optional;
+        }
+
+        @include e(expression-item-ghost) {
+            @extend %filter-tree__expression-item-ghost !optional;
         }
 
         @include e(expression-column) {
@@ -128,6 +160,10 @@
 
         @include e(inputs) {
             @extend %filter-tree__inputs !optional;
+        }
+
+        @include e(inputs-field) {
+            @extend %filter-tree__inputs-field !optional;
         }
 
         @include e(inputs-actions) {
@@ -168,11 +204,15 @@
     @include b(igx-query-builder-tree) {
         @extend %query-builder-tree !optional;
 
-        @for $i from 0 through 5 {
-            @include m(level-#{$i}) {
-                @extend %query-level-#{$i} !optional;
-            }
+        @include m(level-0) {
+            @extend %query-level-0 !optional;
         }
+
+        //@for $i from 0 through 5 {
+        //    @include m(level-#{$i}) {
+        //        @extend %query-level-#{$i} !optional;
+        //    }
+        //}
     }
 }
 
