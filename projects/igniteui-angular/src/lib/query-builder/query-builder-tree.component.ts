@@ -1030,7 +1030,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     private get mainExpressionTree(): HTMLElement {
-        return this.el.nativeElement.firstElementChild.firstElementChild.nextElementSibling;
+        return this.el.nativeElement.querySelector('.igx-filter-tree');
     }
 
     //Chip can be dragged if it's tree is in edit mode and there is no inner query that's been edited
