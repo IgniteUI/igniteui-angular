@@ -237,7 +237,7 @@
                 <div igxDragIgnore class="igx-filter-tree__expression-actions">
                     <button #addExpressionButton igxDragIgnore igxIconButton="flat" [igxDropDownItemNavigation]="addOptionsDropDown"
                     aria-labelledby="add-expression" (keydown)="invokeClick($event)"
-                        (click)="clickExpressionAdd(expressionItem, addExpressionButton, expressionChip)"
+                        (click)="clickExpressionAdd(addExpressionButton, expressionChip)"
                         (blur)="addExpressionBlur()">
                         <igx-icon id="add-expression">add</igx-icon>
                     </button>
@@ -263,7 +263,6 @@
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="expressionItem.inEditMode"
             class="igx-filter-tree__inputs"
-            [style.scroll-margin-top]="'30px'"
         >
             <igx-select
                 #fieldSelect
@@ -284,8 +283,8 @@
                 [overlaySettings]="conditionSelectOverlaySettings"
                 [(ngModel)]="selectedCondition"
                 [disabled]="!selectedField"
+                [placeholder]="this.resourceStrings.igx_query_builder_condition_placeholder"
             >
-                <label igxLabel>{{this.resourceStrings.igx_query_builder_condition_placeholder}}</label>
                 <igx-prefix
                     *ngIf="
                         selectedField &&
@@ -458,8 +457,8 @@
             <div
                 class="igx-filter-tree__line"
                 [ngClass]="{
-                    'igx-filter-tree__line--and': !expressionItem || expressionItem?.operator === 0,
-                    'igx-filter-tree__line--or': expressionItem?.operator === 1
+                    'igx-filter-tree__line--and': (expressionItem ?? this.expressionTree).operator === 0,
+                    'igx-filter-tree__line--or': (expressionItem ?? this.expressionTree).operator === 1
                 }"
             ></div>
 
@@ -486,7 +485,7 @@
                             (over)="onGroupRootOver(groupRef, expressionItem)"
                             (leave)="onChipLeave()"
                         > 
-                            {{!expressionItem || expressionItem?.operator === 0 ? this.resourceStrings.igx_query_builder_and_label : this.resourceStrings.igx_query_builder_or_label}}
+                            {{(expressionItem ?? this.expressionTree).operator === 0 ? this.resourceStrings.igx_query_builder_and_label : this.resourceStrings.igx_query_builder_or_label}}
                         </span>
                         <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>
                     </button>
@@ -495,7 +494,7 @@
                                    [width]="'fit-content'">
                         <igx-drop-down-item [value]="'switchCondition'"
                         >
-                            {{getSwitchGroupText(contextualGroup?.operator)}}
+                            {{getSwitchGroupText((contextualGroup ?? this.expressionTree).operator)}}
                         </igx-drop-down-item>
                         <igx-drop-down-item [value]="'ungroup'"
                                             [disabled]="this.rootGroup === this.contextualGroup"
