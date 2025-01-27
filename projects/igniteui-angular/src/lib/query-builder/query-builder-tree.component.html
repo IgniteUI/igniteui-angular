@@ -96,7 +96,7 @@
             #addConditionButton
             igxButton="outlined"
             [disabled]="hasEditedExpression"
-            (click)="addCondition(expressionItem, afterExpression)"
+            (click)="addCondition(expressionItem, afterExpression, addConditionButton)"
             igxDrop 
             (enter)="onAddConditionEnter(addConditionButton, expressionItem)"
             (leave)="onChipLeave()"
@@ -135,6 +135,7 @@
             (focusout)="onExpressionBlur($event, expressionItem)"
         >
             <igx-chip        
+                #expressionChip
                 [draggable]="canBeDragged() ? 'true' : 'false'" 
                 [hideBaseOnDrag] = "false"    
                 [animateOnRelease] = "false"
@@ -149,7 +150,7 @@
                 [data]="expressionItem"
                 [removable]="isInEditMode() ? 'true' : 'false'"
                 (keydown)="invokeClick($event)"
-                (click)="onChipClick(expressionItem)"
+                (click)="onChipClick(expressionItem, expressionChip)"
                 (remove)="onChipRemove(expressionItem)"                
                 
             >
@@ -236,7 +237,7 @@
                 <div igxDragIgnore class="igx-filter-tree__expression-actions">
                     <button #addExpressionButton igxDragIgnore igxIconButton="flat" [igxDropDownItemNavigation]="addOptionsDropDown"
                     aria-labelledby="add-expression" (keydown)="invokeClick($event)"
-                        (click)="clickExpressionAdd(expressionItem, addExpressionButton)"
+                        (click)="clickExpressionAdd(expressionItem, addExpressionButton, expressionChip)"
                         (blur)="addExpressionBlur()">
                         <igx-icon id="add-expression">add</igx-icon>
                     </button>
@@ -423,13 +424,13 @@
                 <button type="button"
                     igxIconButton="flat"
                     [disabled]="!operandCanBeCommitted()"
-                    (click)="commitOperandEdit()"
+                    (click)="commitExpression()"
                 >
                     <igx-icon family="default" name="confirm"></igx-icon>
                 </button>
                 <button type="button"
                     igxIconButton="flat"
-                    (click)="cancelOperandEdit()"
+                    (click)="discardExpression(expressionItem)"
                 >
                     <ng-container *ngTemplateOutlet="closeIcon"></ng-container>
                 </button>
