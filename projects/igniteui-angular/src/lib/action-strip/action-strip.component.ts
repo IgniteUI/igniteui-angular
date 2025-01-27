@@ -58,7 +58,7 @@ export class IgxActionStripMenuItemDirective {
  *
  * @igxGroup Data Entry & Display
  *
- * @igxParent IgxGridElementsComponent, IgxHierarchicalGridElementsComponent, IgxTreeGridComponent, IgxRowIslandComponent, *
+ * @igxParent IgxGridElementsComponent, IgxHierarchicalGridElementsComponent, IgxTreeGridComponent, IgxRowIslandElementsComponent, *
  *
  * @remarks
  * The Ignite UI Action Strip is a container, overlaying its parent container,

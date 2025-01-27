@@ -15,7 +15,6 @@ import {
     IgxGridToolbarTitleComponent,
     IgxPaginatorComponent,
     IgxPivotGridComponent,
-    IgxRowIslandComponent,
     IgxTreeGridComponent,
     IgxPivotDataSelectorComponent
 } from 'igniteui-angular';
@@ -29,6 +28,7 @@ import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
 import { injector } from '../utils/injector-ref';
 import { registerComponent } from '../utils/register';
 import { IgxHierarchicalGridElementsComponent } from '../lib/grids/hierarchical-grid.component';
+import { IgxRowIslandElementsComponent } from '../lib/grids/row-island.component';
 
 // force-create icon service, TODO: move to initializer or register/define mechanic to avoid side-effect?
 const _iconBroadcast: IgxIconBroadcastService = injector.get(IgxIconBroadcastService);
@@ -48,7 +48,7 @@ const IgcPivotGridComponent = withRegister(pivot, () => { registerComponent(IgcP
 const pivotDataSelector = createIgxCustomElement(IgxPivotDataSelectorComponent, { injector, registerConfig });
 const IgcPivotDataSelectorComponent = withRegister(pivotDataSelector, () => { registerComponent(IgcPivotDataSelectorComponent) });
 
-const rowIsland = createIgxCustomElement(IgxRowIslandComponent, { injector, registerConfig });
+const rowIsland = createIgxCustomElement(IgxRowIslandElementsComponent, { injector, registerConfig });
 const IgcRowIslandComponent = withRegister(rowIsland, () => { registerComponent(IgcRowIslandComponent) });
 
 const columnGroup = createIgxCustomElement(IgxColumnGroupComponent, { injector, registerConfig });
