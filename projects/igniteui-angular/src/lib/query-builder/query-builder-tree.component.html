@@ -283,8 +283,8 @@
                 [overlaySettings]="conditionSelectOverlaySettings"
                 [(ngModel)]="selectedCondition"
                 [disabled]="!selectedField"
+                [placeholder]="this.resourceStrings.igx_query_builder_condition_placeholder"
             >
-                <label igxLabel>{{this.resourceStrings.igx_query_builder_condition_placeholder}}</label>
                 <igx-prefix
                     *ngIf="
                         selectedField &&
