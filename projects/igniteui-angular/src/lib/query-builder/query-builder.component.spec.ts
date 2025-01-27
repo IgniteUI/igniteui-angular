@@ -1,12 +1,12 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxComboComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxComboComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './query-builder-functions.spec';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 
@@ -41,8 +41,7 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilderElement.children.length).toEqual(2);
 
       expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' Query Builder ');
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fix).textContent).toBe('and');
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fix).textContent).toBe('or');
+
       const queryTreeElement = queryBuilderElement.children[1];
       expect(queryTreeElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_TREE);
 
@@ -157,7 +156,7 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(1);
 
       // Verify there is a new root group, which is empty.
-      let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
+      const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
       expect(group).not.toBeNull('There is no root group.');
 
       // Click on the 'cancel' button
@@ -1518,7 +1517,7 @@ describe('IgxQueryBuilder', () => {
       tick(100);
       fix.detectChanges();
 
-      let group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+      const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
 
       // Add new 'expression'.
       const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
@@ -2046,13 +2045,6 @@ describe('IgxQueryBuilder', () => {
 
     it('Should render custom header properly.', () => {
       expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe(' Custom Title ');
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fixture)).toBeNull();
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fixture)).toBeNull();
-
-      fixture.componentInstance.showLegend = true;
-      fixture.detectChanges();
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fixture).textContent).toBe('and');
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fixture).textContent).toBe('or');
     });
 
     it('Should render custom input template properly.', fakeAsync(() => {
@@ -2186,8 +2178,6 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' My advanced filter ');
-      expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fix) as HTMLElement).innerText).toBe('My and');
-      expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fix) as HTMLElement).innerText).toBe('My or');
       expect((QueryBuilderFunctions.getQueryBuilderInitialAddConditionBtn(fix, 0) as HTMLElement).querySelector('span').innerText)
         .toBe('My condition');
 
@@ -2601,7 +2591,7 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
 @Component({
   template: `
      <igx-query-builder #queryBuilder [entities]="this.entities" [expressionTree]="this.expressionTree">
-         <igx-query-builder-header [title]="'Custom Title'" [showLegend]="showLegend"></igx-query-builder-header>
+         <igx-query-builder-header [title]="'Custom Title'"></igx-query-builder-header>
          <ng-template #searchValueTemplate
                         igxQueryBuilderSearchValue
                         let-searchValue
@@ -2637,7 +2627,6 @@ export class IgxQueryBuilderCustomTemplateSampleTestComponent implements OnInit 
   @ViewChild('searchValueTemplate', { read: IgxQueryBuilderSearchValueTemplateDirective, static: true })
   public searchValueTemplate: IgxQueryBuilderSearchValueTemplateDirective;
   public entities: Array<any>;
-  public showLegend = false;
   public expressionTree: IExpressionTree;
   public comboData: any[];
 

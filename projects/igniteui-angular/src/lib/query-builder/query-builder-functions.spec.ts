@@ -136,18 +136,6 @@ export class QueryBuilderFunctions {
         return title.textContent;
     }
 
-    public static getQueryBuilderHeaderLegendItemAnd(fix: ComponentFixture<any>) {
-        const header = QueryBuilderFunctions.getQueryBuilderHeader(fix);
-        const andLegendItem = header.querySelector('.igx-builder-legend__item--and');
-        return andLegendItem;
-    }
-
-    public static getQueryBuilderHeaderLegendItemOr(fix: ComponentFixture<any>) {
-        const header = QueryBuilderFunctions.getQueryBuilderHeader(fix);
-        const orLegendItem = header.querySelector('.igx-builder-legend__item--or');
-        return orLegendItem;
-    }
-
     /**
      * Get the expressions container that contains all groups and expressions.
      */
