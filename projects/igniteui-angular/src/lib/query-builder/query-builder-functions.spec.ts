@@ -13,6 +13,7 @@ export const QueryBuilderConstants = {
     QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS: 'igx-filter-tree__line--or',
     CSS_CLASS_DROPDOWN_LIST_SCROLL: 'igx-drop-down__list-scroll',
     QUERY_BUILDER_GROUP_CONTEXT_MENU: 'igx-filter-tree-group-context-menu',
+    CSS_CLASS_DROP_DOWN_ITEM_DISABLED: 'igx-drop-down__item--disabled',
     QUERY_BUILDER_BODY: 'igx-query-builder__main',
     QUERY_BUILDER_EXPRESSION_ITEM_CLASS: 'igx-filter-tree__expression-item'
 }
@@ -393,8 +394,13 @@ export class QueryBuilderFunctions {
     }
 
     public static getQueryBuilderGroupContextMenuDropDownItems(fix: ComponentFixture<any>) {
-        const dropDownItems = fix.debugElement.queryAll(By.css(`.igx-filter-tree-group-drop-down-item`));
+        const dropDownItems = fix.nativeElement.querySelectorAll('igx-drop-down-item')
         return dropDownItems;
+    }
+
+    public static verifyContextMenuItemDisabled(fix: ComponentFixture<any>, index: number, disabled: boolean) {
+        const contextMenuItems = QueryBuilderFunctions.getQueryBuilderGroupContextMenuDropDownItems(fix);
+        expect(contextMenuItems[index].classList.contains(QueryBuilderConstants.CSS_CLASS_DROP_DOWN_ITEM_DISABLED)).toBe(disabled);
     }
 
     public static clickQueryBuilderGroupContextMenu(fix: ComponentFixture<any>, index = 0) {
@@ -402,14 +408,9 @@ export class QueryBuilderFunctions {
         contextMenuButton.click();
     }
     
-    public static clickQueryBuilderGroupContextMenuSwitchGroup(fix: ComponentFixture<any>, index = 0) {
+    public static clickContextMenuItem(fix: ComponentFixture<any>, index: number) {
         const dropDownItems = this.getQueryBuilderGroupContextMenuDropDownItems(fix);
-        dropDownItems[0].nativeElement.click();
-    }
-    
-    public static clickQueryBuilderGroupContextMenuUngroup(fix: ComponentFixture<any>, index = 0) {
-        const dropDownItems = this.getQueryBuilderGroupContextMenuDropDownItems(fix);
-        dropDownItems[1].nativeElement.click();
+        dropDownItems[index].click();
     }
 
     /*
