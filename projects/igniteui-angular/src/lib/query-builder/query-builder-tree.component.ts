@@ -285,7 +285,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         // if value is invalid, set it back to _localeId
         try {
             getLocaleFirstDayOfWeek(this._locale);
-        } catch () {
+        } catch {
             this._locale = this._localeId;
         }
     }
