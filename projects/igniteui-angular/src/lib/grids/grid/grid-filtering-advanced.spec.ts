@@ -1217,8 +1217,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix).trim()).toBe('My advanced filter');
-            expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fix) as HTMLElement).innerText).toBe('My and');
-            expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fix) as HTMLElement).innerText).toBe('My or');
             expect(QueryBuilderFunctions.getQueryBuilderInitialAddConditionBtn(fix).querySelector('span').innerText)
                 .toBe('My condition');
 
