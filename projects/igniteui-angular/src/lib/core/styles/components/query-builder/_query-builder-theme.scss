@@ -153,8 +153,8 @@
     %query-level-0 {
         display: block;
         width: 100%;
-        padding-inline: rem(24px);
-        padding-block: 0 rem(24px);
+        padding-inline:  if($variant != 'bootstrap', rem(24px), rem(16px));
+        padding-block: 0  if($variant != 'bootstrap', rem(24px), rem(16px));
 
         > %advanced-filter__main {
              > %filter-tree__section {
@@ -174,7 +174,7 @@
             border-radius: var-get($theme, 'tree-border-radius');
         }
 
-        // Hide the subquery if there is a tee with display none inside
+        // Hide the subquery if there is a tree with display none inside
         &:has( > %query-builder-tree[style='display: none;']) {
             display: none;
         }
@@ -222,12 +222,6 @@
     }
 
     %advanced-filter__header {
-        @if $variant == 'bootstrap' {
-            > * {
-                margin-bottom: rem(0) !important;
-            }
-        }
-
         display: flex;
         align-items: center;
         background-color: var-get($theme, 'header-background');
@@ -236,6 +230,9 @@
         border-radius: $border-radius $border-radius 0 0;
         margin-bottom: 0;
         border-block-end: rem(1px) solid var-get($theme, 'header-border');
+
+        padding-inline: if($variant != 'bootstrap', rem(24px), rem(16px));
+        padding-block: if($variant != 'bootstrap', rem(24px), rem(16px)) rem(16px);
     }
 
     %advanced-filter__title {
@@ -262,12 +259,6 @@
         display: flex;
         gap: rem(8px);
         padding-bottom: $gap;
-    }
-
-    %advanced-filter__header {
-        padding-inline: rem(24px);
-        padding-block: rem(24px) rem(16px);
-
     }
 
     %advanced-filter__outlet {
@@ -312,43 +303,20 @@
         }
     }
 
-    //%query-builder-tree:not([style*="display: none"]) + %filter-tree {
-    //    padding-top: $gap;
-    //}
-
-    //%filter-tree:not(:last-child):not(:nth-last-child(2):has(+ %query-builder-tree)) {
-    //    padding-bottom: $gap;
-    //}
-
     %filter-tree__line {
-        width: rem(2px);
+        $size: rem(2px);
+        width: $size;
         background-color: white;
-        margin-inline-end: rem(8px);
+        margin-inline-end: calc(rem(8px) - $size);
         outline-style: none;
     }
 
     %filter-tree__line--and {
         background: var-get($theme, 'color-and');
-
-        //&-selected {
-        //    background: var-get($theme, 'background-and--focus');
-        //}
-
-        //&:focus {
-        //    box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'background-and--focus');
-        //}
     }
 
     %filter-tree__line--or {
         background: var-get($theme, 'color-or');
-
-        //&-selected {
-        //    background-color: var-get($theme, 'background-or--focus');
-        //}
-
-        //&:focus {
-        //    box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'background-or--focus');
-        //}
     }
 
     %filter-tree__button--and {
@@ -477,7 +445,7 @@
         }
 
         %igx-icon-button-display {
-            --size: #{sizable(rem(20px), rem(24px), if($variant != 'indigo', rem(32px), rem(28px)))}
+            --ig-size: 1
         };
     }
 
@@ -508,15 +476,14 @@
     }
 
     %filter-tree__inputs {
+        --ig-size: 1;
+
         display: flex;
         align-items: flex-end;
         gap: rem(16px);
         width: 100%;
         border-radius: inherit;
 
-        igx-input-group {
-            --ig-size: 1;
-        }
 
         &:empty {
             display: none;

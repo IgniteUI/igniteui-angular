@@ -472,6 +472,10 @@
                     (leave)="onChipLeave()"
                 >
                     <button #changeGroupButton
+                            [ngClass]="{
+                                'igx-filter-tree__button--and': (expressionItem ?? this.expressionTree).operator === 0,
+                                'igx-filter-tree__button--or': (expressionItem ?? this.expressionTree).operator === 1
+                            }"
                             [igxDropDownItemNavigation]="groupContextMenuDropDown"
                             igxDragIgnore
                             igxButton="flat"
