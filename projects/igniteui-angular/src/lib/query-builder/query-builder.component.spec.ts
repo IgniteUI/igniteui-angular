@@ -73,7 +73,7 @@ describe('IgxQueryBuilder', () => {
       const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
       const bodyElement = queryTreeElement.children[0];
       expect(bodyElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_BODY);
-      expect(bodyElement.children.length).toEqual(3);
+      expect(bodyElement.children.length).toEqual(2);
 
       // Verify the operator line of the root group is an 'And' line.
       QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
@@ -82,10 +82,11 @@ describe('IgxQueryBuilder', () => {
       expect(selectFromContainer).toHaveClass('igx-filter-tree__inputs');
       expect(selectFromContainer.children[0].children[1].tagName).toEqual('IGX-SELECT');
       expect(selectFromContainer.children[1].children[1].tagName).toEqual('IGX-COMBO');
-      const queryTreeExpressionContainer = bodyElement.children[2].children[1];
-      expect(queryTreeExpressionContainer).toHaveClass('igx-filter-tree__expression');
+      const queryTreeExpressionContainer = bodyElement.children[1].children[1];
+      expect(queryTreeExpressionContainer).toHaveClass('igx-filter-tree');
+      expect(queryTreeExpressionContainer.children[1]).toHaveClass('igx-filter-tree__expressions');
 
-      const expressionItems = queryTreeExpressionContainer.querySelectorAll(':scope > .igx-filter-tree__expression-item');
+      const expressionItems = queryTreeExpressionContainer.children[1].children[1].querySelectorAll(':scope > .igx-filter-tree__expression-item');
       expect(expressionItems.length).toEqual(queryBuilder.expressionTree.filteringOperands.length);
       // entity select should have proper value
       expect(queryBuilder.queryTree.selectedEntity.name).toEqual(queryBuilder.expressionTree.entity);

@@ -165,7 +165,7 @@ export class QueryBuilderFunctions {
      * Get the root group.
      */
     public static getQueryBuilderTreeRootGroup(fix: ComponentFixture<any>, level = 0) {
-        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix, level);
+        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix, level).children[1];
         const rootGroup = exprContainer.querySelector(':scope > .igx-filter-tree');
         return rootGroup;
     }
@@ -176,7 +176,7 @@ export class QueryBuilderFunctions {
      */
     public static getQueryBuilderTreeChildGroups(group: HTMLElement, directChildrenOnly = true) {
         const pattern = directChildrenOnly ? ':scope > .igx-filter-tree' : '.igx-filter-tree';
-        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childrenContainer = group.querySelector('.igx-filter-tree__expressions').children[1];
         const childGroups = Array.from(childrenContainer.querySelectorAll(pattern));
         return childGroups;
     }
@@ -187,7 +187,7 @@ export class QueryBuilderFunctions {
      */
     public static getQueryBuilderTreeChildExpressions(group: HTMLElement, directChildrenOnly = true) {
         const pattern = directChildrenOnly ? ':scope > .igx-filter-tree__expression-item' : '.igx-filter-tree__expression-item';
-        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childrenContainer = group.querySelector('.igx-filter-tree__expressions').children[1];
         const childExpressions = Array.from(childrenContainer.querySelectorAll(pattern));
         return childExpressions;
     }
@@ -307,7 +307,7 @@ export class QueryBuilderFunctions {
      */
     public static getQueryBuilderTreeRootGroupButtons(fix: ComponentFixture<any>, buttonsIndex: number) {
         const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
-        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childrenContainer = group.querySelector('.igx-filter-tree__expressions');
         const buttonsContainers = Array.from(childrenContainer.querySelectorAll(':scope > .igx-filter-tree__buttons'));
         const buttonsContainer: any = buttonsContainers[buttonsIndex];
         const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
