@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './query-builder-functions.spec';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 
@@ -1067,7 +1067,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'ProductName', 'Starts With', 'a', 1);
     }));
 
-    it('Should switch edit mode on click on chip on the same level.', fakeAsync(()=>{
+    it('Should switch edit mode on click on chip on the same level.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
       tick(100);
@@ -1076,7 +1076,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
       tick(50);
       fix.detectChanges();
-      
+
       // Click the existing chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], 1);
       tick(50);
@@ -1089,7 +1089,7 @@ describe('IgxQueryBuilder', () => {
       tick(50);
       fix.detectChanges();
       // Verify inputs values
-      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Released', 'True', '', 1 );
+      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Released', 'True', '', 1);
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'ProductName', 'Contains', 'a', 1);
     }));
 
@@ -2224,7 +2224,7 @@ describe('IgxQueryBuilder', () => {
   describe('Drag and drop', () => {
     const ROW_HEIGHT = 40;
     let chipComponents = [];
-    beforeEach(() => {       
+    beforeEach(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
 
@@ -2246,8 +2246,7 @@ describe('IgxQueryBuilder', () => {
       expect(chipComponents[1].nativeElement.getBoundingClientRect().height).toBe(0);
     });
 
-    it('should render drop ghost properly.', () => {
-      pending("This test seems obsolete!");
+    it('should render drop ghost properly when mouse dragged.', async () => {
       const draggedChip = chipComponents[1].componentInstance;
       const draggedChipElem = draggedChip.chipArea.nativeElement;
 
@@ -2260,59 +2259,64 @@ describe('IgxQueryBuilder', () => {
       const startingX = (startingLeft + startingRight) / 2;
       const startingY = (startingTop + startingBottom) / 2;
 
-      let X =100, Y = 15, run =1;
+      const DROP_CONDITION_HERE = "Drop condition here"; //should be "DROP CONDITION HERE";
+
+      let X = 100, Y = 100, run = 0;
+
       //pickup chip
       dragDir.onPointerDown({ pointerId: 1, pageX: startingX, pageY: startingY });
       fix.detectChanges();
 
-      const initialChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
-      initialChipContents.push("DROP CONDITION HERE");
-      
-      for (let i = 0; i <= 9; i++) { 
+      //trigger ghost
+      dragDir.onPointerMove({ pointerId: 1, pageX: startingX + 10, pageY: startingY + 10 });
+      fix.detectChanges();
+
+      //dragDir.ghostElement.mockMethod = () => {console.log('asd')};
+      spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
+
+      for (let i = 0; i <= 30; i++) {
         //move mouse down a bit
-        dragDir.onPointerMove({ pointerId: 1, pageX: X, pageY: startingTop + Y });
+        dragDir.onPointerMove({ pointerId: 1, pageX: X, pageY: Y });
+        //duplicate the mousemove as dispatched Event, so we can trigger the RxJS listener
+        dragDir.ghostElement.dispatchEvent(new MouseEvent('mousemove', { clientX: X, clientY: Y }));
+
+        await wait(120);
         fix.detectChanges();
         Y += 15;
         const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
-        const visibleChips = chipComponents.map(c => c.nativeElement);
 
-        //TODO for some reason when dragging over div, the mouse needs to be closer to the row, compared to when dragging over chip
-        //That's why the '+run'
-        switch(true){
-          case i < 4 + run: 
-            expect(QueryBuilderFunctions.getChipContent(visibleChips[1])).toBe("DROP CONDITION HERE");
-            // expect(newChipContents[0]).toEqual(initialChipContents[0]);
-            // expect(newChipContents[1]).toEqual(initialChipContents[4]);
-            // expect(newChipContents[2]).toEqual(initialChipContents[2]);
-            // expect(newChipContents[3]).toEqual(initialChipContents[3]);
+        //When dragging over div, the mouse needs to be closer to the row, compared to when dragging over chip, that's why the '+run'
+        switch (true) {
+          case i < 5 + run:
+            expect(newChipContents).not.toContain(DROP_CONDITION_HERE);
             break;
-          case i < 6 + run: 
-          expect(QueryBuilderFunctions.getChipContent(visibleChips[2])).toBe("DROP CONDITION HERE");
-
-            // expect(newChipContents[0]).toEqual(initialChipContents[0]);
-            // expect(newChipContents[1]).toEqual(initialChipContents[2]);
-            // expect(newChipContents[2]).toEqual(initialChipContents[4]);
-            // expect(newChipContents[3]).toEqual(initialChipContents[3]);
+          case i < 10 + run:
+            expect(newChipContents[0]).toBe(DROP_CONDITION_HERE);
             break;
-          case i < 9 + run: 
-          expect(QueryBuilderFunctions.getChipContent(visibleChips[3])).toBe("DROP CONDITION HERE");
-
-            // expect(newChipContents[0]).toEqual(initialChipContents[0]);
-            // expect(newChipContents[1]).toEqual(initialChipContents[2]);
-            // expect(newChipContents[2]).toEqual(initialChipContents[3]);
-            // expect(newChipContents[3]).toEqual(initialChipContents[4]);
+          case i < 13 + run:
+            expect(newChipContents[1]).toBe(DROP_CONDITION_HERE);
             break;
-          default: 
-            break;  
+          case i < 15 + run:
+            expect(newChipContents[4]).toBe(DROP_CONDITION_HERE);
+            break;
+          case i < 18 + run:
+            expect(newChipContents[5]).toBe(DROP_CONDITION_HERE);
+            break;
+          case i < 24 + run:
+            expect(newChipContents[6]).toBe(DROP_CONDITION_HERE);
+            break;
+          default:
+            expect(newChipContents).not.toContain(DROP_CONDITION_HERE);
+            break;
         }
 
-        //When done moving mouse over chips, go to the left and test the whole chip row as well
-        // if(i === 9 && run === 1) {
-        //   i=0;
-        //   X+=500;
-        //   Y = 15;
-        //   run = 2;
-        // }
+        //When done moving mouse over chips, go to the left and test the chip row (blank space to the right) as well
+        if (i === 30 && run === 0) {
+          i = 0;
+          X += 500;
+          Y = 100;
+          run = 1;
+        }
       }
     });
 
@@ -2338,8 +2342,8 @@ describe('IgxQueryBuilder', () => {
       const secondChipElem = secondChip.chipArea.nativeElement;
 
       const dragDir = secondChip.dragDirective;
-      UIInteractions.moveDragDirective(fix, dragDir, 0, -2* secondChipElem.offsetHeight, false);
-      
+      UIInteractions.moveDragDirective(fix, dragDir, 0, -2 * secondChipElem.offsetHeight, false);
+
       const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
 
       expect(dropGhost).not.toBe(null);
@@ -2408,7 +2412,7 @@ describe('IgxQueryBuilder', () => {
 
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderName  Equals  foo");
 
-      UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 0, -2* secondChipElem.offsetHeight, true);
+      UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 0, -2 * secondChipElem.offsetHeight, true);
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderId  In Products / OrderId");
       expect(QueryBuilderFunctions.getChipContent(chipComponents[1].nativeElement)).toBe("OrderName  Equals  foo");
@@ -2499,7 +2503,7 @@ describe('IgxQueryBuilder', () => {
 
       chipComponents[2].nativeElement.click();
 
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -2.5* draggedChipElem.offsetHeight, true);
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -2.5 * draggedChipElem.offsetHeight, true);
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
     });
@@ -2544,7 +2548,7 @@ describe('IgxQueryBuilder', () => {
       const draggedChip = chipComponents[2].componentInstance;
       const draggedChipElem = draggedChip.nativeElement;
 
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -10* draggedChipElem.offsetHeight, false);
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -10 * draggedChipElem.offsetHeight, false);
 
       expect(QueryBuilderFunctions.getVisibleChips(fix).length).toBe(4);
       expect(QueryBuilderFunctions.getDropGhost(fix)).toBe(null);
@@ -2553,11 +2557,11 @@ describe('IgxQueryBuilder', () => {
     it('should successfully drop a condition inside a newly created group.', () => {
       var addGroupButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0).pop();
       QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 1);
-      
+
       (addGroupButton as HTMLElement).click();
       const draggedChip = chipComponents.pop().componentInstance;
-      const draggedChipElem = draggedChip.nativeElement;     
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, 3* draggedChipElem.offsetHeight, true);
+      const draggedChipElem = draggedChip.nativeElement;
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, 3 * draggedChipElem.offsetHeight, true);
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(chipComponents.length).toBe(4);
