@@ -7,7 +7,8 @@ import {
     Output,
     Renderer2,
     booleanAttribute,
-    AfterContentInit
+    AfterContentInit,
+    OnDestroy
 } from '@angular/core';
 import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
@@ -46,7 +47,7 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
     selector: '[igxButton]',
     standalone: true
 })
-export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterContentInit {
+export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterContentInit, OnDestroy {
     private static ngAcceptInputType_type: IgxButtonType | '';
 
     /**
@@ -92,6 +93,12 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
      */
     private _selected = false;
 
+    private emitSelected() {
+        this.buttonSelected.emit({
+            button: this
+        });
+    }
+
     /**
      * Gets or sets whether the button is selected.
      * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
@@ -121,11 +128,11 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
     }
 
     public ngAfterContentInit() {
-        this.nativeElement.addEventListener('click', () => {
-            this.buttonSelected.emit({
-                button: this
-            });
-        });
+        this.nativeElement.addEventListener('click', this.emitSelected);
+    }
+
+    public ngOnDestroy(): void {
+        this.nativeElement.removeEventListener('click', this.emitSelected);
     }
 
     /**
