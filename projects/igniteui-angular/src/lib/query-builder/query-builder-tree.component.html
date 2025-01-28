@@ -8,8 +8,8 @@
 
 <ng-template #selectFromTemplate>
     <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && !this.isAdvancedFiltering()) ? 'flex' : 'none'">
-        <div>
-            <span>From</span>
+        <div class="igx-filter-tree__inputs-field">
+            <span class="igx-query-builder__label">From</span>
             <igx-select #entitySelect
                 type="box"
                 (selectionChanging)="onEntitySelectChanging($event)"
@@ -25,8 +25,8 @@
             </igx-select>
         </div>
 
-        <div>
-            <span>Select</span>
+        <div class="igx-filter-tree__inputs-field">
+            <span class="igx-query-builder__label">Select</span>
             @if(!parentExpression) {
                 <igx-combo
                     #returnFieldsCombo
@@ -46,7 +46,7 @@
                     <ng-template igxComboHeader>
                         <div
                             class="igx-drop-down__item igx-drop-down__item--query-builder"
-                            (click)="onSelectAllClicked($event)"                
+                            (click)="onSelectAllClicked($event)"
                             [ngClass]="{'igx-drop-down__item--selected': this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length}"
                         >
                             <igx-checkbox
@@ -87,17 +87,16 @@
 <div
     #expressionsContainer
     class="igx-query-builder__main"
-    style="display: grid;"
 >
     <ng-container *ngTemplateOutlet="selectFromTemplate"></ng-container>
 
     <ng-template #addExpressionsTemplate let-expressionItem let-afterExpression="afterExpression">
         <button type="button"
             #addConditionButton
-            igxButton="outlined"
+            igxButton="flat"
             [disabled]="hasEditedExpression"
             (click)="addCondition(expressionItem, afterExpression)"
-            igxDrop 
+            igxDrop
             (enter)="onAddConditionEnter(addConditionButton, expressionItem)"
             (leave)="onChipLeave()"
         >
@@ -121,24 +120,24 @@
 
     <ng-template #operandTemplate let-expressionItem>
         <div
-            #dragRef 
+            #dragRef
             igxDrop
             (enter)="onChipEnter(dragRef, expressionItem, true)"
             (over)="onDivOver(dragRef, expressionItem)"
             (leave)="onChipLeave()"
             (dropped)="onDivDropped(expressionItem)"
             *ngIf="!expressionItem.inEditMode"
-            class="igx-filter-tree__expression-item"            
+            class="igx-filter-tree__expression-item"
             (mouseenter)="expressionItem.hovered = true"
             (mouseleave)="expressionItem.hovered = false"
             (focusin)="onExpressionFocus(expressionItem)"
             (focusout)="onExpressionBlur($event, expressionItem)"
         >
-            <igx-chip        
-                [draggable]="canBeDragged() ? 'true' : 'false'" 
-                [hideBaseOnDrag] = "false"    
+            <igx-chip
+                [draggable]="canBeDragged() ? 'true' : 'false'"
+                [hideBaseOnDrag] = "false"
                 [animateOnRelease] = "false"
-                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem, false, true): null" 
+                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem, false): null"
                 (moveEnd)="onMoveEnd()"
                 (dragEnter)="onChipEnter(dragRef, expressionItem, false)"
                 (dragOver)="onChipOver(dragRef, false)"
@@ -150,14 +149,14 @@
                 [removable]="isInEditMode() ? 'true' : 'false'"
                 (keydown)="invokeClick($event)"
                 (click)="onChipClick(expressionItem)"
-                (remove)="onChipRemove(expressionItem)"                
-                
+                (remove)="onChipRemove(expressionItem)"
+
             >
-                <igx-icon igxPrefix 
+                <igx-icon igxPrefix
                     class="igx-drag-indicator"
                     tabindex="0"
-                    (focus)="onChipDragIndicatorFocus(dragRef, expressionItem)" 
-                    (focusout)="onChipDragIndicatorFocusOut()"    
+                    (focus)="onChipDragIndicatorFocus(dragRef, expressionItem)"
+                    (focusout)="onChipDragIndicatorFocusOut()"
                 >
                     drag_indicator
                 </igx-icon>
@@ -234,7 +233,7 @@
 
             @if((expressionItem.focused || expressionItem.hovered) && !expressionItem.inAddMode) {
                 <div igxDragIgnore class="igx-filter-tree__expression-actions">
-                    <button #addExpressionButton igxDragIgnore igxIconButton="flat" [igxDropDownItemNavigation]="addOptionsDropDown"
+                    <button #addExpressionButton igxDragIgnore igxIconButton="outlined" [igxDropDownItemNavigation]="addOptionsDropDown"
                     aria-labelledby="add-expression" (keydown)="invokeClick($event)"
                         (click)="clickExpressionAdd(addExpressionButton)"
                         (blur)="addExpressionBlur()">
@@ -253,201 +252,204 @@
             }
         </div>
 
-        <div
-            #editingInputsContainer
-            igxDrop
-            (enter)="onChipEnter(editingInputsContainer, expressionItem, true)"
-            (over)="onDivOver(editingInputsContainer, expressionItem)"
-            (leave)="onChipLeave()"
-            (dropped)="onDivDropped(expressionItem)"
-            *ngIf="expressionItem.inEditMode"
-            class="igx-filter-tree__inputs"
-        >
-            <igx-select
-                #fieldSelect
-                type="box"
-                [overlaySettings]="fieldSelectOverlaySettings"
-                [(ngModel)]="selectedField"
-                [disabled]="!fields"
+        <div class="igx-filter-tree__subquery">
+            <div
+                #editingInputsContainer
+                igxDrop
+                (enter)="onChipEnter(editingInputsContainer, expressionItem, true)"
+                (over)="onDivOver(editingInputsContainer, expressionItem)"
+                (leave)="onChipLeave()"
+                (dropped)="onDivDropped(expressionItem)"
+                *ngIf="expressionItem.inEditMode"
+                class="igx-filter-tree__inputs"
             >
-                <label igxLabel>{{this.resourceStrings.igx_query_builder_column_placeholder}}</label>
-                <igx-select-item *ngFor="let field of fields" [value]="field">
-                    {{ field.label || field.header || field.field }}
-                </igx-select-item>
-            </igx-select>
-
-            <igx-select
-                #conditionSelect
-                type="box"
-                [overlaySettings]="conditionSelectOverlaySettings"
-                [(ngModel)]="selectedCondition"
-                [disabled]="!selectedField"
-                [placeholder]="this.resourceStrings.igx_query_builder_condition_placeholder"
-            >
-                <igx-prefix
-                    *ngIf="
-                        selectedField &&
-                        conditionSelect.value &&
-                        selectedField.filters.condition(conditionSelect.value)
-                    "
+                <igx-select
+                    #fieldSelect
+                    type="box"
+                    [overlaySettings]="fieldSelectOverlaySettings"
+                    [(ngModel)]="selectedField"
+                    [disabled]="!fields"
+                    [placeholder]="this.resourceStrings.igx_query_builder_column_placeholder"
                 >
-                    <igx-icon
-                        family="default"
-                        [name]="
-                            selectedField.filters.condition(
-                                conditionSelect.value
-                            ).iconName
+
+                    <igx-select-item *ngFor="let field of fields" [value]="field">
+                        {{ field.label || field.header || field.field }}
+                    </igx-select-item>
+                </igx-select>
+
+                <igx-select
+                    #conditionSelect
+                    type="box"
+                    [overlaySettings]="conditionSelectOverlaySettings"
+                    [(ngModel)]="selectedCondition"
+                    [disabled]="!selectedField"
+                    [placeholder]="this.resourceStrings.igx_query_builder_condition_placeholder"
+                >
+                    <igx-prefix
+                        *ngIf="
+                            selectedField &&
+                            conditionSelect.value &&
+                            selectedField.filters.condition(conditionSelect.value)
                         "
                     >
-                    </igx-icon>
-                </igx-prefix>
-
-                <igx-select-item
-                    *ngFor="let condition of getConditionList()"
-                    [value]="condition"
-                    [text]="getConditionFriendlyName(condition)"
-                >
-                    <div class="igx-grid__filtering-dropdown-items">
                         <igx-icon
                             family="default"
                             [name]="
-                                selectedField.filters.condition(condition)
-                                    .iconName
+                                selectedField.filters.condition(
+                                    conditionSelect.value
+                                ).iconName
                             "
                         >
                         </igx-icon>
-                        <span class="igx-grid__filtering-dropdown-text">{{
-                            getConditionFriendlyName(condition)
-                        }}</span>
-                    </div>
-                </igx-select-item>
-            </igx-select>
+                    </igx-prefix>
 
-            <ng-container
-                *ngTemplateOutlet="
-                    searchValueTemplate ? searchValueTemplate : defaultSearchValueTemplate;
-                    context: getSearchValueTemplateContext(defaultSearchValueTemplate)
-                "
-            >
-            </ng-container>
+                    <igx-select-item
+                        *ngFor="let condition of getConditionList()"
+                        [value]="condition"
+                        [text]="getConditionFriendlyName(condition)"
+                    >
+                            <div class="igx-grid__filtering-dropdown-items">
+                                <igx-icon
+                                    family="default"
+                                    [name]="
+                                        selectedField.filters.condition(condition)
+                                            .iconName
+                                    "
+                                >
+                                </igx-icon>
+                                <span class="igx-grid__filtering-dropdown-text">{{
+                                    getConditionFriendlyName(condition)
+                                }}</span>
+                            </div>
+                    </igx-select-item>
+                </igx-select>
 
-            <ng-template #defaultSearchValueTemplate>
-                <igx-input-group
-                    *ngIf="
-                        !selectedField ||
-                        (selectedField.dataType !== 'date' &&
-                            selectedField.dataType !== 'time' &&
-                            selectedField.dataType !== 'dateTime')
+                <ng-container
+                    *ngTemplateOutlet="
+                        searchValueTemplate ? searchValueTemplate : defaultSearchValueTemplate;
+                        context: getSearchValueTemplateContext(defaultSearchValueTemplate)
                     "
-                    type="box"
                 >
-                    <label igxLabel>{{this.resourceStrings.igx_query_builder_value_placeholder}}</label>
-                    <input
-                        #searchValueInput
-                        igxInput
-                        [disabled]="isSearchValueInputDisabled()"
-                        [type]="
-                            selectedField && selectedField.dataType === 'number'
-                                ? 'number'
-                                : 'text'
+                </ng-container>
+
+                <ng-template #defaultSearchValueTemplate>
+                    <igx-input-group
+                        *ngIf="
+                            !selectedField ||
+                            (selectedField.dataType !== 'date' &&
+                                selectedField.dataType !== 'time' &&
+                                selectedField.dataType !== 'dateTime')
                         "
-                        [(ngModel)]="searchValue.value"
-                    />
-                </igx-input-group>
+                                type="box"
+                        >
 
-                <igx-date-picker
-                    #picker
-                    *ngIf="selectedField && selectedField.dataType === 'date'"
-                    [(value)]="searchValue.value"
-                    (keydown)="openPicker($event)"
-                    (click)="picker.open()"
-                    type="box"
-                    [readOnly]="true"
-                    [disabled]="isSearchValueInputDisabled()"
-                    [locale]="this.locale"
-                    [outlet]="pickerOutlet"
-                    [formatter]="selectedField.formatter"
-                    [displayFormat]="selectedField.pipeArgs.format"
-                    [weekStart]="selectedField.pipeArgs.weekStart"
-                >
-                    <label igxLabel>{{this.resourceStrings.igx_query_builder_date_placeholder}}</label>
-                    <!-- disable default icons -->
-                    <igx-picker-toggle></igx-picker-toggle>
-                    <igx-picker-clear></igx-picker-clear>
-                </igx-date-picker>
+                            <input
+                                #searchValueInput
+                                igxInput
+                                [disabled]="isSearchValueInputDisabled()"
+                                [placeholder]="this.resourceStrings.igx_query_builder_value_placeholder"
+                                [type]="
+                                selectedField && selectedField.dataType === 'number'
+                                    ? 'number'
+                                    : 'text'
+                            "
+                            [(ngModel)]="searchValue.value"
+                        />
+                    </igx-input-group>
 
-                <igx-time-picker
-                    #picker
-                    *ngIf="selectedField && selectedField.dataType === 'time'"
-                    [(value)]="searchValue.value"
-                    (click)="picker.open()"
-                    (keydown)="openPicker($event)"
-                    type="box"
-                    [readOnly]="true"
-                    [disabled]="isSearchValueInputDisabled()"
-                    [locale]="this.locale"
-                    [outlet]="pickerOutlet"
-                    [formatter]="selectedField.formatter"
-                    [displayFormat]="selectedField.pipeArgs.format"
-                    [inputFormat]="selectedField.editorOptions?.dateTimeFormat"
-                >
-                    <!-- disable default icons -->
-                    <label igxLabel>{{this.resourceStrings.igx_query_builder_time_placeholder}}</label>
-                    <igx-picker-toggle></igx-picker-toggle>
-                    <igx-picker-clear></igx-picker-clear>
-                </igx-time-picker>
-
-                <igx-input-group
-                    #inputGroup
-                    type="box"
-                    *ngIf="selectedField && selectedField.dataType === 'dateTime'"
-                    type="box"
-                >
-                    <label igxLabel>{{this.resourceStrings.igx_query_builder_datetime_placeholder}}</label>
-                    <input
-                        #input
-                        igxInput
-                        tabindex="0"
-                        [(ngModel)]="searchValue.value"
+                    <igx-date-picker
+                        #picker
+                        *ngIf="selectedField && selectedField.dataType === 'date'"
+                        [(value)]="searchValue.value"
+                        (keydown)="openPicker($event)"
+                        (click)="picker.open()"
+                        type="box"
+                        [readOnly]="true"
                         [disabled]="isSearchValueInputDisabled()"
                         [locale]="this.locale"
-                        [igxDateTimeEditor]="selectedField.editorOptions?.dateTimeFormat"
-                        [defaultFormatType]="selectedField.dataType"
+                        [outlet]="pickerOutlet"
+                        [formatter]="selectedField.formatter"
                         [displayFormat]="selectedField.pipeArgs.format"
-                    />
-                </igx-input-group>
-            </ng-template>
+                        [weekStart]="selectedField.pipeArgs.weekStart"
+                        [placeholder]="this.resourceStrings.igx_query_builder_date_placeholder"
+                    >
+                        <!-- disable default icons -->
+                        <igx-picker-toggle></igx-picker-toggle>
+                        <igx-picker-clear></igx-picker-clear>
+                    </igx-date-picker>
 
-            <div class="igx-filter-tree__inputs-actions">
-                <button type="button"
-                    igxIconButton="flat"
-                    [disabled]="!operandCanBeCommitted()"
-                    (click)="commitOperandEdit()"
-                >
-                    <igx-icon family="default" name="confirm"></igx-icon>
-                </button>
-                <button type="button"
-                    igxIconButton="flat"
-                    (click)="cancelOperandEdit()"
-                >
-                    <ng-container *ngTemplateOutlet="closeIcon"></ng-container>
-                </button>
+                    <igx-time-picker
+                        #picker
+                        *ngIf="selectedField && selectedField.dataType === 'time'"
+                        [(value)]="searchValue.value"
+                        (click)="picker.open()"
+                        (keydown)="openPicker($event)"
+                        type="box"
+                        [readOnly]="true"
+                        [disabled]="isSearchValueInputDisabled()"
+                        [locale]="this.locale"
+                        [outlet]="pickerOutlet"
+                        [formatter]="selectedField.formatter"
+                        [displayFormat]="selectedField.pipeArgs.format"
+                        [inputFormat]="selectedField.editorOptions?.dateTimeFormat"
+                        [placeholder]="this.resourceStrings.igx_query_builder_time_placeholder"
+                    >
+                        <!-- disable default icons -->
+                        <igx-picker-toggle></igx-picker-toggle>
+                        <igx-picker-clear></igx-picker-clear>
+                    </igx-time-picker>
+
+                    <igx-input-group
+                        #inputGroup
+                        type="box"
+                        *ngIf="selectedField && selectedField.dataType === 'dateTime'"
+                    >
+                        <label igxLabel>{{this.resourceStrings.igx_query_builder_datetime_placeholder}}</label>
+                        <input
+                            #input
+                            igxInput
+                            tabindex="0"
+                            [(ngModel)]="searchValue.value"
+                            [disabled]="isSearchValueInputDisabled()"
+                            [locale]="this.locale"
+                            [igxDateTimeEditor]="selectedField.editorOptions?.dateTimeFormat"
+                            [defaultFormatType]="selectedField.dataType"
+                            [displayFormat]="selectedField.pipeArgs.format"
+                        />
+                    </igx-input-group>
+                </ng-template>
+
+                <div class="igx-filter-tree__inputs-actions">
+                    <button type="button"
+                            igxIconButton="outlined"
+                            [disabled]="!operandCanBeCommitted()"
+                            (click)="commitOperandEdit()"
+                    >
+                        <igx-icon family="default" name="confirm"></igx-icon>
+                    </button>
+                    <button type="button"
+                            igxIconButton="outlined"
+                            (click)="cancelOperandEdit()"
+                    >
+                        <ng-container *ngTemplateOutlet="closeIcon"></ng-container>
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <ng-container *ngIf="
-            (!expressionItem.inEditMode && expressionItem.expression.searchTree && expressionItem.expression.searchTree.filteringOperands?.length > 0) ||
-            (expressionItem.inEditMode && selectedField?.filters?.condition(selectedCondition)?.isNestedQuery)">
-            <igx-query-builder-tree
-                [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
-                [entities]="entities"
-                [queryBuilder]="this.queryBuilder"
-                [parentExpression]="expressionItem"
-                [expressionTree]="expressionItem.inEditMode ? (innerQueryNewExpressionTree ?? getExpressionTreeCopy(expressionItem.expression.searchTree, true)) : expressionItem.expression.searchTree"
-                (inEditModeChange)="onInEditModeChanged($event)"
-                [searchValueTemplate]="searchValueTemplate">
-            </igx-query-builder-tree>
-        </ng-container>
+            <ng-container *ngIf="
+                (!expressionItem.inEditMode && expressionItem.expression.searchTree && expressionItem.expression.searchTree.filteringOperands?.length > 0) ||
+                (expressionItem.inEditMode && selectedField?.filters?.condition(selectedCondition)?.isNestedQuery)">
+                <igx-query-builder-tree
+                    [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
+                    [entities]="entities"
+                    [queryBuilder]="this.queryBuilder"
+                    [parentExpression]="expressionItem"
+                    [expressionTree]="expressionItem.inEditMode ? (innerQueryNewExpressionTree ?? getExpressionTreeCopy(expressionItem.expression.searchTree, true)) : expressionItem.expression.searchTree"
+                    (inEditModeChange)="onInEditModeChanged($event)"
+                    [searchValueTemplate]="searchValueTemplate">
+                </igx-query-builder-tree>
+            </ng-container>
+        </div>
     </ng-template>
 
     <ng-template #expressionGroupTemplate let-expressionItem>
@@ -461,10 +463,9 @@
                 }"
             ></div>
 
-            <div class="igx-filter-tree__expression">
-                <div style="width: 100%;"
-                    class="igx-filter-tree-group-context-menu"
-                    #groupRef 
+            <div class="igx-filter-tree__expressions">
+                <div class="igx-filter-tree__expression-context-menu"
+                    #groupRef
                     igxDrop
                     (enter)="onGroupRootOver(groupRef, expressionItem)"
                     (over)="onGroupRootOver(groupRef, expressionItem)"
@@ -478,7 +479,7 @@
                             (keydown)="invokeClick($event)"
                             (click)="onGroupClick(groupContextMenuDropDown, changeGroupButton, expressionItem)"
                     >
-                        <span 
+                        <span
                             igxDrop
                             (enter)="onGroupRootOver(groupRef, expressionItem)"
                             (over)="onGroupRootOver(groupRef, expressionItem)"
@@ -502,24 +503,26 @@
                         </igx-drop-down-item>
                     </igx-drop-down>
                 </div>
-                <ng-container *ngFor="let expr of expressionItem?.children">
-                    <ng-container
-                        *ngTemplateOutlet="
+                <div class="igx-filter-tree__expression-section">
+                    <ng-container *ngFor="let expr of expressionItem?.children">
+                        <ng-container
+                                *ngTemplateOutlet="
                             isExpressionGroup(expr)
                                 ? expressionGroupTemplate
                                 : operandTemplate;
                             context: context(expr)
                         "
-                    >
+                        >
+                        </ng-container>
                     </ng-container>
-                </ng-container>
+                </div>
                 <div
-                    *ngIf="expressionItem === rootGroup"
-                    #currentGroupButtonsContainer
-                    class="igx-filter-tree__buttons"
+                        *ngIf="expressionItem === rootGroup"
+                        #currentGroupButtonsContainer
+                        class="igx-filter-tree__buttons"
                 >
                     <ng-container
-                        *ngTemplateOutlet="
+                            *ngTemplateOutlet="
                             addExpressionsTemplate;
                             context: context(expressionItem)
                         "
@@ -530,15 +533,15 @@
         </div>
     </ng-template>
 
-    <ng-container *ngIf="rootGroup || (!rootGroup && (selectedEntity || (entities?.length === 1 && !entities[0]?.name)))">
-        <span>Where</span>
+    <div class="igx-filter-tree__section" *ngIf="rootGroup || (!rootGroup && (selectedEntity || (entities?.length === 1 && !entities[0]?.name)))">
+        <span class="igx-query-builder__label">Where</span>
         <ng-container
             *ngTemplateOutlet="
                 expressionGroupTemplate;
                 context: context(rootGroup)
             "
         ></ng-container>
-    </ng-container>
+    </div>
 </div>
 
 <div

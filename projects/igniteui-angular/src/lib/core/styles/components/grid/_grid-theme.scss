@@ -3197,26 +3197,32 @@
     @include excel-filtering($theme);
 
     %advanced-filtering-dialog {
-        background: var-get($theme, 'filtering-row-background');
-        box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 12));
+        $light-variant: contrast-color($color: 'gray', $variant: 900);
+        $dark-variant: contrast-color($color: 'surface', $variant: 500);
+        background: if($theme-variant == 'light', $light-variant, $dark-variant);
+        box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 24));
+
+        @if $variant == 'material' or $variant == 'bootstrap' {
+            border-radius: rem(4px);
+        }
+
+        @if $variant == 'fluent' {
+            border-radius: rem(2px);
+        }
 
         @if $variant == 'indigo' {
             border-radius: rem(10px);
         }
 
         igx-query-builder {
-            --igx-query-builder-background: #{var-get($theme, 'filtering-row-background')};
-            --igx-query-builder-background-and: #{var-get($theme, 'filtering-background-and')};
-            --igx-query-builder-background-and--focus: #{var-get($theme, 'filtering-background-and--focus')};
-            --igx-query-builder-background-or: #{var-get($theme, 'filtering-background-or')};
-            --igx-query-builder-background-or--focus: #{var-get($theme, 'filtering-background-or--focus')};
+            //--igx-query-builder-background: #{var-get($theme, 'filtering-row-background')};
+            //--igx-query-builder-background-and: #{var-get($theme, 'filtering-background-and')};
+            //--igx-query-builder-background-and--focus: #{var-get($theme, 'filtering-background-and--focus')};
+            //--igx-query-builder-background-or: #{var-get($theme, 'filtering-background-or')};
+            //--igx-query-builder-background-or--focus: #{var-get($theme, 'filtering-background-or--focus')};
             box-shadow: none;
             border: none;
             border-radius: inherit;
-
-            @if $variant == 'indigo' {
-                border-radius: rem(10px);
-            }
         }
 
         igx-query-builder-header {

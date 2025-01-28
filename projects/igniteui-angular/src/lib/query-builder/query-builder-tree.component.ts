@@ -1050,11 +1050,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //When we pick up a chip
-    public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean, shouldExitEdit = false): void {
+    public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean): void {
         //console.log('Picked up:', event, sourceDragElement);
-        if(shouldExitEdit) {
-            this.exitEditAddMode();
-        }
         this.resetDragAndDrop(true);
         this.isKeyboardDrag = isKeyboardDrag;
         this.sourceExpressionItem = sourceExpressionItem;
@@ -1083,7 +1080,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.keyboardSubscription$?.unsubscribe();
     }
 
-    //On entering a drop area of another chip 
+    //On entering a drop area of another chip
     public onDivEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
         this.onChipEnter(targetDragElement, targetExpressionItem, true)
     }
@@ -1096,7 +1093,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         //If entering the one that's been picked up
         if (targetDragElement == this.sourceElement) return;
 
-        //Simulate leaving the last entered chip in case of no Leave event triggered due to the artificial drop zone of a north positioned ghost chip 
+        //Simulate leaving the last entered chip in case of no Leave event triggered due to the artificial drop zone of a north positioned ghost chip
         if (this.targetElement) {
             this.resetDragAndDrop(false);
         }
@@ -1104,7 +1101,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.targetElement = targetDragElement;
         this.targetExpressionItem = targetExpressionItem;
 
-        //Determine the middle point of the chip. (fromDiv - get the div's chip) 
+        //Determine the middle point of the chip. (fromDiv - get the div's chip)
         const appendUnder = fromDiv ? this.ghostInLowerPart(targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(targetDragElement);
 
         this.renderDropGhostChip(targetDragElement, appendUnder);
@@ -1124,7 +1121,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         //console.log('Over:', targetDragElement, 'type: ', typeof event);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
-        //Determine the middle point of the chip. (fromDiv - get the div's chip) 
+        //Determine the middle point of the chip. (fromDiv - get the div's chip)
         const appendUnder = fromDiv ? this.ghostInLowerPart(targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(targetDragElement);
 
         this.renderDropGhostChip(targetDragElement, appendUnder);
@@ -1153,6 +1150,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     public onChipDropped() {
         if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
+
+        this.exitEditAddMode();
 
         //console.log('Move: [', this.sourceElement.children[0].textContent.trim(), (this.dropUnder ? '] under: [' : '] over:'), this.targetExpressionItem)
         this.moveDraggedChipToNewLocation(this.targetExpressionItem)
@@ -1236,13 +1235,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (!keyboardMode) {
             var span = document.createElement('span')
             //TODO Localize string
-            span.innerHTML = "DROP CONDITION HERE";
+            span.innerHTML = "Drop condition here";
 
             dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
             dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
             (dragCopy.firstChild.firstChild.firstChild as HTMLElement).replaceChildren(span);
-            (dragCopy.firstChild.firstChild as HTMLElement).style.border = '1px';
-            (dragCopy.firstChild.firstChild as HTMLElement).style.borderStyle = 'dashed';
+            (dragCopy.firstChild.firstChild as HTMLElement).classList.add('igx-filter-tree__expression-item-ghost');
         }
         return dragCopy;
     }
@@ -1308,7 +1306,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.deleteItem(this.sourceExpressionItem);
     }
 
-    //Reset Drag&Drop vars. Optionally the drag source vars too 
+    //Reset Drag&Drop vars. Optionally the drag source vars too
     private resetDragAndDrop(clearDragged: boolean) {
         this.targetExpressionItem = null;
         this.targetElement = null;
@@ -1375,7 +1373,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         let newKeyIndexOffset = 0;
         if (key.code == 'ArrowUp') {
-            //decrease index offset capped at top of tree 
+            //decrease index offset capped at top of tree
             newKeyIndexOffset = this.keyDragOffsetIndex - 1 >= index * -2 - 1 ? this.keyDragOffsetIndex - 1 : this.keyDragOffsetIndex;
         } else if (key.code == 'ArrowDown') {
             //increase index offset capped at bottom of tree
@@ -1389,19 +1387,19 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             //If not the last drop zone (the +Condition button)
             if (index + indexOffset <= this.dropZonesList.length - 2) {
-                const groupsTillCurrent = this.dropZonesList.filter((x, ix) => ix < index + indexOffset && x.className.indexOf('igx-filter-tree-group-context-menu') !== -1).length;
+                const groupsTillCurrent = this.dropZonesList.filter((x, ix) => ix < index + indexOffset && x.className.indexOf('igx-filter-tree__expression-context-menu') !== -1).length;
 
                 let under = this.keyDragOffsetIndex < 0 ? this.keyDragOffsetIndex % 2 == 0 ? true : false : this.keyDragOffsetIndex % 2 == 0 ? false : true;
                 let overrideDropUnder;
 
                 //if the current drop zone is a condition chip
-                if (this.dropZonesList[index + indexOffset].className.indexOf('igx-filter-tree-group-context-menu') === -1) {
+                if (this.dropZonesList[index + indexOffset].className.indexOf('igx-filter-tree__expression-context-menu') === -1) {
                     this.targetElement = this.dropZonesList[index + indexOffset]
                     this.targetExpressionItem = this.expressionsList[index + indexOffset - groupsTillCurrent];
                 } else {
                     //if the current drop zone is a group root (AND/OR)
                     if ((index + indexOffset === 0)) {
-                        //If the root group's AND/OR 
+                        //If the root group's AND/OR
                         this.targetElement = this.dropZonesList[0]
                         this.targetExpressionItem = this.rootGroup.children[0];
                         under = true;
@@ -1491,7 +1489,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         const viableDropAreaSelector = `.igx-filter-tree__expression-item:not([style*="display:none"]):not(.${this.dropGhostClass}),
         .igx-filter-tree__inputs:not(.igx-query-builder__main > .igx-filter-tree__inputs),
         .igx-filter-tree__buttons > .igx-button:first-of-type,
-        .igx-filter-tree-group-context-menu`;
+        .igx-filter-tree__group-expression-menu`;
 
         const expressionElementList = (this.el.nativeElement as HTMLElement).querySelectorAll(viableDropAreaSelector);
         const ownChipElements = [];
@@ -1686,7 +1684,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public onGroupClick(groupContextMenuDropDown: any, targetButton: HTMLButtonElement, groupItem: ExpressionGroupItem) {
         this.exitEditAddMode();
         this.cdr.detectChanges();
-        
+
         this.groupContextMenuDropDown = groupContextMenuDropDown;
         this.groupContextMenuDropDownOverlaySettings.target = targetButton;
         this.groupContextMenuDropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({

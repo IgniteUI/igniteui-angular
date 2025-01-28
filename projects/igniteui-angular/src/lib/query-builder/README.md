@@ -9,8 +9,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
     [expressionTree]="customExpressionTree">
 
     <!-- Custom header -->
-    <igx-query-builder-header [title]="'Custom title for Query Builder'"
-        [showLegend]="false">
+    <igx-query-builder-header [title]="'Custom title for Query Builder'">
     </igx-query-builder-header>
 
 </igx-query-builder>
@@ -43,5 +42,4 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | Name | Type | Description |
 | :--- | :--- | :--- |
 | `title` | string | Sets the title displayed in the header. |
-| `showLegend` | boolean | Determines whether the legend items are displayed or not. Defaults to true. |
 | `resourceStrings` | IQueryBuilderResourceStrings | Gets/sets the resource strings. |

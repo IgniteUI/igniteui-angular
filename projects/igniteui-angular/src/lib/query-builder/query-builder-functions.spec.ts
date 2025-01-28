@@ -12,7 +12,7 @@ export const QueryBuilderConstants = {
     QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS: 'igx-filter-tree__line--and',
     QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS: 'igx-filter-tree__line--or',
     CSS_CLASS_DROPDOWN_LIST_SCROLL: 'igx-drop-down__list-scroll',
-    QUERY_BUILDER_GROUP_CONTEXT_MENU: 'igx-filter-tree-group-context-menu',
+    QUERY_BUILDER_GROUP_CONTEXT_MENU: 'igx-filter-tree__expression-context-menu',
     CSS_CLASS_DROP_DOWN_ITEM_DISABLED: 'igx-drop-down__item--disabled',
     QUERY_BUILDER_BODY: 'igx-query-builder__main',
     QUERY_BUILDER_EXPRESSION_ITEM_CLASS: 'igx-filter-tree__expression-item'
@@ -117,7 +117,7 @@ export class QueryBuilderFunctions {
             fieldName: 'OrderDate',
             condition: IgxDateFilteringOperand.instance().condition('today'),
             conditionName: IgxDateFilteringOperand.instance().condition('today').name
-        });        
+        });
         tree.filteringOperands.push(subGroup);
 
         return tree;
@@ -134,18 +134,6 @@ export class QueryBuilderFunctions {
         const header = QueryBuilderFunctions.getQueryBuilderHeader(fix);
         const title = header.querySelector('.igx-query-builder__title');
         return title.textContent;
-    }
-
-    public static getQueryBuilderHeaderLegendItemAnd(fix: ComponentFixture<any>) {
-        const header = QueryBuilderFunctions.getQueryBuilderHeader(fix);
-        const andLegendItem = header.querySelector('.igx-builder-legend__item--and');
-        return andLegendItem;
-    }
-
-    public static getQueryBuilderHeaderLegendItemOr(fix: ComponentFixture<any>) {
-        const header = QueryBuilderFunctions.getQueryBuilderHeader(fix);
-        const orLegendItem = header.querySelector('.igx-builder-legend__item--or');
-        return orLegendItem;
     }
 
     /**
@@ -177,7 +165,7 @@ export class QueryBuilderFunctions {
      * Get the root group.
      */
     public static getQueryBuilderTreeRootGroup(fix: ComponentFixture<any>, level = 0) {
-        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix, level);
+        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix, level).children[1];
         const rootGroup = exprContainer.querySelector(':scope > .igx-filter-tree');
         return rootGroup;
     }
@@ -188,7 +176,7 @@ export class QueryBuilderFunctions {
      */
     public static getQueryBuilderTreeChildGroups(group: HTMLElement, directChildrenOnly = true) {
         const pattern = directChildrenOnly ? ':scope > .igx-filter-tree' : '.igx-filter-tree';
-        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childrenContainer = group.querySelector('.igx-filter-tree__expressions').children[1];
         const childGroups = Array.from(childrenContainer.querySelectorAll(pattern));
         return childGroups;
     }
@@ -199,7 +187,7 @@ export class QueryBuilderFunctions {
      */
     public static getQueryBuilderTreeChildExpressions(group: HTMLElement, directChildrenOnly = true) {
         const pattern = directChildrenOnly ? ':scope > .igx-filter-tree__expression-item' : '.igx-filter-tree__expression-item';
-        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childrenContainer = group.querySelector('.igx-filter-tree__expressions').children[1];
         const childExpressions = Array.from(childrenContainer.querySelectorAll(pattern));
         return childExpressions;
     }
@@ -319,7 +307,7 @@ export class QueryBuilderFunctions {
      */
     public static getQueryBuilderTreeRootGroupButtons(fix: ComponentFixture<any>, buttonsIndex: number) {
         const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
-        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childrenContainer = group.querySelector('.igx-filter-tree__expressions');
         const buttonsContainers = Array.from(childrenContainer.querySelectorAll(':scope > .igx-filter-tree__buttons'));
         const buttonsContainer: any = buttonsContainers[buttonsIndex];
         const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
@@ -407,7 +395,7 @@ export class QueryBuilderFunctions {
         const contextMenuButton = QueryBuilderFunctions.getQueryBuilderGroupContextMenus(fix)[index].queryAll(By.css('.igx-button'))[0].nativeElement;
         contextMenuButton.click();
     }
-    
+
     public static clickContextMenuItem(fix: ComponentFixture<any>, index: number) {
         const dropDownItems = this.getQueryBuilderGroupContextMenuDropDownItems(fix);
         dropDownItems[index].click();
@@ -853,8 +841,8 @@ export class QueryBuilderFunctions {
     public static GetChipsContentAsArray(fix: ComponentFixture<any>){
         const contents: string[] = [];
 
-        const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;        
-        
+        const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
+
         queryTreeElement.querySelectorAll('.igx-chip').forEach(chip => {
             contents.push(QueryBuilderFunctions.getChipContent(chip));
         });
@@ -865,7 +853,7 @@ export class QueryBuilderFunctions {
     public static getChipContent(chip: Element): string {
         if(chip.checkVisibility()){
             let text:string = '';
-            
+
             Array.from(chip.querySelectorAll('span')).forEach(element => {
                 if(element?.textContent) text +=element.textContent;
             });
