@@ -1442,8 +1442,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private getPreviousChip(chipSubject: HTMLElement) {
         //TODO optimize
         let prevElement = chipSubject?.previousElementSibling;
-        prevElement = prevElement?.classList?.contains('igx-query-builder-tree') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
-        prevElement = prevElement?.classList?.contains('igx-query-builder-tree') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
+        prevElement = prevElement?.classList?.contains('igx-filter-tree__subquery') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
+        prevElement = prevElement?.classList?.contains('igx-filter-tree__subquery') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
 
         return prevElement;
     }
@@ -1452,8 +1452,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private getNextChip(chipSubject: HTMLElement) {
         //Get next and prev chip area taking into account a possible hidden sub-tree
         let nextElement = chipSubject?.nextElementSibling;
-        nextElement = nextElement?.classList?.contains('igx-query-builder-tree') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
-        nextElement = nextElement?.classList?.contains('igx-query-builder-tree') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
+        nextElement = nextElement?.classList?.contains('igx-filter-tree__subquery') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
+        nextElement = nextElement?.classList?.contains('igx-filter-tree__subquery') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
 
         return nextElement;
     }
