@@ -152,7 +152,7 @@ export abstract class BaseProgressDirective {
 
 
     /**
-     * Set a custom text, This will hide the counter value.
+     * Set a custom text. This will hide the counter value.
      * ```html
      * <igx-circular-bar text="my text"></igx-circular-bar>
      * ```
