@@ -1,7 +1,6 @@
 import { Component, Input, TemplateRef, ViewChild, Output, EventEmitter, ElementRef, booleanAttribute } from '@angular/core';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { NgIf } from '@angular/common';
 import { IgxIconButtonDirective } from '../../directives/button/icon-button.directive';
 
@@ -11,7 +10,7 @@ import { IgxIconButtonDirective } from '../../directives/button/icon-button.dire
 @Component({
     selector: 'igx-grid-action-button',
     templateUrl: 'grid-action-button.component.html',
-    imports: [NgIf, IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
+    imports: [NgIf, IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxGridActionButtonComponent {
 

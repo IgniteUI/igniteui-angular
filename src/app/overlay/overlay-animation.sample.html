@@ -1,5 +1,6 @@
 <div #container>
-    <section class="sample-content">
+    <h5 style="text-align: center;">Move mouse over the avatars to start animations</h5>
+    <section class="sample-content padding">
         <igx-avatar id="audi" initials="BS" size="large" (mouseenter)="mouseenter($event)"
             (mouseleave)="mouseleave($event)">
         </igx-avatar>
@@ -8,6 +9,18 @@
         </igx-avatar>
         <igx-avatar id="mercedes" initials="DZ" size="large" (mouseenter)="mouseenter($event)"
             (mouseleave)="mouseleave($event)">
+        </igx-avatar>
+    </section>
+    <h5 style="text-align: center;">Move mouse over the avatars to reuse overlay settings</h5>
+    <section class="sample-content padding">
+        <igx-avatar id="audi" initials="BS" size="large" (mouseenter)="mouseenterReuse($event)"
+            (mouseleave)="mouseleaveReuse($event)">
+        </igx-avatar>
+        <igx-avatar id="bmw" initials="HK" size="large" (mouseenter)="mouseenterReuse($event)"
+            (mouseleave)="mouseleaveReuse($event)">
+        </igx-avatar>
+        <igx-avatar id="mercedes" initials="DZ" size="large" (mouseenter)="mouseenterReuse($event)"
+            (mouseleave)="mouseleaveReuse($event)">
         </igx-avatar>
     </section>
     <div igxToggle #audiToggle="toggle" style="max-width: 400px; min-width:250px;">
@@ -45,6 +58,17 @@
                 <p class="igx-card-content__text">Harald Krüger (born 13 October 1965 in Freiburg im Breisgau, West
                     Germany)
                     is the current chairman of the board of management (CEO) for BMW.</p>
+            </igx-card-content>
+        </igx-card>
+    </div>
+    <div igxToggle #commonToggle="toggle" style="max-width: 400px; min-width:250px;">
+        <igx-card>
+            <igx-card-header>
+                <h3 class="igx-card-header__title">No Name</h3>
+                <h5 class="igx-card-header__subtitle">No Company</h5>
+            </igx-card-header>
+            <igx-card-content>
+                <p class="igx-card-content__text">This is a common toggle with no specific information.</p>
             </igx-card-content>
         </igx-card>
     </div>
