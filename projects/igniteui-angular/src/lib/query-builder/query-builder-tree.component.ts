@@ -526,10 +526,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
-     * Disables the select entity dropdown after the initial selection.
+     * Disables the select entity dropdown at the root level after the initial selection.
      */
-    public get disableEntityChange(): boolean {        
-        return this.selectedEntity ? this.queryBuilder.disableEntityChange : false;
+    public get disableEntityChange(): boolean {
+                
+        return !this.parentExpression && this.selectedEntity ? this.queryBuilder.disableEntityChange : false;
     }
     
     public get level(): number {
