@@ -456,6 +456,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public initialOperator = 0;
+
+    /**
+     * @hidden @internal
+     */
     public returnFieldSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
@@ -766,7 +771,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             searchVal: null
         }, parent);
 
-        const groupItem = new ExpressionGroupItem(FilteringLogic.And, parent);
+        const groupItem = new ExpressionGroupItem(this.getOperator(null) ?? FilteringLogic.And, parent);
+        this.contextualGroup = groupItem;
+        this.initialOperator = null;
 
         if (parent) {
             if (afterExpression) {
@@ -876,6 +883,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             }
 
             this._editedExpression = null;
+        }
+
+        if (!this.expressionTree && this.contextualGroup) {
+            this.initialOperator = this.contextualGroup.operator;
         }
     }
 
@@ -1695,7 +1706,24 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public getSwitchGroupText(operator: FilteringLogic) {
+    public getOperator(expressionItem: any) {
+        // if (!expressionItem && !this.expressionTree && !this.initialOperator) {
+        //     this.initialOperator = 0;
+        // }
+
+        const operator = expressionItem ?
+                            expressionItem.operator :
+                            this.expressionTree ?
+                                this.expressionTree.operator :
+                                this.initialOperator;
+        return operator;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public getSwitchGroupText(expressionItem: any) {
+        const operator = this.getOperator(expressionItem);
         const condition = operator === FilteringLogic.Or ? this.resourceStrings.igx_query_builder_and_label : this.resourceStrings.igx_query_builder_or_label
         return this.resourceStrings.igx_query_builder_switch_group.replace('{0}', condition.toUpperCase());
     }
@@ -1707,7 +1735,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         event.cancel = true;
 
         if (event.newSelection.value === 'switchCondition') {
-            this.selectFilteringLogic((this.contextualGroup ?? this._expressionTree).operator === 0 ? 1 : 0)
+            const newOperator = (!this.expressionTree ? this.initialOperator : (this.contextualGroup ?? this._expressionTree).operator) === 0 ? 1 : 0;
+            this.selectFilteringLogic(newOperator);
         } else if (event.newSelection.value === 'ungroup') {
             this.ungroup();
         }
@@ -1736,12 +1765,19 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public selectFilteringLogic(index: number) {
+        if (!this.expressionTree) {
+            this.initialOperator = index;
+            return;
+        }
+
         if (this.contextualGroup) {
             this.contextualGroup.operator = index as FilteringLogic;
             this.commitOperandEdit();
-        } else {
+        } else if (this.expressionTree) {
             this._expressionTree.operator = index as FilteringLogic;
         }
+
+        this.initialOperator = null;
     }
 
     /**
