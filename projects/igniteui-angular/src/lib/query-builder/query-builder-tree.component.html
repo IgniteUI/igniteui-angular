@@ -458,8 +458,8 @@
             <div
                 class="igx-filter-tree__line"
                 [ngClass]="{
-                    'igx-filter-tree__line--and': (expressionItem ?? this.expressionTree).operator === 0,
-                    'igx-filter-tree__line--or': (expressionItem ?? this.expressionTree).operator === 1
+                    'igx-filter-tree__line--and': getOperator(expressionItem) === 0,
+                    'igx-filter-tree__line--or': getOperator(expressionItem) === 1
                 }"
             ></div>
 
@@ -484,8 +484,8 @@
                             (enter)="onGroupRootOver(groupRef, expressionItem)"
                             (over)="onGroupRootOver(groupRef, expressionItem)"
                             (leave)="onChipLeave()"
-                        >
-                            {{(expressionItem ?? this.expressionTree).operator === 0 ? this.resourceStrings.igx_query_builder_and_label : this.resourceStrings.igx_query_builder_or_label}}
+                        > 
+                            {{getOperator(expressionItem) === 0 ? this.resourceStrings.igx_query_builder_and_label : this.resourceStrings.igx_query_builder_or_label}}
                         </span>
                         <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>
                     </button>
@@ -494,7 +494,7 @@
                                    [width]="'fit-content'">
                         <igx-drop-down-item [value]="'switchCondition'"
                         >
-                            {{getSwitchGroupText((contextualGroup ?? this.expressionTree).operator)}}
+                            {{getSwitchGroupText(expressionItem)}}
                         </igx-drop-down-item>
                         <igx-drop-down-item [value]="'ungroup'"
                                             [disabled]="this.rootGroup === this.contextualGroup"
