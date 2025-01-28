@@ -2223,6 +2223,7 @@ describe('IgxQueryBuilder', () => {
 
   describe('Drag and drop', () => {
     const ROW_HEIGHT = 40;
+    const DROP_CONDITION_HERE = "Drop condition here"; //should be "DROP CONDITION HERE";
     let chipComponents = [];
     beforeEach(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
@@ -2258,8 +2259,6 @@ describe('IgxQueryBuilder', () => {
 
       const startingX = (startingLeft + startingRight) / 2;
       const startingY = (startingTop + startingBottom) / 2;
-
-      const DROP_CONDITION_HERE = "Drop condition here"; //should be "DROP CONDITION HERE";
 
       let X = 100, Y = 100, run = 0;
 
@@ -2570,6 +2569,69 @@ describe('IgxQueryBuilder', () => {
       const newGroupConditions = newGroup.querySelectorAll('igx-chip');
       expect(newGroupConditions.length).toBe(1);
       expect(QueryBuilderFunctions.getChipContent(newGroupConditions[0])).toBe("OrderDate  Today");
+    });
+
+    it('should render drop ghost properly when keyboard dragged.', async () => {
+      const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[1];
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+      let keyPress = new KeyboardEvent('keydown', { code: 'ArrowDown' });
+
+      draggedIndicator.triggerEventHandler('focus', {});
+      draggedIndicator.nativeElement.focus();
+
+      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+      const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
+
+      for (let i = 0; i <= 5; i++) {
+        tree.nativeElement.dispatchEvent(keyPress);
+        await wait();
+        fix.detectChanges();
+
+        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+
+        switch (true) {
+          case i === 0:
+            expect(newChipContents[4]).toBe(dropGhostContent);
+            break;
+          case i === 1:
+            expect(newChipContents[5]).toBe(dropGhostContent);
+            break;
+          case i >= 2:
+            expect(newChipContents[6]).toBe(dropGhostContent);
+            break;
+        }
+      }
+
+      keyPress = new KeyboardEvent('keydown', { code: 'ArrowUp' });
+
+      for (let i = 0; i <= 10; i++) {
+        tree.nativeElement.dispatchEvent(keyPress);
+        await wait();
+        fix.detectChanges();
+
+        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+
+        switch (true) {
+          case i === 0:
+            expect(newChipContents[6]).toBe(dropGhostContent);
+            break;
+          case i === 1:
+            expect(newChipContents[5]).toBe(dropGhostContent);
+            break;
+          case i === 2:
+            expect(newChipContents[4]).toBe(dropGhostContent);
+            break;
+          case i === 3:
+            expect(newChipContents[2]).toBe(dropGhostContent);
+            break;
+          case i === 4:
+            expect(newChipContents[1]).toBe(dropGhostContent);
+            break;
+          case i >= 5:
+            expect(newChipContents[0]).toBe(dropGhostContent);
+            break;
+        }
+      }
     });
   });
 });
