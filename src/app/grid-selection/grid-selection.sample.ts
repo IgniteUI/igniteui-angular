@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { Observable } from 'rxjs';
@@ -14,7 +14,6 @@ import { data } from '../shared/data';
     styleUrls: ['grid-selection.sample.scss'],
     providers: [RemoteService],
     imports: [
-        AsyncPipe,
         FormsModule,
         IGX_INPUT_GROUP_DIRECTIVES,
         IGX_SELECT_DIRECTIVES,
@@ -23,7 +22,6 @@ import { data } from '../shared/data';
         IgxGridComponent,
         IgxSwitchComponent,
         NgFor,
-        NgIf,
     ]
 })
 export class GridSelectionComponent implements AfterViewInit {

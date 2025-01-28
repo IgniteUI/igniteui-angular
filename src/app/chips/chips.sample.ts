@@ -6,7 +6,6 @@ import {
     IChipsAreaReorderEventArgs,
     IChipsAreaSelectEventArgs,
     IgxAvatarComponent,
-    IgxButtonGroupComponent,
     IgxChipComponent,
     IgxChipsAreaComponent,
     IgxDropDirective,
@@ -26,7 +25,6 @@ import { SizeSelectorComponent } from '../size-selector/size-selector.component'
     styleUrls: ['chips.sample.scss', '../app.component.scss'],
     templateUrl: 'chips.sample.html',
     imports: [
-        IgxButtonGroupComponent,
         IgxChipComponent,
         IgxCircularProgressBarComponent,
         IgxIconComponent,

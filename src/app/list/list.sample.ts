@@ -7,8 +7,6 @@ import {
     IgxAvatarComponent,
     IgxBadgeComponent,
     IgxButtonDirective,
-    IgxButtonGroupComponent,
-    IgxCardComponent,
     IgxCheckboxComponent,
     IgxDialogComponent,
     IgxFilterDirective,
@@ -16,7 +14,6 @@ import {
     IgxFilterPipe,
     IgxIconComponent,
     IgxListComponent,
-    IgxRippleDirective,
     IgxSwitchComponent
 } from 'igniteui-angular';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
@@ -36,10 +33,7 @@ interface Employee {
     imports: [
         NgFor,
         FormsModule,
-        IgxButtonGroupComponent,
         IgxBadgeComponent,
-        IgxCardComponent,
-        IgxRippleDirective,
         IgxIconComponent,
         IgxCheckboxComponent,
         IgxAvatarComponent,
