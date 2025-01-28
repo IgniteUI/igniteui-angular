@@ -128,7 +128,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
     }
 
     public ngAfterContentInit() {
-        this.nativeElement.addEventListener('click', this.emitSelected);
+        this.nativeElement.addEventListener('click', this.emitSelected.bind(this));
     }
 
     public ngOnDestroy(): void {
