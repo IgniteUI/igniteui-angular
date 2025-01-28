@@ -1039,11 +1039,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //When we pick up a chip
-    public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean, shouldExitEdit = false): void {
+    public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean): void {
         //console.log('Picked up:', event, sourceDragElement);
-        if(shouldExitEdit) {
-            this.exitEditAddMode();
-        }
         this.resetDragAndDrop(true);
         this.isKeyboardDrag = isKeyboardDrag;
         this.sourceExpressionItem = sourceExpressionItem;
@@ -1142,6 +1139,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     public onChipDropped() {
         if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
+
+        this.exitEditAddMode();
 
         //console.log('Move: [', this.sourceElement.children[0].textContent.trim(), (this.dropUnder ? '] under: [' : '] over:'), this.targetExpressionItem)
         this.moveDraggedChipToNewLocation(this.targetExpressionItem)
