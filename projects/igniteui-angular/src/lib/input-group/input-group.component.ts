@@ -220,15 +220,13 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
         private themeToken: ThemeToken
     ) {
         this._theme = this.themeToken.theme;
-
-        const { unsubscribe } = this.themeToken.onChange((theme) => {
+        const themeChange = this.themeToken.onChange((theme) => {
             if (this._theme !== theme) {
                 this._theme = theme;
                 this.cdr.detectChanges();
             }
         });
-
-        this._destroyRef.onDestroy(() => unsubscribe);
+        this._destroyRef.onDestroy(() => themeChange.unsubscribe());
     }
 
     /** @hidden */
