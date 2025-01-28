@@ -2107,7 +2107,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.rowList.length).toBe(10);
             });
 
-            fit('should have the correct IGridCellEventArgs when clicking on a cell', () => {
+            it('should have the correct IGridCellEventArgs when clicking on a cell', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 spyOn(pivotGrid.cellClick, 'emit').and.callThrough();
                 fixture.detectChanges();
