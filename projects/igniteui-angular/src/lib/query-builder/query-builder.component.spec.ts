@@ -2315,35 +2315,24 @@ describe('IgxQueryBuilder', () => {
     //OK
     it('should render drop ghost properly when mouse dragged.', async () => {
       const draggedChip = chipComponents[1].componentInstance;
-      const draggedChipElem = draggedChip.chipArea.nativeElement;
-
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
-      const startingTop = draggedChipElem.getBoundingClientRect().top;
-      const startingLeft = draggedChipElem.getBoundingClientRect().left;
-      const startingBottom = draggedChipElem.getBoundingClientRect().bottom;
-      const startingRight = draggedChipElem.getBoundingClientRect().right;
-
-      const startingX = (startingLeft + startingRight) / 2;
-      const startingY = (startingTop + startingBottom) / 2;
 
       let X = 100, Y = 100, run = 0;
 
+      
       //pickup chip
-      dragDir.onPointerDown({ pointerId: 1, pageX: startingX, pageY: startingY });
+      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
       fix.detectChanges();
-
+      
       //trigger ghost
-      dragDir.onPointerMove({ pointerId: 1, pageX: startingX + 10, pageY: startingY + 10 });
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
       fix.detectChanges();
-
-      //dragDir.ghostElement.mockMethod = () => {console.log('asd')};
+      
       spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
 
       for (let i = 0; i <= 30; i++) {
-        //move mouse down a bit
-        dragDir.onPointerMove({ pointerId: 1, pageX: X, pageY: Y });
-        //duplicate the mousemove as dispatched Event, so we can trigger the RxJS listener
-        dragDir.ghostElement.dispatchEvent(new MouseEvent('mousemove', { clientX: X, clientY: Y }));
+        QueryBuilderFunctions.dragMove(dragDir, X, Y);
 
         await wait(i < 24 ? 20 : 120); //wait a bit more when leaving the tree, for the RxJS listener to trigger
         fix.detectChanges();

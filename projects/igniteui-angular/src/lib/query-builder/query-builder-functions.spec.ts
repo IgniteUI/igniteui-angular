@@ -838,7 +838,7 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static GetChipsContentAsArray(fix: ComponentFixture<any>){
+    public static GetChipsContentAsArray(fix: ComponentFixture<any>) {
         const contents: string[] = [];
 
         const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
@@ -851,11 +851,11 @@ export class QueryBuilderFunctions {
     }
 
     public static getChipContent(chip: Element): string {
-        if(chip.checkVisibility()){
-            let text:string = '';
+        if (chip.checkVisibility()) {
+            let text: string = '';
 
             Array.from(chip.querySelectorAll('span')).forEach(element => {
-                if(element?.textContent) text +=element.textContent;
+                if (element?.textContent) text += element.textContent;
             });
 
             return text.trim();
@@ -863,16 +863,31 @@ export class QueryBuilderFunctions {
     }
 
 
-    public static getVisibleChips(fixture: ComponentFixture<any>) : DebugElement[] {
+    public static getVisibleChips(fixture: ComponentFixture<any>): DebugElement[] {
         return fixture.debugElement.queryAll(By.directive(IgxChipComponent)).filter(chip => chip.nativeElement.offsetHeight > 0);
     }
 
-    public static getDropGhost(fixture: ComponentFixture<any>) : Element {
+    public static getDropGhost(fixture: ComponentFixture<any>): Element {
         var expressionsContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fixture);
         return expressionsContainer.querySelector('div.igx-filter-tree__expression-item-drop-ghost');
     }
 
-    public static getDropGhostBounds(fixture: ComponentFixture<any>) : DOMRect {
+    public static getDropGhostBounds(fixture: ComponentFixture<any>): DOMRect {
         return QueryBuilderFunctions.getDropGhost(fixture)?.getBoundingClientRect();
+    }
+
+    public static getElementCenter(element: HTMLElement) {
+        const bounds = element.getBoundingClientRect();
+        return {
+            X: (bounds.left + bounds.right) / 2,
+            Y: (bounds.top + bounds.bottom) / 2
+        }
+    }
+
+    public static dragMove(dragDirective, X: number, Y: number) {
+        //move mouse down a bit
+        dragDirective.onPointerMove({ pointerId: 1, pageX: X, pageY: Y });
+        //duplicate the mousemove as dispatched Event, so we can trigger the RxJS listener
+        dragDirective.ghostElement.dispatchEvent(new MouseEvent('mousemove', { clientX: X, clientY: Y }));
     }
 }
