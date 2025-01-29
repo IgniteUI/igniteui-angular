@@ -108,7 +108,7 @@
 
         @if(this.rootGroup) {
             <button type="button"
-                igxButton="flat"
+                igxButton="outlined"
                 [disabled]="hasEditedExpression"
                 (click)="addReverseGroup(expressionItem, afterExpression)"
             >
@@ -473,8 +473,8 @@
                 >
                     <button #changeGroupButton
                             [ngClass]="{
-                                'igx-filter-tree__button--and': (expressionItem ?? this.expressionTree).operator === 0,
-                                'igx-filter-tree__button--or': (expressionItem ?? this.expressionTree).operator === 1
+                                'igx-filter-tree__button--and': (expressionItem ?? this.expressionTree)?.operator === 0,
+                                'igx-filter-tree__button--or': (expressionItem ?? this.expressionTree)?.operator === 1
                             }"
                             [igxDropDownItemNavigation]="groupContextMenuDropDown"
                             igxDragIgnore
@@ -488,7 +488,7 @@
                             (enter)="onGroupRootOver(groupRef, expressionItem)"
                             (over)="onGroupRootOver(groupRef, expressionItem)"
                             (leave)="onChipLeave()"
-                        > 
+                        >
                             {{getOperator(expressionItem) === 0 ? this.resourceStrings.igx_query_builder_and_label : this.resourceStrings.igx_query_builder_or_label}}
                         </span>
                         <igx-icon family="default" name="arrow_drop_down" role="button"></igx-icon>
