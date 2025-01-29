@@ -1377,6 +1377,38 @@ describe('igxOverlay', () => {
             expect(overlayContent.style.getPropertyValue('--ig-size')).toEqual('1');
             overlayInstance.detach(firstCallId);
         }));
+
+        it('#15228 - Should use provided in show overlay settings ', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleRefComponent);
+            fixture.detectChanges();
+            const overlayInstance = fixture.componentInstance.overlay;
+            const id = overlayInstance.attach(SimpleDynamicComponent);
+            const info = overlayInstance.getOverlayById(id);
+            const initialPositionSpy = spyOn(info.settings.positionStrategy, 'position').and.callThrough();
+
+            overlayInstance.show(id);
+            tick();
+
+            expect(initialPositionSpy).toHaveBeenCalledTimes(1);
+            overlayInstance.hide(id);
+            tick();
+
+            const os: OverlaySettings = {
+                excludeFromOutsideClick: [],
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: new CloseScrollStrategy(),
+                modal: false,
+                closeOnOutsideClick: false,
+                closeOnEscape: true
+            };
+            const lastPositionSpy = spyOn(os.positionStrategy, 'position').and.callThrough();
+            overlayInstance.show(id, os);
+            tick();
+
+            expect(lastPositionSpy).toHaveBeenCalledTimes(1);
+            expect(info.settings.scrollStrategy).toBe(os.scrollStrategy);
+            expect(info.settings.positionStrategy).toBe(os.positionStrategy);
+        }));
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {

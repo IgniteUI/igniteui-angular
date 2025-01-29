@@ -136,6 +136,15 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
     }
 
     /**
+     * @hidden
+     */
+    protected onMouseDown() {
+        if (this.tabIndex !== -1) {
+            this.el.nativeElement.focus();
+        }
+    }
+
+    /**
      * Returns the locale representation of the month in the months view.
      *
      * @hidden
