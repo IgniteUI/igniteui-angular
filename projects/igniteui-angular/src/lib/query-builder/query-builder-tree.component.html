@@ -134,7 +134,7 @@
             (focusout)="onExpressionBlur($event, expressionItem)"
         >
             <igx-chip
-                [draggable]="canBeDragged() ? 'true' : 'false'"
+                [draggable]="canBeDragged()"
                 [hideBaseOnDrag] = "false"
                 [animateOnRelease] = "false"
                 (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem, false): null"
@@ -281,6 +281,7 @@
                     type="box"
                     [overlaySettings]="conditionSelectOverlaySettings"
                     [(ngModel)]="selectedCondition"
+                    (selectionChanging)="onConditionSelectChanging($event)"
                     [disabled]="!selectedField"
                     [placeholder]="this.resourceStrings.igx_query_builder_condition_placeholder"
                 >

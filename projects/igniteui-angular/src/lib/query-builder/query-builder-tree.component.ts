@@ -1675,6 +1675,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public onConditionSelectChanging(event: ISelectionEventArgs) {
+        event.cancel = true;
+        this.selectedCondition = event.newSelection.value;
+        this.conditionSelect.close();
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden @internal
+     */
     public onKeyDown(eventArgs: KeyboardEvent) {
         eventArgs.stopPropagation();
     }
