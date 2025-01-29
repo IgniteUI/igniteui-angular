@@ -1801,6 +1801,26 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilder.expressionTree.filteringOperands.filter(o => o instanceof FilteringExpressionsTree).length).toBe(0);
     }));
 
+    it('Should disable changing a selected entity when "disableEntityChange"=true', () => {
+      queryBuilder.disableEntityChange = true;
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+      fix.detectChanges();
+
+      const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
+    });
+
+    it('Should disable changing a selected entity when "disableEntityChange"=true only after initial selection', fakeAsync(() => {
+      queryBuilder.disableEntityChange = true;
+      fix.detectChanges();
+
+      const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalse;
+      QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 0);
+
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
+    }));
+    
     it(`Should show 'Ungroup' as disabled in root group context menu.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
@@ -2315,35 +2335,24 @@ describe('IgxQueryBuilder', () => {
     //OK
     it('should render drop ghost properly when mouse dragged.', async () => {
       const draggedChip = chipComponents[1].componentInstance;
-      const draggedChipElem = draggedChip.chipArea.nativeElement;
-
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
-      const startingTop = draggedChipElem.getBoundingClientRect().top;
-      const startingLeft = draggedChipElem.getBoundingClientRect().left;
-      const startingBottom = draggedChipElem.getBoundingClientRect().bottom;
-      const startingRight = draggedChipElem.getBoundingClientRect().right;
-
-      const startingX = (startingLeft + startingRight) / 2;
-      const startingY = (startingTop + startingBottom) / 2;
 
       let X = 100, Y = 100, run = 0;
 
+      
       //pickup chip
-      dragDir.onPointerDown({ pointerId: 1, pageX: startingX, pageY: startingY });
+      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
       fix.detectChanges();
-
+      
       //trigger ghost
-      dragDir.onPointerMove({ pointerId: 1, pageX: startingX + 10, pageY: startingY + 10 });
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
       fix.detectChanges();
-
-      //dragDir.ghostElement.mockMethod = () => {console.log('asd')};
+      
       spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
 
       for (let i = 0; i <= 30; i++) {
-        //move mouse down a bit
-        dragDir.onPointerMove({ pointerId: 1, pageX: X, pageY: Y });
-        //duplicate the mousemove as dispatched Event, so we can trigger the RxJS listener
-        dragDir.ghostElement.dispatchEvent(new MouseEvent('mousemove', { clientX: X, clientY: Y }));
+        QueryBuilderFunctions.dragMove(dragDir, X, Y);
 
         await wait(i < 24 ? 20 : 120); //wait a bit more when leaving the tree, for the RxJS listener to trigger
         fix.detectChanges();
@@ -2531,18 +2540,122 @@ describe('IgxQueryBuilder', () => {
 
     it('should drop the condition at the last position of the root group when dropped above the buttons.', () => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
-      const draggedChipElem = draggedChip.nativeElement;
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
+      const dragDir = draggedChip.dragDirective;
 
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChipElem.offsetHeight, true);
+      //pickup chip
+      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
+      fix.detectChanges();
 
+      //trigger ghost
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
+      fix.detectChanges();
+
+      spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
+
+      const addConditionButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
+      const addConditionButtonCenter = QueryBuilderFunctions.getElementCenter(addConditionButton);
+
+      //move over +Condition
+      QueryBuilderFunctions.dragMove(dragDir, addConditionButtonCenter.X, addConditionButtonCenter.Y);
+
+      const dropGhost = QueryBuilderFunctions.getDropGhost(fix) as HTMLElement;
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
-      expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
+      expect(QueryBuilderFunctions.getElementCenter(dropGhost).Y).toBeGreaterThan(QueryBuilderFunctions.getElementCenter(chipComponents[2].nativeElement).Y)
+      expect(QueryBuilderFunctions.getElementCenter(dropGhost).Y).toBeLessThan(QueryBuilderFunctions.getElementCenter(addConditionButton).Y)
 
-      const droppedChipBounds = chipComponents[3].nativeElement.getBoundingClientRect();
-      const innerGroupElement = QueryBuilderFunctions.getQueryBuilderTreeChildGroups(QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement)[0];
-      const innerGroupBounds = innerGroupElement.getBoundingClientRect();
-      expect(droppedChipBounds.y).toBeCloseTo(innerGroupBounds.bottom);
-      expect(droppedChipBounds.x).toBeCloseTo(innerGroupBounds.x);
+      //drop condition
+      dragDir.onPointerUp({ pointerId: 1, pageX: addConditionButtonCenter.X, pageY: addConditionButtonCenter.Y });
+      wait();
+      fix.detectChanges();
+
+      const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+      expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "fieldName": "OrderName",
+      "condition": {
+        "name": "equals",
+        "isUnary": false,
+        "iconName": "filter_equal"
+      },
+      "conditionName": "equals",
+      "searchVal": "foo"
+    },
+    {
+      "fieldName": "OrderId",
+      "condition": {
+        "name": "in",
+        "isUnary": false,
+        "isNestedQuery": true,
+        "iconName": "in"
+      },
+      "conditionName": "in",
+      "searchTree": {
+        "filteringOperands": [
+          {
+            "fieldName": "Id",
+            "condition": {
+              "name": "equals",
+              "isUnary": false,
+              "iconName": "filter_equal"
+            },
+            "conditionName": "equals",
+            "searchVal": 123
+          },
+          {
+            "fieldName": "ProductName",
+            "condition": {
+              "name": "equals",
+              "isUnary": false,
+              "iconName": "filter_equal"
+            },
+            "conditionName": "equals",
+            "searchVal": "abc"
+          }
+        ],
+        "operator": 0,
+        "entity": "Products",
+        "returnFields": [
+          "OrderId"
+        ]
+      }
+    },
+    {
+      "filteringOperands": [
+        {
+          "fieldName": "OrderName",
+          "condition": {
+            "name": "endsWith",
+            "isUnary": false,
+            "iconName": "filter_ends_with"
+          },
+          "conditionName": "endsWith",
+          "searchVal": "a"
+        }
+      ],
+      "operator": 1,
+      "entity": "Orders",
+      "returnFields": [
+        "*"
+      ]
+    },
+    {
+      "fieldName": "OrderDate",
+      "condition": {
+        "name": "today",
+        "isUnary": true,
+        "iconName": "filter_today"
+      },
+      "conditionName": "today"
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "*"
+  ]
+}`);
     });
 
     it('should remove the inner group when the last condition is dragged out.', () => {

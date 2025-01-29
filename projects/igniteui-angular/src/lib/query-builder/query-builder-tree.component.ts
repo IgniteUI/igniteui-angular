@@ -530,6 +530,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
+    /**
+     * Disables the select entity dropdown at the root level after the initial selection.
+     */
+    public get disableEntityChange(): boolean {
+                
+        return !this.parentExpression && this.selectedEntity ? this.queryBuilder.disableEntityChange : false;
+    }
+    
     public get level(): number {
         let parent = this.elRef.nativeElement.parentElement;
         let _level = 0;
@@ -1230,7 +1238,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         (dragCopy as HTMLElement).classList.add(this.dropGhostClass);
         (dragCopy as HTMLElement).style.display = '';
         (dragCopy.firstChild as HTMLElement).style.visibility = 'visible';
-        (dragCopy.firstChild as HTMLElement).style.opacity = '0.5';
         dragCopy.removeChild(dragCopy.childNodes[3]);
 
         if (!keyboardMode) {
