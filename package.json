@@ -22,7 +22,7 @@
     "test:i18n": "ts-node --skip-project ./projects/igniteui-angular/src/lib/core/i18n/tests/tests.mjs",
     "test:elements": "ng test igniteui-angular-elements --watch=false --no-progress --code-coverage --source-map=false",
     "test:elements:watch": "ng test igniteui-angular-elements",
-    "build:lib": "ng build igniteui-angular --configuration production && npm run build:styles:all",
+    "build:lib": "npm run build:styles:all && ng build igniteui-angular --configuration production",
     "build:styles:all": "node scripts/build-styles.mjs",
     "build:styles:components": "node scripts/build-component-styles.mjs",
     "watch:styles": "node scripts/watch-styles.mjs",
