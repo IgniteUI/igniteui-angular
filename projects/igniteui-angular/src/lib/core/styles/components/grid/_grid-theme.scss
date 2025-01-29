@@ -3198,7 +3198,7 @@
 
     %advanced-filtering-dialog {
         $light-variant: contrast-color($color: 'gray', $variant: 900);
-        $dark-variant: contrast-color($color: 'surface', $variant: 500);
+        $dark-variant: color($color: 'surface', $variant: 500);
         background: if($theme-variant == 'light', $light-variant, $dark-variant);
         box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 24));
 
