@@ -252,9 +252,8 @@
             }
         </div>
 
-        <div class="igx-filter-tree__subquery">
-            <div
-                #editingInputsContainer
+        <div #editingInputsContainer class="igx-filter-tree__subquery" >
+            <div                
                 igxDrop
                 (enter)="onChipEnter(editingInputsContainer, expressionItem, true)"
                 (over)="onDivOver(editingInputsContainer, expressionItem)"
