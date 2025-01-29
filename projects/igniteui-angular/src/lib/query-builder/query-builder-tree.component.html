@@ -108,7 +108,7 @@
 
         @if(this.rootGroup) {
             <button type="button"
-                igxButton="outlined"
+                igxButton="flat"
                 [disabled]="hasEditedExpression"
                 (click)="addReverseGroup(expressionItem, afterExpression)"
             >
@@ -517,7 +517,7 @@
                     </ng-container>
                 </div>
                 <div
-                        *ngIf="expressionItem === rootGroup"
+                        *ngIf="expressionItem === rootGroup && !hasEditedExpression"
                         #currentGroupButtonsContainer
                         class="igx-filter-tree__buttons"
                 >
