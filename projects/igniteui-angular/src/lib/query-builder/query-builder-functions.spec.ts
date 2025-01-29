@@ -818,7 +818,7 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
 
         // Verify all inputs
-        QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false, level - 1); // Parent commit button should be disabled
+        QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true, level - 1); // Parent commit button should be disabled
         QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, true, level);
         QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id', 'ProductName', 'Contains', 'a', level);
 

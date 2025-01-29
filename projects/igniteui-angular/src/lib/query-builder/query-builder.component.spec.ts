@@ -1370,7 +1370,7 @@ describe('IgxQueryBuilder', () => {
       ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
     }));
 
-    it(`Parent "commit" button should be disabled if a child condition is edited.`, fakeAsync(() => {
+    it(`Parent "commit" button should be enabled if a child condition is edited.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
       tick(100);
@@ -1393,7 +1393,7 @@ describe('IgxQueryBuilder', () => {
       let parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
       let childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
 
-      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement);
+      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
       ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement, false);
 
       // Commit the change
@@ -1414,7 +1414,7 @@ describe('IgxQueryBuilder', () => {
       parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
       childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
 
-      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement);
+      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
       ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement);
 
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1);
@@ -1432,6 +1432,66 @@ describe('IgxQueryBuilder', () => {
       // Verify parent is enabled
       parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
       ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
+    }));
+
+    it(`Clicking parent "commit" button should properly exit edit mode of inner query.`, fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+
+      // Click the parent chip 'Products' to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
+      tick(50);
+      fix.detectChanges();
+
+      // Click the child chip 'Released' to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], 1);
+      tick(50);
+      fix.detectChanges();
+
+      // Change the 'Released' operator
+      QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2, 1); // Select 'False' operator.
+
+      // Commit the change through the parent
+      QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+      tick(50);
+      fix.detectChanges();
+
+      // Verify the changes in the child query are commited
+      let exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.filteringOperands[0]);
+      expect(exprTree).toBe(`{"fieldName":"OrderId","condition":{"name":"in","isUnary":false,"isNestedQuery":true,"iconName":"in"},"conditionName":"in","searchVal":null,"searchTree":{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"conditionName":"contains","searchVal":"a"},{"fieldName":"Released","condition":{"name":"false","isUnary":true,"iconName":"filter_false"},"conditionName":"false","searchVal":null,"searchTree":null}],"operator":0,"entity":"Products","returnFields":["Id"]}}`);
+      // Enter edit mode again
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
+      tick(50);
+      fix.detectChanges();
+
+      // Click the child chip 'ProductName' to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], 1);
+      tick(50);
+      fix.detectChanges();
+
+      // Change the 'ProductName' column to 'Id'
+      QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+
+      // Verify input values
+      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Id', '', '', 1);
+
+      // Verify parent and child commit buttons are disabled
+      const parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+      const childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
+
+      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
+      ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement);
+
+      // Commit the parent
+      QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+      tick(50);
+      fix.detectChanges();
+
+      // Verify the changes in the child query are discarded
+      exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.filteringOperands[0]);
+      expect(exprTree).toBe(`{"fieldName":"OrderId","condition":{"name":"in","isUnary":false,"isNestedQuery":true,"iconName":"in"},"conditionName":"in","searchVal":null,"searchTree":{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"conditionName":"contains","searchVal":"a"},{"fieldName":"Released","condition":{"name":"false","isUnary":true,"iconName":"filter_false"},"conditionName":"false","searchVal":null,"searchTree":null}],"operator":0,"entity":"Products","returnFields":["Id"]}}`);
     }));
 
     it('Should collapse nested query when it is committed.', fakeAsync(() => {
@@ -1693,7 +1753,7 @@ describe('IgxQueryBuilder', () => {
       const parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
       const childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
 
-      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement);
+      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
       ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement, false);
 
       // Verify inputs values on both levels

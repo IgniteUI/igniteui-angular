@@ -828,6 +828,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0]
             if (innerQuery && this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery) {
+                innerQuery.exitEditAddMode();
                 this._editedExpression.expression.searchTree = this.getExpressionTreeCopy(innerQuery.expressionTree);
                 this._editedExpression.expression.searchTree.returnFields = innerQuery.selectedReturnFields;
             } else {
@@ -903,7 +904,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
                 ) ||
                 (
-                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields?.length > 0
+                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery.selectedReturnFields?.length > 0
                 ) ||
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
