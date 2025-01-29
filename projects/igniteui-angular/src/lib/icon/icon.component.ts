@@ -15,8 +15,6 @@ import type { IconReference } from "./types";
 import { filter, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SafeHtml } from "@angular/platform-browser";
-import { ThemeService } from '../services/theme/theme.service';
-import themes from './themes/index';
 
 /**
  * Icon provides a way to include material icons to markup
@@ -42,7 +40,7 @@ import themes from './themes/index';
  */
 @Component({
     selector: "igx-icon",
-    templateUrl: "icon.component.html"
+    templateUrl: "icon.component.html",
 })
 export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     private _iconRef: IconReference;

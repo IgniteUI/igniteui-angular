@@ -217,6 +217,9 @@ export class IgxGridNavigationService {
 
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {
         if (!this.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) {
+            if (cb) {
+                cb();
+            }
             return;
         }
         this.pendingNavigation = true;

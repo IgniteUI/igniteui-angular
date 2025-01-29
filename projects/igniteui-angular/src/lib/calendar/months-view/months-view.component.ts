@@ -7,7 +7,7 @@ import {
     Inject,
 } from "@angular/core";
 import { IgxCalendarMonthDirective } from "../calendar.directives";
-import { NgFor, TitleCasePipe, DatePipe } from "@angular/common";
+import { NgFor, TitleCasePipe } from "@angular/common";
 import {
     IgxCalendarViewDirective,
     DAY_INTERVAL_TOKEN,
@@ -33,7 +33,7 @@ let NEXT_ID = 0;
     ],
     selector: "igx-months-view",
     templateUrl: "months-view.component.html",
-    imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe, DatePipe]
+    imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe]
 })
 export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     #standalone = true;
@@ -133,6 +133,15 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
         @Inject(DAY_INTERVAL_TOKEN) dayInterval: DayInterval,
     ) {
         super(dayInterval);
+    }
+
+    /**
+     * @hidden
+     */
+    protected onMouseDown() {
+        if (this.tabIndex !== -1) {
+            this.el.nativeElement.focus();
+        }
     }
 
     /**

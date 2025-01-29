@@ -1,0 +1,61 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+@layer base {
+    @include b(igx-avatar) {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+
+        position: relative;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+        color: var-get($theme, 'color');
+        background: var-get($theme, 'background');
+        vertical-align: middle;
+        outline-style: none;
+        flex-shrink: 0;
+        width: var-get($theme, 'size');
+        height: var-get($theme, 'size');
+
+        igx-icon {
+            --ig-size: 3;
+
+            color: var-get($theme, 'icon-color');
+        }
+
+        &::after {
+            box-shadow: none;
+            transition: box-shadow 0.15s $ease-in-out-quad;
+        }
+
+        @include e(image) {
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        @include m(circle) {
+            border-radius: calc(#{var-get($theme, 'size')} / 2);
+        }
+
+        @include m(rounded) {
+            border-radius: var-get($theme, 'border-radius');
+        }
+
+        @include m(initials) {
+            text-transform: uppercase;
+            font-size: calc(#{var-get($theme, 'size')} / 2);
+            line-height: calc(#{var-get($theme, 'size')} / 2);
+        }
+    }
+}
