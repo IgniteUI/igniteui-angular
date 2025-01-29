@@ -2292,18 +2292,23 @@ describe('IgxQueryBuilder', () => {
       chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
     });
 
+    //OK
     it('should render ghost when mouse drag operation starts.', () => {
       const draggedChip = chipComponents[1].componentInstance;
 
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 10, 10, false);
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 100, 10, false);
+      const dropGhost = QueryBuilderFunctions.getDropGhost(fix) as HTMLElement;
 
       expect(draggedChip.dragDirective.ghostElement).toBeTruthy();
+      expect(dropGhost).toBeDefined();
+      expect(dropGhost.innerText).toBe(DROP_CONDITION_HERE);
     });
 
+    //OK
     it('should collapse the condition when mouse drag operation starts.', () => {
       const secondChip = chipComponents[1].componentInstance;
 
-      UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 10, 10, false);
+      UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 100, 10, false);
       expect(chipComponents[1].nativeElement.getBoundingClientRect().height).toBe(0);
     });
 
