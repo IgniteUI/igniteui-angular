@@ -363,6 +363,7 @@
 
         @if $variant == 'material' {
             border: none;
+            z-index: 0;
 
             &::after {
                 position: absolute;
