@@ -1801,6 +1801,26 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilder.expressionTree.filteringOperands.filter(o => o instanceof FilteringExpressionsTree).length).toBe(0);
     }));
 
+    it('Should disable changing a selected entity when "disableEntityChange"=true', () => {
+      queryBuilder.disableEntityChange = true;
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+      fix.detectChanges();
+
+      const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
+    });
+
+    it('Should disable changing a selected entity when "disableEntityChange"=true only after initial selection', fakeAsync(() => {
+      queryBuilder.disableEntityChange = true;
+      fix.detectChanges();
+
+      const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalse;
+      QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 0);
+
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
+    }));
+    
     it(`Should show 'Ungroup' as disabled in root group context menu.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();

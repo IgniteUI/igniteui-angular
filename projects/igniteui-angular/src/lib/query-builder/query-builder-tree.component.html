@@ -18,6 +18,7 @@
                 [ngModel]="selectedEntity"
                 [style.display]="isInEditMode() ? 'block' : 'none'"
                 [placeholder]="this.resourceStrings.igx_query_builder_select_entity"
+                [disabled]="disableEntityChange"
             >
                 <igx-select-item *ngFor="let entity of entities" [value]="entity">
                     {{entity.name}}
