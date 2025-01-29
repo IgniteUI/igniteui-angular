@@ -2312,6 +2312,7 @@ describe('IgxQueryBuilder', () => {
       expect(chipComponents[1].nativeElement.getBoundingClientRect().height).toBe(0);
     });
 
+    //OK
     it('should render drop ghost properly when mouse dragged.', async () => {
       const draggedChip = chipComponents[1].componentInstance;
       const draggedChipElem = draggedChip.chipArea.nativeElement;
@@ -2344,7 +2345,7 @@ describe('IgxQueryBuilder', () => {
         //duplicate the mousemove as dispatched Event, so we can trigger the RxJS listener
         dragDir.ghostElement.dispatchEvent(new MouseEvent('mousemove', { clientX: X, clientY: Y }));
 
-        await wait(120);
+        await wait(i < 24 ? 20 : 120); //wait a bit more when leaving the tree, for the RxJS listener to trigger
         fix.detectChanges();
         Y += 15;
         const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
