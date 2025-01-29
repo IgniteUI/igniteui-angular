@@ -19,6 +19,7 @@ body {
 );
 
 .indigo {
+    --ig-theme: indigo;
     --ig-theme-variant: dark;
 
     @include palette($dark-indigo-palette);

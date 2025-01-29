@@ -1,0 +1,56 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use './light/tokens' as *;
+
+$theme: $material;
+
+@scope (.igx-icon) {
+    :scope:is(igx-icon) {
+        display: inline-flex;
+        // Using "em" unit here is on purpose see:
+        // https://github.com/IgniteUI/igniteui-angular/issues/13394#event-10241243103
+        width: 1em;
+        height: 1em;
+        font-size: var-get($theme, 'size');
+        direction: inherit;
+
+        div,
+        svg {
+            display: block;
+            width: inherit;
+            height: inherit;
+            fill: currentColor;
+        }
+
+        &[igxPrefix].material-icons,
+        &[igxSuffix].material-icons {
+            font-family: 'Material Icons', sans-serif;
+        }
+    }
+}
+
+@layer base {
+    @include b(igx-icon) {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+
+        color: var-get($theme, 'color');
+
+        @include m(inactive) {
+            color: var-get($theme, 'disabled-color');
+            opacity: 0.54;
+        }
+
+        @include m(success) {
+            color: color($color: 'success');
+        }
+
+        @include m(error) {
+            color: color($color: 'error');
+        }
+    }
+}

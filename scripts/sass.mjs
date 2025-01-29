@@ -143,7 +143,6 @@ export async function buildComponentStyles() {
   } catch (err) {
     await compiler.dispose();
     report.error(err);
-    process.exit(1);
   }
 
   await compiler.dispose();
