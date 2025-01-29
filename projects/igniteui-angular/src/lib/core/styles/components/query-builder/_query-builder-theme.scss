@@ -119,7 +119,8 @@
         label-foreground: $label-foreground,
         theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
+            variant: map.get($schema, '_meta', 'theme'),
+            theme-variant: map.get($schema, '_meta', 'variant')
         )),
     ));
 }
@@ -467,6 +468,7 @@
             }
         }
     }
+
 
     %filter-tree__expression-item-ghost {
         &.igx-chip__item {

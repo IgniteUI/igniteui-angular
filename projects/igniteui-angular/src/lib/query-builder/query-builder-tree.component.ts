@@ -1230,7 +1230,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         (dragCopy as HTMLElement).classList.add(this.dropGhostClass);
         (dragCopy as HTMLElement).style.display = '';
         (dragCopy.firstChild as HTMLElement).style.visibility = 'visible';
-        (dragCopy.firstChild as HTMLElement).style.opacity = '0.5';
         dragCopy.removeChild(dragCopy.childNodes[3]);
 
         if (!keyboardMode) {
