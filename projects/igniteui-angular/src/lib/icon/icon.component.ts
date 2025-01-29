@@ -8,7 +8,7 @@ import {
     OnChanges,
     ChangeDetectorRef,
     booleanAttribute,
-    inject,
+    ViewEncapsulation,
 } from "@angular/core";
 import { IgxIconService } from "./icon.service";
 import type { IconReference } from "./types";
@@ -40,15 +40,15 @@ import { SafeHtml } from "@angular/platform-browser";
  */
 @Component({
     selector: "igx-icon",
+    styleUrl: "icon.component.css",
     templateUrl: "icon.component.html",
+    encapsulation: ViewEncapsulation.None,
 })
 export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     private _iconRef: IconReference;
     private _destroy$ = new Subject<void>();
     private _userClasses = new Set<string>();
     private _iconClasses = new Set<string>();
-
-    public themeService = inject(ThemeService);
 
     @HostBinding("class")
     protected get elementClasses() {
@@ -139,7 +139,6 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public ngOnInit() {
-        this.themeService.adoptStyles(IgxIconComponent, themes);
         this.setIcon();
     }
 
