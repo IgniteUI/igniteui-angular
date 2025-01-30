@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './query-builder-functions.spec';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 
@@ -1067,7 +1067,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'ProductName', 'Starts With', 'a', 1);
     }));
 
-    it('Should switch edit mode on click on chip on the same level.', fakeAsync(()=>{
+    it('Should switch edit mode on click on chip on the same level.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
       tick(100);
@@ -1076,7 +1076,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
       tick(50);
       fix.detectChanges();
-      
+
       // Click the existing chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], 1);
       tick(50);
@@ -1089,7 +1089,7 @@ describe('IgxQueryBuilder', () => {
       tick(50);
       fix.detectChanges();
       // Verify inputs values
-      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Released', 'True', '', 1 );
+      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Released', 'True', '', 1);
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'ProductName', 'Contains', 'a', 1);
     }));
 
@@ -1370,7 +1370,7 @@ describe('IgxQueryBuilder', () => {
       ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, false);
     }));
 
-    it(`Parent "commit" button should be disabled if a child condition is edited.`, fakeAsync(() => {
+    it(`Parent "commit" button should be enabled if a child condition is edited.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
       tick(100);
@@ -1393,7 +1393,7 @@ describe('IgxQueryBuilder', () => {
       let parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
       let childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
 
-      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement);
+      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
       ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement, false);
 
       // Commit the change
@@ -1414,7 +1414,7 @@ describe('IgxQueryBuilder', () => {
       parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
       childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
 
-      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement);
+      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
       ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement);
 
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1);
@@ -1432,6 +1432,66 @@ describe('IgxQueryBuilder', () => {
       // Verify parent is enabled
       parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
       ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
+    }));
+
+    it(`Clicking parent "commit" button should properly exit edit mode of inner query.`, fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+
+      // Click the parent chip 'Products' to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
+      tick(50);
+      fix.detectChanges();
+
+      // Click the child chip 'Released' to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1], 1);
+      tick(50);
+      fix.detectChanges();
+
+      // Change the 'Released' operator
+      QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2, 1); // Select 'False' operator.
+
+      // Commit the change through the parent
+      QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+      tick(50);
+      fix.detectChanges();
+
+      // Verify the changes in the child query are commited
+      let exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.filteringOperands[0]);
+      expect(exprTree).toBe(`{"fieldName":"OrderId","condition":{"name":"in","isUnary":false,"isNestedQuery":true,"iconName":"in"},"conditionName":"in","searchVal":null,"searchTree":{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"conditionName":"contains","searchVal":"a"},{"fieldName":"Released","condition":{"name":"false","isUnary":true,"iconName":"filter_false"},"conditionName":"false","searchVal":null,"searchTree":null}],"operator":0,"entity":"Products","returnFields":["Id"]}}`);
+      // Enter edit mode again
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
+      tick(50);
+      fix.detectChanges();
+
+      // Click the child chip 'ProductName' to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], 1);
+      tick(50);
+      fix.detectChanges();
+
+      // Change the 'ProductName' column to 'Id'
+      QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+
+      // Verify input values
+      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Id', '', '', 1);
+
+      // Verify parent and child commit buttons are disabled
+      const parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+      const childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
+
+      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
+      ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement);
+
+      // Commit the parent
+      QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+      tick(50);
+      fix.detectChanges();
+
+      // Verify the changes in the child query are discarded
+      exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.filteringOperands[0]);
+      expect(exprTree).toBe(`{"fieldName":"OrderId","condition":{"name":"in","isUnary":false,"isNestedQuery":true,"iconName":"in"},"conditionName":"in","searchVal":null,"searchTree":{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"conditionName":"contains","searchVal":"a"},{"fieldName":"Released","condition":{"name":"false","isUnary":true,"iconName":"filter_false"},"conditionName":"false","searchVal":null,"searchTree":null}],"operator":0,"entity":"Products","returnFields":["Id"]}}`);
     }));
 
     it('Should collapse nested query when it is committed.', fakeAsync(() => {
@@ -1811,7 +1871,7 @@ describe('IgxQueryBuilder', () => {
       const parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
       const childCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, 1);
 
-      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement);
+      ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
       ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement, false);
 
       // Verify inputs values on both levels
@@ -1859,6 +1919,26 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilder.expressionTree.filteringOperands.filter(o => o instanceof FilteringExpressionsTree).length).toBe(0);
     }));
 
+    it('Should disable changing a selected entity when "disableEntityChange"=true', () => {
+      queryBuilder.disableEntityChange = true;
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+      fix.detectChanges();
+
+      const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
+    });
+
+    it('Should disable changing a selected entity when "disableEntityChange"=true only after initial selection', fakeAsync(() => {
+      queryBuilder.disableEntityChange = true;
+      fix.detectChanges();
+
+      const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalse;
+      QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 0);
+
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
+    }));
+    
     it(`Should show 'Ungroup' as disabled in root group context menu.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
@@ -2341,96 +2421,94 @@ describe('IgxQueryBuilder', () => {
 
   describe('Drag and drop', () => {
     const ROW_HEIGHT = 40;
+    const DROP_CONDITION_HERE = "Drop condition here"; //should be "DROP CONDITION HERE";
     let chipComponents = [];
-    beforeEach(() => {       
+    beforeEach(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
 
       chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
     });
 
+    //OK
     it('should render ghost when mouse drag operation starts.', () => {
       const draggedChip = chipComponents[1].componentInstance;
 
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 10, 10, false);
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 100, 10, false);
+      const dropGhost = QueryBuilderFunctions.getDropGhost(fix) as HTMLElement;
 
       expect(draggedChip.dragDirective.ghostElement).toBeTruthy();
+      expect(dropGhost).toBeDefined();
+      expect(dropGhost.innerText).toBe(DROP_CONDITION_HERE);
     });
 
+    //OK
     it('should collapse the condition when mouse drag operation starts.', () => {
       const secondChip = chipComponents[1].componentInstance;
 
-      UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 10, 10, false);
+      UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 100, 10, false);
       expect(chipComponents[1].nativeElement.getBoundingClientRect().height).toBe(0);
     });
 
-    it('should render drop ghost properly.', () => {
-      pending("This test seems obsolete!");
+    //OK
+    it('should render drop ghost properly when mouse dragged.', async () => {
       const draggedChip = chipComponents[1].componentInstance;
-      const draggedChipElem = draggedChip.chipArea.nativeElement;
-
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
-      const startingTop = draggedChipElem.getBoundingClientRect().top;
-      const startingLeft = draggedChipElem.getBoundingClientRect().left;
-      const startingBottom = draggedChipElem.getBoundingClientRect().bottom;
-      const startingRight = draggedChipElem.getBoundingClientRect().right;
 
-      const startingX = (startingLeft + startingRight) / 2;
-      const startingY = (startingTop + startingBottom) / 2;
+      let X = 100, Y = 100, run = 0;
 
-      let X =100, Y = 15, run =1;
-      //pickup chip
-      dragDir.onPointerDown({ pointerId: 1, pageX: startingX, pageY: startingY });
-      fix.detectChanges();
-
-      const initialChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
-      initialChipContents.push("DROP CONDITION HERE");
       
-      for (let i = 0; i <= 9; i++) { 
-        //move mouse down a bit
-        dragDir.onPointerMove({ pointerId: 1, pageX: X, pageY: startingTop + Y });
+      //pickup chip
+      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
+      fix.detectChanges();
+      
+      //trigger ghost
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
+      fix.detectChanges();
+      
+      spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
+
+      for (let i = 0; i <= 30; i++) {
+        QueryBuilderFunctions.dragMove(dragDir, X, Y);
+
+        await wait(i < 24 ? 20 : 120); //wait a bit more when leaving the tree, for the RxJS listener to trigger
         fix.detectChanges();
         Y += 15;
         const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
-        const visibleChips = chipComponents.map(c => c.nativeElement);
 
-        //TODO for some reason when dragging over div, the mouse needs to be closer to the row, compared to when dragging over chip
-        //That's why the '+run'
-        switch(true){
-          case i < 4 + run: 
-            expect(QueryBuilderFunctions.getChipContent(visibleChips[1])).toBe("DROP CONDITION HERE");
-            // expect(newChipContents[0]).toEqual(initialChipContents[0]);
-            // expect(newChipContents[1]).toEqual(initialChipContents[4]);
-            // expect(newChipContents[2]).toEqual(initialChipContents[2]);
-            // expect(newChipContents[3]).toEqual(initialChipContents[3]);
+        //When dragging over div, the mouse needs to be closer to the row, compared to when dragging over chip, that's why the '+run'
+        switch (true) {
+          case i < 5 + run:
+            expect(newChipContents).not.toContain(DROP_CONDITION_HERE);
             break;
-          case i < 6 + run: 
-          expect(QueryBuilderFunctions.getChipContent(visibleChips[2])).toBe("DROP CONDITION HERE");
-
-            // expect(newChipContents[0]).toEqual(initialChipContents[0]);
-            // expect(newChipContents[1]).toEqual(initialChipContents[2]);
-            // expect(newChipContents[2]).toEqual(initialChipContents[4]);
-            // expect(newChipContents[3]).toEqual(initialChipContents[3]);
+          case i < 10 + run:
+            expect(newChipContents[0]).toBe(DROP_CONDITION_HERE);
             break;
-          case i < 9 + run: 
-          expect(QueryBuilderFunctions.getChipContent(visibleChips[3])).toBe("DROP CONDITION HERE");
-
-            // expect(newChipContents[0]).toEqual(initialChipContents[0]);
-            // expect(newChipContents[1]).toEqual(initialChipContents[2]);
-            // expect(newChipContents[2]).toEqual(initialChipContents[3]);
-            // expect(newChipContents[3]).toEqual(initialChipContents[4]);
+          case i < 13 + run:
+            expect(newChipContents[1]).toBe(DROP_CONDITION_HERE);
             break;
-          default: 
-            break;  
+          case i < 15 + run:
+            expect(newChipContents[4]).toBe(DROP_CONDITION_HERE);
+            break;
+          case i < 18 + run:
+            expect(newChipContents[5]).toBe(DROP_CONDITION_HERE);
+            break;
+          case i < 24 + run:
+            expect(newChipContents[6]).toBe(DROP_CONDITION_HERE);
+            break;
+          default:
+            expect(newChipContents).not.toContain(DROP_CONDITION_HERE);
+            break;
         }
 
-        //When done moving mouse over chips, go to the left and test the whole chip row as well
-        // if(i === 9 && run === 1) {
-        //   i=0;
-        //   X+=500;
-        //   Y = 15;
-        //   run = 2;
-        // }
+        //When done moving mouse over chips, go to the left and test the chip row (blank space to the right) as well
+        if (i === 30 && run === 0) {
+          i = 0;
+          X += 500;
+          Y = 100;
+          run = 1;
+        }
       }
     });
 
@@ -2456,8 +2534,8 @@ describe('IgxQueryBuilder', () => {
       const secondChipElem = secondChip.chipArea.nativeElement;
 
       const dragDir = secondChip.dragDirective;
-      UIInteractions.moveDragDirective(fix, dragDir, 0, -2* secondChipElem.offsetHeight, false);
-      
+      UIInteractions.moveDragDirective(fix, dragDir, 0, -2 * secondChipElem.offsetHeight, false);
+
       const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
 
       expect(dropGhost).not.toBe(null);
@@ -2526,7 +2604,7 @@ describe('IgxQueryBuilder', () => {
 
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderName  Equals  foo");
 
-      UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 0, -2* secondChipElem.offsetHeight, true);
+      UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 0, -2 * secondChipElem.offsetHeight, true);
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderId  In Products / OrderId");
       expect(QueryBuilderFunctions.getChipContent(chipComponents[1].nativeElement)).toBe("OrderName  Equals  foo");
@@ -2580,18 +2658,122 @@ describe('IgxQueryBuilder', () => {
 
     it('should drop the condition at the last position of the root group when dropped above the buttons.', () => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
-      const draggedChipElem = draggedChip.nativeElement;
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
+      const dragDir = draggedChip.dragDirective;
 
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChipElem.offsetHeight, true);
+      //pickup chip
+      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
+      fix.detectChanges();
 
+      //trigger ghost
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
+      fix.detectChanges();
+
+      spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
+
+      const addConditionButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
+      const addConditionButtonCenter = QueryBuilderFunctions.getElementCenter(addConditionButton);
+
+      //move over +Condition
+      QueryBuilderFunctions.dragMove(dragDir, addConditionButtonCenter.X, addConditionButtonCenter.Y);
+
+      const dropGhost = QueryBuilderFunctions.getDropGhost(fix) as HTMLElement;
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
-      expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
+      expect(QueryBuilderFunctions.getElementCenter(dropGhost).Y).toBeGreaterThan(QueryBuilderFunctions.getElementCenter(chipComponents[2].nativeElement).Y)
+      expect(QueryBuilderFunctions.getElementCenter(dropGhost).Y).toBeLessThan(QueryBuilderFunctions.getElementCenter(addConditionButton).Y)
 
-      const droppedChipBounds = chipComponents[3].nativeElement.getBoundingClientRect();
-      const innerGroupElement = QueryBuilderFunctions.getQueryBuilderTreeChildGroups(QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement)[0];
-      const innerGroupBounds = innerGroupElement.getBoundingClientRect();
-      expect(droppedChipBounds.y).toBeCloseTo(innerGroupBounds.bottom);
-      expect(droppedChipBounds.x).toBeCloseTo(innerGroupBounds.x);
+      //drop condition
+      dragDir.onPointerUp({ pointerId: 1, pageX: addConditionButtonCenter.X, pageY: addConditionButtonCenter.Y });
+      wait();
+      fix.detectChanges();
+
+      const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+      expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "fieldName": "OrderName",
+      "condition": {
+        "name": "equals",
+        "isUnary": false,
+        "iconName": "filter_equal"
+      },
+      "conditionName": "equals",
+      "searchVal": "foo"
+    },
+    {
+      "fieldName": "OrderId",
+      "condition": {
+        "name": "in",
+        "isUnary": false,
+        "isNestedQuery": true,
+        "iconName": "in"
+      },
+      "conditionName": "in",
+      "searchTree": {
+        "filteringOperands": [
+          {
+            "fieldName": "Id",
+            "condition": {
+              "name": "equals",
+              "isUnary": false,
+              "iconName": "filter_equal"
+            },
+            "conditionName": "equals",
+            "searchVal": 123
+          },
+          {
+            "fieldName": "ProductName",
+            "condition": {
+              "name": "equals",
+              "isUnary": false,
+              "iconName": "filter_equal"
+            },
+            "conditionName": "equals",
+            "searchVal": "abc"
+          }
+        ],
+        "operator": 0,
+        "entity": "Products",
+        "returnFields": [
+          "OrderId"
+        ]
+      }
+    },
+    {
+      "filteringOperands": [
+        {
+          "fieldName": "OrderName",
+          "condition": {
+            "name": "endsWith",
+            "isUnary": false,
+            "iconName": "filter_ends_with"
+          },
+          "conditionName": "endsWith",
+          "searchVal": "a"
+        }
+      ],
+      "operator": 1,
+      "entity": "Orders",
+      "returnFields": [
+        "*"
+      ]
+    },
+    {
+      "fieldName": "OrderDate",
+      "condition": {
+        "name": "today",
+        "isUnary": true,
+        "iconName": "filter_today"
+      },
+      "conditionName": "today"
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "*"
+  ]
+}`);
     });
 
     it('should remove the inner group when the last condition is dragged out.', () => {
@@ -2617,7 +2799,7 @@ describe('IgxQueryBuilder', () => {
 
       chipComponents[2].nativeElement.click();
 
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -2.5* draggedChipElem.offsetHeight, true);
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -2.5 * draggedChipElem.offsetHeight, true);
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
     });
@@ -2662,7 +2844,7 @@ describe('IgxQueryBuilder', () => {
       const draggedChip = chipComponents[2].componentInstance;
       const draggedChipElem = draggedChip.nativeElement;
 
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -10* draggedChipElem.offsetHeight, false);
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -10 * draggedChipElem.offsetHeight, false);
 
       expect(QueryBuilderFunctions.getVisibleChips(fix).length).toBe(4);
       expect(QueryBuilderFunctions.getDropGhost(fix)).toBe(null);
@@ -2671,11 +2853,11 @@ describe('IgxQueryBuilder', () => {
     it('should successfully drop a condition inside a newly created group.', () => {
       var addGroupButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0).pop();
       QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 1);
-      
+
       (addGroupButton as HTMLElement).click();
       const draggedChip = chipComponents.pop().componentInstance;
-      const draggedChipElem = draggedChip.nativeElement;     
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, 3* draggedChipElem.offsetHeight, true);
+      const draggedChipElem = draggedChip.nativeElement;
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, 3 * draggedChipElem.offsetHeight, true);
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(chipComponents.length).toBe(4);
@@ -2684,6 +2866,69 @@ describe('IgxQueryBuilder', () => {
       const newGroupConditions = newGroup.querySelectorAll('igx-chip');
       expect(newGroupConditions.length).toBe(1);
       expect(QueryBuilderFunctions.getChipContent(newGroupConditions[0])).toBe("OrderDate  Today");
+    });
+
+    it('should render drop ghost properly when keyboard dragged.', async () => {
+      const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[1];
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+      let keyPress = new KeyboardEvent('keydown', { code: 'ArrowDown' });
+
+      draggedIndicator.triggerEventHandler('focus', {});
+      draggedIndicator.nativeElement.focus();
+
+      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+      const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
+
+      for (let i = 0; i <= 5; i++) {
+        tree.nativeElement.dispatchEvent(keyPress);
+        await wait();
+        fix.detectChanges();
+
+        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+
+        switch (true) {
+          case i === 0:
+            expect(newChipContents[4]).toBe(dropGhostContent);
+            break;
+          case i === 1:
+            expect(newChipContents[5]).toBe(dropGhostContent);
+            break;
+          case i >= 2:
+            expect(newChipContents[6]).toBe(dropGhostContent);
+            break;
+        }
+      }
+
+      keyPress = new KeyboardEvent('keydown', { code: 'ArrowUp' });
+
+      for (let i = 0; i <= 10; i++) {
+        tree.nativeElement.dispatchEvent(keyPress);
+        await wait();
+        fix.detectChanges();
+
+        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+
+        switch (true) {
+          case i === 0:
+            expect(newChipContents[6]).toBe(dropGhostContent);
+            break;
+          case i === 1:
+            expect(newChipContents[5]).toBe(dropGhostContent);
+            break;
+          case i === 2:
+            expect(newChipContents[4]).toBe(dropGhostContent);
+            break;
+          case i === 3:
+            expect(newChipContents[2]).toBe(dropGhostContent);
+            break;
+          case i === 4:
+            expect(newChipContents[1]).toBe(dropGhostContent);
+            break;
+          case i >= 5:
+            expect(newChipContents[0]).toBe(dropGhostContent);
+            break;
+        }
+      }
     });
   });
 });

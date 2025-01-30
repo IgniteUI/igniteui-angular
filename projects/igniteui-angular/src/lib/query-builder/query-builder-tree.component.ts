@@ -460,6 +460,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public initialOperator = 0;
+
+    /**
+     * @hidden @internal
+     */
     public returnFieldSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
@@ -531,6 +536,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
+    /**
+     * Disables the select entity dropdown at the root level after the initial selection.
+     */
+    public get disableEntityChange(): boolean {
+                
+        return !this.parentExpression && this.selectedEntity ? this.queryBuilder.disableEntityChange : false;
+    }
+    
     public get level(): number {
         let parent = this.elRef.nativeElement.parentElement;
         let _level = 0;
@@ -772,7 +785,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             searchVal: null
         }, parent);
 
-        const groupItem = new ExpressionGroupItem(FilteringLogic.And, parent);
+        const groupItem = new ExpressionGroupItem(this.getOperator(null) ?? FilteringLogic.And, parent);
+        this.contextualGroup = groupItem;
+        this.initialOperator = null;
 
         this._lastFocusedChipIndex =  this._lastFocusedChipIndex == undefined ? -1 : this._lastFocusedChipIndex;
 
@@ -856,6 +871,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0]
             if (innerQuery && this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery) {
+                innerQuery.exitEditAddMode();
                 this._editedExpression.expression.searchTree = this.getExpressionTreeCopy(innerQuery.expressionTree);
                 this._editedExpression.expression.searchTree.returnFields = innerQuery.selectedReturnFields;
             } else {
@@ -912,6 +928,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             this._editedExpression = null;
         }
+
+        if (!this.expressionTree && this.contextualGroup) {
+            this.initialOperator = this.contextualGroup.operator;
+        }
     }
 
     /**
@@ -927,7 +947,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
                 ) ||
                 (
-                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields?.length > 0
+                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery.selectedReturnFields?.length > 0
                 ) ||
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
@@ -1253,7 +1273,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         (dragCopy as HTMLElement).classList.add(this.dropGhostClass);
         (dragCopy as HTMLElement).style.display = '';
         (dragCopy.firstChild as HTMLElement).style.visibility = 'visible';
-        (dragCopy.firstChild as HTMLElement).style.opacity = '0.5';
         dragCopy.removeChild(dragCopy.childNodes[3]);
 
         if (!keyboardMode) {
@@ -1477,8 +1496,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private getPreviousChip(chipSubject: HTMLElement) {
         //TODO optimize
         let prevElement = chipSubject?.previousElementSibling;
-        prevElement = prevElement?.classList?.contains('igx-query-builder-tree') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
-        prevElement = prevElement?.classList?.contains('igx-query-builder-tree') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
+        prevElement = prevElement?.classList?.contains('igx-filter-tree__subquery') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
+        prevElement = prevElement?.classList?.contains('igx-filter-tree__subquery') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
 
         return prevElement;
     }
@@ -1487,8 +1506,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private getNextChip(chipSubject: HTMLElement) {
         //Get next and prev chip area taking into account a possible hidden sub-tree
         let nextElement = chipSubject?.nextElementSibling;
-        nextElement = nextElement?.classList?.contains('igx-query-builder-tree') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
-        nextElement = nextElement?.classList?.contains('igx-query-builder-tree') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
+        nextElement = nextElement?.classList?.contains('igx-filter-tree__subquery') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
+        nextElement = nextElement?.classList?.contains('igx-filter-tree__subquery') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
 
         return nextElement;
     }
@@ -1700,6 +1719,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public onConditionSelectChanging(event: ISelectionEventArgs) {
+        event.cancel = true;
+        this.selectedCondition = event.newSelection.value;
+        this.conditionSelect.close();
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden @internal
+     */
     public onKeyDown(eventArgs: KeyboardEvent) {
         eventArgs.stopPropagation();
     }
@@ -1730,7 +1759,24 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public getSwitchGroupText(operator: FilteringLogic) {
+    public getOperator(expressionItem: any) {
+        // if (!expressionItem && !this.expressionTree && !this.initialOperator) {
+        //     this.initialOperator = 0;
+        // }
+
+        const operator = expressionItem ?
+                            expressionItem.operator :
+                            this.expressionTree ?
+                                this.expressionTree.operator :
+                                this.initialOperator;
+        return operator;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public getSwitchGroupText(expressionItem: any) {
+        const operator = this.getOperator(expressionItem);
         const condition = operator === FilteringLogic.Or ? this.resourceStrings.igx_query_builder_and_label : this.resourceStrings.igx_query_builder_or_label
         return this.resourceStrings.igx_query_builder_switch_group.replace('{0}', condition.toUpperCase());
     }
@@ -1742,7 +1788,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         event.cancel = true;
 
         if (event.newSelection.value === 'switchCondition') {
-            this.selectFilteringLogic((this.contextualGroup ?? this._expressionTree).operator === 0 ? 1 : 0)
+            const newOperator = (!this.expressionTree ? this.initialOperator : (this.contextualGroup ?? this._expressionTree).operator) === 0 ? 1 : 0;
+            this.selectFilteringLogic(newOperator);
         } else if (event.newSelection.value === 'ungroup') {
             this.ungroup();
         }
@@ -1771,12 +1818,19 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public selectFilteringLogic(index: number) {
+        if (!this.expressionTree) {
+            this.initialOperator = index;
+            return;
+        }
+
         if (this.contextualGroup) {
             this.contextualGroup.operator = index as FilteringLogic;
             this.commitOperandEdit();
-        } else {
+        } else if (this.expressionTree) {
             this._expressionTree.operator = index as FilteringLogic;
         }
+
+        this.initialOperator = null;
     }
 
     /**

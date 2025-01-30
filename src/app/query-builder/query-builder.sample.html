@@ -1,36 +1,30 @@
-<div class="sample-content">
-    <div class="sample-column">
+<div class="qb-sample-content">
+    <div class="qb-sample-column">
         <igx-query-builder #queryBuilder0 [entities]="this.entities"></igx-query-builder>
-
         <igx-query-builder #queryBuilder
-            (expressionTreeChange)="handleExpressionTreeChange()" [entities]="this.entities"
-            [expressionTree]="this.expressionTree">
+                           (expressionTreeChange)="handleExpressionTreeChange()" [entities]="this.entities"
+                           [expressionTree]="this.expressionTree">
             <!-- Custom header -->
             <!-- <igx-query-builder-header [title]="'Builder'"><span>Custom Title</span></igx-query-builder-header> -->
 
             <!-- Custom SearchValue template for a given column and condition -->
             <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-searchValue
-                let-selectedField="selectedField" let-selectedCondition="selectedCondition"
-                let-defaultSearchValueTemplate="defaultSearchValueTemplate">
+                         let-selectedField="selectedField" let-selectedCondition="selectedCondition"
+                         let-defaultSearchValueTemplate="defaultSearchValueTemplate">
                 @if ((selectedField?.field === 'Id' || selectedField?.field === 'Name') && selectedCondition ===
                 'equals'){
-                <!-- <input type="text" required [(ngModel)]="searchValue.value"/> -->
-                <!-- <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value"
-                    (selectionChanging)="handleChange($event, selectedField, searchValue)" [displayKey]="'field'">
-                </igx-combo> -->
-                <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value" [displayKey]="'field'">
-                </igx-combo>
+                    <!-- <input type="text" required [(ngModel)]="searchValue.value"/> -->
+                            <!-- <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value"
+                                (selectionChanging)="handleChange($event, selectedField, searchValue)" [displayKey]="'field'">
+                            </igx-combo> -->
+                    <igx-combo #combo class="combo" [data]="lData" [(ngModel)]="searchValue.value" [displayKey]="'field'">
+                    </igx-combo>
                 } @else {
-                <ng-container *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
+                    <ng-container *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
                 }
             </ng-template>
         </igx-query-builder>
-
-        <!-- <div class="sample-buttons">
-            <button igxButton="contained" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
-        </div> -->
-
-        <div class="sample-buttons">
+        <div class="qb-sample-buttons">
             <button igxButton="contained" igxRipple (click)="canCommitExpressionTree()">can commit</button>
             <button igxButton="contained" igxRipple (click)="commitExpressionTree()">commit</button>
             <button igxButton="contained" igxRipple (click)="discardExpressionTree()">discard</button>
@@ -40,7 +34,7 @@
             {{ this.queryResult }}
         </div>
 
-        <div class="output-area">
+        <div class="qb-output-area">
             <pre>{{ printExpressionTree(queryBuilder.expressionTree) }}</pre>
         </div>
     </div>

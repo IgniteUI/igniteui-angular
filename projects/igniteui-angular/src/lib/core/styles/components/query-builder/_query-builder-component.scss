@@ -62,26 +62,6 @@
     }
 }
 
-//@mixin _builder-legend {
-//    @include b(igx-builder-legend) {
-//        @extend %filter-legend !optional;
-
-//        @include e(item) {
-//            @extend %filter-legend__item !optional;
-//        }
-
-//        @include e(item, $m: 'and') {
-//            @extend %filter-legend__item !optional;
-//            @extend %filter-legend__item--and !optional;
-//        }
-
-//        @include e(item, $m: 'or') {
-//            @extend %filter-legend__item !optional;
-//            @extend %filter-legend__item--or !optional;
-//        }
-//    }
-//}
-
 @mixin _advanced-filtering-tree {
     @include b(igx-filter-tree) {
         @extend %filter-tree !optional;
@@ -105,14 +85,6 @@
         @include e(line, $m: 'or') {
             @extend %filter-tree__line--or !optional;
         }
-
-        //@include e(line, $mods: ('selected', 'and')) {
-        //    @extend %filter-tree__line--and-selected !optional;
-        //}
-
-        //@include e(line, $mods: ('selected', 'or')) {
-        //    @extend %filter-tree__line--or-selected !optional;
-        //}
 
         @include e(button, $m: 'and') {
             @extend %filter-tree__button--and !optional;
@@ -207,12 +179,6 @@
         @include m(level-0) {
             @extend %query-level-0 !optional;
         }
-
-        //@for $i from 0 through 5 {
-        //    @include m(level-#{$i}) {
-        //        @extend %query-level-#{$i} !optional;
-        //    }
-        //}
     }
 }
 
