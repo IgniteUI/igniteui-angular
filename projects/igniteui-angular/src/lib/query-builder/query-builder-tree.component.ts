@@ -1423,17 +1423,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                         const targetEx = this.expressionsList[index + indexOffset - groupsTillCurrent];
                         this.targetExpressionItem = targetEx.parent ? targetEx.parent : targetEx;
                     }
+
+                    //If should drop under AND/OR => drop over first chip in that AND/OR's group
+                    if (under) {
+                        this.targetElement = this.targetElement.nextElementSibling.firstElementChild as HTMLElement;
+                        if (this.targetElement === this.dropGhostChipNode) this.targetElement = this.targetElement.nextElementSibling as HTMLElement;
+                        under = false;
+                    }
                 }
+
 
                 const before = this.getPreviousChip(this.dropGhostElement);
                 const after = this.getNextChip(this.dropGhostElement);
-
-                //If should drop under group root => drop over first chip in that group
-                if (this.targetElement.className.indexOf("igx-filter-tree__expression-context-menu") !== -1 && under) {
-                    this.targetElement = this.targetElement.nextElementSibling.firstElementChild as HTMLElement;
-                    if (this.targetElement === this.dropGhostChipNode) this.targetElement = this.targetElement.nextElementSibling as HTMLElement;
-                    under = false;
-                }
 
                 this.renderDropGhostChip(this.targetElement, under, true, overrideDropUnder);
 
@@ -1467,21 +1468,25 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //Get previous chip area taking into account a possible hidden sub-tree or collapsed base chip
-    private getPreviousChip(chipSubject: HTMLElement) {
-        //TODO optimize
-        let prevElement = chipSubject?.previousElementSibling;
-        prevElement = prevElement?.classList?.contains('igx-filter-tree__subquery') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
-        prevElement = prevElement?.classList?.contains('igx-filter-tree__subquery') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
+    private getPreviousChip(chipSubject: Element) {
+        let prevElement = chipSubject;
+
+        do {
+            prevElement = prevElement?.previousElementSibling;
+        }
+        while (prevElement && getComputedStyle(prevElement).display === 'none')
 
         return prevElement;
     }
 
     //Get next chip area taking into account a possible hidden sub-tree or collapsed base chip
-    private getNextChip(chipSubject: HTMLElement) {
-        //Get next and prev chip area taking into account a possible hidden sub-tree
-        let nextElement = chipSubject?.nextElementSibling;
-        nextElement = nextElement?.classList?.contains('igx-filter-tree__subquery') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
-        nextElement = nextElement?.classList?.contains('igx-filter-tree__subquery') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
+    private getNextChip(chipSubject: Element) {
+        let nextElement = chipSubject;
+
+        do {
+            nextElement = nextElement?.nextElementSibling;
+        }
+        while (nextElement && getComputedStyle(nextElement).display === 'none')
 
         return nextElement;
     }
