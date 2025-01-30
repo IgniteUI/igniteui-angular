@@ -63,6 +63,10 @@
             @include e(indicator-secondary) {
                 @extend %indicator__indeterminate-secondary !optional;
             }
+
+            @include e(value) {
+                @extend %value--hidden !optional;
+            }
         }
 
         @include m(animation-none) {
@@ -71,9 +75,7 @@
 
         @include m(hide-counter) {
             @include e(value) {
-                &::before {
-                    @extend %value--hidden !optional;
-                }
+                @extend %hide-counter !optional;
             }
         }
     }

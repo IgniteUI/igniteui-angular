@@ -44,10 +44,10 @@ describe('BaseProgressDirective', () => {
         expect(component.value).toBe(100);
     });
 
-    it('should not update value if indeterminate is true', () => {
+    it('should update value if indeterminate is true', () => {
         component.indeterminate = true;
         component.value = 50;
-        expect(component.value).toBe(0);
+        expect(component.value).toBe(50);
     });
 
     it('should correctly calculate value in percentage', () => {
@@ -195,11 +195,11 @@ describe('BaseProgressDirective', () => {
         expect(component.progressChanged.emit).not.toHaveBeenCalled();
     });
 
-    it('should not trigger progressChanged event when indeterminate is true', () => {
+    it('should trigger progressChanged event when indeterminate is true', () => {
         spyOn(component.progressChanged, 'emit');
 
         component.indeterminate = true;
-        component.value = 30; // Attempting to change value
-        expect(component.progressChanged.emit).not.toHaveBeenCalled();
+        component.value = 30;
+        expect(component.progressChanged.emit).toHaveBeenCalled();
     });
 });

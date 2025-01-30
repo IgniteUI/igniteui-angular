@@ -177,6 +177,7 @@
         align-items: center;
         color: var-get($theme, 'label-color');
         width: max-content;
+        cursor: pointer;
     }
 
     %radio-input {
