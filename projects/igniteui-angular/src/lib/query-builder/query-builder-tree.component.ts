@@ -1916,14 +1916,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             return null;
         }
 
-        const exprTreeCopy =
-        {
-            filteringOperands: [],
-            operator: expressionTree.operator,
-            fieldName: expressionTree.fieldName,
-            entity: expressionTree.entity,
-            returnFields: expressionTree.returnFields
-        };
+        const exprTreeCopy = new FilteringExpressionsTree(expressionTree.operator, expressionTree.fieldName, expressionTree.entity, expressionTree.returnFields);
+        exprTreeCopy.filteringOperands = [];
+
         expressionTree.filteringOperands.forEach(o => o instanceof FilteringExpressionsTree ? exprTreeCopy.filteringOperands.push(this.getExpressionTreeCopy(o)) : exprTreeCopy.filteringOperands.push(o));
 
         if (!this.innerQueryNewExpressionTree && shouldAssignInnerQueryExprTree) {
