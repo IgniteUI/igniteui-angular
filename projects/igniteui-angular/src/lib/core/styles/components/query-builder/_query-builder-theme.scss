@@ -517,7 +517,7 @@
     }
 
     %filter-tree__inputs {
-        --ig-size: 1;
+        --ig-size: #{if($variant == 'indigo', 2, 1)};
 
         display: flex;
         align-items: flex-end;
