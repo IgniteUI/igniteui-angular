@@ -479,6 +479,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         const eventArgs: IDialogCancellableEventArgs = { dialog: this, event: null, cancel: false };
         this.opening.emit(eventArgs);
         if (!eventArgs.cancel) {
+            overlaySettings = { ...{}, ... this._overlayDefaultSettings, ...overlaySettings };
             this.toggleRef.open(overlaySettings);
             this.isOpenChange.emit(true);
             if (!this.leftButtonLabel && !this.rightButtonLabel) {

@@ -46,6 +46,9 @@
     "angularCompilerOptions": {
         "generateDeepReexports": true,
         "strictTemplates": true,
+        "extendedDiagnostics": {
+            "defaultCategory": "error"
+        },
         "fullTemplateTypeCheck": true,
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,

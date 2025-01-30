@@ -1,5 +1,5 @@
 import { IgxComboItemComponent } from './combo-item.component';
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 
 /**
  * @hidden
@@ -11,6 +11,11 @@ import { Component } from '@angular/core';
     standalone: true
 })
 export class IgxComboAddItemComponent extends IgxComboItemComponent {
+    @HostBinding('class.igx-drop-down__item')
+    public get isDropDownItem(): boolean {
+        return false;
+    }
+
     public override get selected(): boolean {
         return false;
     }
