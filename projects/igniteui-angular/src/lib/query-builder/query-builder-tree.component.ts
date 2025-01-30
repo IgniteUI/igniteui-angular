@@ -1175,12 +1175,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         let newTargetElement, newTargetExpressionItem;
 
         if (this.ghostInLowerPart(targetDragElement) || !targetExpressionItem.parent) {
-            //if ghost in upper part of the AND/OR, drop before the group starts
-            newTargetElement = targetDragElement.nextElementSibling;
+            //if ghost in lower part of the AND/OR (or it's the main group) => drop before the group starts
+            newTargetElement = targetDragElement.nextElementSibling.firstElementChild;
             newTargetElement = (newTargetElement.className.indexOf(this.dropGhostClass) !== -1) ? newTargetElement.nextElementSibling : newTargetElement;
             newTargetExpressionItem = targetExpressionItem.children[0];
         } else {
-            //if ghost in lower part or it's the root group, drop as first child of that group
+            //if ghost in upper part or it's the root group => drop as first child of that group
             newTargetElement = targetDragElement.parentElement.parentElement;
             newTargetExpressionItem = targetExpressionItem;
         }
