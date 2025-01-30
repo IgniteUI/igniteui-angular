@@ -1386,6 +1386,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         } else if (key.code == 'ArrowDown') {
             //increase index offset capped at bottom of tree
             newKeyIndexOffset = this.keyDragOffsetIndex + 1 <= (this.dropZonesList.length - 2 - index) * 2 + 2 ? this.keyDragOffsetIndex + 1 : this.keyDragOffsetIndex;
+        } else {
+            console.error('wrong key');
+            return;
         }
 
         //if up/down limits not reached
@@ -1406,13 +1409,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     this.targetExpressionItem = this.expressionsList[index + indexOffset - groupsTillCurrent];
                 } else {
                     //if the current drop zone is a group root (AND/OR)
-                    if ((index + indexOffset === 0)) {
+                    if (index + indexOffset === 0) {
                         //If the root group's AND/OR
                         this.targetElement = this.dropZonesList[0]
                         this.targetExpressionItem = this.rootGroup.children[0];
                         under = true;
                         overrideDropUnder = false;
-                    } else if (under || (index + indexOffset === 0)) {
+                    } else if (under) {
                         //If under AND/OR
                         this.targetElement = this.dropZonesList[index + indexOffset]
                         this.targetExpressionItem = this.expressionsList[index + indexOffset - groupsTillCurrent];
@@ -1424,6 +1427,23 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                         this.targetExpressionItem = targetEx.parent ? targetEx.parent : targetEx;
                     }
 
+                    //Calculation of proper targetExpression in case of multiple nested groups
+                    if (index + indexOffset !== 0) {
+                        let parentCount = 0;
+                        let item = this.targetExpressionItem;
+                        do {
+                            parentCount++;
+                            item = item.parent;
+                        }
+                        while (item.parent);
+
+                        if (key.code == 'ArrowDown') parentCount--;
+
+                        for (let index = 0; index < parentCount - groupsTillCurrent; index++) {
+                            if (this.targetExpressionItem.parent) this.targetExpressionItem = this.targetExpressionItem.parent;
+                        }
+                    }
+
                     //If should drop under AND/OR => drop over first chip in that AND/OR's group
                     if (under) {
                         this.targetElement = this.targetElement.nextElementSibling.firstElementChild as HTMLElement;
@@ -1431,7 +1451,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                         under = false;
                     }
                 }
-
 
                 const before = this.getPreviousChip(this.dropGhostElement);
                 const after = this.getNextChip(this.dropGhostElement);
