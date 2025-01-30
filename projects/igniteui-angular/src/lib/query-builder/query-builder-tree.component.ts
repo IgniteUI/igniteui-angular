@@ -64,7 +64,7 @@ const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
 const DEFAULT_PIPE_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
-const DEFAULT_CHIP_FOCUS_DELAY = 100;
+const DEFAULT_CHIP_FOCUS_DELAY = 50;
 
 @Pipe({
     name: 'fieldFormatter',
@@ -517,6 +517,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     };
 
     private destroy$ = new Subject<any>();
+    private _timeoutId: any;
     private _lastFocusedChipIndex: number;
     private _focusDelay = DEFAULT_CHIP_FOCUS_DELAY;
     private _parentExpression: ExpressionOperandItem;
@@ -774,7 +775,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public addCondition(parent: ExpressionGroupItem, afterExpression?: ExpressionOperandItem, target?: HTMLElement) {
+    public addCondition(parent: ExpressionGroupItem, afterExpression?: ExpressionOperandItem, isUIInteraction?: boolean) {
         this.cancelOperandAdd();
 
         const operandItem = new ExpressionOperandItem({
@@ -807,7 +808,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._focusDelay = 250;
 
-        if (target && !afterExpression) {
+        if (isUIInteraction && !afterExpression) {
             this._lastFocusedChipIndex = this.expressionsChips.length; 
             this._focusDelay = DEFAULT_CHIP_FOCUS_DELAY;           
         }
@@ -2184,7 +2185,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     private focusEditedExpressionChip() {
-        setTimeout(() => {
+        if (this._timeoutId) {
+            clearTimeout(this._timeoutId);
+        }
+
+        this._timeoutId = setTimeout(() => {
             if (this._lastFocusedChipIndex != -1) {
                 const chipElement = this.expressionsChips.toArray()[this._lastFocusedChipIndex].nativeElement;
                 chipElement.focus();

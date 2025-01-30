@@ -96,7 +96,7 @@
             #addConditionButton
             igxButton="flat"
             [disabled]="hasEditedExpression"
-            (click)="addCondition(expressionItem, afterExpression, addConditionButton)"
+            (click)="addCondition(expressionItem, afterExpression, true)"
             igxDrop 
             (enter)="onAddConditionEnter(addConditionButton, expressionItem)"
             (leave)="onChipLeave()"
