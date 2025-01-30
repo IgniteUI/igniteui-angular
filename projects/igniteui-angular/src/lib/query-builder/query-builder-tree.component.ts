@@ -1194,12 +1194,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     public onAddConditionEnter(addConditionElement: HTMLElement, rootGroup: ExpressionGroupItem) {
-        //console.log('onAddConditionEnter', targetDragElement);
+        //console.log('onAddConditionEnter', addConditionElement);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
-
-        const lastElement = this.getPreviousChip(addConditionElement.parentElement);
+        
+        const lastElement = addConditionElement.parentElement.previousElementSibling.lastElementChild;
         if (lastElement == this.dropGhostChipNode) return;
-
+        
         //simulate entering in the lower part of the last chip/group
         this.onChipEnter(lastElement as HTMLElement,
             rootGroup.children[rootGroup.children.length - 1],
