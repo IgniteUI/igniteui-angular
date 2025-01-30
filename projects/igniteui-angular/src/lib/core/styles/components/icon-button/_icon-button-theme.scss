@@ -363,14 +363,12 @@
 
         @if $variant == 'material' {
             border: none;
-            z-index: 0;
 
             &::after {
                 position: absolute;
                 content: '';
                 inset: 0;
                 box-shadow: inset 0 0 0 rem(1px) var-get($outlined-theme, 'border-color');
-                z-index: -1;
                 border-radius: inherit;
             }
 
