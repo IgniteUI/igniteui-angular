@@ -29,6 +29,12 @@ $_theme: $material;
         padding: rem(20px);
     }
 
+    @include mx(invalid, checked) {
+        @include e(composite) {
+            background: var-get($_theme, 'error-color');
+        }
+    }
+
     @include mx(invalid, disabled) {
         @include e(composite) {
             border-color: var-get($_theme, 'disabled-color');

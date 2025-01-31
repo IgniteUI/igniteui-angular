@@ -50,6 +50,14 @@ $_theme: $bootstrap;
         }
     }
 
+    @include m(invalid) {
+        &:hover {
+            @include e(composite) {
+                border-color: var-get($_theme, 'error-color-hover');
+            }
+        }
+    }
+
     @include m(focused) {
         @include e(composite) {
             border-radius: var-get($_theme, 'border-radius');
@@ -75,12 +83,6 @@ $_theme: $bootstrap;
             border-color: var-get($_theme, 'error-color');
             box-shadow: 0 0 0 rem(4px)
                 var-get($_theme, 'focus-outline-color-error');
-        }
-
-        &:hover {
-            @include e(composite) {
-                border-color: var-get($_theme, 'error-color-hover');
-            }
         }
     }
 

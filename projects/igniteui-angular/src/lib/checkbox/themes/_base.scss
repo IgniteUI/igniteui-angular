@@ -124,6 +124,7 @@ $_theme: $material;
     %igx-checkbox--indeterminate {
         %cbx-composite-mark {
             margin-inline-start: var(--mark-offset);
+            margin-block-start: var(--mark-offset);
         }
 
         &:hover {
@@ -165,13 +166,6 @@ $_theme: $material;
         transform: translateX(
             calc(var(--mark-stroke) / var(--mark-length) * -1em)
         );
-    }
-
-
-    %cbx-composite-mark--invalid--fluent {
-        // @if $variant == 'fluent' and $theme-variant == 'dark' {
-        //     stroke: color($color: 'error', $variant: 500);
-        // }
     }
 
     %cbx-label {

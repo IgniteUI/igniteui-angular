@@ -97,12 +97,22 @@ $_theme: $fluent;
         &:hover {
             @include e(composite) {
                 background: var-get($_theme, 'fill-color-hover');
-                border-color: transparent;
             }
 
             @include e(composite-mark) {
                 stroke: var-get($_theme, 'tick-color');
+                transition: none;
             }
+        }
+    }
+
+    @include mx(indeterminate, checked) {
+        @include e(composite) {
+            background: transparent;
+        }
+
+        @include e(composite-mark) {
+            stroke: transparent;
         }
     }
 
@@ -132,6 +142,10 @@ $_theme: $fluent;
                     background: var-get($_theme, 'error-color-hover');
                 }
             }
+
+            @include e(composite-mark) {
+                stroke: transparent;
+            }
         }
     }
 
@@ -140,7 +154,6 @@ $_theme: $fluent;
             border-color: var-get($_theme, 'disabled-color');
         }
     }
-
 
     @include mx(indeterminate, invalid, checked) {
         @include e(composite) {
