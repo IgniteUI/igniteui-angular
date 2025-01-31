@@ -8,7 +8,6 @@ import {
     TemplateRef,
     ViewChild,
     ViewEncapsulation,
-    inject
 } from '@angular/core';
 
 import { mkenum, normalizeURI } from '../core/utils';
@@ -60,8 +59,6 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
     imports: [IgxIconComponent, NgTemplateOutlet]
 })
 export class IgxAvatarComponent implements OnInit {
-    public elementRef = inject(ElementRef);
-
     /**
      * Returns the `aria-label` attribute of the avatar.
      *
@@ -337,6 +334,8 @@ export class IgxAvatarComponent implements OnInit {
                 return this.defaultTemplate;
         }
     }
+
+    constructor(public elementRef: ElementRef) { }
 
     /**
      * Returns the css url of the image.
