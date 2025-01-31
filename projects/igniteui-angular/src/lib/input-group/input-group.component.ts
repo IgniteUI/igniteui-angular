@@ -430,7 +430,9 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
      */
     @HostBinding('class.igx-input-group--search')
     public get isTypeSearch() {
-        return this.type === 'search';
+        if(!this.isFileType && !this.input.isTextArea) {
+            return this.type === 'search';
+        }
     }
 
     /** @hidden */
