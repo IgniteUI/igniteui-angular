@@ -4,10 +4,7 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin component {
-    //@include _builder-legend();
     @include _advanced-filtering-tree();
-    @include _advanced-filtering-con-menu();
-    @include _advanced-filtering-empty();
     @include _query-builder-tree();
     @include _query-builder-dialog();
 
@@ -144,30 +141,6 @@
 
         @include e(details-button) {
             @extend %filter-tree-details-button !optional;;
-        }
-    }
-}
-
-@mixin _advanced-filtering-con-menu {
-    @include b(igx-filter-contextual-menu) {
-        @extend %filter-con-menu !optional;
-
-        @include e(close-btn) {
-            @extend %filter-con-menu__close-btn !optional;
-        }
-
-        @include e(delete-btn) {
-            @extend %filter-con-menu__delete-btn !optional;
-        }
-    }
-}
-
-@mixin _advanced-filtering-empty {
-    @include b(igx-filter-empty) {
-        @extend %filter-empty !optional;
-
-        @include e(title) {
-            @extend %filter-empty__title !optional;
         }
     }
 }

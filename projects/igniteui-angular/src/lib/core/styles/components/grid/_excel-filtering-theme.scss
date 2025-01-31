@@ -724,6 +724,8 @@
     }
 
     %grid-excel-menu__secondary-footer {
+        --ig-size: 2;
+
         padding-inline: if($variant != 'bootstrap', rem(24px), rem(16px));
         padding-block-end: if($variant != 'bootstrap', rem(24px), rem(16px));
 

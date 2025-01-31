@@ -20,21 +20,8 @@
 /// @param {Map} separator-color [null] - The separator color of the query builder tree block.
 /// @param {Number} border-radius [null] - The border radius of the query builder.
 ///
-/// @param {Color} color-and [null] - The color of advanced filtering "AND" condition.
-/// @param {Color} foreground-and [null] - The foreground color of advanced filtering "AND" condition button.
-/// @param {Color} background-and [null] - The background color of advanced filtering "AND" condition button.
-/// @param {Color} background-and--hover [null] - The background color on hover of advanced filtering "AND" condition button.
-/// @param {Color} background-and--focus [null] - The background color on focus of advanced filtering "AND" condition button.
-/// @param {Color} background-and--focus-hover [null] - The background color on focus/hover of advanced filtering "AND" condition button.
-/// @param {Color} shadow-color-and [null] - The shadow color of advanced filtering "AND" condition button.
-///
-/// @param {Color} color-or [null] - The color of advanced filtering "OR" condition.
-/// @param {Color} foreground-or [null] - The foreground color of advanced filtering "OR" condition button.
-/// @param {Color} background-or [null] - The background color of advanced filtering "OR" condition button.
-/// @param {Color} background-or--hover [null] - The background color on hover of advanced filtering "OR" condition button.
-/// @param {Color} background-or--focus [null] - The background color on focus of advanced filtering "OR" condition button.
-/// @param {Color} background-or--focus-hover [null] - The background color on focus/hover of advanced filtering "OR" condition button.
-/// @param {Color} shadow-color-or [null] - The shadow color of advanced filtering "OR" condition button.
+/// @param {Color} color-expression-group-and [null] - The color of advanced filtering "AND" condition group.
+/// @param {Color} color-expression-group-or [null] - The color of advanced filtering "OR" condition group.
 ///
 /// @example scss Set custom query-builder colors
 ///   $my-query-builder-theme: query-builder-theme($background: red);
@@ -43,31 +30,18 @@
 @function query-builder-theme(
     $schema: $light-material-schema,
     $elevations: null,
-
     $background: null,
     $header-background: null,
     $header-foreground: null,
     $header-border: null,
-    $color-and: null,
-    $foreground-and: null,
-    $background-and: null,
-    $background-and--focus: null,
-    $background-and--hover: null,
-    $background-and--focus-hover: null,
-    $color-or: null,
-    $foreground-or: null,
-    $background-or: null,
-    $background-or--focus: null,
-    $background-or--hover: null,
-    $background-or--focus-hover: null,
-    $shadow-color-and: null,
-    $shadow-color-or: null,
+    $color-expression-group-and: null,
+    $color-expression-group-or: null,
     $border-radius: null,
     $subquery-background: null,
     $subquery-border-color: null,
     $subquery-border-radius: null,
     $separator-color: null,
-    $label-foreground: nulll
+    $label-foreground: null,
 ) {
     $name: 'igx-query-builder';
     $selector: 'igx-query-builder';
@@ -97,25 +71,13 @@
         header-background: $header-background,
         header-foreground: $header-foreground,
         header-border: $header-border,
-        color-and: $color-and,
-        foreground-and: $foreground-and,
-        background-and: $background-and,
-        background-and--focus: $background-and--focus,
-        background-and--hover: $background-and--hover,
-        background-and--focus-hover: $background-and--focus-hover,
-        color-or: $color-or,
-        foreground-or: $background-or,
-        background-or: $background-or,
-        background-or--focus: $background-or--focus,
-        background-or--hover: $background-or--hover,
-        background-or--focus-hover: $background-or--focus-hover,
+        color-expression-group-and: $color-expression-group-and,
+        color-expression-group-or: $color-expression-group-or,
         subquery-background: $subquery-background,
         subquery-border-color: $subquery-border-color,
         subquery-border-radius: $subquery-border-radius,
         separator-color: $separator-color,
         border-radius: $border-radius,
-        shadow-color-and: $shadow-color-and,
-        shadow-color-or: $shadow-color-or,
         label-foreground: $label-foreground,
         theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
@@ -143,27 +105,12 @@
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: not($bootstrap-theme);
 
-    $filter-empty: (
-        comfortable: rem(144px),
-        cosy: rem(107px),
-        compact: rem(92px)
-    );
-
-    $vertical-space: (
-        comfortable: rem(16px),
-        cosy: rem(12px),
-        compact: rem(8px)
-    );
-
-    $gap: sizable(
-        map.get($vertical-space, 'compact'),
-        map.get($vertical-space, 'cosy'),
-        map.get($vertical-space, 'comfortable')
-    );
+    // Custom colors alpha
+    $alpha-hover: .06;
+    $alpha-focus: .16;
+    $alpha-focus-hover: .24;
 
     $border-radius: var-get($theme, 'border-radius');
-;
-    $max-depth: 10;
     $icon-size: rem(18px);
 
     %advanced-filter {
@@ -174,6 +121,7 @@
         background-color: var-get($theme, 'background');
         border-radius: $border-radius;
         box-shadow: var-get($theme, 'elevation');
+        overflow: hidden;
     }
 
     %query-builder-tree {
@@ -212,15 +160,14 @@
             border-radius: var-get($theme, 'subquery-border-radius');
         }
 
-        // Hide the subquery if there is a tree with display none inside
+        // Hide the subquery itself if there is a tree with display none inside
         &:has( > %query-builder-tree[style='display: none;']) {
             display: none;
         }
 
         > %filter-tree__inputs {
-            padding: rem(16px);
+            padding: rem(12px);
             border-radius: inherit;
-            background: var-get($theme, 'subquery-background');
 
             > igx-input-group,
             > igx-date-picker,
@@ -241,6 +188,7 @@
         &:empty {
             display: none;
         }
+
     }
 
     %filter-tree-details-button {
@@ -310,7 +258,7 @@
     %advanced-filter__root-actions {
         display: flex;
         gap: rem(8px);
-        padding-bottom: $gap;
+        padding-bottom: rem(16px);
     }
 
     %advanced-filter__outlet {
@@ -348,6 +296,10 @@
         [igxbutton='flat'] {
             --ig-size: 1;
 
+            @if $variant == 'bootstrap' {
+                --ig-button-text-transform: capitalize;
+            }
+
             border: none;
             min-width: auto;
         }
@@ -362,56 +314,61 @@
     }
 
     %filter-tree__line--and {
-        background: var-get($theme, 'color-and');
+        background: var-get($theme, 'color-expression-group-and');
     }
 
     %filter-tree__line--or {
-        background: var-get($theme, 'color-or');
+        background: var-get($theme, 'color-expression-group-or');
     }
 
     %filter-tree__button--and {
         @if $variant == 'material' {
-            --focus-hover-background: #{var-get($theme, 'background-and--focus-hover')};
-            --focus-visible-background: #{var-get($theme, 'background-and--focus')};
-            --focus-background: #{var-get($theme, 'background-and--focus')};
-            --hover-background: #{var-get($theme, 'background-and--hover')};
-            --active-background: #{var-get($theme, 'background-and--focus')};
-            --background: #{var-get($theme, 'background-and')};
+            --focus-hover-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus-hover});
+            --focus-visible-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+            --focus-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+            --active-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+            --hover-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
+            --background: transparent;
         }
 
-        --shadow-color: #{var-get($theme, 'shadow-color-and')};
-        --foreground: #{var-get($theme, 'foreground-and')};
-        --focus-foreground: #{var-get($theme, 'foreground-and')};
-        --hover-foreground: #{var-get($theme, 'foreground-and')};
-        --focus-hover-foreground: #{var-get($theme, 'foreground-and')};
-        --focus-visible-foreground: #{var-get($theme, 'foreground-and')};
-        --active-foreground: #{var-get($theme, 'foreground-and')};
+        @if $variant == 'bootstrap' {
+            --shadow-color: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / .5);
+        }
 
-        --icon-color: #{var-get($theme, 'foreground-and')};
-        --icon-color-hover: #{var-get($theme, 'foreground-and')};
+        --foreground: #{var-get($theme, 'color-expression-group-and')};
+        --focus-foreground: #{var-get($theme, 'color-expression-group-and')};
+        --hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+        --focus-hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+        --focus-visible-foreground: #{var-get($theme, 'color-expression-group-and')};
+        --active-foreground: #{var-get($theme, 'color-expression-group-and')};
+
+        --icon-color: #{var-get($theme, 'color-expression-group-and')};
+        --icon-color-hover: #{var-get($theme, 'color-expression-group-and')};
     }
 
     %filter-tree__button--or {
         @if $variant == 'material' {
-            --focus-hover-background: #{var-get($theme, 'background-or--focus-hover')};
-            --focus-visible-background: #{var-get($theme, 'background-or--focus')};
-            --focus-background: #{var-get($theme, 'background-or--focus')};
-            --hover-background: #{var-get($theme, 'background-or--hover')};
-            --active-background: #{var-get($theme, 'background-or--focus')};
-            --background: #{var-get($theme, 'background-or')};
+            --focus-hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus-hover});
+            --focus-visible-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+            --focus-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+            --active-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+            --hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
+            --background: transparent;
         }
 
-        --shadow-color: #{var-get($theme, 'shadow-color-or')};
+        @if $variant == 'bootstrap' {
+            --shadow-color: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / .5);
+        }
 
-        --foreground: #{var-get($theme, 'foreground-or')};
-        --focus-foreground: #{var-get($theme, 'foreground-or')};
-        --hover-foreground: #{var-get($theme, 'foreground-or')};
-        --focus-hover-foreground: #{var-get($theme, 'foreground-or')};
-        --focus-visible-foreground: #{var-get($theme, 'foreground-or')};
-        --active-foreground: #{var-get($theme, 'foreground-or')};
+        --foreground: #{var-get($theme, 'color-expression-group-or')};
+        --focus-foreground: #{var-get($theme, 'color-expression-group-or')};
+        --hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+        --focus-hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+        --focus-visible-foreground: #{var-get($theme, 'color-expression-group-or')};
+        --active-foreground: #{var-get($theme, 'color-expression-group-or')};
 
-        --icon-color: #{var-get($theme, 'foreground-or')};
-        --icon-color-hover: #{var-get($theme, 'foreground-or')};
+        --icon-color: #{var-get($theme, 'color-expression-group-or')};
+        --icon-color-hover: #{var-get($theme, 'color-expression-group-or')};
     }
 
     %filter-tree__expressions {
@@ -490,7 +447,7 @@
 
     %filter-tree__expression-actions {
         display: inline-flex;
-        gap: if($variant != 'indigo', $gap, rem(8px));
+        gap: if($variant != 'indigo', rem(16px), rem(8px));
 
         span {
             display: inline-flex;
@@ -506,7 +463,7 @@
     }
 
     %filter-tree__buttons {
-        --ig-size: #{if($variant == 'fluent', 2, 1)};
+        --ig-size: 1;
 
         display: flex;
         align-items: center;
@@ -527,7 +484,6 @@
         width: 100%;
         border-radius: inherit;
 
-
         &:empty {
             display: none;
         }
@@ -537,7 +493,7 @@
         display: flex;
         flex-direction: column;
         gap: rem(4px);
-        max-width: rem(300px);
+        max-width: rem(250px);
         width: 100%;
     }
 
@@ -558,41 +514,6 @@
 
         [igxIconButton] {
             transition: none;
-        }
-    }
-
-    %filter-con-menu {
-        position: relative;
-        display: flex;
-        flex-flow: column;
-        width: rem(196px);
-        background-color: var-get($theme, 'background');
-        padding: rem(16px);
-        margin-inline-start: rem(16px);
-        border-radius: $border-radius;
-        border: rem(1px) solid color(null, 'gray', 200);
-
-        > [igxButton] + [igxButton],
-        igx-buttongroup + [igxButton],
-        [igxButton] + igx-buttongroup {
-            margin-top: pad(
-                map.get($vertical-space, 'compact'),
-                map.get($vertical-space, 'cosy'),
-                map.get($vertical-space, 'comfortable')
-            );
-        }
-
-        > [igxButton]%filter-con-menu__close-btn + [igxButton],
-        [igxButton]%filter-con-menu__close-btn + igx-buttongroup {
-            margin-top: 0;
-        }
-
-        [igxButton] > igx-icon + * {
-            margin-inline-start: rem(8px);
-        }
-
-        igx-buttongroup > * {
-            box-shadow: none;
         }
     }
 
@@ -627,29 +548,6 @@
             @if $not-bootstrap-theme {
                 background-color: var-get($theme, 'background');
             }
-        }
-    }
-
-    %filter-empty {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: pad(
-            map.get($filter-empty, 'compact'),
-            map.get($filter-empty, 'cosy'),
-            map.get($filter-empty, 'comfortable')
-        );
-    }
-
-    %filter-empty__title {
-        @if $variant == 'indigo' {
-            @if $theme-variant == 'light' {
-                color: color(null, 'gray', 600);
-            } @else {
-                color: contrast-color(null, 'gray', 50, .6);
-            }
-        } @else {
-            color: color(null, 'gray', 500);
         }
     }
 
