@@ -1254,7 +1254,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //Make a copy of the drag chip and place it in the DOM north or south of the drop chip
-    private renderDropGhostChip(appendToElement: HTMLElement, appendUnder: boolean, keyboardMode?: boolean, overrideDropUnder?: boolean): void {
+    private renderDropGhostChip(appendToElement: HTMLElement, appendUnder: boolean, keyboardMode?: boolean): void {
         const dragCopy = this.createDropGhost(keyboardMode);
 
         //Append the ghost
@@ -1273,8 +1273,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.dropUnder = true;
             appendToElement.parentNode.insertBefore(this.dropGhostChipNode, appendToElement.nextElementSibling);
         }
-
-        this.dropUnder = overrideDropUnder == null ? this.dropUnder : overrideDropUnder;
 
         //Put focus on the drag icon of the ghost while performing keyboard drag
         if (this.isKeyboardDrag) {
@@ -1396,17 +1394,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.keyDragOffsetIndex = newKeyIndexOffset;
             const indexOffset = ~~(this.keyDragOffsetIndex / 2);
 
-            //If not the last drop zone (the +Condition button)
-            if (index + indexOffset <= this.dropZonesList.length - 2) {
-                const groupsTillCurrent = this.dropZonesList.filter((x, ix) => ix < index + indexOffset && x.className.indexOf('igx-filter-tree__expression-context-menu') !== -1).length;
-
+            if (index + indexOffset <= this.expressionsList.length - 1) {
                 let under = this.keyDragOffsetIndex < 0 ? this.keyDragOffsetIndex % 2 == 0 ? true : false : this.keyDragOffsetIndex % 2 == 0 ? false : true;
-                let overrideDropUnder;
 
-                //if the current drop zone is a condition chip
                 if (this.dropZonesList[index + indexOffset].className.indexOf('igx-filter-tree__expression-context-menu') === -1) {
                     this.targetElement = this.dropZonesList[index + indexOffset]
-                    this.targetExpressionItem = this.expressionsList[index + indexOffset - groupsTillCurrent];
+                    this.targetExpressionItem = this.expressionsList[index + indexOffset];
                 } else {
                     //if the current drop zone is a group root (AND/OR)
                     if (index + indexOffset === 0) {
@@ -1414,34 +1407,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                         this.targetElement = this.dropZonesList[0]
                         this.targetExpressionItem = this.rootGroup.children[0];
                         under = true;
-                        overrideDropUnder = false;
                     } else if (under) {
                         //If under AND/OR
                         this.targetElement = this.dropZonesList[index + indexOffset]
-                        this.targetExpressionItem = this.expressionsList[index + indexOffset - groupsTillCurrent];
-                        overrideDropUnder = false;
+                        this.targetExpressionItem = this.expressionsList[index + indexOffset + 1];
                     } else {
                         //if over AND/OR
                         this.targetElement = this.dropZonesList[index + indexOffset].parentElement.parentElement;
-                        const targetEx = this.expressionsList[index + indexOffset - groupsTillCurrent];
-                        this.targetExpressionItem = targetEx.parent ? targetEx.parent : targetEx;
-                    }
-
-                    //Calculation of proper targetExpression in case of multiple nested groups
-                    if (index + indexOffset !== 0) {
-                        let parentCount = 0;
-                        let item = this.targetExpressionItem;
-                        do {
-                            parentCount++;
-                            item = item.parent;
-                        }
-                        while (item.parent);
-
-                        if (key.code == 'ArrowDown') parentCount--;
-
-                        for (let index = 0; index < parentCount - groupsTillCurrent; index++) {
-                            if (this.targetExpressionItem.parent) this.targetExpressionItem = this.targetExpressionItem.parent;
-                        }
+                        this.targetExpressionItem = this.expressionsList[index + indexOffset];
                     }
 
                     //If should drop under AND/OR => drop over first chip in that AND/OR's group
@@ -1451,13 +1424,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                         under = false;
                     }
                 }
-
                 const before = this.getPreviousChip(this.dropGhostElement);
                 const after = this.getNextChip(this.dropGhostElement);
 
-                this.renderDropGhostChip(this.targetElement, under, true, overrideDropUnder);
+                this.renderDropGhostChip(this.targetElement, under, true);
 
-                //If it's the first arrow hit OR drop ghost is not displayed OR hasn't actually moved => move one more step in the same direction
+                //If it's the first arrow hit OR drop ghost is not displayed OR hasn't actually moved, move one more step in the same direction
                 if (this.keyDragFirstMove ||
                     !this.dropGhostElement ||
                     (this.getPreviousChip(this.dropGhostElement) === before && this.getNextChip(this.dropGhostElement) === after)) {
@@ -1510,10 +1482,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return nextElement;
     }
 
-    //Get all expressions from the tree flatten out as a list
+    //Get all expressions from the tree flatten out as a list, including the expression groups
     private getListedExpressions(group: ExpressionGroupItem): ExpressionItem[] {
         const expressions: ExpressionItem[] = [];
 
+        expressions.push(group);
         group.children.forEach(child => {
             if (child instanceof ExpressionGroupItem) {
                 expressions.push(...this.getListedExpressions(child));
