@@ -190,20 +190,6 @@ $_theme: $material;
             }
         }
 
-        @include mx(invalid, checked) {
-            @include e(composite) {
-                border-color: var-get($_theme, 'error-color');
-                background: var-get($_theme, 'error-color');
-            }
-
-            &:hover {
-                @include e(composite) {
-                    border-color: var-get($_theme, 'error-color-hover');
-                    background: var-get($_theme, 'error-color-hover');
-                }
-            }
-        }
-
         @include m(focused) {
             @include e(ripple) {
                 @extend %cbx-ripple--focused;
@@ -219,6 +205,20 @@ $_theme: $material;
         @include mx(focused, invalid) {
             @include e(ripple) {
                 @extend %cbx-ripple--focused-invalid;
+            }
+        }
+
+        @include mx(invalid, checked) {
+            @include e(composite) {
+                border-color: var-get($_theme, 'error-color');
+                background: var-get($_theme, 'error-color');
+            }
+
+            &:hover {
+                @include e(composite) {
+                    border-color: var-get($_theme, 'error-color-hover');
+                    background: var-get($_theme, 'error-color-hover');
+                }
             }
         }
 
@@ -261,6 +261,12 @@ $_theme: $material;
                     @extend %cbx-ripple--hover-checked;
                     @extend %cbx-ripple--pressed;
                 }
+            }
+        }
+
+        @include mx(indeterminate, checked) {
+            @include e(composite-mark) {
+                stroke-dashoffset: 41;
             }
         }
 
