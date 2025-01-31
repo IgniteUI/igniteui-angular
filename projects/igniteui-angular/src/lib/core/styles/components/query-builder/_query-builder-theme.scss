@@ -106,7 +106,7 @@
     $not-bootstrap-theme: not($bootstrap-theme);
 
     // Custom colors alpha
-    $alpha-hover: .06;
+    $alpha-hover: .08;
     $alpha-focus: .16;
     $alpha-focus-hover: .24;
 
@@ -434,6 +434,8 @@
             @include type-style('body-2');
 
             --ig-body-2-text-transform: unset;
+
+            padding-inline: rem(32px);
         }
 
         color: color($color: 'gray', $variant: if($theme-variant == 'light', 600, 900));
@@ -476,7 +478,7 @@
     }
 
     %filter-tree__inputs {
-        --ig-size: #{if($variant == 'indigo', 2, 1)};
+        --ig-size: #{if($variant == 'indigo' or $variant == 'bootstrap', 2, 1)};
 
         display: flex;
         align-items: flex-end;
@@ -504,7 +506,7 @@
     }
 
     %filter-tree__inputs-actions {
-        --ig-size: #{if($variant != 'bootstrap', 2, 1)};
+        --ig-size: 2;
 
         display: flex;
         gap: rem(8px);

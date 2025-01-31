@@ -97,7 +97,7 @@
             igxButton="flat"
             [disabled]="hasEditedExpression"
             (click)="addCondition(expressionItem, afterExpression, true)"
-            igxDrop 
+            igxDrop
             (enter)="onAddConditionEnter(addConditionButton, expressionItem)"
             (leave)="onChipLeave()"
         >
@@ -151,8 +151,8 @@
                 [removable]="isInEditMode() ? 'true' : 'false'"
                 (keydown)="invokeClick($event)"
                 (click)="onChipClick(expressionItem, expressionChip)"
-                (remove)="onChipRemove(expressionItem)"                
-                
+                (remove)="onChipRemove(expressionItem)"
+
             >
                 <igx-icon igxPrefix
                     class="igx-drag-indicator"
@@ -423,14 +423,14 @@
 
                 <div class="igx-filter-tree__inputs-actions">
                     <button type="button"
-                        igxIconButton="flat"
+                        igxIconButton="outlined"
                         [disabled]="!operandCanBeCommitted()"
                         (click)="commitExpression()"
                     >
                         <igx-icon family="default" name="confirm"></igx-icon>
                     </button>
                     <button type="button"
-                        igxIconButton="flat"
+                        igxIconButton="outlined"
                         (click)="discardExpression(expressionItem)"
                     >
                         <ng-container *ngTemplateOutlet="closeIcon"></ng-container>
