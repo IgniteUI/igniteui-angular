@@ -541,10 +541,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * Disables the select entity dropdown at the root level after the initial selection.
      */
     public get disableEntityChange(): boolean {
-                
+
         return !this.parentExpression && this.selectedEntity ? this.queryBuilder.disableEntityChange : false;
     }
-    
+
     public get level(): number {
         let parent = this.elRef.nativeElement.parentElement;
         let _level = 0;
@@ -1196,11 +1196,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public onChipDropped() {
         if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
 
-        this.exitEditAddMode();
-
         //console.log('Move: [', this.sourceElement.children[0].textContent.trim(), (this.dropUnder ? '] under: [' : '] over:'), this.targetExpressionItem)
         this.moveDraggedChipToNewLocation(this.targetExpressionItem)
         this.resetDragAndDrop(true);
+
+        this.exitEditAddMode();
     }
 
 
@@ -1211,12 +1211,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         let newTargetElement, newTargetExpressionItem;
 
         if (this.ghostInLowerPart(targetDragElement) || !targetExpressionItem.parent) {
-            //if ghost in upper part of the AND/OR, drop before the group starts
-            newTargetElement = targetDragElement.nextElementSibling;
+            //if ghost in lower part of the AND/OR (or it's the main group) => drop before the group starts
+            newTargetElement = targetDragElement.nextElementSibling.firstElementChild;
             newTargetElement = (newTargetElement.className.indexOf(this.dropGhostClass) !== -1) ? newTargetElement.nextElementSibling : newTargetElement;
             newTargetExpressionItem = targetExpressionItem.children[0];
         } else {
-            //if ghost in lower part or it's the root group, drop as first child of that group
+            //if ghost in upper part or it's the root group => drop as first child of that group
             newTargetElement = targetDragElement.parentElement.parentElement;
             newTargetExpressionItem = targetExpressionItem;
         }
@@ -1230,10 +1230,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     public onAddConditionEnter(addConditionElement: HTMLElement, rootGroup: ExpressionGroupItem) {
-        //console.log('onAddConditionEnter', targetDragElement);
+        //console.log('onAddConditionEnter', addConditionElement);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
-        const lastElement = this.getPreviousChip(addConditionElement.parentElement);
+        const lastElement = addConditionElement.parentElement.previousElementSibling.lastElementChild;
         if (lastElement == this.dropGhostChipNode) return;
 
         //simulate entering in the lower part of the last chip/group
@@ -1290,7 +1290,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //Make a copy of the drag chip and place it in the DOM north or south of the drop chip
-    private renderDropGhostChip(appendToElement: HTMLElement, appendUnder: boolean, keyboardMode?: boolean, overrideDropUnder?: boolean): void {
+    private renderDropGhostChip(appendToElement: HTMLElement, appendUnder: boolean, keyboardMode?: boolean): void {
         const dragCopy = this.createDropGhost(keyboardMode);
 
         //Append the ghost
@@ -1307,10 +1307,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             (this.dropGhostChipNode as HTMLElement)?.remove();
             this.dropGhostChipNode = dragCopy;
             this.dropUnder = true;
-            appendToElement.parentNode.insertBefore(this.dropGhostChipNode, appendToElement.nextSibling);
+            appendToElement.parentNode.insertBefore(this.dropGhostChipNode, appendToElement.nextElementSibling);
         }
-
-        this.dropUnder = overrideDropUnder == null ? this.dropUnder : overrideDropUnder;
 
         //Put focus on the drag icon of the ghost while performing keyboard drag
         if (this.isKeyboardDrag) {
@@ -1422,6 +1420,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         } else if (key.code == 'ArrowDown') {
             //increase index offset capped at bottom of tree
             newKeyIndexOffset = this.keyDragOffsetIndex + 1 <= (this.dropZonesList.length - 2 - index) * 2 + 2 ? this.keyDragOffsetIndex + 1 : this.keyDragOffsetIndex;
+        } else {
+            console.error('wrong key');
+            return;
         }
 
         //if up/down limits not reached
@@ -1429,44 +1430,42 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.keyDragOffsetIndex = newKeyIndexOffset;
             const indexOffset = ~~(this.keyDragOffsetIndex / 2);
 
-            //If not the last drop zone (the +Condition button)
-            if (index + indexOffset <= this.dropZonesList.length - 2) {
-                const groupsTillCurrent = this.dropZonesList.filter((x, ix) => ix < index + indexOffset && x.className.indexOf('igx-filter-tree__expression-context-menu') !== -1).length;
-
+            if (index + indexOffset <= this.expressionsList.length - 1) {
                 let under = this.keyDragOffsetIndex < 0 ? this.keyDragOffsetIndex % 2 == 0 ? true : false : this.keyDragOffsetIndex % 2 == 0 ? false : true;
-                let overrideDropUnder;
 
-                //if the current drop zone is a condition chip
                 if (this.dropZonesList[index + indexOffset].className.indexOf('igx-filter-tree__expression-context-menu') === -1) {
                     this.targetElement = this.dropZonesList[index + indexOffset]
-                    this.targetExpressionItem = this.expressionsList[index + indexOffset - groupsTillCurrent];
+                    this.targetExpressionItem = this.expressionsList[index + indexOffset];
                 } else {
                     //if the current drop zone is a group root (AND/OR)
-                    if ((index + indexOffset === 0)) {
+                    if (index + indexOffset === 0) {
                         //If the root group's AND/OR
                         this.targetElement = this.dropZonesList[0]
                         this.targetExpressionItem = this.rootGroup.children[0];
                         under = true;
-                        overrideDropUnder = false;
-                    } else if (under || (index + indexOffset === 0)) {
+                    } else if (under) {
                         //If under AND/OR
                         this.targetElement = this.dropZonesList[index + indexOffset]
-                        this.targetExpressionItem = this.expressionsList[index + indexOffset - groupsTillCurrent];
-                        overrideDropUnder = false;
+                        this.targetExpressionItem = this.expressionsList[index + indexOffset + 1];
                     } else {
                         //if over AND/OR
                         this.targetElement = this.dropZonesList[index + indexOffset].parentElement.parentElement;
-                        const targetEx = this.expressionsList[index + indexOffset - groupsTillCurrent];
-                        this.targetExpressionItem = targetEx.parent ? targetEx.parent : targetEx;
+                        this.targetExpressionItem = this.expressionsList[index + indexOffset];
+                    }
+
+                    //If should drop under AND/OR => drop over first chip in that AND/OR's group
+                    if (under) {
+                        this.targetElement = this.targetElement.nextElementSibling.firstElementChild as HTMLElement;
+                        if (this.targetElement === this.dropGhostChipNode) this.targetElement = this.targetElement.nextElementSibling as HTMLElement;
+                        under = false;
                     }
                 }
-
                 const before = this.getPreviousChip(this.dropGhostElement);
                 const after = this.getNextChip(this.dropGhostElement);
 
-                this.renderDropGhostChip(this.targetElement, under, true, overrideDropUnder);
+                this.renderDropGhostChip(this.targetElement, under, true);
 
-                //If it's the first arrow hit OR drop ghost is not displayed OR hasn't actually moved => move one more step in the same direction
+                //If it's the first arrow hit OR drop ghost is not displayed OR hasn't actually moved, move one more step in the same direction
                 if (this.keyDragFirstMove ||
                     !this.dropGhostElement ||
                     (this.getPreviousChip(this.dropGhostElement) === before && this.getNextChip(this.dropGhostElement) === after)) {
@@ -1475,8 +1474,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 }
             } else {
                 //Dropping on '+ Condition button' => drop as last condition in the root group
-                let lastElement = this.getPreviousChip(this.dropZonesList[this.dropZonesList.length - 1].parentElement);
-                lastElement = lastElement === this.dropGhostChipNode ? this.getPreviousChip(lastElement as HTMLElement) : lastElement;
+                let lastElement = this.dropZonesList[this.dropZonesList.length - 1].parentElement.previousElementSibling
+                if (lastElement.className.indexOf("igx-filter-tree__expression-section") !== -1) lastElement = lastElement.lastElementChild;
+                if (lastElement.className.indexOf("igx-filter-tree__subquery") !== -1) lastElement = lastElement.previousElementSibling
+                if (lastElement === this.dropGhostChipNode) lastElement = lastElement.previousElementSibling;
 
                 const getParentExpression = (expression: ExpressionItem) => {
                     return expression.parent ? getParentExpression(expression.parent) : expression
@@ -1494,29 +1495,34 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     //Get previous chip area taking into account a possible hidden sub-tree or collapsed base chip
-    private getPreviousChip(chipSubject: HTMLElement) {
-        //TODO optimize
-        let prevElement = chipSubject?.previousElementSibling;
-        prevElement = prevElement?.classList?.contains('igx-filter-tree__subquery') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
-        prevElement = prevElement?.classList?.contains('igx-filter-tree__subquery') || (prevElement as HTMLElement)?.style?.display === 'none' ? prevElement?.previousElementSibling : prevElement;
+    private getPreviousChip(chipSubject: Element) {
+        let prevElement = chipSubject;
+
+        do {
+            prevElement = prevElement?.previousElementSibling;
+        }
+        while (prevElement && getComputedStyle(prevElement).display === 'none')
 
         return prevElement;
     }
 
     //Get next chip area taking into account a possible hidden sub-tree or collapsed base chip
-    private getNextChip(chipSubject: HTMLElement) {
-        //Get next and prev chip area taking into account a possible hidden sub-tree
-        let nextElement = chipSubject?.nextElementSibling;
-        nextElement = nextElement?.classList?.contains('igx-filter-tree__subquery') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
-        nextElement = nextElement?.classList?.contains('igx-filter-tree__subquery') || (nextElement as HTMLElement)?.style?.display === 'none' ? nextElement?.nextElementSibling : nextElement;
+    private getNextChip(chipSubject: Element) {
+        let nextElement = chipSubject;
+
+        do {
+            nextElement = nextElement?.nextElementSibling;
+        }
+        while (nextElement && getComputedStyle(nextElement).display === 'none')
 
         return nextElement;
     }
 
-    //Get all expressions from the tree flatten out as a list
+    //Get all expressions from the tree flatten out as a list, including the expression groups
     private getListedExpressions(group: ExpressionGroupItem): ExpressionItem[] {
         const expressions: ExpressionItem[] = [];
 
+        expressions.push(group);
         group.children.forEach(child => {
             if (child instanceof ExpressionGroupItem) {
                 expressions.push(...this.getListedExpressions(child));
@@ -1530,26 +1536,25 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     //Gets all chip elements owned by this tree (discard child trees), AND/OR group roots and '+condition' button, flatten out as a list of HTML elements
     private getListedDropZones(): HTMLElement[] {
-        const viableDropAreaSelector = `.igx-filter-tree__expression-item:not([style*="display:none"]):not(.${this.dropGhostClass}),
-        .igx-filter-tree__inputs:not(.igx-query-builder__main > .igx-filter-tree__inputs),
-        .igx-filter-tree__buttons > .igx-button:first-of-type,
-        .igx-filter-tree__group-expression-menu`;
+        const viableDropAreaSelector = `.igx-filter-tree__expression-item[igxDrop]:not(.${this.dropGhostClass}),` + /*Condition chip*/ //TODO :not(.${this.dropGhostClass}) might be redundant now
+            `.igx-filter-tree__subquery:has([igxDrop]),` + /*Chip in edit*/
+            `.igx-filter-tree__buttons > .igx-button[igxDrop]:first-of-type,` + /*Add Condition Button*/
+            `.igx-filter-tree__expression-context-menu[igxDrop]`; /*AND/OR group root*/
 
         const expressionElementList = (this.el.nativeElement as HTMLElement).querySelectorAll(viableDropAreaSelector);
         const ownChipElements = [];
 
-        expressionElementList.forEach(element => {
-            if (isNotFromThisTree(this.el.nativeElement, element))
-                return;
-            ownChipElements.push(element);
-        });
-
-        function isNotFromThisTree(qb, parent) {
+        const isNotFromThisTree = (qb, parent) => {
             if (parent == qb) return false;
             else if (parent?.style?.display === "none" || parent.classList.contains('igx-query-builder-tree')) return true;
             else if (parent.parentElement) return isNotFromThisTree(qb, parent.parentElement);
             else return false;
         }
+
+        expressionElementList.forEach(element => {
+            if (!isNotFromThisTree(this.el.nativeElement, element) && getComputedStyle(element).display !== 'none')
+                ownChipElements.push(element);
+        });
 
         return ownChipElements;
     }
@@ -1766,10 +1771,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         // }
 
         const operator = expressionItem ?
-                            expressionItem.operator :
-                            this.expressionTree ?
-                                this.expressionTree.operator :
-                                this.initialOperator;
+            expressionItem.operator :
+            this.expressionTree ?
+                this.expressionTree.operator :
+                this.initialOperator;
         return operator;
     }
 
@@ -1954,14 +1959,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             return null;
         }
 
-        const exprTreeCopy =
-        {
-            filteringOperands: [],
-            operator: expressionTree.operator,
-            fieldName: expressionTree.fieldName,
-            entity: expressionTree.entity,
-            returnFields: expressionTree.returnFields
-        };
+        const exprTreeCopy = new FilteringExpressionsTree(expressionTree.operator, expressionTree.fieldName, expressionTree.entity, expressionTree.returnFields);
+        exprTreeCopy.filteringOperands = [];
+
         expressionTree.filteringOperands.forEach(o => o instanceof FilteringExpressionsTree ? exprTreeCopy.filteringOperands.push(this.getExpressionTreeCopy(o)) : exprTreeCopy.filteringOperands.push(o));
 
         if (!this.innerQueryNewExpressionTree && shouldAssignInnerQueryExprTree) {
