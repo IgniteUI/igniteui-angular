@@ -802,6 +802,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._lastFocusedChipIndex++;
         } else {
             this.rootGroup = groupItem;
+            operandItem.parent = groupItem;
             this.rootGroup.children.push(operandItem);
             this._lastFocusedChipIndex = 0;
         }

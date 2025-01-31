@@ -253,6 +253,8 @@ export class QueryBuilderComponent implements OnInit {
                 conditionName: IgxStringFilteringOperand.instance().condition('notNull').name
             });
             tree.filteringOperands.push(subGroup2);
+            
+            this.expressionTree = tree;
         }
         this.lData = [{ id: 0, field: 'a' }, { id: 1, field: '1' }]
         // this.onChange();
