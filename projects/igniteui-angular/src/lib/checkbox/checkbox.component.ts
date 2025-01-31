@@ -4,6 +4,7 @@ import {
     Input,
     AfterViewInit,
     booleanAttribute,
+    ViewEncapsulation,
 } from '@angular/core';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { CheckboxBaseDirective } from './checkbox-base.directive';
@@ -48,6 +49,8 @@ export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
     ],
     preserveWhitespaces: false,
     templateUrl: 'checkbox.component.html',
+    styleUrl: 'checkbox.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxRippleDirective],
 })
 export class IgxCheckboxComponent

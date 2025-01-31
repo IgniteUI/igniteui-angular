@@ -12,11 +12,21 @@
 /// @param {String} $variant - The target variant - light, dark.
 /// @requires {mixin} b
 /// @example scss
-@mixin themed-block($component, $theme, $variant) {
-    @layer #{$theme} {
-        @container style(--ig-theme: #{"" + $theme}) and style(--ig-theme-variant: #{$variant}) {
-            @include b($component) {
-                @content;
+@mixin themed-block($component, $theme, $variant: null) {
+    $_theme: "" + $theme;
+
+    @layer #{$_theme} {
+        @if $variant {
+            @container style(--theme: #{$_theme}) and style(--ig-theme-variant: #{$variant}) {
+                @include b($component) {
+                    @content;
+                }
+            }
+        } @else {
+            @container style(--theme: #{$_theme}) {
+                @include b($component) {
+                    @content;
+                }
             }
         }
     }

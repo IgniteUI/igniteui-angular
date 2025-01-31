@@ -1,0 +1,163 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-checkbox, indigo) {
+    --size: #{rem(16px)};
+    --border-width: #{rem(2px)};
+    --label-margin: #{rem(8px)};
+    --mark-stroke: 3;
+    --mark-length: 24;
+    --mark-offset: 1px;
+
+    &:hover {
+        @include e(composite) {
+            border-color: var-get($_theme, 'empty-color-hover');
+        }
+    }
+
+    @include e(composite-mark) {
+        stroke: unset;
+        stroke-linecap: unset;
+        stroke-width: unset;
+        stroke-dasharray: unset;
+        stroke-dashoffset: unset;
+        fill: var-get($_theme, 'tick-color');
+        transition: none;
+
+        rect {
+            fill: none;
+        }
+    }
+
+    @include e(label) {
+        &:hover {
+            color: var-get($_theme, 'label-color-hover');
+        }
+    }
+
+    @include e(label) {
+        @include type-style(body-2) {
+            margin-block: 0;
+        }
+    }
+
+    @include m(checked) {
+        &:hover {
+            @include e(composite) {
+                border-color: transparent;
+            }
+        }
+    }
+
+    @include m(focused) {
+        @include e(composite) {
+            border-radius: var-get($_theme, 'border-radius');
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-outline-color');
+        }
+    }
+
+    @include m(invalid) {
+        &:hover {
+            @include e(composite) {
+                border-color: var-get($_theme, 'error-color-hover');
+            }
+        }
+
+        @include e(label) {
+            color: var-get($_theme, 'label-color');
+        }
+    }
+
+    @include m(indeterminate) {
+        &:hover {
+            @include e(composite) {
+                border-color: transparent;
+            }
+        }
+
+        @include e(composite-mark) {
+            fill: none;
+            stroke-dashoffset: unset;
+            rotate: none;
+            transform: none;
+
+            rect {
+                fill: var-get($_theme, 'tick-color');
+                opacity: 1;
+            }
+        }
+    }
+
+    @include m(disabled) {
+        @include e(label) {
+            color: var-get($_theme, 'disabled-color-label');
+        }
+    }
+
+    @include mx(focused, checked) {
+        @include e(composite) {
+            border-radius: var-get($_theme, 'border-radius');
+            box-shadow: 0 0 0 rem(3px)
+                var-get($_theme, 'focus-outline-color-focused');
+        }
+    }
+
+    @include mx(focused, invalid) {
+        @include e(composite) {
+            box-shadow: 0 0 0 rem(3px)
+                var-get($_theme, 'focus-outline-color-error');
+        }
+    }
+
+    @include mx(indeterminate, invalid) {
+        @include e(composite) {
+            background: var-get($_theme, 'error-color');
+        }
+
+        &:hover {
+            @include e(composite) {
+                background: var-get($_theme, 'error-color-hover');
+            }
+        }
+    }
+
+    @include mx(focused, indeterminate) {
+        @include e(composite) {
+            border-radius: var-get($_theme, 'border-radius');
+            box-shadow: 0 0 0 rem(3px)
+                var-get($_theme, 'focus-outline-color-focused');
+        }
+    }
+
+    @include mx(disabled, checked) {
+        @include e(composite) {
+            background: var-get($_theme, 'disabled-indeterminate-color');
+            border-color: transparent;
+        }
+
+        @include e(composite-mark) {
+            fill: var-get($_theme, 'disabled-tick-color');
+        }
+    }
+
+    @include mx(disabled, indeterminate) {
+        @include e(composite) {
+            background: var-get($_theme, 'disabled-indeterminate-color');
+            border-color: transparent;
+        }
+
+        @include e(composite-mark) {
+            stroke: unset;
+            fill: none;
+
+            rect {
+                fill: var-get($_theme, 'disabled-tick-color');
+            }
+        }
+    }
+}

@@ -1,0 +1,171 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/animations' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-checkbox, fluent) {
+    --size: #{rem(20px)};
+    --border-width: #{rem(1px)};
+    --label-margin: #{rem(8px)};
+    --mark-stroke: 1.5;
+    --mark-length: 24;
+    --mark-offset: -1px;
+
+    &:hover {
+        @include e(composite) {
+            background: transparent;
+        }
+
+        @include e(composite-mark) {
+            stroke-linecap: square;
+            stroke-width: var(--mark-stroke);
+            stroke-dasharray: var(--mark-length);
+            stroke-dashoffset: 0;
+            fill: none;
+            z-index: 1;
+            opacity: 1;
+            transition: none;
+
+            stroke: var-get($_theme, 'tick-color-hover');
+        }
+    }
+
+    @include e(composite-mark) {
+        width: rem(16px);
+        aspect-ratio: 1;
+    }
+
+    @include e(label) {
+        @include type-style(body-2) {
+            margin-block: 0;
+        }
+    }
+
+    @include m(focused) {
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: -#{rem(2px)};
+            box-shadow: 0 0 0 rem(1px) var-get($_theme, 'focus-outline-color');
+        }
+    }
+
+    @include m(indeterminate) {
+        @include e(composite) {
+            background: transparent;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: calc(var(--size) / 2 - rem(6px));
+                inset-inline-start: calc(var(--size) / 2 - rem(6px));
+                width: rem(10px);
+                height: rem(10px);
+                border-radius: border-radius(rem(2px));
+                background: var-get($_theme, 'fill-color');
+                z-index: 1;
+            }
+        }
+
+        @include e(composite-mark) {
+            stroke: transparent;
+        }
+
+        &:hover {
+            @include e(composite) {
+                background: transparent;
+
+                &::before {
+                    background: var-get($_theme, 'fill-color-hover');
+                }
+            }
+
+            @include e(composite-mark) {
+                stroke: transparent;
+            }
+        }
+    }
+
+    @include m(checked) {
+        &:hover {
+            @include e(composite) {
+                background: var-get($_theme, 'fill-color-hover');
+                border-color: transparent;
+            }
+
+            @include e(composite-mark) {
+                stroke: var-get($_theme, 'tick-color');
+            }
+        }
+    }
+
+    @include mx(invalid, checked) {
+        &:hover {
+            @include e(composite) {
+                background: var-get($_theme, 'error-color-hover');
+            }
+        }
+    }
+
+    @include mx(indeterminate, invalid) {
+        @include e(composite) {
+            border-color: var-get($_theme, 'error-color');
+
+            &::before {
+                background: var-get($_theme, 'error-color');
+            }
+        }
+
+        &:hover {
+            @include e(composite) {
+                background: transparent;
+                border-color: var-get($_theme, 'error-color-hover');
+
+                &::before {
+                    background: var-get($_theme, 'error-color-hover');
+                }
+            }
+        }
+    }
+
+    @include mx(indeterminate, invalid, disabled) {
+        @include e(composite) {
+            border-color: var-get($_theme, 'disabled-color');
+        }
+    }
+
+
+    @include mx(indeterminate, invalid, checked) {
+        @include e(composite) {
+            background: transparent;
+        }
+    }
+
+    @include mx(disabled, checked) {
+        @include e(composite) {
+            background: var-get($_theme, 'disabled-color');
+            border-color: var-get($_theme, 'disabled-color');
+        }
+    }
+
+    @include mx(disabled, indeterminate) {
+        @include e(composite) {
+            background: transparent;
+
+            &::before {
+                background: var-get($_theme, 'disabled-color');
+            }
+        }
+
+        @include e(composite-mark) {
+            stroke: transparent;
+        }
+    }
+}
