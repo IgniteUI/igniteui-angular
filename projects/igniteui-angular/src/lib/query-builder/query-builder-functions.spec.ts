@@ -657,6 +657,17 @@ export class QueryBuilderFunctions {
         });
     };
 
+    public static verifyFocusedChip = (columnText: string, conditionText: string, valueText?: string) => {
+        expect(document.activeElement.tagName).toEqual('IGX-CHIP');
+        const chipElement = document.activeElement;
+        expect((chipElement.querySelector('.igx-filter-tree__expression-column') as HTMLElement).innerText).toEqual(columnText);
+        expect((chipElement.querySelector('.igx-filter-tree__expression-condition') as HTMLElement).innerText).toEqual(conditionText);
+
+        if (valueText) {
+            expect((chipElement.querySelector('.igx-chip__content') as HTMLElement).innerText).toEqual(valueText);
+        }
+    }
+
     public static verifyTabbableConditionEditLineElements = (editLine: DebugElement) => {
         const tabElements = QueryBuilderFunctions.getTabbableElements(editLine.nativeElement);
 

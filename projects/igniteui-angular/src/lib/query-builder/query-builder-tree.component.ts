@@ -64,6 +64,7 @@ const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
 const DEFAULT_PIPE_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
+const DEFAULT_CHIP_FOCUS_DELAY = 50;
 
 @Pipe({
     name: 'fieldFormatter',
@@ -354,6 +355,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChild('groupContextMenuDropDown', { read: IgxDropDownComponent })
     private groupContextMenuDropDown: IgxDropDownComponent;
 
+    @ViewChildren(IgxChipComponent, { read: IgxChipComponent })
+    private expressionsChips: QueryList<IgxChipComponent>;
+
     /**
      * @hidden @internal
      */
@@ -513,6 +517,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     };
 
     private destroy$ = new Subject<any>();
+    private _timeoutId: any;
+    private _lastFocusedChipIndex: number;
+    private _focusDelay = DEFAULT_CHIP_FOCUS_DELAY;
     private _parentExpression: ExpressionOperandItem;
     private _selectedEntity: EntityType;
     private _selectedReturnFields: string | string[];
@@ -768,7 +775,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public addCondition(parent: ExpressionGroupItem, afterExpression?: ExpressionOperandItem) {
+    public addCondition(parent: ExpressionGroupItem, afterExpression?: ExpressionOperandItem, isUIInteraction?: boolean) {
         this.cancelOperandAdd();
 
         const operandItem = new ExpressionOperandItem({
@@ -783,6 +790,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.contextualGroup = groupItem;
         this.initialOperator = null;
 
+        this._lastFocusedChipIndex =  this._lastFocusedChipIndex == undefined ? -1 : this._lastFocusedChipIndex;
+
         if (parent) {
             if (afterExpression) {
                 const index = parent.children.indexOf(afterExpression);
@@ -790,9 +799,18 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             } else {
                 parent.children.push(operandItem);
             }
+            this._lastFocusedChipIndex++;
         } else {
             this.rootGroup = groupItem;
             this.rootGroup.children.push(operandItem);
+            this._lastFocusedChipIndex = 0;
+        }
+
+        this._focusDelay = 250;
+
+        if (isUIInteraction && !afterExpression) {
+            this._lastFocusedChipIndex = this.expressionsChips.length; 
+            this._focusDelay = DEFAULT_CHIP_FOCUS_DELAY;           
         }
 
         this.enterExpressionEdit(operandItem);
@@ -816,6 +834,24 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public endGroup(groupItem: ExpressionGroupItem) {
         this.currentGroup = groupItem.parent;
+    }
+   
+    /**
+     * @hidden @internal
+     */
+    public commitExpression() {
+        this.commitOperandEdit();
+        this.focusEditedExpressionChip();
+    }
+    
+    /**
+     * @hidden @internal
+     */
+    public discardExpression(expressionItem?: ExpressionOperandItem) {
+        this.cancelOperandEdit();
+        if (expressionItem && expressionItem.expression.fieldName) {
+            this.focusEditedExpressionChip();
+        }
     }
 
     /**
@@ -1565,16 +1601,17 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public onChipClick(expressionItem: ExpressionOperandItem) {
-        this.enterExpressionEdit(expressionItem);
+    public onChipClick(expressionItem: ExpressionOperandItem, chip: IgxChipComponent) {
+        this.enterExpressionEdit(expressionItem, chip);
     }
 
     /**
      * @hidden @internal
      */
-    public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
+    public enterExpressionEdit(expressionItem: ExpressionOperandItem, chip?: IgxChipComponent) {
         this.exitEditAddMode(true);
         this.cdr.detectChanges();
+        this._lastFocusedChipIndex = chip ? this.expressionsChips.toArray().findIndex(expr => expr === chip) : this._lastFocusedChipIndex;
         this.enterEditMode(expressionItem);
     }
 
@@ -1582,9 +1619,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public clickExpressionAdd(targetButton: HTMLElement) {
+    public clickExpressionAdd(targetButton: HTMLElement, chip: IgxChipComponent) {
         this.exitEditAddMode(true);
         this.cdr.detectChanges();
+        this._lastFocusedChipIndex = this.expressionsChips.toArray().findIndex(expr => expr === chip);
         this.openExpressionAddDialog(targetButton);
     }
 
@@ -2144,6 +2182,21 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         } else if (container.scrollTop + container.clientHeight < targetOffset + target.offsetHeight + delta) {
             container.scrollTop = targetOffset + target.offsetHeight + delta - container.clientHeight;
         }
+    }
+
+    private focusEditedExpressionChip() {
+        if (this._timeoutId) {
+            clearTimeout(this._timeoutId);
+        }
+
+        this._timeoutId = setTimeout(() => {
+            if (this._lastFocusedChipIndex != -1) {
+                const chipElement = this.expressionsChips.toArray()[this._lastFocusedChipIndex].nativeElement;
+                chipElement.focus();
+                this._lastFocusedChipIndex = -1;
+                this._focusDelay = DEFAULT_CHIP_FOCUS_DELAY;
+            }
+        }, this._focusDelay);
     }
 
     private init() {

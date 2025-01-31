@@ -1572,7 +1572,125 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderId', 'Greater Than', '3');
     }));
 
-    it('Should not make bug where existing inner query is leaking to a newly created one', fakeAsync(() => {
+    it(`Should focus edited expression chip after click on the 'commit'/'discard' button.`, fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+
+      // Click the 'OrderId' chip to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
+      tick(100);
+      fix.detectChanges();
+
+      // Click on the 'commit' button
+      const commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+      commitBtn.click();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+      // Verify focused chip
+      QueryBuilderFunctions.verifyFocusedChip('OrderId', 'Greater Than', '3');
+
+      // Click the 'OrderId' chip to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
+      tick(100);
+      fix.detectChanges();
+
+      // Click on the 'discard' button
+      const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
+      closeBtn.click();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+      // Verify focused chip
+      QueryBuilderFunctions.verifyFocusedChip('OrderId', 'Greater Than', '3');
+    }));
+
+    it(`Should focus proper expression chip after switching edit mode and click on the 'commit'/'discard' button.`, fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+
+      // Click the 'OrderDate' chip to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [2]);
+      tick(100);
+      fix.detectChanges();
+
+      // Click the 'OrderId' chip to enter edit mode.
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
+      tick(100);
+      fix.detectChanges();
+
+      // Click on the 'commit' button
+      const commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+      commitBtn.click();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+      // Verify focused chip
+      QueryBuilderFunctions.verifyFocusedChip('OrderId', 'Greater Than', '3');
+    }));
+
+    it('Should focus added through group add buttons expression chip if it is commited.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+
+      const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+
+      // Add new 'expression'.
+      const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
+      const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
+      (buttons[0] as HTMLElement).click();
+      tick();
+      fix.detectChanges();
+
+      QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3); // Select 'Delivered' column.
+      QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1); // Select 'True' operator.
+      tick(100);
+      fix.detectChanges();
+
+      // Click on the 'commit' button
+      const commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
+      commitBtn.click();
+      fix.detectChanges();
+      tick(300);
+      fix.detectChanges();
+
+      // Verify focused chip
+      QueryBuilderFunctions.verifyFocusedChip('Delivered', 'True');
+    }));
+
+    it('Should NOT focus an expression chip if added expression is discarded.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+
+      const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+
+      // Add new 'expression'.
+      const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
+      const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
+      (buttons[0] as HTMLElement).click();
+      tick();
+      fix.detectChanges();
+
+      // Click on the 'close' button
+      const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
+      closeBtn.click();
+      fix.detectChanges();
+      tick(300);
+      fix.detectChanges();
+
+      // Verify chip is not focused
+      expect(document.activeElement.tagName).toEqual('BODY');
+    }));
+
+    it('Should not make bug where existing inner query is leaking to a newly created one.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
       tick(100);
