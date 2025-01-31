@@ -5,7 +5,7 @@
         <article>
             <strong>Angular Checkbox</strong>
             <igx-checkbox
-            [indeterminate]="properties.indeterminate"
+            [indeterminate]="properties.indeterminate && !properties.checked"
             [required]="properties.required"
             [disabled]="properties.disabled"
             [invalid]="properties.invalid"
@@ -57,7 +57,7 @@
         <article>
             <strong>WC Checkbox</strong>
             <igc-checkbox
-            [indeterminate]="properties.indeterminate"
+            [indeterminate]="properties.indeterminate && !properties.checked"
             [required]="properties.required"
             [disabled]="properties.disabled"
             [invalid]="properties.invalid"

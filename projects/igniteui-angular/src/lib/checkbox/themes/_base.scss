@@ -13,245 +13,18 @@ $_theme: $material;
     @include scale-in-out($start-scale: 0.9);
     @include scale-in-center();
 
-    %cbx-display {
-        position: relative;
-        display: inline-flex;
-        flex-flow: row nowrap;
-        align-items: center;
-        outline-style: none;
-        cursor: pointer;
-    }
-
-    %cbx-display--disabled {
-        user-select: none;
-        pointer-events: none;
-        cursor: initial;
-    }
-
-    %cbx-input {
-        @include hide-default();
-    }
-
-    %cbx-composite-wrapper {
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        position: relative;
-        width: var(--size);
-        height: var(--size);
-
-        //ripple color
-        --color: #{var-get($_theme, 'empty-color')};
-    }
-
-    %cbx-composite-wrapper--x {
-        //ripple color
-        --color: #{var-get($_theme, 'fill-color')};
-    }
-
-    %cbx-composite {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        width: var(--size);
-        height: var(--size);
-        min-width: var(--size);
-        background: var-get($_theme, 'empty-fill-color');
-        border-width: var(--border-width);
-        border-style: solid;
-        border-color: var-get($_theme, 'empty-color');
-        border-radius: var-get($_theme, 'border-radius');
-        -webkit-tap-highlight-color: transparent;
-        transition:
-            border-color 0.2s $ease-out-quad,
-            background 0.2s $ease-out-quad;
-        overflow: hidden;
-    }
-
-    %cbx-composite--hover {
-        border-color: var-get($_theme, 'empty-color-hover');
-    }
-
-    %cbx-composite--x {
-        border-color: var-get($_theme, 'fill-color');
-        background: var-get($_theme, 'fill-color');
-    }
-
-    %cbx-composite--invalid {
-        border-color: var-get($_theme, 'error-color');
-    }
-
-    %cbx-composite-wrapper--invalid {
-        //ripple color
-        --color: #{var-get($_theme, 'error-color')};
-    }
-
-    %cbx-composite--invalid--hover {
-        border-color: var-get($_theme, 'error-color-hover');
-    }
-
-    %cbx-composite--x--invalid {
-        border-color: var-get($_theme, 'error-color');
-        background: var-get($_theme, 'error-color');
-    }
-
-    %cbx-composite--x--hover {
-        border-color: var-get($_theme, 'fill-color-hover');
-        background: var-get($_theme, 'fill-color-hover');
-    }
-
-    %cbx-composite--x--invalid--hover {
-        border-color: var-get($_theme, 'error-color-hover');
-        background: var-get($_theme, 'error-color-hover');
-    }
-
-    %cbx-composite--disabled {
-        border-color: var-get($_theme, 'disabled-color');
-    }
-
-    %cbx-composite-mark {
-        width: 100%;
-        stroke: var-get($_theme, 'tick-color');
-        stroke-linecap: square;
-        stroke-width: var(--mark-stroke);
-        stroke-dasharray: var(--mark-length);
-        stroke-dashoffset: var(--mark-length);
-        fill: none;
-        opacity: 0;
-        z-index: 1;
-    }
-
-    %igx-checkbox--indeterminate {
-        %cbx-composite-mark {
-            margin-inline-start: var(--mark-offset);
-            margin-block-start: var(--mark-offset);
-        }
-
-        &:hover {
-            %cbx-composite {
-                border-color: var-get($_theme, 'fill-color-hover');
-                background: var-get($_theme, 'fill-color-hover');
-
-                &::before {
-                    background: var-get($_theme, 'fill-color-hover');
-                }
-            }
-        }
-    }
-
-    %igx-checkbox--indeterminate--invalid {
-        %cbx-composite--x {
-            border-color: var-get($_theme, 'error-color');
-            background: var-get($_theme, 'error-color');
-        }
-
-        %cbx-composite--x--hover {
-            border-color: var-get($_theme, 'error-color-hover');
-            background: var-get($_theme, 'error-color-hover');
-        }
-    }
-
-    %cbx-composite-mark--x {
-        stroke-dashoffset: 0;
-        opacity: 1;
-        transition:
-            all 0.2s $ease-out-quad,
-            opacity 0.2s $ease-out-quad;
-    }
-
-    %cbx-composite-mark--in {
-        stroke-dashoffset: 41; /* length of path - adjacent line length */
-        opacity: 1;
-        rotate: 45deg;
-        transform: translateX(
-            calc(var(--mark-stroke) / var(--mark-length) * -1em)
-        );
-    }
-
-    %cbx-label {
-        display: inline-block;
-        color: var-get($_theme, 'label-color');
-        user-select: none;
-        word-wrap: break-all;
-        transition: color 0.2s $ease-out-quad;
-
-        &:empty {
-            margin: 0;
-        }
-    }
-
-    %cbx-label-pos--before,
-    %cbx-label-pos--after {
-        &:empty {
-            margin: 0;
-        }
-    }
-
-    %cbx-label-pos--after {
-        margin-inline-start: var(--label-margin);
-    }
-
-    %cbx-label-pos--before {
-        margin-inline-end: var(--label-margin);
-        order: -1;
-    }
-
-    %cbx-label--invalid {
-        color: var-get($_theme, 'error-color');
-    }
-
-    %cbx-label--disabled {
-        color: var-get($_theme, 'disabled-color-label');
-    }
-
-    %cbx-ripple {
-        --_ripple-size: #{rem(40px)};
-
-        display: none;
-        position: absolute;
-        top: calc(50% - calc(var(--_ripple-size) / 2));
-        width: var(--_ripple-size);
-        aspect-ratio: 1;
-        border-radius: var-get($_theme, 'border-radius-ripple');
-        overflow: hidden;
-        pointer-events: none;
-        filter: opacity(1);
-    }
-
-    %cbx-ripple--hover {
+    %cbx-ripple-empty {
         background: var-get($_theme, 'empty-color');
         transition: background 0.2s $ease-out-quad;
+    }
+
+    %cbx-ripple--hovered {
+        @extend %cbx-ripple-empty;
         opacity: 0.06;
 
         @container style(--ig-theme-variant: dark) {
             opacity: 0.12;
         }
-    }
-
-    %cbx-ripple--hover-checked {
-        background: var-get($_theme, 'fill-color');
-    }
-
-    %cbx-ripple--hover-invalid {
-        background: var-get($_theme, 'error-color');
-    }
-
-    %cbx-ripple--focused {
-        background: var-get($_theme, 'empty-color');
-        transition: background 0.2s $ease-out-quad;
-        opacity: 0.12;
-
-        @container style(--ig-theme-variant: dark) {
-            opacity: 0.24;
-        }
-    }
-
-    %cbx-ripple--focused-checked {
-        background: var-get($_theme, 'fill-color');
-    }
-
-    %cbx-ripple--focused-invalid {
-        background: var-get($_theme, 'error-color');
     }
 
     %cbx-ripple--pressed {
@@ -262,229 +35,346 @@ $_theme: $material;
         }
     }
 
-    %cbx-display--plain {
-        %cbx-composite,
-        %cbx-composite::after,
-        %cbx-composite-mark,
-        %cbx-composite-mark--x {
-            transition: none;
-        }
+    %cbx-ripple--focused {
+        @extend %cbx-ripple-empty;
+        @extend %cbx-ripple--pressed;
+    }
+
+    %cbx-ripple--filled {
+        background: var-get($_theme, 'fill-color');
+    }
+
+    %cbx-ripple--error {
+        background: var-get($_theme, 'error-color');
+    }
+
+    %cbx-ripple--hover-checked,
+    %cbx-ripple--focused-checked {
+        @extend %cbx-ripple--filled;
+    }
+
+    %cbx-ripple--hover-invalid,
+    %cbx-ripple--focused-invalid {
+        @extend %cbx-ripple--error;
     }
 
     @include b(igx-checkbox) {
-        @extend %cbx-display;
+        position: relative;
+        display: inline-flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        outline-style: none;
+        cursor: pointer;
 
         &:hover {
             @include e(ripple) {
-                @extend %cbx-ripple--hover !optional;
+                @extend %cbx-ripple--hovered;
             }
         }
 
         &:active {
             @include e(ripple) {
-                @extend %cbx-ripple--hover !optional;
-                @extend %cbx-ripple--pressed !optional;
+                @extend %cbx-ripple--hovered;
+                @extend %cbx-ripple--pressed;
             }
         }
 
         @include e(input) {
-            @extend %cbx-input !optional;
+            @include hide-default();
         }
 
         @include e(label) {
-            @extend %cbx-label !optional;
-            @extend %cbx-label-pos--after !optional;
+            display: inline-block;
+            color: var-get($_theme, 'label-color');
+            user-select: none;
+            word-wrap: break-all;
+            transition: color 0.2s $ease-out-quad;
+            margin-inline-start: var(--label-margin);
+
+            &:empty {
+                margin: 0;
+            }
         }
 
         @include e(label, $m: before) {
-            @extend %cbx-label !optional;
-            @extend %cbx-label-pos--before !optional;
+            margin-inline-end: var(--label-margin);
+            order: -1;
         }
 
         @include e(composite-wrapper) {
-            @extend %cbx-composite-wrapper !optional;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            position: relative;
+            width: var(--size);
+            height: var(--size);
+
+            //ripple color
+            --color: #{var-get($_theme, 'empty-color')};
         }
 
         @include e(composite) {
-            @extend %cbx-composite !optional;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            width: var(--size);
+            height: var(--size);
+            min-width: var(--size);
+            background: var-get($_theme, 'empty-fill-color');
+            border-width: var(--border-width);
+            border-style: solid;
+            border-color: var-get($_theme, 'empty-color');
+            border-radius: var-get($_theme, 'border-radius');
+            -webkit-tap-highlight-color: transparent;
+            transition:
+                border-color 0.2s $ease-out-quad,
+                background 0.2s $ease-out-quad;
+            overflow: hidden;
         }
 
         @include e(composite-mark) {
-            @extend %cbx-composite-mark !optional;
+            width: 100%;
+            stroke: var-get($_theme, 'tick-color');
+            stroke-linecap: square;
+            stroke-width: var(--mark-stroke);
+            stroke-dasharray: var(--mark-length);
+            stroke-dashoffset: var(--mark-length);
+            fill: none;
+            opacity: 0;
+            z-index: 1;
         }
 
         @include e(ripple) {
-            @extend %cbx-ripple !optional;
+            --_ripple-size: #{rem(40px)};
+
+            display: none;
+            position: absolute;
+            top: calc(50% - calc(var(--_ripple-size) / 2));
+            width: var(--_ripple-size);
+            aspect-ratio: 1;
+            border-radius: var-get($_theme, 'border-radius-ripple');
+            overflow: hidden;
+            pointer-events: none;
+            filter: opacity(1);
         }
 
         @include m(invalid) {
             @include e(composite) {
-                @extend %cbx-composite--invalid !optional;
+                border-color: var-get($_theme, 'error-color');
             }
 
             @include e(composite-wrapper) {
-                @extend %cbx-composite-wrapper--invalid !optional;
+                //ripple color
+                --color: #{var-get($_theme, 'error-color')};
             }
 
             @include e(label) {
-                @extend %cbx-label--invalid !optional;
+                color: var-get($_theme, 'error-color');
             }
 
             &:hover {
                 @include e(ripple) {
-                    @extend %cbx-ripple--hover !optional;
-                    @extend %cbx-ripple--hover-invalid !optional;
+                    @extend %cbx-ripple--hovered;
+                    @extend %cbx-ripple--hover-invalid;
                 }
 
                 @include e(composite) {
-                    @extend %cbx-composite--invalid--hover !optional;
+                    border-color: var-get($_theme, 'error-color-hover');
                 }
             }
 
             &:active {
                 @include e(ripple) {
-                    @extend %cbx-ripple--hover-invalid !optional;
+                    @extend %cbx-ripple--hover-invalid;
                 }
             }
         }
 
         @include mx(invalid, checked) {
             @include e(composite) {
-                @extend %cbx-composite--x--invalid !optional;
+                border-color: var-get($_theme, 'error-color');
+                background: var-get($_theme, 'error-color');
             }
 
             &:hover {
                 @include e(composite) {
-                    @extend %cbx-composite--x--invalid--hover !optional;
+                    border-color: var-get($_theme, 'error-color-hover');
+                    background: var-get($_theme, 'error-color-hover');
                 }
             }
         }
 
         @include m(focused) {
-            @extend %igx-checkbox--focused !optional;
-
             @include e(ripple) {
-                @extend %cbx-ripple--focused !optional;
+                @extend %cbx-ripple--focused;
             }
 
             &:hover {
                 @include e(ripple) {
-                    @extend %cbx-ripple--focused !optional;
+                    @extend %cbx-ripple--focused;
                 }
             }
         }
 
-        @include mx(focused, checked) {
-            @extend %igx-checkbox--focused-checked !optional;
-        }
-
         @include mx(focused, invalid) {
             @include e(ripple) {
-                @extend %cbx-ripple--focused-invalid !optional;
+                @extend %cbx-ripple--focused-invalid;
             }
         }
 
         @include m(indeterminate) {
-            @extend %igx-checkbox--indeterminate !optional;
-
             @include e(composite) {
-                @extend %cbx-composite--x !optional;
+                border-color: var-get($_theme, 'fill-color');
+                background: var-get($_theme, 'fill-color');
             }
 
             @include e(composite-mark) {
-                @extend %cbx-composite-mark--in !optional;
+                stroke-dashoffset: 41; /* length of path - adjacent line length */
+                opacity: 1;
+                rotate: 45deg;
+                transform: translateX(
+                    calc(var(--mark-stroke) / var(--mark-length) * -1em)
+                );
+                margin-inline-start: var(--mark-offset);
+                margin-block-start: var(--mark-offset);
             }
 
             &:hover {
                 @include e(ripple) {
-                    @extend %cbx-ripple--hover !optional;
-                    @extend %cbx-ripple--hover-checked !optional;
+                    @extend %cbx-ripple--hovered;
+                    @extend %cbx-ripple--hover-checked;
+                }
+
+                @include e(composite) {
+                    border-color: var-get($_theme, 'fill-color-hover');
+                    background: var-get($_theme, 'fill-color-hover');
+
+                    &::before {
+                        background: var-get($_theme, 'fill-color-hover');
+                    }
                 }
             }
 
             &:active {
                 @include e(ripple) {
-                    @extend %cbx-ripple--hover !optional;
-                    @extend %cbx-ripple--hover-checked !optional;
-                    @extend %cbx-ripple--pressed !optional;
+                    @extend %cbx-ripple--hovered;
+                    @extend %cbx-ripple--hover-checked;
+                    @extend %cbx-ripple--pressed;
                 }
             }
         }
 
         @include mx(invalid, indeterminate) {
-            @extend %igx-checkbox--indeterminate--invalid !optional;
+            @include e(composite) {
+                border-color: var-get($_theme, 'error-color');
+                background: var-get($_theme, 'error-color');
+            }
 
             &:hover {
                 @include e(composite) {
-                    @extend %cbx-composite--x--hover !optional;
+                    border-color: var-get($_theme, 'error-color-hover');
+                    background: var-get($_theme, 'error-color-hover');
+                }
+            }
+        }
+
+        @include mx(invalid, indeterminate, checked) {
+            @include e(composite) {
+                border-color: var-get($_theme, 'error-color');
+                background: var-get($_theme, 'error-color');
+            }
+
+            &:hover {
+                @include e(composite) {
+                    border-color: var-get($_theme, 'error-color-hover');
+                    background: var-get($_theme, 'error-color-hover');
                 }
             }
         }
 
         @include m(checked) {
             @include e(composite) {
-                @extend %cbx-composite--x !optional;
+                border-color: var-get($_theme, 'fill-color');
+                background: var-get($_theme, 'fill-color');
             }
 
             @include e(composite-mark) {
-                @extend %cbx-composite-mark--x !optional;
+                stroke-dashoffset: 0;
+                opacity: 1;
+                transition:
+                    all 0.2s $ease-out-quad,
+                    opacity 0.2s $ease-out-quad;
             }
 
             @include e(composite-wrapper) {
-                @extend %cbx-composite-wrapper--x !optional;
+                //ripple color
+                --color: #{var-get($_theme, 'fill-color')};
             }
 
             &:hover {
                 @include e(ripple) {
-                    @extend %cbx-ripple--hover !optional;
-                    @extend %cbx-ripple--hover-checked !optional;
+                    @extend %cbx-ripple--hovered;
+                    @extend %cbx-ripple--hover-checked;
                 }
 
                 @include e(composite) {
-                    @extend %cbx-composite--x--hover !optional;
+                    border-color: var-get($_theme, 'fill-color-hover');
+                    background: var-get($_theme, 'fill-color-hover');
                 }
             }
 
             &:active {
                 @include e(ripple) {
-                    @extend %cbx-ripple--hover !optional;
-                    @extend %cbx-ripple--hover-checked !optional;
-                    @extend %cbx-ripple--pressed !optional;
+                    @extend %cbx-ripple--hovered;
+                    @extend %cbx-ripple--hover-checked;
+                    @extend %cbx-ripple--pressed;
                 }
             }
         }
 
         @include m(disabled) {
-            @extend %cbx-display--disabled !optional;
+            user-select: none;
+            pointer-events: none;
+            cursor: initial;
 
             @include e(label) {
-                @extend %cbx-label--disabled !optional;
+                color: var-get($_theme, 'disabled-color-label');
             }
 
             @include e(label, $m: before) {
-                @extend %cbx-label--disabled !optional;
+                color: var-get($_theme, 'disabled-color-label');
             }
 
             @include e(composite) {
-                @extend %cbx-composite--disabled !optional;
+                border-color: var-get($_theme, 'disabled-color');
             }
         }
 
         @include m(plain) {
-            @extend %cbx-display--plain !optional;
+            @include e(composite) {
+                transition: none;
+
+                &::after {
+                    transition: none;
+                }
+            }
+
+            @include e(composite-mark) {
+                transition: none;
+            }
         }
 
         @include mx(focused, checked) {
             @include e(ripple) {
-                @extend %cbx-ripple--focused !optional;
-                @extend %cbx-ripple--focused-checked !optional;
+                @extend %cbx-ripple--focused;
+                @extend %cbx-ripple--focused-checked;
             }
         }
 
         @include mx(focused, indeterminate) {
             @include e(ripple) {
-                @extend %cbx-ripple--focused !optional;
-                @extend %cbx-ripple--focused-checked !optional;
+                @extend %cbx-ripple--focused;
+                @extend %cbx-ripple--focused-checked;
             }
         }
     }
