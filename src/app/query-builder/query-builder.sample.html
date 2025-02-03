@@ -2,7 +2,7 @@
     <div class="qb-sample-column">
         <button igxButton="contained" (click)="qbDialog.open()">Open QB inside a dialog</button>
 
-        <igx-dialog #qbDialog>
+        <igx-dialog #qbDialog closeOnOutsideSelect>
             <igx-query-builder [entities]="this.entities">
                 <igx-query-builder-tree ></igx-query-builder-tree>
             </igx-query-builder>
