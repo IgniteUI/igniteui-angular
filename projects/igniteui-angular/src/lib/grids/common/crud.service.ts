@@ -686,7 +686,12 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         this.endEdit(true, event);
 
         if (parentRow != null && this.grid.expansionStates.get(parentRow.key)) {
-            this.grid.collapseRow(parentRow.key);
+            const key = parentRow.key;
+            this.grid.collapseRow(key);
+            // detect changes and get correct row by key
+            // in case collapsing changes row context.
+            this.grid.cdr.detectChanges();
+            parentRow = this.grid.getRowByKey(key);
         }
 
         this.createAddRow(parentRow, asChild);
