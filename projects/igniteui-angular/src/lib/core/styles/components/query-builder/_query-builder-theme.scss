@@ -141,6 +141,8 @@
             if($variant != 'bootstrap', rem(24px), rem(16px));
 
         > %advanced-filter__main {
+            gap: if($variant != 'bootstrap', rem(24px), rem(16px));
+
              > %filter-tree__section {
                  --sb-size: #{rem(10px)};
 
@@ -153,6 +155,8 @@
     }
 
     %filter-tree__subquery {
+        max-width: rem(960px);
+
         // Add styles to the subquery itself only if there is a direct .igx-filter-tree__inputs inside it
         &:has( > %filter-tree__inputs) {
             background: var-get($theme, 'subquery-background');
@@ -182,7 +186,7 @@
 
         %query-builder-tree {
             border-block-start: rem(1px) dashed var-get($theme, 'separator-color');
-            padding: rem(16px);
+            padding: rem(12px);
         }
 
         &:empty {
@@ -336,14 +340,24 @@
         }
 
         --foreground: #{var-get($theme, 'color-expression-group-and')};
-        --focus-foreground: #{var-get($theme, 'color-expression-group-and')};
-        --hover-foreground: #{var-get($theme, 'color-expression-group-and')};
-        --focus-hover-foreground: #{var-get($theme, 'color-expression-group-and')};
         --focus-visible-foreground: #{var-get($theme, 'color-expression-group-and')};
-        --active-foreground: #{var-get($theme, 'color-expression-group-and')};
-
         --icon-color: #{var-get($theme, 'color-expression-group-and')};
-        --icon-color-hover: #{var-get($theme, 'color-expression-group-and')};
+
+        @if $variant != 'bootstrap' {
+            --focus-foreground: #{var-get($theme, 'color-expression-group-and')};
+            --hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+            --icon-color-hover: #{var-get($theme, 'color-expression-group-and')};
+            --focus-hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+            --active-foreground: #{var-get($theme, 'color-expression-group-and')};
+        } @else {
+            $bootstrap-foreground-lightness: if($theme-variant == 'light', 34%, 78% );
+
+            --icon-color-hover: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+            --focus-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+            --hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+            --focus-hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+            --active-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
+        }
     }
 
     %filter-tree__button--or {
@@ -361,14 +375,24 @@
         }
 
         --foreground: #{var-get($theme, 'color-expression-group-or')};
-        --focus-foreground: #{var-get($theme, 'color-expression-group-or')};
-        --hover-foreground: #{var-get($theme, 'color-expression-group-or')};
-        --focus-hover-foreground: #{var-get($theme, 'color-expression-group-or')};
         --focus-visible-foreground: #{var-get($theme, 'color-expression-group-or')};
-        --active-foreground: #{var-get($theme, 'color-expression-group-or')};
-
         --icon-color: #{var-get($theme, 'color-expression-group-or')};
-        --icon-color-hover: #{var-get($theme, 'color-expression-group-or')};
+
+        @if $variant != 'bootstrap' {
+            --focus-foreground: #{var-get($theme, 'color-expression-group-or')};
+            --hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+            --icon-color-hover: #{var-get($theme, 'color-expression-group-or')};
+            --focus-hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+            --active-foreground: #{var-get($theme, 'color-expression-group-or')};
+        } @else {
+            $bootstrap-foreground-lightness: if($theme-variant == 'light', 14%, 47%);
+
+            --icon-color-hover: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+            --focus-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+            --hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+            --focus-hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+            --active-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
+        }
     }
 
     %filter-tree__expressions {

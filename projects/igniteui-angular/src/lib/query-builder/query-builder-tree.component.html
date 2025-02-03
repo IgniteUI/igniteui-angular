@@ -159,8 +159,8 @@
                     tabindex="0"
                     (focus)="onChipDragIndicatorFocus(dragRef, expressionItem)"
                     (focusout)="onChipDragIndicatorFocusOut()"
+                    family="default" name="drag_indicator"
                 >
-                    drag_indicator
                 </igx-icon>
                 <span igxPrefix class="igx-filter-tree__expression-column">
                     {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
@@ -239,7 +239,7 @@
                     aria-labelledby="add-expression" (keydown)="invokeClick($event)"
                         (click)="clickExpressionAdd(addExpressionButton, expressionChip)"
                         (blur)="addExpressionBlur()">
-                        <igx-icon id="add-expression">add</igx-icon>
+                        <igx-icon id="add-expression" family="default" name="add"></igx-icon>
                     </button>
                     <igx-drop-down #addOptionsDropDown
                         (selectionChanging)="enterExpressionAdd($event, expressionItem)">
