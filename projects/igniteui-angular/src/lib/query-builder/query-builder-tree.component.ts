@@ -732,8 +732,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         if (this._selectedField !== value) {
             this._selectedField = value;
+            this.selectDefaultCondition();
             if (oldValue && this._selectedField && this._selectedField.dataType !== oldValue.dataType) {
-                this.selectedCondition = null;
                 this.searchValue.value = null;
                 this.cdr.detectChanges();
             }
@@ -2024,6 +2024,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             field.pipeArgs.format = field.dataType === DataType.Time ?
                 DEFAULT_PIPE_TIME_FORMAT : field.dataType === DataType.DateTime ?
                     DEFAULT_PIPE_DATE_TIME_FORMAT : DEFAULT_PIPE_DATE_FORMAT;
+        }
+    }
+
+    private selectDefaultCondition() {
+        if (this.selectedField && this.selectedField.filters) {
+            this.selectedCondition = this.selectedField.filters.conditionList().indexOf('equals') >= 0 ? 'equals' : this.selectedField.filters.conditionList()[0];
         }
     }
 
