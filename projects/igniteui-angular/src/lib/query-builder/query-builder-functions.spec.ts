@@ -3,7 +3,7 @@ import { ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxIconComponent, IgxDateFilteringOperand, IgxChipComponent } from 'igniteui-angular';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 export const QueryBuilderConstants = {
     QUERY_BUILDER_CLASS: 'igx-query-builder',
@@ -510,9 +510,9 @@ export class QueryBuilderFunctions {
     * Hit a keyboard button upon element, wait for the desired time and detect changes
     */
     //TODO maybe move to more commonly used class
-    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: HTMLElement, wait: number = null) {
+    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: HTMLElement, waitT: number = null) {
         UIInteractions.triggerKeyDownEvtUponElem(key, elem, true);
-        tick(wait);
+        tick(waitT);
         fix.detectChanges();
     }
 
@@ -895,10 +895,16 @@ export class QueryBuilderFunctions {
         }
     }
 
-    public static dragMove(dragDirective, X: number, Y: number) {
-        //move mouse down a bit
+    public static dragMove(dragDirective, X: number, Y: number, pointerUp?: boolean) {
+        //mouse down
         dragDirective.onPointerMove({ pointerId: 1, pageX: X, pageY: Y });
         //duplicate the mousemove as dispatched Event, so we can trigger the RxJS listener
         dragDirective.ghostElement.dispatchEvent(new MouseEvent('mousemove', { clientX: X, clientY: Y }));
+
+        //mouse up
+        if (pointerUp) {
+            wait();
+            dragDirective.onPointerUp({ pointerId: 1, pageX: X, pageY: Y });
+        }
     }
 }

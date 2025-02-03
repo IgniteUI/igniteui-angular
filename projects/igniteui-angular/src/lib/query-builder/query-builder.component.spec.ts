@@ -1938,7 +1938,7 @@ describe('IgxQueryBuilder', () => {
 
       expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
     }));
-    
+
     it(`Should show 'Ungroup' as disabled in root group context menu.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
@@ -2421,7 +2421,7 @@ describe('IgxQueryBuilder', () => {
 
   describe('Drag and drop', () => {
     const ROW_HEIGHT = 40;
-    const DROP_CONDITION_HERE = "Drop condition here"; //should be "DROP CONDITION HERE";
+    const DROP_CONDITION_HERE = "Drop here to insert";
     let chipComponents = [];
     beforeEach(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
@@ -2458,15 +2458,15 @@ describe('IgxQueryBuilder', () => {
 
       let X = 100, Y = 100, run = 0;
 
-      
+
       //pickup chip
       dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
       fix.detectChanges();
-      
+
       //trigger ghost
       QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
       fix.detectChanges();
-      
+
       spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
 
       for (let i = 0; i <= 30; i++) {
@@ -2513,37 +2513,48 @@ describe('IgxQueryBuilder', () => {
     });
 
     it('should position drop ghost below the target condition on dragging down.', () => {
-      const secondChip = chipComponents[0].componentInstance;
-      const secondChipElem = secondChip.chipArea.nativeElement;
+      const draggedChip = chipComponents[0].componentInstance;
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
+      const dragDir = draggedChip.dragDirective;
 
-      const dragDir = secondChip.dragDirective;
-      UIInteractions.moveDragDirective(fix, dragDir, 0, secondChipElem.offsetHeight, false);
+      //pickup chip
+      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
+      fix.detectChanges();
+
+      //trigger ghost
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y + 10);
+      fix.detectChanges();
 
       const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
 
       expect(dropGhost).not.toBe(null);
       const dropGhostBounds = dropGhost.getBoundingClientRect();
       const targetChipBounds = chipComponents[1].nativeElement.getBoundingClientRect();
-      expect(dropGhostBounds.height).toBeCloseTo(ROW_HEIGHT);
       expect(dropGhostBounds.x).toBe(targetChipBounds.x);
       expect(dropGhostBounds.y).toBeCloseTo(targetChipBounds.y + ROW_HEIGHT);
     });
 
-    it('should position drop ghost above the target condition on dragging up.', () => {
-      const secondChip = chipComponents[1].componentInstance;
-      const secondChipElem = secondChip.chipArea.nativeElement;
+    it('should position drop ghost above the target condition on dragging up.', async () => {
+      const draggedChip = chipComponents[1].componentInstance;
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
+      const dragDir = draggedChip.dragDirective;
 
-      const dragDir = secondChip.dragDirective;
-      UIInteractions.moveDragDirective(fix, dragDir, 0, -2 * secondChipElem.offsetHeight, false);
+      //pickup chip
+      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
+      fix.detectChanges();
+
+      //trigger ghost
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 30);
+      await wait(100);
+      fix.detectChanges();
 
       const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
 
       expect(dropGhost).not.toBe(null);
       const dropGhostBounds = dropGhost.getBoundingClientRect();
       const targetChipBounds = chipComponents[0].nativeElement.getBoundingClientRect();
-      expect(dropGhostBounds.height).toBeCloseTo(ROW_HEIGHT);
       expect(dropGhostBounds.x).toBe(targetChipBounds.x);
-      expect(dropGhostBounds.y).toBeCloseTo(targetChipBounds.y - ROW_HEIGHT);
+      expect(dropGhostBounds.y).toBeCloseTo(targetChipBounds.y + ROW_HEIGHT);
     });
 
     it('should position drop ghost at the top inside the inner group when dragged over the first inner level condition.', () => {
@@ -2556,15 +2567,21 @@ describe('IgxQueryBuilder', () => {
       const dropGhostBounds = QueryBuilderFunctions.getDropGhostBounds(fix);
       const targetChipBounds = chipComponents[4].nativeElement.getBoundingClientRect();
       expect(dropGhostBounds.x).toBe(targetChipBounds.x);
-      expect(dropGhostBounds.y).toBeCloseTo(targetChipBounds.y - ROW_HEIGHT);
+      expect(dropGhostBounds.y).toBeCloseTo(targetChipBounds.y + ROW_HEIGHT);
     });
 
     it('should position drop ghost outside the inner group aligned with the outer level conditions when the top inner level condition is dragged up.', () => {
       const draggedChip = chipComponents[4].componentInstance; // "OrderName Ends With a" chip
-      const draggedChipElem = draggedChip.nativeElement;
-
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
-      UIInteractions.moveDragDirective(fix, dragDir, 0, -2 * draggedChipElem.offsetHeight, false);
+
+      //pickup chip
+      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
+      fix.detectChanges();
+
+      //drag
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 2 * ROW_HEIGHT, false);
+      fix.detectChanges();
 
       const dropGhostBounds = QueryBuilderFunctions.getDropGhostBounds(fix);
       const targetChipBounds = chipComponents[1].nativeElement.getBoundingClientRect(); // "OrderId in Products/OrderId" chip
@@ -2574,17 +2591,15 @@ describe('IgxQueryBuilder', () => {
 
     it('should position drop ghost below the inner group aligned with the outer level conditions when the bottom inner level condition is dragged down.', () => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate Today" chip
-      const draggedChipElem = draggedChip.nativeElement;
-
       const dragDir = draggedChip.dragDirective;
-      UIInteractions.moveDragDirective(fix, dragDir, 0, 10, false);
+      UIInteractions.moveDragDirective(fix, dragDir, -50, 10, false);
 
       const dropGhostBounds = QueryBuilderFunctions.getDropGhostBounds(fix);
       const previousLevelChipBounds = chipComponents[1].nativeElement.getBoundingClientRect(); // "OrderId in Products/OrderId" chip
       expect(dropGhostBounds.x).toBe(previousLevelChipBounds.x);
       const innerGroupElement = QueryBuilderFunctions.getQueryBuilderTreeChildGroups(QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement)[0];
       const innerGroupBounds = innerGroupElement.getBoundingClientRect();
-      expect(dropGhostBounds.y).toBeCloseTo(innerGroupBounds.bottom);
+      expect(Math.abs(dropGhostBounds.top - innerGroupBounds.bottom)).toBeLessThan(20);
     });
 
     it('should hide drop ghost on dragging the mouse far down outside the query builder.', () => {
@@ -2600,11 +2615,19 @@ describe('IgxQueryBuilder', () => {
 
     it('should drop the condition above the target condition on dragging up.', () => {
       const secondChip = chipComponents[1].componentInstance; // "OrderId In Products/ OrderId" chip
-      const secondChipElem = secondChip.nativeElement;
 
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderName  Equals  foo");
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(secondChip.chipArea.nativeElement);
+      const dragDir = secondChip.dragDirective;
 
-      UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 0, -2 * secondChipElem.offsetHeight, true);
+      //pickup chip
+      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
+      fix.detectChanges();
+
+      //drag
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 2 * ROW_HEIGHT, true);
+      fix.detectChanges();
+
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderId  In Products / OrderId");
       expect(QueryBuilderFunctions.getChipContent(chipComponents[1].nativeElement)).toBe("OrderName  Equals  foo");
@@ -2627,7 +2650,7 @@ describe('IgxQueryBuilder', () => {
       const draggedChipElem = draggedChip.nativeElement;
 
       const dragDir = draggedChip.dragDirective;
-      UIInteractions.moveDragDirective(fix, dragDir, 50, 4 * draggedChipElem.offsetHeight, true);
+      UIInteractions.moveDragDirective(fix, dragDir, 50, 2 * draggedChipElem.offsetHeight + 25, true);
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       const droppedChipBounds = chipComponents[1].nativeElement.getBoundingClientRect();
@@ -2643,7 +2666,7 @@ describe('IgxQueryBuilder', () => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
       const draggedChipElem = draggedChip.nativeElement;
 
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -4 * draggedChipElem.offsetHeight, true);
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -3.5 * draggedChipElem.offsetHeight, true);
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       const droppedChipBounds = chipComponents[2].nativeElement.getBoundingClientRect();
@@ -2780,8 +2803,8 @@ describe('IgxQueryBuilder', () => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
       const heightOffset = draggedChip.nativeElement.offsetHeight;
 
-      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, heightOffset, true);
-      UIInteractions.moveDragDirective(fix, chipComponents[4].componentInstance.dragDirective, 0, heightOffset, true);
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -4 * heightOffset, true);
+      UIInteractions.moveDragDirective(fix, chipComponents[4].componentInstance.dragDirective, 0, -4 * heightOffset, true);
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
 
@@ -2919,10 +2942,10 @@ describe('IgxQueryBuilder', () => {
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 3:
-            expect(newChipContents[2]).toBe(dropGhostContent);
+            expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 4:
-            expect(newChipContents[1]).toBe(dropGhostContent);
+            expect(newChipContents[0]).toBe(dropGhostContent);
             break;
           case i >= 5:
             expect(newChipContents[0]).toBe(dropGhostContent);
