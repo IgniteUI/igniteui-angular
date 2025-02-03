@@ -7,18 +7,10 @@
 $_theme: $material;
 
 @include themed-block(igx-checkbox, material) {
-    // TODO: These CSS variables should be listed as design tokens in the schema files.
-    --size: #{rem(20px)};
-    --border-width: #{rem(2px)};
     --label-margin: #{rem(2px)};
-    --mark-stroke: 3;
-    --mark-length: 24;
-    --mark-offset: 0;
 
     @include e(label) {
-        @include type-style(subtitle-1) {
-            margin-block: 0;
-        }
+        @include type-style(subtitle-1);
     }
 
     @include e(ripple) {

@@ -59,6 +59,14 @@ $_theme: $material;
     }
 
     @include b(igx-checkbox) {
+        // TODO: These should be moved to the shema as design tokens
+        --size: #{rem(20px)};
+        --border-width: #{rem(2px)};
+        --label-margin: #{rem(8px)};
+        --mark-stroke: 3;
+        --mark-length: 24;
+        --mark-offset: 0;
+
         position: relative;
         display: inline-flex;
         flex-flow: row nowrap;
@@ -88,8 +96,8 @@ $_theme: $material;
             color: var-get($_theme, 'label-color');
             user-select: none;
             word-wrap: break-all;
-            transition: color 0.2s $ease-out-quad;
             margin-inline-start: var(--label-margin);
+            margin-block: 0;
 
             &:empty {
                 margin: 0;
@@ -249,6 +257,7 @@ $_theme: $material;
                     border-color: var-get($_theme, 'fill-color-hover');
                     background: var-get($_theme, 'fill-color-hover');
 
+                    /* stylelint-disable-next-line max-nesting-depth */
                     &::before {
                         background: var-get($_theme, 'fill-color-hover');
                     }

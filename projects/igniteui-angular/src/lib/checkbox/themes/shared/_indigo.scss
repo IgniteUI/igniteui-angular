@@ -1,5 +1,6 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/animations' as *;
 @use 'igniteui-theming/sass/themes/functions' as *;
 @use 'styles/themes/standalone' as *;
 @use '../light/tokens' as *;
@@ -8,10 +9,6 @@ $_theme: $indigo;
 
 @include themed-block(igx-checkbox, indigo) {
     --size: #{rem(16px)};
-    --border-width: #{rem(2px)};
-    --label-margin: #{rem(8px)};
-    --mark-stroke: 3;
-    --mark-length: 24;
     --mark-offset: 1px;
 
     &:hover {
@@ -35,6 +32,9 @@ $_theme: $indigo;
     }
 
     @include e(label) {
+        @include type-style(body-2);
+        transition: color 0.2s $ease-out-quad;
+
         &:hover {
             color: var-get($_theme, 'label-color-hover');
         }

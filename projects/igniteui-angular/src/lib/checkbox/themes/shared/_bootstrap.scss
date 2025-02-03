@@ -10,9 +10,6 @@ $_theme: $bootstrap;
 @include themed-block(igx-checkbox, bootstrap) {
     --size: #{rem(16px)};
     --border-width: #{rem(1px)};
-    --label-margin: #{rem(8px)};
-    --mark-stroke: 3;
-    --mark-length: 24;
     --mark-offset: 1px;
 
     &:hover {
@@ -28,9 +25,7 @@ $_theme: $bootstrap;
     }
 
     @include e(label) {
-        @include type-style(body-1) {
-            margin-block: 0;
-        }
+        @include type-style(body-1);
     }
 
 
