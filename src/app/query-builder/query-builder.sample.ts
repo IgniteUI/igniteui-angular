@@ -6,7 +6,6 @@ import {
     changei18n,
     IExpressionTree,
     IgxButtonDirective,
-    IgxButtonGroupComponent,
     IgxRippleDirective,
     IgxQueryBuilderHeaderComponent,
     IgxNumberFilteringOperand,
@@ -15,13 +14,14 @@ import {
     IgxDateFilteringOperand,
     IgxTimeFilteringOperand,
     IgxDateTimeFilteringOperand,
-    IgxComboComponent
+    IgxComboComponent,
+    IGX_DIALOG_DIRECTIVES
 } from 'igniteui-angular';
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
-import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import { CommonModule } from '@angular/common';
 import { IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular/src/lib/query-builder/query-builder.directives';
 import { FormsModule } from '@angular/forms';
+import {IgxQueryBuilderTreeComponent} from "igniteui-angular/src/lib/query-builder/query-builder-tree.component";
 
 @Component({
     providers: [],
@@ -29,7 +29,7 @@ import { FormsModule } from '@angular/forms';
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
     standalone: true,
-    imports: [FormsModule, IgxButtonGroupComponent, IgxComboComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule, IgxQueryBuilderSearchValueTemplateDirective]
+    imports: [FormsModule, IGX_DIALOG_DIRECTIVES, IgxComboComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, CommonModule, IgxQueryBuilderSearchValueTemplateDirective, IgxQueryBuilderTreeComponent]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })
@@ -253,7 +253,7 @@ export class QueryBuilderComponent implements OnInit {
                 conditionName: IgxStringFilteringOperand.instance().condition('notNull').name
             });
             tree.filteringOperands.push(subGroup2);
-            
+
             this.expressionTree = tree;
         }
         this.lData = [{ id: 0, field: 'a' }, { id: 1, field: '1' }]

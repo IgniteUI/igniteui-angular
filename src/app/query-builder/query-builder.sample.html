@@ -1,6 +1,15 @@
 <div class="qb-sample-content">
     <div class="qb-sample-column">
+        <button igxButton="contained" (click)="qbDialog.open()">Open QB inside a dialog</button>
+
+        <igx-dialog #qbDialog>
+            <igx-query-builder [entities]="this.entities">
+                <igx-query-builder-tree ></igx-query-builder-tree>
+            </igx-query-builder>
+        </igx-dialog>
+
         <igx-query-builder #queryBuilder0 [entities]="this.entities"></igx-query-builder>
+
         <igx-query-builder #queryBuilder
                            (expressionTreeChange)="handleExpressionTreeChange()" [entities]="this.entities"
                            [expressionTree]="this.expressionTree">

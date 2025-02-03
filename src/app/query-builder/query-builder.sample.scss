@@ -8,6 +8,10 @@
     flex: initial;
     flex-direction: column;
     gap: 16px;
+
+    > button {
+        align-self: center;
+    }
 }
 
 .qb-sample-row {
