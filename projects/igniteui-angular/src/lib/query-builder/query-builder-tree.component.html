@@ -244,7 +244,7 @@
                     aria-labelledby="edit-expression"
                     (keydown)="invokeClick($event)"
                     (click)="enterExpressionEdit(expressionItem)">
-                    <igx-icon id="edit-expression">edit</igx-icon>
+                    <igx-icon id="edit-expression" [attr.aria-hidden]="true">edit</igx-icon>
                 </button>
                 <button
                     igxIconButton="flat"
