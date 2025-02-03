@@ -18,42 +18,19 @@ body {
     $schema: $schema,
 );
 
-.bootstrap-avatar {
-    @include palette($light-bootstrap-palette);
+.indigo {
+    --ig-theme: indigo;
+    --ig-theme-variant: dark;
 
-    @include css-vars(avatar-theme(
-        $schema: $light-bootstrap-schema,
-    ));
+    @include palette($dark-indigo-palette);
 }
 
-.material-avatar {
-    @include palette($light-material-palette);
-
-    @include css-vars(avatar-theme(
-        $schema: $light-material-schema,
-    ));
-}
-
-.custom-palette {
-    @include palette(palette(
-        $primary: green,
-        $secondary: green,
-        $surface: white,
-        $info: #1377d5,
-        $success: #4eb862,
-        $warn: #faa419,
-        $error: #ff134a,
-        $variant: 'material',
-    ));
+.indigo-avatar {
+    @include css-vars(avatar-theme($schema: $dark-indigo-schema));
 }
 
 .dock {
     @include css-vars(dock-manager-theme());
-}
-
-.custom-avatar {
-    --color: blue;
-    outline-color: blue;
 }
 
 .nav-header {

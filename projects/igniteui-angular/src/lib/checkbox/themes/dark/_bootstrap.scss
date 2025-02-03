@@ -1,0 +1,24 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-checkbox, bootstrap, dark) {
+    @include m(invalid) {
+        @include e(composite-mark) {
+            stroke: #000;
+        }
+    }
+
+    @include m(disabled) {
+        @include e(composite) {
+            background: color($color: 'surface', $variant: 500);
+        }
+
+        @include e(composite-mark) {
+            stroke: var-get($_theme, 'disabled-tick-color');
+        }
+    }
+}

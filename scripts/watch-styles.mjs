@@ -2,7 +2,8 @@ import { writeFile } from 'node:fs/promises';
 import watch from 'node-watch';
 import * as sass from 'sass-embedded';
 import report from './report.mjs';
-import { compileSass, fromTemplate } from './sass.mjs';
+import { buildComponentStyles } from './sass.mjs';
+import { globby } from 'globby';
 
 const watchOptions = {
   recursive: true,
@@ -26,18 +27,7 @@ const watcher = watch(
     updating = true;
 
     try {
-      await writeFile(
-        path.replace(/\.scss$/, '.css.ts'),
-        fromTemplate(
-          await compileSass(path, compiler, {
-            style: 'compressed',
-            loadPaths: ['node_modules'],
-            sourceMap: true,
-            sourceMapEmbed: true,
-          })
-        ),
-        'utf8'
-      );
+      await buildComponentStyles();
     } catch (err) {
       report.error(err);
     }

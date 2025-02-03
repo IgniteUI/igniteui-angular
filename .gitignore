@@ -49,7 +49,7 @@ src/**/*.js.map
 src/**/*.css.map
 
 # Artefacts
-projects/igniteui-angular/**/*.css.ts
+projects/igniteui-angular/**/*.component.css
 
 # Typedoc Theme
 extras/docs/themes/typedoc/bin
