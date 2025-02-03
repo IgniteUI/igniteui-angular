@@ -1,9 +1,7 @@
 import { NgIf } from '@angular/common';
-import { booleanAttribute, Component, ElementRef, HostBinding, inject, Input, OnInit } from '@angular/core';
+import { booleanAttribute, Component, HostBinding, Input, ViewEncapsulation } from '@angular/core';
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
-import { ThemeService } from '../services/theme/theme.service';
-import themes from './themes/index';
 
 let NEXT_ID = 0;
 
@@ -42,10 +40,12 @@ export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
  */
 @Component({
     selector: 'igx-badge',
+    styleUrl: "badge.component.css",
     templateUrl: 'badge.component.html',
+    encapsulation: ViewEncapsulation.None,
     imports: [NgIf, IgxIconComponent]
 })
-export class IgxBadgeComponent implements OnInit{
+export class IgxBadgeComponent {
 
    /**
     * Sets/gets the `id` of the badge.
@@ -186,13 +186,6 @@ export class IgxBadgeComponent implements OnInit{
     @Input({transform: booleanAttribute})
     @HostBinding('class.igx-badge--outlined')
     public outlined = false;
-
-    public themeService = inject(ThemeService);
-
-    /** @hidden @internal */
-    public ngOnInit() {
-        this.themeService.adoptStyles(IgxBadgeComponent, themes);
-    }
 
     /**
      * Defines a human-readable, accessor, author-localized description for
