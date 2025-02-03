@@ -1,0 +1,34 @@
+@use 'igniteui-theming/sass/bem' as *;
+
+@include b(properties-panel) {
+    padding: 0.5rem;
+
+    igx-input-group {
+        --ig-size: var(--ig-size-small);
+    }
+
+    > *:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+
+    @include e(property-label) {
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    @include e(switch-container) {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    @include e(date-time) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    @include e(title) {
+        margin-block: 0.5rem 1.5rem;
+    }
+}

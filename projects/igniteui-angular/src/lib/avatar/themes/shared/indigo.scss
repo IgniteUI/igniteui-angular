@@ -1,9 +1,8 @@
 @use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
 
-@include b(igx-avatar) {
-    @container style(--theme: indigo) {
-        igx-icon {
-            --ig-size: 1;
-        }
+@include themed-block(igx-avatar, indigo) {
+    igx-icon {
+        --ig-size: 1;
     }
 }

@@ -142,8 +142,6 @@ export class IgxBadgeComponent implements OnInit{
     @HostBinding('class.igx-badge')
     public cssClass = 'igx-badge';
 
-    constructor(public elementRef: ElementRef) { }
-
     /**
      * Sets a square shape to the badge, if `shape` is set to `square`.
      * By default the shape of the badge is rounded.

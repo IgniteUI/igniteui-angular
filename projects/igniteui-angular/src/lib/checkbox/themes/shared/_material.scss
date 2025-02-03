@@ -1,0 +1,61 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $material;
+
+@include themed-block(igx-checkbox, material) {
+    --label-margin: #{rem(2px)};
+
+    @include e(label) {
+        @include type-style(subtitle-1);
+    }
+
+    @include e(ripple) {
+        display: block;
+    }
+
+    @include e(composite-wrapper) {
+        padding: rem(20px);
+    }
+
+    @include mx(invalid, checked) {
+        @include e(composite) {
+            background: var-get($_theme, 'error-color');
+        }
+    }
+
+    @include mx(invalid, disabled) {
+        @include e(composite) {
+            border-color: var-get($_theme, 'disabled-color');
+        }
+
+        @include e(composite-mark) {
+            stroke: var-get($_theme, 'disabled-tick-color');
+        }
+    }
+
+    @include mx(checked, disabled) {
+        @include e(composite) {
+            border-color: var-get($_theme, 'disabled-color');
+            background: var-get($_theme, 'disabled-color');
+        }
+
+        @include e(composite-mark) {
+            stroke: var-get($_theme, 'disabled-tick-color');
+        }
+    }
+
+    @include mx(disabled, indeterminate) {
+        @include e(composite) {
+            border-color: var-get($_theme, 'disabled-indeterminate-color');
+            background: var-get($_theme, 'disabled-indeterminate-color');
+        }
+
+        @include e(composite-mark) {
+            stroke: var-get($_theme, 'disabled-tick-color');
+        }
+    }
+}
