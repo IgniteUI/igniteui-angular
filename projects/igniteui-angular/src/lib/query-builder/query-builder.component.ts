@@ -1,5 +1,5 @@
 import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef } from '@angular/core';
-import { NgIf, NgTemplateOutlet} from '@angular/common';
+import { NgIf } from '@angular/common';
 import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
@@ -31,7 +31,7 @@ import { recreateTree } from '../data-operations/expressions-tree-util';
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
     standalone: true,
-    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxQueryBuilderTreeComponent, NgTemplateOutlet, IgxQueryBuilderSearchValueTemplateDirective]
+    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxQueryBuilderTreeComponent]
 })
 export class IgxQueryBuilderComponent implements OnDestroy {
     /**

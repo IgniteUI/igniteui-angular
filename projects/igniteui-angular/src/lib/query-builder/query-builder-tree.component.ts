@@ -28,7 +28,7 @@ import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
 
-import { IgxOverlayOutletDirective, IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FieldType, EntityType } from '../grids/common/grid.interface';
 import { IgxSelectComponent } from '../select/select.component';
 import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
@@ -39,7 +39,6 @@ import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-commo
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxSelectItemComponent } from '../select/select-item.component';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
@@ -126,12 +125,10 @@ class ExpressionOperandItem extends ExpressionItem {
     standalone: true,
     imports: [
         NgIf,
-        IgxQueryBuilderHeaderComponent,
         IgxButtonDirective,
         IgxIconComponent,
         IgxChipComponent,
         IgxPrefixDirective,
-        IgxSuffixDirective,
         IgxSelectComponent,
         FormsModule,
         NgFor,
@@ -151,7 +148,6 @@ class ExpressionOperandItem extends ExpressionItem {
         DatePipe,
         IgxFieldFormatterPipe,
         IgxIconButtonDirective,
-        IgxToggleActionDirective,
         IgxComboComponent,
         IgxLabelDirective,
         IgxComboHeaderDirective,
