@@ -1,4 +1,5 @@
 @use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/color/presets/light/material' as *;
 @use 'variables' as *;
 @use 'functions' as *;
 @use 'sass:color';
@@ -112,7 +113,7 @@
 ///     $suffix: 'bg'
 ///   );
 /// @requires {mixin} gen-color-class
-@mixin gen-color-classes($prop, $prefix, $suffix, $palette: $default-palette) {
+@mixin gen-color-classes($prop, $prefix, $suffix) {
     @each $name, $color in $palette {
         @each $variant, $value in $color {
             @if meta.type-of($value) != 'map' {
@@ -140,6 +141,6 @@
 ///     $suffix: 'bg'
 ///   );
 /// @requires {mixin} gen-color-classes
-@mixin color-classes($prop, $suffix: null, $prefix: 'igx', $palette: $default-palette) {
-    @include gen-color-classes($prop, $prefix, $suffix, $palette);
+@mixin color-classes($prop, $suffix: null, $prefix: 'igx') {
+    @include gen-color-classes($prop, $prefix, $suffix);
 }

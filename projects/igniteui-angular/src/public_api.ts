@@ -28,6 +28,7 @@ export * from './lib/directives/mask/mask.directive';
 export * from './lib/directives/radio/public_api';
 export * from './lib/directives/ripple/ripple.directive';
 export * from './lib/directives/scroll-inertia/scroll_inertia.directive';
+export * from './lib/directives/size/ig-size.directive';
 export * from './lib/directives/text-highlight/text-highlight.directive';
 export * from './lib/directives/text-selection/text-selection.directive';
 export * from './lib/directives/template-outlet/template_outlet.directive';

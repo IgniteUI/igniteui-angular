@@ -1,0 +1,496 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:list';
+@use '../../../base/index' as *;
+@use 'igniteui-theming/sass/animations' as *;
+@use '../../../themes/schemas' as *;
+
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
+/// @param {Color} $track-color [null] - The main track color.
+/// @param {Color} $fill-color-default [null] - The track default fill color.
+/// @param {Color} $fill-color-danger [null] - The track danger fill color.
+/// @param {Color} $fill-color-warning [null] - The track warning fill color.
+/// @param {Color} $fill-color-info [null] - The track info fill color.
+/// @param {Color} $fill-color-success [null] - The track success fill color.
+/// @param {Color} $stripes-color [null] - The track stripes color.
+/// @param {Color} $text-color [null] - The track value text color.
+/// @param {List} $track-border-radius [null] - The border radius fraction, between 0 - 8 to be used fot the progress bar track
+/// @requires $light-material-schema
+/// @example scss Change the stripes color
+///   $my-progress-linear-theme: progress-linear-theme(
+///     $stripes-color: orange
+///   );
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-progress-linear-theme);
+@function progress-linear-theme(
+    $schema: $light-material-schema,
+    $track-color: null,
+    $fill-color-default: null,
+    $fill-color-danger: null,
+    $fill-color-warning: null,
+    $fill-color-info: null,
+    $fill-color-success: null,
+    $stripes-color: null,
+    $text-color: null,
+    $track-border-radius: null,
+) {
+    $name: 'igx-linear-bar';
+    $linear-bar-schema: ();
+
+    $linear-bar-schema: if(map.has-key($schema, 'linear-bar'), map.get($schema, 'linear-bar'), $schema);
+
+    $theme: digest-schema($linear-bar-schema);
+    $meta: map.get($theme, '_meta');
+
+    @if not($track-border-radius) {
+        $track-border-radius: map.get($theme, 'track-border-radius');
+    }
+
+    @return extend($theme, (
+        name: $name,
+        track-color: $track-color,
+        fill-color-default: $fill-color-default,
+        fill-color-danger: $fill-color-danger,
+        fill-color-warning: $fill-color-warning,
+        fill-color-info: $fill-color-info,
+        fill-color-success: $fill-color-success,
+        stripes-color: $stripes-color,
+        text-color: $text-color,
+        track-border-radius: $track-border-radius,
+        theme: map.get($schema, '_meta', 'theme'),
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
+    ));
+}
+
+@mixin striped-gradient($variant: default, $gradient-orientation, $stripe-color) {
+    $fill-color-default: if($variant == 'indigo', transparent, $stripe-color);
+    $stripes-color: if($variant == 'indigo', $stripe-color, transparent);
+
+    & {
+        background-image: repeating-linear-gradient(
+            $gradient-orientation,
+            $stripes-color,
+            $stripes-color var(--stripe-size),
+            $fill-color-default var(--stripe-size),
+            $fill-color-default calc(var(--stripe-size) * 2)
+        );
+    }
+}
+
+$easing-curves: (
+    // Primary translate easing curves
+    primary-translate-start: cubic-bezier(0.5, 0, 0.7017, 0.4958),
+    primary-translate-mid: cubic-bezier(0.3024, 0.3813, 0.55, 0.9563),
+
+    // Primary scale easing curves
+    primary-scale-slow-start: cubic-bezier(0.3347, 0.124, 0.7858, 1),
+    primary-scale-quick-end: cubic-bezier(0.06, 0.11, 0.6, 1),
+
+    // Secondary translate easing curves
+    secondary-translate-start: cubic-bezier(0.15, 0, 0.515, 0.4096),
+    secondary-translate-mid: cubic-bezier(0.31, 0.284, 0.8, 0.7337),
+    secondary-translate-end: cubic-bezier(0.4, 0.627, 0.6, 0.902),
+
+    // Secondary scale easing curves
+    secondary-scale-slow-start: cubic-bezier(0.15, 0, 0.515, 0.4096),
+    secondary-scale-mid: cubic-bezier(0.31, 0.284, 0.8, 0.7337),
+    secondary-scale-smooth-end: cubic-bezier(0.4, 0.627, 0.6, 0.902)
+);
+
+// Helper function to retrieve easing curves
+@function get-easing($curve) {
+    @if not map.has-key($easing-curves, $curve) {
+        @warn 'Easing curve #{$curve} does not exist.';
+    }
+    @return map.get($easing-curves, $curve);
+}
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin progress-linear($theme) {
+    @include css-vars($theme);
+
+    $variant: map.get($theme, '_meta', 'variant');
+
+    // TODO all of these should be listed as design tokens in the component schema. [$bar-height, $strip-size]
+    $bar-height: map.get((
+        'material': rem(4px),
+        'fluent': rem(2px),
+        'bootstrap': rem(16px),
+        'indigo': rem(4px),
+    ), $variant);
+
+    $strip-size: map.get((
+        'material': rem(16px),
+        'fluent': rem(16px),
+        'bootstrap': rem(5px),
+        'indigo': rem(16px),
+    ), $variant);
+
+    %display-linear {
+        position: relative;
+        display: flex;
+        width: 100%;
+        flex: 1 1 100%;
+        flex-direction: column;
+
+        @if $variant == 'indigo' {
+            gap: rem(4px);
+        } @else if $variant == 'fluent' {
+            gap: rem(2px);
+        }
+    }
+
+    %display-linear--striped:not(%display-linear--indeterminate) {
+        --linear-strips-orientation: -45deg;
+
+        &:dir(rtl) {
+            --linear-strips-orientation: 45deg
+        }
+
+        %indicator {
+            @include striped-gradient(
+                map.get($theme, 'variant'),
+                var(--linear-strips-orientation),
+                var-get($theme, 'stripes-color')
+            );
+        }
+    }
+
+    %base {
+        --stripe-size: #{$strip-size};
+        --linear-animation-duration: 2000ms;
+
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        width: inherit;
+        height: $bar-height;
+        background: var-get($theme, 'track-color');
+        overflow: hidden;
+        border-radius: var-get($theme, 'track-border-radius');
+        z-index: 0;
+    }
+
+    %indicator {
+        width: calc(var(--_progress-whole) * 1%);
+        position: absolute;
+        height: 100%;
+        transition: width var(--_transition-duration) linear;
+    }
+
+    %display-linear--indeterminate:dir(rtl) {
+        @if $variant != 'fluent' {
+            %base {
+                transform: rotateY(180deg);
+            }
+        } @else {
+            %indicator {
+                animation-name: igx-indeterminate-bar-fluent-rtl;
+            }
+        }
+    }
+
+    %display-linear:not(%display-linear--indeterminate) {
+        %indicator {
+            animation: igx-initial-width var(--_transition-duration) linear;
+            background-color: var-get($theme, 'fill-color-default')
+        }
+    }
+
+    %display-linear--indeterminate {
+        %value {
+            &::before {
+                display: none;
+            }
+        }
+    }
+
+    %indicator__indeterminate,
+    %indicator__indeterminate-secondary {
+        @if $variant != 'fluent' {
+            transform-origin: top left;
+            width: 100% !important;
+            height: inherit;
+            position: absolute;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                inset-inline-start: 0;
+                width: inherit;
+                height: inherit;
+                backface-visibility: hidden;
+                background-color: var-get($theme, 'fill-color-default');
+            }
+        }
+    }
+
+    %indicator__indeterminate {
+        @if $variant != 'fluent' {
+            transform: scale3d(0, 1, 1);
+            animation: igx-indeterminate-primary var(--linear-animation-duration) infinite linear;
+            left: -145.1666%;
+
+            &::after {
+                animation: igx-indeterminate-primary-scale var(--linear-animation-duration) infinite linear;
+            }
+        } @else {
+            width: 33% !important;
+            min-width: 33%;
+            animation-name: igx-indeterminate-bar-fluent;
+            animation-duration: var(--linear-animation-duration);
+            animation-timing-function: ease;
+            animation-iteration-count: infinite;
+            left: auto;
+        }
+    }
+
+    %indicator__indeterminate-secondary {
+        animation: igx-indeterminate-secondary var(--linear-animation-duration) infinite linear;
+        left: -54.8888%;
+
+        &::after {
+            animation: igx-indeterminate-secondary-scale var(--linear-animation-duration) infinite linear;
+            width: 100%;
+            height: inherit;
+        }
+
+        @if $variant == 'fluent' {
+            display: none;
+        }
+    }
+
+    @if $variant == 'fluent' {
+        %indicator__indeterminate {
+            background: linear-gradient(90deg, transparent 0%, var-get($theme, 'fill-color-default') 50%, transparent 100%)
+        }
+    }
+
+    @each $mod in ('success','info','warning','danger') {
+        %display-linear--#{$mod}:not(%display-linear--indeterminate) {
+            %indicator,
+            %indicator__secondary {
+                background-color: var-get($theme, 'fill-color-#{$mod}')
+            }
+        }
+
+        %display-linear--#{$mod} {
+            @if $variant != 'fluent' {
+                %indicator,
+                %indicator__secondary {
+                    /* stylelint-disable max-nesting-depth */
+                    &::after {
+                        background-color: var-get($theme, 'fill-color-#{$mod}');
+                    }
+                    /* stylelint-enable max-nesting-depth */
+                }
+            } @else {
+                %indicator {
+                    background: linear-gradient(90deg, transparent 0%, var-get($theme, 'fill-color-#{$mod}') 50%, transparent 100%)
+                }
+            }
+        }
+    }
+
+    %value {
+        color: var-get($theme, 'text-color');
+        animation: initial-counter var(--_transition-duration) ease-in-out;
+        counter-reset:
+            progress-integer var(--_progress-integer, 0)
+            progress-fraction var(--_progress-fraction, 0);
+        transition:
+            --_progress-integer var(--_transition-duration) ease-in-out,
+            --_progress-fraction var(--_transition-duration) ease-in-out;
+    }
+
+    %value--fraction {
+        &::before {
+            content: counter(progress-integer) '.' counter(progress-fraction, decimal-leading-zero) '%';
+        }
+    }
+
+    %value:not(%value--fraction) {
+        &::before {
+            content: counter(progress-integer) '%';
+        }
+    }
+
+    %value--start {
+        align-self: flex-start;
+    }
+
+    %value--center {
+        align-self: center;
+    }
+
+    %value--end {
+        align-self: flex-end;
+    }
+
+    %value--top {
+        order: -1;
+    }
+
+    %value--hidden {
+        display: none;
+    }
+
+    %hide-counter {
+        &::before {
+            display: none;
+        }
+    }
+
+    // Reset the transition if the animate prop is set to false.
+    %animation-none:not(%display-linear--indeterminate) {
+        --_transition-duration: 0s !important;
+    }
+
+    // Primary animation
+    @keyframes igx-indeterminate-primary {
+        0% {
+            transform: translateX(0);
+        }
+
+        20% {
+            animation-timing-function: get-easing('primary-translate-start');
+            transform: translateX(0);
+        }
+
+        59.15% {
+            animation-timing-function: get-easing('primary-translate-mid');
+            transform: translateX(83.671%);
+        }
+
+        100% {
+            transform: translateX(200.611%);
+        }
+    }
+
+    @keyframes igx-indeterminate-primary-scale {
+        0% {
+            transform: scaleX(0.08);
+        }
+
+        36.65% {
+            animation-timing-function: get-easing('primary-scale-slow-start');
+            transform: scaleX(0.08);
+        }
+
+        69.15% {
+            animation-timing-function: get-easing('primary-scale-quick-end');
+            transform: scaleX(0.6614);
+        }
+
+        100% {
+            transform: scaleX(0.08);
+        }
+    }
+
+    // Secondary animation
+    @keyframes igx-indeterminate-secondary {
+        0% {
+            animation-timing-function: get-easing('secondary-translate-start');
+            transform: translateX(0);
+        }
+
+        25% {
+            animation-timing-function: get-easing('secondary-translate-mid');
+            transform: translateX(37.6519%);
+        }
+
+        48.35% {
+            animation-timing-function: get-easing('secondary-translate-end');
+            transform: translateX(84.3861%);
+        }
+
+        100% {
+            transform: translateX(160.2777%);
+        }
+    }
+
+    @keyframes igx-indeterminate-secondary-scale {
+        0% {
+            animation-timing-function: get-easing('secondary-scale-slow-start');
+            transform: scaleX(0.08);
+        }
+
+        19.15% {
+            animation-timing-function: get-easing('secondary-scale-mid');
+            transform: scaleX(0.4571);
+        }
+
+        44.15% {
+            animation-timing-function: get-easing('secondary-scale-smooth-end');
+            transform: scaleX(0.727);
+        }
+
+        100% {
+            transform: scaleX(0.08);
+        }
+    }
+
+    // Fluent linear animations
+    @keyframes igx-indeterminate-bar-fluent {
+        0% {
+            transform: translateX(-100%);
+            transform-origin: left;
+        }
+
+        100% {
+            transform: translateX(310%);
+            transform-origin: right;
+        }
+    }
+
+    @keyframes igx-indeterminate-bar-fluent-rtl {
+        0% {
+            transform: translateX(100%);
+            transform-origin: right;
+        }
+
+        100% {
+            transform: translateX(-310%);
+            transform-origin: left;
+        }
+    }
+
+    // Initial animations
+    @keyframes igx-initial-width {
+        from {
+            width: 0;
+        }
+
+        to {
+            width: calc(var(--_progress-whole, 0) * 1%);
+        }
+    }
+}
+
+/// Adds typography styles for the igx-linear-bar component.
+/// Uses the 'subtitle-2' category from the typographic scale.
+/// @group typography
+/// @param {Map} $categories [(value: 'subtitle-2')] - The categories from the typographic scale used for type styles.
+@mixin linear-bar-typography($categories: (value: 'subtitle-2')) {
+    $value: map.get($categories, 'value');
+
+    %value {
+        @include type-style($value) {
+            margin: 0;
+        }
+    }
+}
+

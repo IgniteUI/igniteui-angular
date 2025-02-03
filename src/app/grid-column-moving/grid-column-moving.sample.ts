@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
 
-import { PageHeaderComponent } from '../pageHeading/pageHeading.component';
 import { IgxButtonDirective, IgxButtonGroupComponent, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent } from 'igniteui-angular';
 
 @Component({
@@ -12,7 +11,7 @@ import { IgxButtonDirective, IgxButtonGroupComponent, IgxCellHeaderTemplateDirec
     selector: 'app-grid-column-moving-sample',
     styleUrls: ['grid-column-moving.sample.scss'],
     templateUrl: 'grid-column-moving.sample.html',
-    imports: [IgxButtonDirective, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxLabelDirective, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxPaginatorComponent, PageHeaderComponent, IgxColumnGroupComponent, IgxCellHeaderTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent]
+    imports: [IgxButtonDirective, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxLabelDirective, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxPaginatorComponent, IgxColumnGroupComponent, IgxCellHeaderTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent]
 })
 export class GridColumnMovingSampleComponent implements OnInit {
     @HostBinding('style.--ig-size')

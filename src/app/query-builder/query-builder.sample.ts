@@ -6,7 +6,6 @@ import {
     changei18n,
     IExpressionTree,
     IgxButtonDirective,
-    IgxButtonGroupComponent,
     IgxRippleDirective,
     IgxQueryBuilderHeaderComponent,
     IgxNumberFilteringOperand,
@@ -29,7 +28,7 @@ import { FormsModule } from '@angular/forms';
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
     standalone: true,
-    imports: [FormsModule, IgxButtonGroupComponent, IgxComboComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule, IgxQueryBuilderSearchValueTemplateDirective]
+    imports: [FormsModule, IgxComboComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, SizeSelectorComponent, CommonModule, IgxQueryBuilderSearchValueTemplateDirective]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })

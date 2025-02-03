@@ -1,7 +1,6 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-
 ## 19.1.0
 ### New Features
 - `IgxQueryBuilder`
@@ -30,6 +29,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCarousel`
     - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
     - **Deprecation** - `CarouselIndicatorsOrientation` enum members `top` and `bottom` have been deprecated and will be removed in a future version. Use `start` and `end` instead.
+### New Features
+- `IgxBanner`
+    - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. The banner can now be programmatically set to expanded (visible) or collapsed (hidden) both initially and at runtime. Animations will trigger during runtime updates — the **open animation** plays when `expanded` is set to `true`, and the **close animation** plays when set to `false`. However, no animations will trigger when the property is set initially.
+    - The banner's event lifecycle (`opening`, `opened`, `closing`, `closed`) only triggers through **user interactions** (e.g., clicking to open/close). Programmatic updates using the `expanded` property will not fire any events.
+    - If the `expanded` property changes during an ongoing animation, the current animation will **stop** and the opposite animation will begin from the **point where the previous animation left off**. For instance, if the open animation (10 seconds) is interrupted at 6 seconds and `expanded` is set to `false`, the close animation (5 seconds) will start from its 3rd second.
 
 ## 19.0.0
 ### General
@@ -38,6 +42,27 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxColumn`
     - Introduced the `disabledSummaries` property, allowing users to specify which summaries should be disabled for a given column. This property accepts an array of strings corresponding to the summary keys, enabling selective control over both default summaries (e.g., 'Count', 'Min') and any custom summaries created by the user.
+- `Themes`
+    - **Deprecation** The utility mixins `light-theme`, `dark-theme`, `bootstrap-light-theme`, `bootstrap-dark-theme`, `fluent-light-theme`, `fluent-dark-theme`, `indigo-light-theme`, and `indigo-dark-theme` have been deprecated and will be removed in version 20 of Ignite UI for Angular. Switch to the more generic `theme` mixin instead.
+    Example:
+    ```scss
+    $my-light-palette: palette(
+        $primary: navy,
+        $secondary: rebeccapurple,
+        $surface: white,
+    );
+
+    // Before:
+    @include light-theme(
+        $palette: $my-light-palette
+    );
+
+    // After:
+    @include theme(
+        $palette: $my-light-palette,
+        $schema: $light-material-schema,
+    );
+    ```
 
 ## 18.2.0
 ### General
@@ -79,6 +104,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridState`
     -  When possible the state directive nows reuses the column that already exists on the grid when restoring the state, instead of creating new column instances every time. This removes the need to set any complex objects manually back on the column on `columnInit`. The only instance where this is still necessary is when the column (or its children in case of column groups) have no `field` property so there's no way to uniquely identify the matching column.
     - Added support for persisting Multi-Row Layout.
+
 ### Themes
 - **Breaking Change** `Palettes`
     - All palette colors have been migrated to the [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors). This means that color consumed as CSS variables no longer need to be wrapped in an `hsl` function. 

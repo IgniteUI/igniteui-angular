@@ -1,11 +1,70 @@
-.mt30 {
-    margin-top: 30px;
-}
-
-.sample-content {
-    igx-switch,
-    button {
-        margin-right: 10px;
-        margin-bottom: 20px;
+.sample-wrapper {
+    igx-carousel {
+        margin-bottom: 64px;
     }
 }
+
+::ng-deep {
+    [role='tablist'] {
+        .indicator-active {
+            width: 105px;
+        }
+
+        .indicator-inactive {
+            width: 100px;
+        }
+
+        .igx-carousel-indicators__indicator:first-of-type {
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+        }
+
+        .igx-carousel-indicators__indicator:last-of-type {
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .igx-carousel-indicators__indicator:first-of-type,
+        .igx-carousel-indicators__indicator:last-of-type {
+            overflow: hidden;
+        }
+    }
+}
+
+.wc-indicator-template {
+    ::part(inactive) {
+        width: 100px;
+
+        img {
+            width: 100px;
+        }
+    }
+
+    ::part(active) {
+        width: 105px;
+    }
+
+    .image-indicator {
+        width: 100%;
+    }
+
+    [slot='indicator'][tabindex="-1"] {
+        width: 100px;
+    }
+
+    [slot='indicator']:first-of-type {
+        img {
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+        }
+    }
+
+    [slot='indicator']:last-of-type {
+        img {
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+    }
+
+    [slot='indicator']:first-of-type,
+    [slot='indicator']:last-of-type {
+        overflow: hidden;
+    }
+}
+
