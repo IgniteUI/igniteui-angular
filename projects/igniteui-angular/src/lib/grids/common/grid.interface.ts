@@ -307,6 +307,7 @@ export interface FieldType {
     pipeArgs?: IFieldPipeArgs;
     defaultTimeFormat?: string;
     defaultDateTimeFormat?: string;
+    validators?: any[];
 
     formatter?(value: any, rowData?: any): any;
 }
@@ -334,7 +335,6 @@ export interface ColumnType extends FieldType {
     headerGroup: any;
     /** @hidden @internal */
     headerCell: any;
-    validators: any[];
 
     /**
      * The template reference for the custom header of the column
