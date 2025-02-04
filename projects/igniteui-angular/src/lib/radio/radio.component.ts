@@ -11,9 +11,7 @@ import {
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import themes from './themes/index';
-
+import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
 
 /**
  * **Ignite UI for Angular Radio Button** -
@@ -38,7 +36,11 @@ import themes from './themes/index';
     templateUrl: 'radio.component.html',
     imports: [IgxRippleDirective]
 })
-export class IgxRadioComponent extends IgxCheckboxComponent implements OnInit, AfterViewInit, ControlValueAccessor, EditorProvider {
+
+export class IgxRadioComponent
+    extends CheckboxBaseDirective
+    implements AfterViewInit, ControlValueAccessor, EditorProvider {
+
     /** @hidden @internal */
     public blurRadio = new EventEmitter();
 
@@ -151,7 +153,11 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements OnInit, A
     public select() {
         if (!this.checked) {
             this.checked = true;
-            this.change.emit({ value: this.value, owner: this, checked: this.checked });
+            this.change.emit({
+                value: this.value,
+                owner: this,
+                checked: this.checked,
+            });
             this._onChangeCallback(this.value);
         }
     }

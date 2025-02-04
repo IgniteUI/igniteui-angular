@@ -1,0 +1,34 @@
+
+
+
+<section class="sample-content"
+    [style.--ig-circular-progress-diameter]="properties.diameter ? properties.diameter + 'px' : null"
+    [style.--igx-circular-bar-diameter]="properties.diameter ? properties.diameter + 'px' : null">
+    <article class="circular-samples sample-column">
+        <h4 class="sample-title">Circular progress Angular</h4>
+        <div class="circular-container">
+            <igx-circular-bar
+            [animationDuration]="properties.animationDuration"
+            [indeterminate]="properties.indeterminate"
+            [value]="properties.value"
+            [text]="properties.text"
+            [max]="properties.max"
+            [animate]="properties.hasAnimation"
+            [textVisibility]="!properties.hideLabel">
+            </igx-circular-bar>
+        </div>
+
+        <h4 class="sample-title">Circular progress WC</h4>
+        <div class="circular-container">
+            <igc-circular-progress
+            [animationDuration]="properties.animationDuration"
+            [attr.indeterminate]="properties.indeterminate ? true : null"
+            [labelFormat]="properties.text"
+            [value]="properties.value"
+            [max]="properties.max"
+            [variant]="properties.variant"
+            [hideLabel]="properties.hideLabel">
+            </igc-circular-progress>
+        </div>
+    </article>
+</section>

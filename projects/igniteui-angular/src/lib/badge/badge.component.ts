@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { booleanAttribute, Component, ElementRef, HostBinding, Input } from '@angular/core';
+import { booleanAttribute, Component, HostBinding, Input } from '@angular/core';
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 
@@ -139,8 +139,6 @@ export class IgxBadgeComponent {
      */
     @HostBinding('class.igx-badge')
     public cssClass = 'igx-badge';
-
-    constructor(public elementRef: ElementRef) { }
 
     /**
      * Sets a square shape to the badge, if `shape` is set to `square`.
