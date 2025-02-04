@@ -684,17 +684,13 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             return;
         }
         this.endEdit(true, event);
-
-        if (parentRow != null && this.grid.expansionStates.get(parentRow.key)) {
-            const key = parentRow.key;
-            this.grid.collapseRow(key);
-            // detect changes and get correct row by key
-            // in case collapsing changes row context.
-            this.grid.cdr.detectChanges();
-            parentRow = this.grid.getRowByKey(key);
+        // work with copy of original row, since context may change on collapse.
+        const parentRowCopy = Object.assign(copyDescriptors(parentRow), parentRow);
+        if (parentRowCopy != null && this.grid.expansionStates.get(parentRowCopy.key)) {
+            this.grid.collapseRow(parentRowCopy.key);
         }
 
-        this.createAddRow(parentRow, asChild);
+        this.createAddRow(parentRowCopy, asChild);
 
         this.grid.transactions.startPending();
         if (this.addRowParent.isPinned) {
