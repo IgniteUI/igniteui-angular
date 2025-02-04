@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsZHHANS = {
     igx_query_builder_column_placeholder: '选择列',
     igx_query_builder_condition_placeholder: '选择筛选器',
     igx_query_builder_value_placeholder: '数值',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: '所有字段',
     igx_query_builder_details: '详细信息',
     igx_query_builder_search: '搜索',

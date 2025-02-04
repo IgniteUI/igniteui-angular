@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsBG = {
     igx_query_builder_column_placeholder: 'Избери колона',
     igx_query_builder_condition_placeholder: 'Изберете филтър',
     igx_query_builder_value_placeholder: 'Стойност',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: 'Всички полета',
     igx_query_builder_details: 'Детайли',
     igx_query_builder_search: 'Търсене',

@@ -540,8 +540,10 @@ describe('IgxQueryBuilder', () => {
 
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
-      //Type Value
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+      // Verify value input placeholder
+      expect(input.placeholder).toEqual('Value');
+      // Type Value
       UIInteractions.clickAndSendInputElementValue(input, 'a');
       tick(100);
       fix.detectChanges();
@@ -583,8 +585,10 @@ describe('IgxQueryBuilder', () => {
 
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'Id' column.
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator
-      //Type Value
       const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+      // Verify value input placeholder
+      expect(input.placeholder).toEqual('Value');
+      // Type Value
       UIInteractions.clickAndSendInputElementValue(input, '5');
       tick(100);
       fix.detectChanges();
@@ -669,6 +673,11 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3); // Select 'Released' column.
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1); // Select 'True' operator.
 
+      // Verify value input placeholder
+      const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+      // Verify value input placeholder
+      expect(input.placeholder).toEqual('Value');
+
       // Commit the populated expression.
       QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
       fix.detectChanges();
@@ -706,6 +715,11 @@ describe('IgxQueryBuilder', () => {
 
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'OrderDate' column.
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 9); // Select 'This Year' operator.
+
+      // Verify value input placeholder
+      const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+      // Verify value input placeholder
+      expect(input.placeholder).toEqual('Select date');
 
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Third input should be disabled for unary operators.
       // Commit the populated expression.
@@ -771,6 +785,10 @@ describe('IgxQueryBuilder', () => {
       // Verify operator icon
       const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement;
       expect(operatorInputGroup.querySelector('igx-icon').attributes.getNamedItem('ng-reflect-name').nodeValue).toEqual('in');
+
+      const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+      // Verify value input placeholder
+      expect(input.placeholder).toEqual('Sub-query results');
 
       // Verify inputs states
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
@@ -843,6 +861,10 @@ describe('IgxQueryBuilder', () => {
       // Verify operator icon
       const operatorInputGroup = QueryBuilderFunctions.getQueryBuilderOperatorSelect(fix).querySelector('igx-input-group') as HTMLElement;
       expect(operatorInputGroup.querySelector('igx-icon').attributes.getNamedItem('ng-reflect-name').nodeValue).toEqual('not-in');
+
+      const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+      // Verify value input placeholder
+      expect(input.placeholder).toEqual('Sub-query results');
 
       // Verify inputs states
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);

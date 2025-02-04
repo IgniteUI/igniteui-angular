@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsCS = {
     igx_query_builder_column_placeholder: 'Vyberte sloupec',
     igx_query_builder_condition_placeholder: 'Vyberte filtr',
     igx_query_builder_value_placeholder: 'Hodnota',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: 'Všechna pole',
     igx_query_builder_details: 'Podrobnosti',
     igx_query_builder_search: 'Vyhledávání',

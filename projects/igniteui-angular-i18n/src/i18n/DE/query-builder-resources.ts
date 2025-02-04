@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsDE = {
     igx_query_builder_column_placeholder: 'Wähle Spalte',
     igx_query_builder_condition_placeholder: 'Wähle Filter',
     igx_query_builder_value_placeholder: 'Wert',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: 'Alle Felder',
     igx_query_builder_details: 'Details',
     igx_query_builder_search: 'Suchen',

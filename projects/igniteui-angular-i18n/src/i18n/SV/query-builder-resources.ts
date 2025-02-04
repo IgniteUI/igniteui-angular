@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsSV = {
     igx_query_builder_column_placeholder: 'Välj kolumn',
     igx_query_builder_condition_placeholder: 'Välj filter',
     igx_query_builder_value_placeholder: 'Värde',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: 'Alla fält',
     igx_query_builder_details: 'Detaljer',
     igx_query_builder_search: 'Sök',
