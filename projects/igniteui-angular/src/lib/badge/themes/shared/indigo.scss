@@ -10,8 +10,6 @@
     }
 
     igx-icon {
-        $icon-size: rem(12px);
-        --ig-icon-size: #{$icon-size};
-        --igx-icon-size: #{$icon-size};
+        --igx-icon-size: #{rem(12px)};
     }
 }
