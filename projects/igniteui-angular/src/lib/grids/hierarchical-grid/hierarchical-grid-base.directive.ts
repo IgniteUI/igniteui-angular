@@ -200,6 +200,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         );
     }
 
+    public override navigation: IgxHierarchicalGridNavigationService;
+
     /**
      * @hidden
      */
