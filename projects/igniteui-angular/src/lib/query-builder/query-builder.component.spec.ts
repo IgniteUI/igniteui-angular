@@ -378,7 +378,7 @@ describe('IgxQueryBuilder', () => {
 
       //Select Column
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
-      QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, false, false);
+      QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, false);
 
       //Select Operator
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
@@ -392,7 +392,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, true);
 
       // Verify all inputs values
-      QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, Released', 'ProductName', 'Contains', 'a');
+      QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id, ProductName, Released', 'ProductName', 'Contains', 'a');
 
       //Commit the group
       QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
@@ -420,6 +420,7 @@ describe('IgxQueryBuilder', () => {
   "entity": "Products",
   "returnFields": [
     "Id",
+    "ProductName",
     "Released"
   ]
 }`);
@@ -430,7 +431,7 @@ describe('IgxQueryBuilder', () => {
 
       //Select Column
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
-      QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, false, false);
+      QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, false, true);
 
       //Select Operator
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
@@ -1430,7 +1431,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
 
       // Verify input values
-      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Id', '', '', 1);
+      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Id', 'Equals', '', 1);
 
       // Verify parent and child commit buttons are disabled
       parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
@@ -1497,7 +1498,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
 
       // Verify input values
-      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Id', '', '', 1);
+      QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Id', 'Equals', '', 1);
 
       // Verify parent and child commit buttons are disabled
       const parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
@@ -1804,7 +1805,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
       expect(queryBuilder.canCommit()).withContext('Add condition clicked again').toBeTrue();
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
-      expect(queryBuilder.canCommit()).withContext('Column selected again').toBeFalse();
+      expect(queryBuilder.canCommit()).withContext('Column selected again').toBeTrue();
       QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
       expect(queryBuilder.canCommit()).withContext('Unary operator selected').toBeTrue();
     }));

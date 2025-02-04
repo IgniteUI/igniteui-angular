@@ -2198,8 +2198,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._timeoutId = setTimeout(() => {
             if (this._lastFocusedChipIndex != -1) {
-                const chipElement = this.expressionsChips.toArray()[this._lastFocusedChipIndex].nativeElement;
-                chipElement.focus();
+                const chipElement = this.expressionsChips.toArray()[this._lastFocusedChipIndex]?.nativeElement;
+                if(chipElement) {
+                    chipElement.focus();
+                }
                 this._lastFocusedChipIndex = -1;
                 this._focusDelay = DEFAULT_CHIP_FOCUS_DELAY;
             }
