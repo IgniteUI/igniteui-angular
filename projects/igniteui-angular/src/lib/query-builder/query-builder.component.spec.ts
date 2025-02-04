@@ -1739,9 +1739,9 @@ describe('IgxQueryBuilder', () => {
       const bodyElement = queryBuilderElement.children[1].children[0];
       const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
       expect(actionArea).toBeNull();
-      expect(bodyElement.children[1].children[1].children[5]).toHaveClass('igx-query-builder-tree');
-      expect(bodyElement.children[1].children[1].children[5].children.length).toEqual(3);
-      const tree = bodyElement.children[1].children[1].children[5].querySelector('.igx-filter-tree__expression');
+      expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1]).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_TREE);
+      expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].children.length).toEqual(3);
+      const tree = bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].querySelector('.igx-filter-tree__expression');
       expect(tree).toBeNull();
     }));
 
