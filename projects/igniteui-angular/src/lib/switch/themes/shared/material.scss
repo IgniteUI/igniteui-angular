@@ -1,59 +1,78 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/themes/functions' as *;
-@use '../light/themes' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
 
-$theme: $material;
+$_theme: $material;
 
-@container style(--theme: material) {
-    @include b(igx-switch) {
-        --switch-width: #{rem(36px)};
-        --switch-height: #{rem(14px)};
-        --switch-thumb-size: #{rem(20px)};
-        --switch-on-offset: #{rem(1px)};
-        --switch-off-offset: #{rem(-1px)};
-        --label-margin: #{rem(12px)};
-        
-        @include e(label) {
-            @include type-style(subtitle-1) {
-                margin-block: 0;
-            }
+@include themed-block(igx-switch, material) {
+    --switch-width: #{rem(36px)};
+    --switch-height: #{rem(14px)};
+    --switch-thumb-size: #{rem(20px)};
+    --switch-on-offset: #{rem(1px)};
+    --switch-off-offset: #{rem(-1px)};
+    --label-margin: #{rem(12px)};
+    
+    @include e(label) {
+        @include type-style(subtitle-1) {
+            margin-block: 0;
         }
+    }
 
-        @include e(ripple) {
-            display: block;
-        }
+    @include e(ripple) {
+        display: block;
+    }
 
+    @include e(thumb) {
+        box-shadow: var-get($_theme, 'resting-elevation');
+    }
+
+    &:hover {
         @include e(thumb) {
-            box-shadow: var-get($theme, 'resting-elevation');
+            background: var-get($_theme, 'thumb-off-color');
+            box-shadow: var-get($_theme, 'resting-elevation');
         }
+    }
 
+    @include m(checked) {
         &:hover {
             @include e(thumb) {
-                background: var-get($theme, 'thumb-off-color');
-                box-shadow: var-get($theme, 'resting-elevation');
+                background: var-get($_theme, 'thumb-on-color');
             }
         }
+    }
 
-        @include m(checked) {
-            &:hover {
-                @include e(thumb) {
-                    background: var-get($theme, 'thumb-on-color');
-                }
-            }
+    @include m(invalid) {
+        @include e(composite) {
+            border-color: var-get($_theme, 'track-error-color');
+            background: var-get($_theme, 'track-error-color');
         }
+    }
 
-        @include m(invalid) {
-            @include e(composite) {
-                border-color: var-get($theme, 'track-error-color');
-                background: var-get($theme, 'track-error-color');
-            }
+    @include mx(invalid, checked) {
+        @include e(composite) {
+            background: var-get($_theme, 'track-on-color');
+            border-color: var-get($_theme, 'border-on-color');
         }
+    }
 
-        @include m(disabled) {
-            @include e(thumb) {
-                box-shadow: var-get($theme, 'disabled-elevation');
-            }
+    @include m(disabled) {
+        @include e(thumb) {
+            box-shadow: var-get($_theme, 'disabled-elevation');
+        }
+    }
+
+    @include mx(disabled, invalid) {
+        @include e(composite) {
+            background: var-get($_theme, 'track-disabled-color');
+            border-color: var-get($_theme, 'border-disabled-color');
+        }
+    }
+
+    @include mx(disabled, invalid, checked) {
+        @include e(composite) {
+            background: var-get($_theme, 'track-on-disabled-color');
         }
     }
 }

@@ -1,0 +1,379 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use './light/tokens' as *;
+
+$_theme: $material;
+
+@layer base {
+    @include scale-in-out($start-scale: .9);
+
+    $input-transition: all .2s $ease-in-out-quad;
+
+    %switch-label {
+        display: inline-block;
+        color: var-get($_theme, 'label-color');
+        user-select: none;
+        word-wrap: break-all;
+
+        &:empty {
+            margin: 0;
+        }
+    }
+
+    %switch-ripple--focused {
+        background: color($color: 'gray', $variant: 600);
+        transition: background .2s $ease-out-quad;
+        opacity: .12;
+
+        @container style(--ig-theme-variant: dark) {
+            opacity: .24;
+        }
+    }
+
+    %switch-ripple--hover {
+        &::after {
+            position: absolute;
+            content: '';
+            opacity: .06;
+            inset: 0;
+
+            @container style(--ig-theme-variant: dark) {
+                opacity: .12;
+            }
+        }
+    }
+
+    %switch-ripple--pressed {
+        &::after {
+            opacity: .12;
+
+            @container style(--ig-theme-variant: dark) {
+                opacity: .24;
+            }
+        }
+    }
+
+    @include b(igx-switch) {
+        position: relative;
+        display: inline-flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        cursor: pointer;
+
+        &:hover {
+            @include e(ripple) {
+                @extend %switch-ripple--hover !optional;
+
+                &::after {
+                    background: color($color: 'gray', $variant: 600);
+                }
+            }
+
+            @include e(composite) {
+                border-color: var-get($_theme, 'border-hover-color');
+            }
+
+            @include e(thumb) {
+                background: var-get($_theme, 'border-hover-color');
+            }
+
+            @include e(label) {
+                color: var-get($_theme, 'label-hover-color');
+            }
+
+            @include e(label, $m: before) {
+                color: var-get($_theme, 'label-hover-color');
+            }
+        }
+
+        &:active {
+            @include e(ripple) {
+                @extend %switch-ripple--hover !optional;
+                @extend %switch-ripple--pressed !optional;
+
+                &::after {
+                    background: color($color: 'gray', $variant: 600);
+                }
+            }
+        }
+
+        @include e(input) {
+            @include hide-default();
+        }
+
+        @include e(composite) {
+            display: flex;
+            align-items: center;
+            width: var(--switch-width);
+            height: var(--switch-height);
+            border: rem(1px) solid var-get($_theme, 'border-color');
+            border-radius: var-get($_theme, 'border-radius-track');
+            background: var-get($_theme, 'track-off-color');
+            user-select: none;
+            transition: $input-transition;
+
+            //ripple color
+            --color: #{var-get($_theme, 'track-off-color')};
+        }
+
+        @include e(composite-thumb) {
+            width: var(--switch-thumb-size);
+            height: var(--switch-thumb-size);
+            min-width: var(--switch-thumb-size);
+            border-radius: var-get($_theme, 'border-radius-thumb');
+            transition: $input-transition;
+            transform: translateX(var(--switch-off-offset));
+
+            [dir='rtl'] & {
+                transform: translateX(calc(var(--switch-off-offset) * -1));
+            }
+        }
+
+        @include e(thumb) {
+            position: relative;
+            display: block;
+            width: var(--switch-thumb-size);
+            height: var(--switch-thumb-size);
+            min-width: var(--switch-thumb-size);
+            border-radius: var-get($_theme, 'border-radius-thumb');
+            background: var-get($_theme, 'thumb-off-color');
+            transition: $input-transition;
+        }
+
+        @include e(ripple) {
+            --_ripple-size: #{rem(40px)};
+
+            display: none;
+            position: absolute;
+            top: calc(50% - calc(var(--_ripple-size) / 2));
+            inset-inline-start: calc(50% - calc(var(--_ripple-size) / 2));
+            width: var(--_ripple-size);
+            aspect-ratio: 1;
+            overflow: hidden;
+            pointer-events: none;
+            filter: opacity(1);
+            border-radius: var-get($_theme, 'border-radius-ripple');
+        }
+
+        @include e(label) {
+            @extend %switch-label !optional;
+
+            margin-inline-start: var(--label-margin);
+        }
+
+        @include e(label, $m: before) {
+            @extend %switch-label !optional;
+
+            order: -1;
+            margin-inline-end: var(--label-margin);
+        }
+
+        @include m(focused) {
+            @extend  %igx-switch--focused !optional;
+
+            @include e(ripple) {
+                @extend %switch-ripple--focused !optional;
+            }
+
+            &:hover {
+                @include e(composite) {
+                    @extend %igx-switch--focused--hover !optional;
+                }
+            }
+        }
+
+        @include mx(focused, checked) {
+            @extend  %igx-switch--focused-checked !optional;
+
+            @include e(ripple) {
+                @extend %switch-ripple--focused !optional;
+
+                background: var-get($_theme, 'thumb-on-color');
+            }
+
+            &:hover {
+                @include e(composite) {
+                    background: var-get($_theme, 'track-on-hover-color');
+                    border-color: var-get($_theme, 'border-on-hover-color');
+                }
+
+                @include e(thumb) {
+                    background: var-get($_theme, 'thumb-on-color');
+                }
+            }
+        }
+
+        @include mx(focused, invalid) {
+            @include e(ripple) {
+                @extend %switch-ripple--focused !optional;
+
+                background: var-get($_theme, 'error-color-hover');
+            }
+        }
+
+        @include m(checked) {
+            @include e(composite) {
+                background: var-get($_theme, 'track-on-color');
+                border-color: var-get($_theme, 'border-on-color');
+        
+                //ripple color
+                --color: #{var-get($_theme, 'thumb-on-color')};
+            }
+
+            @include e(composite-thumb) {
+                transform: translateX(calc(var(--switch-width) - var(--switch-thumb-size) - var(--switch-on-offset)));
+
+                [dir='rtl'] & {
+                    transform: translateX(calc((var(--switch-width) - var(--switch-thumb-size) - var(--switch-on-offset)) * -1));
+                }
+            }
+
+            @include e(thumb) {
+                background: var-get($_theme, 'thumb-on-color');
+            }
+
+            &:hover {
+                @include e(ripple) {
+                    @extend %switch-ripple--hover !optional;
+
+                    &::after {
+                        background: var-get($_theme, 'thumb-on-color');
+                    }
+                }
+
+                @include e(composite) {
+                    background: var-get($_theme, 'track-on-hover-color');
+                    border-color: var-get($_theme, 'border-on-hover-color');
+                }
+
+                @include e(thumb) {
+                    background: var-get($_theme, 'thumb-on-color');
+                }
+            }
+
+            &:active {
+                @include e(ripple) {
+                    @extend %switch-ripple--hover !optional;
+                    @extend %switch-ripple--pressed !optional;
+
+                    &::after {
+                        background: var-get($_theme, 'thumb-on-color');
+                    }
+                }
+            }
+        }
+
+        @include m(invalid) {
+            @include e(composite) {
+                border-color: var-get($_theme, 'error-color');
+            }
+
+            &:hover {
+                @include e(ripple) {
+                    @extend %switch-ripple--hover !optional;
+
+                    &::after {
+                        background: var-get($_theme, 'error-color-hover');
+                    }
+                }
+
+                @include e(composite) {
+                    @extend %switch-composite--invalid--hover !optional;
+                }
+            }
+
+            &:active {
+                @include e(ripple) {
+                    @extend %switch-ripple--hover !optional;
+                    @extend %switch-ripple--pressed !optional;
+
+                    &::after {
+                        background: var-get($_theme, 'error-color-hover');
+                    }
+                }
+            }
+
+            @include e(label) {
+                color: var-get($_theme, 'label-invalid-color');
+            }
+        
+            @include e(label, $m: before) {
+                color: var-get($_theme, 'label-invalid-color');
+            }
+
+            @include e(thumb) {
+                background: var-get($_theme, 'error-color');
+            }
+        }
+
+        @include mx(invalid, checked) {
+            @include e(composite) {
+                border-color: var-get($_theme, 'border-on-color');
+            }
+
+            @include e(thumb) {
+                background: var-get($_theme, 'thumb-on-error-color');
+            }
+
+            &:hover {
+                @include e(ripple) {
+                    @extend %switch-ripple--hover !optional;
+
+                    &::after {
+                        background: var-get($_theme, 'thumb-on-color');
+                    }
+                }
+            }
+        }
+
+        @include m(disabled) {
+            user-select: none;
+            pointer-events: none;
+            cursor: initial;
+
+            @include e(composite) {
+                background: var-get($_theme, 'track-disabled-color');
+                border-color: var-get($_theme, 'border-disabled-color');
+            }
+
+            @include e(thumb) {
+                background: var-get($_theme, 'thumb-disabled-color');
+            }
+
+            @include e(label) {
+                color: var-get($_theme, 'label-disabled-color');
+            }
+
+            @include e(label, $m: before) {
+                color: var-get($_theme, 'label-disabled-color');
+            }
+        }
+
+        @include mx(disabled, checked) {
+            @include e(composite) {
+                background: var-get($_theme, 'track-on-disabled-color');
+            }
+
+            @include e(thumb) {
+                background: var-get($_theme, 'thumb-on-disabled-color');
+            }
+        }
+
+        @include mx(disabled, invalid) {
+            @include e(thumb) {
+                background: var-get($_theme, 'thumb-disabled-color');
+            }
+        }
+
+        @include mx(disabled, invalid, checked) {
+            @include e(thumb) {
+                background: var-get($_theme, 'thumb-on-disabled-color');
+            }
+        }
+    }
+}

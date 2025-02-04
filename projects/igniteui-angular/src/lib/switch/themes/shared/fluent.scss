@@ -2,59 +2,65 @@
 @use 'igniteui-theming/sass/themes/functions' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/animations' as *;
-@use '../light/themes' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
 
-$theme: $fluent;
+$_theme: $fluent;
 
-@container style(--theme: fluent) {
-    @include b(igx-switch) {
-        --switch-width: #{rem(40px)};
-        --switch-height: #{rem(20px)};
-        --switch-thumb-size: #{rem(12px)};
-        --switch-on-offset: #{rem(5px)};
-        --switch-off-offset: #{rem(3px)};
-        --label-margin: #{rem(8px)};
-        
-        @include e(label) {
-            @include type-style(body-2) {
-                margin-block: 0;
+@include themed-block(igx-switch, fluent) {
+    --switch-width: #{rem(40px)};
+    --switch-height: #{rem(20px)};
+    --switch-thumb-size: #{rem(12px)};
+    --switch-on-offset: #{rem(5px)};
+    --switch-off-offset: #{rem(3px)};
+    --label-margin: #{rem(8px)};
+    
+    @include e(label) {
+        @include type-style(body-2) {
+            margin-block: 0;
+        }
+    }
+
+    @include m(focused) {
+        @include e(composite) {
+            position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                inset: rem(-3px);
+                box-shadow: 0 0 0 rem(1px) var-get($_theme, 'focus-outline-color');
             }
         }
+    }
 
-        @include m(focused) {
+    @include m(invalid) {
+        &:hover {
             @include e(composite) {
-                position: relative;
-
-                &::after {
-                    content: '';
-                    position: absolute;
-                    inset: rem(-3px);
-                    box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
-                }
+                border-color: var-get($_theme, 'error-color-hover');
             }
 
-            // should be removed after this PR is merged: https://github.com/IgniteUI/igniteui-angular/pull/15298
-            &.igx-checkbox--focused::after {
-                opacity: 0;
+            @include e(thumb) {
+                background: var-get($_theme, 'error-color-hover');
             }
         }
+    }
 
-        @include m(invalid) {
-            &:hover {
-                @include e(composite) {
-                    border-color: var-get($theme, 'error-color-hover');
-                }
-
-                @include e(thumb) {
-                    background: var-get($theme, 'error-color-hover');
-                }
-            }
-        }
-
-        @include mx(disabled, checked) {
+    @include mx(invalid, checked) {
+        &:hover {
             @include e(composite) {
-                border-color: var-get($theme, 'track-on-disabled-color');
+                border-color: var-get($_theme, 'border-on-hover-color');
             }
+
+            @include e(thumb) {
+                background: var-get($_theme, 'thumb-on-color');
+            }
+        }
+    }
+
+    @include mx(disabled, checked) {
+        @include e(composite) {
+            border-color: var-get($_theme, 'track-on-disabled-color');
         }
     }
 }
