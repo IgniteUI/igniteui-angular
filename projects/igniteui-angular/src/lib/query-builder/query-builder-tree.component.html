@@ -98,8 +98,8 @@
             [disabled]="hasEditedExpression"
             (click)="addCondition(expressionItem, afterExpression, true)"
             igxDrop
-            (enter)="onAddConditionEnter(addConditionButton, expressionItem)"
-            (leave)="onChipLeave()"
+            (enter)="dragService.onAddConditionEnter(addConditionButton, expressionItem)"
+            (leave)="dragService.onChipLeave()"
         >
             <ng-container *ngTemplateOutlet="addIcon"></ng-container>
             <span>{{
@@ -123,10 +123,10 @@
         <div
             #dragRef
             igxDrop
-            (enter)="onChipEnter(dragRef, expressionItem, true)"
-            (over)="onDivOver(dragRef, expressionItem)"
-            (leave)="onChipLeave()"
-            (dropped)="onDivDropped(expressionItem)"
+            (enter)="dragService.onChipEnter(dragRef, expressionItem, true)"
+            (over)="dragService.onDivOver(dragRef, expressionItem)"
+            (leave)="dragService.onChipLeave()"
+            (dropped)="dragService.onDivDropped(expressionItem)"
             *ngIf="!expressionItem.inEditMode"
             class="igx-filter-tree__expression-item"
             (mouseenter)="expressionItem.hovered = true"
@@ -139,12 +139,12 @@
                 [draggable]="canBeDragged()"
                 [hideBaseOnDrag] = "false"
                 [animateOnRelease] = "false"
-                (moveStart)="canBeDragged() ? onMoveStart(dragRef, expressionItem, false): null"
-                (moveEnd)="onMoveEnd()"
-                (dragEnter)="onChipEnter(dragRef, expressionItem, false)"
-                (dragOver)="onChipOver(dragRef, false)"
-                (dragLeave)="onChipLeave()"
-                (dragDrop)="onChipDropped()"
+                (moveStart)="canBeDragged() ? dragService.onMoveStart(dragRef, expressionItem, false): null"
+                (moveEnd)="dragService.onMoveEnd()"
+                (dragEnter)="dragService.onChipEnter(dragRef, expressionItem, false)"
+                (dragOver)="dragService.onChipOver(dragRef, false)"
+                (dragLeave)="dragService.onChipLeave()"
+                (dragDrop)="dragService.onChipDropped()"
                 #target="tooltipTarget"
                 [igxTooltipTarget]="tooltipRef"
                 [data]="expressionItem"
@@ -157,8 +157,8 @@
                 <igx-icon igxPrefix
                     class="igx-drag-indicator"
                     tabindex="0"
-                    (focus)="onChipDragIndicatorFocus(dragRef, expressionItem)"
-                    (focusout)="onChipDragIndicatorFocusOut()"
+                    (focus)="dragService.onChipDragIndicatorFocus(dragRef, expressionItem)"
+                    (focusout)="dragService.onChipDragIndicatorFocusOut()"
                     family="default" name="drag_indicator"
                 >
                 </igx-icon>
@@ -257,10 +257,10 @@
         <div #editingInputsContainer class="igx-filter-tree__subquery" >
             <div
                 igxDrop
-                (enter)="onChipEnter(editingInputsContainer, expressionItem, true)"
-                (over)="onDivOver(editingInputsContainer, expressionItem)"
-                (leave)="onChipLeave()"
-                (dropped)="onDivDropped(expressionItem)"
+                (enter)="dragService.onChipEnter(editingInputsContainer, expressionItem, true)"
+                (over)="dragService.onDivOver(editingInputsContainer, expressionItem)"
+                (leave)="dragService.onChipLeave()"
+                (dropped)="dragService.onDivDropped(expressionItem)"
                 *ngIf="expressionItem.inEditMode"
                 class="igx-filter-tree__inputs"
             >
@@ -450,7 +450,7 @@
 
     <ng-template #expressionGroupTemplate let-expressionItem>
         <div class="igx-filter-tree"
-            (focusout)="parentExpression? null : onDragFocusOut()">
+            (focusout)="parentExpression? null : dragService.onDragFocusOut()">
             <div
                 class="igx-filter-tree__line"
                 [ngClass]="{
@@ -463,9 +463,9 @@
                 <div class="igx-filter-tree__expression-context-menu"
                     #groupRef
                     igxDrop
-                    (enter)="onGroupRootOver(groupRef, expressionItem)"
-                    (over)="onGroupRootOver(groupRef, expressionItem)"
-                    (leave)="onChipLeave()"
+                    (enter)="dragService.onGroupRootOver(groupRef, expressionItem)"
+                    (over)="dragService.onGroupRootOver(groupRef, expressionItem)"
+                    (leave)="dragService.onChipLeave()"
                 >
                     <button #changeGroupButton
                             [ngClass]="{
@@ -481,9 +481,9 @@
                     >
                         <span
                             igxDrop
-                            (enter)="onGroupRootOver(groupRef, expressionItem)"
-                            (over)="onGroupRootOver(groupRef, expressionItem)"
-                            (leave)="onChipLeave()"
+                            (enter)="dragService.onGroupRootOver(groupRef, expressionItem)"
+                            (over)="dragService.onGroupRootOver(groupRef, expressionItem)"
+                            (leave)="dragService.onChipLeave()"
                         >
                             {{getOperator(expressionItem) === 0 ? this.resourceStrings.igx_query_builder_and_label : this.resourceStrings.igx_query_builder_or_label}}
                         </span>
