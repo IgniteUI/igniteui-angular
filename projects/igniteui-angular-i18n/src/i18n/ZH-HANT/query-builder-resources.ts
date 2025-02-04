@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsZHHANT = {
     igx_query_builder_column_placeholder: '選擇列',
     igx_query_builder_condition_placeholder: '選擇篩選條件',
     igx_query_builder_value_placeholder: '數值',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: '所有領域',
     igx_query_builder_details: '詳細資訊',
     igx_query_builder_search: '搜尋',

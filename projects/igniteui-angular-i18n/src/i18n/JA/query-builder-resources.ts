@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsJA = {
     igx_query_builder_column_placeholder: '列の選択',
     igx_query_builder_condition_placeholder: 'フィルターの選択',
     igx_query_builder_value_placeholder: '値',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: 'すべてのフィールド',
     igx_query_builder_details: '詳細',
     igx_query_builder_search: '検索',

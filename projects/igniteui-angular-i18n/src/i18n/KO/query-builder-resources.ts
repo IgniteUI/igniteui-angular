@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsKO = {
     igx_query_builder_column_placeholder: '열 선택',
     igx_query_builder_condition_placeholder: '필터 선택',
     igx_query_builder_value_placeholder: '값',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: '모든 분야',
     igx_query_builder_details: '세부',
     igx_query_builder_search: '검색',

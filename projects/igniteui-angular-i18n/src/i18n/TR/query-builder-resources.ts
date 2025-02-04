@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsTR = {
     igx_query_builder_column_placeholder: 'Sütun seç',
     igx_query_builder_condition_placeholder: 'Filtre seç',
     igx_query_builder_value_placeholder: 'Değer',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: 'Tüm alanlar',
     igx_query_builder_details: 'Detaylar',
     igx_query_builder_search: 'Arama',

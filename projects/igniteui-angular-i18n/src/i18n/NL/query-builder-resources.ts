@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsNL = {
     igx_query_builder_column_placeholder: 'Selecteer kolom',
     igx_query_builder_condition_placeholder: 'Selecteer filter',
     igx_query_builder_value_placeholder: 'Waarde',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: 'Alle velden',
     igx_query_builder_details: 'Details',
     igx_query_builder_search: 'Zoeken',

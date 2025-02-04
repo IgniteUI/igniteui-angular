@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsES = {
     igx_query_builder_column_placeholder: 'Seleccionar columna',
     igx_query_builder_condition_placeholder: 'Seleccionar filtro',
     igx_query_builder_value_placeholder: 'Valor',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: 'Todos los campos',
     igx_query_builder_details: 'Detalles',
     igx_query_builder_search: 'Buscar',

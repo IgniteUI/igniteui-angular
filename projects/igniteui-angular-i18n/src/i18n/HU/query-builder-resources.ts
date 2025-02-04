@@ -63,6 +63,7 @@ export const QueryBuilderResourceStringsHU = {
     igx_query_builder_column_placeholder: 'Oszlop kiválasztása',
     igx_query_builder_condition_placeholder: 'Szűrő kiválasztása',
     igx_query_builder_value_placeholder: 'Érték',
+    igx_query_builder_query_value_placeholder: 'Sub-query results',
     igx_query_builder_all_fields: 'Minden mező',
     igx_query_builder_details: 'Részletek',
     igx_query_builder_search: 'Keresés',
