@@ -1,0 +1,33 @@
+<div class="sample-wrapper">
+    <article class="sample-column">
+        <h4 class="sample-title">Angular Snackbar vs WebComponents Snackbar</h4>
+        <div class="snackbar-sample">
+            <div class="snackbar-container">
+                <igx-snackbar
+                    #snackbar
+                    [outlet]="outlet"
+                    [actionText]="properties.actionText"
+                    [autoHide]="!properties.keepOpen"
+                    [displayTime]="properties.displayTime"
+                >Angular Snackbar Message
+                </igx-snackbar>
+            </div>
+            <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+        </div>
+        <button igxButton (click)="snackbar.toggle(); snackbar2.toggle()">Toggle Snackbars</button>
+    </article>
+</div>
+
+<div class="sample-wrapper">
+    <article class="sample-column">
+        <div class="snackbar-sample">
+            <igc-snackbar #snackbar2
+            [actionText]="properties.actionText"
+            [keepOpen]="properties.keepOpen"
+            [displayTime]="properties.displayTime">
+                WebCom Snackbar Message
+            </igc-snackbar>
+        </div>
+    </article>
+</div>
+

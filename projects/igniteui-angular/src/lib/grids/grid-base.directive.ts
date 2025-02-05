@@ -37,7 +37,7 @@ import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { GridColumnDataType } from '../data-operations/data-util';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightService } from '../directives/text-highlight/text-highlight.service';
@@ -178,6 +178,7 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { isTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 
 interface IMatchInfoCache {
     row: any;
@@ -1845,18 +1846,21 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     public set filteringExpressionsTree(value) {
-        if (value && value instanceof FilteringExpressionsTree) {
-            const val = (value as FilteringExpressionsTree);
-            for (let index = 0; index < val.filteringOperands.length; index++) {
-                if (!(val.filteringOperands[index] instanceof FilteringExpressionsTree)) {
-                    const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, val.filteringOperands[index].fieldName);
-                    newExpressionsTree.filteringOperands.push(val.filteringOperands[index] as IFilteringExpression);
-                    val.filteringOperands[index] = newExpressionsTree;
+        if (value && isTree(value)) {
+            for (let index = 0; index < value.filteringOperands.length; index++) {
+                if (!(isTree(value.filteringOperands[index]))) {
+                    const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, value.filteringOperands[index].fieldName);
+                    newExpressionsTree.filteringOperands.push(value.filteringOperands[index]);
+                    value.filteringOperands[index] = newExpressionsTree;
                 }
             }
 
             value.type = FilteringExpressionsTreeType.Regular;
-            this._filteringExpressionsTree = value;
+            if (value && this.columns) {
+                this._filteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
+            } else {
+                this._filteringExpressionsTree = value;
+            }
             this.filteringPipeTrigger++;
             this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
@@ -1900,9 +1904,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             return;
         }
 
-        if (value && value instanceof FilteringExpressionsTree) {
+        if (value && isTree(value)) {
             value.type = FilteringExpressionsTreeType.Advanced;
-            this._advancedFilteringExpressionsTree = value;
+            this._advancedFilteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
             this.filteringPipeTrigger++;
         } else {
             this._advancedFilteringExpressionsTree = null;
@@ -3007,6 +3011,12 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public filteringPipeTrigger = 0;
+
+    /**
+     * @hidden @internal
+     */
+    public isColumnWidthSum = false;
+
     /**
      * @hidden @internal
      */
@@ -3208,7 +3218,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
-    protected isColumnWidthSum = false;
+
     private _currencyPositionLeft: boolean;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
@@ -3241,7 +3251,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    protected get minColumnWidth() {
+    public get minColumnWidth() {
         return MINIMUM_COLUMN_WIDTH;
     }
 
@@ -4266,7 +4276,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * Gets/Sets the outlet used to attach the grid's overlays to.
      *
-     * @remark
+     * @remarks
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
     @Input()
@@ -4548,7 +4558,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
-            totalWidth += parseInt(cols[i].calcWidth, 10) || 0;
+            totalWidth += parseFloat(cols[i].calcWidth) || 0;
         }
         this._totalWidth = totalWidth;
         return totalWidth;
@@ -4930,7 +4940,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @param value
      * @param condition
      * @param ignoreCase
-     * @deprecated in version 19.0.0. 
+     * @deprecated in version 19.0.0.
      */
     public filterGlobal(value: any, condition, ignoreCase?) {
         this.filteringService.filterGlobal(value, condition, ignoreCase);
@@ -5394,7 +5404,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             computedWidth = baseWidth;
         } else {
             computedWidth = this.calcWidth ||
-                parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
+                parseFloat(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'));
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
@@ -5418,7 +5428,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
                 const colWidth = curr.width;
-                let widthValue = parseInt(colWidth, 10);
+                let widthValue = parseFloat(colWidth);
                 if (isNaN(widthValue)) {
                     widthValue = MINIMUM_COLUMN_WIDTH;
                 }
@@ -5434,9 +5444,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
         computedWidth -= this.featureColumnsWidth();
 
-        const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
+        const columnWidth = !Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth));
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth);
 
         return columnWidth + 'px';
     }
@@ -6496,8 +6506,10 @@ export abstract class IgxGridBaseDirective implements GridType,
 
 
         if (this.width === null || !width) {
-            width = this.getColumnWidthSum();
             this.isColumnWidthSum = true;
+            width = this.getColumnWidthSum();
+        } else {
+            this.isColumnWidthSum = false;
         }
 
         if (this.hasVerticalScroll() && this.width !== null) {
@@ -6518,8 +6530,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : this.minColumnWidth + 'px';
         }
         this._columns.forEach((column: IgxColumnComponent) => {
-            if (this.hasColumnLayouts && parseInt(this._columnWidth, 10)) {
-                const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
+            if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
+                const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
                 // D.K. March 29th, 2021 #9145 Consider min/max width when setting defaultWidth property
@@ -6592,6 +6604,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             .filter((c) => c.pinned);
         this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
         this._columns = newColumns;
+        if (this._columns && this._filteringExpressionsTree) {
+            this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
+        }
         this.resetCaches();
     }
 
@@ -6653,6 +6668,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.autogenerateColumns();
         } else {
             this._columns = this.getColumnList();
+            if (this._columns && this._filteringExpressionsTree) {
+                this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
+            }
         }
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
@@ -7524,7 +7542,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected get renderedActualRowHeight() {
         let border = 1;
         if (this.rowList.toArray().length > 0) {
-            const rowStyles = document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
+            const rowStyles = this.document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
             border = rowStyles.borderBottomWidth ? Math.ceil(parseFloat(rowStyles.borderBottomWidth)) : border;
         }
         return this.rowHeight + border;

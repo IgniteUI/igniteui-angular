@@ -18,12 +18,14 @@ import {
     QueryList,
     RendererStyleFlags2,
     booleanAttribute,
-    EmbeddedViewRef
+    EmbeddedViewRef,
+    inject
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { IDropStrategy, IgxDefaultDropStrategy } from './drag-drop.strategy';
+import { DOCUMENT } from '@angular/common';
 
 enum DragScrollDirection {
     UP,
@@ -551,7 +553,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected set ghostLeft(pageX: number) {
         if (this.ghostElement) {
             // We need to take into account marginLeft, since top style does not include margin, but pageX includes the margin.
-            const ghostMarginLeft = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
+            const ghostMarginLeft = parseInt(this.document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
             // If ghost host is defined it needs to be taken into account.
             this.ghostElement.style.left = (pageX - ghostMarginLeft - this._ghostHostX) + 'px';
         }
@@ -566,7 +568,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected set ghostTop(pageY: number) {
         if (this.ghostElement) {
             // We need to take into account marginTop, since top style does not include margin, but pageY includes the margin.
-            const ghostMarginTop = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
+            const ghostMarginTop = parseInt(this.document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
             // If ghost host is defined it needs to be taken into account.
             this.ghostElement.style.top = (pageY - ghostMarginTop - this._ghostHostY) + 'px';
         }
@@ -579,19 +581,19 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     protected get windowScrollTop() {
-        return document.documentElement.scrollTop || window.scrollY;
+        return this.document.documentElement.scrollTop || window.scrollY;
     }
 
     protected get windowScrollLeft() {
-        return document.documentElement.scrollLeft || window.scrollX;
+        return this.document.documentElement.scrollLeft || window.scrollX;
     }
 
     protected get windowScrollHeight() {
-        return document.documentElement.scrollHeight;
+        return this.document.documentElement.scrollHeight;
     }
 
     protected get windowScrollWidth() {
-        return document.documentElement.scrollWidth;
+        return this.document.documentElement.scrollWidth;
     }
 
     /**
@@ -641,6 +643,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _scrollContainerStepMs = 10;
     protected _scrollContainerThreshold = 25;
     protected _containerScrollIntervalId = null;
+    private document = inject(DOCUMENT);
 
     /**
      * Sets the offset of the dragged element relative to the mouse in pixels.
@@ -690,7 +693,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         public viewContainer: ViewContainerRef,
         public zone: NgZone,
         public renderer: Renderer2,
-        protected platformUtil: PlatformUtil,
+        protected platformUtil: PlatformUtil
     ) {
     }
 
@@ -746,20 +749,20 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
             // We should bind to document events only once when there are no pointer events.
             if (!this.pointerEventsEnabled && this.touchEventsEnabled) {
-                fromEvent(document.defaultView, 'touchmove').pipe(
+                fromEvent(this.document.defaultView, 'touchmove').pipe(
                     throttle(() => interval(0, animationFrameScheduler)),
                     takeUntil(this._destroy)
                 ).subscribe((res) => this.onPointerMove(res));
 
-                fromEvent(document.defaultView, 'touchend').pipe(takeUntil(this._destroy))
+                fromEvent(this.document.defaultView, 'touchend').pipe(takeUntil(this._destroy))
                     .subscribe((res) => this.onPointerUp(res));
             } else if (!this.pointerEventsEnabled) {
-                fromEvent(document.defaultView, 'mousemove').pipe(
+                fromEvent(this.document.defaultView, 'mousemove').pipe(
                     throttle(() => interval(0, animationFrameScheduler)),
                     takeUntil(this._destroy)
                 ).subscribe((res) => this.onPointerMove(res));
 
-                fromEvent(document.defaultView, 'mouseup').pipe(takeUntil(this._destroy))
+                fromEvent(this.document.defaultView, 'mouseup').pipe(takeUntil(this._destroy))
                     .subscribe((res) => this.onPointerUp(res));
             }
             this.element.nativeElement.addEventListener('transitionend', this.onTransitionEnd.bind(this));
@@ -1140,9 +1143,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             if (this.ghostHost && !Array.from(this.ghostHost.children).includes(this.ghostElement)) {
                 ghostReattached = true;
                 this.ghostHost.appendChild(this.ghostElement);
-            } else if (!this.ghostHost && !Array.from(document.body.children).includes(this.ghostElement)) {
+            } else if (!this.ghostHost && !Array.from(this.document.body.children).includes(this.ghostElement)) {
                 ghostReattached = true;
-                document.body.appendChild(this.ghostElement);
+                this.document.body.appendChild(this.ghostElement);
             }
 
             if (ghostReattached) {
@@ -1293,11 +1296,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this.ghostHost) {
             this.ghostHost.appendChild(this.ghostElement);
         } else {
-            document.body.appendChild(this.ghostElement);
+            this.document.body.appendChild(this.ghostElement);
         }
 
-        const ghostMarginLeft = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
-        const ghostMarginTop = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
+        const ghostMarginLeft = parseInt(this.document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
+        const ghostMarginTop = parseInt(this.document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
         this.ghostElement.style.left = (this._ghostStartX - ghostMarginLeft + totalMovedX - this._ghostHostX) + 'px';
         this.ghostElement.style.top = (this._ghostStartY - ghostMarginTop + totalMovedY - this._ghostHostY) + 'px';
 
@@ -1417,13 +1420,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         // using window.pageXOffset for IE9 compatibility
         const viewPortX = pageX - window.pageXOffset;
         const viewPortY = pageY - window.pageYOffset;
-        if (document['msElementsFromPoint']) {
+        if (this.document['msElementsFromPoint']) {
             // Edge and IE special snowflakes
-            const elements = document['msElementsFromPoint'](viewPortX, viewPortY);
+            const elements = this.document['msElementsFromPoint'](viewPortX, viewPortY);
             return elements === null ? [] : elements;
         } else {
             // Other browsers like Chrome, Firefox, Opera
-            return document.elementsFromPoint(viewPortX, viewPortY);
+            return this.document.elementsFromPoint(viewPortX, viewPortY);
         }
     }
 
@@ -1483,8 +1486,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected getGhostHostBaseOffsetX() {
         if (!this.ghostHost) return 0;
 
-        const ghostPosition = document.defaultView.getComputedStyle(this.ghostHost).getPropertyValue('position');
-        if (ghostPosition === 'static' && this.ghostHost.offsetParent && this.ghostHost.offsetParent === document.body) {
+        const ghostPosition = this.document.defaultView.getComputedStyle(this.ghostHost).getPropertyValue('position');
+        if (ghostPosition === 'static' && this.ghostHost.offsetParent && this.ghostHost.offsetParent === this.document.body) {
             return 0;
         } else if (ghostPosition === 'static' && this.ghostHost.offsetParent) {
             return this.ghostHost.offsetParent.getBoundingClientRect().left + this.windowScrollLeft;
@@ -1495,8 +1498,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected getGhostHostBaseOffsetY() {
         if (!this.ghostHost) return 0;
 
-        const ghostPosition = document.defaultView.getComputedStyle(this.ghostHost).getPropertyValue('position');
-        if (ghostPosition === 'static' && this.ghostHost.offsetParent && this.ghostHost.offsetParent === document.body) {
+        const ghostPosition = this.document.defaultView.getComputedStyle(this.ghostHost).getPropertyValue('position');
+        if (ghostPosition === 'static' && this.ghostHost.offsetParent && this.ghostHost.offsetParent === this.document.body) {
             return 0;
         } else if (ghostPosition === 'static' && this.ghostHost.offsetParent) {
             return this.ghostHost.offsetParent.getBoundingClientRect().top + this.windowScrollTop;
@@ -1540,8 +1543,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             let yDir = scrollDir == DragScrollDirection.UP ? -1 : (scrollDir == DragScrollDirection.DOWN ? 1 : 0);
             if (!this.scrollContainer) {
                 // Cap scrolling so we don't scroll past the window max scroll position.
-                const maxScrollX = this._originalScrollContainerWidth - document.documentElement.clientWidth;
-                const maxScrollY = this._originalScrollContainerHeight - document.documentElement.clientHeight;
+                const maxScrollX = this._originalScrollContainerWidth - this.document.documentElement.clientWidth;
+                const maxScrollY = this._originalScrollContainerHeight - this.document.documentElement.clientHeight;
                 xDir = (this.windowScrollLeft <= 0 && xDir < 0) || (this.windowScrollLeft >= maxScrollX && xDir > 0) ? 0 : xDir;
                 yDir = (this.windowScrollTop <= 0 && yDir < 0) || (this.windowScrollTop >= maxScrollY && yDir > 0) ? 0 : yDir;
             } else {

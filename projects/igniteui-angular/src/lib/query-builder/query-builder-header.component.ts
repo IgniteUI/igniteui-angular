@@ -1,12 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
-import { NgIf } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 @Component({
     selector: 'igx-query-builder-header',
-    templateUrl: 'query-builder-header.component.html',
-    imports: [NgIf]
+    templateUrl: 'query-builder-header.component.html'
 })
 export class IgxQueryBuilderHeaderComponent {
 

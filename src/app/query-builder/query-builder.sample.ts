@@ -28,7 +28,6 @@ import {IgxQueryBuilderTreeComponent} from "igniteui-angular/src/lib/query-build
     selector: 'app-query-builder-sample',
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
-    standalone: true,
     imports: [FormsModule, IGX_DIALOG_DIRECTIVES, IgxComboComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, CommonModule, IgxQueryBuilderSearchValueTemplateDirective, IgxQueryBuilderTreeComponent]
 })
 export class QueryBuilderComponent implements OnInit {

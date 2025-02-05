@@ -1,0 +1,35 @@
+<section class="sample-content">
+    <article class="linear-samples sample-column">
+        <h4 class="sample-title">Linear progress Angular</h4>
+        <div class="linear-container">
+            <igx-linear-bar
+            [striped]="properties.striped"
+            [indeterminate]="properties.indeterminate"
+            [value]="properties.value"
+            [type]="variantAngular"
+            [text]="properties.text"
+            [animationDuration]="properties.animationDuration"
+            [textVisibility]="!properties.hideLabel"
+            [animate]="properties.hasAnimation"
+            [max]="properties.max"
+            [textTop]="getTextAlignmentConfig(properties.labelAlign).textTop"
+            [textAlign]="getTextAlignmentConfig(properties.labelAlign).textAlign">
+            </igx-linear-bar>
+        </div>
+
+        <h4 class="sample-title">Linear progress WC</h4>
+        <div class="linear-container">
+            <igc-linear-progress
+            [striped]="properties.striped"
+            [labelFormat]="properties.text"
+            [attr.indeterminate]="properties.indeterminate ? true : null"
+            [animationDuration]="properties.animationDuration"
+            [max]="properties.max"
+            [value]="properties.value"
+            [variant]="properties.variant"
+            [hideLabel]="properties.hideLabel"
+            [labelAlign]="properties.labelAlign">
+            </igc-linear-progress>
+        </div>
+    </article>
+</section>

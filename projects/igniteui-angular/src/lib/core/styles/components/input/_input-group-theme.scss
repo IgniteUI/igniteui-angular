@@ -11,7 +11,6 @@
 ////
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $idle-text-color [null] - The input text color in the idle state.
 /// @param {Color} $filled-text-color [null] - The input text color in the filled state.
 /// @param {Color} $filled-text-hover-color [null] - The input text color in the filled state on hover.
@@ -67,7 +66,6 @@
 ///   @include css-vars($my-input-group-theme);
 @function input-group-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $box-background: null,
     $box-background-hover: null,
@@ -340,14 +338,14 @@
     );
 
     $hint-spacing-block: map.get((
-        'material': rem(5px),
+        'material': rem(4px),
         'fluent': rem(5px),
         'bootstrap': rem(4px),
         'indigo': rem(4px),
     ), $variant);
 
     $hint-spacing-inline: map.get((
-        'material': rem(16px),
+        'material': sizable(rem(14px), rem(16px), rem(18px)),
         'fluent': 0,
         'bootstrap': 0,
         'indigo': 0,
@@ -422,10 +420,13 @@
         }
 
         input,
-        textarea,
-        span {
+        textarea {
             font: inherit;
             margin: 0;
+        }
+
+        span {
+            font-family: inherit;
         }
 
         input[type='file'] {
@@ -1386,7 +1387,7 @@
         position: relative;
         display: flex;
         padding-block-start: $hint-spacing-block;
-        padding-inline-start: $hint-spacing-inline;
+        padding-inline: $hint-spacing-inline;
 
         justify-content: space-between;
 

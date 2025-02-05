@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { PlatformUtil } from '../core/utils';
@@ -28,7 +27,7 @@ import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
 
-import { IgxOverlayOutletDirective, IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { FieldType, EntityType } from '../grids/common/grid.interface';
 import { IgxSelectComponent } from '../select/select.component';
 import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/overlay/utilities';
@@ -39,13 +38,11 @@ import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-commo
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxSelectItemComponent } from '../select/select-item.component';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IComboSelectionChangingEventArgs, IgxComboComponent } from "../combo/combo.component";
-import { IgxLabelDirective } from '../input-group/public_api';
 import { IgxComboHeaderDirective } from '../combo/public_api';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from "../checkbox/checkbox.component";
 import { IgxDialogComponent } from "../dialog/dialog.component";
@@ -54,12 +51,12 @@ import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
-import { IgxChipsAreaComponent } from "../chips/chips-area.component";
-import { IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
+import { IgxDragIgnoreDirective, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
+import { isTree } from '../data-operations/expressions-tree-util';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -129,15 +126,13 @@ class ExpressionOperandItem extends ExpressionItem {
     selector: 'igx-query-builder-tree',
     templateUrl: './query-builder-tree.component.html',
     host: { 'class': 'igx-query-builder-tree' },
-    standalone: true,
+    // standalone: true,
     imports: [
         NgIf,
-        IgxQueryBuilderHeaderComponent,
         IgxButtonDirective,
         IgxIconComponent,
         IgxChipComponent,
         IgxPrefixDirective,
-        IgxSuffixDirective,
         IgxSelectComponent,
         FormsModule,
         NgFor,
@@ -151,24 +146,17 @@ class ExpressionOperandItem extends ExpressionItem {
         IgxDateTimeEditorDirective,
         NgTemplateOutlet,
         NgClass,
-        IgxToggleDirective,
-        IgxButtonGroupComponent,
         IgxOverlayOutletDirective,
         DatePipe,
         IgxFieldFormatterPipe,
         IgxIconButtonDirective,
-        IgxToggleActionDirective,
         IgxComboComponent,
-        IgxLabelDirective,
         IgxComboHeaderDirective,
         IgxCheckboxComponent,
         IgxDialogComponent,
         IgxTooltipTargetDirective,
         IgxTooltipDirective,
-        IgxChipsAreaComponent,
-        IgxDragDirective,
         IgxDragIgnoreDirective,
-        IgxDragHandleDirective,
         IgxDropDirective,
         IgxDropDownComponent,
         IgxDropDownItemComponent,
@@ -1473,7 +1461,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         const exprTreeCopy = new FilteringExpressionsTree(expressionTree.operator, expressionTree.fieldName, expressionTree.entity, expressionTree.returnFields);
         exprTreeCopy.filteringOperands = [];
 
-        expressionTree.filteringOperands.forEach(o => o instanceof FilteringExpressionsTree ? exprTreeCopy.filteringOperands.push(this.getExpressionTreeCopy(o)) : exprTreeCopy.filteringOperands.push(o));
+        expressionTree.filteringOperands.forEach(o => isTree(o) ? exprTreeCopy.filteringOperands.push(this.getExpressionTreeCopy(o)) : exprTreeCopy.filteringOperands.push(o));
 
         if (!this.innerQueryNewExpressionTree && shouldAssignInnerQueryExprTree) {
             this.innerQueryNewExpressionTree = exprTreeCopy;
@@ -1601,14 +1589,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             }
 
             for (const expr of expressionTree.filteringOperands) {
-                if (expr instanceof FilteringExpressionsTree) {
+                if (isTree(expr)) {
                     groupItem.children.push(this.createExpressionGroupItem(expr, groupItem, expressionTree.entity));
                 } else {
                     const filteringExpr = expr as IFilteringExpression;
                     const exprCopy: IFilteringExpression = {
                         fieldName: filteringExpr.fieldName,
                         condition: filteringExpr.condition,
-                        conditionName: filteringExpr.condition.name,
+                        conditionName: filteringExpr.condition?.name || filteringExpr.conditionName,
                         searchVal: filteringExpr.searchVal,
                         searchTree: filteringExpr.searchTree,
                         ignoreCase: filteringExpr.ignoreCase

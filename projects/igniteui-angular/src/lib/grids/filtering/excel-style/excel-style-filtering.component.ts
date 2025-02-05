@@ -40,6 +40,7 @@ import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
 import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
+import { isTree } from '../../../data-operations/expressions-tree-util';
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]',
@@ -509,7 +510,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.filterValues = this.generateFilterValues();
         this.generateListData();
         this.expressionsList.forEach(expr => {
-            if (this.column.dataType === GridColumnDataType.String && this.column.filteringIgnoreCase && expr.expression.searchVal) {
+            if (this.column.dataType === GridColumnDataType.String && this.column.filteringIgnoreCase
+                && expr.expression.searchVal && expr.expression.searchVal instanceof Set) {
                 this.modifyExpression(expr);
             }
         });
@@ -584,7 +586,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
 
         for (const operand of gridExpressionsTree.filteringOperands) {
-            if (operand instanceof FilteringExpressionsTree) {
+            if (isTree(operand)) {
                 const columnExprTree = operand as FilteringExpressionsTree;
                 if (columnExprTree.fieldName === this.column.field) {
                     continue;
