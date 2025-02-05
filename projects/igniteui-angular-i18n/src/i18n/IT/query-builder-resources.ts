@@ -76,4 +76,5 @@ export const QueryBuilderResourceStringsIT = {
     igx_query_builder_dialog_checkbox_text: 'Non visualizzare più questo messaggio',
     igx_query_builder_dialog_cancel: 'Annulla',
     igx_query_builder_dialog_confirm: 'Conferma',
+    igx_query_builder_drop_ghost_text: 'Drop here to insert'
 } satisfies MakeRequired<IQueryBuilderResourceStrings>;

@@ -2380,7 +2380,8 @@ describe('IgxQueryBuilder', () => {
         igx_query_builder_dialog_message: 'My changing entity message',
         igx_query_builder_dialog_checkbox_text: 'My do not show this dialog again',
         igx_query_builder_dialog_cancel: 'My Cancel',
-        igx_query_builder_dialog_confirm: 'My Confirm'
+        igx_query_builder_dialog_confirm: 'My Confirm',
+        igx_query_builder_drop_ghost_text: 'My Drop here to insert'
       });
       fix.detectChanges();
 
@@ -2415,6 +2416,18 @@ describe('IgxQueryBuilder', () => {
       expect(dialogOutlet.querySelector('.igx-query-builder-dialog').children[1].textContent.trim()).toBe('My do not show this dialog again');
       expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[0].textContent.trim()).toBe('My Cancel');
       expect(dialogOutlet.querySelector('.igx-dialog__window-actions').children[1].textContent.trim()).toBe('My Confirm');
+
+      //Drag ghost text check
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+      const draggedChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[3].componentInstance;
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 10, 10, false);
+      const dropGhost = QueryBuilderFunctions.getDropGhost(fix) as HTMLElement;
+      expect(draggedChip.dragDirective.ghostElement).toBeTruthy();
+      expect(dropGhost).toBeDefined();
+      expect(dropGhost.innerText).toBe('My Drop here to insert');
     }));
   });
 
@@ -2920,13 +2933,13 @@ describe('IgxQueryBuilder', () => {
     it('should render drop ghost properly when keyboard dragged.', () => {
       const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[1];
       const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
-      
+
       draggedIndicator.triggerEventHandler('focus', {});
       draggedIndicator.nativeElement.focus();
-      
+
       spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
       const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
-      
+
       //pass 1 down to bottom
       let keyPress = new KeyboardEvent('keydown', { code: 'ArrowDown' });
       for (let i = 0; i <= 5; i++) {

@@ -76,4 +76,5 @@ export const QueryBuilderResourceStringsTR = {
     igx_query_builder_dialog_checkbox_text: 'Bu iletişim kutusunu bir daha gösterme',
     igx_query_builder_dialog_cancel: 'İptal',
     igx_query_builder_dialog_confirm: 'Onayla',
+    igx_query_builder_drop_ghost_text: 'Drop here to insert'
 } satisfies MakeRequired<IQueryBuilderResourceStrings>;

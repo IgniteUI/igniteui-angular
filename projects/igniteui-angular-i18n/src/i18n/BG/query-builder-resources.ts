@@ -76,4 +76,5 @@ export const QueryBuilderResourceStringsBG = {
     igx_query_builder_dialog_checkbox_text: 'Не показвай този диалогов прозорец отново',
     igx_query_builder_dialog_cancel: 'Отказ',
     igx_query_builder_dialog_confirm: 'Потвърди',
+    igx_query_builder_drop_ghost_text: 'Drop here to insert'
 } satisfies MakeRequired<IQueryBuilderResourceStrings>;

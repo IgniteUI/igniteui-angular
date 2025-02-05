@@ -71,6 +71,7 @@ export interface IQueryBuilderResourceStrings {
     igx_query_builder_dialog_checkbox_text?: string;
     igx_query_builder_dialog_cancel?: string;
     igx_query_builder_dialog_confirm?: string;
+    igx_query_builder_drop_ghost_text?: string;
 }
 
 export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
@@ -146,4 +147,5 @@ export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
     igx_query_builder_dialog_checkbox_text: 'Do not show this dialog again',
     igx_query_builder_dialog_cancel: 'Cancel',
     igx_query_builder_dialog_confirm: 'Confirm',
+    igx_query_builder_drop_ghost_text: 'Drop here to insert'
 };
