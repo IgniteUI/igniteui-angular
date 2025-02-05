@@ -240,8 +240,7 @@ export class IgxQueryBuilderDragService {
 
         if (!keyboardMode) {
             var span = document.createElement('span')
-            //TODO Localize string
-            span.innerHTML = "Drop here to insert";
+            span.innerHTML = this._queryBuilderTreeComponent.resourceStrings.igx_query_builder_drop_ghost_text;
 
             dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
             dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
