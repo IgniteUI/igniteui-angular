@@ -2917,64 +2917,144 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(newGroupConditions[0])).toBe("OrderDate  Today");
     });
 
-    it('should render drop ghost properly when keyboard dragged.', async () => {
+    it('should render drop ghost properly when keyboard dragged.', () => {
       const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[1];
       const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
-      let keyPress = new KeyboardEvent('keydown', { code: 'ArrowDown' });
-
+      
       draggedIndicator.triggerEventHandler('focus', {});
       draggedIndicator.nativeElement.focus();
-
+      
       spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
       const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
-
+      
+      //pass 1 down to bottom
+      let keyPress = new KeyboardEvent('keydown', { code: 'ArrowDown' });
       for (let i = 0; i <= 5; i++) {
         tree.nativeElement.dispatchEvent(keyPress);
-        await wait();
+        wait();
         fix.detectChanges();
 
+        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
+        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
+        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
         const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
 
         switch (true) {
           case i === 0:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toBeNull();
+            expect(nextElement).toEqual("OrderName  Ends With  a");
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 1:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toEqual("OrderName  Ends With  a");
+            expect(nextElement).toBeUndefined();
             expect(newChipContents[5]).toBe(dropGhostContent);
             break;
-          case i >= 2:
+          case i === 2:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toEqual("OrderDate  Today");
+            expect(nextElement).toBeUndefined();
+            expect(newChipContents[6]).toBe(dropGhostContent);
+            break;
+          case i >= 3:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toEqual("or  OrderName  Ends With  a  OrderDate  Today");
+            expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
         }
       }
 
+      //pass 2 up to top
       keyPress = new KeyboardEvent('keydown', { code: 'ArrowUp' });
-
       for (let i = 0; i <= 10; i++) {
         tree.nativeElement.dispatchEvent(keyPress);
-        await wait();
+        wait();
         fix.detectChanges();
 
+        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
+        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
+        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
         const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
 
         switch (true) {
           case i === 0:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toEqual("OrderDate  Today");
+            expect(nextElement).toBeUndefined();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
           case i === 1:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toBeUndefined();
+            expect(nextElement).toEqual("OrderDate  Today");
             expect(newChipContents[5]).toBe(dropGhostContent);
             break;
           case i === 2:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toBeNull();
+            expect(nextElement).toEqual("OrderName  Ends With  a");
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 3:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toBeUndefined();
+            expect(nextElement).toEqual("or  OrderName  Ends With  a  OrderDate  Today");
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
-          case i === 4:
+          case i >= 4:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toBeNull();
+            expect(nextElement).toEqual("OrderName  Equals  foo");
             expect(newChipContents[0]).toBe(dropGhostContent);
             break;
-          case i >= 5:
-            expect(newChipContents[0]).toBe(dropGhostContent);
+        }
+      }
+
+      //pass 3 down to bottom again
+      keyPress = new KeyboardEvent('keydown', { code: 'ArrowDown' });
+      for (let i = 0; i <= 10; i++) {
+        tree.nativeElement.dispatchEvent(keyPress);
+        wait();
+        fix.detectChanges();
+
+        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
+        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
+        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
+        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+
+        switch (true) {
+          case i === 0:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toEqual("OrderName  Equals  foo");
+            expect(nextElement).toBeUndefined();
+            expect(newChipContents[1]).toBe(dropGhostContent);
+            break;
+          case i === 1:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toBeNull();
+            expect(nextElement).toEqual("OrderName  Ends With  a");
+            expect(newChipContents[4]).toBe(dropGhostContent);
+            break;
+          case i === 2:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toEqual("OrderName  Ends With  a");
+            expect(nextElement).toBeUndefined();
+            expect(newChipContents[5]).toBe(dropGhostContent);
+            break;
+          case i === 3:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toEqual("OrderDate  Today");
+            expect(nextElement).toBeUndefined();
+            expect(newChipContents[6]).toBe(dropGhostContent);
+            break;
+          case i >= 4:
+            expect(dropGhost).toBeDefined();
+            expect(prevElement).toEqual("or  OrderName  Ends With  a  OrderDate  Today");
+            expect(nextElement).toBeNull();
+            expect(newChipContents[6]).toBe(dropGhostContent);
             break;
         }
       }
