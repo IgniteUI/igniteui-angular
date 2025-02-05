@@ -21,7 +21,7 @@ import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 import { CommonModule } from '@angular/common';
 import { IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular/src/lib/query-builder/query-builder.directives';
 import { FormsModule } from '@angular/forms';
-import {IgxQueryBuilderTreeComponent} from "igniteui-angular/src/lib/query-builder/query-builder-tree.component";
+import { IgxQueryBuilderTreeComponent } from "igniteui-angular/src/lib/query-builder/query-builder-tree.component";
 
 @Component({
     providers: [],
@@ -72,189 +72,92 @@ export class QueryBuilderComponent implements OnInit {
             }
         ];
 
-        if (true) {
-            const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Entity B', ['Number']);
-            innerTree.filteringOperands.push({
-                fieldName: 'Number',
-                condition: IgxNumberFilteringOperand.instance().condition('equals'),
-                conditionName: IgxNumberFilteringOperand.instance().condition('equals').name,
-                searchVal: 123
-            });
-            innerTree.filteringOperands.push({
-                fieldName: 'String',
-                condition: IgxStringFilteringOperand.instance().condition('equals'),
-                conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
-                searchVal: 'abc'
-            });
-            innerTree.filteringOperands.push({
-                fieldName: 'Boolean',
-                condition: IgxBooleanFilteringOperand.instance().condition('true'),
-                conditionName: IgxBooleanFilteringOperand.instance().condition('true').name
-            });
-            innerTree.filteringOperands.push({
-                fieldName: 'Date',
-                condition: IgxDateFilteringOperand.instance().condition('before'),
-                conditionName: IgxDateFilteringOperand.instance().condition('before').name,
-                searchVal: new Date()
-            });
-            innerTree.filteringOperands.push({
-                fieldName: 'Time',
-                condition: IgxTimeFilteringOperand.instance().condition('before'),
-                conditionName: IgxTimeFilteringOperand.instance().condition('before').name,
-                searchVal: new Date()
-            });
-            innerTree.filteringOperands.push({
-                fieldName: 'DateTime',
-                condition: IgxDateTimeFilteringOperand.instance().condition('before'),
-                conditionName: IgxDateTimeFilteringOperand.instance().condition('before').name,
-                searchVal: new Date()
-            });
 
-            const nestedGroup10 = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Entity A', ['*']);
-            nestedGroup10.filteringOperands.push({
-                fieldName: 'Id',
-                condition: IgxStringFilteringOperand.instance().condition('in'),
-                conditionName: IgxStringFilteringOperand.instance().condition('in').name,
-                searchTree: innerTree
-            });
-            nestedGroup10.filteringOperands.push({
-                fieldName: 'Validated',
-                condition: IgxBooleanFilteringOperand.instance().condition('true'),
-                conditionName: IgxBooleanFilteringOperand.instance().condition('true').name
-            });
+        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Entity B', ['Number']);
+        innerTree.filteringOperands.push({
+            fieldName: 'Number',
+            condition: IgxNumberFilteringOperand.instance().condition('equals'),
+            conditionName: IgxNumberFilteringOperand.instance().condition('equals').name,
+            searchVal: 123
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'String',
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
+            conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
+            searchVal: 'abc'
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'Boolean',
+            condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: IgxBooleanFilteringOperand.instance().condition('true').name
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'Date',
+            condition: IgxDateFilteringOperand.instance().condition('before'),
+            conditionName: IgxDateFilteringOperand.instance().condition('before').name,
+            searchVal: new Date()
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'Time',
+            condition: IgxTimeFilteringOperand.instance().condition('before'),
+            conditionName: IgxTimeFilteringOperand.instance().condition('before').name,
+            searchVal: new Date()
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'DateTime',
+            condition: IgxDateTimeFilteringOperand.instance().condition('before'),
+            conditionName: IgxDateTimeFilteringOperand.instance().condition('before').name,
+            searchVal: new Date()
+        });
 
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Entity A', ['*']);
+        tree.filteringOperands.push({
+            fieldName: 'Id',
+            condition: IgxStringFilteringOperand.instance().condition('in'),
+            conditionName: IgxStringFilteringOperand.instance().condition('in').name,
+            searchTree: innerTree
+        });
+        tree.filteringOperands.push({
+            fieldName: 'Validated',
+            condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: IgxBooleanFilteringOperand.instance().condition('true').name
+        });
 
-            const nestedGroup20 = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Entity A', ['*']);
-            nestedGroup20.filteringOperands.push({
-                fieldName: 'Name',
-                condition: IgxStringFilteringOperand.instance().condition('endsWith'),
-                conditionName: IgxStringFilteringOperand.instance().condition('endsWith').name,
-                searchVal: 'a'
-            });
-            nestedGroup20.filteringOperands.push({
-                fieldName: 'DateTime created',
-                condition: IgxDateFilteringOperand.instance().condition('today'),
-                conditionName: IgxDateFilteringOperand.instance().condition('today').name
-            });
+        const subGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Entity A', ['*']);
+        subGroup.filteringOperands.push({
+            fieldName: 'Name',
+            condition: IgxStringFilteringOperand.instance().condition('endsWith'),
+            conditionName: IgxStringFilteringOperand.instance().condition('endsWith').name,
+            searchVal: 'a'
+        });
+        subGroup.filteringOperands.push({
+            fieldName: 'DateTime created',
+            condition: IgxDateFilteringOperand.instance().condition('today'),
+            conditionName: IgxDateFilteringOperand.instance().condition('today').name
+        });
+        tree.filteringOperands.push(subGroup);
 
-            const nestedGroup21 = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Entity A', ['*']);
-            nestedGroup21.filteringOperands.push(nestedGroup20);
+        tree.filteringOperands.push({
+            fieldName: 'Validated',
+            condition: IgxBooleanFilteringOperand.instance().condition('false'),
+            conditionName: IgxBooleanFilteringOperand.instance().condition('false').name
+        });
 
-            const nestedGroup22 = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Entity A', ['*']);
-            nestedGroup22.filteringOperands.push(nestedGroup21);
+        const subGroup2 = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Entity A', ['*']);
+        subGroup2.filteringOperands.push({
+            fieldName: 'Id',
+            condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            conditionName: IgxNumberFilteringOperand.instance().condition('greaterThan').name,
+            searchVal: '3'
+        });
+        subGroup2.filteringOperands.push({
+            fieldName: 'Name',
+            condition: IgxStringFilteringOperand.instance().condition('notNull'),
+            conditionName: IgxStringFilteringOperand.instance().condition('notNull').name
+        });
+        tree.filteringOperands.push(subGroup2);
 
-            const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Entity A', ['*']);
-            tree.filteringOperands.push(nestedGroup10);
-            tree.filteringOperands.push({
-                fieldName: 'Validated',
-                condition: IgxBooleanFilteringOperand.instance().condition('false'),
-                conditionName: IgxBooleanFilteringOperand.instance().condition('false').name
-            });
-            tree.filteringOperands.push(nestedGroup22);
-
-
-            const subGroup2 = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Entity A', ['*']);
-            subGroup2.filteringOperands.push({
-                fieldName: 'Id',
-                condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-                conditionName: IgxNumberFilteringOperand.instance().condition('greaterThan').name,
-                searchVal: '3'
-            });
-            subGroup2.filteringOperands.push({
-                fieldName: 'Name',
-                condition: IgxStringFilteringOperand.instance().condition('notNull'),
-                conditionName: IgxStringFilteringOperand.instance().condition('notNull').name
-            });
-            tree.filteringOperands.push(subGroup2);
-
-            this.expressionTree = tree;
-        } else {
-            const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Entity B', ['Number']);
-            innerTree.filteringOperands.push({
-                fieldName: 'Number',
-                condition: IgxNumberFilteringOperand.instance().condition('equals'),
-                conditionName: IgxNumberFilteringOperand.instance().condition('equals').name,
-                searchVal: 123
-            });
-            innerTree.filteringOperands.push({
-                fieldName: 'String',
-                condition: IgxStringFilteringOperand.instance().condition('equals'),
-                conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
-                searchVal: 'abc'
-            });
-            innerTree.filteringOperands.push({
-                fieldName: 'Boolean',
-                condition: IgxBooleanFilteringOperand.instance().condition('true'),
-                conditionName: IgxBooleanFilteringOperand.instance().condition('true').name
-            });
-            innerTree.filteringOperands.push({
-                fieldName: 'Date',
-                condition: IgxDateFilteringOperand.instance().condition('before'),
-                conditionName: IgxDateFilteringOperand.instance().condition('before').name,
-                searchVal: new Date()
-            });
-            innerTree.filteringOperands.push({
-                fieldName: 'Time',
-                condition: IgxTimeFilteringOperand.instance().condition('before'),
-                conditionName: IgxTimeFilteringOperand.instance().condition('before').name,
-                searchVal: new Date()
-            });
-            innerTree.filteringOperands.push({
-                fieldName: 'DateTime',
-                condition: IgxDateTimeFilteringOperand.instance().condition('before'),
-                conditionName: IgxDateTimeFilteringOperand.instance().condition('before').name,
-                searchVal: new Date()
-            });
-
-            const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Entity A', ['*']);
-            tree.filteringOperands.push({
-                fieldName: 'Id',
-                condition: IgxStringFilteringOperand.instance().condition('in'),
-                conditionName: IgxStringFilteringOperand.instance().condition('in').name,
-                searchTree: innerTree
-            });
-            tree.filteringOperands.push({
-                fieldName: 'Validated',
-                condition: IgxBooleanFilteringOperand.instance().condition('true'),
-                conditionName: IgxBooleanFilteringOperand.instance().condition('true').name
-            });
-
-            const subGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Entity A', ['*']);
-            subGroup.filteringOperands.push({
-                fieldName: 'Name',
-                condition: IgxStringFilteringOperand.instance().condition('endsWith'),
-                conditionName: IgxStringFilteringOperand.instance().condition('endsWith').name,
-                searchVal: 'a'
-            });
-            subGroup.filteringOperands.push({
-                fieldName: 'DateTime created',
-                condition: IgxDateFilteringOperand.instance().condition('today'),
-                conditionName: IgxDateFilteringOperand.instance().condition('today').name
-            });
-            tree.filteringOperands.push(subGroup);
-
-            tree.filteringOperands.push({
-                fieldName: 'Validated',
-                condition: IgxBooleanFilteringOperand.instance().condition('false'),
-                conditionName: IgxBooleanFilteringOperand.instance().condition('false').name
-            });
-
-            const subGroup2 = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Entity A', ['*']);
-            subGroup2.filteringOperands.push({
-                fieldName: 'Id',
-                condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-                conditionName: IgxNumberFilteringOperand.instance().condition('greaterThan').name,
-                searchVal: '3'
-            });
-            subGroup2.filteringOperands.push({
-                fieldName: 'Name',
-                condition: IgxStringFilteringOperand.instance().condition('notNull'),
-                conditionName: IgxStringFilteringOperand.instance().condition('notNull').name
-            });
-            tree.filteringOperands.push(subGroup2);
-
-            this.expressionTree = tree;
-        }
+        this.expressionTree = tree;
         this.lData = [{ id: 0, field: 'a' }, { id: 1, field: '1' }]
         // this.onChange();
     }
