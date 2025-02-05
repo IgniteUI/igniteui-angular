@@ -1,27 +1,14 @@
 .columns-container{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-    column-gap: 24px;
-    row-gap: 24px;
     margin: 24px 16px;
 }
 
-.buttons-sample {
+.title, .buttons-sample {
+    columns: 2 1vw;
+    justify-items: center;
+}
+
+.custom-controls {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: minmax(80px, auto);
-    align-items: center;
-}
-
-.display-density {
-    grid-template-columns: repeat(auto-fill, minmax(450px, 2fr));
-}
-
-.button-sample {
-    justify-self: center;
-}
-
-.density-chooser {
-    margin-bottom: 16px;
+    row-gap: 1rem;
 }
 

@@ -23,6 +23,7 @@
 /// @param {Color} $tick-color [null] - The checked mark color.
 /// @param {Color} $tick-color-hover [null] - The checked mark color on hover.
 /// @param {Color} $disabled-color [null] - The disabled border and fill colors.
+/// @param {Color} $disabled-tick-color [null] - The checked mark color in disabled state.
 /// @param {Color} $disabled-indeterminate-color [null] - The disabled border and fill colors in indeterminate state.
 /// @param {Color} $disabled-color-label [null] - The disabled label color.
 /// @param {List} $border-radius [null] - The border radius used for checkbox component.
@@ -52,6 +53,7 @@
     $tick-color: null,
     $tick-color-hover: null,
     $disabled-color: null,
+    $disabled-tick-color: null,
     $disabled-indeterminate-color: null,
     $disabled-color-label: null,
     $border-radius-ripple: null,
@@ -83,6 +85,7 @@
         tick-color: $tick-color,
         tick-color-hover: $tick-color-hover,
         disabled-color: $disabled-color,
+        disabled-tick-color: $disabled-tick-color,
         disabled-indeterminate-color: $disabled-indeterminate-color,
         disabled-color-label: $disabled-color-label,
         border-radius: $border-radius,
@@ -172,6 +175,7 @@
         flex-flow: row nowrap;
         align-items: center;
         outline-style: none;
+        cursor: pointer;
     }
 
     %cbx-display--disabled {
@@ -208,7 +212,6 @@
     %cbx-composite {
         position: relative;
         display: inline-block;
-        cursor: pointer;
         width: $size;
         height: $size;
         min-width: $size;
@@ -278,15 +281,20 @@
             background: var-get($theme, 'disabled-color');
         }
 
-        @if $variant == 'indigo' {
+        @if $variant == 'indigo' or $variant == 'bootstrap' {
             background: var-get($theme, 'disabled-indeterminate-color');
             border-color: transparent;
-            stroke-opacity: 40%;
         }
 
-        @if $bootstrap-theme {
-            background: var-get($theme, 'disabled-indeterminate-color');
-            border-color: transparent;
+        @if $variant != 'indigo' {
+            %cbx-composite-mark {
+                stroke: var-get($theme, 'disabled-tick-color');
+            }
+        } @else {
+            %cbx-composite-mark {
+                stroke: unset;
+                fill: var-get($theme, 'disabled-tick-color');
+            }
         }
     }
 
@@ -346,13 +354,23 @@
 
     %igx-checkbox--indeterminate-indigo {
         %cbx-composite-mark {
-            fill: none;
+            fill: none !important;
             stroke-dashoffset: unset !important;
             transform: none !important;
 
             rect {
                 fill: var-get($theme, 'tick-color');
                 opacity: 1;
+            }
+        }
+    }
+
+    %igx-checkbox--disabled-indeterminate-indigo {
+        @extend %igx-checkbox--indeterminate-indigo;
+
+        %cbx-composite-mark {
+            rect {
+                fill: var-get($theme, 'disabled-tick-color');
             }
         }
     }
@@ -377,6 +395,12 @@
                 z-index: 1;
             }
         }
+    }
+
+    %igx-checkbox--disabled-indeterminate-fluent {
+        %cbx-composite-mark {
+            stroke: transparent;
+        }
 
         %cbx-composite--x--disabled {
             background: transparent;
@@ -387,7 +411,7 @@
         }
     }
 
-    %igx-checkbox--indeterminate-material {
+    %igx-checkbox--disabled-indeterminate-material {
         %cbx-composite--x--disabled {
             border-color: var-get($theme, 'disabled-indeterminate-color');
             background: var-get($theme, 'disabled-indeterminate-color');
@@ -476,7 +500,6 @@
     %cbx-label {
         display: inline-block;
         color: var-get($theme, 'label-color');
-        cursor: pointer;
         user-select: none;
         word-wrap: break-all;
         transition: color .2s $ease-out-quad;

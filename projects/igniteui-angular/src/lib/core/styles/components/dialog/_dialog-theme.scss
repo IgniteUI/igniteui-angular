@@ -12,7 +12,6 @@
 
 /// Dialog Theme
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The dialog background color.
 /// @param {Color} $title-color [null] - The dialog title text color.
 /// @param {Color} $message-color [null] - The dialog message text color.
@@ -26,7 +25,6 @@
 ///   @include css-vars($my-dialog-theme);
 @function dialog-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $border-radius: null,
     $border-color: null,

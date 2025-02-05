@@ -20,7 +20,7 @@ import { ColumnType, GridType } from '../common/grid.interface';
 import { formatDate } from '../../core/utils';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { fadeIn } from 'igniteui-angular/animations';
-import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
+import { ExpressionsTreeUtil, isTree } from '../../data-operations/expressions-tree-util';
 
 /**
  * @hidden
@@ -146,7 +146,7 @@ export class IgxFilteringService implements OnDestroy {
         this.isFiltering = true;
 
         let expressionsTree;
-        if (expressions instanceof FilteringExpressionsTree) {
+        if (expressions && 'operator' in expressions) {
             expressionsTree = expressions;
         } else {
             expressionsTree = this.createSimpleFilteringTree(field, expressions);
@@ -197,11 +197,10 @@ export class IgxFilteringService implements OnDestroy {
             const expressionsTreeForColumn = ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, field);
             if (!expressionsTreeForColumn) {
                 throw new Error('Invalid condition or Expression Tree!');
-            } else if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
+            } else if (isTree(expressionsTreeForColumn)) {
                 this.filter_internal(field, value, expressionsTreeForColumn, filteringIgnoreCase);
             } else {
-                const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
-                this.filter_internal(field, value, expressionForColumn.condition, filteringIgnoreCase);
+                this.filter_internal(field, value, expressionsTreeForColumn.condition, filteringIgnoreCase);
             }
         }
         const doneEventArgs = ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, field) as FilteringExpressionsTree;
@@ -496,9 +495,8 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         for (const expr of expressionTree.filteringOperands) {
-            if ((expr instanceof FilteringExpressionsTree)) {
-                const exprTree = expr as FilteringExpressionsTree;
-                if (exprTree.filteringOperands && exprTree.filteringOperands.length) {
+            if (isTree(expr)) {
+                if (expr.filteringOperands && expr.filteringOperands.length) {
                     return false;
                 }
             } else {
@@ -532,9 +530,9 @@ export class IgxFilteringService implements OnDestroy {
         insertAtIndex = -1,
         createNewTree = false): FilteringExpressionsTree {
 
-        let expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
-            conditionOrExpressionsTree as IFilteringExpressionsTree : null;
-        const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+        let expressionsTree = 'operator' in conditionOrExpressionsTree ?
+            conditionOrExpressionsTree : null;
+        const condition = 'operator' in conditionOrExpressionsTree ?
             null : conditionOrExpressionsTree as IFilteringOperation;
 
         let newExpressionsTree = filteringState as FilteringExpressionsTree;
@@ -567,17 +565,16 @@ export class IgxFilteringService implements OnDestroy {
             return false;
         }
 
-        if (expressions instanceof FilteringExpressionsTree) {
-            const expressionsTree = expressions as FilteringExpressionsTree;
-            if (expressionsTree.operator === FilteringLogic.Or) {
-                const andOperatorsCount = this.getChildAndOperatorsCount(expressionsTree);
+        if (isTree(expressions)) {
+            if (expressions.operator === FilteringLogic.Or) {
+                const andOperatorsCount = this.getChildAndOperatorsCount(expressions);
 
                 // having more than one 'And' operator in the sub-tree means that the filter could not be represented without parentheses.
                 return andOperatorsCount > 1;
             }
 
             let isComplex = false;
-            for (const operand of expressionsTree.filteringOperands) {
+            for (const operand of expressions.filteringOperands) {
                 isComplex = isComplex || this.isFilteringTreeComplex(operand);
             }
 
@@ -592,12 +589,12 @@ export class IgxFilteringService implements OnDestroy {
         let operand;
         for (let i = 0; i < expressions.filteringOperands.length; i++) {
             operand = expressions[i];
-            if (operand instanceof FilteringExpressionsTree) {
+            if (operand && isTree(operand)) {
                 if (operand.operator === FilteringLogic.And) {
                     count++;
                 }
 
-                count = count + this.getChildAndOperatorsCount(operand);
+                count = count + this.getChildAndOperatorsCount(operand as IFilteringExpressionsTree);
             }
         }
 

@@ -1,12 +1,39 @@
+@let config = (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
+
 <div class="sample-header">
-    <button igxIconButton="flat"
+    <div class="wrapper">
+        <button igxIconButton="flat"
             igxRipple
             [igxRippleCentered]="true"
             igxToggleAction="navdrawer"
             class="hamburger">
-        <igx-icon family="default" name="menu"></igx-icon>
-    </button>
-    <h5 class="title">
-        {{ title }}
-    </h5>
+        <igx-icon>menu</igx-icon>
+        </button>
+        <h5 class="title">
+            {{ title }}
+        </h5>
+    </div>
+
+    <div class="header-actions">
+        <small class="header-actions__title">Direction: </small>
+        <button
+                (click)="onToggleDirectionClick()"
+                igxIconButton="flat"
+                igxRipple
+                [igxRippleCentered]="true"
+                class="toggle-button">
+                {{ dirMode }}
+        </button>
+
+        @if(config) {
+            <button
+                    igxIconButton="flat"
+                    igxRipple
+                    [igxRippleCentered]="true"
+                    igxToggleAction="paneldrawer"
+                    class="toggle-button">
+                <igx-icon>settings</igx-icon>
+            </button>
+        }
+    </div>
 </div>

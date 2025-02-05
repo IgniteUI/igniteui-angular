@@ -1,0 +1,57 @@
+@use 'igniteui-theming/sass/bem' as *;
+
+@include b(combo-sample) {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 32px 16px;
+
+    @include e(section) {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+        border: 1px dashed var(--ig-gray-300);
+    }
+
+    @include e(row) {
+        display: flex;
+        gap: 16px
+    }
+
+    @include e(row, $m: 'stretch') {
+        > * {
+            flex: 1;
+        }
+    }
+
+    @include e(form) {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    @include e(title) {
+        font-weight: 600;
+        font-size: 20px;
+        letter-spacing: .4px;
+        margin: 0;
+        line-height: normal;
+    }
+
+    igx-simple-combo,
+    igx-combo {
+        max-width: 100%;
+        min-width: 30%;
+    }
+}
+
+.custom-combo-footer,
+.custom-combo-header {
+    text-align: center;
+    padding: 8px 16px;
+    background: var(--ig-gray-100);
+}
+

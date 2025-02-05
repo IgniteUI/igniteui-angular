@@ -1,5 +1,4 @@
 import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef } from '@angular/core';
-import { NgIf, NgTemplateOutlet} from '@angular/common';
 import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
@@ -14,6 +13,7 @@ import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from '../icon/icon.service';
 import { editor } from '@igniteui/material-icons-extended';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
+import { recreateTree } from '../data-operations/expressions-tree-util';
 
 /**
  * A component used for operating with complex filters by creating or editing conditions
@@ -29,8 +29,7 @@ import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.dir
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
-    standalone: true,
-    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxQueryBuilderTreeComponent, NgTemplateOutlet, IgxQueryBuilderSearchValueTemplateDirective]
+    imports: [IgxQueryBuilderHeaderComponent, IgxQueryBuilderTreeComponent]
 })
 export class IgxQueryBuilderComponent implements OnDestroy {
     /**
@@ -53,10 +52,26 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public showEntityChangeDialog = true;
 
     /**
-     * Gets/sets the entities.
+     * Returns the entities.
+     * @hidden
+     */
+    public get entities(): EntityType[] {
+        return this._entities;
+    }
+
+    /**
+     * Sets the entities.
+     * @hidden
      */
     @Input()
-    public entities: EntityType[];
+    public set entities(entities: EntityType[]) {
+        if (entities !== this._entities) {
+            if (entities && this.expressionTree) {
+                this._expressionTree = recreateTree(this._expressionTree, entities);
+            }
+        }
+        this._entities = entities;
+    }
 
     /**
      * Returns the fields.
@@ -97,8 +112,12 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     @Input()
     public set expressionTree(expressionTree: IExpressionTree) {
-        if (JSON.stringify(expressionTree) !== JSON.stringify(this._expressionTree)) {
-            this._expressionTree = expressionTree;
+        if (expressionTree !== this._expressionTree) {
+            if (this.entities && expressionTree) {
+                this._expressionTree = recreateTree(expressionTree, this.entities);
+            } else {
+                this._expressionTree = expressionTree;
+            }
         }
     }
 
@@ -163,6 +182,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
     private _expressionTree: IExpressionTree;
     private _fields: FieldType[];
+    private _entities: EntityType[];
     private _shouldEmitTreeChange = true;
 
     constructor(protected iconService: IgxIconService) {
@@ -241,7 +261,11 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     }
 
     public onExpressionTreeChange(tree: IExpressionTree) {
-        this._expressionTree = tree;
+        if (tree && this.entities && tree !== this._expressionTree) {
+            this._expressionTree = recreateTree(tree, this.entities);
+        } else {
+            this._expressionTree = tree;
+        }
         if (this._shouldEmitTreeChange) {
             this.expressionTreeChange.emit();
         }

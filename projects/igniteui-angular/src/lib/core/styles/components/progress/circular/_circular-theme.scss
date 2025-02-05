@@ -1,0 +1,422 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:list';
+@use '../../../base' as *;
+@use 'igniteui-theming/sass/animations' as *;
+@use '../../../themes/schemas' as *;
+
+/// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
+///
+/// @param {Color} $base-circle-color [null] - The base circle fill color.
+/// @param {Color | List<Color>} $progress-circle-color [null] - The progress circle fill color.
+/// @param {Color} $text-color [null] - The value text color.
+/// @param {Number} $diameter [null] - The progress circle diameter.
+///
+/// @requires $light-material-schema
+///
+/// @example scss Change the circle progress color
+///   $my-progress-circular-theme: progress-circular-theme(
+///     $progress-circle-color: purple
+///   );
+///   // Pass the theme to the igx-progress-circular component mixin
+///   @include igx-progress-circular($my-progress-circle-theme);
+@function progress-circular-theme(
+    $schema: $light-material-schema,
+    $base-circle-color: null,
+    $progress-circle-color: null,
+    $text-color: null,
+    $diameter: null
+) {
+    $name: 'igx-circular-bar';
+    $circular-bar-schema: ();
+
+    @if map.has-key($schema, 'circular-bar') {
+        $circular-bar-schema: map.get($schema, 'circular-bar');
+    } @else {
+        $circular-bar-schema: $schema;
+    }
+
+    $theme: digest-schema($circular-bar-schema);
+    $meta: map.get($theme, '_meta');
+
+    $progress-circle-color-start: map.get($theme, 'progress-circle-color');
+    $progress-circle-color-end: map.get($theme, 'progress-circle-color');
+
+    @if meta.type-of($progress-circle-color) == 'color' {
+        $progress-circle-color-start: $progress-circle-color;
+        $progress-circle-color-end: $progress-circle-color;
+    }
+
+    @if list.length($progress-circle-color) == 2 {
+        $progress-circle-color-start: list.nth($progress-circle-color, 1);
+        $progress-circle-color-end: list.nth($progress-circle-color, 2);
+    }
+
+    @return extend($theme, (
+        name: $name,
+        base-circle-color: $base-circle-color,
+        progress-circle-color-start: $progress-circle-color-start,
+        progress-circle-color-end: $progress-circle-color-end,
+        text-color: $text-color,
+        diameter: $diameter,
+        theme: map.get($schema, '_meta', 'theme'),
+        _meta: map.merge(if($meta, $meta, ()), (
+            variant: map.get($schema, '_meta', 'theme')
+        )),
+    ));
+}
+
+/// @deprecated Use the `css-vars` mixin instead.
+/// @see {mixin} css-vars
+/// @param {Map} $theme - The theme used to style the component.
+@mixin progress-circular($theme) {
+    // Include rotate animation
+    @include rotate-center();
+
+    @include css-vars($theme);
+
+    $animation-direction: normal;
+    $animation-direction-rtl: reverse;
+    $diameter: calc(var(--circular-size) + var(--stroke-thickness));
+    $radius: calc(var(--circular-size) / 2 - var(--stroke-thickness) * .5);
+    $circumference: calc(#{$radius} * 2 * 3.1416);
+    $variant: map.get($theme, '_meta', 'variant');
+
+    %display-circular {
+        --circular-size: calc(#{var-get($theme, 'diameter')} - var(--stroke-thickness));
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+
+        // Do not use rem values here
+        // This will break the component in Safari
+        // https://github.com/IgniteUI/igniteui-webcomponents/issues/377
+        // TODO SEE if this restriction is necessary
+        @if $variant == 'material' {
+            --stroke-thickness: 1.3px;
+            --scale-factor: 2.95;
+        }
+
+        @if $variant == 'bootstrap' {
+            --stroke-thickness: 2px;
+            --scale-factor: 3.05;
+        }
+
+        @if $variant == 'fluent' {
+            --stroke-thickness: 2px;
+            --scale-factor: 2.75;
+        }
+
+        @if $variant == 'indigo' {
+            --stroke-thickness: 3px;
+            --scale-factor: 3.4;
+        }
+
+        svg {
+            width: $diameter;
+            height: $diameter;
+            transform: rotate(-90deg);
+            transform-origin: center;
+
+            %outer {
+                @if $variant != 'bootstrap' {
+                    animation: igx-initial-dashoffset var(--_transition-duration) linear;
+                } @else {
+                    stroke-width: var(--stroke-thickness);
+                }
+
+                stroke-dasharray: #{$circumference} #{$circumference};
+                stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
+            }
+        }
+    }
+
+    %display-circular:not(%display-circular--indeterminate) {
+        svg {
+            %outer {
+                animation: igx-initial-dashoffset var(--_transition-duration) linear;
+                stroke-dasharray: #{$circumference} #{$circumference};
+                stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
+            }
+        }
+    }
+
+    %display-circular:dir(rtl):not(%display-circular--indeterminate) {
+        svg {
+            %outer {
+                animation: igx-initial-dashoffset-rtl var(--_transition-duration) linear;
+                animation-direction: reverse;
+            }
+        }
+    }
+
+    %display-circular--indeterminate {
+        svg {
+            @if $variant != 'fluent' {
+                animation: 3s linear 0s infinite $animation-direction none running rotate-center;
+            }
+
+            @if $variant != 'bootstrap' {
+                transform-origin: 50% 50%;
+            } @else {
+                animation-duration: .75s;
+            }
+
+            %inner {
+                @if $variant == 'bootstrap' {
+                    stroke: transparent;
+                }
+            }
+
+            %outer {
+                stroke-dashoffset: calc(#{$circumference} * 2);
+
+                @if $variant == 'fluent' {
+                    stroke-linecap: round;
+                    animation: 2s linear 0s infinite normal none running igx-indeterminate-circular-fluent
+                } @else {
+                    animation: igx-indeterminate-accordion 1.5s cubic-bezier(0, 0.085, 0.68, 0.53) $animation-direction infinite;
+                }
+
+                @if $variant == 'bootstrap' {
+                    stroke-dashoffset: 60%;
+                    animation: none;
+                }
+            }
+        }
+    }
+
+    %display-circular--indeterminate:dir(rtl) {
+        svg {
+            animation-direction: reverse;
+
+            %outer {
+                @if $variant == 'fluent' {
+                    animation-name: igx-indeterminate-circular-fluent-rtl;
+                }
+
+                @if $variant == 'bootstrap' {
+                    stroke-dashoffset: 60%;
+                }
+            }
+        }
+
+        animation-direction: $animation-direction-rtl;
+
+        %inner {
+            animation-direction: $animation-direction-rtl;
+        }
+
+        %outer {
+            stroke-dashoffset: calc(#{$circumference} + var(--_progress-percentage) * #{$circumference});
+
+            @if $variant != 'fluent' {
+                animation-direction: reverse;
+            }
+        }
+    }
+
+    %inner {
+        stroke-width: var(--stroke-thickness);
+        stroke: var-get($theme, 'base-circle-color');
+    }
+
+    %outer {
+        --_progress-percentage: calc(var(--_progress-whole, 0) / 100);
+
+        stroke-dasharray: #{$circumference} #{$circumference};
+        stroke-dashoffset: calc(#{$circumference} - var(--_progress-whole, 0) * #{$circumference});
+        transition: stroke-dashoffset var(--_transition-duration) linear;
+
+        @if $variant == 'material' {
+            stroke-width: calc(var(--stroke-thickness) + rem(0.75px));
+        } @else {
+            stroke-width: var(--stroke-thickness);
+        }
+    }
+
+    %outer--indeterminate {
+        stroke-dasharray: 289;
+        @include animation(igx-indeterminate-accordion var(--_transition-duration) cubic-bezier(0, .085, .68, .53) normal infinite);
+    }
+
+    %inner,
+    %outer {
+        width: 100%;
+        height: 100%;
+        fill: transparent;
+        cx: calc(#{$diameter} / 2);
+        cy: calc(#{$diameter} / 2);
+        r: $radius;
+        transform-origin: center;
+    }
+
+    %text {
+        position: absolute;
+        color: var-get($theme, 'text-color');
+        font-size: round(calc(#{var-get($theme, 'diameter')} / var(--scale-factor) - var(--stroke-thickness)), 1px);
+        line-height: normal;
+        text-align: center;
+        font-weight: 600;
+
+        @if $variant == 'bootstrap' or $variant == 'fluent' {
+            font-weight: 700;
+        }
+
+        animation: igx-initial-counter var(--_transition-duration) ease-in-out;
+        counter-reset:
+            progress-integer var(--_progress-integer, 0)
+            progress-fraction var(--_progress-fraction, 0);
+        transition:
+            --_progress-integer var(--_transition-duration) ease-in-out,
+            --_progress-fraction var(--_transition-duration) ease-in-out;
+    }
+
+    %text:not(%text--fraction) {
+        &::before {
+            content: counter(progress-integer) '%';
+        }
+    }
+
+    %text--fraction {
+        &::before {
+            content: counter(progress-integer) '.' counter(progress-fraction, decimal-leading-zero) '%';
+        }
+    }
+
+    %text--hidden {
+        visibility: hidden;
+    }
+
+    %gradient-start {
+        stop-color: var-get($theme, 'progress-circle-color-start');
+    }
+
+    %gradient-end {
+        stop-color: var-get($theme, 'progress-circle-color-end');
+    }
+
+    @keyframes igx-indeterminate-accordion {
+        0% {
+            stroke-dashoffset: calc(#{$circumference} * 2);
+            stroke-dasharray: calc(#{$circumference} * 9 / 10);
+        }
+
+        100% {
+            stroke-dashoffset: calc(#{$circumference} * 2 / 5);
+        }
+    }
+
+    @keyframes igx-indeterminate-accordion-rtl {
+        0% {
+            stroke-dashoffset: calc(#{$circumference} * -2);
+            stroke-dasharray: calc(#{$circumference} * 9 / 10);
+        }
+
+        100% {
+            stroke-dashoffset: calc(#{$circumference} * -2 / 5);
+        }
+    }
+
+    // Fluent: Circular progress animation for indeterminate state.
+    // Dynamically changes stroke-dasharray and rotates for a smooth spinning effect.
+    @keyframes igx-indeterminate-circular-fluent {
+        0% {
+            // Start the stroke at the correct position by adjusting the dasharray and dashoffset
+            stroke-dasharray: calc(#{$circumference} * 0.0001), #{$circumference};
+            stroke-dashoffset: calc(-1 * #{$circumference} / 4);
+
+            // Start at 12 o'clock
+            transform: rotate(-90deg);
+        }
+
+        50% {
+            stroke-dasharray: calc(#{$circumference} / 2), calc(#{$circumference} / 2);
+
+            // Adjust to keep starting point correct
+            stroke-dashoffset: calc(-1 * #{$circumference} / 4);
+
+            // Continue rotating smoothly
+            transform: rotate(360deg);
+        }
+
+        100% {
+            stroke-dasharray: calc(#{$circumference} * 0.0001), #{$circumference};
+
+            // Reset properly
+            stroke-dashoffset: calc(-1 * #{$circumference} / 4);
+
+            // Complete the full rotation
+            transform: rotate(990deg);
+        }
+    }
+
+    @keyframes igx-indeterminate-circular-fluent-rtl {
+        0% {
+            stroke-dasharray: calc(#{$circumference} * 0.0001), #{$circumference};
+
+            // Positive offset for opposite direction
+            stroke-dashoffset: calc(#{$circumference} / 4);
+            transform: rotate(90deg);
+        }
+
+        50% {
+            stroke-dasharray: calc(#{$circumference} / 2), calc(#{$circumference} / 2);
+
+            // Positive offset for opposite direction
+            stroke-dashoffset: calc(#{$circumference} / 4);
+            transform: rotate(-360deg);
+        }
+
+        100% {
+            stroke-dasharray: calc(#{$circumference} * 0.0001), #{$circumference};
+
+            // Positive offset for opposite direction
+            stroke-dashoffset: calc(#{$circumference} / 4);
+            transform: rotate(-990deg);
+        }
+    }
+
+    @keyframes igx-initial-dashoffset {
+        from {
+            /* Start with no progress (0%) */
+            stroke-dashoffset: #{$circumference};
+        }
+
+        to {
+            stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
+        }
+    }
+
+    // Generic animations
+    @keyframes igc-initial-counter {
+        from {
+            --_progress-integer: 0;
+            --_progress-fraction: 0;
+        }
+    }
+
+    @keyframes igx-rotate-center {
+        0% {
+            transform: rotate(0);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    // Reset the transition if the animate prop is set to false.
+    %animation-none:not(%display-circular--indeterminate) {
+        --_transition-duration: 0s !important;
+    }
+
+    %hide-counter {
+        &::before {
+            display: none;
+        }
+    }
+}
