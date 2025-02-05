@@ -142,7 +142,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Orders', 'OrderId, OrderName, OrderDate, Delivered', '', '', '');
 
       // Verify adding buttons are not displayed
-      expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtonsContainer(fix, 0)).toBe(undefined); 
+      expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtonsContainer(fix, 0)).toBe(undefined);
     }));
 
     it(`Should discard newly added group when clicking on the 'cancel' button of its initial condition.`, fakeAsync(() => {
@@ -231,7 +231,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, '', '', '');
 
       // Verify adding buttons are not displayed
-      expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtonsContainer(fix, 0)).toBe(undefined); 
+      expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtonsContainer(fix, 0)).toBe(undefined);
 
       // Populate edit inputs.
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
@@ -1021,7 +1021,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Verify adding buttons are not displayed
-      expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtonsContainer(fix, 0)).toBe(undefined);      
+      expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtonsContainer(fix, 0)).toBe(undefined);
 
       // Exit edit mode
       const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
@@ -2433,7 +2433,6 @@ describe('IgxQueryBuilder', () => {
       chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
     });
 
-    //OK
     it('should render ghost when mouse drag operation starts.', () => {
       const draggedChip = chipComponents[1].componentInstance;
 
@@ -2445,7 +2444,6 @@ describe('IgxQueryBuilder', () => {
       expect(dropGhost.innerText).toBe(DROP_CONDITION_HERE);
     });
 
-    //OK
     it('should collapse the condition when mouse drag operation starts.', () => {
       const secondChip = chipComponents[1].componentInstance;
 
@@ -2453,14 +2451,12 @@ describe('IgxQueryBuilder', () => {
       expect(chipComponents[1].nativeElement.getBoundingClientRect().height).toBe(0);
     });
 
-    //OK
     it('should render drop ghost properly when mouse dragged.', async () => {
       const draggedChip = chipComponents[1].componentInstance;
       const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
 
-      let X = 100, Y = 100, run = 0;
-
+      let X = 100, Y = 150;
 
       //pickup chip
       dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
@@ -2472,47 +2468,74 @@ describe('IgxQueryBuilder', () => {
 
       spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
 
-      for (let i = 0; i <= 30; i++) {
+      const ghostPositionVisits: boolean[] = [false, false, false, false, false, false, false, false]
+
+      let i = 0, pass = 1, inc = 1;
+
+      //Drag ghost up and down four times and check if drop ghost is rendered in the expected positions
+      while (pass <= 4) {
+        i += inc;
+        Y += 5 * inc;
+
         QueryBuilderFunctions.dragMove(dragDir, X, Y);
-
-        await wait(i < 24 ? 20 : 120); //wait a bit more when leaving the tree, for the RxJS listener to trigger
+        await wait();
         fix.detectChanges();
-        Y += 15;
-        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
 
-        //When dragging over div, the mouse needs to be closer to the row, compared to when dragging over chip, that's why the '+run'
-        switch (true) {
-          case i < 5 + run:
-            expect(newChipContents).not.toContain(DROP_CONDITION_HERE);
-            break;
-          case i < 10 + run:
-            expect(newChipContents[0]).toBe(DROP_CONDITION_HERE);
-            break;
-          case i < 13 + run:
-            expect(newChipContents[1]).toBe(DROP_CONDITION_HERE);
-            break;
-          case i < 15 + run:
-            expect(newChipContents[4]).toBe(DROP_CONDITION_HERE);
-            break;
-          case i < 18 + run:
-            expect(newChipContents[5]).toBe(DROP_CONDITION_HERE);
-            break;
-          case i < 24 + run:
-            expect(newChipContents[6]).toBe(DROP_CONDITION_HERE);
-            break;
-          default:
-            expect(newChipContents).not.toContain(DROP_CONDITION_HERE);
-            break;
+        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
+        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
+        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
+
+        if (i < 8 && !ghostPositionVisits[0]) {
+          await wait(100);
+          if (!dropGhost) ghostPositionVisits[0] = true;
         }
 
-        //When done moving mouse over chips, go to the left and test the chip row (blank space to the right) as well
-        if (i === 30 && run === 0) {
-          i = 0;
-          X += 500;
-          Y = 100;
-          run = 1;
+        if (i > 7 && i < 22 && !ghostPositionVisits[1]) {
+          if (dropGhost && !prevElement && nextElement == "OrderName  Equals  foo") ghostPositionVisits[1] = true;
+        }
+
+        if (i > 21 && i < 34 && !ghostPositionVisits[2]) {
+          if (dropGhost && prevElement == "OrderName  Equals  foo" && !nextElement) ghostPositionVisits[2] = true;
+        }
+
+        if (i > 33 && i < 38 && !ghostPositionVisits[3]) {
+          if (dropGhost && !prevElement && nextElement == "OrderName  Ends With  a") ghostPositionVisits[3] = true;
+        }
+
+        if (i > 37 && i < 46 && !ghostPositionVisits[4]) {
+          if (dropGhost && prevElement == "OrderName  Ends With  a" && !nextElement) ghostPositionVisits[4] = true;
+        }
+
+        if (i > 45 && i < 56 && !ghostPositionVisits[5]) {
+          if (dropGhost && prevElement == "OrderDate  Today" && !nextElement) ghostPositionVisits[5] = true;
+        }
+
+        if (i > 55 && i < 63 && !ghostPositionVisits[6]) {
+          if (pass > 2 || (dropGhost && prevElement == "or  OrderName  Ends With  a  OrderDate  Today" && !nextElement)) ghostPositionVisits[6] = true;
+        }
+
+        if (i > 63 && !ghostPositionVisits[7]) {
+          await wait(100);
+          if (!dropGhost) ghostPositionVisits[7] = true;
+        }
+
+        //When dragged to the end, check results and reverse direction for next pass
+        if (i === 65 || i === 0) {
+          expect(ghostPositionVisits).not.toContain(false,
+            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()
+            } on pass:${pass}`);
+
+          ghostPositionVisits.fill(false);
+          pass++;
+          inc *= -1;
+          if (pass % 2 === 0) Y -= ROW_HEIGHT;
+          if (pass % 2 !== 0) Y += ROW_HEIGHT;
+
+          //go to the left and test the whole chip div as well(blank space to the right)
+          if (pass == 3) X += 400;
         }
       }
+
     });
 
     it('should position drop ghost below the target condition on dragging down.', () => {

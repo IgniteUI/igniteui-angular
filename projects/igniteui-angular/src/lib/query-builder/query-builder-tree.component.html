@@ -123,7 +123,7 @@
         <div
             #dragRef
             igxDrop
-            (enter)="dragService.onChipEnter(dragRef, expressionItem, true)"
+            (enter)="dragService.onChipEnter(dragRef, expressionItem)"
             (over)="dragService.onDivOver(dragRef, expressionItem)"
             (leave)="dragService.onChipLeave()"
             (dropped)="dragService.onDivDropped(expressionItem)"
@@ -141,8 +141,8 @@
                 [animateOnRelease] = "false"
                 (moveStart)="canBeDragged() ? dragService.onMoveStart(dragRef, expressionItem, false): null"
                 (moveEnd)="dragService.onMoveEnd()"
-                (dragEnter)="dragService.onChipEnter(dragRef, expressionItem, false)"
-                (dragOver)="dragService.onChipOver(dragRef, false)"
+                (dragEnter)="dragService.onChipEnter(dragRef, expressionItem)"
+                (dragOver)="dragService.onChipOver(dragRef)"
                 (dragLeave)="dragService.onChipLeave()"
                 (dragDrop)="dragService.onChipDropped()"
                 #target="tooltipTarget"
@@ -257,7 +257,7 @@
         <div #editingInputsContainer class="igx-filter-tree__subquery" >
             <div
                 igxDrop
-                (enter)="dragService.onChipEnter(editingInputsContainer, expressionItem, true)"
+                (enter)="dragService.onChipEnter(editingInputsContainer, expressionItem)"
                 (over)="dragService.onDivOver(editingInputsContainer, expressionItem)"
                 (leave)="dragService.onChipLeave()"
                 (dropped)="dragService.onDivDropped(expressionItem)"
