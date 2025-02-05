@@ -2,198 +2,204 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/themes/functions' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
-@use '../light/themes' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
 
-$theme: $bootstrap;
+$_theme: $bootstrap;
 
-@container style(--theme: bootstrap) {
-    @include b(igx-radio) {
-        --size: #{rem(16px)};
-        --label-margin: #{rem(8px)};
-        --scale: scale(.4375);
-        --border-width: #{rem(1px)};
-        --horizontal-group-margin: #{rem(8px)};
-        --vertical-group-margin: #{rem(8px)};
-
-        @include e(label) {
-            @include type-style(body-1) {
-                margin-block: 0;
+@include themed-block(igx-radio, bootstrap) {
+    --size: #{rem(16px)};
+    --label-margin: #{rem(8px)};
+    --scale: scale(.4375);
+    --border-width: #{rem(1px)};
+    --horizontal-group-margin: #{rem(8px)};
+    --vertical-group-margin: #{rem(8px)};
+    
+    @include e(label) {
+        @include type-style(body-1) {
+            margin-block: 0;
+        }
+    }
+    
+    @include e(composite) {
+        &::before {
+            transition: none;
+        }
+    }
+    
+    &:hover {
+        @include e(composite) {
+            &::after {
+                border: var(--border-width) solid var-get($_theme, 'hover-color');
+                transition: all .2s ease-in;
             }
         }
-
+    }
+    
+    @include m(checked) {
         @include e(composite) {
             &::before {
-                transition: none;
+                border-color: var-get($_theme, 'fill-hover-border-color');
+                background: var-get($_theme, 'fill-hover-border-color');
+            }
+            
+            &::after {
+                background: var-get($_theme, 'fill-color');
+            }
+        }
+        
+        &:hover {
+            @include e(composite) {
+                &::after {
+                    background: var-get($_theme, 'fill-color-hover');
+                    border-color: var-get($_theme, 'fill-color-hover');
+                }
+            }
+        }
+        
+        &:active {
+            @include e(composite) {
+                &::after {
+                    background: var-get($_theme, 'fill-color-hover');
+                    border-color: var-get($_theme, 'fill-color-hover');
+                }
+            }
+        }
+    }
+    
+    @include m(focused) {
+        @include e(composite) {
+            border-radius: border-radius(50%);
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focus-outline-color');
+            
+            &::after {
+                border-color: color($color: 'primary', $variant: 200);
+            }
+        }
+        
+        &:hover {
+            @include e(composite) {
+                &::after {
+                    border-color: color($color: 'primary', $variant: 300);
+                }
+            }
+        }
+    }
+    
+    @include mx(focused, checked) {
+        @include e(composite) {
+            &::after {
+                border-color: transparent;
             }
         }
 
         &:hover {
             @include e(composite) {
-                &::before {
-                    background: none;
-                    transform: none;
-                }
-
                 &::after {
-                    border: var(--border-width) solid var-get($theme, 'hover-color');
-                    transition: all .2s ease-in;
+                    background: var-get($_theme, 'fill-color-hover');
+                    border-color: var-get($_theme, 'fill-color-hover');
                 }
             }
         }
-
-        @include m(checked) {
+        
+        &:active {
             @include e(composite) {
-                &::before {
-                    border-color: var-get($theme, 'fill-hover-border-color');
-                    background: var-get($theme, 'fill-hover-border-color');
-                }
-
                 &::after {
-                    background: var-get($theme, 'fill-color');
-                }
-            }
-
-            &:hover {
-                @include e(composite) {
-                    &::after {
-                        background: var-get($theme, 'fill-color-hover');
-                        border-color: var-get($theme, 'fill-color-hover');
-                    }
-                }
-            }
-
-            &:active {
-                @include e(composite) {
-                    &::after {
-                        background: var-get($theme, 'fill-color-hover');
-                        border-color: var-get($theme, 'fill-color-hover');
-                    }
+                    background: var-get($_theme, 'fill-color-hover');
+                    border-color: var-get($_theme, 'fill-color-hover');
                 }
             }
         }
-
-        @include m(focused) {
-            @include e(composite) {
-                border-radius: border-radius(50%);
-                box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
-
-                &::after {
-                    border-color: color($color: 'primary', $variant: 200);
-                }
-            }
-
-            &:hover {
-                @include e(composite) {
-                    &::after {
-                        border-color: color($color: 'primary', $variant: 300);
-                    }
-                }
-            }
-        }
-
-        @include mx(focused, checked) {
-            @include e(composite) {
-                &::after {
-                    border-color: transparent;
-                }
-            }
-
-            //check if can be combined
-            &:hover {
-                @include e(composite) {
-                    &::after {
-                        background: var-get($theme, 'fill-color-hover');
-                        border-color: var-get($theme, 'fill-color-hover');
-                    }
-                }
-            }
-
-            &:active {
-                @include e(composite) {
-                    &::after {
-                        background: var-get($theme, 'fill-color-hover');
-                        border-color: var-get($theme, 'fill-color-hover');
-                    }
-                }
-            }
-        }
-
-        @include m(invalid) {
-            @include e(composite) {
+    }
+    
+    @include m(invalid) {
+        @include e(composite) {
+            &::after {
                 background: transparent;
-                border: var(--border-width) solid var-get($theme, 'error-color');
+                border: var(--border-width) solid var-get($_theme, 'error-color');
             }
         }
 
-        @include mx(focused, invalid) {
-            @include e(composite) {
-                box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color-error');
-                
-                &::after {
-                    border: var(--border-width) solid var-get($theme, 'error-color');
-                } 
-            }
-
-            &:hover {
-                @include e(composite) {
-                    &::after {
-                        border: var(--border-width) solid var-get($theme, 'error-color-hover');
-                    }
-                }
-            }
-        }
-
-        @include mx(checked, invalid) {
+        &:hover {
             @include e(composite) {
                 &::after {
-                    background: var-get($theme, 'error-color');
-                    border-color: var-get($theme, 'error-color');
-                }
-                
-                &::before {
-                    background: white;
-                }
-            }
-
-            //check if can be combined
-            &:hover {
-                @include e(composite) {
-                    &::after {
-                        background: var-get($theme, 'error-color-hover');
-                        border-color: var-get($theme, 'error-color-hover');
-                    }
-                }
-            }
-
-            &:active {
-                @include e(composite) {
-                    &::after {
-                        background: var-get($theme, 'error-color-hover');
-                        border-color: var-get($theme, 'error-color-hover');
-                    }
+                    border-color: var(--error-color-hover);
                 }
             }
         }
-
-        @include mx(checked, invalid, focused) {
-            @include e(composite) {
-                &::before {
-                    background: white;
-                    border-color: transparent;
-                }
-            }
+    }
+    
+    @include mx(focused, invalid) {
+        @include e(composite) {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focus-outline-color-error');
+            
+            &::after {
+                border: var(--border-width) solid var-get($_theme, 'error-color');
+            } 
         }
-
-        @include mx(checked, disabled) {
+        
+        &:hover {
             @include e(composite) {
-                &::before {
-                    background: var-get($theme, 'fill-hover-border-color');
-                    border: var(--border-width) solid var-get($theme, 'fill-color');
-                }
-
                 &::after {
-                    background: var-get($theme, 'disabled-fill-color');
+                    border: var(--border-width) solid var-get($_theme, 'error-color-hover');
                 }
+            }
+        }
+    }
+    
+    @include mx(checked, invalid) {
+        @include e(composite) {
+            &::after {
+                background: var-get($_theme, 'error-color');
+                border-color: var-get($_theme, 'error-color');
+            }
+            
+            &::before {
+                background: white;
+            }
+        }
+
+        &:hover {
+            @include e(composite) {
+                &::after {
+                    background: var-get($_theme, 'error-color-hover');
+                    border-color: var-get($_theme, 'error-color-hover');
+                }
+            }
+        }
+        
+        &:active {
+            @include e(composite) {
+                &::after {
+                    background: var-get($_theme, 'error-color-hover');
+                    border-color: var-get($_theme, 'error-color-hover');
+                }
+            }
+        }
+    }
+    
+    @include mx(checked, invalid, focused) {
+        @include e(composite) {
+            &::before {
+                background: white;
+                border-color: transparent;
+            }
+        }
+    }
+
+    @include mx(invalid, disabled) {
+        @include e(composite) {
+            &::after {
+                border-color: var-get($_theme, 'disabled-color');
+            }
+        }
+    }
+    
+    @include mx(checked, disabled) {
+        @include e(composite) {
+            &::after {
+                background: var-get($_theme, 'disabled-fill-color');
+                border-color: var-get($_theme, 'disabled-fill-color');
             }
         }
     }

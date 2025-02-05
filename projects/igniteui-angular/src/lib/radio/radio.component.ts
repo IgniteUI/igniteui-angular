@@ -5,7 +5,7 @@ import {
     HostBinding,
     HostListener,
     Input,
-    OnInit,
+    ViewEncapsulation,
     booleanAttribute
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
@@ -34,6 +34,8 @@ import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
             multi: true
         }],
     templateUrl: 'radio.component.html',
+    styleUrl: "radio.component.css",
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxRippleDirective]
 })
 
@@ -193,11 +195,6 @@ export class IgxRadioComponent
         } else {
             this.deselect();
         }
-    }
-
-    /** @hidden @internal */
-    public override ngOnInit() {
-        this.themeService.adoptStyles(IgxRadioComponent, themes);
     }
 
     /**

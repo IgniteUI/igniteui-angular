@@ -1,66 +1,96 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/themes/functions' as *;
-@use '../light/themes' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
 
-$theme: $indigo;
+$_theme: $indigo;
 
-@container style(--theme: indigo) {
-    @include b(igx-radio) {
-        --size: #{rem(16px)};
-        --label-margin: #{rem(8px)};
-        --scale: scale(.5);
-        --border-width: #{rem(2px)};
-        --horizontal-group-margin: #{rem(16px)};
-        --vertical-group-margin: #{rem(8px)};
+@include themed-block(igx-radio, indigo) {
+    --size: #{rem(16px)};
+    --label-margin: #{rem(8px)};
+    --scale: scale(.5);
+    --border-width: #{rem(2px)};
+    --horizontal-group-margin: #{rem(16px)};
+    --vertical-group-margin: #{rem(8px)};
 
+    @include e(label) {
+        @include type-style(body-2) {
+            margin-block: 0;
+        }
+    }
+
+    &:hover {
         @include e(label) {
-            @include type-style(body-2) {
-                margin-block: 0;
+            color: var-get($_theme, 'label-color-hover');
+        }
+
+        @include e(composite) {
+            &::after {
+                border-color: var-get($_theme, 'hover-color');
+                transition: all .2s ease-in;
             }
+        }
+    }
+
+    @include m(checked) {
+        &:hover {
+            @include e(composite) {
+                &::after {
+                    border-color: var-get($_theme, 'fill-hover-border-color');
+                }
+            }
+        }
+    }
+
+    @include m(invalid) {
+        @include e(label) {
+            color: var-get($_theme, 'label-color');
         }
 
         &:hover {
-            @include e(label) {
-                color: var-get($theme, 'label-color-hover');
-            }
-
             @include e(composite) {
                 &::after {
-                    // border: var(--border-width) solid var-get($theme, 'hover-color');
-                    border-color: var-get($theme, 'hover-color');
-                    transition: all .2s ease-in;
+                    border-color: var-get($_theme, 'error-color-hover');
                 }
             }
-        }
 
-        @include m(invalid) {
             @include e(label) {
-                color: var-get($theme, 'label-color');
+                color: var-get($_theme, 'label-color-hover');
+            }
+        }
 
-                &:hover {
-                    color: var-get($theme, 'label-color-hover');
+        &:active {
+            @include e(composite) {
+                &::after {
+                    border-color: var-get($_theme, 'error-color-hover');
                 }
             }
         }
+    }
 
-        @include m(focused) {
-            @include e(composite) {
-                border-radius: border-radius(50%);
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
-            }
+    @include m(focused) {
+        @include e(composite) {
+            border-radius: border-radius(50%);
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-outline-color');
         }
+    }
 
-        @include mx(focused, invalid) {
-            @include e(composite) {
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-error');
-            }
+    @include mx(focused, checked) {
+        @include e(composite) {
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-outline-color-filled');
         }
+    }
 
-        @include mx(focused, checked) {
-            @include e(composite) {
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-filled');
-            }
+    @include mx(focused, invalid) {
+        @include e(composite) {
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-outline-color-error');
+        }
+    }
+
+    @include m(disabled) {
+        @include e(label) {
+            color: var-get($_theme, 'disabled-label-color');
         }
     }
 }

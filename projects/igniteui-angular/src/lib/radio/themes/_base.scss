@@ -1,0 +1,431 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use './light/tokens' as *;
+
+$_theme: $material;
+
+@layer base {
+    @include scale-in-out($start-scale: .9);
+
+    %radio-label {
+        color: var-get($_theme, 'label-color');
+        user-select: none;
+        word-wrap: break-all;
+    
+        &:empty {
+            display: none;
+        }
+    }
+
+    %radio-ripple--hover {
+        background: var-get($_theme, 'empty-color');
+        transition: background .2s $ease-out-quad;
+        opacity: .06;
+    
+        @container style(--ig-theme-variant: dark) {
+            opacity: .12;
+        }
+    }
+    
+    %radio-ripple--hover-checked {
+        background: var-get($_theme, 'fill-color');
+    }
+    
+    %radio-ripple--hover-invalid {
+        background: var-get($_theme, 'error-color');
+    }
+    
+    %radio-ripple--focused {
+        background: var-get($_theme, 'empty-color');
+        transition: background .2s $ease-out-quad;
+        opacity: .12;
+    
+        @container style(--ig-theme-variant: dark) {
+            opacity: .24;
+        }
+    }
+
+    %radio-ripple--pressed {
+        opacity: .12;
+    
+        @container style(--ig-theme-variant: dark) {
+            opacity: .24;
+        }
+    }
+    
+    %radio-group-display {
+        display: block;
+    
+        %radio-display:not(:last-of-type) {
+            margin-inline-end: var(--horizontal-group-margin);
+        }
+    }
+    
+    %radio-group-display--vertical {
+        display: flex;
+        flex-flow: column;
+    
+        %radio-display:not(:last-of-type) {
+            margin-inline-end: 0;
+            margin-block-end: var(--vertical-group-margin);
+        }
+    }
+
+    @include b(igx-radio) {
+        position: relative;
+        display: inline-flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        color: var-get($_theme, 'label-color');
+        width: max-content;
+        cursor: pointer;
+
+        &:hover {
+            @include e(composite) {
+                &::before {
+                    background: var-get($_theme, 'hover-color');
+                }
+            }
+
+            @include e(ripple) {
+                @extend %radio-ripple--hover !optional;
+            }
+        }
+
+        &:active {
+            @include e(composite) {
+                &::before {
+                    background: var-get($_theme, 'hover-color');
+                }
+            }
+
+            @include e(ripple) {
+                @extend %radio-ripple--hover !optional;
+                @extend %radio-ripple--pressed !optional;
+            }
+        }
+        
+        @include e(input) {
+            @include hide-default();
+        }
+        
+        @include e(composite) {
+            position: relative;
+            display: inline-block;
+            width: var(--size);
+            height: var(--size);
+            min-width: var(--size);
+            line-height: var(--size);
+            color: var-get($_theme, 'label-color');
+            user-select: none;
+
+            //ripple color
+            --color: #{var-get($_theme, 'empty-color')};
+
+            &::before,
+            &::after {
+                position: absolute;
+                content: '';
+                width: var(--size);
+                height: var(--size);
+                inset-inline-start: 0;
+                top: 0;
+                border-radius: border-radius(50%);
+            }
+
+            &::before {
+                backface-visibility: hidden;
+                z-index: 1;
+                transform: scale(0);
+                transition: all .2s ease-in;
+            }
+
+            &::after {
+                border: var(--border-width) solid var-get($_theme, 'empty-color');
+                background: var-get($_theme, 'empty-fill-color');
+            }
+        }
+        
+        @include e(label) {
+            @extend %radio-label !optional;
+
+            margin-inline-start: var(--label-margin);
+
+            &:empty {
+                margin: 0;
+            }
+        }
+        
+        @include e(label, $m: before) {
+            @extend %radio-label !optional;
+
+            order: -1;
+            margin-inline-end: var(--label-margin);
+
+            &:empty {
+                margin: 0;
+            }
+        }
+        
+        @include e(ripple) {
+            --_ripple-size: #{rem(40px)};
+    
+            display: none;
+            position: absolute;
+            top: calc(50% - calc(var(--_ripple-size) / 2));
+            inset-inline-start: calc(50% - calc(var(--_ripple-size) / 2));
+            width: var(--_ripple-size);
+            aspect-ratio: 1;
+            // should be moved to the schema file like the switch and checkbox
+            border-radius: calc(var(--_ripple-size) / 2);
+            overflow: hidden;
+            pointer-events: none;
+            filter: opacity(1);
+        }
+        
+        @include m(focused) {
+            @extend %igx-radio--focused !optional;
+        
+            @include e(ripple) {
+                @extend %radio-ripple--focused !optional;
+            }
+        
+            &:hover {
+                @include e(ripple) {
+                    @extend %radio-ripple--focused !optional;
+                }
+            }
+        }
+        
+        @include m(checked) {
+            @include e(composite) {
+                //ripple color
+                --color: #{var-get($_theme, 'fill-color')};
+
+                &::before {
+                    border: var(--border-width) solid var-get($_theme, 'fill-color');
+                    background: var-get($_theme, 'fill-color');
+                    transform: var(--scale);
+                }
+
+                &::after {
+                    border: var(--border-width) solid var-get($_theme, 'fill-color');
+                }
+            }
+        
+            &:hover {
+                @include e(composite) {
+                    &::before {
+                        background: var-get($_theme, 'fill-color-hover');
+                        border-color: var-get($_theme, 'fill-hover-border-color');
+                    }
+                    
+                    &::after {
+                        border-color: var-get($_theme, 'fill-hover-border-color');
+                    }
+                }
+        
+                @include e(ripple) {
+                    @extend %radio-ripple--hover !optional;
+                    @extend %radio-ripple--hover-checked !optional;
+                }
+            }
+        
+            &:active {
+                @include e(composite) {
+                    &::before {
+                        background: var-get($_theme, 'fill-color-hover');
+                        border-color: var-get($_theme, 'fill-hover-border-color');
+                    }
+                    
+                    &::after {
+                        border-color: var-get($_theme, 'fill-hover-border-color');
+                    }
+                }
+        
+                @include e(ripple) {
+                    @extend %radio-ripple--hover !optional;
+                    @extend %radio-ripple--hover-checked !optional;
+                    @extend %radio-ripple--pressed !optional;
+                }
+            }
+        }
+
+        @include mx(focused, checked) {
+            &:hover {
+                @include e(composite) {
+                    &::before {
+                        background: var-get($_theme, 'fill-color-hover');
+                        border-color: var-get($_theme, 'fill-hover-border-color');
+                    }
+                    
+                    &::after {
+                        border-color: var-get($_theme, 'fill-hover-border-color');
+                    }
+                }
+            }
+        
+            &:active {
+                @include e(composite) {
+                    &::before {
+                        background: var-get($_theme, 'fill-color-hover');
+                        border-color: var-get($_theme, 'fill-hover-border-color');
+                    }
+                    
+                    &::after {
+                        border-color: var-get($_theme, 'fill-hover-border-color');
+                    }
+                }
+            }
+        
+            @include e(ripple) {
+                @extend %radio-ripple--focused !optional;
+
+                background: var-get($_theme, 'fill-color');
+            }
+        }
+        
+        @include m(invalid) {
+            @include e(composite) {
+                //ripple color
+                --color: #{var-get($_theme, 'error-color')};
+
+                &::after {
+                    border: var(--border-width) solid var-get($_theme, 'error-color');
+                }
+            }
+        
+            @include e(label) {
+                color: var-get($_theme, 'error-color');
+            }
+        
+            &:hover {
+                @include e(ripple) {
+                    @extend %radio-ripple--hover !optional;
+                    @extend %radio-ripple--hover-invalid !optional;
+                }
+        
+                @include e(composite) {
+                    &::before {
+                        background: var-get($_theme, 'error-color');
+                    }
+                
+                    &::after {
+                        border-color: var-get($_theme, 'error-color-hover');
+                    }
+                }
+            }
+
+            &:active {
+                @include e(composite) {
+                    &::before {
+                        background: var-get($_theme, 'error-color');
+                    }
+                
+                    &::after {
+                        border-color: var-get($_theme, 'error-color-hover');
+                    }
+                }
+        
+                @include e(ripple) {
+                    @extend %radio-ripple--hover !optional;
+                    @extend %radio-ripple--hover-invalid !optional;
+                    @extend %radio-ripple--pressed !optional;
+                }
+            }
+        }
+        
+        @include mx(focused, invalid) {
+            @include e(ripple) {
+                @extend %radio-ripple--focused !optional;
+
+                background: var-get($_theme, 'error-color');
+            }
+        }
+
+        @include mx(checked, invalid) {
+            @include e(composite) {
+                &::after {
+                    border: var(--border-width) solid var-get($_theme, 'error-color');
+                }
+                
+                &::before {
+                    background: var-get($_theme, 'error-color');
+                    border: var(--border-width) solid transparent;
+                }
+            }
+        
+            &:hover {
+                @include e(composite) {
+                    &::before {
+                        background: var-get($_theme, 'error-color-hover');
+                        border-color: var-get($_theme, 'error-color-hover');
+                    }
+                
+                    &::after {
+                        border: var(--border-width) solid var-get($_theme, 'error-color-hover');
+                    }
+                }
+            }
+
+            &:active {
+                @include e(composite) {
+                    &::before {
+                        background: var-get($_theme, 'error-color-hover');
+                        border-color: var-get($_theme, 'error-color-hover');
+                    }
+                
+                    &::after {
+                        border: var(--border-width) solid var-get($_theme, 'error-color-hover');
+                    }
+                }
+            }
+        }
+        
+        @include mx(checked, invalid, focused) {
+            @include e(composite) {
+                &::after {
+                    border: var(--border-width) solid var-get($_theme, 'error-color');
+                }
+        
+                &::before {
+                    background: var-get($_theme, 'error-color');
+                    border-color: var-get($_theme, 'error-color');
+                }
+            }
+        }
+
+        @include m(disabled) {
+            pointer-events: none;
+            color: var-get($_theme, 'disabled-label-color');
+            user-select: none;
+        
+            @include e(composite) {
+                &::after {
+                    border: var(--border-width) solid var-get($_theme, 'disabled-color');
+                }
+            }
+        
+            @include e(label) {
+                color: var-get($_theme, 'disabled-label-color');
+            }
+        }
+
+        @include mx(disabled, checked) {
+            @include e(composite) {
+                &::after {
+                    border: var(--border-width) solid var-get($_theme, 'disabled-fill-color');
+                }
+            
+                &::before {
+                    background: var-get($_theme, 'disabled-fill-color');
+                    border: var(--border-width) solid transparent;
+                }
+            }
+        }
+    }
+}
