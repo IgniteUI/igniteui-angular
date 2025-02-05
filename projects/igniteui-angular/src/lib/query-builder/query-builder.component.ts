@@ -1,5 +1,4 @@
 import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef } from '@angular/core';
-import { NgIf } from '@angular/common';
 import {
     Component, Input, ViewChild, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
@@ -30,8 +29,7 @@ import { recreateTree } from '../data-operations/expressions-tree-util';
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
-    standalone: true,
-    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxQueryBuilderTreeComponent]
+    imports: [IgxQueryBuilderHeaderComponent, IgxQueryBuilderTreeComponent]
 })
 export class IgxQueryBuilderComponent implements OnDestroy {
     /**
@@ -147,6 +145,12 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     }
 
     /**
+     * Disables subsequent entity changes at the root level after the initial selection.
+     */
+    @Input()
+    public disableEntityChange = false;
+
+    /**
      * Event fired as the expression tree is changed.
      *
      * ```html
@@ -236,13 +240,6 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     public get isContextMenuVisible(): boolean {
         return this.queryTree.isContextMenuVisible;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public clearSelection() {
-        this.queryTree.clearSelection();
     }
 
     /**

@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { PlatformUtil } from '../core/utils';
@@ -28,10 +27,10 @@ import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
 
-import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { FieldType, EntityType } from '../grids/common/grid.interface';
 import { IgxSelectComponent } from '../select/select.component';
-import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
+import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/overlay/utilities';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
@@ -44,7 +43,6 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IComboSelectionChangingEventArgs, IgxComboComponent } from "../combo/combo.component";
-import { IgxLabelDirective } from '../input-group/public_api';
 import { IgxComboHeaderDirective } from '../combo/public_api';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from "../checkbox/checkbox.component";
 import { IgxDialogComponent } from "../dialog/dialog.component";
@@ -53,12 +51,18 @@ import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
 import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
+import { IgxDragIgnoreDirective, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
+import { IgxDropDownComponent } from '../drop-down/drop-down.component';
+import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
+import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
+import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { isTree } from '../data-operations/expressions-tree-util';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
 const DEFAULT_PIPE_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
+const DEFAULT_CHIP_FOCUS_DELAY = 50;
 
 @Pipe({
     name: 'fieldFormatter',
@@ -76,9 +80,8 @@ export class IgxFieldFormatterPipe implements PipeTransform {
  *
  * Internal class usage
  */
-class ExpressionItem {
+export class ExpressionItem {
     public parent: ExpressionGroupItem;
-    public selected: boolean;
     public expanded: boolean;
     constructor(parent?: ExpressionGroupItem) {
         this.parent = parent;
@@ -90,7 +93,7 @@ class ExpressionItem {
  *
  * Internal class usage
  */
-class ExpressionGroupItem extends ExpressionItem {
+export class ExpressionGroupItem extends ExpressionItem {
     public operator: FilteringLogic;
     public children: ExpressionItem[];
     constructor(operator: FilteringLogic, parent?: ExpressionGroupItem) {
@@ -110,6 +113,7 @@ class ExpressionOperandItem extends ExpressionItem {
     public inEditMode: boolean;
     public inAddMode: boolean;
     public hovered: boolean;
+    public focused: boolean;
     public fieldLabel: string;
     constructor(expression: IFilteringExpression, parent: ExpressionGroupItem) {
         super(parent);
@@ -122,7 +126,7 @@ class ExpressionOperandItem extends ExpressionItem {
     selector: 'igx-query-builder-tree',
     templateUrl: './query-builder-tree.component.html',
     host: { 'class': 'igx-query-builder-tree' },
-    standalone: true,
+    // standalone: true,
     imports: [
         NgIf,
         IgxButtonDirective,
@@ -142,19 +146,21 @@ class ExpressionOperandItem extends ExpressionItem {
         IgxDateTimeEditorDirective,
         NgTemplateOutlet,
         NgClass,
-        IgxToggleDirective,
-        IgxButtonGroupComponent,
         IgxOverlayOutletDirective,
         DatePipe,
         IgxFieldFormatterPipe,
         IgxIconButtonDirective,
         IgxComboComponent,
-        IgxLabelDirective,
         IgxComboHeaderDirective,
         IgxCheckboxComponent,
         IgxDialogComponent,
         IgxTooltipTargetDirective,
-        IgxTooltipDirective
+        IgxTooltipDirective,
+        IgxDragIgnoreDirective,
+        IgxDropDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxDropDownItemNavigationDirective
     ]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
@@ -246,7 +252,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._selectedReturnFields = [];
         }
 
-        this.init();
+        if (!this._preventInit) {
+            this.init();
+        }
     }
 
     /**
@@ -267,7 +275,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         // if value is invalid, set it back to _localeId
         try {
             getLocaleFirstDayOfWeek(this._locale);
-        } catch (e) {
+        } catch {
             this._locale = this._localeId;
         }
     }
@@ -302,7 +310,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('entitySelect', { read: IgxSelectComponent })
     protected entitySelect: IgxSelectComponent;
-    
+
     @ViewChild('returnFieldsCombo', { read: IgxComboComponent })
     private returnFieldsCombo: IgxComboComponent;
 
@@ -330,6 +338,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChild('entityChangeDialog', { read: IgxDialogComponent })
     private entityChangeDialog: IgxDialogComponent;
 
+    @ViewChild('addOptionsDropDown', { read: IgxDropDownComponent })
+    private addExpressionItemDropDown: IgxDropDownComponent;
+
+    @ViewChild('groupContextMenuDropDown', { read: IgxDropDownComponent })
+    private groupContextMenuDropDown: IgxDropDownComponent;
+
+    @ViewChildren(IgxChipComponent, { read: IgxChipComponent })
+    private expressionsChips: QueryList<IgxChipComponent>;
+
     /**
      * @hidden @internal
      */
@@ -353,23 +370,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return this._editingInputsContainer;
     }
 
-    @ViewChild('addModeContainer', { read: ElementRef })
-    protected set addModeContainer(value: ElementRef) {
-        if ((value && !this._addModeContainer) ||
-            (value && this._addModeContainer && this._addModeContainer.nativeElement !== value.nativeElement)) {
-            requestAnimationFrame(() => {
-                this.scrollElementIntoView(value.nativeElement);
-            });
-        }
-
-        this._addModeContainer = value;
-    }
-
-    /** @hidden */
-    protected get addModeContainer(): ElementRef {
-        return this._addModeContainer;
-    }
-
     @ViewChild('currentGroupButtonsContainer', { read: ElementRef })
     protected set currentGroupButtonsContainer(value: ElementRef) {
         if ((value && !this._currentGroupButtonsContainer) ||
@@ -386,12 +386,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     protected get currentGroupButtonsContainer(): ElementRef {
         return this._currentGroupButtonsContainer;
     }
-
-    @ViewChild(IgxToggleDirective)
-    private contextMenuToggle: IgxToggleDirective;
-
-    @ViewChildren(IgxChipComponent)
-    private chips: QueryList<IgxChipComponent>;
 
     @ViewChild('expressionsContainer')
     private expressionsContainer: ElementRef;
@@ -450,6 +444,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public prevFocusedExpression: ExpressionOperandItem;
+
+    /**
+     * @hidden @internal
+     */
+    public initialOperator = 0;
+
+    /**
+     * @hidden @internal
+     */
     public returnFieldSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
@@ -483,26 +487,52 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         closeOnOutsideClick: true
     };
 
+    /**
+     * @hidden @internal
+     */
+    public addExpressionDropDownOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
+
+    /**
+     * @hidden @internal
+     */
+    public groupContextMenuDropDownOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
+
     private destroy$ = new Subject<any>();
+    private _timeoutId: any;
+    private _lastFocusedChipIndex: number;
+    private _focusDelay = DEFAULT_CHIP_FOCUS_DELAY;
     private _parentExpression: ExpressionOperandItem;
     private _selectedEntity: EntityType;
     private _selectedReturnFields: string | string[];
     private _selectedField: FieldType;
-    private _clickTimer;
-    private _dblClickDelay = 200;
-    private _preventChipClick = false;
     private _editingInputsContainer: ElementRef;
-    private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
     private _addModeExpression: ExpressionOperandItem;
     private _editedExpression: ExpressionOperandItem;
-    private _selectedGroups: ExpressionGroupItem[] = [];
+    private _preventInit = false;
+    private _prevFocusedContainer: ElementRef;
     private _expandedExpressions: IFilteringExpression[] = [];
     private _fields: FieldType[];
     private _expressionTree: IExpressionTree;
     private _locale;
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+
+    /**
+     * Disables the select entity dropdown at the root level after the initial selection.
+     */
+    public get disableEntityChange(): boolean {
+
+        return !this.parentExpression && this.selectedEntity ? this.queryBuilder.disableEntityChange : false;
+    }
 
     public get level(): number {
         let parent = this.elRef.nativeElement.parentElement;
@@ -536,9 +566,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /** @hidden */
     protected isSearchValueInputDisabled(): boolean {
         return !this.selectedField ||
-                !this.selectedCondition ||
-                (this.selectedField &&
-                    (this.selectedField.filters.condition(this.selectedCondition).isUnary ||
+            !this.selectedCondition ||
+            (this.selectedField &&
+                (this.selectedField.filters.condition(this.selectedCondition).isUnary ||
                     this.selectedField.filters.condition(this.selectedCondition).isNestedQuery));
     }
 
@@ -559,6 +589,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
         this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.addExpressionDropDownOverlaySettings.outlet = this.overlayOutlet;
+        this.groupContextMenuDropDownOverlaySettings.outlet = this.overlayOutlet;
         // Trigger additional change detection cycle
         this.cdr.detectChanges();
     }
@@ -689,8 +721,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         if (this._selectedField !== value) {
             this._selectedField = value;
+            this.selectDefaultCondition();
             if (oldValue && this._selectedField && this._selectedField.dataType !== oldValue.dataType) {
-                this.selectedCondition = null;
                 this.searchValue.value = null;
                 this.cdr.detectChanges();
             }
@@ -719,7 +751,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * used by the grid
      */
     public get isContextMenuVisible(): boolean {
-        return !this.contextMenuToggle.collapsed;
+        return !this.groupContextMenuDropDown.collapsed;
     }
 
     /**
@@ -732,7 +764,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public addCondition(parent: ExpressionGroupItem, afterExpression?: ExpressionItem) {
+    public addCondition(parent: ExpressionGroupItem, afterExpression?: ExpressionOperandItem, isUIInteraction?: boolean) {
         this.cancelOperandAdd();
 
         const operandItem = new ExpressionOperandItem({
@@ -743,11 +775,32 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             searchVal: null
         }, parent);
 
-        if (afterExpression) {
-            const index = parent.children.indexOf(afterExpression);
-            parent.children.splice(index + 1, 0, operandItem);
+        const groupItem = new ExpressionGroupItem(this.getOperator(null) ?? FilteringLogic.And, parent);
+        this.contextualGroup = groupItem;
+        this.initialOperator = null;
+
+        this._lastFocusedChipIndex = this._lastFocusedChipIndex == undefined ? -1 : this._lastFocusedChipIndex;
+
+        if (parent) {
+            if (afterExpression) {
+                const index = parent.children.indexOf(afterExpression);
+                parent.children.splice(index + 1, 0, operandItem);
+            } else {
+                parent.children.push(operandItem);
+            }
+            this._lastFocusedChipIndex++;
         } else {
-            parent.children.push(operandItem);
+            this.rootGroup = groupItem;
+            operandItem.parent = groupItem;
+            this.rootGroup.children.push(operandItem);
+            this._lastFocusedChipIndex = 0;
+        }
+
+        this._focusDelay = 250;
+
+        if (isUIInteraction && !afterExpression) {
+            this._lastFocusedChipIndex = this.expressionsChips.length;
+            this._focusDelay = DEFAULT_CHIP_FOCUS_DELAY;
         }
 
         this.enterExpressionEdit(operandItem);
@@ -756,15 +809,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public addAndGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
-        this.addGroup(FilteringLogic.And, parent, afterExpression);
-    }
+    public addReverseGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
+        parent = parent ?? this.rootGroup;
 
-    /**
-     * @hidden @internal
-     */
-    public addOrGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
-        this.addGroup(FilteringLogic.Or, parent, afterExpression);
+        if (parent.operator === FilteringLogic.And) {
+            this.addGroup(FilteringLogic.Or, parent, afterExpression);
+        } else {
+            this.addGroup(FilteringLogic.And, parent, afterExpression);
+        }
     }
 
     /**
@@ -772,6 +824,24 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public endGroup(groupItem: ExpressionGroupItem) {
         this.currentGroup = groupItem.parent;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public commitExpression() {
+        this.commitOperandEdit();
+        this.focusEditedExpressionChip();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public discardExpression(expressionItem?: ExpressionOperandItem) {
+        this.cancelOperandEdit();
+        if (expressionItem && expressionItem.expression.fieldName) {
+            this.focusEditedExpressionChip();
+        }
     }
 
     /**
@@ -792,6 +862,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0]
             if (innerQuery && this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery) {
+                innerQuery.exitEditAddMode();
                 this._editedExpression.expression.searchTree = this.getExpressionTreeCopy(innerQuery.expressionTree);
                 this._editedExpression.expression.searchTree.returnFields = innerQuery.selectedReturnFields;
             } else {
@@ -823,6 +894,35 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    private deleteItem = (expressionItem: ExpressionItem) => {
+        //console.log('deleteItem', expressionItem)
+        if (!expressionItem.parent) {
+            this.rootGroup = null;
+            this.currentGroup = null;
+            //this._expressionTree = null;
+            return;
+        }
+
+        if (expressionItem === this.currentGroup) {
+            this.currentGroup = this.currentGroup.parent;
+        }
+
+        const children = expressionItem.parent.children;
+        const index = children.indexOf(expressionItem);
+        children.splice(index, 1);
+        const entity = this.expressionTree ? this.expressionTree.entity : null;
+        const returnFields = this.expressionTree ? this.expressionTree.returnFields : null;
+        this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup, entity, returnFields); // TODO: don't recreate if not necessary
+
+        if (!children.length) {
+            this.deleteItem(expressionItem.parent);
+        }
+
+        if (!this.parentExpression) {
+            this.expressionTreeChange.emit(this._expressionTree);
+        }
+    }
+
     /**
      * @hidden @internal
      */
@@ -848,6 +948,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
             this._editedExpression = null;
         }
+
+        if (!this.expressionTree && this.contextualGroup) {
+            this.initialOperator = this.contextualGroup.operator;
+        }
     }
 
     /**
@@ -863,7 +967,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
                 ) ||
                 (
-                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery._editedExpression == undefined && innerQuery.selectedReturnFields?.length > 0
+                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery.selectedReturnFields?.length > 0
                 ) ||
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
@@ -907,6 +1011,22 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     /**
      * @hidden @internal
+     */
+    public exitEditAddMode(shouldPreventInit = false) {
+        if (!this._editedExpression) {
+            return;
+        }
+
+        this.exitOperandEdit();
+        this.cancelOperandAdd();
+
+        if (shouldPreventInit) {
+            this._preventInit = true;
+        }
+    }
+
+    /**
+     * @hidden @internal
      *
      * used by the grid
      */
@@ -932,39 +1052,121 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
+    public onExpressionFocus(expressionItem: ExpressionOperandItem) {
+        if (this.prevFocusedExpression) {
+            this.prevFocusedExpression.focused = false;
+        }
+        expressionItem.focused = true;
+        this.prevFocusedExpression = expressionItem;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onExpressionBlur(event, expressionItem: ExpressionOperandItem) {
+        if (this._prevFocusedContainer && this._prevFocusedContainer !== event.target.closest('.igx-filter-tree__expression-item')) {
+            expressionItem.focused = false;
+        }
+        this._prevFocusedContainer = event.target.closest('.igx-filter-tree__expression-item');
+    }
+
+    /**
+     * @hidden @internal
+     */
     public onChipRemove(expressionItem: ExpressionItem) {
+        this.exitEditAddMode();
         this.deleteItem(expressionItem);
     }
 
+    public dragService: IgxQueryBuilderDragService = new IgxQueryBuilderDragService(this, this.el, this.deleteItem);
+
+    //Chip can be dragged if it's tree is in edit mode and there is no inner query that's been edited
+    public canBeDragged(): boolean {
+        return this.isInEditMode && (!this.innerQueries || this.innerQueries.length == 0 || !this.innerQueries?.some(q => q.isInEditMode()))
+    }
+
     /**
      * @hidden @internal
      */
-    public onChipClick(expressionItem: ExpressionOperandItem) {
-        this._clickTimer = setTimeout(() => {
-            if (!this._preventChipClick) {
-                this.onToggleExpression(expressionItem);
+    public addExpressionBlur() {
+        if (this.prevFocusedExpression) {
+            this.prevFocusedExpression.focused = false;
+        }
+        if (this.addExpressionItemDropDown && !this.addExpressionItemDropDown.collapsed) {
+            this.addExpressionItemDropDown.close();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onChipClick(expressionItem: ExpressionOperandItem, chip: IgxChipComponent) {
+        this.enterExpressionEdit(expressionItem, chip);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public enterExpressionEdit(expressionItem: ExpressionOperandItem, chip?: IgxChipComponent) {
+        this.exitEditAddMode(true);
+        this.cdr.detectChanges();
+        this._lastFocusedChipIndex = chip ? this.expressionsChips.toArray().findIndex(expr => expr === chip) : this._lastFocusedChipIndex;
+        this.enterEditMode(expressionItem);
+    }
+
+
+    /**
+     * @hidden @internal
+     */
+    public clickExpressionAdd(targetButton: HTMLElement, chip: IgxChipComponent) {
+        this.exitEditAddMode(true);
+        this.cdr.detectChanges();
+        this._lastFocusedChipIndex = this.expressionsChips.toArray().findIndex(expr => expr === chip);
+        this.openExpressionAddDialog(targetButton);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public openExpressionAddDialog(targetButton: HTMLElement) {
+        this.addExpressionDropDownOverlaySettings.target = targetButton;
+        this.addExpressionDropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
+            horizontalDirection: HorizontalAlignment.Right,
+            horizontalStartPoint: HorizontalAlignment.Left,
+            verticalStartPoint: VerticalAlignment.Bottom
+        });
+
+        this.addExpressionItemDropDown.open(this.addExpressionDropDownOverlaySettings);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public enterExpressionAdd(event: ISelectionEventArgs, expressionItem: ExpressionOperandItem) {
+        if (this._addModeExpression) {
+            this._addModeExpression.inAddMode = false;
+        }
+
+        if (this.parentExpression) {
+            this.inEditModeChange.emit(this.parentExpression);
+        }
+
+        const parent = expressionItem.parent ?? this.rootGroup;
+        requestAnimationFrame(() => {
+            if (event.newSelection.value === 'addCondition') {
+                this.addCondition(parent, expressionItem);
+            } else if (event.newSelection.value === 'addGroup') {
+                this.addReverseGroup(parent, expressionItem);
             }
-            this._preventChipClick = false;
-        }, this._dblClickDelay);
+            expressionItem.inAddMode = true;
+            this._addModeExpression = expressionItem;
+        })
     }
 
     /**
      * @hidden @internal
      */
-    public onChipDblClick(expressionItem: ExpressionOperandItem) {
-        clearTimeout(this._clickTimer);
-        this._preventChipClick = true;
-        this.enterExpressionEdit(expressionItem);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
-        this.clearSelection();
-        this.exitOperandEdit();
-        this.cancelOperandAdd();
-
+    public enterEditMode(expressionItem: ExpressionOperandItem) {
         if (this._editedExpression) {
             this._editedExpression.inEditMode = false;
         }
@@ -1022,47 +1224,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public clearSelection() {
-        for (const group of this._selectedGroups) {
-            group.selected = false;
-        }
-        this._selectedGroups = [];
-
-        for (const expr of this.selectedExpressions) {
-            expr.selected = false;
-        }
-        this.selectedExpressions = [];
-
-        this.toggleContextMenu();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public enterExpressionAdd(expressionItem: ExpressionOperandItem) {
-        this.clearSelection();
-        this.exitOperandEdit();
-
-        if (this._addModeExpression) {
-            this._addModeExpression.inAddMode = false;
-        }
-
-        if (this.parentExpression) {
-            this.inEditModeChange.emit(this.parentExpression);
-        }
-
-        expressionItem.inAddMode = true;
-        this._addModeExpression = expressionItem;
-        if (expressionItem.selected) {
-            this.toggleExpression(expressionItem);
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public contextMenuClosed() {
-        this.contextualGroup = null;
+    public onConditionSelectChanging(event: ISelectionEventArgs) {
+        event.cancel = true;
+        this.selectedCondition = event.newSelection.value;
+        this.conditionSelect.close();
+        this.cdr.detectChanges();
     }
 
     /**
@@ -1070,46 +1236,70 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public onKeyDown(eventArgs: KeyboardEvent) {
         eventArgs.stopPropagation();
-        const key = eventArgs.key;
-        if (!this.contextMenuToggle.collapsed && (key === this.platform.KEYMAP.ESCAPE)) {
-            this.clearSelection();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onGroupClick(groupContextMenuDropDown: any, targetButton: HTMLButtonElement, groupItem: ExpressionGroupItem) {
+        this.exitEditAddMode();
+        this.cdr.detectChanges();
+
+        this.groupContextMenuDropDown = groupContextMenuDropDown;
+        this.groupContextMenuDropDownOverlaySettings.target = targetButton;
+        this.groupContextMenuDropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
+            horizontalDirection: HorizontalAlignment.Right,
+            horizontalStartPoint: HorizontalAlignment.Left,
+            verticalStartPoint: VerticalAlignment.Bottom
+        });
+
+        if (groupContextMenuDropDown.collapsed) {
+            this.contextualGroup = groupItem;
+            groupContextMenuDropDown.open(this.groupContextMenuDropDownOverlaySettings);
+        } else {
+            groupContextMenuDropDown.close();
         }
     }
 
     /**
      * @hidden @internal
      */
-    public createAndGroup() {
-        this.createGroup(FilteringLogic.And);
+    public getOperator(expressionItem: any) {
+        // if (!expressionItem && !this.expressionTree && !this.initialOperator) {
+        //     this.initialOperator = 0;
+        // }
+
+        const operator = expressionItem ?
+            expressionItem.operator :
+            this.expressionTree ?
+                this.expressionTree.operator :
+                this.initialOperator;
+        return operator;
     }
 
     /**
      * @hidden @internal
      */
-    public createOrGroup() {
-        this.createGroup(FilteringLogic.Or);
+    public getSwitchGroupText(expressionItem: any) {
+        const operator = this.getOperator(expressionItem);
+        const condition = operator === FilteringLogic.Or ? this.resourceStrings.igx_query_builder_and_label : this.resourceStrings.igx_query_builder_or_label
+        return this.resourceStrings.igx_query_builder_switch_group.replace('{0}', condition.toUpperCase());
     }
 
     /**
      * @hidden @internal
      */
-    public deleteFilters() {
-        for (const expr of this.selectedExpressions) {
-            this.deleteItem(expr);
+    public onGroupContextMenuDropDownSelectionChanging(event: ISelectionEventArgs) {
+        event.cancel = true;
+
+        if (event.newSelection.value === 'switchCondition') {
+            const newOperator = (!this.expressionTree ? this.initialOperator : (this.contextualGroup ?? this._expressionTree).operator) === 0 ? 1 : 0;
+            this.selectFilteringLogic(newOperator);
+        } else if (event.newSelection.value === 'ungroup') {
+            this.ungroup();
         }
 
-        this.clearSelection();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public onGroupClick(groupItem: ExpressionGroupItem) {
-        const firstChild = groupItem.children[0] as ExpressionOperandItem;
-        if (!this.isInEditMode() && firstChild) {
-            this.enterExpressionEdit(firstChild);
-        }
-        this.toggleGroup(groupItem);
+        this.groupContextMenuDropDown.close();
     }
 
     /**
@@ -1126,50 +1316,26 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 expr.parent = parent;
             }
         }
-
-        this.clearSelection();
         this.commitOperandEdit();
     }
 
     /**
      * @hidden @internal
      */
-    public deleteGroup() {
-        const selectedGroup = this.contextualGroup;
-        let parent = selectedGroup.parent;
-        if (parent) {
-            let index = parent.children.indexOf(selectedGroup);
-            parent.children.splice(index, 1);
-
-            if (parent.children.length === 0) {
-                let childGroup = parent;
-                parent = parent.parent;
-                while (parent && parent.children.length === 1) {
-                    childGroup = parent;
-                    parent = parent.parent;
-                }
-
-                if (parent) {
-                    index = parent.children.indexOf(childGroup);
-                    parent.children.splice(index, 1);
-                } else {
-                    this.rootGroup = null;
-                }
-            }
-        } else {
-            this.rootGroup = null;
+    public selectFilteringLogic(index: number) {
+        if (!this.expressionTree) {
+            this.initialOperator = index;
+            return;
         }
 
-        this.clearSelection();
-        this.commitOperandEdit();
-    }
+        if (this.contextualGroup) {
+            this.contextualGroup.operator = index as FilteringLogic;
+            this.commitOperandEdit();
+        } else if (this.expressionTree) {
+            this._expressionTree.operator = index as FilteringLogic;
+        }
 
-    /**
-     * @hidden @internal
-     */
-    public selectFilteringLogic(event: IButtonGroupEventArgs) {
-        this.contextualGroup.operator = event.index as FilteringLogic;
-        this.commitOperandEdit();
+        this.initialOperator = null;
     }
 
     /**
@@ -1189,18 +1355,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public onExpressionsScrolled() {
-        if (!this.contextMenuToggle.collapsed) {
-            this.calculateContextMenuTarget();
-            this.contextMenuToggle.reposition();
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
     public invokeClick(eventArgs: KeyboardEvent) {
-        if (this.platform.isActivationKey(eventArgs)) {
+        if (!this.dragService.dropGhostChipNode && this.platform.isActivationKey(eventArgs)) {
             eventArgs.preventDefault();
             (eventArgs.currentTarget as HTMLElement).click();
         }
@@ -1274,36 +1430,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         };
     }
 
-    /**
-     * @hidden @internal
-     */
-    public onChipSelectionEnd() {
-        const contextualGroup = this.findSingleSelectedGroup();
-        if (contextualGroup || this.selectedExpressions.length > 1) {
-            this.contextualGroup = contextualGroup;
-            this.calculateContextMenuTarget();
-            if (this.contextMenuToggle.collapsed) {
-                this.contextMenuToggle.open(this._overlaySettings);
-            } else {
-                this.contextMenuToggle.reposition();
-            }
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public expanderClick(event, expressionItem: ExpressionOperandItem) {
-        expressionItem.expanded = !expressionItem.expanded;
-        if (expressionItem.expanded) {
-            this._expandedExpressions.push(expressionItem.expression);
-        } else {
-            const matchIndex = this._expandedExpressions.indexOf(expressionItem.expression);
-            this._expandedExpressions.splice(matchIndex, 1);
-        }
-        event.stopPropagation();
-    }
-
     public formatReturnFields(innerTree: IFilteringExpressionsTree) {
         const returnFields = innerTree.returnFields;
         let text = returnFields.join(', ');
@@ -1332,14 +1458,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             return null;
         }
 
-        const exprTreeCopy =
-        {
-            filteringOperands: [],
-            operator: expressionTree.operator,
-            fieldName: expressionTree.fieldName,
-            entity: expressionTree.entity,
-            returnFields: expressionTree.returnFields
-        };
+        const exprTreeCopy = new FilteringExpressionsTree(expressionTree.operator, expressionTree.fieldName, expressionTree.entity, expressionTree.returnFields);
+        exprTreeCopy.filteringOperands = [];
+
         expressionTree.filteringOperands.forEach(o => isTree(o) ? exprTreeCopy.filteringOperands.push(this.getExpressionTreeCopy(o)) : exprTreeCopy.filteringOperands.push(o));
 
         if (!this.innerQueryNewExpressionTree && shouldAssignInnerQueryExprTree) {
@@ -1404,6 +1525,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    private selectDefaultCondition() {
+        if (this.selectedField && this.selectedField.filters) {
+            this.selectedCondition = this.selectedField.filters.conditionList().indexOf('equals') >= 0 ? 'equals' : this.selectedField.filters.conditionList()[0];
+        }
+    }
+
     private setFilters(field: FieldType) {
         if (!field.filters) {
             switch (field.dataType) {
@@ -1432,24 +1559,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    private onToggleExpression(expressionItem: ExpressionOperandItem) {
-        this.exitOperandEdit();
-        this.toggleExpression(expressionItem);
-
-        this.toggleContextMenu();
-    }
-
-    private toggleExpression(expressionItem: ExpressionOperandItem) {
-        expressionItem.selected = !expressionItem.selected;
-
-        if (expressionItem.selected) {
-            this.selectedExpressions.push(expressionItem);
-        } else {
-            const index = this.selectedExpressions.indexOf(expressionItem);
-            this.selectedExpressions.splice(index, 1);
-            this.deselectParentRecursive(expressionItem);
-        }
-    }
 
     private addGroup(operator: FilteringLogic, parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
         this.cancelOperandAdd();
@@ -1539,162 +1648,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return expressionTree;
     }
 
-    private toggleContextMenu() {
-        const contextualGroup = this.findSingleSelectedGroup();
-
-        if (contextualGroup || this.selectedExpressions.length > 1) {
-            this.contextualGroup = contextualGroup;
-
-            if (contextualGroup) {
-                this.filteringLogics = [
-                    {
-                        label: this.resourceStrings.igx_query_builder_filter_operator_and,
-                        selected: contextualGroup.operator === FilteringLogic.And
-                    },
-                    {
-                        label: this.resourceStrings.igx_query_builder_filter_operator_or,
-                        selected: contextualGroup.operator === FilteringLogic.Or
-                    }
-                ];
-            }
-        } else if (this.contextMenuToggle) {
-            this.contextMenuToggle.close();
-        }
-    }
-
-    private findSingleSelectedGroup(): ExpressionGroupItem {
-        for (const group of this._selectedGroups) {
-            const containsAllSelectedExpressions = this.selectedExpressions.every(op => this.isInsideGroup(op, group));
-
-            if (containsAllSelectedExpressions) {
-                return group;
-            }
-        }
-
-        return null;
-    }
-
-    private isInsideGroup(item: ExpressionItem, group: ExpressionGroupItem): boolean {
-        if (!item) {
-            return false;
-        }
-
-        if (item.parent === group) {
-            return true;
-        }
-
-        return this.isInsideGroup(item.parent, group);
-    }
-
-    private deleteItem(expressionItem: ExpressionItem) {
-        if (!expressionItem.parent) {
-            this.rootGroup = null;
-            this.currentGroup = null;
-            //this._expressionTree = null;
-            return;
-        }
-
-        if (expressionItem === this.currentGroup) {
-            this.currentGroup = this.currentGroup.parent;
-        }
-
-        const children = expressionItem.parent.children;
-        const index = children.indexOf(expressionItem);
-        children.splice(index, 1);
-        const entity = this.expressionTree ? this.expressionTree.entity : null;
-        const returnFields = this.expressionTree ? this.expressionTree.returnFields : null;
-        this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup, entity, returnFields); // TODO: don't recreate if not necessary
-
-        if (!children.length) {
-            this.deleteItem(expressionItem.parent);
-        }
-
-        if (!this.parentExpression) {
-            this.expressionTreeChange.emit(this._expressionTree);
-        }
-    }
-
-    private createGroup(operator: FilteringLogic) {
-        const chips = this.chips.toArray();
-        const minIndex = this.selectedExpressions.reduce((i, e) => Math.min(i, chips.findIndex(c => c.data === e)), Number.MAX_VALUE);
-        const firstExpression = chips[minIndex].data;
-
-        const parent = firstExpression.parent;
-        const groupItem = new ExpressionGroupItem(operator, parent);
-
-        const index = parent.children.indexOf(firstExpression);
-        parent.children.splice(index, 0, groupItem);
-
-        for (const expr of this.selectedExpressions) {
-            groupItem.children.push(expr);
-            this.deleteItem(expr);
-            expr.parent = groupItem;
-        }
-
-        this.clearSelection();
-    }
-
-    private toggleGroup(groupItem: ExpressionGroupItem) {
-        this.exitOperandEdit();
-        if (groupItem.children && groupItem.children.length) {
-            this.toggleGroupRecursive(groupItem, !groupItem.selected);
-            if (!groupItem.selected) {
-                this.deselectParentRecursive(groupItem);
-            }
-            this.toggleContextMenu();
-        }
-    }
-
-    private toggleGroupRecursive(groupItem: ExpressionGroupItem, selected: boolean) {
-        if (groupItem.selected !== selected) {
-            groupItem.selected = selected;
-
-            if (groupItem.selected) {
-                this._selectedGroups.push(groupItem);
-            } else {
-                const index = this._selectedGroups.indexOf(groupItem);
-                this._selectedGroups.splice(index, 1);
-            }
-        }
-
-        for (const expr of groupItem.children) {
-            if (expr instanceof ExpressionGroupItem) {
-                this.toggleGroupRecursive(expr, selected);
-            } else {
-                const operandExpression = expr as ExpressionOperandItem;
-                if (operandExpression.selected !== selected) {
-                    this.toggleExpression(operandExpression);
-                }
-            }
-        }
-    }
-
-    private deselectParentRecursive(expressionItem: ExpressionItem) {
-        const parent = expressionItem.parent;
-        if (parent) {
-            if (parent.selected) {
-                parent.selected = false;
-                const index = this._selectedGroups.indexOf(parent);
-                this._selectedGroups.splice(index, 1);
-            }
-            this.deselectParentRecursive(parent);
-        }
-    }
-
-    private calculateContextMenuTarget() {
-        const containerRect = this.expressionsContainer.nativeElement.getBoundingClientRect();
-        const chips = this.chips.filter(c => this.selectedExpressions.indexOf(c.data) !== -1);
-        let minTop = chips.reduce((t, c) =>
-            Math.min(t, c.nativeElement.getBoundingClientRect().top), Number.MAX_VALUE);
-        minTop = Math.max(containerRect.top, minTop);
-        minTop = Math.min(containerRect.bottom, minTop);
-        let maxRight = chips.reduce((r, c) =>
-            Math.max(r, c.nativeElement.getBoundingClientRect().right), 0);
-        maxRight = Math.max(maxRight, containerRect.left);
-        maxRight = Math.min(maxRight, containerRect.right);
-        this._overlaySettings.target = new Point(maxRight, minTop);
-    }
-
     private scrollElementIntoView(target: HTMLElement) {
         const container = this.expressionsContainer.nativeElement;
         const targetOffset = target.offsetTop - container.offsetTop;
@@ -1707,8 +1660,24 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    private focusEditedExpressionChip() {
+        if (this._timeoutId) {
+            clearTimeout(this._timeoutId);
+        }
+
+        this._timeoutId = setTimeout(() => {
+            if (this._lastFocusedChipIndex != -1) {
+                const chipElement = this.expressionsChips.toArray()[this._lastFocusedChipIndex]?.nativeElement;
+                if (chipElement) {
+                    chipElement.focus();
+                }
+                this._lastFocusedChipIndex = -1;
+                this._focusDelay = DEFAULT_CHIP_FOCUS_DELAY;
+            }
+        }, this._focusDelay);
+    }
+
     private init() {
-        this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
 

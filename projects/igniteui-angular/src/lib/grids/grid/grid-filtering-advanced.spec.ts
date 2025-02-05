@@ -84,8 +84,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify there are not filters present and that the default text is shown.
             expect(grid.advancedFilteringExpressionsTree).toBeUndefined();
-            expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix)).toBeNull();
-            expect(QueryBuilderFunctions.getQueryBuilderEmptyPrompt(fix)).not.toBeNull();
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 0, 0);
 
             // Close Advanced Filtering dialog.
             GridFunctions.clickAdvancedFilteringCancelButton(fix);
@@ -117,8 +116,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Click the initial 'Add And Group' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -148,8 +147,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Double-click the existing chip to enter edit mode.
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], true);
+            // Click the existing chip to enter edit mode.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
             tick(50);
             fix.detectChanges();
             // Edit the filter value.
@@ -182,8 +181,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Click the initial 'Add And Group' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -249,8 +248,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Click the initial 'Add And Group' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -286,8 +285,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Click the initial 'Add And Group' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -322,8 +321,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Click the initial 'Add And Group' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -466,8 +465,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify there are not filters present and that the default text is shown.
             expect(grid.advancedFilteringExpressionsTree).toBeNull();
-            expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix)).toBeNull();
-            expect(QueryBuilderFunctions.getQueryBuilderEmptyPrompt(fix)).not.toBeNull();
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 0, 0);
         }));
 
         it('Applying/Clearing filter through the UI should correctly update the API.', fakeAsync(() => {
@@ -487,8 +485,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Click the initial 'Add And Group' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -536,8 +534,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Click the initial 'Add And Group' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -562,8 +560,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Click the initial 'Add And Group' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -578,8 +576,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Click the initial 'Add And Group' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -595,8 +593,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Click the initial 'Add And Group' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -625,8 +623,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
 
-            // Click the initial 'Add And Group' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -745,49 +743,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick();
             fix.detectChanges();
 
-            // Click the edit icon to enter edit mode of the expression.
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChipIcon(fix, [9], 'edit');
+            // Click the chip to enter edit mode of the expression.
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [9]);
             fix.detectChanges();
             tick(50);
 
             // Verify the edit mode container (the one with the editing inputs) is in view.
             verifyElementIsInExpressionsContainerView(fix, QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false) as HTMLElement);
-        }));
-
-        it('Should keep the context menu in view when scrolling the expressions container.', fakeAsync(() => {
-            // Apply advanced filter through API.
-            const tree = new FilteringExpressionsTree(FilteringLogic.Or);
-            for (let index = 0; index < 20; index++) {
-                tree.filteringOperands.push({
-                    fieldName: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals'), conditionName: 'equals'
-                });
-            }
-            grid.advancedFilteringExpressionsTree = tree;
-            fix.detectChanges();
-
-            // Open Advanced Filtering dialog.
-            grid.openAdvancedFilteringDialog();
-            fix.detectChanges();
-
-            // Scroll to the top.
-            const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix);
-            tick(50);
-            exprContainer.scrollTop = 0;
-
-            // Select the first two chips.
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
-            fix.detectChanges();
-
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
-            tick(200); // Await click timeout
-            fix.detectChanges();
-
-            // Scroll to the bottom.
-            exprContainer.scrollTop = exprContainer.scrollHeight;
-
-            // Verify that the context menu is correctly repositioned and in view.
-            const contextMenu = QueryBuilderFunctions.getQueryBuilderContextMenus(fix)[0];
-            verifyElementIsInExpressionsContainerView(fix, contextMenu.nativeElement);
         }));
 
         it('Should clear all conditions and groups when the \'clear filter\' button is clicked.', fakeAsync(() => {
@@ -818,7 +780,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify there are filters in the dialog.
             expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix)).not.toBeNull();
-            expect(QueryBuilderFunctions.getQueryBuilderEmptyPrompt(fix)).toBeNull();
 
             // Clear the filters.
             GridFunctions.clickAdvancedFilteringClearFilterButton(fix);
@@ -826,8 +787,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Verify there are no filters in the dialog.
-            expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix)).toBeNull();
-            expect(QueryBuilderFunctions.getQueryBuilderEmptyPrompt(fix)).not.toBeNull();
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 0, 0);
         }));
 
         it('Should keep edited conditions and groups inside AF dialog when applying and opening it again.', fakeAsync(() => {
@@ -866,7 +826,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [0, 0], 'ProductName', 'Contains', 'angular');
 
             // Edit the first expression in the inner 'or' group.
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0, 0], true); // Double-click the chip
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0, 0]); // Click the chip
             tick(200);
             fix.detectChanges();
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
@@ -931,7 +891,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [0, 0], 'ProductName', 'Contains', 'angular');
 
             // Edit the first expression in the inner 'or' group.
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0, 0], true); // Double-click the chip
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0, 0]); // Click the chip
             tick(200);
             fix.detectChanges();
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
@@ -996,7 +956,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Add root group.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -1030,7 +990,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Add root group.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -1064,7 +1024,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -1094,7 +1054,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -1120,7 +1080,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -1145,7 +1105,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -1174,8 +1134,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             GridFunctions.clickAdvancedFilteringButton(fixture);
             fixture.detectChanges();
 
-            // Click the initial 'Add And Group' button
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fixture, 0);
+            // Click the initial 'Add Condition' button
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fixture, 0);
             tick(100);
             fixture.detectChanges();
 
@@ -1241,18 +1201,14 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 igx_grid_filter_operator_and: 'My and',
                 igx_grid_filter_operator_or: 'My or',
                 igx_grid_advanced_filter_title: 'My advanced filter',
-                igx_grid_advanced_filter_and_group: 'My and group',
-                igx_grid_advanced_filter_or_group: 'My or group',
                 igx_grid_advanced_filter_end_group: 'My end group',
                 igx_grid_advanced_filter_create_and_group: 'My create and group',
-                igx_grid_advanced_filter_create_or_group: 'My create or group',
                 igx_grid_advanced_filter_and_label: 'My and',
                 igx_grid_advanced_filter_or_label: 'My or',
-                igx_grid_advanced_filter_add_condition: 'My condition',
+                igx_grid_advanced_filter_add_condition_root: 'My condition',
+                igx_grid_advanced_filter_add_group_root: 'My group',
                 igx_grid_advanced_filter_ungroup: 'My ungroup',
-                igx_grid_advanced_filter_delete: 'My delete',
-                igx_grid_advanced_filter_delete_filters: 'My delete filters',
-                igx_grid_advanced_filter_initial_text: 'My initial text'
+                igx_grid_advanced_filter_delete_filters: 'My delete filters'
             });
             fix.detectChanges();
 
@@ -1261,24 +1217,17 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix).trim()).toBe('My advanced filter');
-            expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemAnd(fix) as HTMLElement).innerText).toBe('My and');
-            expect((QueryBuilderFunctions.getQueryBuilderHeaderLegendItemOr(fix) as HTMLElement).innerText).toBe('My or');
-            expect(QueryBuilderFunctions.getQueryBuilderInitialAddGroupButtons(fix)[0].querySelector('span').innerText)
-                .toBe('My and group');
-            expect(QueryBuilderFunctions.getQueryBuilderInitialAddGroupButtons(fix)[1].querySelector('span').innerText)
-                .toBe('My or group');
-            expect((QueryBuilderFunctions.getQueryBuilderEmptyPrompt(fix) as HTMLElement).innerText).toBe('My initial text');
+            expect(QueryBuilderFunctions.getQueryBuilderInitialAddConditionBtn(fix).querySelector('span').innerText)
+                .toBe('My condition');
 
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
             expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement).querySelector('span').innerText)
                 .toBe('My condition');
             expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[1] as HTMLElement).querySelector('span').innerText)
-                .toBe('My and group');
-            expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[2] as HTMLElement).querySelector('span').innerText)
-                .toBe('My or group');
+                .toBe('My group');
 
             // Populate edit inputs.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
@@ -1289,63 +1238,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Commit the populated expression.
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
-
-            const rootOperatorLine = QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement;
-            rootOperatorLine.click();
-            fix.detectChanges();
-
-            const buttonGroupItems = GridFunctions.sortNativeElementsHorizontally(
-                Array.from(QueryBuilderFunctions.getQueryBuilderContextMenuButtonGroup(fix)
-                    .querySelectorAll('.igx-button-group__item-content')));
-            expect(buttonGroupItems[0].textContent).toBe('My and');
-            expect(buttonGroupItems[1].textContent).toBe('My or');
-            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[3] as HTMLElement).querySelector('span').innerText)
-                .toBe('My ungroup');
-            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[4] as HTMLElement).querySelector('span').innerText)
-                .toBe('My delete');
-
-            // Close context menu.
-            QueryBuilderFunctions.clickQueryBuilderContextMenuCloseButton(fix);
-            fix.detectChanges();
-
-            // Add another expression to root group.
-            let btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
-            btn.click();
-            fix.detectChanges();
-
-            // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
-
-            input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
-            UIInteractions.clickAndSendInputElementValue(input, 'script', fix); // Type filter value.
-            // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
-            fix.detectChanges();
-
-            // Select two chips.
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
-            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
-            tick(200);
-            fix.detectChanges();
-
-            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[1] as HTMLElement).innerText).toBe('My create and group');
-            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[2] as HTMLElement).innerText).toBe('My create or group');
-            expect((QueryBuilderFunctions.getQueryBuilderContextMenuButtons(fix)[3] as HTMLElement).innerText).toBe('My delete filters');
-
-            // Close context menu.
-            QueryBuilderFunctions.clickQueryBuilderContextMenuCloseButton(fix);
-            tick(100);
-            fix.detectChanges();
-
-            // Add an 'or' group to root group.
-            btn = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[2] as HTMLElement;
-            btn.click();
-            tick(100);
-            fix.detectChanges();
-
-            const endGroupButton = QueryBuilderFunctions.getQueryBuilderTreeGroupButtons(fix, [0], 0)[3] as HTMLElement;
-            expect(endGroupButton.querySelector('span').innerText).toBe('My end group');
         }));
     });
 
@@ -1364,8 +1256,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
 
-            // Click the initial 'Add And Group' button.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            // Click the initial 'Add Condition' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -1388,7 +1280,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should allow hosting Advanced Filtering dialog outside of the grid.', fakeAsync(() => {
             // Add a root 'and' group.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, 0);
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
 

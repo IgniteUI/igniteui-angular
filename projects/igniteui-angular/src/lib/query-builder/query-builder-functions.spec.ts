@@ -3,7 +3,7 @@ import { ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxIconComponent, IgxDateFilteringOperand, IgxChipComponent } from 'igniteui-angular';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 export const QueryBuilderConstants = {
     QUERY_BUILDER_CLASS: 'igx-query-builder',
@@ -11,10 +11,9 @@ export const QueryBuilderConstants = {
     QUERY_BUILDER_TREE: 'igx-query-builder-tree',
     QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS: 'igx-filter-tree__line--and',
     QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS: 'igx-filter-tree__line--or',
-    QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS: 'igx-filter-tree__line--selected',
     CSS_CLASS_DROPDOWN_LIST_SCROLL: 'igx-drop-down__list-scroll',
-    CHIP_SELECT_CLASS: '.igx-chip__select',
-    QUERY_CONTEXT_MENU: 'igx-filter-contextual-menu',
+    QUERY_BUILDER_GROUP_CONTEXT_MENU: 'igx-filter-tree__expression-context-menu',
+    CSS_CLASS_DROP_DOWN_ITEM_DISABLED: 'igx-drop-down__item--disabled',
     QUERY_BUILDER_BODY: 'igx-query-builder__main',
     QUERY_BUILDER_EXPRESSION_ITEM_CLASS: 'igx-filter-tree__expression-item'
 }
@@ -76,6 +75,55 @@ export class QueryBuilderFunctions {
         return tree;
     }
 
+    public static generateExpressionTreeWithSubGroup(): FilteringExpressionsTree {
+        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Products', ['OrderId']);
+        innerTree.filteringOperands.push({
+            fieldName: 'Id',
+            condition: IgxNumberFilteringOperand.instance().condition('equals'),
+            conditionName: IgxNumberFilteringOperand.instance().condition('equals').name,
+            searchVal: 123
+        });
+        innerTree.filteringOperands.push({
+            fieldName: 'ProductName',
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
+            conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
+            searchVal: 'abc'
+        });
+
+
+        const tree = new FilteringExpressionsTree(FilteringLogic.And, null, 'Orders', ['*']);
+        tree.filteringOperands.push({
+            fieldName: 'OrderName',
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
+            conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
+            searchVal: 'foo'
+        });
+
+        tree.filteringOperands.push({
+            fieldName: 'OrderId',
+            condition: IgxStringFilteringOperand.instance().condition('in'),
+            conditionName: IgxStringFilteringOperand.instance().condition('in').name,
+            searchTree: innerTree
+        });
+
+        const subGroup = new FilteringExpressionsTree(FilteringLogic.Or, undefined, 'Orders', ['*']);
+        subGroup.filteringOperands.push({
+            fieldName: 'OrderName',
+            condition: IgxStringFilteringOperand.instance().condition('endsWith'),
+            conditionName: IgxStringFilteringOperand.instance().condition('endsWith').name,
+            searchVal: 'a'
+        });
+        subGroup.filteringOperands.push({
+            fieldName: 'OrderDate',
+            condition: IgxDateFilteringOperand.instance().condition('today'),
+            conditionName: IgxDateFilteringOperand.instance().condition('today').name
+        });
+        tree.filteringOperands.push(subGroup);
+
+        return tree;
+    }
+
+
     public static getQueryBuilderHeader(fix: ComponentFixture<any>) {
         const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
         const header = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_HEADER}`);
@@ -86,24 +134,6 @@ export class QueryBuilderFunctions {
         const header = QueryBuilderFunctions.getQueryBuilderHeader(fix);
         const title = header.querySelector('.igx-query-builder__title');
         return title.textContent;
-    }
-
-    public static getQueryBuilderHeaderLegendItemAnd(fix: ComponentFixture<any>) {
-        const header = QueryBuilderFunctions.getQueryBuilderHeader(fix);
-        const andLegendItem = header.querySelector('.igx-builder-legend__item--and');
-        return andLegendItem;
-    }
-
-    public static getQueryBuilderHeaderLegendItemOr(fix: ComponentFixture<any>) {
-        const header = QueryBuilderFunctions.getQueryBuilderHeader(fix);
-        const orLegendItem = header.querySelector('.igx-builder-legend__item--or');
-        return orLegendItem;
-    }
-
-    public static getQueryBuilderEmptyPrompt(fix: ComponentFixture<any>) {
-        const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
-        const emptyPrompt = queryBuilderElement.querySelector('.igx-filter-empty');
-        return emptyPrompt;
     }
 
     /**
@@ -117,12 +147,12 @@ export class QueryBuilderFunctions {
     }
 
     /**
-     * Get the initial group adding buttons when the dialog does not contain any filters.
+     * Get the initial condition adding buttons when the dialog does not contain any filters.
      */
-    public static getQueryBuilderInitialAddGroupButtons(fix: ComponentFixture<any>, level = 0) {
+    public static getQueryBuilderInitialAddConditionBtn(fix: ComponentFixture<any>, level = 0) {
         const exprContainer = this.getQueryBuilderExpressionsContainer(fix, level);
-        const initialButtons = Array.from(exprContainer.querySelectorAll('button'));
-        return initialButtons;
+        const initialButton = Array.from(exprContainer.querySelectorAll('button')).filter(item => item.checkVisibility()).at(-1);
+        return initialButton;
     }
 
     public static getQueryBuilderAllGroups(fix: ComponentFixture<any>): any[] {
@@ -135,7 +165,7 @@ export class QueryBuilderFunctions {
      * Get the root group.
      */
     public static getQueryBuilderTreeRootGroup(fix: ComponentFixture<any>, level = 0) {
-        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix, level);
+        const exprContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix, level).children[1];
         const rootGroup = exprContainer.querySelector(':scope > .igx-filter-tree');
         return rootGroup;
     }
@@ -146,7 +176,7 @@ export class QueryBuilderFunctions {
      */
     public static getQueryBuilderTreeChildGroups(group: HTMLElement, directChildrenOnly = true) {
         const pattern = directChildrenOnly ? ':scope > .igx-filter-tree' : '.igx-filter-tree';
-        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childrenContainer = group.querySelector('.igx-filter-tree__expressions').children[1];
         const childGroups = Array.from(childrenContainer.querySelectorAll(pattern));
         return childGroups;
     }
@@ -157,7 +187,7 @@ export class QueryBuilderFunctions {
      */
     public static getQueryBuilderTreeChildExpressions(group: HTMLElement, directChildrenOnly = true) {
         const pattern = directChildrenOnly ? ':scope > .igx-filter-tree__expression-item' : '.igx-filter-tree__expression-item';
-        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childrenContainer = group.querySelector('.igx-filter-tree__expressions').children[1];
         const childExpressions = Array.from(childrenContainer.querySelectorAll(pattern));
         return childExpressions;
     }
@@ -276,12 +306,16 @@ export class QueryBuilderFunctions {
      * index position of the buttons container.
      */
     public static getQueryBuilderTreeRootGroupButtons(fix: ComponentFixture<any>, buttonsIndex: number) {
-        const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
-        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
-        const buttonsContainers = Array.from(childrenContainer.querySelectorAll('.igx-filter-tree__buttons'));
-        const buttonsContainer: any = buttonsContainers[buttonsIndex];
+        const buttonsContainer: any = this.getQueryBuilderTreeRootGroupButtonsContainer(fix, buttonsIndex);
         const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
         return buttons;
+    }
+
+    public static getQueryBuilderTreeRootGroupButtonsContainer(fix: ComponentFixture<any>, buttonsIndex: number) {
+        const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
+        const childrenContainer = group.querySelector('.igx-filter-tree__expressions');
+        const buttonsContainers = Array.from(childrenContainer.querySelectorAll(':scope > .igx-filter-tree__buttons'));
+        return buttonsContainers[buttonsIndex];
     }
 
     public static getQueryBuilderOutlet(queryBuilderElement: HTMLElement) {
@@ -325,7 +359,7 @@ export class QueryBuilderFunctions {
     }
 
     /**
-     * Get the specified icon (add, edit, close) of the expression that is located on the provided 'path'.
+     * Get the specified icon (add, close) of the expression that is located on the provided 'path'.
      */
     public static getQueryBuilderTreeExpressionIcon(fix: ComponentFixture<any>, path: number[], iconType: string) {
         const actionsContainer = QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, path);
@@ -347,31 +381,28 @@ export class QueryBuilderFunctions {
         return buttons;
     }
 
-    public static getQueryBuilderContextMenus(fix: ComponentFixture<any>) {
-        return fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_CONTEXT_MENU}`));
+    public static getQueryBuilderGroupContextMenus(fix: ComponentFixture<any>) {
+        return fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_GROUP_CONTEXT_MENU}`));
     }
 
-    public static getQueryBuilderGroupContextMenuButton(contextMenu: DebugElement, buttonContent: string) {
-        return contextMenu.queryAll(By.css('.igx-button')).find(b => b.nativeElement.innerText.split("\n").pop().toLowerCase() === buttonContent.toLowerCase()) as DebugElement
+    public static getQueryBuilderGroupContextMenuDropDownItems(fix: ComponentFixture<any>) {
+        const dropDownItems = fix.nativeElement.querySelectorAll('igx-drop-down-item')
+        return dropDownItems;
     }
 
-    public static getQueryBuilderContextMenuButtons(fix: ComponentFixture<any>) {
-        const contextMenu = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenus(fix))[0].nativeElement;
-        const buttons = Array.from(contextMenu.querySelectorAll('button'));
-        return buttons;
+    public static verifyContextMenuItemDisabled(fix: ComponentFixture<any>, index: number, disabled: boolean) {
+        const contextMenuItems = QueryBuilderFunctions.getQueryBuilderGroupContextMenuDropDownItems(fix);
+        expect(contextMenuItems[index].classList.contains(QueryBuilderConstants.CSS_CLASS_DROP_DOWN_ITEM_DISABLED)).toBe(disabled);
     }
 
-    public static getQueryBuilderContextMenuButtonGroup(fix: ComponentFixture<any>) {
-        const contextMenu = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenus(fix))[0].nativeElement;
-        const buttonGroup = contextMenu.querySelector('igx-buttongroup');
-        return buttonGroup;
+    public static clickQueryBuilderGroupContextMenu(fix: ComponentFixture<any>, index = 0) {
+        const contextMenuButton = QueryBuilderFunctions.getQueryBuilderGroupContextMenus(fix)[index].queryAll(By.css('.igx-button'))[0].nativeElement;
+        contextMenuButton.click();
     }
 
-    public static getQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>, path = 0) {
-        const contextMenu = Array.from(QueryBuilderFunctions.getQueryBuilderContextMenus(fix))[path].nativeElement;;
-        const buttons = Array.from(contextMenu.querySelectorAll('button'));
-        const closeButton: any = buttons.find((b: any) => b.innerText.toLowerCase() === 'close');
-        return closeButton;
+    public static clickContextMenuItem(fix: ComponentFixture<any>, index: number) {
+        const dropDownItems = this.getQueryBuilderGroupContextMenuDropDownItems(fix);
+        dropDownItems[index].click();
     }
 
     /*
@@ -389,10 +420,9 @@ export class QueryBuilderFunctions {
         );
     }
 
-    public static clickQueryBuilderInitialAddGroupButton(fix: ComponentFixture<any>, buttonIndex: number, level = 0) {
-        const exprContainer = this.getQueryBuilderInitialAddGroupButtons(fix, level);
-        const andOrAddGroupButton = exprContainer[buttonIndex] as HTMLElement;
-        andOrAddGroupButton.click();
+    public static clickQueryBuilderInitialAddConditionBtn(fix: ComponentFixture<any>, level = 0) {
+        const btn = this.getQueryBuilderInitialAddConditionBtn(fix, level);
+        btn.click();
     }
 
     /**
@@ -458,13 +488,10 @@ export class QueryBuilderFunctions {
     /**
      * (Double)Click the underlying chip of the expression that is located on the provided 'path'.
      */
-    public static clickQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[], dblClick = false, level = 0) {
+    public static clickQueryBuilderTreeExpressionChip(fix: ComponentFixture<any>, path: number[], level = 0) {
         const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path, level) as HTMLElement;
-        if (dblClick) {
-            chip.dispatchEvent(new MouseEvent('dblclick'));
-        } else {
-            chip.click();
-        }
+
+        chip.click();
     }
 
     /**
@@ -476,33 +503,20 @@ export class QueryBuilderFunctions {
     }
 
     /**
-     * Click the specified icon (add, edit, close )of the expression that is located on the provided 'path'.
+     * Click the specified icon (add, close) of the expression that is located on the provided 'path'.
      */
     public static clickQueryBuilderTreeExpressionChipIcon(fix: ComponentFixture<any>, path: number[], iconType: string) {
         const chipIcon = QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, path, iconType);
         chipIcon.click();
     }
 
-    /**
-     * Click the operator line of the group that is located on the provided 'path'.
-     */
-    public static clickQueryBuilderTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
-        const operatorLine = QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, path) as HTMLElement;
-        operatorLine.click();
-    }
-
-    public static clickQueryBuilderContextMenuCloseButton(fix: ComponentFixture<any>, path = 0) {
-        const contextMenuCloseButton = QueryBuilderFunctions.getQueryBuilderContextMenuCloseButton(fix, path);
-        contextMenuCloseButton.click();
-    }
-
     /*
     * Hit a keyboard button upon element, wait for the desired time and detect changes
     */
     //TODO maybe move to more commonly used class
-    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: HTMLElement, wait: number = null) {
+    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: HTMLElement, waitT: number = null) {
         UIInteractions.triggerKeyDownEvtUponElem(key, elem, true);
-        tick(wait);
+        tick(waitT);
         fix.detectChanges();
     }
 
@@ -520,11 +534,6 @@ export class QueryBuilderFunctions {
             expect(operatorLine.classList.contains(QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_AND_CSS_CLASS)).toBe(false, 'incorrect operator line');
             expect(operatorLine.classList.contains(QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_OR_CSS_CLASS)).toBe(true, 'incorrect operator line');
         }
-    }
-
-    public static verifyOperatorLineSelection(operatorLine: HTMLElement, shouldBeSelected: boolean) {
-        expect(operatorLine.classList.contains(QueryBuilderConstants.QUERY_BUILDER_OPERATOR_LINE_SELECTED_CSS_CLASS))
-            .toBe(shouldBeSelected, 'incorrect selection state of the operator line');
     }
 
     public static verifyEditModeQueryExpressionInputStates(fix,
@@ -610,59 +619,6 @@ export class QueryBuilderFunctions {
         expect(valueInput.value).toBe(valueText);
     };
 
-    public static verifyGroupContextMenuVisibility = (fix: ComponentFixture<any>, shouldBeVisible: boolean) => {
-        if (shouldBeVisible) {
-            const wrapper = fix.debugElement.queryAll(By.css('.igx-overlay__wrapper'));
-            expect(wrapper.length).toBeGreaterThan(0, 'context menu wrapper missing');
-            const contextMenu = wrapper[0].nativeElement.querySelector('.igx-filter-contextual-menu');
-            const contextMenuRect = contextMenu.getBoundingClientRect();
-            expect(contextMenu.classList.contains('igx-toggle--hidden')).toBe(false, 'incorrect context menu visibility');
-            expect(contextMenuRect.width === 0 && contextMenuRect.height === 0).toBe(false, 'incorrect context menu dimensions');
-        } else {
-            const wrapper = fix.debugElement.queryAll(By.css('.igx-overlay__wrapper'));
-            expect(wrapper.length).toBeLessThanOrEqual(0);
-        }
-    };
-
-
-    public static verifyChipSelectedState = (chip: HTMLElement, shouldBeSelected: boolean) => {
-        const chipItem = chip.querySelector('.igx-chip__item');
-        if (shouldBeSelected) {
-            expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(true, "Chip should have been selected");
-            expect(chipItem.querySelector(QueryBuilderConstants.CHIP_SELECT_CLASS)).not.toBeNull();
-        } else {
-            expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(false, "Chip should have been deselected");
-            expect(chipItem.querySelector(QueryBuilderConstants.CHIP_SELECT_CLASS)).toBeNull();
-        }
-    };
-
-    public static verifyExpressionChipSelection(fix, path: number[], shouldBeSelected: boolean) {
-        const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, path) as HTMLElement;
-        QueryBuilderFunctions.verifyChipSelectedState(chip, shouldBeSelected);
-    };
-
-    /**
-     * Verifies that all children (operator lines and expression chips) of the provided 'parent' are selected.
-     */
-    public static verifyChildrenSelection(parent: HTMLElement, shouldBeSelected: boolean) {
-        const allOperatorLines: any[] = Array.from(parent.querySelectorAll('.igx-filter-tree__line'));
-        const allExpressionChips: any[] = Array.from(parent.querySelectorAll(`.igx-filter-tree__expression-item`));
-        for (const operatorLine of allOperatorLines) {
-            if (operatorLine.checkVisibility()) {
-                QueryBuilderFunctions.verifyOperatorLineSelection(operatorLine, shouldBeSelected);
-            } else {
-                QueryBuilderFunctions.verifyOperatorLineSelection(operatorLine, false);
-            }
-        }
-        for (const expressionChip of allExpressionChips) {
-            if (expressionChip.checkVisibility()) {
-                QueryBuilderFunctions.verifyChipSelectedState(expressionChip, shouldBeSelected);
-            } else {
-                QueryBuilderFunctions.verifyChipSelectedState(expressionChip, false);
-            }
-        }
-    };
-
     public static verifyQueryBuilderTabbableElements = (fixture: ComponentFixture<any>) => {
         const tabElements = QueryBuilderFunctions.getTabbableElements(fixture.nativeElement);
 
@@ -671,20 +627,21 @@ export class QueryBuilderFunctions {
             switch (i) {
                 case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 2: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('and'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
-                case 4: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 5: expect(element).toHaveClass('igx-filter-tree__details-button'); break;
+                case 4: expect(element).toHaveClass('igx-icon'); break;
+                case 5: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 6: expect(element).toHaveClass('igx-chip'); break;
-                case 7: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 8: expect(element).toHaveClass('igx-chip'); break;
-                case 9: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 10: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('Condition'); break;
-                case 11: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('"And" Group'); break;
+                case 7: expect(element).toHaveClass('igx-icon'); break;
+                case 8: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 9: expect(element).toHaveClass('igx-chip'); break;
+                case 10: expect(element).toHaveClass('igx-icon'); break;
+                case 11: expect(element).toHaveClass('igx-chip__remove'); break;
                 case 12: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('"Or" Group'); break;
+                    expect(element.innerText).toContain('Condition'); break;
+                case 13: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('Group'); break;
             }
             i++;
         });
@@ -697,15 +654,23 @@ export class QueryBuilderFunctions {
         tabElements.forEach((element: HTMLElement) => {
             switch (i) {
                 case 0: expect(element.firstChild).toHaveClass('igx-icon');
-                    expect(element.firstChild.textContent).toContain('edit');
-                    break;
-                case 1: expect(element.firstChild).toHaveClass('igx-icon');
                     expect(element.firstChild.textContent).toContain('add');
                     break;
             }
             i++;
         });
     };
+
+    public static verifyFocusedChip = (columnText: string, conditionText: string, valueText?: string) => {
+        expect(document.activeElement.tagName).toEqual('IGX-CHIP');
+        const chipElement = document.activeElement;
+        expect((chipElement.querySelector('.igx-filter-tree__expression-column') as HTMLElement).innerText).toEqual(columnText);
+        expect((chipElement.querySelector('.igx-filter-tree__expression-condition') as HTMLElement).innerText).toEqual(conditionText);
+
+        if (valueText) {
+            expect((chipElement.querySelector('.igx-chip__content') as HTMLElement).innerText).toEqual(valueText);
+        }
+    }
 
     public static verifyTabbableConditionEditLineElements = (editLine: DebugElement) => {
         const tabElements = QueryBuilderFunctions.getTabbableElements(editLine.nativeElement);
@@ -730,19 +695,18 @@ export class QueryBuilderFunctions {
             switch (i) {
                 case 0: expect(element).toHaveClass('igx-input-group__input'); break;
                 case 1: expect(element).toHaveClass('igx-input-group__input'); break;
-                case 2: expect(element).toHaveClass('igx-filter-tree__line--and'); break;
+                case 2: expect(element).toHaveClass('igx-button'); break;
                 case 3: expect(element).toHaveClass('igx-chip'); break;
-                case 4: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 5: expect(element).toHaveClass('igx-chip'); break;
-                case 6: expect(element).toHaveClass('igx-chip__remove'); break;
-                case 7: expect(element).toHaveClass('igx-button');
+                case 4: expect(element).toHaveClass('igx-icon'); break;
+                case 5: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 6: expect(element).toHaveClass('igx-chip'); break;
+                case 7: expect(element).toHaveClass('igx-icon'); break;
+                case 8: expect(element).toHaveClass('igx-chip__remove'); break;
+                case 9: expect(element).toHaveClass('igx-button');
                     expect(element.innerText).toContain('Condition');
                     break;
-                case 8: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('"And" Group');
-                    break;
-                case 9: expect(element).toHaveClass('igx-button');
-                    expect(element.innerText).toContain('"Or" Group');
+                case 10: expect(element).toHaveClass('igx-button');
+                    expect(element.innerText).toContain('Group');
                     break;
             }
             i++;
@@ -835,7 +799,7 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static addAndValidateChildGroup(fix: ComponentFixture<any>, groupType: number, level: number) {
+    public static addAndValidateChildGroup(fix: ComponentFixture<any>, level: number) {
         // Enter values in the nested query
         QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
         tick(100);
@@ -846,8 +810,8 @@ export class QueryBuilderFunctions {
         tick(100);
         fix.detectChanges();
 
-        // Click the initial 'Add Or Group' button.
-        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, groupType, level);
+        // Click the initial 'Add Condition' button.
+        QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, level);
         tick(100);
         fix.detectChanges();
 
@@ -857,7 +821,7 @@ export class QueryBuilderFunctions {
 
         QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1, level); // Select 'ProductName' column.
 
-        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, false, false, level);
+        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, false, level);
 
         QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, level); // Select 'Contains' operator.
 
@@ -869,7 +833,7 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
 
         // Verify all inputs
-        QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false, level - 1); // Parent commit button should be disabled
+        QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true, level - 1); // Parent commit button should be disabled
         QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, true, level);
         QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Products', 'Id', 'ProductName', 'Contains', 'a', level);
 
@@ -878,33 +842,73 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static createGroupFromBottomTwoChips(fix: ComponentFixture<any>, operator: string) {
-        //Select bottom two chips
-        const chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[3].nativeElement, 200);
-        QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chips[4].nativeElement, 200);
-
-        //context menu should have opened
-        const contextMenus = QueryBuilderFunctions.getQueryBuilderContextMenus(fix);
-        expect(contextMenus.length).toBe(2);
-
-        //Click 'create OR group'
-        const operatorButton = operator.toUpperCase() === "AND" ? 0 :
-            operator.toUpperCase() === "OR" ? 1 : null;
-        const orButton = contextMenus[1].queryAll(By.css('.igx-button'))[operatorButton];
-        orButton.nativeElement.click();
-        tick();
-        fix.detectChanges();
-    }
-
-    public static selectEntityAndClickInitialAddGroup(fix: ComponentFixture<any>, entityIndex: number, groupIndex: number) {
+    public static selectEntityAndClickInitialAddCondition(fix: ComponentFixture<any>, entityIndex: number, groupIndex = 0) {
         QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex);
         tick(100);
         fix.detectChanges();
 
-        // Click the initial 'Add Or Group' button.
-        QueryBuilderFunctions.clickQueryBuilderInitialAddGroupButton(fix, groupIndex);
+        // Click the initial 'Add Condition' button.
+        QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, groupIndex);
         tick(100);
         fix.detectChanges();
+    }
+
+    public static GetChipsContentAsArray(fix: ComponentFixture<any>) {
+        const contents: string[] = [];
+
+        const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
+
+        queryTreeElement.querySelectorAll('.igx-chip').forEach(chip => {
+            contents.push(QueryBuilderFunctions.getChipContent(chip));
+        });
+
+        return contents;
+    }
+
+    public static getChipContent(chip: Element): string {
+        if (chip.checkVisibility()) {
+            let text: string = '';
+
+            Array.from(chip.querySelectorAll('span')).forEach(element => {
+                if (element?.textContent) text += element.textContent;
+            });
+
+            return text.trim();
+        }
+    }
+
+
+    public static getVisibleChips(fixture: ComponentFixture<any>): DebugElement[] {
+        return fixture.debugElement.queryAll(By.directive(IgxChipComponent)).filter(chip => chip.nativeElement.offsetHeight > 0);
+    }
+
+    public static getDropGhost(fixture: ComponentFixture<any>): Element {
+        var expressionsContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fixture);
+        return expressionsContainer.querySelector('div.igx-filter-tree__expression-item-drop-ghost');
+    }
+
+    public static getDropGhostBounds(fixture: ComponentFixture<any>): DOMRect {
+        return QueryBuilderFunctions.getDropGhost(fixture)?.getBoundingClientRect();
+    }
+
+    public static getElementCenter(element: HTMLElement) {
+        const bounds = element.getBoundingClientRect();
+        return {
+            X: (bounds.left + bounds.right) / 2,
+            Y: (bounds.top + bounds.bottom) / 2
+        }
+    }
+
+    public static dragMove(dragDirective, X: number, Y: number, pointerUp?: boolean) {
+        //mouse down
+        dragDirective.onPointerMove({ pointerId: 1, pageX: X, pageY: Y });
+        //duplicate the mousemove as dispatched Event, so we can trigger the RxJS listener
+        dragDirective.ghostElement.dispatchEvent(new MouseEvent('mousemove', { clientX: X, clientY: Y }));
+
+        //mouse up
+        if (pointerUp) {
+            wait();
+            dragDirective.onPointerUp({ pointerId: 1, pageX: X, pageY: Y });
+        }
     }
 }

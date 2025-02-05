@@ -131,7 +131,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         eventArgs.stopPropagation();
         const key = eventArgs.key;
         if (this.queryBuilder.isContextMenuVisible && (key === this.platform.KEYMAP.ESCAPE)) {
-            this.queryBuilder.clearSelection();
+
         } else if (key === this.platform.KEYMAP.ESCAPE) {
             this.closeDialog();
         }
