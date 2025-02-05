@@ -76,4 +76,5 @@ export const QueryBuilderResourceStringsKO = {
     igx_query_builder_dialog_checkbox_text: '이 대화 상자를 다시 표시하지 않기',
     igx_query_builder_dialog_cancel: '취소',
     igx_query_builder_dialog_confirm: '확인',
+    igx_query_builder_drop_ghost_text: 'Drop here to insert'
 } satisfies MakeRequired<IQueryBuilderResourceStrings>;

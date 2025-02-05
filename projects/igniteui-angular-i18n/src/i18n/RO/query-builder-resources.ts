@@ -76,4 +76,5 @@ export const QueryBuilderResourceStringsRO = {
     igx_query_builder_dialog_checkbox_text: 'Nu se mai afișează această casetă de dialog',
     igx_query_builder_dialog_cancel: 'Anulare',
     igx_query_builder_dialog_confirm: 'Confirmare',
+    igx_query_builder_drop_ghost_text: 'Drop here to insert'
 } satisfies MakeRequired<IQueryBuilderResourceStrings>;

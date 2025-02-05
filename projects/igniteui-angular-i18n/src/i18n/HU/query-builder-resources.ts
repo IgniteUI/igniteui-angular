@@ -76,4 +76,5 @@ export const QueryBuilderResourceStringsHU = {
     igx_query_builder_dialog_checkbox_text: 'Ne jelenjen meg többet ez a párbeszédpanel',
     igx_query_builder_dialog_cancel: 'Mégse',
     igx_query_builder_dialog_confirm: 'Megerősítés',
+    igx_query_builder_drop_ghost_text: 'Drop here to insert'
 } satisfies MakeRequired<IQueryBuilderResourceStrings>;

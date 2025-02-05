@@ -76,4 +76,5 @@ export const QueryBuilderResourceStringsZHHANT = {
     igx_query_builder_dialog_checkbox_text: '不要再顯示這個對話方塊',
     igx_query_builder_dialog_cancel: '取消',
     igx_query_builder_dialog_confirm: '確認',
+    igx_query_builder_drop_ghost_text: 'Drop here to insert'
 } satisfies MakeRequired<IQueryBuilderResourceStrings>;

@@ -76,4 +76,5 @@ export const QueryBuilderResourceStringsCS = {
     igx_query_builder_dialog_checkbox_text: 'Tento dialog již příště nezobrazovat',
     igx_query_builder_dialog_cancel: 'Zrušení',
     igx_query_builder_dialog_confirm: 'Potvrdit',
+    igx_query_builder_drop_ghost_text: 'Drop here to insert'
 } satisfies MakeRequired<IQueryBuilderResourceStrings>;
