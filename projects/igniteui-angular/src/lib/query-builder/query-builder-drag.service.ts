@@ -73,12 +73,11 @@ export class IgxQueryBuilderDragService {
 
     //On entering a drop area of another chip
     public onDivEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
-        this.onChipEnter(targetDragElement, targetExpressionItem, true)
+        this.onChipEnter(targetDragElement, targetExpressionItem)
     }
 
-    //TODO remove fromDiv: boolean -> targetDragElement is always the div
-    public onChipEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem, fromDiv: boolean) {
-        // console.log('Entering:', targetDragElement, targetExpressionItem, 'from div:', fromDiv);
+    public onChipEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
+        // console.log('Entering:', targetDragElement, targetExpressionItem);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         //If entering the one that's been picked up
@@ -92,8 +91,8 @@ export class IgxQueryBuilderDragService {
         this.targetElement = targetDragElement;
         this.targetExpressionItem = targetExpressionItem;
 
-        //Determine the middle point of the chip. (fromDiv - get the div's chip)
-        const appendUnder = fromDiv ? this.ghostInLowerPart(targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(targetDragElement);
+        //Determine the middle point of the chip.
+        const appendUnder = this.ghostInLowerPart(targetDragElement);
 
         this.renderDropGhostChip(targetDragElement, appendUnder);
     }
@@ -101,19 +100,18 @@ export class IgxQueryBuilderDragService {
     //On moving the dragged chip in a drop area
     public onDivOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
         if (this.targetExpressionItem === targetExpressionItem) {
-            this.onChipOver(targetDragElement, true)
+            this.onChipOver(targetDragElement)
         } else {
-            this.onChipEnter(targetDragElement, targetExpressionItem, true);
+            this.onChipEnter(targetDragElement, targetExpressionItem);
         }
     }
 
-    //TODO remove fromDiv: boolean -> targetDragElement is always the div
-    public onChipOver(targetDragElement: HTMLElement, fromDiv: boolean): void {
+    public onChipOver(targetDragElement: HTMLElement): void {
         //console.log('Over:', targetDragElement, 'type: ', typeof event);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
-        //Determine the middle point of the chip. (fromDiv - get the div's chip)
-        const appendUnder = fromDiv ? this.ghostInLowerPart(targetDragElement.children[0] as HTMLElement) : this.ghostInLowerPart(targetDragElement);
+        //Determine the middle point of the chip.
+        const appendUnder = this.ghostInLowerPart(targetDragElement);
 
         this.renderDropGhostChip(targetDragElement, appendUnder);
     }
@@ -183,13 +181,7 @@ export class IgxQueryBuilderDragService {
         if (lastElement == this.dropGhostChipNode) return;
 
         //simulate entering in the lower part of the last chip/group
-        this.onChipEnter(lastElement as HTMLElement,
-            rootGroup.children[rootGroup.children.length - 1],
-            false);
-    }
-
-    public onAddConditionLeave() {
-        this.onChipLeave();
+        this.onChipEnter(lastElement as HTMLElement, rootGroup.children[rootGroup.children.length - 1]);
     }
 
     public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
@@ -239,7 +231,6 @@ export class IgxQueryBuilderDragService {
     }
 
     //Create the drop ghost node based on the base chip that's been dragged
-    //TODO refactor this using angular and css?
     private createDropGhost(keyboardMode?: boolean) {
         const dragCopy = this.sourceElement.cloneNode(true);
         (dragCopy as HTMLElement).classList.add(this._dropGhostClass);
@@ -306,17 +297,20 @@ export class IgxQueryBuilderDragService {
     }
 
     //Execute the drop
-    private moveDraggedChipToNewLocation(appendToExpressionItem: ExpressionItem, fromAddConditionBtn?: boolean) {
+    private moveDraggedChipToNewLocation(appendToExpressionItem: ExpressionItem) {
         //Copy dragged chip
         const dragCopy = { ...this.sourceExpressionItem };
         dragCopy.parent = appendToExpressionItem.parent;
 
         //Paste on new place
         const index = appendToExpressionItem.parent.children.indexOf(appendToExpressionItem);
-        appendToExpressionItem.parent.children.splice(index + (fromAddConditionBtn || this.dropUnder ? 1 : 0), 0, dragCopy);
+        appendToExpressionItem.parent.children.splice(index + (this.dropUnder ? 1 : 0), 0, dragCopy);
 
         //Delete from old place
         this._queryBuilderTreeComponentDeleteItem(this.sourceExpressionItem);
+
+        // this._queryBuilderTreeComponent._lastFocusedChipIndex = index;
+        // this._queryBuilderTreeComponent.focusEditedExpressionChip();
     }
 
     //Reset Drag&Drop vars. Optionally the drag source vars too
@@ -507,7 +501,7 @@ export class IgxQueryBuilderDragService {
 
     //Gets all chip elements owned by this tree (discard child trees), AND/OR group roots and '+condition' button, flatten out as a list of HTML elements
     private getListedDropZones(): HTMLElement[] {
-        const viableDropAreaSelector = `.igx-filter-tree__expression-item[igxDrop]:not(.${this._dropGhostClass}),` + /*Condition chip*/ //TODO :not(.${this.dropGhostClass}) might be redundant now
+        const viableDropAreaSelector = `.igx-filter-tree__expression-item[igxDrop]:not(.${this._dropGhostClass}),` + /*Condition chip*/
             `.igx-filter-tree__subquery:has([igxDrop]),` + /*Chip in edit*/
             `.igx-filter-tree__buttons > .igx-button[igxDrop]:first-of-type,` + /*Add Condition Button*/
             `.igx-filter-tree__expression-context-menu[igxDrop]`; /*AND/OR group root*/
