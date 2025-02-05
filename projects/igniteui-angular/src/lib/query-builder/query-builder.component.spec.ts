@@ -141,11 +141,8 @@ describe('IgxQueryBuilder', () => {
       // Verify the edit inputs are empty.
       QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, 'Orders', 'OrderId, OrderName, OrderDate, Delivered', '', '', '');
 
-      // Verify adding buttons are disabled.
-      const buttons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
-      for (const button of buttons) {
-        ControlsFunction.verifyButtonIsDisabled(button as HTMLElement);
-      }
+      // Verify adding buttons are not displayed
+      expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtonsContainer(fix, 0)).toBe(undefined); 
     }));
 
     it(`Should discard newly added group when clicking on the 'cancel' button of its initial condition.`, fakeAsync(() => {
@@ -233,12 +230,8 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, false, false, false);
       QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, '', '', '');
 
-      // adding buttons should be disabled
-      let addingButtons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
-      expect(addingButtons.length).toBe(2);
-      for (const button of addingButtons) {
-        ControlsFunction.verifyButtonIsDisabled(button as HTMLElement);
-      }
+      // Verify adding buttons are not displayed
+      expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtonsContainer(fix, 0)).toBe(undefined); 
 
       // Populate edit inputs.
       QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
@@ -255,7 +248,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeGroupOperatorLine(fix, [0]) as HTMLElement, 'or');
 
       // adding buttons should be enabled
-      addingButtons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
+      const addingButtons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
       expect(addingButtons.length).toBe(2);
       for (const button of addingButtons) {
         ControlsFunction.verifyButtonIsDisabled(button as HTMLElement, false);
@@ -1027,11 +1020,8 @@ describe('IgxQueryBuilder', () => {
       tick(50);
       fix.detectChanges();
 
-      // Verify adding buttons are disabled
-      buttons = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
-      for (const button of buttons) {
-        ControlsFunction.verifyButtonIsDisabled(button as HTMLElement);
-      }
+      // Verify adding buttons are not displayed
+      expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtonsContainer(fix, 0)).toBe(undefined);      
 
       // Exit edit mode
       const closeButton = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
@@ -2402,16 +2392,6 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' My advanced filter ');
       expect((QueryBuilderFunctions.getQueryBuilderInitialAddConditionBtn(fix, 0) as HTMLElement).querySelector('span').innerText)
         .toBe('My condition');
-
-      // Click the initial 'Add condition' button.
-      QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
-      tick(100);
-      fix.detectChanges();
-
-      expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement).querySelector('span').innerText)
-        .toBe('My condition');
-      expect((QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[1] as HTMLElement).querySelector('span').innerText)
-        .toBe('My group');
 
       // Click the 'My and' group button
       QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix);

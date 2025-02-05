@@ -306,12 +306,16 @@ export class QueryBuilderFunctions {
      * index position of the buttons container.
      */
     public static getQueryBuilderTreeRootGroupButtons(fix: ComponentFixture<any>, buttonsIndex: number) {
+        const buttonsContainer: any = this.getQueryBuilderTreeRootGroupButtonsContainer(fix, buttonsIndex);
+        const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
+        return buttons;
+    }
+
+    public static getQueryBuilderTreeRootGroupButtonsContainer(fix: ComponentFixture<any>, buttonsIndex: number) {
         const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
         const childrenContainer = group.querySelector('.igx-filter-tree__expressions');
         const buttonsContainers = Array.from(childrenContainer.querySelectorAll(':scope > .igx-filter-tree__buttons'));
-        const buttonsContainer: any = buttonsContainers[buttonsIndex];
-        const buttons = Array.from(buttonsContainer.querySelectorAll('button'));
-        return buttons;
+        return buttonsContainers[buttonsIndex];
     }
 
     public static getQueryBuilderOutlet(queryBuilderElement: HTMLElement) {
@@ -817,7 +821,7 @@ export class QueryBuilderFunctions {
 
         QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1, level); // Select 'ProductName' column.
 
-        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, true, level);
+        QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, false, level);
 
         QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, level); // Select 'Contains' operator.
 
