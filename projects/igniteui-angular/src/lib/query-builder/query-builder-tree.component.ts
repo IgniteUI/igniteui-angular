@@ -1185,7 +1185,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             expressionItem.expression.condition ?
                 expressionItem.expression.condition.name :
                 null;
-        this.searchValue.value = expressionItem.expression.searchVal;
+        this.searchValue.value = expressionItem.expression.searchVal instanceof Set ?
+                                    Array.from(expressionItem.expression.searchVal) :
+                                    expressionItem.expression.searchVal;
 
         expressionItem.inEditMode = true;
         this._editedExpression = expressionItem;
