@@ -56,24 +56,6 @@ $_theme: $material;
             opacity: .24;
         }
     }
-    
-    %radio-group-display {
-        display: block;
-    
-        %radio-display:not(:last-of-type) {
-            margin-inline-end: var(--horizontal-group-margin);
-        }
-    }
-    
-    %radio-group-display--vertical {
-        display: flex;
-        flex-flow: column;
-    
-        %radio-display:not(:last-of-type) {
-            margin-inline-end: 0;
-            margin-block-end: var(--vertical-group-margin);
-        }
-    }
 
     @include b(igx-radio) {
         position: relative;
@@ -425,6 +407,24 @@ $_theme: $material;
                     background: var-get($_theme, 'disabled-fill-color');
                     border: var(--border-width) solid transparent;
                 }
+            }
+        }
+    }
+
+    @include b(igx-radio-group) {
+        display: block;
+
+        igx-radio:not(:last-of-type) {
+            margin-inline-end: var(--horizontal-group-margin);
+        }
+
+        @include m(vertical) {
+            display: flex;
+            flex-flow: column;
+        
+            igx-radio:not(:last-of-type) {
+                margin-inline-end: 0;
+                margin-block-end: var(--vertical-group-margin);
             }
         }
     }
