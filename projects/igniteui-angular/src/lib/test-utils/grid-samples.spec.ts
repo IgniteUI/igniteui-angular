@@ -42,6 +42,7 @@ import { CellType, ColumnType, IgxAdvancedFilteringDialogComponent } from '../gr
 import { IgxGridComponent } from '../grids/grid/public_api';
 import { OverlaySettings } from '../services/public_api';
 import { IgxFocusDirective } from '../directives/focus/focus.directive';
+import { trackByIdentity } from '../core/utils';
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', `<igx-column field="ID" [hidden]="true"></igx-column>`),
@@ -1124,7 +1125,7 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
         <igx-grid-toolbar></igx-grid-toolbar>
-        @for (c of columns; track c) {
+        @for (c of columns; track trackColumnItem(c)) {
             <igx-column
                 [field]="c.field"
                 [header]="c.header"
@@ -1140,6 +1141,7 @@ export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridCo
     public override data = [];
     public columns = [];
 
+    public trackColumnItem = trackByIdentity;
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', header: 'HeaderID', width: '100px', type: 'number' },

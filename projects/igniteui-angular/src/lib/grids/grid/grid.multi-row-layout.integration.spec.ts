@@ -15,6 +15,7 @@ import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
 import { IgxGridToolbarActionsComponent } from '../toolbar/common';
 import { IgxGridToolbarHidingComponent } from '../toolbar/grid-toolbar-hiding.component';
 import { IgxGridToolbarPinningComponent } from '../toolbar/grid-toolbar-pinning.component';
+import { trackByIdentity } from '../../core/utils';
 
 
 type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayouHidingTestComponent | ColumnLayoutResizingTestComponent
@@ -1286,7 +1287,7 @@ export class ColumnLayouHidingTestComponent {
                 </igx-grid-toolbar-actions>
             </igx-grid-toolbar>
         }
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track trackColumnItem(group)) {
             <igx-column-layout [field]='group.group' [pinned]='group.pinned'>
                 @for (col of group.columns; track col) {
                     <igx-column
@@ -1328,6 +1329,7 @@ export class ColumnLayoutPinningTestComponent {
         }
     ];
     public data = SampleTestData.contactInfoDataFull();
+    public trackColumnItem = trackByIdentity;
 }
 
 @Component({
@@ -1396,7 +1398,7 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px">
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track trackColumnItem(group)) {
             <igx-column-layout>
                 @for (col of group.columns; track col) {
                     <igx-column [field]='col.field' [width]='col.width' [resizable]='col.resizable'
@@ -1428,4 +1430,5 @@ export class ColumnLayoutResizingTestComponent {
         }
     ];
     public data = SampleTestData.contactInfoDataFull();
+    public trackColumnItem = trackByIdentity;
 }
