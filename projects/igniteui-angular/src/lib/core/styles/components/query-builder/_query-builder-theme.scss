@@ -10,7 +10,7 @@
 /// @param {Color} header-foreground [null] - The foreground color of the query builder header.
 /// @param {Color} header-border [null] - The border color of the query builder header.
 ///
-/// @param {Map} subquery-background [null] - The background color of the subquery block.
+/// @param {Map} subquery-header-background [null] - The background color of the subquery header.
 /// @param {Map} subquery-border-color [null] - The border color of the query block.
 /// @param {Map} separator-color [null] - The separator color of the query block.
 /// @param {Number} subquery-border-radius [null] - The border radius of the subquery block.
@@ -35,7 +35,7 @@
     $color-expression-group-and: null,
     $color-expression-group-or: null,
     $border-radius: null,
-    $subquery-background: null,
+    $subquery-header-background: null,
     $subquery-border-color: null,
     $subquery-border-radius: null,
     $separator-color: null,
@@ -71,7 +71,7 @@
         header-border: $header-border,
         color-expression-group-and: $color-expression-group-and,
         color-expression-group-or: $color-expression-group-or,
-        subquery-background: $subquery-background,
+        subquery-header-background: $subquery-header-background,
         subquery-border-color: $subquery-border-color,
         subquery-border-radius: $subquery-border-radius,
         separator-color: $separator-color,
@@ -157,7 +157,7 @@
 
         // Add styles to the subquery itself only if there is a direct .igx-filter-tree__inputs inside it
         &:has( > %filter-tree__inputs) {
-            background: var-get($theme, 'subquery-background');
+            background: var-get($theme, 'subquery-header-background');
             border: rem(1px) solid var-get($theme, 'subquery-border-color');
             border-radius: var-get($theme, 'subquery-border-radius');
         }
