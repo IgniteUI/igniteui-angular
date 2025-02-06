@@ -1,0 +1,74 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'light/tokens' as *;
+@use 'light/tokens' as *;
+
+$theme: $base;
+
+@layer base {
+    @include b(igx-divider) {
+        @include css-vars-from-theme($theme, 'igx-divider');
+        --dash-interval: #{rem(10px)};
+        --dash-angle: 90deg;
+        --inset-center: calc(100% - (#{var-get($theme, 'inset')} * 2));
+        --line: #{rem(4px)};
+        --thickness: #{rem(1px)};
+
+        position: relative;
+        display: flex;
+        justify-content: center;
+        min-width: var(--thickness);
+        min-height: var(--thickness);
+        overflow: hidden;
+
+        &::after {
+            content: '';
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background: var-get($theme, 'color');
+            inset-inline-start: var-get($theme, 'inset');
+        }
+
+        @include m(inset) {
+            &::after {
+                min-width: var(--line);
+                width: var(--inset-center);
+            }
+        }
+
+        @include m(dashed) {
+            &::after {
+                background: repeating-linear-gradient(
+                    var(--dash-angle),
+                    var-get($theme, 'color'),
+                    var-get($theme, 'color') var(--dash-interval),
+                    transparent var(--dash-interval),
+                    transparent calc(var(--dash-interval) * 2)
+                );
+            }
+        }
+
+        @include m(vertical) {
+            display: inline-flex;
+            width: var(--thickness);
+
+            &::after {
+                inset-inline-start: unset;
+                inset-block-start: var-get($theme, 'inset');
+            }
+        }
+
+        @include mx(dashed, vertical) {
+            --dash-angle: 0deg;
+        }
+
+        @include mx(vertical, inset) {
+            &::after {
+                min-height: var(--line);
+                height: var(--inset-center);
+            }
+        }
+    }
+}

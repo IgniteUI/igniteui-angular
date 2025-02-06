@@ -384,13 +384,13 @@
         @include dialog($dialog-theme-map);
     }
 
-    @if is-used('igx-divider', $exclude) {
-        $divider-theme-map: divider-theme(
-            $schema: $schema,
-        );
-        $divider-theme-map: meta.call($theme-handler, $divider-theme-map);
-        @include divider($divider-theme-map);
-    }
+    // @if is-used('igx-divider', $exclude) {
+    //     $divider-theme-map: divider-theme(
+    //         $schema: $schema,
+    //     );
+    //     $divider-theme-map: meta.call($theme-handler, $divider-theme-map);
+    //     @include divider($divider-theme-map);
+    // }
 
     @if is-used('igc-dockmanager', $exclude) {
         $dock-manager-theme-map: dock-manager-theme(
