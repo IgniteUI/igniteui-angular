@@ -15,7 +15,7 @@
 
     <article #expressionsContainer class="igx-excel-filter__secondary-main">
         @if (column.dataType === 'date' || column.dataType === 'dateTime' || column.dataType === 'time') {
-            @for (expression of expressionsList; track expression) {
+            @for (expression of expressionsList; track expression.expressionId) {
                 <igx-excel-style-date-expression
                     class="igx-excel-filter__condition"
                     [expressionUI]="expression"
@@ -29,7 +29,7 @@
         }
 
         @if (column.dataType !== 'date' && column.dataType !== 'dateTime' && column.dataType !== 'time') {
-            @for (expression of expressionsList; track expression) {
+            @for (expression of expressionsList; track expression.expressionId) {
                 <igx-excel-style-default-expression
                     class="igx-excel-filter__condition"
                     [expressionUI]="expression"

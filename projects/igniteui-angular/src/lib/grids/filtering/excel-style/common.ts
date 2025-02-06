@@ -20,11 +20,16 @@ export class FilterListItem {
  * @hidden
  */
 export class ExpressionUI {
+    public expressionId: string;
     public expression: IFilteringExpression;
     public beforeOperator: FilteringLogic;
     public afterOperator: FilteringLogic;
     public isSelected = false;
     public isVisible = true;
+
+    constructor() {
+        this.expressionId = crypto.randomUUID();
+    }
 }
 
 /**
