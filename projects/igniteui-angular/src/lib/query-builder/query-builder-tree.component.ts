@@ -369,23 +369,26 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     protected get editingInputsContainer(): ElementRef {
         return this._editingInputsContainer;
     }
-
+  
     @ViewChild('currentGroupButtonsContainer', { read: ElementRef })
     protected set currentGroupButtonsContainer(value: ElementRef) {
         if ((value && !this._currentGroupButtonsContainer) ||
-            (value && this._currentGroupButtonsContainer && this._currentGroupButtonsContainer.nativeElement !== value.nativeElement)) {
+        (value && this._currentGroupButtonsContainer && this._currentGroupButtonsContainer.nativeElement !== value.nativeElement)) {
             requestAnimationFrame(() => {
                 this.scrollElementIntoView(value.nativeElement);
             });
         }
-
+        
         this._currentGroupButtonsContainer = value;
     }
-
+    
     /** @hidden */
     protected get currentGroupButtonsContainer(): ElementRef {
         return this._currentGroupButtonsContainer;
     }
+
+    @ViewChild('editingInputsParentContainer', {read: ElementRef})
+    private editingInputsParentContainer: ElementRef;
 
     @ViewChild('expressionsContainer')
     private expressionsContainer: ElementRef;
@@ -1221,6 +1224,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
             input?.focus();
         }
+        this.editingInputsParentContainer?.nativeElement.scrollIntoView();
     }
 
     /**
