@@ -27,11 +27,8 @@ $theme: $material;
         }
 
         igx-icon {
-            --size: var(--igx-icon-size, calc(var(--_badge-size) / 2));
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 400;
+            --size: calc(var(--_badge-size) / 2) !important;
+
             color: var-get($theme, 'icon-color');
         }
 
