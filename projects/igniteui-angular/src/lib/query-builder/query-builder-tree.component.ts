@@ -311,6 +311,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChild('entitySelect', { read: IgxSelectComponent })
     protected entitySelect: IgxSelectComponent;
 
+    @ViewChild('editingInputs', { read: ElementRef })
+    private editingInputs: ElementRef;
+
     @ViewChild('returnFieldsCombo', { read: IgxComboComponent })
     private returnFieldsCombo: IgxComboComponent;
 
@@ -1221,6 +1224,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
             input?.focus();
         }
+
+        (this.editingInputs.nativeElement.parentElement as HTMLElement).scrollIntoView({block: "nearest", inline: "nearest"});
     }
 
     /**
