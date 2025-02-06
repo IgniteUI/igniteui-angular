@@ -1,0 +1,63 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use './light/tokens' as *;
+
+$_theme: $material;
+
+@layer base {
+    @include b(igx-dialog) {
+        outline-style: none;
+
+        @include e(window) {
+            position: relative;
+            min-width: var(--min-width);
+            border: rem(1px) solid var-get($_theme, 'border-color');
+            border-radius: var-get($_theme, 'border-radius');
+            background: var-get($_theme, 'background');
+            box-shadow: var-get($_theme, 'elevation');
+            overflow: hidden;
+
+            .igx-calendar {
+                min-width: rem(320px);
+            }
+
+            .igx-calendar--vertical {
+                min-width: rem(496px);
+            }
+        }
+
+        @include e(window-title) {
+            display: flex;
+            color: var-get($_theme, 'title-color');
+            padding: var(--title-padding);
+        }
+
+        @include e(window-content) {
+            color: var-get($_theme, 'message-color');
+            padding: var(--message-padding);
+            // The 2 rules below are related to https://github.com/IgniteUI/igniteui-angular/issues/11300
+            position: relative;
+            z-index: 0;
+        }
+
+        @include e(window-message) {
+            display: inline-block;
+            max-width: 40ch;
+        }
+
+        @include e(window-actions) {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: flex-end;
+            padding: var(--actions-padding);
+            gap: rem(8px);
+        }
+
+        @include m(hidden) {
+            display: none;
+        }
+    }
+}

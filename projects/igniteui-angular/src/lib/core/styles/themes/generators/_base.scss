@@ -376,13 +376,13 @@
         @include date-range-picker($date-range-picker-theme-map);
     }
 
-    @if is-used('igx-dialog', $exclude) {
-        $dialog-theme-map: dialog-theme(
-            $schema: $schema,
-        );
-        $dialog-theme-map: meta.call($theme-handler, $dialog-theme-map);
-        @include dialog($dialog-theme-map);
-    }
+    // @if is-used('igx-dialog', $exclude) {
+    //     $dialog-theme-map: dialog-theme(
+    //         $schema: $schema,
+    //     );
+    //     $dialog-theme-map: meta.call($theme-handler, $dialog-theme-map);
+    //     @include dialog($dialog-theme-map);
+    // }
 
     // @if is-used('igx-divider', $exclude) {
     //     $divider-theme-map: divider-theme(
