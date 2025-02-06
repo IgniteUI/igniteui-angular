@@ -3,6 +3,7 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
 @use './light/tokens' as *;
 
 $theme: $material;
@@ -32,7 +33,7 @@ $theme: $material;
     }
 }
 
-@layer base {
+@include layer(base) {
     @include b(igx-icon) {
         @include sizable();
 

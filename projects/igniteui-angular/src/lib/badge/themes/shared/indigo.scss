@@ -5,11 +5,9 @@
 @use '../light/tokens' as *;
 
 @include themed-block(igx-badge, indigo) {
+    --igx-icon-size: #{rem(12px)};
+
     @include type-style(button) {
         margin: 0;
-    }
-
-    igx-icon {
-        --size: #{rem(12px)};
     }
 }

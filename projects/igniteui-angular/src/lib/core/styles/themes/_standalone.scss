@@ -4,6 +4,12 @@
 @forward 'igniteui-theming/sass/themes';
 @forward 'igniteui-theming/sass/bem';
 
+@mixin layer($name) {
+    @layer ig.#{$name} {
+        @content;
+    }
+}
+
 /// Includes a block element (@see block) for a specific component, theme, and variant.
 /// @access private
 /// @group bem
@@ -15,7 +21,7 @@
 @mixin themed-block($component, $theme, $variant: null) {
     $_theme: "" + $theme;
 
-    @layer #{$_theme} {
+    @include layer($_theme) {
         @if $variant {
             @container style(--theme: #{$_theme}) and style(--ig-theme-variant: #{$variant}) {
                 @include b($component) {
