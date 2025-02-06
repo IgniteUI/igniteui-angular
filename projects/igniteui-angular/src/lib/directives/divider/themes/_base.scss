@@ -7,7 +7,6 @@ $theme: $base;
 
 @layer base {
     @include b(igx-divider) {
-        @include css-vars-from-theme($theme, 'igx-divider');
         --dash-interval: #{rem(10px)};
         --dash-angle: 90deg;
         --inset-center: calc(100% - (#{var-get($theme, 'inset')} * 2));
