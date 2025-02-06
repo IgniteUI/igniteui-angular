@@ -10,6 +10,8 @@ export class IgxQueryBuilderDragService {
         private _queryBuilderTreeComponentElRef: ElementRef,
         @Inject(IgxQueryBuilderTreeComponent)
         private _queryBuilderTreeComponentDeleteItem: (expressionItem: ExpressionItem) => void,
+        @Inject(IgxQueryBuilderTreeComponent)
+        private _queryBuilderFocusChipAfterDrag: (index: number) => void,
     ) { }
     public sourceExpressionItem: ExpressionItem;
     public sourceElement: HTMLElement;
@@ -139,14 +141,18 @@ export class IgxQueryBuilderDragService {
 
     public onChipDropped() {
         if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
-
         //console.log('Move: [', this.sourceElement.children[0].textContent.trim(), (this.dropUnder ? '] under: [' : '] over:'), this.targetExpressionItem)
-        this.moveDraggedChipToNewLocation(this.targetExpressionItem)
+
+        const dropLocationIndex = this.calculateDropLocationIndex(this.targetExpressionItem, this.sourceExpressionItem, this.dropUnder);
+
+        this.moveDraggedChipToNewLocation(this.targetExpressionItem);
+
+        this._queryBuilderFocusChipAfterDrag(dropLocationIndex);
+
         this.resetDragAndDrop(true);
 
         this._queryBuilderTreeComponent.exitEditAddMode();
-    }
-
+    }   
 
     public onGroupRootOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionGroupItem) {
         //console.log('Entering:', targetDragElement, targetExpressionItem);
@@ -307,9 +313,6 @@ export class IgxQueryBuilderDragService {
 
         //Delete from old place
         this._queryBuilderTreeComponentDeleteItem(this.sourceExpressionItem);
-
-        // this._queryBuilderTreeComponent._lastFocusedChipIndex = index;
-        // this._queryBuilderTreeComponent.focusEditedExpressionChip();
     }
 
     //Reset Drag&Drop vars. Optionally the drag source vars too
@@ -521,5 +524,26 @@ export class IgxQueryBuilderDragService {
         });
 
         return ownChipElements;
+    }
+
+    //Determine which chip to be focused after successful drop is completed
+    private calculateDropLocationIndex(targetExpressionItem: ExpressionItem, sourceExpressionItem: ExpressionItem, dropUnder: boolean): number {
+        const expressions = this.getListedExpressions(this._queryBuilderTreeComponent.rootGroup);
+
+        let dropLocationIndex = 0;
+        let ixt = expressions.indexOf(targetExpressionItem);
+        let ixs = expressions.indexOf(sourceExpressionItem);
+
+        dropLocationIndex = ixt - 1;
+        dropLocationIndex -= (expressions.filter((ex, ix) => !ex['expression'] && ix < ixt).length - 1); //deduct group roots
+
+        if (!dropUnder && ixs < ixt) dropLocationIndex -= 1;
+
+        if (dropUnder && ixs > ixt) dropLocationIndex += 1;
+
+        //if dropped on the +Condition button
+        if (dropUnder && !targetExpressionItem['expression']) dropLocationIndex = expressions.filter(ex => ex['expression']).length - 1;
+
+        return dropLocationIndex;
     }
 }
