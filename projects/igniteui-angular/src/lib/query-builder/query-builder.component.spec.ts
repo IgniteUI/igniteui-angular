@@ -3160,7 +3160,7 @@ export class IgxQueryBuilderCustomTemplateSampleTestComponent implements OnInit 
   public handleChange(ev, selectedField, searchVal) {
     if (selectedField.field === 'OrderId') {
       searchVal.value = ev.newValue[0];
-      selectedField.formatter = (value: any, rowData: any) => rowData === 'equals' ? value[0].id : value;
+      selectedField.formatter = (value: any, rowData: any) => rowData === 'equals' ? (Array.from(value)[0] as any).id : value;
     }
   }
 }

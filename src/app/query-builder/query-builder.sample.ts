@@ -46,7 +46,7 @@ export class QueryBuilderComponent implements OnInit {
 
     public ngOnInit(): void {
         this.fieldsEntityA = [
-            { field: 'Id', dataType: 'number', formatter: (value: any, rowData: any) => rowData === 'equals' ? `${value.map((v: { id: any; }) => v.id)}` : value },
+            { field: 'Id', dataType: 'number', formatter: (value: any, rowData: any) => rowData === 'equals' ? `${Array.from(value).map((v: { id: any; }) => v.id)}` : value },
             { field: 'Name', dataType: 'string' },
             { field: 'Validated', dataType: 'boolean' },
             { field: 'Date created', dataType: 'date' },
