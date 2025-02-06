@@ -37,6 +37,7 @@ import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
+import { trackByIdentity } from '../core/utils';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -294,6 +295,9 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
     protected get currentGroupButtonsContainer(): ElementRef {
         return this._currentGroupButtonsContainer;
     }
+
+    /** rootGroup recreates when clicking Apply and it sets expressionTree */
+    protected trackExpressionItem = trackByIdentity;
 
     @ViewChild(IgxToggleDirective)
     private contextMenuToggle: IgxToggleDirective;
