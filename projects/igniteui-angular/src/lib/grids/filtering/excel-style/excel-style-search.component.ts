@@ -19,7 +19,7 @@ import {
     IgxStringFilteringOperand, IgxDateTimeFilteringOperand, IgxTimeFilteringOperand
 } from '../../../data-operations/filtering-condition';
 import { Subject } from 'rxjs';
-import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from '../../../checkbox/checkbox.component';
+import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from '../../../checkbox/public_api';
 import { takeUntil } from 'rxjs/operators';
 import { cloneHierarchicalArray, PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
