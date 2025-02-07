@@ -2,6 +2,9 @@ import { filter, fromEvent, sampleTime, Subscription, tap } from 'rxjs';
 import { ExpressionGroupItem, ExpressionItem, IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { ElementRef, Inject, Injectable } from '@angular/core';
 
+const DEFAULT_SET_Z_INDEX_DELAY = 10;
+const Z_INDEX_TO_SET = 10006;
+
 @Injectable()
 export class IgxQueryBuilderDragService {
     constructor(
@@ -24,6 +27,7 @@ export class IgxQueryBuilderDragService {
     private _isKeyboardDrag: boolean;
     private _dropZonesList: HTMLElement[];   //stores a flat ordered list of all chips, including +Condition button, while performing the keyboard drag&drop
     private _expressionsList: ExpressionItem[]; //stores a flat ordered list of all expressions, including +Condition button, while performing the keyboard drag&drop
+    private _timeoutId: any;
     readonly FILTER_TREE_CLASS = 'igx-filter-tree';
     readonly QUERY_BUILDER_TREE_CLASS = 'igx-query-builder-tree';
     readonly DRAG_INDICATOR_CLASS = 'igx-drag-indicator';
@@ -63,6 +67,7 @@ export class IgxQueryBuilderDragService {
 
         if (!this._isKeyboardDrag) {
             this.sourceElement.style.display = 'none';
+            this.setDragGhostZIndex();
         }
     }
 
@@ -297,9 +302,6 @@ export class IgxQueryBuilderDragService {
         }
 
         this.setDragCursor('grab');
-
-        //TODO z-index is set, but ghost still not visible in Dialog 
-        if(this.dragGhostElement.style) this.dragGhostElement.style.zIndex = "9999";
     }
 
     //Set the cursor when dragging a ghost
@@ -530,5 +532,17 @@ export class IgxQueryBuilderDragService {
         });
 
         return ownChipElements;
+    }
+
+    //Sets the z-index of the drag ghost with a little delay, since we don't have access to ghostCreated() but we know it's executed right after moveStart()
+    private setDragGhostZIndex() {
+        if (this._timeoutId) {
+            clearTimeout(this._timeoutId);
+        }
+
+        this._timeoutId = setTimeout(() => {
+            console.log(this.dragGhostElement)
+            if (this.dragGhostElement.style) this.dragGhostElement.style.zIndex = `${Z_INDEX_TO_SET}`;
+        }, DEFAULT_SET_Z_INDEX_DELAY);
     }
 }
