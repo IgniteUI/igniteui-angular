@@ -9,7 +9,7 @@ $_theme: $material;
 @include themed-block(igx-radio, material) {
     --size: #{rem(40px)};
     --label-margin: #{rem(2px)};
-    --scale: scale(.5);
+    --scale: scale(0.5);
     --border-width: #{rem(2px)};
     --horizontal-group-margin: #{rem(16px)};
     --vertical-group-margin: 0;

@@ -9,7 +9,7 @@ $_theme: $fluent;
 @include themed-block(igx-radio, fluent) {
     --size: #{rem(20px)};
     --label-margin: #{rem(8px)};
-    --scale: scale(.5);
+    --scale: scale(0.5);
     --border-width: #{rem(1px)};
     --horizontal-group-margin: #{rem(12px)};
     --vertical-group-margin: #{rem(8px)};
@@ -23,7 +23,7 @@ $_theme: $fluent;
     &:hover {
         @include e(composite) {
             &::before {
-                transform: scale(.5);
+                transform: scale(0.5);
             }
         }
     }

@@ -9,7 +9,7 @@ $_theme: $indigo;
 @include themed-block(igx-radio, indigo) {
     --size: #{rem(16px)};
     --label-margin: #{rem(8px)};
-    --scale: scale(.5);
+    --scale: scale(0.5);
     --border-width: #{rem(2px)};
     --horizontal-group-margin: #{rem(16px)};
     --vertical-group-margin: #{rem(8px)};
@@ -28,7 +28,7 @@ $_theme: $indigo;
         @include e(composite) {
             &::after {
                 border-color: var-get($_theme, 'hover-color');
-                transition: all .2s ease-in;
+                transition: all 0.2s ease-in;
             }
         }
     }
@@ -45,6 +45,10 @@ $_theme: $indigo;
 
     @include m(invalid) {
         @include e(label) {
+            color: var-get($_theme, 'label-color');
+        }
+
+        @include e(label, $m: before) {
             color: var-get($_theme, 'label-color');
         }
 
@@ -78,18 +82,24 @@ $_theme: $indigo;
 
     @include mx(focused, checked) {
         @include e(composite) {
-            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-outline-color-filled');
+            box-shadow: 0 0 0 rem(3px)
+                var-get($_theme, 'focus-outline-color-filled');
         }
     }
 
     @include mx(focused, invalid) {
         @include e(composite) {
-            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-outline-color-error');
+            box-shadow: 0 0 0 rem(3px)
+                var-get($_theme, 'focus-outline-color-error');
         }
     }
 
     @include m(disabled) {
         @include e(label) {
+            color: var-get($_theme, 'disabled-label-color');
+        }
+
+        @include e(label, $m: before) {
             color: var-get($_theme, 'disabled-label-color');
         }
     }

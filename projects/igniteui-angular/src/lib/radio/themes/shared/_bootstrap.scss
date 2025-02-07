@@ -10,44 +10,45 @@ $_theme: $bootstrap;
 @include themed-block(igx-radio, bootstrap) {
     --size: #{rem(16px)};
     --label-margin: #{rem(8px)};
-    --scale: scale(.4375);
+    --scale: scale(0.4375);
     --border-width: #{rem(1px)};
     --horizontal-group-margin: #{rem(8px)};
     --vertical-group-margin: #{rem(8px)};
-    
+
     @include e(label) {
         @include type-style(body-1) {
             margin-block: 0;
         }
     }
-    
+
     @include e(composite) {
         &::before {
             transition: none;
         }
     }
-    
+
     &:hover {
         @include e(composite) {
             &::after {
-                border: var(--border-width) solid var-get($_theme, 'hover-color');
-                transition: all .2s ease-in;
+                border: var(--border-width) solid
+                    var-get($_theme, 'hover-color');
+                transition: all 0.2s ease-in;
             }
         }
     }
-    
+
     @include m(checked) {
         @include e(composite) {
             &::before {
                 border-color: var-get($_theme, 'fill-hover-border-color');
                 background: var-get($_theme, 'fill-hover-border-color');
             }
-            
+
             &::after {
                 background: var-get($_theme, 'fill-color');
             }
         }
-        
+
         &:hover {
             @include e(composite) {
                 &::after {
@@ -56,7 +57,7 @@ $_theme: $bootstrap;
                 }
             }
         }
-        
+
         &:active {
             @include e(composite) {
                 &::after {
@@ -66,17 +67,17 @@ $_theme: $bootstrap;
             }
         }
     }
-    
+
     @include m(focused) {
         @include e(composite) {
             border-radius: border-radius(50%);
             box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focus-outline-color');
-            
+
             &::after {
                 border-color: color($color: 'primary', $variant: 200);
             }
         }
-        
+
         &:hover {
             @include e(composite) {
                 &::after {
@@ -85,7 +86,7 @@ $_theme: $bootstrap;
             }
         }
     }
-    
+
     @include mx(focused, checked) {
         @include e(composite) {
             &::after {
@@ -101,7 +102,7 @@ $_theme: $bootstrap;
                 }
             }
         }
-        
+
         &:active {
             @include e(composite) {
                 &::after {
@@ -111,12 +112,13 @@ $_theme: $bootstrap;
             }
         }
     }
-    
+
     @include m(invalid) {
         @include e(composite) {
             &::after {
                 background: transparent;
-                border: var(--border-width) solid var-get($_theme, 'error-color');
+                border: var(--border-width) solid
+                    var-get($_theme, 'error-color');
             }
         }
 
@@ -128,32 +130,35 @@ $_theme: $bootstrap;
             }
         }
     }
-    
+
     @include mx(focused, invalid) {
         @include e(composite) {
-            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focus-outline-color-error');
-            
+            box-shadow: 0 0 0 rem(4px)
+                var-get($_theme, 'focus-outline-color-error');
+
             &::after {
-                border: var(--border-width) solid var-get($_theme, 'error-color');
-            } 
+                border: var(--border-width) solid
+                    var-get($_theme, 'error-color');
+            }
         }
-        
+
         &:hover {
             @include e(composite) {
                 &::after {
-                    border: var(--border-width) solid var-get($_theme, 'error-color-hover');
+                    border: var(--border-width) solid
+                        var-get($_theme, 'error-color-hover');
                 }
             }
         }
     }
-    
+
     @include mx(checked, invalid) {
         @include e(composite) {
             &::after {
                 background: var-get($_theme, 'error-color');
                 border-color: var-get($_theme, 'error-color');
             }
-            
+
             &::before {
                 background: white;
             }
@@ -167,7 +172,7 @@ $_theme: $bootstrap;
                 }
             }
         }
-        
+
         &:active {
             @include e(composite) {
                 &::after {
@@ -177,7 +182,7 @@ $_theme: $bootstrap;
             }
         }
     }
-    
+
     @include mx(checked, invalid, focused) {
         @include e(composite) {
             &::before {
@@ -194,7 +199,7 @@ $_theme: $bootstrap;
             }
         }
     }
-    
+
     @include mx(checked, disabled) {
         @include e(composite) {
             &::after {
