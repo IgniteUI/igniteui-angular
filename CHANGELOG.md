@@ -4,7 +4,7 @@ All notable changes for each version of this project will be documented in this 
 ## 19.1.0
 ### New Features
 - `IgxQueryBuilder`
-    - Introduced ability to create nested queries by specifying IN/NOT IN operators.
+    - Introduced the ability to create nested queries by specifying IN/NOT IN operators.
     - Added the `entities` property that accepts an array of `EntityType` objects describing an entity with its name and an array of fields. The `fields` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
     - Added the `canCommit`, `commit` and `discard` public methods that allows the user to save/discard the current state of the expression tree.
     - Added option to template the search value input:
@@ -25,6 +25,10 @@ All notable changes for each version of this project will be documented in this 
     - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
 - `IFilteringOperation`
     - A new optional property called `isNestedQuery` has been introduced. It's used to indicate whether the condition leads to a nested query creation.
+- **Behavioral Changes** 
+    - Expression enters edit mode on single click, `Enter` or `Space`.
+    - Selection of chips inside the `IgxQueryBuilderComponent` is removed. For grouping/ungrouping expressions could be used the newly exposed Drag&Drop functionality.
+    - Deleting multiple expressions through context menu is removed.
 ### General
 - `IgxCarousel`
     - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
