@@ -296,7 +296,7 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         return this._currentGroupButtonsContainer;
     }
 
-    /** rootGroup recreates when clicking Apply and it sets expressionTree */
+    /** rootGroup is recreated after clicking Apply, which sets new expressionTree and calls init()*/
     protected trackExpressionItem = trackByIdentity;
 
     @ViewChild(IgxToggleDirective)

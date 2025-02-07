@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -97,7 +97,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         // verify block style
         let sizes = grid.columnList.first.getGridTemplate(false).split(' ').map(width => parseFloat(width).toFixed(2) + "px").join(' ');
-        
+
 
         expect(sizes).toBe('200.33px 200.33px 200.33px');
         expect(grid.columnList.first.getGridTemplate(true)).toBe('repeat(3,1fr)');
@@ -909,6 +909,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         }];
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
+        tick(); // Required to render scrollbars
         const grid = fixture.componentInstance.grid;
 
         const horizontalVirtualization = grid.rowList.first.virtDirRow;

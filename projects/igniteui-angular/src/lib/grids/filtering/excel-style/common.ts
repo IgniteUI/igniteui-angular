@@ -28,6 +28,7 @@ export class ExpressionUI {
     public isVisible = true;
 
     constructor() {
+        // Use IDs to identify expressions clearly and use to track them in template @for cycles.
         this.expressionId = crypto.randomUUID();
     }
 }
