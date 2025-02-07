@@ -297,6 +297,9 @@ export class IgxQueryBuilderDragService {
         }
 
         this.setDragCursor('grab');
+
+        //TODO z-index is set, but ghost still not visible in Dialog 
+        if(this.dragGhostElement.style) this.dragGhostElement.style.zIndex = "9999";
     }
 
     //Set the cursor when dragging a ghost
