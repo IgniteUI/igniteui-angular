@@ -1168,7 +1168,7 @@ describe('IgxQueryBuilder', () => {
       tick(100);
       fix.detectChanges();
 
-      // Hover exprssion and click add button
+      // Hover expression and click add button
       UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
       tick(50);
       fix.detectChanges();
