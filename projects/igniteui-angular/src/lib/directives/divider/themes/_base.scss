@@ -1,11 +1,12 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
 @use 'light/tokens' as *;
 
 $theme: $base;
 
-@layer base {
+@include layer(base) {
     @include b(igx-divider) {
         --dash-interval: #{rem(10px)};
         --dash-angle: 90deg;
