@@ -106,7 +106,7 @@ export const GridResourceStringsBG = {
     igx_grid_advanced_filter_ungroup: 'Разгрупирай',
     igx_grid_advanced_filter_delete: 'Изтрий',
     igx_grid_advanced_filter_delete_filters: 'Изтрий филтрите',
-    igx_grid_advanced_filter_initial_text: 'Започнете със създаване не група от условия свързани с "And" или "Or".',
+    igx_grid_advanced_filter_initial_text: 'Започнете със създаване на група от условия свързани с "And" или "Or".',
     igx_grid_advanced_filter_column_placeholder: 'Избери колона',
     igx_grid_advanced_filter_value_placeholder: 'Стойност',
     igx_grid_pinned_row_indicator: 'Закачени',

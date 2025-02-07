@@ -59,7 +59,7 @@ export const QueryBuilderResourceStringsBG = {
     igx_query_builder_ungroup: 'Разгрупирай',
     igx_query_builder_delete: 'Изтрий',
     igx_query_builder_delete_filters: 'Изтрий филтрите',
-    igx_query_builder_initial_text: 'Започнете със създаване не група от условия свързани с "And" или "Or".',
+    igx_query_builder_initial_text: 'Започнете със създаване на група от условия свързани с "And" или "Or".',
     igx_query_builder_column_placeholder: 'Избери колона',
     igx_query_builder_condition_placeholder: 'Изберете филтър',
     igx_query_builder_value_placeholder: 'Стойност',
