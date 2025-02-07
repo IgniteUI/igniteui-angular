@@ -233,7 +233,7 @@
                 }
             </div>
 
-            @if((expressionItem.focused || expressionItem.hovered) && !expressionItem.inAddMode) {
+            @if(expressionItem.focused || expressionItem.hovered) {
                 <div igxDragIgnore class="igx-filter-tree__expression-actions">
                     <button #addExpressionButton igxDragIgnore igxIconButton="outlined" [igxDropDownItemNavigation]="addOptionsDropDown"
                     aria-labelledby="add-expression" (keydown)="invokeClick($event)"
