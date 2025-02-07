@@ -2974,9 +2974,9 @@ describe('IgxQueryBuilder', () => {
       const draggedChip = chipComponents.pop().componentInstance;
       const draggedChipElem = draggedChip.nativeElement;
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, 3 * draggedChipElem.offsetHeight, true);
-      await wait(100);
+      await wait(300);
       fix.detectChanges();
-      QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today'); //TODO throws error in console and focus is lost to body
+      QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(chipComponents.length).toBe(4);
