@@ -111,9 +111,9 @@
     ));
     @include time-picker-typography();
     @include stepper-typography();
-    @include toast-typography($categories: (
-        text: 'caption'
-    ));
+    // @include toast-typography($categories: (
+    //     text: 'caption'
+    // ));
     @include tooltip-typography();
     @include tree-typography();
     @include label-typography($categories: (

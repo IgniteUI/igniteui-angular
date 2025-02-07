@@ -616,13 +616,13 @@
         @include stepper($stepper-theme-map);
     }
 
-    @if is-used('igx-toast', $exclude) {
-        $toast-theme-map: toast-theme(
-            $schema: $schema,
-        );
-        $toast-theme-map: meta.call($theme-handler, $toast-theme-map);
-        @include toast($toast-theme-map);
-    }
+    // @if is-used('igx-toast', $exclude) {
+    //     $toast-theme-map: toast-theme(
+    //         $schema: $schema,
+    //     );
+    //     $toast-theme-map: meta.call($theme-handler, $toast-theme-map);
+    //     @include toast($toast-theme-map);
+    // }
 
     @if is-used('igx-tooltip', $exclude) {
         $tooltip-theme-map: tooltip-theme(

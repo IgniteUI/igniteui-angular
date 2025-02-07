@@ -107,7 +107,7 @@
         selected-time: 'h4'
     ));
     @include stepper-typography();
-    @include toast-typography();
+    // @include toast-typography();
     @include tooltip-typography();
     @include tree-typography();
     @include label-typography($categories: (
