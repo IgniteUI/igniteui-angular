@@ -67,7 +67,7 @@ export * from './lib/buttonGroup/public_api';
 export * from './lib/calendar/public_api';
 export * from './lib/card/public_api';
 export * from './lib/carousel/public_api';
-export * from './lib/checkbox/checkbox.component';
+export * from './lib/checkbox/public_api';
 export * from './lib/chips/public_api';
 export * from './lib/combo/public_api';
 export * from './lib/simple-combo/public_api';
