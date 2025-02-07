@@ -565,7 +565,6 @@ export class IgxQueryBuilderDragService {
         }
 
         this._timeoutId = setTimeout(() => {
-            console.log(this.dragGhostElement)
             if (this.dragGhostElement?.style) this.dragGhostElement.style.zIndex = `${Z_INDEX_TO_SET}`;
         }, DEFAULT_SET_Z_INDEX_DELAY);
     }
