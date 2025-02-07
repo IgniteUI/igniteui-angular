@@ -4,7 +4,7 @@ import { ElementRef, Inject, Injectable } from '@angular/core';
 import { ExpressionGroupItem, ExpressionItem, QueryBuilderSelectors } from './query-builder.common';
 
 const DEFAULT_SET_Z_INDEX_DELAY = 10;
-const Z_INDEX_TO_SET = 10006;
+const Z_INDEX_TO_SET = 10010; //overlay z-index is 10005
 
 @Injectable()
 export class IgxQueryBuilderDragService {
@@ -534,7 +534,7 @@ export class IgxQueryBuilderDragService {
         }
 
         this._timeoutId = setTimeout(() => {
-            if (this.dragGhostElement.style) this.dragGhostElement.style.zIndex = `${Z_INDEX_TO_SET}`;
+            if (this.dragGhostElement?.style) this.dragGhostElement.style.zIndex = `${Z_INDEX_TO_SET}`;
         }, DEFAULT_SET_Z_INDEX_DELAY);
     }
 }

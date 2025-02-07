@@ -1163,6 +1163,38 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilder.queryTree.hasEditedExpression).toBeFalse();
     }));
 
+    it('Should show add expression button when there is an expression in add mode.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+      tick(100);
+      fix.detectChanges();
+
+      // Hover expression and click add button
+      UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
+      tick(50);
+      fix.detectChanges();
+      (QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, [0], 'add') as HTMLElement).click();
+      tick(50);
+      fix.detectChanges();
+
+      // Click 'add condition' option
+      QueryBuilderFunctions.clickQueryBuilderTreeAddOption(fix, 0);
+
+      // Hover the first chip and verify actions container is visible.
+      UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
+      tick(50);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
+        .not.toBeNull('actions container is not visible');
+
+      // Hover the second chip and verify actions container is visible.
+      UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [1]) as HTMLElement);
+      tick(50);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [1]))
+        .not.toBeNull('actions container is not visible');
+    }));
+
     it('Should display an alert dialog when the entity is changed and showEntityChangeDialog is true.', fakeAsync(() => {
       const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER}`))[0].nativeElement;
       const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`);

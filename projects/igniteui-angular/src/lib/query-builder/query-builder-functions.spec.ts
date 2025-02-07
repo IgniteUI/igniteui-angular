@@ -498,6 +498,17 @@ export class QueryBuilderFunctions {
         chipIcon.click();
     }
 
+    /**
+     * Click 'add condition' or 'add group' item
+     */
+    public static clickQueryBuilderTreeAddOption(fix: ComponentFixture<any>, index: number) {
+        const outlet = Array.from(fix.debugElement.nativeElement.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
+        const item = Array.from((outlet as HTMLElement).querySelectorAll('.igx-drop-down__item'))[index] as HTMLElement;
+        UIInteractions.simulateClickAndSelectEvent(item)
+        tick(100);
+        fix.detectChanges();
+    }
+
     /*
     * Hit a keyboard button upon element, wait for the desired time and detect changes
     */
