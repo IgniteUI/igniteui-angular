@@ -139,7 +139,7 @@
             if($variant != 'bootstrap', rem(24px), rem(16px));
 
         > %advanced-filter__main {
-            gap: if($variant != 'bootstrap', rem(24px), rem(16px));
+            gap: rem(16px);
 
              > %filter-tree__section {
                  --sb-size: #{rem(10px)};
