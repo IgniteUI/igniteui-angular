@@ -4,7 +4,10 @@
 
 @include themed-block(igx-toast, fluent) {
     --_padding: #{rem(8px)} #{rem(12px)};
-    @include type-style(caption);
+
+    @include type-style(caption) {
+        margin: revert-layer;
+    };
 
     > * {
         @include type-style(caption) {
