@@ -1082,11 +1082,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.deleteItem(expressionItem);
     }
 
-    private focusChipAfterDrag = (index: number) =>{
+    private focusChipAfterDrag = (index: number) => {
         this._lastFocusedChipIndex = index;
         this.focusEditedExpressionChip();
     }
-    
+
     public dragService: IgxQueryBuilderDragService = new IgxQueryBuilderDragService(this, this.el, this.deleteItem, this.focusChipAfterDrag);
 
     //Chip can be dragged if its tree is in edit mode and there is no inner query that's been edited
@@ -1682,13 +1682,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             if (this._lastFocusedChipIndex != -1) {
                 //Sort the expression chip list. 
                 //If there was a recent drag&drop and the tree hasn't rerendered(child query), they will be unordered
-                const sortedChips = this.expressionsChips.toArray().sort(function(a,b) {
-                    if( a === b) return 0;
-                    if( !a.chipArea.nativeElement.compareDocumentPosition) {
-                        // support for IE8 and below
-                        return a.chipArea.nativeElement.sourceIndex - b.chipArea.nativeElement.sourceIndex;
-                    }
-                    if( a.chipArea.nativeElement.compareDocumentPosition(b.chipArea.nativeElement) & 2) {
+                const sortedChips = this.expressionsChips.toArray().sort(function (a, b) {
+                    if (a === b) return 0;
+                    if (a.chipArea.nativeElement.compareDocumentPosition(b.chipArea.nativeElement) & 2) {
                         // b comes before a
                         return 1;
                     }
