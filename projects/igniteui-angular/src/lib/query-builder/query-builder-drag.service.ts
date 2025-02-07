@@ -541,11 +541,10 @@ export class IgxQueryBuilderDragService {
     private calculateDropLocationIndex(targetExpressionItem: ExpressionItem, sourceExpressionItem: ExpressionItem, dropUnder: boolean): number {
         const expressions = this.getListedExpressions(this._queryBuilderTreeComponent.rootGroup);
 
-        let dropLocationIndex = 0;
         let ixt = expressions.indexOf(targetExpressionItem);
         let ixs = expressions.indexOf(sourceExpressionItem);
 
-        dropLocationIndex = ixt - 1;
+        let dropLocationIndex = ixt - 1;
         dropLocationIndex -= (expressions.filter((ex, ix) => !ex['expression'] && ix < ixt).length - 1); //deduct group roots
 
         if (!dropUnder && ixs < ixt) dropLocationIndex -= 1;
