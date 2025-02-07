@@ -77,7 +77,7 @@
     $theme: map.get($schema, '_meta', 'theme');
     $variant: map.get($schema, '_meta', 'variant');
 
-    @layer base, #{$theme}, #{$theme}-overrides;
+    @layer ig.base, ig.#{$theme};
 
     #{$scope} {
         --ig-size-small: 1;
@@ -152,13 +152,13 @@
         @include action-strip($action-strip-theme-map);
     }
 
-    @if is-used('igx-badge', $exclude) {
-        $badge-theme-map: badge-theme(
-            $schema: $schema,
-        );
-        $badge-theme-map: meta.call($theme-handler, $badge-theme-map);
-        @include badge($badge-theme-map);
-    }
+    // @if is-used('igx-badge', $exclude) {
+    //     $badge-theme-map: badge-theme(
+    //         $schema: $schema,
+    //     );
+    //     $badge-theme-map: meta.call($theme-handler, $badge-theme-map);
+    //     @include badge($badge-theme-map);
+    // }
 
     @if is-used('igx-bottom-nav', $exclude) {
         $bottom-nav-theme-map: bottom-nav-theme(
@@ -376,21 +376,21 @@
         @include date-range-picker($date-range-picker-theme-map);
     }
 
-    @if is-used('igx-dialog', $exclude) {
-        $dialog-theme-map: dialog-theme(
-            $schema: $schema,
-        );
-        $dialog-theme-map: meta.call($theme-handler, $dialog-theme-map);
-        @include dialog($dialog-theme-map);
-    }
+    // @if is-used('igx-dialog', $exclude) {
+    //     $dialog-theme-map: dialog-theme(
+    //         $schema: $schema,
+    //     );
+    //     $dialog-theme-map: meta.call($theme-handler, $dialog-theme-map);
+    //     @include dialog($dialog-theme-map);
+    // }
 
-    @if is-used('igx-divider', $exclude) {
-        $divider-theme-map: divider-theme(
-            $schema: $schema,
-        );
-        $divider-theme-map: meta.call($theme-handler, $divider-theme-map);
-        @include divider($divider-theme-map);
-    }
+    // @if is-used('igx-divider', $exclude) {
+    //     $divider-theme-map: divider-theme(
+    //         $schema: $schema,
+    //     );
+    //     $divider-theme-map: meta.call($theme-handler, $divider-theme-map);
+    //     @include divider($divider-theme-map);
+    // }
 
     @if is-used('igc-dockmanager', $exclude) {
         $dock-manager-theme-map: dock-manager-theme(

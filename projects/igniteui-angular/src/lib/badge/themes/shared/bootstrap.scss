@@ -1,0 +1,13 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
+
+@include themed-block(igx-badge, bootstrap) {
+    @include m(outlined) {
+        box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'border-color');
+    }
+}

@@ -3,7 +3,7 @@ import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxDividerDirective, IgxDividerType } from './divider.directive';
+import { IgxDividerComponent, IgxDividerType } from './divider.component';
 
 describe('Divider', () => {
     configureTestSuite();
@@ -100,7 +100,7 @@ describe('Divider', () => {
         [inset]="inset"
         [role]="role">
     </igx-divider>`,
-    imports: [IgxDividerDirective]
+    imports: [IgxDividerComponent]
 })
 class TestDividerComponent {
     public type: string;

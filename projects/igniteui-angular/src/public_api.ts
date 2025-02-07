@@ -14,7 +14,7 @@
 export * from './lib/core/navigation';
 export * from './lib/directives/autocomplete/autocomplete.directive';
 export * from './lib/directives/button/button.directive';
-export * from './lib/directives/divider/divider.directive';
+export * from './lib/directives/divider/divider.component';
 export * from './lib/directives/drag-drop/public_api';
 export * from './lib/directives/filter/filter.directive';
 export * from './lib/directives/focus/focus.directive';
@@ -67,7 +67,7 @@ export * from './lib/buttonGroup/public_api';
 export * from './lib/calendar/public_api';
 export * from './lib/card/public_api';
 export * from './lib/carousel/public_api';
-export * from './lib/checkbox/checkbox.component';
+export * from './lib/checkbox/public_api';
 export * from './lib/chips/public_api';
 export * from './lib/combo/public_api';
 export * from './lib/simple-combo/public_api';
