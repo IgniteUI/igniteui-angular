@@ -1089,7 +1089,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     
     public dragService: IgxQueryBuilderDragService = new IgxQueryBuilderDragService(this, this.el, this.deleteItem, this.focusChipAfterDrag);
 
-    //Chip can be dragged if it's tree is in edit mode and there is no inner query that's been edited
+    //Chip can be dragged if its tree is in edit mode and there is no inner query that's been edited
     public canBeDragged(): boolean {
         return this.isInEditMode && (!this.innerQueries || this.innerQueries.length == 0 || !this.innerQueries?.some(q => q.isInEditMode()))
     }
