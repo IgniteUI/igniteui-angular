@@ -98,7 +98,7 @@
         ticks-label: 'body-2',
         thumb-label: 'subtitle-2',
     ));
-    @include snackbar-typography();
+    // @include snackbar-typography();
     @include switch-typography($categories: (
         label: 'body-2'
     ));
