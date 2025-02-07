@@ -2672,24 +2672,31 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(chipComponents[1].nativeElement)).toBe("OrderName  Equals  foo");
     });
 
-    it('should drop the condition below the target condition on dragging down.', () => {
+    it('should drop the condition below the target condition on dragging down.', async () => {
       const secondChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
       const secondChipElem = secondChip.nativeElement;
 
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderName  Equals  foo");
 
       UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 0, secondChipElem.offsetHeight, true);
+      await wait(100);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Equals', 'foo');
+
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderId  In Products / OrderId");
       expect(QueryBuilderFunctions.getChipContent(chipComponents[1].nativeElement)).toBe("OrderName  Equals  foo");
     });
 
-    it('should drop the condition inside the inner group when dropped over the group.', () => {
+    it('should drop the condition inside the inner group when dropped over the group.', async () => {
       const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
       const draggedChipElem = draggedChip.nativeElement;
 
       const dragDir = draggedChip.dragDirective;
       UIInteractions.moveDragDirective(fix, dragDir, 50, 2 * draggedChipElem.offsetHeight + 25, true);
+      await wait(100);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Equals', 'foo');
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       const droppedChipBounds = chipComponents[1].nativeElement.getBoundingClientRect();
@@ -2701,11 +2708,14 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(chipComponents[1].nativeElement)).toBe("OrderName  Equals  foo");
     });
 
-    it('should drop the condition outside the inner group aligned with the outer level conditions when dropped above the inner group.', () => {
+    it('should drop the condition outside the inner group aligned with the outer level conditions when dropped above the inner group.', async() => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
       const draggedChipElem = draggedChip.nativeElement;
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -3.5 * draggedChipElem.offsetHeight, true);
+      await wait(100);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       const droppedChipBounds = chipComponents[2].nativeElement.getBoundingClientRect();
@@ -2838,12 +2848,19 @@ describe('IgxQueryBuilder', () => {
 }`);
     });
 
-    it('should remove the inner group when the last condition is dragged out.', () => {
+    it('should remove the inner group when the last condition is dragged out.', async () => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
       const heightOffset = draggedChip.nativeElement.offsetHeight;
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -4 * heightOffset, true);
+      await wait(100);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
+
       UIInteractions.moveDragDirective(fix, chipComponents[4].componentInstance.dragDirective, 0, -4 * heightOffset, true);
+      await wait(100);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Ends With', 'a');
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
 
@@ -2854,7 +2871,7 @@ describe('IgxQueryBuilder', () => {
       expect(chipComponents.length).toBe(4);
     });
 
-    it('should drop the condition above the currently edited condition on dragging up.', () => {
+    it('should drop the condition above the currently edited condition on dragging up.', async () => {
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       const draggedChip = chipComponents[3].componentInstance; // "OrderDate  Today" chip
       const draggedChipElem = draggedChip.nativeElement;
@@ -2862,6 +2879,10 @@ describe('IgxQueryBuilder', () => {
       chipComponents[2].nativeElement.click();
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -2.5 * draggedChipElem.offsetHeight, true);
+      await wait(100);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
+
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
     });
@@ -2887,13 +2908,17 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBe(null);
     });
 
-    it('should successfully rearrange sub-query conditions via mouse drag.', () => {
+    it('should successfully rearrange sub-query conditions via mouse drag.', async () => {
       chipComponents[1].nativeElement.click();
 
       const draggedChip = chipComponents[2].componentInstance;
       const draggedChipElem = draggedChip.nativeElement;
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChipElem.offsetHeight, true);
+      await wait(100);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('Id', 'Equals', '123');
+
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(chipComponents.length).toBe(5);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[1].nativeElement)).toBe("ProductName  Equals  abc");
@@ -2912,7 +2937,7 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getDropGhost(fix)).toBe(null);
     });
 
-    it('should successfully drop a condition inside a newly created group.', () => {
+    it('should successfully drop a condition inside a newly created group.', async () => {
       var addGroupButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0).pop();
       QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 1);
 
@@ -2920,6 +2945,9 @@ describe('IgxQueryBuilder', () => {
       const draggedChip = chipComponents.pop().componentInstance;
       const draggedChipElem = draggedChip.nativeElement;
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, 3 * draggedChipElem.offsetHeight, true);
+      await wait(100);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today'); //TODO throws error in console and focus is lost to body
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(chipComponents.length).toBe(4);
