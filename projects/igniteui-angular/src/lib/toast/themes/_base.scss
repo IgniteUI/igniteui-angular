@@ -21,7 +21,7 @@ $theme: $base;
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         border-radius: var-get($theme, 'border-radius');
-        box-shadow: map.get($theme, 'shadow');
+        box-shadow: var-get($theme, 'elevation');
         backdrop-filter: blur(10px);
 
         &::after {
