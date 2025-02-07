@@ -5,14 +5,15 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
 @use './light/tokens' as *;
 
 $_theme: $material;
 
-@layer base {
-    @include scale-in-out($start-scale: .9);
+@include layer(base) {
+    @include scale-in-out($start-scale: 0.9);
 
-    $input-transition: all .2s $ease-in-out-quad;
+    $input-transition: all 0.2s $ease-in-out-quad;
 
     %switch-label {
         display: inline-block;
@@ -21,41 +22,35 @@ $_theme: $material;
         word-wrap: break-all;
 
         &:empty {
-            margin: 0;
+            display: none;
         }
     }
 
-    %switch-ripple--focused {
+    %switch-ripple-empty {
         background: color($color: 'gray', $variant: 600);
-        transition: background .2s $ease-out-quad;
-        opacity: .12;
-
-        @container style(--ig-theme-variant: dark) {
-            opacity: .24;
-        }
+        transition: background 0.2s $ease-out-quad;
     }
 
     %switch-ripple--hover {
-        &::after {
-            position: absolute;
-            content: '';
-            opacity: .06;
-            inset: 0;
+        @extend %switch-ripple-empty;
+        opacity: 0.06;
 
-            @container style(--ig-theme-variant: dark) {
-                opacity: .12;
-            }
+        @container style(--ig-theme-variant: dark) {
+            opacity: 0.12;
         }
     }
 
     %switch-ripple--pressed {
-        &::after {
-            opacity: .12;
+        opacity: 0.12;
 
-            @container style(--ig-theme-variant: dark) {
-                opacity: .24;
-            }
+        @container style(--ig-theme-variant: dark) {
+            opacity: 0.24;
         }
+    }
+
+    %switch-ripple--focused {
+        @extend %switch-ripple-empty;
+        @extend %switch-ripple--pressed;
     }
 
     @include b(igx-switch) {
@@ -67,11 +62,7 @@ $_theme: $material;
 
         &:hover {
             @include e(ripple) {
-                @extend %switch-ripple--hover !optional;
-
-                &::after {
-                    background: color($color: 'gray', $variant: 600);
-                }
+                @extend %switch-ripple--hover;
             }
 
             @include e(composite) {
@@ -93,12 +84,8 @@ $_theme: $material;
 
         &:active {
             @include e(ripple) {
-                @extend %switch-ripple--hover !optional;
-                @extend %switch-ripple--pressed !optional;
-
-                &::after {
-                    background: color($color: 'gray', $variant: 600);
-                }
+                @extend %switch-ripple--hover;
+                @extend %switch-ripple--pressed;
             }
         }
 
@@ -117,8 +104,7 @@ $_theme: $material;
             user-select: none;
             transition: $input-transition;
 
-            //ripple color
-            --color: #{var-get($_theme, 'track-off-color')};
+            --igx-ripple-color: #{var-get($_theme, 'track-off-color')};
         }
 
         @include e(composite-thumb) {
@@ -161,37 +147,33 @@ $_theme: $material;
         }
 
         @include e(label) {
-            @extend %switch-label !optional;
+            @extend %switch-label;
 
             margin-inline-start: var(--label-margin);
         }
 
         @include e(label, $m: before) {
-            @extend %switch-label !optional;
+            @extend %switch-label;
 
             order: -1;
             margin-inline-end: var(--label-margin);
         }
 
         @include m(focused) {
-            @extend  %igx-switch--focused !optional;
-
             @include e(ripple) {
-                @extend %switch-ripple--focused !optional;
+                @extend %switch-ripple--focused;
             }
 
             &:hover {
-                @include e(composite) {
-                    @extend %igx-switch--focused--hover !optional;
+                @include e(ripple) {
+                    @extend %switch-ripple--focused;
                 }
             }
         }
 
         @include mx(focused, checked) {
-            @extend  %igx-switch--focused-checked !optional;
-
             @include e(ripple) {
-                @extend %switch-ripple--focused !optional;
+                @extend %switch-ripple--focused;
 
                 background: var-get($_theme, 'thumb-on-color');
             }
@@ -210,7 +192,7 @@ $_theme: $material;
 
         @include mx(focused, invalid) {
             @include e(ripple) {
-                @extend %switch-ripple--focused !optional;
+                @extend %switch-ripple--focused;
 
                 background: var-get($_theme, 'error-color-hover');
             }
@@ -220,9 +202,8 @@ $_theme: $material;
             @include e(composite) {
                 background: var-get($_theme, 'track-on-color');
                 border-color: var-get($_theme, 'border-on-color');
-        
-                //ripple color
-                --color: #{var-get($_theme, 'thumb-on-color')};
+
+                --igx-ripple-color: #{var-get($_theme, 'thumb-on-color')};
             }
 
             @include e(composite-thumb) {
@@ -239,11 +220,9 @@ $_theme: $material;
 
             &:hover {
                 @include e(ripple) {
-                    @extend %switch-ripple--hover !optional;
+                    @extend %switch-ripple--hover;
 
-                    &::after {
-                        background: var-get($_theme, 'thumb-on-color');
-                    }
+                    background: var-get($_theme, 'thumb-on-color');
                 }
 
                 @include e(composite) {
@@ -258,12 +237,10 @@ $_theme: $material;
 
             &:active {
                 @include e(ripple) {
-                    @extend %switch-ripple--hover !optional;
-                    @extend %switch-ripple--pressed !optional;
+                    @extend %switch-ripple--hover;
+                    @extend %switch-ripple--pressed;
 
-                    &::after {
-                        background: var-get($_theme, 'thumb-on-color');
-                    }
+                    background: var-get($_theme, 'thumb-on-color');
                 }
             }
         }
@@ -275,26 +252,18 @@ $_theme: $material;
 
             &:hover {
                 @include e(ripple) {
-                    @extend %switch-ripple--hover !optional;
+                    @extend %switch-ripple--hover;
 
-                    &::after {
-                        background: var-get($_theme, 'error-color-hover');
-                    }
-                }
-
-                @include e(composite) {
-                    @extend %switch-composite--invalid--hover !optional;
+                    background: var-get($_theme, 'error-color-hover');
                 }
             }
 
             &:active {
                 @include e(ripple) {
-                    @extend %switch-ripple--hover !optional;
-                    @extend %switch-ripple--pressed !optional;
+                    @extend %switch-ripple--hover;
+                    @extend %switch-ripple--pressed;
 
-                    &::after {
-                        background: var-get($_theme, 'error-color-hover');
-                    }
+                    background: var-get($_theme, 'error-color-hover');
                 }
             }
 
@@ -322,12 +291,18 @@ $_theme: $material;
 
             &:hover {
                 @include e(ripple) {
-                    @extend %switch-ripple--hover !optional;
+                    @extend %switch-ripple--hover;
 
-                    &::after {
-                        background: var-get($_theme, 'thumb-on-color');
-                    }
+                    background: var-get($_theme, 'thumb-on-color');
                 }
+            }
+        }
+
+        @include mx(focused, invalid, checked) {
+            @include e(ripple) {
+                @extend %switch-ripple--focused;
+
+                background: var-get($_theme, 'thumb-on-color');
             }
         }
 
