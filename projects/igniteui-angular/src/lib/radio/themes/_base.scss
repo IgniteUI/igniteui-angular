@@ -23,9 +23,13 @@ $_theme: $material;
         }
     }
 
-    %radio-ripple--hover {
+    %radio-ripple-empty {
         background: var-get($_theme, 'empty-color');
         transition: background 0.2s $ease-out-quad;
+    }
+
+    %radio-ripple--hover {
+        @extend %radio-ripple-empty;
         opacity: 0.06;
 
         @container style(--ig-theme-variant: dark) {
@@ -41,9 +45,7 @@ $_theme: $material;
         background: var-get($_theme, 'error-color');
     }
 
-    %radio-ripple--focused {
-        background: var-get($_theme, 'empty-color');
-        transition: background 0.2s $ease-out-quad;
+    %radio-ripple--pressed {
         opacity: 0.12;
 
         @container style(--ig-theme-variant: dark) {
@@ -51,12 +53,9 @@ $_theme: $material;
         }
     }
 
-    %radio-ripple--pressed {
-        opacity: 0.12;
-
-        @container style(--ig-theme-variant: dark) {
-            opacity: 0.24;
-        }
+    %radio-ripple--focused {
+        @extend %radio-ripple-empty;
+        @extend %radio-ripple--pressed;
     }
 
     @include b(igx-radio) {
@@ -138,10 +137,6 @@ $_theme: $material;
             @extend %radio-label;
 
             margin-inline-start: var(--label-margin);
-
-            &:empty {
-                margin: 0;
-            }
         }
 
         @include e(label, $m: before) {
@@ -149,10 +144,6 @@ $_theme: $material;
 
             order: -1;
             margin-inline-end: var(--label-margin);
-
-            &:empty {
-                margin: 0;
-            }
         }
 
         @include e(ripple) {

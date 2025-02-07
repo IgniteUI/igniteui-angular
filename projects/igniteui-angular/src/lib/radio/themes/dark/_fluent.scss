@@ -3,12 +3,24 @@
 @use 'styles/themes/standalone' as *;
 @use '../light/tokens' as *;
 
+$_theme: $fluent;
+
 @include themed-block(igx-radio, fluent, dark) {
     @include m(invalid) {
         &:hover {
             @include e(composite) {
                 &::before {
                     background: color($color: 'error', $variant: 500);
+                }
+            }
+        }
+    }
+
+    @include mx(checked, invalid) {
+        &:hover {
+            @include e(composite) {
+                &::before {
+                    background: var-get($_theme, 'error-color-hover');
                 }
             }
         }

@@ -34,7 +34,7 @@ import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
             multi: true
         }],
     templateUrl: 'radio.component.html',
-    styleUrl: "radio.component.css",
+    styleUrl: 'radio.component.css',
     encapsulation: ViewEncapsulation.None,
     imports: [IgxRippleDirective]
 })
