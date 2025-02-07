@@ -1162,7 +1162,7 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilder.queryTree.hasEditedExpression).toBeFalse();
     }));
 
-    it('Should show add expression button when there is expression in add mode.', fakeAsync(() => {
+    it('Should show add expression button when there is an expression in add mode.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
       tick(100);
