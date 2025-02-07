@@ -117,7 +117,7 @@
         indicator: 'button',
         body-content: 'body-2'
     ));
-    @include toast-typography();
+    // @include toast-typography();
     @include tooltip-typography($categories: (
         tooltip-text: 'subtitle-2'
     ));

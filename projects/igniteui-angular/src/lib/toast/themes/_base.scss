@@ -1,0 +1,42 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/tokens' as *;
+
+$theme: $base;
+
+@include layer(base) {
+    @include b(igx-toast) {
+        --_padding: #{rem(10px)} #{rem(16px)};
+        @include type-style(body-2);
+
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin: rem(42px) auto;
+        padding: var(--_padding);
+        min-width: rem(52px);
+        color: var-get($theme, 'text-color');
+        background: var-get($theme, 'background');
+        border-radius: var-get($theme, 'border-radius');
+        box-shadow: map.get($theme, 'shadow');
+        backdrop-filter: blur(10px);
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
+        }
+
+        > * {
+            @include type-style(body-2) {
+                margin: 0;
+            }
+        }
+    }
+}

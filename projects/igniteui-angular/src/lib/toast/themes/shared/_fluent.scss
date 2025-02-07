@@ -1,0 +1,14 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-toast, fluent) {
+    --_padding: #{rem(8px)} #{rem(12px)};
+    @include type-style(caption);
+
+    > * {
+        @include type-style(caption) {
+            margin: 0;
+        }
+    }
+}

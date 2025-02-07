@@ -8,7 +8,8 @@ import {
     Input,
     OnInit,
     Optional,
-    Output
+    Output,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService } from '../core/navigation';
@@ -44,7 +45,8 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-toast',
     templateUrl: 'toast.component.html',
-    standalone: true
+    styleUrl: 'toast.component.css',
+    encapsulation: ViewEncapsulation.None
 })
 export class IgxToastComponent extends IgxNotificationsDirective implements OnInit {
     /**

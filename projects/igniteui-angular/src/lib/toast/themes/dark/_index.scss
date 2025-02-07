@@ -1,0 +1,6 @@
+@use 'sass:meta';
+@use 'tokens';
+@use 'styles/themes/standalone' as *;
+
+$tokens: meta.module-variables(tokens);
+@include themes(igx-toast, $tokens, dark);
