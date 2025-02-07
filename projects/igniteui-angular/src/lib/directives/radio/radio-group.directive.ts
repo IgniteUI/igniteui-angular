@@ -10,7 +10,7 @@ import { startWith, takeUntil } from 'rxjs/operators';
 import { mkenum } from '../../core/utils';
 import { IgxRadioComponent } from '../../radio/radio.component';
 import { IgxDirectionality } from '../../services/direction/directionality';
-import { IChangeCheckboxEventArgs } from '../../checkbox/checkbox.component';
+import { IChangeCheckboxEventArgs } from '../../checkbox/public_api';
 
 /**
  * Determines the Radio Group alignment

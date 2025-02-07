@@ -5,13 +5,27 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
 @use './light/tokens' as *;
 
 $_theme: $material;
 
-@layer base {
+@include layer(base) {
     @include scale-in-out($start-scale: 0.9);
     @include scale-in-center();
+
+    %label {
+        display: inline-block;
+        margin-inline-start: var(--label-margin);
+        margin-block: 0;
+        color: var-get($_theme, 'label-color');
+        user-select: none;
+        word-wrap: break-all;
+
+        &:empty {
+            display: none;
+        }
+    }
 
     %cbx-ripple-empty {
         background: var-get($_theme, 'empty-color');
@@ -92,19 +106,12 @@ $_theme: $material;
         }
 
         @include e(label) {
-            display: inline-block;
-            color: var-get($_theme, 'label-color');
-            user-select: none;
-            word-wrap: break-all;
-            margin-inline-start: var(--label-margin);
-            margin-block: 0;
-
-            &:empty {
-                margin: 0;
-            }
+            @extend %label;
         }
 
         @include e(label, $m: before) {
+            @extend %label;
+
             margin-inline-end: var(--label-margin);
             order: -1;
         }
@@ -117,8 +124,7 @@ $_theme: $material;
             width: var(--size);
             height: var(--size);
 
-            //ripple color
-            --color: #{var-get($_theme, 'empty-color')};
+            --igx-ripple-color: #{var-get($_theme, 'empty-color')};
         }
 
         @include e(composite) {
@@ -172,11 +178,14 @@ $_theme: $material;
             }
 
             @include e(composite-wrapper) {
-                //ripple color
-                --color: #{var-get($_theme, 'error-color')};
+                --igx-ripple-color: #{var-get($_theme, 'error-color')};
             }
 
             @include e(label) {
+                color: var-get($_theme, 'error-color');
+            }
+
+            @include e(label, $m: before) {
                 color: var-get($_theme, 'error-color');
             }
 
@@ -322,8 +331,7 @@ $_theme: $material;
             }
 
             @include e(composite-wrapper) {
-                //ripple color
-                --color: #{var-get($_theme, 'fill-color')};
+                --igx-ripple-color: #{var-get($_theme, 'fill-color')};
             }
 
             &:hover {

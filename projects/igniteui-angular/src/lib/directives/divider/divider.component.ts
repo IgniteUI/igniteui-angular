@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input, booleanAttribute } from '@angular/core';
+import { Component, HostBinding, Input, ViewEncapsulation, booleanAttribute } from '@angular/core';
 import { mkenum } from '../../core/utils';
 
 export const IgxDividerType = /*@__PURE__*/mkenum({
@@ -9,11 +9,14 @@ export type IgxDividerType = (typeof IgxDividerType)[keyof typeof IgxDividerType
 
 let NEXT_ID = 0;
 
-@Directive({
+// TODO: Write migration from IgxDividerDirective to IgxDividerComponent
+@Component({
     selector: 'igx-divider',
-    standalone: true
+    template: '',
+    styleUrl: 'divider.component.css',
+    encapsulation: ViewEncapsulation.None
 })
-export class IgxDividerDirective {
+export class IgxDividerComponent {
     /**
      * Sets/gets the `id` of the divider.
      * If not set, `id` will have value `"igx-divider-0"`;

@@ -71,6 +71,10 @@ $_theme: $indigo;
         @include e(label) {
             color: var-get($_theme, 'label-color');
         }
+
+        @include e(label, $m: before) {
+            color: var-get($_theme, 'label-color');
+        }
     }
 
     @include m(indeterminate) {
@@ -95,6 +99,10 @@ $_theme: $indigo;
 
     @include m(disabled) {
         @include e(label) {
+            color: var-get($_theme, 'disabled-color-label');
+        }
+
+        @include e(label, $m: before) {
             color: var-get($_theme, 'disabled-color-label');
         }
     }
