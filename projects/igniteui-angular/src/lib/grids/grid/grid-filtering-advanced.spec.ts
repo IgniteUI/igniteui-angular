@@ -22,9 +22,10 @@ import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { QueryBuilderConstants, QueryBuilderFunctions } from '../../query-builder/query-builder-functions.spec';
+import { QueryBuilderFunctions } from '../../query-builder/query-builder-functions.spec';
 import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
+import { QueryBuilderSelectors } from '../../query-builder/query-builder.common';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     configureTestSuite((() => {
@@ -621,7 +622,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
 
             // Click the initial 'Add Condition' button of the query builder.
             QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
@@ -660,7 +661,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             exprContainer.scrollTop = 0;
 
             // Hover the last visible expression chip
-            const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderConstants.QUERY_BUILDER_EXPRESSION_ITEM_CLASS}`)[9];
+            const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`)[9];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
             tick();
             fix.detectChanges();
@@ -698,7 +699,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             exprContainer.scrollTop = 0;
 
             // Hover the previous to last visible expression chip.
-            const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderConstants.QUERY_BUILDER_EXPRESSION_ITEM_CLASS}`)[9];
+            const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`)[9];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
             tick();
             fix.detectChanges();
@@ -738,7 +739,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             exprContainer.scrollTop = 0;
 
             // Hover the last visible expression chip
-            const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderConstants.QUERY_BUILDER_EXPRESSION_ITEM_CLASS}`)[9];
+            const expressionItem = fix.nativeElement.querySelectorAll(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`)[9];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
             tick();
             fix.detectChanges();
@@ -1023,7 +1024,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
             QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
             tick(100);
             fix.detectChanges();
@@ -1254,7 +1255,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
 
             // Click the initial 'Add Condition' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);

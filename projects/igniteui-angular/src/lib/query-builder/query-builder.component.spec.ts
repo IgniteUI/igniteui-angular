@@ -5,10 +5,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
-import { QueryBuilderFunctions, QueryBuilderConstants, SampleEntities } from './query-builder-functions.spec';
+import { QueryBuilderFunctions, SampleEntities } from './query-builder-functions.spec';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
+import { QueryBuilderSelectors } from './query-builder.common';
 
 describe('IgxQueryBuilder', () => {
   configureTestSuite();
@@ -36,20 +37,20 @@ describe('IgxQueryBuilder', () => {
     it('Should render empty Query Builder properly.', fakeAsync(() => {
       tick(100);
       fix.detectChanges();
-      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
+      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER}`))[0].nativeElement;
       expect(queryBuilderElement).toBeDefined();
       expect(queryBuilderElement.children.length).toEqual(2);
 
       expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' Query Builder ');
 
       const queryTreeElement = queryBuilderElement.children[1];
-      expect(queryTreeElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_TREE);
+      expect(queryTreeElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_TREE);
 
       expect(queryBuilder.expressionTree).toBeUndefined();
 
       expect(queryTreeElement.children.length).toEqual(3);
       const bodyElement = queryTreeElement.children[0];
-      expect(bodyElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_BODY);
+      expect(bodyElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_BODY);
       expect(bodyElement.children.length).toEqual(1);
 
       QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false);
@@ -70,9 +71,9 @@ describe('IgxQueryBuilder', () => {
       tick(100);
       fix.detectChanges();
 
-      const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE))[0].nativeElement;
+      const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE))[0].nativeElement;
       const bodyElement = queryTreeElement.children[0];
-      expect(bodyElement).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_BODY);
+      expect(bodyElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_BODY);
       expect(bodyElement.children.length).toEqual(2);
 
       // Verify the operator line of the root group is an 'And' line.
@@ -93,7 +94,7 @@ describe('IgxQueryBuilder', () => {
       // fields input should have proper value
       expect(queryBuilder.queryTree.selectedReturnFields.length).toEqual(4);
       // nested queries should be collapsed
-      const nestedQueryTrees = queryTreeExpressionContainer.querySelectorAll(QueryBuilderConstants.QUERY_BUILDER_TREE);
+      const nestedQueryTrees = queryTreeExpressionContainer.querySelectorAll(QueryBuilderSelectors.QUERY_BUILDER_TREE);
       for (let i = 0; i < nestedQueryTrees.length; i++) {
         expect(nestedQueryTrees[i].checkVisibility()).toBeFalse();
       }
@@ -450,7 +451,7 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it('Column dropdown should contain proper fields based on the entity.', fakeAsync(() => {
-      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
+      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
 
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
@@ -465,7 +466,7 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it('Operator dropdown should contain operators based on the column\'s datatype (\'string\' or \'number\' or \'date\').', fakeAsync(() => {
-      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
+      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
 
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
@@ -512,7 +513,7 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it('Operator dropdown should contain operators based on the column\'s datatype (\'boolean\').', fakeAsync(() => {
-      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`))[0].nativeElement;
+      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
 
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
@@ -788,7 +789,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
 
       // Should render empty query builder tree
-      const nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
+      const nestedTree = fix.debugElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
       expect(nestedTree).toBeDefined();
 
       QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
@@ -864,7 +865,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
 
       // Should render empty query builder tree
-      const nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
+      const nestedTree = fix.debugElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
       expect(nestedTree).toBeDefined();
 
       QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
@@ -940,13 +941,13 @@ describe('IgxQueryBuilder', () => {
         //Verify 'In' disables value input and renders empty sub query
         QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex); // Select 'In' operator.
         QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
-        let nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
+        let nestedTree = fix.debugElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
         expect(nestedTree).toBeDefined();
 
         //Verify 'NotIn' disables value input and renders empty sub query
         QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex + 1); // Select 'NotIn' operator.
         QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
-        nestedTree = fix.debugElement.query(By.css(QueryBuilderConstants.QUERY_BUILDER_TREE));
+        nestedTree = fix.debugElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
         expect(nestedTree).toBeDefined();
 
         const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
@@ -1057,14 +1058,14 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderId', 'Equals', '3');
 
       // Verify that the nested query is not expanded
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
 
       // Click the nested query chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
       tick(50);
       fix.detectChanges();
       // Verify the query is expanded
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
       // Click a chip in the nested query three to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0], 1);
       tick(50);
@@ -1163,8 +1164,8 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it('Should display an alert dialog when the entity is changed and showEntityChangeDialog is true.', fakeAsync(() => {
-      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
-      const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`);
+      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER}`))[0].nativeElement;
+      const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`);
       const dialog = queryTreeElement.querySelector('igx-dialog');
       const dialogOutlet = document.querySelector('.igx-dialog__window');
       expect(dialog).toBeDefined();
@@ -1204,8 +1205,8 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it('Should not display an alert dialog when the entity changed once showEntityChangeDialog is disabled.', fakeAsync(() => {
-      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
-      const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`);
+      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER}`))[0].nativeElement;
+      const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`);
       const dialog = queryTreeElement.querySelector('igx-dialog');
       const dialogOutlet = document.querySelector('.igx-dialog__window');
       expect(dialog).toBeDefined();
@@ -1250,8 +1251,8 @@ describe('IgxQueryBuilder', () => {
 
     it('Initially should not display an alert dialog when the entity is changed if hideEntityChangeDialog is disabled through API.', fakeAsync(() => {
       queryBuilder.showEntityChangeDialog = false;
-      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
-      const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}`);
+      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER}`))[0].nativeElement;
+      const queryTreeElement = queryBuilderElement.querySelector(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`);
       const dialog = queryTreeElement.querySelector('igx-dialog');
       expect(dialog).toBeDefined();
 
@@ -1516,14 +1517,14 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
 
       // Verify that the nested query is expanded
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeTrue();
 
       QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
       tick(100);
       fix.detectChanges();
 
       // Verify that the nested query is collapsed
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
     }));
 
     it(`Should discard the changes in the fields if 'close' button of nested query condition is clicked.`, fakeAsync(() => {
@@ -1725,11 +1726,11 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       //New empty inner query should be displayed
-      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_CLASS}`))[0].nativeElement;
+      const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER}`))[0].nativeElement;
       const bodyElement = queryBuilderElement.children[1].children[0];
       const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
       expect(actionArea).toBeNull();
-      expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1]).toHaveClass(QueryBuilderConstants.QUERY_BUILDER_TREE);
+      expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1]).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_TREE);
       expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].children.length).toEqual(3);
       const tree = bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].querySelector('.igx-filter-tree__expression');
       expect(tree).toBeNull();
@@ -2063,7 +2064,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Verify the nested query is collapsed
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
 
       // Click the existing chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
@@ -2091,7 +2092,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       // Verify the nested query is collapsed
-      expect(fix.debugElement.query(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
+      expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBeFalse();
 
       // Expand the nested query by putting it in edit mode
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
@@ -2194,7 +2195,7 @@ describe('IgxQueryBuilder', () => {
       const editLine = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[1];
       QueryBuilderFunctions.verifyTabbableConditionEditLineElements(editLine);
 
-      const editDialog = fix.debugElement.queryAll(By.css(`.${QueryBuilderConstants.QUERY_BUILDER_BODY}`))[1];
+      const editDialog = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_BODY}`))[1];
       QueryBuilderFunctions.verifyTabbableInConditionDialogElements(editDialog);
     }));
 

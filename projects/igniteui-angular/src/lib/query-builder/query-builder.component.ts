@@ -320,16 +320,6 @@ export class IgxQueryBuilderComponent implements OnDestroy {
             name: 'edit',
             family: 'material',
         });
-
-        this.iconService.addIconRef('unfold_less', 'default', {
-            name: 'unfold_less',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('unfold_more', 'default', {
-            name: 'unfold_more',
-            family: 'material',
-        });
     }
 }
 

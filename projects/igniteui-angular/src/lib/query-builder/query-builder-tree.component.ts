@@ -4,8 +4,6 @@ import {
     EventEmitter,
     LOCALE_ID,
     Output,
-    Pipe,
-    PipeTransform,
     TemplateRef
 } from '@angular/core';
 import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
@@ -58,6 +56,7 @@ import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component'
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { isTree } from '../data-operations/expressions-tree-util';
+import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -65,104 +64,46 @@ const DEFAULT_PIPE_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
 const DEFAULT_CHIP_FOCUS_DELAY = 50;
 
-@Pipe({
-    name: 'fieldFormatter',
-    standalone: true
-})
-export class IgxFieldFormatterPipe implements PipeTransform {
-
-    public transform(value: any, formatter: (v: any, data: any, fieldData?: any) => any, rowData: any, fieldData?: any) {
-        return formatter(value, rowData, fieldData);
-    }
-}
-
-/**
- * @hidden @internal
- *
- * Internal class usage
- */
-export class ExpressionItem {
-    public parent: ExpressionGroupItem;
-    public expanded: boolean;
-    constructor(parent?: ExpressionGroupItem) {
-        this.parent = parent;
-    }
-}
-
-/**
- * @hidden @internal
- *
- * Internal class usage
- */
-export class ExpressionGroupItem extends ExpressionItem {
-    public operator: FilteringLogic;
-    public children: ExpressionItem[];
-    constructor(operator: FilteringLogic, parent?: ExpressionGroupItem) {
-        super(parent);
-        this.operator = operator;
-        this.children = [];
-    }
-}
-
-/**
- * @hidden @internal
- *
- * Internal class usage
- */
-class ExpressionOperandItem extends ExpressionItem {
-    public expression: IFilteringExpression;
-    public inEditMode: boolean;
-    public inAddMode: boolean;
-    public hovered: boolean;
-    public focused: boolean;
-    public fieldLabel: string;
-    constructor(expression: IFilteringExpression, parent: ExpressionGroupItem) {
-        super(parent);
-        this.expression = expression;
-    }
-}
-
 /** @hidden */
 @Component({
     selector: 'igx-query-builder-tree',
     templateUrl: './query-builder-tree.component.html',
     host: { 'class': 'igx-query-builder-tree' },
-    // standalone: true,
     imports: [
-        NgIf,
-        IgxButtonDirective,
-        IgxIconComponent,
-        IgxChipComponent,
-        IgxPrefixDirective,
-        IgxSelectComponent,
-        FormsModule,
-        NgFor,
-        IgxSelectItemComponent,
-        IgxInputGroupComponent,
-        IgxInputDirective,
-        IgxDatePickerComponent,
-        IgxPickerToggleComponent,
-        IgxPickerClearComponent,
-        IgxTimePickerComponent,
-        IgxDateTimeEditorDirective,
-        NgTemplateOutlet,
-        NgClass,
-        IgxOverlayOutletDirective,
-        DatePipe,
-        IgxFieldFormatterPipe,
-        IgxIconButtonDirective,
-        IgxComboComponent,
-        IgxComboHeaderDirective,
-        IgxCheckboxComponent,
-        IgxDialogComponent,
-        IgxTooltipTargetDirective,
-        IgxTooltipDirective,
-        IgxDragIgnoreDirective,
-        IgxDropDirective,
-        IgxDropDownComponent,
-        IgxDropDownItemComponent,
-        IgxDropDownItemNavigationDirective
-    ]
+    DatePipe,
+    FormsModule,
+    IgxButtonDirective,
+    IgxCheckboxComponent,
+    IgxChipComponent,
+    IgxComboComponent,
+    IgxComboHeaderDirective,
+    IgxDatePickerComponent,
+    IgxDateTimeEditorDirective,
+    IgxDialogComponent,
+    IgxDragIgnoreDirective,
+    IgxDropDirective,
+    IgxDropDownComponent,
+    IgxDropDownItemComponent,
+    IgxDropDownItemNavigationDirective,
+    IgxFieldFormatterPipe,
+    IgxIconButtonDirective,
+    IgxIconComponent,
+    IgxInputDirective,
+    IgxInputGroupComponent,
+    IgxOverlayOutletDirective,
+    IgxPickerClearComponent,
+    IgxPickerToggleComponent,
+    IgxPrefixDirective,
+    IgxSelectComponent,
+    IgxSelectItemComponent,
+    IgxTimePickerComponent,
+    IgxTooltipDirective,
+    IgxTooltipTargetDirective,
+    NgClass,
+    NgFor,
+    NgIf,
+    NgTemplateOutlet
+]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
@@ -531,13 +472,16 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
-     * Disables the select entity dropdown at the root level after the initial selection.
+     * Returns if the select entity dropdown at the root level is disabled after the initial selection.
      */
     public get disableEntityChange(): boolean {
 
         return !this.parentExpression && this.selectedEntity ? this.queryBuilder.disableEntityChange : false;
     }
 
+    /**
+     * Returns the current level.
+     */
     public get level(): number {
         let parent = this.elRef.nativeElement.parentElement;
         let _level = 0;

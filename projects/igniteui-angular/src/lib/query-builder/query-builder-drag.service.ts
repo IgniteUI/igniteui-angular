@@ -1,6 +1,7 @@
 import { filter, fromEvent, sampleTime, Subscription, tap } from 'rxjs';
-import { ExpressionGroupItem, ExpressionItem, IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
+import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { ElementRef, Inject, Injectable } from '@angular/core';
+import { ExpressionGroupItem, ExpressionItem, QueryBuilderSelectors } from './query-builder.common';
 
 const DEFAULT_SET_Z_INDEX_DELAY = 10;
 const Z_INDEX_TO_SET = 10006;
@@ -14,12 +15,14 @@ export class IgxQueryBuilderDragService {
         @Inject(IgxQueryBuilderTreeComponent)
         private _queryBuilderTreeComponentDeleteItem: (expressionItem: ExpressionItem) => void,
     ) { }
+
     public sourceExpressionItem: ExpressionItem;
     public sourceElement: HTMLElement;
     public targetExpressionItem: ExpressionItem;
     public targetElement: HTMLElement;
     public dropUnder: boolean;
     public dropGhostChipNode: Node;
+
     private _ghostChipMousemoveSubscription$: Subscription;
     private _keyboardSubscription$: Subscription;
     private _keyDragOffsetIndex: number = 0;
@@ -28,18 +31,8 @@ export class IgxQueryBuilderDragService {
     private _dropZonesList: HTMLElement[];   //stores a flat ordered list of all chips, including +Condition button, while performing the keyboard drag&drop
     private _expressionsList: ExpressionItem[]; //stores a flat ordered list of all expressions, including +Condition button, while performing the keyboard drag&drop
     private _timeoutId: any;
-    readonly FILTER_TREE_CLASS = 'igx-filter-tree';
-    readonly QUERY_BUILDER_TREE_CLASS = 'igx-query-builder-tree';
-    readonly DRAG_INDICATOR_CLASS = 'igx-drag-indicator';
-    readonly DROP_GHOST_CLASS = 'igx-filter-tree__expression-item-drop-ghost';
-    readonly EXPRESSION_ITEM_GHOST_CLASS = 'igx-filter-tree__expression-item-ghost';
-    readonly EXPRESSION_CONTEXT_MENU_CLASS = 'igx-filter-tree__expression-context-menu';
-    readonly TREE_SUBQUERY_CLASS = 'igx-filter-tree__subquery';
-    readonly TREE_EXPRESSION_SECTION_CLASS = 'igx-filter-tree__expression-section';
-    readonly VIABLE_DROP_AREA_SELECTOR = `.igx-filter-tree__expression-item[igxDrop]:not(.${this.DROP_GHOST_CLASS}),` + /*Condition chip*/
-        `.igx-filter-tree__subquery:has([igxDrop]),` + /*Chip in edit*/
-        `.igx-filter-tree__buttons > .igx-button[igxDrop]:first-of-type,` + /*Add Condition Button*/
-        `.igx-filter-tree__expression-context-menu[igxDrop]`; /*AND/OR group root*/
+
+
 
     //Get the dragged ghost as a HTMLElement
     private get dragGhostElement(): HTMLElement {
@@ -48,11 +41,11 @@ export class IgxQueryBuilderDragService {
 
     //Get the drop ghost as a HTMLElement
     private get dropGhostElement(): HTMLElement {
-        return (document.querySelector(`.${this.DROP_GHOST_CLASS}`) as HTMLElement);
+        return (document.querySelector(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST}`) as HTMLElement);
     }
 
     private get mainExpressionTree(): HTMLElement {
-        return this._queryBuilderTreeComponentElRef.nativeElement.querySelector(`.${this.FILTER_TREE_CLASS}`);
+        return this._queryBuilderTreeComponentElRef.nativeElement.querySelector(`.${QueryBuilderSelectors.FILTER_TREE}`);
     }
 
     //When we pick up a chip
@@ -173,7 +166,7 @@ export class IgxQueryBuilderDragService {
         if (this.ghostInLowerPart(targetDragElement) || !targetExpressionItem.parent) {
             //if ghost in lower part of the AND/OR (or it's the main group) => drop before the group starts
             newTargetElement = targetDragElement.nextElementSibling.firstElementChild;
-            newTargetElement = (newTargetElement.className.indexOf(this.DROP_GHOST_CLASS) !== -1) ? newTargetElement.nextElementSibling : newTargetElement;
+            newTargetElement = (newTargetElement.className.indexOf(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST) !== -1) ? newTargetElement.nextElementSibling : newTargetElement;
             newTargetExpressionItem = targetExpressionItem.children[0];
         } else {
             //if ghost in upper part or it's the root group => drop as first child of that group
@@ -201,7 +194,7 @@ export class IgxQueryBuilderDragService {
     }
 
     public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
-        (sourceDragElement.querySelector(`.${this.DRAG_INDICATOR_CLASS}`) as HTMLElement).setAttribute('aria-hidden', 'false'); //Temp solution for aria-hidden bug #35759
+        (sourceDragElement.querySelector(`.${QueryBuilderSelectors.DRAG_INDICATOR}`) as HTMLElement).setAttribute('aria-hidden', 'false'); //Temp solution for aria-hidden bug #35759
         this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
     }
 
@@ -217,7 +210,7 @@ export class IgxQueryBuilderDragService {
         if (this._isKeyboardDrag && this.dropGhostElement) {
             //have to wait a tick because upon blur, the next activeElement is always body, right before the next element gains focus
             setTimeout(() => {
-                if (document.activeElement.className.indexOf(this.DRAG_INDICATOR_CLASS) === -1) {
+                if (document.activeElement.className.indexOf(QueryBuilderSelectors.DRAG_INDICATOR) === -1) {
                     this.resetDragAndDrop(true);
                     this._keyboardSubscription$?.unsubscribe();
                 }
@@ -249,7 +242,7 @@ export class IgxQueryBuilderDragService {
     //Create the drop ghost node based on the base chip that's been dragged
     private createDropGhost(keyboardMode?: boolean) {
         const dragCopy = this.sourceElement.cloneNode(true);
-        (dragCopy as HTMLElement).classList.add(this.DROP_GHOST_CLASS);
+        (dragCopy as HTMLElement).classList.add(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST);
         (dragCopy as HTMLElement).style.display = '';
         (dragCopy.firstChild as HTMLElement).style.visibility = 'visible';
         dragCopy.removeChild(dragCopy.childNodes[3]);
@@ -261,7 +254,7 @@ export class IgxQueryBuilderDragService {
             dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
             dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
             (dragCopy.firstChild.firstChild.firstChild as HTMLElement).replaceChildren(span);
-            (dragCopy.firstChild.firstChild as HTMLElement).classList.add(this.EXPRESSION_ITEM_GHOST_CLASS);
+            (dragCopy.firstChild.firstChild as HTMLElement).classList.add(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_GHOST);
         }
         return dragCopy;
     }
@@ -289,7 +282,7 @@ export class IgxQueryBuilderDragService {
 
         //Put focus on the drag icon of the ghost while performing keyboard drag
         if (this._isKeyboardDrag) {
-            ((this.dropGhostChipNode as HTMLElement).querySelector(`.${this.DRAG_INDICATOR_CLASS}`) as HTMLElement).focus();
+            ((this.dropGhostChipNode as HTMLElement).querySelector(`.${QueryBuilderSelectors.DRAG_INDICATOR}`) as HTMLElement).focus();
         }
 
         //Attach a mousemove event listener (if not already in place) to the dragged ghost (if present)
@@ -413,7 +406,7 @@ export class IgxQueryBuilderDragService {
             if (index + indexOffset <= this._expressionsList.length - 1) {
                 let under = this._keyDragOffsetIndex < 0 ? this._keyDragOffsetIndex % 2 == 0 ? true : false : this._keyDragOffsetIndex % 2 == 0 ? false : true;
 
-                if (this._dropZonesList[index + indexOffset].className.indexOf(this.EXPRESSION_CONTEXT_MENU_CLASS) === -1) {
+                if (this._dropZonesList[index + indexOffset].className.indexOf(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_CONTEXT_MENU) === -1) {
                     this.targetElement = this._dropZonesList[index + indexOffset]
                     this.targetExpressionItem = this._expressionsList[index + indexOffset];
                 } else {
@@ -455,8 +448,8 @@ export class IgxQueryBuilderDragService {
             } else {
                 //Dropping on '+ Condition button' => drop as last condition in the root group
                 let lastElement = this._dropZonesList[this._dropZonesList.length - 1].parentElement.previousElementSibling
-                if (lastElement.className.indexOf(this.TREE_EXPRESSION_SECTION_CLASS) !== -1) lastElement = lastElement.lastElementChild;
-                if (lastElement.className.indexOf(this.TREE_SUBQUERY_CLASS) !== -1) lastElement = lastElement.previousElementSibling;
+                if (lastElement.className.indexOf(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_SECTION) !== -1) lastElement = lastElement.lastElementChild;
+                if (lastElement.className.indexOf(QueryBuilderSelectors.FILTER_TREE_SUBQUERY) !== -1) lastElement = lastElement.previousElementSibling;
                 if (lastElement === this.dropGhostChipNode) lastElement = lastElement.previousElementSibling;
 
                 const getParentExpression = (expression: ExpressionItem) => {
@@ -516,12 +509,12 @@ export class IgxQueryBuilderDragService {
 
     //Gets all chip elements owned by this tree (discard child trees), AND/OR group roots and '+condition' button, flatten out as a list of HTML elements
     private getListedDropZones(): HTMLElement[] {
-        const expressionElementList = (this._queryBuilderTreeComponentElRef.nativeElement as HTMLElement).querySelectorAll(this.VIABLE_DROP_AREA_SELECTOR);
+        const expressionElementList = (this._queryBuilderTreeComponentElRef.nativeElement as HTMLElement).querySelectorAll(QueryBuilderSelectors.VIABLE_DROP_AREA);
         const ownChipElements = [];
 
         const isNotFromThisTree = (qb, parent) => {
             if (parent == qb) return false;
-            else if (parent?.style?.display === 'none' || parent.classList.contains(this.QUERY_BUILDER_TREE_CLASS)) return true;
+            else if (parent?.style?.display === 'none' || parent.classList.contains(QueryBuilderSelectors.QUERY_BUILDER_TREE)) return true;
             else if (parent.parentElement) return isNotFromThisTree(qb, parent.parentElement);
             else return false;
         }
@@ -541,7 +534,6 @@ export class IgxQueryBuilderDragService {
         }
 
         this._timeoutId = setTimeout(() => {
-            console.log(this.dragGhostElement)
             if (this.dragGhostElement.style) this.dragGhostElement.style.zIndex = `${Z_INDEX_TO_SET}`;
         }, DEFAULT_SET_Z_INDEX_DELAY);
     }
