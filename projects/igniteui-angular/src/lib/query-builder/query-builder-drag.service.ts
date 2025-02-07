@@ -552,6 +552,13 @@ export class IgxQueryBuilderDragService {
 
         if (dropUnder && ixs > ixt) dropLocationIndex += 1;
 
+        //if dropping under empty edited condition (which will be discarded)
+        if(dropUnder && targetExpressionItem['expression'] && 
+            !targetExpressionItem['expression'].fieldName && 
+            !targetExpressionItem['expression'].condition) dropLocationIndex -= 1;
+
+        console.log(JSON.stringify(targetExpressionItem['expression']));
+
         //if dropped on the +Condition button
         if (dropUnder && !targetExpressionItem['expression']) dropLocationIndex = expressions.filter(ex => ex['expression']).length - 1;
 
