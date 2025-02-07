@@ -1176,6 +1176,9 @@ describe('IgxQueryBuilder', () => {
       tick(50);
       fix.detectChanges();
 
+      // Click 'add condition' option
+      QueryBuilderFunctions.clickQueryBuilderTreeAddOption(fix, 0);
+
       // Hover the first chip and verify actions container is visible.
       UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
       tick(50);
