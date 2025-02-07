@@ -11,7 +11,8 @@ import {
     Output,
     ViewChild,
     AfterContentInit,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -56,6 +57,8 @@ let DIALOG_ID = 0;
 @Component({
     selector: 'igx-dialog',
     templateUrl: 'dialog-content.component.html',
+    styleUrl: 'dialog.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxToggleDirective, IgxFocusTrapDirective, NgIf, IgxFocusDirective, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, AfterContentInit {
