@@ -87,6 +87,7 @@ $_theme: $material;
         align-items: center;
         outline-style: none;
         cursor: pointer;
+        animation: enable-transitions 0s 0.1s forwards;
 
         &:hover {
             @include e(ripple) {
@@ -143,6 +144,7 @@ $_theme: $material;
             transition:
                 border-color 0.2s $ease-out-quad,
                 background 0.2s $ease-out-quad;
+            transition-delay: var(--_transition-delay);
             overflow: hidden;
         }
 
@@ -328,6 +330,7 @@ $_theme: $material;
                 transition:
                     all 0.2s $ease-out-quad,
                     opacity 0.2s $ease-out-quad;
+                transition-delay: var(--_transition-delay);
             }
 
             @include e(composite-wrapper) {

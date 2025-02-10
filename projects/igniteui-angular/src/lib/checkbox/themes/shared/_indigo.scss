@@ -34,6 +34,7 @@ $_theme: $indigo;
     @include e(label) {
         @include type-style(body-2);
         transition: color 0.2s $ease-out-quad;
+        transition-delay: var(--_transition-delay);
 
         &:hover {
             color: var-get($_theme, 'label-color-hover');
