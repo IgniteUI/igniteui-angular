@@ -112,6 +112,12 @@
         }
     }
 
+    @property --_transition-delay {
+        syntax: '<time>';
+        initial-value: -1s;
+        inherits: true;
+    }
+
     @property --_progress-integer {
         syntax: '<integer>';
         initial-value: 0;
@@ -197,5 +203,10 @@
     @if $print-layout == true {
         @include print.layout();
     }
-}
 
+    @keyframes enable-transitions {
+      to {
+            --_transition-delay: 0s;
+        }
+    }
+}
