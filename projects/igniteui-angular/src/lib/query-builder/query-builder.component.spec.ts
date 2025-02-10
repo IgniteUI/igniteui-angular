@@ -2613,7 +2613,7 @@ describe('IgxQueryBuilder', () => {
 
       //trigger ghost
       QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 30);
-      await wait(100);
+      await wait(50);
       fix.detectChanges();
 
       const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
@@ -2708,7 +2708,7 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderName  Equals  foo");
 
       UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 0, secondChipElem.offsetHeight, true);
-      await wait(100);
+      await wait(50);
       fix.detectChanges();
       QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Equals', 'foo');
 
@@ -2723,7 +2723,7 @@ describe('IgxQueryBuilder', () => {
 
       const dragDir = draggedChip.dragDirective;
       UIInteractions.moveDragDirective(fix, dragDir, 50, 2 * draggedChipElem.offsetHeight + 25, true);
-      await wait(100);
+      await wait(50);
       fix.detectChanges();
       QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Equals', 'foo');
 
@@ -2742,7 +2742,7 @@ describe('IgxQueryBuilder', () => {
       const draggedChipElem = draggedChip.nativeElement;
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -3.5 * draggedChipElem.offsetHeight, true);
-      await wait(100);
+      await wait(50);
       fix.detectChanges();
       QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
 
@@ -2882,12 +2882,12 @@ describe('IgxQueryBuilder', () => {
       const heightOffset = draggedChip.nativeElement.offsetHeight;
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -4 * heightOffset, true);
-      await wait(100);
+      await wait(50);
       fix.detectChanges();
       QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
 
       UIInteractions.moveDragDirective(fix, chipComponents[4].componentInstance.dragDirective, 0, -4 * heightOffset, true);
-      await wait(100);
+      await wait(50);
       fix.detectChanges();
       QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Ends With', 'a');
 
@@ -2908,7 +2908,7 @@ describe('IgxQueryBuilder', () => {
       chipComponents[2].nativeElement.click();
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -2.5 * draggedChipElem.offsetHeight, true);
-      await wait(100);
+      await wait(50);
       fix.detectChanges();
       QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
 
@@ -2944,7 +2944,7 @@ describe('IgxQueryBuilder', () => {
       const draggedChipElem = draggedChip.nativeElement;
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChipElem.offsetHeight, true);
-      await wait(100);
+      await wait(50);
       fix.detectChanges();
       QueryBuilderFunctions.verifyFocusedChip('Id', 'Equals', '123');
 
