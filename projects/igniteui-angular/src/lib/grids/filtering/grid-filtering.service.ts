@@ -530,9 +530,9 @@ export class IgxFilteringService implements OnDestroy {
         insertAtIndex = -1,
         createNewTree = false): FilteringExpressionsTree {
 
-        let expressionsTree = 'operator' in conditionOrExpressionsTree ?
+        let expressionsTree = conditionOrExpressionsTree && 'operator' in conditionOrExpressionsTree ?
             conditionOrExpressionsTree : null;
-        const condition = 'operator' in conditionOrExpressionsTree ?
+        const condition = conditionOrExpressionsTree && 'operator' in conditionOrExpressionsTree ?
             null : conditionOrExpressionsTree as IFilteringOperation;
 
         let newExpressionsTree = filteringState as FilteringExpressionsTree;
