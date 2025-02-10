@@ -59,6 +59,7 @@ $_theme: $material;
         flex-flow: row nowrap;
         align-items: center;
         cursor: pointer;
+        animation: enable-transitions 0s 0.1s forwards;
 
         &:hover {
             @include e(ripple) {
@@ -103,6 +104,7 @@ $_theme: $material;
             background: var-get($_theme, 'track-off-color');
             user-select: none;
             transition: $input-transition;
+            transition-delay: var(--_transition-delay);
 
             --igx-ripple-color: #{var-get($_theme, 'track-off-color')};
         }
@@ -114,6 +116,7 @@ $_theme: $material;
             border-radius: var-get($_theme, 'border-radius-thumb');
             transition: $input-transition;
             transform: translateX(var(--switch-off-offset));
+            transition-delay: var(--_transition-delay);
 
             [dir='rtl'] & {
                 transform: translateX(calc(var(--switch-off-offset) * -1));
@@ -129,6 +132,7 @@ $_theme: $material;
             border-radius: var-get($_theme, 'border-radius-thumb');
             background: var-get($_theme, 'thumb-off-color');
             transition: $input-transition;
+            transition-delay: var(--_transition-delay);
         }
 
         @include e(ripple) {
@@ -270,7 +274,7 @@ $_theme: $material;
             @include e(label) {
                 color: var-get($_theme, 'label-invalid-color');
             }
-        
+
             @include e(label, $m: before) {
                 color: var-get($_theme, 'label-invalid-color');
             }
