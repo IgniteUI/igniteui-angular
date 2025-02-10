@@ -454,7 +454,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
     }
 
     /** @hidden @internal */
-    public ngAfterViewChecked() {
+    public ngAfterContentChecked() {
         this.setComponentTheme();
     }
 }
