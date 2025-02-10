@@ -1026,9 +1026,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.deleteItem(expressionItem);
     }
 
-    public dragService: IgxQueryBuilderDragService = new IgxQueryBuilderDragService(this, this.el, this.deleteItem);
+    private focusChipAfterDrag = (index: number) => {
+        this._lastFocusedChipIndex = index;
+        this.focusEditedExpressionChip();
+    }
 
-    //Chip can be dragged if it's tree is in edit mode and there is no inner query that's been edited
+    public dragService: IgxQueryBuilderDragService = new IgxQueryBuilderDragService(this, this.el, this.deleteItem, this.focusChipAfterDrag);
+
+    //Chip can be dragged if its tree is in edit mode and there is no inner query that's been edited
     public canBeDragged(): boolean {
         return this.isInEditMode && (!this.innerQueries || this.innerQueries.length == 0 || !this.innerQueries?.some(q => q.isInEditMode()))
     }
@@ -1619,7 +1624,17 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._timeoutId = setTimeout(() => {
             if (this._lastFocusedChipIndex != -1) {
-                const chipElement = this.expressionsChips.toArray()[this._lastFocusedChipIndex]?.nativeElement;
+                //Sort the expression chip list. 
+                //If there was a recent drag&drop and the tree hasn't rerendered(child query), they will be unordered
+                const sortedChips = this.expressionsChips.toArray().sort(function (a, b) {
+                    if (a === b) return 0;
+                    if (a.chipArea.nativeElement.compareDocumentPosition(b.chipArea.nativeElement) & 2) {
+                        // b comes before a
+                        return 1;
+                    }
+                    return -1;
+                });
+                const chipElement = sortedChips[this._lastFocusedChipIndex]?.nativeElement;
                 if (chipElement) {
                     chipElement.focus();
                 }
