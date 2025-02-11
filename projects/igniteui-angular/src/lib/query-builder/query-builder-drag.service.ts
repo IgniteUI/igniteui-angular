@@ -17,14 +17,13 @@ export class IgxQueryBuilderDragService {
         @Inject(IgxQueryBuilderTreeComponent)
         private _queryBuilderFocusChipAfterDrag: (index: number) => void,
     ) { }
-
-    public sourceExpressionItem: ExpressionItem;
-    public sourceElement: HTMLElement;
-    public targetExpressionItem: ExpressionItem;
-    public targetElement: HTMLElement;
-    public dropUnder: boolean;
+    
     public dropGhostChipNode: Node;
-
+    private sourceExpressionItem: ExpressionItem;
+    private sourceElement: HTMLElement;
+    private targetExpressionItem: ExpressionItem;
+    private targetElement: HTMLElement;
+    private dropUnder: boolean;
     private _ghostChipMousemoveSubscription$: Subscription;
     private _keyboardSubscription$: Subscription;
     private _keyDragOffsetIndex: number = 0;
