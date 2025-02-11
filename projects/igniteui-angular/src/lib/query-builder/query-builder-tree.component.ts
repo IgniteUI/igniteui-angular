@@ -1440,7 +1440,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     public onReturnFieldSelectChanging(event: IComboSelectionChangingEventArgs | ISelectionEventArgs) {
         let newSelection = [];
-        if (event.newSelection instanceof Array) {
+        if (Array.isArray(event.newSelection)) {
             newSelection = event.newSelection.map(item => item.field)
         } else {
             newSelection.push(event.newSelection.value);
