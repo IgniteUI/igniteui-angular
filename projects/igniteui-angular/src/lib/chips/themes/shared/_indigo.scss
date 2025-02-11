@@ -1,0 +1,197 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-chip, indigo) {
+    %disabled-item {
+        // not working
+        background: color($color: 'primary', $variant: 400, $opacity: .5);
+        color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
+        border-color: transparent;
+    }
+
+    @include e(item) {
+        --igx-icon-size: #{sizable(rem(14px), rem(14px), rem(16px))};
+        --affix-margin: calc(#{sizable(rem(1px), rem(3px), rem(4px))} * -1);
+
+        padding-inline: #{sizable(rem(3px), rem(5px), rem(7px))};
+    }
+
+    &:focus {
+        @include e(item) {
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-outline-color');
+        }
+
+        @include e(item, $m: 'selected') {
+            box-shadow: 0 0 rem(3px) var-get($_theme, 'focus-selected-outline-color');
+        }
+    }
+
+    @include m(primary) {
+        &:focus {
+            @include e(item) {
+                color: contrast-color($color: 'primary', $variant: 900);
+                background: color($color: 'primary', $variant: 500);
+                border-color: color($color: 'primary', $variant: 500);
+                box-shadow: 0 0 0 rem(3px) color($color: 'primary', $variant: 400, $opacity: .5);
+            }
+        }
+
+        &:hover {
+            @include e(item) {
+                color: contrast-color($color: 'primary', $variant: 900);
+                background: color($color: 'primary', $variant: 400);
+                border-color: color($color: 'primary', $variant: 400);
+            }
+        }
+    }
+
+    @include m(info) {
+        &:focus {
+            @include e(item) {
+                color: contrast-color($color: 'info', $variant: 500);
+                background: color($color: 'info', $variant: 500);
+                border-color: color($color: 'info', $variant: 500);
+                box-shadow: 0 0 0 rem(3px) color($color: 'info', $variant: 100);
+            }
+        }
+
+        &:hover {
+            @include e(item) {
+                color: contrast-color($color: 'info', $variant: 400);
+                background: color($color: 'info', $variant: 400);
+                border-color: color($color: 'info', $variant: 400);
+            }
+        }
+    }
+
+    @include m(success) {
+        @include e(item) {
+            color: contrast-color($color: 'success', $variant: 900);
+        }
+
+        &:focus {
+            @include e(item) {
+                color: contrast-color($color: 'success', $variant: 900);
+                background: color($color: 'success', $variant: 500);
+                border-color: color($color: 'success', $variant: 500);
+                box-shadow: 0 0 0 rem(3px) color($color: 'success', $variant: 200);
+            }
+        }
+
+        &:hover {
+            @include e(item) {
+                color: contrast-color($color: 'success', $variant: 900);
+                background: color($color: 'success', $variant: 400);
+                border-color: color($color: 'success', $variant: 400);
+            }
+        }
+    }
+
+    @include m(warning) {
+        &:focus {
+            @include e(item) {
+                color: contrast-color($color: 'warn', $variant: 900);
+                background: color($color: 'warn', $variant: 500);
+                border-color: color($color: 'warn', $variant: 500);
+                box-shadow: 0 0 0 rem(3px) color($color: 'warn', $variant: 100);
+            }
+        }
+
+        &:hover {
+            @include e(item) {
+                color: contrast-color($color: 'warn', $variant: 900);
+                background: color($color: 'warn', $variant: 400);
+                border-color: color($color: 'warn', $variant: 400);
+            }
+        }
+    }
+
+    @include m(danger) {
+        @include e(item) {
+            color: contrast-color($color: 'error', $variant: 900);
+        }
+
+        &:focus {
+            @include e(item) {
+                color: contrast-color($color: 'error', $variant: 900);
+                background: color($color: 'error', $variant: 500);
+                border-color: color($color: 'error', $variant: 500);
+                box-shadow: 0 0 0 rem(3px) color($color: 'error', $variant: 100);
+            }
+        }
+
+        &:hover {
+            @include e(item) {
+                color: contrast-color($color: 'error', $variant: 900);
+                background: color($color: 'error', $variant: 400);
+                border-color: color($color: 'error', $variant: 400);
+            }
+        }
+    }
+
+    @include m(disabled) {
+        @include e(item, $m: 'selected') {
+            // @extend %disabled-item;
+
+            background: color($color: 'primary', $variant: 400, $opacity: .5);
+            color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
+            border-color: transparent;
+        }
+    }
+
+    @include mx(disabled, primary) {
+        @include e(item) {
+            // @extend %disabled-item;
+
+            background: color($color: 'primary', $variant: 400, $opacity: .5);
+            color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
+            border-color: transparent;
+        }
+    }
+
+    @include mx(disabled, info) {
+        @include e(item) {
+            color: contrast-color($color: 'info', $variant: 900);
+            background: color($color: 'info', $variant: 500);
+            border-color: color($color: 'info', $variant: 500);
+            opacity: .4;
+        }
+    }
+
+    @include mx(disabled, success) {
+        @include e(item) {
+            color: contrast-color($color: 'success', $variant: 900);
+            background: color($color: 'success', $variant: 500);
+            border-color: color($color: 'success', $variant: 500);
+            opacity: .4;
+        }
+    }
+
+    @include mx(disabled, warning) {
+        @include e(item) {
+            color: contrast-color($color: 'warn', $variant: 900);
+            background: color($color: 'warn', $variant: 500);
+            border-color: color($color: 'warn', $variant: 500);
+            opacity: .4;
+        }
+    }
+
+    @include mx(disabled, danger) {
+        @include e(item) {
+            color: contrast-color($color: 'error', $variant: 900);
+            background: color($color: 'error', $variant: 500);
+            border-color: color($color: 'error', $variant: 500);
+            opacity: .4;
+        }
+    }
+}
+
+@include themed-block(igx-chip-area, indigo) {
+    padding: rem(4px);
+    gap: rem(8px)
+}

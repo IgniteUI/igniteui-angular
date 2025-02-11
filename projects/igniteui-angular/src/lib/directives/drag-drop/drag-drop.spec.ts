@@ -1922,6 +1922,30 @@ describe('Nested igxDrag elements', () => {
     });
 })
 
+describe('GhostClasses', () => {
+    configureTestSuite();
+    beforeAll(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [TestGhostClassesComponent]
+        })
+        .compileComponents();
+    }));
+
+    it('should correctly apply all ghost classes.', async () => {
+        const fix = TestBed.createComponent(TestGhostClassesComponent);
+        fix.detectChanges();
+
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        expect(firstElement.getAttribute('ng-reflect-ghost-class')).toMatch('ghostElement');
+
+        const secondDrag = fix.componentInstance.dragElems.toArray()[1];
+        const secondElement = secondDrag.element.nativeElement;
+        expect(secondElement.getAttribute('ng-reflect-ghost-classes')).toContain('ghostElement');
+        expect(secondElement.getAttribute('ng-reflect-ghost-classes')).toContain('casper');
+    });
+})
+
 const getDragDirsRects = (dragDirs: QueryList<IgxDragDirective>) => {
     const dragDirsRects = [];
     dragDirs.forEach((dragDir) => {
@@ -1990,6 +2014,21 @@ const generalStyles = [`
         background-color: rgba(232, 232, 232, .5);
     }
 `];
+
+@Component({
+    template: `
+        <h3>Draggable elements:</h3>
+        <div>
+            <div id="firstDrag" [ghostClass]="'ghostElement'" igxDrag><span>Drag 1</span></div>
+            <div id="secondDrag" [ghostClasses]="['ghostElement', 'casper']" igxDrag>Drag 2</div>
+        </div>
+    `,
+    imports: [IgxDragDirective, IgxDragHandleDirective]
+})
+class TestGhostClassesComponent {
+    @ViewChildren(IgxDragDirective)
+    public dragElems: QueryList<IgxDragDirective>;
+}
 
 @Component({
     styles: generalStyles,

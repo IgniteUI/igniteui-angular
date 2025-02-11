@@ -1,0 +1,442 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/tokens' as *;
+
+$_theme: $material;
+
+@include layer(base) {
+    --affix-margin: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
+
+    %igx-chip {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($_theme, 'default-size')});
+        --chip-size: var(--component-size);
+
+        position: relative;
+        display: inline-flex;
+        flex-shrink: 0;
+
+        // Fix: The grid resizing does not autosize the filter header cells with the default filter chips
+        // https://github.com/IgniteUI/igniteui-angular/pull/12770/files/efd2a274038c051e82561903f8799fd03265fd74#r1150993630
+        min-width: max-content;
+        touch-action: none;
+        outline: none;
+    }
+
+    %igx-chip__part {
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    @include b(igx-chip-area) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        width: 100%;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    @include b(igx-chip) {
+        // @extend %igx-chip;
+
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($_theme, 'default-size')});
+        --chip-size: var(--component-size);
+
+        position: relative;
+        display: inline-flex;
+        flex-shrink: 0;
+
+        // Fix: The grid resizing does not autosize the filter header cells with the default filter chips
+        // https://github.com/IgniteUI/igniteui-angular/pull/12770/files/efd2a274038c051e82561903f8799fd03265fd74#r1150993630
+        min-width: max-content;
+        touch-action: none;
+        outline: none;
+
+        // The focus and hover are build that way since the host is the focusable element
+        &:focus {
+            @include e(item) {
+                outline-style: none;
+                color: var-get($_theme, 'focus-text-color');
+                background: var-get($_theme, 'focus-background');
+                border-color: var-get($_theme, 'focus-border-color');
+            }
+
+            @include e(item, $m: 'selected') {
+                color: var-get($_theme, 'focus-selected-text-color');
+                background: var-get($_theme, 'focus-selected-background');
+                border-color: var-get($_theme, 'focus-selected-border-color');
+            }
+        }
+
+        &:hover {
+            @include e(item) {
+                color: var-get($_theme, 'hover-text-color');
+                background: var-get($_theme, 'hover-background');
+                border-color: var-get($_theme, 'hover-border-color');
+            }
+
+            @include e(item, $m: 'selected') {
+                color: var-get($_theme, 'hover-selected-text-color');
+                background: var-get($_theme, 'hover-selected-background');
+                border-color: var-get($_theme, 'hover-selected-border-color');
+            }
+        }
+
+        @include e(item) {
+            @include type-style(body-2);
+
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: auto;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: var-get($_theme, 'size');
+            padding-inline: sizable(rem(2px), rem(6px), rem(12px));
+            gap: sizable(rem(3px), rem(6px), rem(8px));
+            color: var-get($_theme, 'text-color');
+            background: var-get($_theme, 'background');
+            border: rem(1px) solid var-get($_theme, 'border-color');
+            border-radius: var-get($_theme, 'border-radius');
+            user-select: none;
+            overflow: hidden;
+            cursor: pointer;
+            filter: opacity(1);
+
+            igx-avatar {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                font-size: 50%;
+                max-height: 100%;
+                width: sizable(rem(14px), rem(18px), rem(24px));
+                max-width: sizable(rem(14px), rem(18px), rem(24px));
+                height: sizable(rem(14px), rem(18px), rem(24px));
+            }
+
+            igx-icon {
+                --component-size: var(--chip-size);
+            }
+
+            igx-circular-bar {
+                --diameter: #{sizable(rem(14px), rem(18px), rem(24px))};
+            }
+
+            igx-prefix,
+            [igxPrefix],
+            igx-suffix,
+            [igxSuffix] {
+                display: inline-flex;
+                vertical-align: middle;
+                max-width: 32ch;
+
+                > igx-icon {
+                    display: block;
+                }
+            }
+        }
+
+        @include e(start) {
+            @extend %igx-chip__part;
+
+            > igx-avatar,
+            > igx-circular-bar {
+                &:first-child {
+                    margin-inline-start: var(--affix-margin);
+                }
+            }
+
+            [igxPrefix],
+            igx-prefix {
+                &:first-of-type {
+                    igx-avatar,
+                    igx-circular-bar {
+                        margin-inline-start: var(--affix-margin);
+                    }
+                }
+            }
+        }
+
+        @include e(end) {
+            @extend %igx-chip__part;
+
+            > igx-avatar,
+            > igx-circular-bar {
+                &:last-child {
+                    margin-inline-end: var(--affix-margin);
+                }
+            }
+
+            [igxPrefix],
+            igx-prefix {
+                &:first-of-type {
+                    igx-avatar,
+                    igx-circular-bar {
+                        margin-inline-end: var(--affix-margin);
+                    }
+                }
+            }
+        }
+
+        @include e(item, $m: 'selected') {
+            color: var-get($_theme, 'selected-text-color');
+            background: var-get($_theme, 'selected-background');
+            border-color: var-get($_theme, 'selected-border-color');
+        }
+
+        @include m(primary) {
+            @include e(item) {
+                color: contrast-color($color: 'primary', $variant: 500);
+                background: color($color: 'primary', $variant: 500);
+                border-color: color($color: 'primary', $variant: 500);
+            }
+
+            &:focus {
+                @include e(item) {
+                    color: contrast-color($color: 'primary', $variant: 800);
+                    background: color($color: 'primary', $variant: 800);
+                    border-color: color($color: 'primary', $variant: 800);
+                }
+            }
+    
+            &:hover {
+                @include e(item) {
+                    color: contrast-color($color: 'primary', $variant: 600);
+                    background: color($color: 'primary', $variant: 600);
+                    border-color: color($color: 'primary', $variant: 600);
+                }
+            }
+        }
+
+        @include m(info) {
+            @include e(item) {
+                color: contrast-color($color: 'info', $variant: 500);
+                background: color($color: 'info', $variant: 500);
+                border-color: color($color: 'info', $variant: 500);
+            }
+
+            &:focus {
+                @include e(item) {
+                    color: contrast-color($color: 'info', $variant: 800);
+                    background: color($color: 'info', $variant: 800);
+                    border-color: color($color: 'info', $variant: 800);
+                }
+            }
+    
+            &:hover {
+                @include e(item) {
+                    color: contrast-color($color: 'info', $variant: 600);
+                    background: color($color: 'info', $variant: 600);
+                    border-color: color($color: 'info', $variant: 600);
+                }
+            }
+        }
+
+        @include m(success) {
+            @include e(item) {
+                color: contrast-color($color: 'success', $variant: 500);
+                background: color($color: 'success', $variant: 500);
+                border-color: color($color: 'success', $variant: 500);
+            }
+
+            &:focus {
+                @include e(item) {
+                    color: contrast-color($color: 'success', $variant: 800);
+                    background: color($color: 'success', $variant: 800);
+                    border-color: color($color: 'success', $variant: 800);
+                }
+            }
+    
+            &:hover {
+                @include e(item) {
+                    color: contrast-color($color: 'success', $variant: 600);
+                    background: color($color: 'success', $variant: 600);
+                    border-color: color($color: 'success', $variant: 600);
+                }
+            }
+        }
+
+        @include m(warning) {
+            @include e(item) {
+                color: contrast-color($color: 'warn', $variant: 900);
+                background: color($color: 'warn', $variant: 500);
+                border-color: color($color: 'warn', $variant: 500);
+            }
+
+            &:focus {
+                @include e(item) {
+                    color: contrast-color($color: 'warn', $variant: 800);
+                    background: color($color: 'warn', $variant: 800);
+                    border-color: color($color: 'warn', $variant: 800);
+                }
+            }
+    
+            &:hover {
+                @include e(item) {
+                    color: contrast-color($color: 'warn', $variant: 600);
+                    background: color($color: 'warn', $variant: 600);
+                    border-color: color($color: 'warn', $variant: 600);
+                }
+            }
+        }
+
+        @include m(danger) {
+            @include e(item) {
+                color: contrast-color($color: 'error', $variant: 500);
+                background: color($color: 'error', $variant: 500);
+                border-color: color($color: 'error', $variant: 500);
+            }
+
+            &:focus {
+                @include e(item) {
+                    color: contrast-color($color: 'error', $variant: 800);
+                    background: color($color: 'error', $variant: 800);
+                    border-color: color($color: 'error', $variant: 800);
+                }
+            }
+    
+            &:hover {
+                @include e(item) {
+                    color: contrast-color($color: 'error', $variant: 600);
+                    background: color($color: 'error', $variant: 600);
+                    border-color: color($color: 'error', $variant: 600);
+                }
+            }
+        }
+
+        @include e(content) {
+            @include ellipsis();
+
+            max-width: 32ch;
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(select) {
+            display: inline-flex;
+            align-items: center;
+            max-width: rem(24px);
+            opacity: 1;
+            z-index: 1;
+            // transition: max-width .12s $in-out-quad, opacity .12s $in-out-quad .06s;
+            transition-behavior: allow-discrete;
+
+            @starting-style {
+                max-width: 0;
+                opacity: 0;
+            }
+        }
+
+        @include e(remove) {
+            display: inline-flex;
+            color: var-get($_theme, 'remove-icon-color', currentColor);
+
+            &:empty {
+                display: none;
+            }
+
+            // FIX IE11 and Edge focus styles.
+            // [focus-within] is not supported by IE & Edge.
+            &:focus {
+                igx-icon {
+                    color: var-get($_theme, 'remove-icon-color-focus');
+                }
+            }
+
+            igx-icon {
+                &:focus{
+                    outline-style: none;
+                }
+            }
+        }
+
+        @include e(ghost) {
+            @extend %igx-chip;
+
+            position: absolute;
+            box-shadow: var-get($_theme, 'ghost-elevation');
+            overflow: hidden;
+            color: var-get($_theme, 'focus-text-color');
+            background: var-get($_theme, 'ghost-background');
+            // If z-index is not set,
+            //the chip would hide behind it's parent grid as it has a z-index of 1
+            z-index: 10;
+
+            igx-avatar,
+            igx-circular-bar,
+            igx-icon {
+                --component-size: var(--chip-size);
+            }
+
+            &:hover,
+            &:focus {
+                background: var-get($_theme, 'ghost-background');
+            }
+
+            &:focus {
+                .igx-chip__item {
+                    outline-style: none;
+                    color: var-get($_theme, 'focus-text-color');
+                    background: var-get($_theme, 'focus-background');
+                    border-color: var-get($_theme, 'focus-border-color');
+                }
+
+                .igx-chip__item--selected {
+                    color: var-get($_theme, 'focus-selected-text-color');
+                    background: var-get($_theme, 'focus-selected-background');
+                    border-color: var-get($_theme, 'focus-selected-border-color');
+                }
+            }
+
+            &:hover {
+                .igx-chip__item {
+                    color: var-get($_theme, 'hover-text-color');
+                    background: var-get($_theme, 'hover-background');
+                    border-color: var-get($_theme, 'hover-border-color');
+                }
+
+                .igx-chip__item--selected {
+                    color: var-get($_theme, 'hover-selected-text-color');
+                    background: var-get($_theme, 'hover-selected-background');
+                    border-color: var-get($_theme, 'hover-selected-border-color');
+                }
+            }
+        }
+
+        @include m(disabled) {
+            cursor: default;
+            pointer-events: none;
+
+            @include e(end) {
+                &:has(.igx-chip__remove:only-child) {
+                    display: none;
+                }
+            }
+
+            @include e(item) {
+                color: var-get($_theme, 'disabled-text-color');
+                background: var-get($_theme, 'disabled-background');
+                border-color: var-get($_theme, 'disabled-border-color');
+            }
+        }
+    }
+}
