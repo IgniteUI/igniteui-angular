@@ -11,16 +11,4 @@
     [igxNavbarTitle] {
         @include type-style(h5);
     }
-
-    igc-input,
-    igc-icon-button {
-        --ig-size: 1;
-    }
-
-    [igxButton],
-    igc-button,
-    [igxIconButton],
-    igx-input-group {
-        --ig-size: 2;
-    }
 }

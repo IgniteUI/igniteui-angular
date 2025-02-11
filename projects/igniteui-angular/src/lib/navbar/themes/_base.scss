@@ -75,6 +75,11 @@ $_theme: $material;
             --ig-size: 1;
         }
 
+        [igxButton],
+        [igxIconButton] {
+            --ig-size: 2;
+        }
+
         @include e(title) {
             @extend %igx-navbar-title;
         }
