@@ -3,7 +3,7 @@
 @use 'styles/themes/standalone' as *;
 @use '../light/tokens' as *;
 
-$_theme: $fluent;
+$_theme: $bootstrap;
 
 @include themed-block(igx-checkbox, bootstrap, dark) {
     @include m(invalid) {

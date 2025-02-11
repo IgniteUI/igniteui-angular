@@ -10,6 +10,7 @@
                 [selectable]="properties.selectable"
                 [removable]="properties.removable"
                 [selected]="properties.selected"
+                [draggable]="properties.draggable"
                 [removeIcon]="customIcons ? myRemoveIcon : null"
                 [selectIcon]="customIcons ? mySelectIcon : null"
                 (remove)="removeChip(me)"
@@ -43,6 +44,7 @@
                 [selectable]="properties.selectable"
                 [removable]="properties.removable"
                 [selected]="properties.selected"
+                [draggable]="properties.draggable"
             >
                 @if (hasAvatar) {
                 <igc-avatar

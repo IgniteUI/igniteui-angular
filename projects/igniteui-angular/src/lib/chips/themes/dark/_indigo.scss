@@ -1,0 +1,51 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+@include themed-block(igx-chip, indigo, dark) {
+    @include m(info) {
+        &:focus {
+            @include e(item) {
+                box-shadow: 0 0 0 rem(3px) color($color: 'info', $variant: 800);
+            }
+        }
+    }
+
+    @include m(success) {
+        &:focus {
+            @include e(item) {
+                box-shadow: 0 0 0 rem(3px) color($color: 'success', $variant: 800);
+            }
+        }
+    }
+
+    @include m(warning) {
+        &:focus {
+            @include e(item) {
+                box-shadow: 0 0 0 rem(3px) color($color: 'warn', $variant: 900);
+            }
+        }
+    }
+
+    @include m(danger) {
+        &:focus {
+            @include e(item) {
+                box-shadow: 0 0 0 rem(3px) color($color: 'error', $variant: 900);
+            }
+        }
+    }
+
+    @include m(disabled) {
+        @include e(item, $m: 'selected') {
+            color: contrast-color($color: 'primary', $variant: 900, $opacity: .2);
+        }
+
+        @include m(primary) {
+            @include e(item) {
+                color: contrast-color($color: 'primary', $variant: 900, $opacity: .2);
+            }
+        }
+    }
+}

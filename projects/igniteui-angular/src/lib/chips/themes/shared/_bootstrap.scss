@@ -1,0 +1,71 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
+
+@include themed-block(igx-chip, bootstrap) {
+    &:focus {
+        @include e(item) {
+            box-shadow: 0 0 0 rem(2px) var-get($_theme, 'focus-outline-color');
+        }
+
+        @include e(item, $m: 'selected') {
+            box-shadow: 0 0 0 rem(2px) var-get($_theme, 'focus-selected-outline-color');
+        }
+    }
+
+    @include m(primary) {
+        @include e(item) {
+            color: contrast-color($color: 'primary', $variant: 600);
+        }
+
+        &:focus {
+            @include e(item) {
+                box-shadow: 0 0 0 rem(2px) color($color: 'primary', $variant: 200);
+            }
+        }
+    }
+
+    @include m(info) {
+        &:focus {
+            @include e(item) {
+                box-shadow: 0 0 0 rem(2px) color($color: 'info', $variant: 200);
+            }
+        }
+    }
+
+    @include m(success) {
+        @include e(item) {
+            color: contrast-color($color: 'success', $variant: 600);
+        }
+
+        &:focus {
+            @include e(item) {
+                box-shadow: 0 0 0 rem(2px) color($color: 'success', $variant: 200);
+            }
+        }
+    }
+
+    @include m(warning) {
+        &:focus {
+            @include e(item) {
+                box-shadow: 0 0 0 rem(2px) color($color: 'warn', $variant: 200);
+            }
+        }
+    }
+
+    @include m(danger) {
+        @include e(item) {
+            color: contrast-color($color: 'error', $variant: 600);
+        }
+
+        &:focus {
+            @include e(item) {
+                box-shadow: 0 0 0 rem(2px) color($color: 'error', $variant: 200);
+            }
+        }
+    }
+}
