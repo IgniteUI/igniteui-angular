@@ -100,9 +100,9 @@
         label: 'body-2'
     ));
     @include slider-typography();
-    @include snackbar-typography($categories: (
-        text: 'caption'
-    ));
+    // @include snackbar-typography($categories: (
+    //     text: 'caption'
+    // ));
     @include switch-typography($categories: (
         label: 'body-2'
     ));

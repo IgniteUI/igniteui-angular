@@ -1,0 +1,22 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-snackbar, fluent) {
+    --igx-button-foreground: #{var-get($_theme, 'button-color')};
+    --igx-button-hover-foreground: var(--igx-button-foreground);
+    --igx-button-focus-foreground: var(--igx-button-foreground);
+    --igx-button-focus-hover-foreground: var(--igx-button-foreground);
+    --igx-button-active-foreground: var(--igx-button-foreground);
+    --igx-button-focus-visible-foreground: var(--igx-button-foreground);
+
+    @include e(message) {
+        @include type-style(caption) {
+            margin: revert-layer;
+        }
+    }
+}

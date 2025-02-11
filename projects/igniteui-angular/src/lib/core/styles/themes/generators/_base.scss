@@ -584,13 +584,13 @@
         @include slider($slider-theme-map);
     }
 
-    @if is-used('igx-snackbar', $exclude) {
-        $snackbar-theme-map: snackbar-theme(
-            $schema: $schema,
-        );
-        $snackbar-theme-map: meta.call($theme-handler, $snackbar-theme-map);
-        @include snackbar($snackbar-theme-map);
-    }
+    // @if is-used('igx-snackbar', $exclude) {
+    //     $snackbar-theme-map: snackbar-theme(
+    //         $schema: $schema,
+    //     );
+    //     $snackbar-theme-map: meta.call($theme-handler, $snackbar-theme-map);
+    //     @include snackbar($snackbar-theme-map);
+    // }
 
     @if is-used('igx-switch', $exclude) {
         $switch-theme-map: switch-theme(
