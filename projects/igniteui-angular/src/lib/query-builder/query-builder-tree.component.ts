@@ -1175,7 +1175,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             input?.focus();
         }
 
-        (this.editingInputs.nativeElement.parentElement as HTMLElement).scrollIntoView({block: "nearest", inline: "nearest"});
+        (this.editingInputs?.nativeElement.parentElement as HTMLElement)?.scrollIntoView({block: "nearest", inline: "nearest"});
     }
 
     /**
