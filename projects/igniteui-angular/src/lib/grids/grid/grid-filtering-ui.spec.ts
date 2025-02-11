@@ -7241,8 +7241,8 @@ const verifyExcelStyleFilteringSize = (fix: ComponentFixture<any>, expectedSize:
     expect(getComponentSize(list)).toBe(expectedSize);
 
     // Verify size of all flat and contained buttons in excel stlye dialog.
-    const flatButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--flat');
-    const containedButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--contained');
+    const flatButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--flat:not(.igx-excel-filter__secondary *):not(.igx-excel-filter__menu-footer)');
+    const containedButtons: HTMLElement[] = excelMenu.querySelectorAll('.igx-button--contained:not(.igx-excel-filter__secondary *):not(.igx-excel-filter__menu-footer)');
     const buttons: HTMLElement[] = Array.from(flatButtons).concat(Array.from(containedButtons));
     buttons.forEach((button) => {
         expect(getComponentSize(button)).toBe(expectedSize);
@@ -7345,10 +7345,12 @@ const verifySortMoveSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
 const verifyExcelCustomFilterSize = (fix: ComponentFixture<any>, expectedSize: Size) => {
     // Excel style filtering custom filter dialog
     const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
+    // Main container of custom filter dialog
+    const container = customFilterMenu.querySelector('.igx-excel-filter__secondary-main');
 
     // Verify size of all flat and contained buttons in custom filter dialog.
-    const flatButtons = customFilterMenu.querySelectorAll('.igx-button--flat');
-    const containedButtons = customFilterMenu.querySelectorAll('.igx-button--contained');
+    const flatButtons = container.querySelectorAll('.igx-button--flat');
+    const containedButtons = container.querySelectorAll('.igx-button--contained');
     const buttons = Array.from(flatButtons).concat(Array.from(containedButtons));
     buttons.forEach((button) => {
         expect(getComponentSize(button)).toBe(expectedSize);
