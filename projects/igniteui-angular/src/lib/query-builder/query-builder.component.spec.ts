@@ -68,8 +68,6 @@ describe('IgxQueryBuilder', () => {
     it('Should render Query Builder with initially set expression tree properly.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
 
       const queryTreeElement: HTMLElement = fix.debugElement.queryAll(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE))[0].nativeElement;
       const bodyElement = queryTreeElement.children[0];
@@ -171,8 +169,6 @@ describe('IgxQueryBuilder', () => {
     it('Should add a new condition to existing group by using add buttons.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
 
       spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
 
@@ -210,8 +206,6 @@ describe('IgxQueryBuilder', () => {
 
     it(`Should add a new 'Or' group to existing group by using add buttons.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-      fix.detectChanges();
-      tick(100);
       fix.detectChanges();
 
       spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
@@ -263,8 +257,6 @@ describe('IgxQueryBuilder', () => {
     it(`Should add a new 'And' group to existing group by using add buttons.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
 
       spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
 
@@ -313,8 +305,6 @@ describe('IgxQueryBuilder', () => {
 
     it(`Should remove a condition from an existing group by using the 'close' icon of the respective chip.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-      fix.detectChanges();
-      tick(100);
       fix.detectChanges();
 
       spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
@@ -982,8 +972,6 @@ describe('IgxQueryBuilder', () => {
     it('Should display add button when hovering a chip.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
 
       // Verify actions container is not visible. (This container contains the 'add' button.)
       expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
@@ -1006,8 +994,6 @@ describe('IgxQueryBuilder', () => {
 
     it('Should have disabled adding buttons when an expression is in edit mode.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-      fix.detectChanges();
-      tick(100);
       fix.detectChanges();
 
       // Verify adding buttons are enabled
@@ -1039,8 +1025,6 @@ describe('IgxQueryBuilder', () => {
 
     it('Clicking a condition should put it in edit mode.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-      fix.detectChanges();
-      tick(100);
       fix.detectChanges();
 
       // Click the existing chip to enter edit mode.
@@ -1084,8 +1068,6 @@ describe('IgxQueryBuilder', () => {
     it('Should switch edit mode on click on chip on the same level.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
 
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
       tick(50);
@@ -1109,8 +1091,6 @@ describe('IgxQueryBuilder', () => {
 
     it('Should exit edit mode on add, change group buttons, entity and fields select click.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-      fix.detectChanges();
-      tick(100);
       fix.detectChanges();
 
       // Click chip to enter edit mode.
@@ -1165,8 +1145,6 @@ describe('IgxQueryBuilder', () => {
 
     it('Should show add expression button when there is an expression in add mode.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-      fix.detectChanges();
-      tick(100);
       fix.detectChanges();
 
       // Hover expression and click add button
@@ -1333,8 +1311,6 @@ describe('IgxQueryBuilder', () => {
       const confirmButton = Array.from(dialogOutlet.querySelectorAll('button'))[1];
       expect(confirmButton.innerText).toEqual('Confirm');
       confirmButton.click();
-      fix.detectChanges();
-      tick(100);
       fix.detectChanges();
 
       QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
@@ -1771,8 +1747,6 @@ describe('IgxQueryBuilder', () => {
     it('canCommit should return the correct validity state of currently edited condition.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
 
       // Click the existing chip to enter edit mode.
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
@@ -1901,8 +1875,6 @@ describe('IgxQueryBuilder', () => {
     it(`Should be able to enter edit mode from condition in an inner query.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
 
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
       tick(100);
@@ -1927,8 +1899,6 @@ describe('IgxQueryBuilder', () => {
 
     it(`Should be able to switch group condition and ungroup from group context menu.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
-      fix.detectChanges();
-      tick(100);
       fix.detectChanges();
 
       // Verify there is one subgroup
@@ -1988,8 +1958,6 @@ describe('IgxQueryBuilder', () => {
     it(`Should show 'Ungroup' as disabled in root group context menu.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
 
       // Click the 'AND' root group button
       QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 0);
@@ -2012,8 +1980,6 @@ describe('IgxQueryBuilder', () => {
   describe('API', () => {
     beforeEach(fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-      fix.detectChanges();
-      tick(100);
       fix.detectChanges();
 
       spyOn(queryBuilder.expressionTreeChange, 'emit').and.callThrough();
@@ -2154,7 +2120,6 @@ describe('IgxQueryBuilder', () => {
       const confirmButton = Array.from(dialogOutlet.querySelectorAll('button'))[1];
       expect(confirmButton.innerText).toEqual('Confirm');
       confirmButton.click();
-      fix.detectChanges();
       tick(100);
       fix.detectChanges();
 
@@ -2202,16 +2167,12 @@ describe('IgxQueryBuilder', () => {
     it('Should navigate with Tab/Shift+Tab through entity and fields inputs, chips, their respective drop & delete icons and operator drop-down button', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
 
       QueryBuilderFunctions.verifyQueryBuilderTabbableElements(fix);
     }));
 
     it('Should navigate with Tab/Shift+Tab through chips" "edit", "cancel" buttons, fields of a condition in edit mode.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-      fix.detectChanges();
-      tick(100);
       fix.detectChanges();
 
       const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
@@ -2235,8 +2196,6 @@ describe('IgxQueryBuilder', () => {
       //!Both Enter and Space should work
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
 
       const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
@@ -2259,8 +2218,6 @@ describe('IgxQueryBuilder', () => {
     it('Should remove a chip in when pressing \'Enter\' on its \'remove\' icon.', fakeAsync(() => {
       //!Both Enter and Space should work
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
-      fix.detectChanges();
-      tick(100);
       fix.detectChanges();
 
       // Verify there are three chip expressions.
@@ -2453,8 +2410,6 @@ describe('IgxQueryBuilder', () => {
       //Drag ghost text check
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
-      tick(100);
-      fix.detectChanges();
       const draggedChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[3].componentInstance;
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 10, 10, false);
       const dropGhost = QueryBuilderFunctions.getDropGhost(fix) as HTMLElement;
@@ -2617,7 +2572,7 @@ describe('IgxQueryBuilder', () => {
 
       //trigger ghost
       QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 30);
-      await wait(100);
+      await wait(50);
       fix.detectChanges();
 
       const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
@@ -2705,24 +2660,31 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(chipComponents[1].nativeElement)).toBe("OrderName  Equals  foo");
     });
 
-    it('should drop the condition below the target condition on dragging down.', () => {
+    it('should drop the condition below the target condition on dragging down.', async () => {
       const secondChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
       const secondChipElem = secondChip.nativeElement;
 
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderName  Equals  foo");
 
       UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 0, secondChipElem.offsetHeight, true);
+      await wait(50);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Equals', 'foo');
+
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderId  In Products / OrderId");
       expect(QueryBuilderFunctions.getChipContent(chipComponents[1].nativeElement)).toBe("OrderName  Equals  foo");
     });
 
-    it('should drop the condition inside the inner group when dropped over the group.', () => {
+    it('should drop the condition inside the inner group when dropped over the group.', async () => {
       const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
       const draggedChipElem = draggedChip.nativeElement;
 
       const dragDir = draggedChip.dragDirective;
       UIInteractions.moveDragDirective(fix, dragDir, 50, 2 * draggedChipElem.offsetHeight + 25, true);
+      await wait(50);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Equals', 'foo');
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       const droppedChipBounds = chipComponents[1].nativeElement.getBoundingClientRect();
@@ -2734,11 +2696,14 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(chipComponents[1].nativeElement)).toBe("OrderName  Equals  foo");
     });
 
-    it('should drop the condition outside the inner group aligned with the outer level conditions when dropped above the inner group.', () => {
+    it('should drop the condition outside the inner group aligned with the outer level conditions when dropped above the inner group.', async() => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
       const draggedChipElem = draggedChip.nativeElement;
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -3.5 * draggedChipElem.offsetHeight, true);
+      await wait(50);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       const droppedChipBounds = chipComponents[2].nativeElement.getBoundingClientRect();
@@ -2871,12 +2836,19 @@ describe('IgxQueryBuilder', () => {
 }`);
     });
 
-    it('should remove the inner group when the last condition is dragged out.', () => {
+    it('should remove the inner group when the last condition is dragged out.', async () => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
       const heightOffset = draggedChip.nativeElement.offsetHeight;
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -4 * heightOffset, true);
+      await wait(50);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
+
       UIInteractions.moveDragDirective(fix, chipComponents[4].componentInstance.dragDirective, 0, -4 * heightOffset, true);
+      await wait(50);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Ends With', 'a');
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
 
@@ -2887,7 +2859,7 @@ describe('IgxQueryBuilder', () => {
       expect(chipComponents.length).toBe(4);
     });
 
-    it('should drop the condition above the currently edited condition on dragging up.', () => {
+    it('should drop the condition above the currently edited condition on dragging up.', async () => {
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       const draggedChip = chipComponents[3].componentInstance; // "OrderDate  Today" chip
       const draggedChipElem = draggedChip.nativeElement;
@@ -2895,6 +2867,10 @@ describe('IgxQueryBuilder', () => {
       chipComponents[2].nativeElement.click();
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -2.5 * draggedChipElem.offsetHeight, true);
+      await wait(50);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
+
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
     });
@@ -2920,13 +2896,17 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBe(null);
     });
 
-    it('should successfully rearrange sub-query conditions via mouse drag.', () => {
+    it('should successfully rearrange sub-query conditions via mouse drag.', async () => {
       chipComponents[1].nativeElement.click();
 
       const draggedChip = chipComponents[2].componentInstance;
       const draggedChipElem = draggedChip.nativeElement;
 
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChipElem.offsetHeight, true);
+      await wait(50);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('Id', 'Equals', '123');
+
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(chipComponents.length).toBe(5);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[1].nativeElement)).toBe("ProductName  Equals  abc");
@@ -2945,7 +2925,7 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getDropGhost(fix)).toBe(null);
     });
 
-    it('should successfully drop a condition inside a newly created group.', () => {
+    it('should successfully drop a condition inside a newly created group.', async () => {
       var addGroupButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0).pop();
       QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 1);
 
@@ -2953,6 +2933,9 @@ describe('IgxQueryBuilder', () => {
       const draggedChip = chipComponents.pop().componentInstance;
       const draggedChipElem = draggedChip.nativeElement;
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, 3 * draggedChipElem.offsetHeight, true);
+      await wait(300);
+      fix.detectChanges();
+      QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(chipComponents.length).toBe(4);

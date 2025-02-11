@@ -66,7 +66,7 @@ export class ExpressionsTreeUtil {
  * @returns The recreated search value.
  */
 function recreateSearchValue(searchValue: any, dataType: string): any {
-    if (!dataType) {
+    if (!dataType && !Array.isArray(searchValue)) {
         return searchValue;
     }
     // In ESF, values are stored as a Set.

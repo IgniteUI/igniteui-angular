@@ -11,7 +11,7 @@ import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
-import { ColumnType, GridType, IGX_GRID_BASE, IPinningConfig } from './common/grid.interface';
+import { ColumnType, FieldType, GridType, IGX_GRID_BASE, IPinningConfig } from './common/grid.interface';
 import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
 import { PivotUtil } from './pivot-grid/pivot-util';
@@ -677,6 +677,10 @@ export class IgxGridStateBaseDirective {
     private createExpressionsTreeFromObject(exprTreeObject: IExpressionTree): IExpressionTree {
         if (!exprTreeObject || !exprTreeObject.filteringOperands) {
             return null;
+        }
+
+        if (this.currGrid instanceof IgxPivotGridComponent) {
+            return recreateTreeFromFields(exprTreeObject, this.currGrid.allDimensions.map(d => ({ dataType: d.dataType, field: d.memberName })) as FieldType[]) as IExpressionTree;
         }
 
         return recreateTreeFromFields(exprTreeObject, this.currGrid.columns) as IExpressionTree;
