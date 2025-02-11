@@ -199,7 +199,6 @@ export class IgxQueryBuilderDragService {
     }
 
     public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
-        (sourceDragElement.querySelector(`.${QueryBuilderSelectors.DRAG_INDICATOR}`) as HTMLElement).setAttribute('aria-hidden', 'false'); //Temp solution for aria-hidden bug #35759
         this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
     }
 
