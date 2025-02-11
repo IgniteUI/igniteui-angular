@@ -12,11 +12,6 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
 
     const update = new UpdateChanges(__dirname, host, context);
 
-    update.addValueTransform('fields_to_entities', (args: BoundPropertyObject): void => {
-        args.bindingType = InputPropertyType.EVAL;
-        args.value = `[{ name: '', fields: ${args.value}}]`;
-    });
-
     const IG_COLORS = [
         'primary-',
         'primary-A',
