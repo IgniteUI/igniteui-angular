@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/toast' as *;
+
+$base: digest-schema($light-toast);
+$material: digest-schema($material-toast);
+$bootstrap: digest-schema($bootstrap-toast);
+$fluent: digest-schema($fluent-toast);
+$indigo: digest-schema($indigo-toast);

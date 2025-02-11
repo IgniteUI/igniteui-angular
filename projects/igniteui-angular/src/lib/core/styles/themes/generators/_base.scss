@@ -552,13 +552,13 @@
         @include progress-linear($progress-linear-theme-map);
     }
 
-    @if is-used('igx-radio', $exclude) {
-        $radio-theme-map: radio-theme(
-            $schema: $schema,
-        );
-        $radio-theme-map: meta.call($theme-handler, $radio-theme-map);
-        @include radio($radio-theme-map);
-    }
+    // @if is-used('igx-radio', $exclude) {
+    //     $radio-theme-map: radio-theme(
+    //         $schema: $schema,
+    //     );
+    //     $radio-theme-map: meta.call($theme-handler, $radio-theme-map);
+    //     @include radio($radio-theme-map);
+    // }
 
     @if is-used('igx-query-builder', $exclude) {
         $query-builder-theme-map: query-builder-theme(
@@ -616,13 +616,13 @@
         @include stepper($stepper-theme-map);
     }
 
-    @if is-used('igx-toast', $exclude) {
-        $toast-theme-map: toast-theme(
-            $schema: $schema,
-        );
-        $toast-theme-map: meta.call($theme-handler, $toast-theme-map);
-        @include toast($toast-theme-map);
-    }
+    // @if is-used('igx-toast', $exclude) {
+    //     $toast-theme-map: toast-theme(
+    //         $schema: $schema,
+    //     );
+    //     $toast-theme-map: meta.call($theme-handler, $toast-theme-map);
+    //     @include toast($toast-theme-map);
+    // }
 
     @if is-used('igx-tooltip', $exclude) {
         $tooltip-theme-map: tooltip-theme(
