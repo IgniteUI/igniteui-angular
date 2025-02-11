@@ -31,15 +31,15 @@ $_theme: $indigo;
         }
     }
 
-    @include mx(focused, checked) {
-        @include e(composite) {
-            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-outline-color-focused');
-        }
-    }
-
     @include mx(focused, invalid) {
         @include e(composite) {
             box-shadow: 0 0 0 rem(3px) var-get($_theme, 'error-color-hover');
+        }
+    }
+
+    @include mx(focused, checked) {
+        @include e(composite) {
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-outline-color-focused');
         }
     }
 

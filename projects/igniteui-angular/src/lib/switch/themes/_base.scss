@@ -20,6 +20,8 @@ $_theme: $material;
         color: var-get($_theme, 'label-color');
         user-select: none;
         word-wrap: break-all;
+        transition: $input-transition;
+        transition-delay: var(--_transition-delay);
 
         &:empty {
             display: none;
@@ -54,6 +56,8 @@ $_theme: $material;
     }
 
     @include b(igx-switch) {
+        --transform-thumb: calc(var(--switch-width) - var(--switch-thumb-size) - var(--switch-on-offset));
+
         position: relative;
         display: inline-flex;
         flex-flow: row nowrap;
@@ -211,10 +215,10 @@ $_theme: $material;
             }
 
             @include e(composite-thumb) {
-                transform: translateX(calc(var(--switch-width) - var(--switch-thumb-size) - var(--switch-on-offset)));
+                transform: translateX(var(--transform-thumb));
 
                 [dir='rtl'] & {
-                    transform: translateX(calc((var(--switch-width) - var(--switch-thumb-size) - var(--switch-on-offset)) * -1));
+                    transform: translateX(calc(var(--transform-thumb) * -1));
                 }
             }
 
