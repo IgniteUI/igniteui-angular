@@ -100,6 +100,8 @@ $_theme: $material;
         }
 
         @include e(item) {
+            @include type-style(body-2);
+
             display: grid;
             grid-auto-flow: column;
             grid-auto-columns: auto;
@@ -134,7 +136,7 @@ $_theme: $material;
             }
 
             igx-circular-bar {
-                --diameter: #{sizable(rem(14px), rem(18px), rem(24px))}!important;
+                --diameter: #{sizable(rem(14px), rem(18px), rem(24px))};
             }
 
             igx-prefix,
