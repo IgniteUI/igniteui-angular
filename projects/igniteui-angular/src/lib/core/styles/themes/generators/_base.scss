@@ -504,13 +504,13 @@
         @include label($label-theme-map);
     }
 
-    @if is-used('igx-navbar', $exclude) {
-        $navbar-theme-map: navbar-theme(
-            $schema: $schema,
-        );
-        $navbar-theme-map: meta.call($theme-handler, $navbar-theme-map);
-        @include navbar($navbar-theme-map);
-    }
+    // @if is-used('igx-navbar', $exclude) {
+    //     $navbar-theme-map: navbar-theme(
+    //         $schema: $schema,
+    //     );
+    //     $navbar-theme-map: meta.call($theme-handler, $navbar-theme-map);
+    //     @include navbar($navbar-theme-map);
+    // }
 
     @if is-used('igx-nav-drawer', $exclude) {
         $navdrawer-theme-map: navdrawer-theme(

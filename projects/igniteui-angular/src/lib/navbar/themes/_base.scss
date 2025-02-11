@@ -1,0 +1,115 @@
+@use 'igniteui-theming/sass/animations/easings' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$_theme: $material;
+
+@include layer(base) {
+    %igx-navbar-title {
+        @include type-style(h6);
+        @include line-clamp(4, true, true);
+        margin: 0;
+        flex-grow: 1;
+        user-select: text;
+        display: flex;
+        flex-direction: row;
+    }
+
+    %igx-navbar-icon {
+        display: flex;
+        align-items: center;
+
+        igx-icon,
+        igc-icon {
+            --component-size: 3;
+            cursor: pointer;
+        }
+
+        > igx-icon,
+        > igc-icon {
+            transition: color .15s $out-quad;
+            color: var-get($_theme, 'idle-icon-color');
+
+            &:hover {
+                color: var-get($_theme, 'hover-icon-color');
+            }
+
+            user-select: none;
+        }
+    }
+
+    igx-navbar-action,
+    [igxNavbarAction] {
+        display: flex;
+        align-items: center;
+    }
+
+    igx-navbar-title,
+    [igxNavbarTitle] {
+        @extend %igx-navbar-title;
+
+        align-items: center;
+    }
+
+    @include b(igx-navbar) {
+        display: flex;
+        align-items: center;
+        position: relative;
+        flex-flow: row nowrap;
+        gap: rem(16px);
+        width: 100%;
+        min-height: rem(56px);
+        max-height: rem(128px);
+        padding-inline: rem(16px);
+        background: var-get($_theme, 'background');
+        color: var-get($_theme, 'text-color');
+        box-shadow: var-get($_theme, 'elevation');
+        z-index: 4;
+        overflow: hidden;
+        border-bottom: rem(1px) solid var-get($_theme, 'border-color');
+
+        igx-avatar {
+            --ig-size: 1;
+        }
+
+        [igxButton],
+        [igxIconButton] {
+            --ig-size: 2;
+        }
+
+        @include e(title) {
+            @extend %igx-navbar-title;
+        }
+
+        @include e(left) {
+            @extend %igx-navbar-icon;
+
+            &:not(:empty) {
+                margin-inline-end: rem(16px);
+            }
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(middle) {
+            @extend %igx-navbar-icon;
+
+            flex-grow: 1;
+        }
+
+        @include e(right) {
+            @extend %igx-navbar-icon;
+
+            gap: rem(16px);
+
+            &:empty {
+                display: none;
+            }
+        }
+    }
+}
