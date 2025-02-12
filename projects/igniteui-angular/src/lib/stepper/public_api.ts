@@ -5,6 +5,7 @@ import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, Ig
 export * from './stepper.component';
 export * from './step/step.component';
 export {
+    HorizontalAnimationType,
     IStepChangingEventArgs,
     IStepChangedEventArgs,
     IgxStepperOrientation,

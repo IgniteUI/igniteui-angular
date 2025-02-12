@@ -18,7 +18,6 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
     selector: 'igx-combo-drop-down',
     templateUrl: '../drop-down/drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }],
-    standalone: true,
     imports: [IgxToggleDirective, NgIf]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
@@ -127,6 +126,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     public override navigatePrev() {
         if (this._focusedItem && this._focusedItem.index === 0 && this.virtDir.state.startIndex === 0) {
             this.combo.focusSearchInput(false);
+            this.focusedItem = null;
         } else {
             super.navigatePrev();
         }

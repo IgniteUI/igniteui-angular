@@ -19,7 +19,7 @@
 @use '../components/list/list-theme' as *;
 @use '../components/navbar/navbar-theme' as *;
 @use '../components/navdrawer/navdrawer-theme' as *;
-@use '../components/progress/progress-theme' as *;
+@use '../components/progress/linear/linear-theme' as *;
 @use '../components/radio/radio-theme' as *;
 @use '../components/slider/slider-theme' as *;
 @use '../components/snackbar/snackbar-theme' as *;
@@ -30,6 +30,7 @@
 @use '../components/toast/toast-theme' as *;
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
+@use '../components/label/label-theme' as *;
 
 @mixin typography() {
     @include badge-typography();
@@ -58,14 +59,18 @@
     @include chip-typography($categories: (
         text: 'subtitle-2'
     ));
-    @include circular-bar-typography($categories: (
-        text: null
-    ));
     @include column-actions-typography();
     @include date-range-typography();
-    @include dialog-typography();
+    @include dialog-typography($categories: (
+        title: 'h6',
+        content: 'body-2'
+    ));
     @include dock-manager-typography();
-    @include drop-down-typography();
+    @include drop-down-typography($categories: (
+        header: 'subtitle-2',
+        item: 'body-2',
+        select-item: 'body-2'
+    ));
     @include expansion-panel-typography($categories: (
         title: 'subtitle-1',
         description: 'body-2',
@@ -101,7 +106,9 @@
     @include switch-typography($categories: (
         label: 'body-2'
     ));
-    @include tabs-typography();
+    @include tabs-typography($categories: (
+        label: 'body-2'
+    ));
     @include time-picker-typography();
     @include stepper-typography();
     @include toast-typography($categories: (
@@ -109,4 +116,7 @@
     ));
     @include tooltip-typography();
     @include tree-typography();
+    @include label-typography($categories: (
+        label: 'subtitle-2'
+    ));
 }

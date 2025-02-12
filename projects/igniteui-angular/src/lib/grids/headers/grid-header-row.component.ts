@@ -36,7 +36,6 @@ import { NgIf, NgTemplateOutlet, NgClass, NgFor, NgStyle } from '@angular/common
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header-row',
     templateUrl: './grid-header-row.component.html',
-    standalone: true,
     imports: [NgIf, IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, NgFor, IgxGridHeaderGroupComponent, NgStyle, IgxGridForOfDirective, IgxGridFilteringRowComponent, IgxCheckboxComponent, IgxGridTopLevelColumns, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderRowComponent implements DoCheck {
@@ -65,7 +64,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     /**
      * Header groups inside the header row.
      *
-     * @remark
+     * @remarks
      * Note: These are only the top level header groups in case there are multi-column headers
      * or a specific column layout. If you want to get the flattened collection use the `groups`
      * property below.

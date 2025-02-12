@@ -280,7 +280,6 @@ describe('IgxForOf directive -', () => {
 
         it('should apply the changes when itemSize is changed.', () => {
             const firstRecChildren = displayContainer.children[0].children;
-            // eslint-disable-next-line @typescript-eslint/prefer-for-of
             for (let i = 0; i < firstRecChildren.length; i++) {
                 expect(firstRecChildren[i].clientHeight)
                     .toBe(parseInt(fix.componentInstance.parentVirtDir.igxForItemSize, 10));
@@ -288,7 +287,6 @@ describe('IgxForOf directive -', () => {
 
             fix.componentInstance.itemSize = '100px';
             fix.detectChanges();
-            // eslint-disable-next-line @typescript-eslint/prefer-for-of
             for (let i = 0; i < firstRecChildren.length; i++) {
                 expect(firstRecChildren[i].clientHeight)
                     .toBe(parseInt(fix.componentInstance.parentVirtDir.igxForItemSize, 10));
@@ -374,6 +372,16 @@ describe('IgxForOf directive -', () => {
             await wait(200);
             expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 130, 130, 130]);
         });
+
+        it('should render no more that initial chunk size elements when set if no containerSize', () => {
+            fix.componentInstance.height = undefined;
+            fix.componentInstance.initialChunkSize = 3;
+            fix.detectChanges();
+            expect(displayContainer).not.toBeNull();
+            expect(verticalScroller).not.toBeNull();
+            expect(horizontalScroller).toBeNull();
+            expect(displayContainer.children.length).toBe(3);
+        });
     });
 
     describe('vertical virtual component no data', () => {
@@ -409,7 +417,6 @@ describe('IgxForOf directive -', () => {
             rowsRendered = displayContainer.querySelectorAll('div');
             expect(rowsRendered.length).not.toBe(0);
         });
-
     });
 
     describe('vertical and horizontal virtual component', () => {
@@ -1386,7 +1393,6 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
             <ng-template igxForTest [igxForOf]="data"></ng-template>
         </span>
     `,
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class EmptyVirtualComponent {
@@ -1415,7 +1421,6 @@ export class EmptyVirtualComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class VirtualComponent {
@@ -1475,7 +1480,8 @@ export class VirtualComponent {
             <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
-                [igxForItemSize]='itemSize'>
+                [igxForItemSize]='itemSize'
+                [igxForInitialChunkSize]='initialChunkSize'>
                 <div [style.display]="'flex'"
                     [style.height]="rowData.height || itemSize || '50px'"
                     [style.margin-top]="rowData.margin || '0px'">
@@ -1488,7 +1494,6 @@ export class VirtualComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     selector: 'igx-vertical-virtual',
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
@@ -1504,6 +1509,7 @@ export class VerticalVirtualComponent extends VirtualComponent {
     ];
     public override data = [];
     public itemSize = '50px';
+    public initialChunkSize;
 }
 
 @Component({
@@ -1523,7 +1529,6 @@ export class VerticalVirtualComponent extends VirtualComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective, NgIf]
 })
 export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
@@ -1561,7 +1566,6 @@ export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     imports: [IgxForOfDirective, NgIf]
 })
 export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
@@ -1592,7 +1596,6 @@ export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
             </div>
         </div>
     `,
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective, NgFor]
 })
 export class HorizontalVirtualComponent extends VirtualComponent {
@@ -1616,7 +1619,6 @@ export class HorizontalVirtualComponent extends VirtualComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 export class VirtualVariableSizeComponent {
@@ -1652,7 +1654,6 @@ export class VirtualVariableSizeComponent {
             </ng-template>
         </div>
     `,
-    standalone: true,
     selector: 'igx-vertical-virtual-no-data',
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
@@ -1715,7 +1716,6 @@ export class LocalService {
         </div>
     `,
     providers: [LocalService],
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
@@ -1761,7 +1761,6 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         </div>
     `,
     providers: [LocalService],
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
@@ -1817,7 +1816,6 @@ export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
         flex: 0 0 60px;
         border-right: 1px solid #888;
     }`],
-    standalone: true,
     imports: [TestIgxForOfDirective, IgxForOfDirective]
 })
 
@@ -1861,7 +1859,6 @@ export class NoWidthAndHeightComponent {
         </ng-template>
     </div>
     `,
-    standalone: true,
     imports: [IgxForOfDirective, NgClass]
 })
 export class LocalVariablesComponent {
@@ -1894,7 +1891,6 @@ export class CustomSlicePipe implements PipeTransform {
         </div>
     </div>
     `,
-    standalone: true,
     imports: [IgxForOfDirective, CustomSlicePipe, NgClass]
 })
 export class LocalVariablesAsComponent {

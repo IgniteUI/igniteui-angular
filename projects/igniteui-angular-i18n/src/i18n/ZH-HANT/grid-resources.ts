@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsZHHANT_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Traditional Chinese (zh-Hant) resource strings for IgxGrid
+ */
+export const GridResourceStringsZHHANT = {
     igx_grid_groupByArea_message: '將列標題拖曳至此處，以按該列分組。',
     igx_grid_emptyFilteredGrid_message: '未找到任何記錄。',
     igx_grid_emptyGrid_message: '網格沒有資料。',
@@ -111,6 +114,7 @@ const GridResourceStringsZHHANT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: '取消全部釘選',
     igx_grid_row_edit_btn_done: '完成',
     igx_grid_row_edit_btn_cancel: '取消',
+    igx_grid_row_edit_text: '您對此行和 {1} 個隱藏列進行了 {0} 項更改',
     igx_grid_toolbar_actions_filter_prompt: '篩選條件列清單...',
     igx_grid_toolbar_pinning_button_tooltip: '打開列釘選下拉式選單',
     igx_grid_toolbar_hiding_button_tooltip: '打開列隱藏下拉式選單',
@@ -166,9 +170,4 @@ const GridResourceStringsZHHANT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: '輸入內容不得超過 {0} 個字元',
     igx_grid_email_validation_error: '必須輸入有效的電子郵件地址',
     igx_grid_pattern_validation_error: '輸入的內容不符合要求的格式'
-};
-
-/**
- * Traditional Chinese (zh-Hant) resource strings for IgxGrid
- */
-export const GridResourceStringsZHHANT = GridResourceStringsZHHANT_ as ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

@@ -64,6 +64,7 @@
         text-color: $text-color,
         border-color: $border-color,
         shadow: $shadow,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -85,7 +86,7 @@
         'material': rem(10px) rem(16px),
         'fluent': rem(8px) rem(12px),
         'bootstrap': rem(12px),
-        'indigo-design': rem(10px) rem(16px)
+        'indigo': rem(10px) rem(16px)
     ), $variant);
 
     %igx-toast-display {

@@ -33,7 +33,8 @@ describe('igxBanner', () => {
                 IgxBannerOneButtonComponent,
                 IgxBannerSampleComponent,
                 IgxBannerCustomTemplateComponent,
-                SimpleBannerEventsComponent
+                SimpleBannerEventsComponent,
+                IgxBannerInitializedOpenComponent
             ]
         }).compileComponents();
     }));
@@ -395,6 +396,36 @@ describe('igxBanner', () => {
             expect(banner.closing.emit).toHaveBeenCalledTimes(2);
             expect(banner.closed.emit).toHaveBeenCalledTimes(1);
         }));
+
+        it('Should toggle banner state when expanded property changes', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
+            fixture.detectChanges();
+            const banner = fixture.componentInstance.banner;
+
+            banner.expanded = false;
+            tick();
+            fixture.detectChanges();
+
+            expect(banner.expanded).toBeFalse();
+
+            banner.expanded = true;
+            tick();
+            fixture.detectChanges();
+            expect(banner.expanded).toBeTrue();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('block');
+
+            banner.expanded = false;
+            tick();
+            fixture.detectChanges();
+            expect(banner.expanded).toBeFalse();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('');
+
+            banner.expanded = true;
+            tick();
+            fixture.detectChanges();
+            expect(banner.expanded).toBeTrue();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('block');
+        }));
     });
 
     describe('Rendering tests: ', () => {
@@ -485,6 +516,16 @@ describe('igxBanner', () => {
             expect(panel.attributes.getNamedItem('role').nodeValue).toEqual('status');
             expect(panel.attributes.getNamedItem('aria-live').nodeValue).toEqual('polite');
         }));
+
+        it('Should initialize banner as open when expanded is set to true', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxBannerInitializedOpenComponent);
+            fixture.detectChanges();
+            const banner = fixture.componentInstance.banner;
+
+            expect(banner.expanded).toBeTrue();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('block');
+            expect(banner.elementRef.nativeElement.querySelector('.' + CSS_CLASS_BANNER)).not.toBeNull();
+        }));
     });
 
     const getBaseClassElements = <T>(fixture: ComponentFixture<T>) => {
@@ -502,8 +543,7 @@ describe('igxBanner', () => {
             <igx-banner></igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
-    standalone: true,
-    imports: [ IgxBannerComponent ]
+    imports: [IgxBannerComponent]
 })
 export class IgxBannerEmptyComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -522,8 +562,7 @@ export class IgxBannerEmptyComponent {
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>
     `,
-    standalone: true,
-    imports: [ IgxBannerComponent, IgxBannerActionsDirective ]
+    imports: [IgxBannerComponent, IgxBannerActionsDirective]
 })
 export class IgxBannerOneButtonComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -544,8 +583,7 @@ export class IgxBannerOneButtonComponent {
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>
     `,
-    standalone: true,
-    imports: [ IgxBannerComponent, IgxBannerActionsDirective, IgxIconComponent ]
+    imports: [IgxBannerComponent, IgxBannerActionsDirective, IgxIconComponent]
 })
 export class IgxBannerSampleComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -575,8 +613,7 @@ export class IgxBannerSampleComponent {
             </igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
-    standalone: true,
-    imports: [ IgxBannerComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxBannerActionsDirective, IgxAvatarComponent ]
+    imports: [IgxBannerComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxBannerActionsDirective, IgxAvatarComponent]
 })
 export class IgxBannerCustomTemplateComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -589,8 +626,7 @@ export class IgxBannerCustomTemplateComponent {
             <igx-banner (opening)="handleOpening($event)" (closing)="handleClosing($event)">Simple message</igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
-    standalone: true,
-    imports: [ IgxBannerComponent ]
+    imports: [IgxBannerComponent]
 })
 export class SimpleBannerEventsComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -605,4 +641,20 @@ export class SimpleBannerEventsComponent {
     public handleClosing(event: any) {
         event.cancel = this.cancelFlag;
     }
+}
+
+@Component({
+    template: `
+        <div>
+            <igx-banner [expanded]="true">
+                Banner initialized as open.
+            </igx-banner>
+        </div>
+    `,
+    standalone: true,
+    imports: [IgxBannerComponent]
+})
+export class IgxBannerInitializedOpenComponent {
+    @ViewChild(IgxBannerComponent, { static: true })
+    public banner: IgxBannerComponent;
 }

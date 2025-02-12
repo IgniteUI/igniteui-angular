@@ -15,7 +15,8 @@ import { AnimationService } from '../services/animation/animation';
 import { IgxStepComponent } from './step/step.component';
 import {
     IgxStepper, IgxStepperOrientation, IgxStepperTitlePosition, IgxStepType,
-    IGX_STEPPER_COMPONENT, IStepChangedEventArgs, IStepChangingEventArgs, VerticalAnimationType
+    IGX_STEPPER_COMPONENT, IStepChangedEventArgs, IStepChangingEventArgs, VerticalAnimationType,
+    HorizontalAnimationType
 } from './stepper.common';
 import {
     IgxStepActiveIndicatorDirective,
@@ -24,7 +25,6 @@ import {
 } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
 import { fadeIn, growVerIn, growVerOut } from 'igniteui-angular/animations';
-import { HorizontalAnimationType } from '../carousel/enums';
 
 
 // TODO: common interface between IgxCarouselComponentBase and ToggleAnimationPlayer?
@@ -73,7 +73,6 @@ import { HorizontalAnimationType } from '../carousel/enums';
         IgxStepperService,
         { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
     ],
-    standalone: true,
     imports: [NgIf, NgTemplateOutlet, NgFor]
 })
 export class IgxStepperComponent extends IgxCarouselComponentBase implements IgxStepper, OnChanges, OnInit, AfterContentInit, OnDestroy {
@@ -539,5 +538,3 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
         }
     }
 }
-
-

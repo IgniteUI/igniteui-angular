@@ -231,14 +231,13 @@ export class GridFunctions {
         return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
     }
 
-    public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => new Promise<void>(async (resolve) => {
-        const icon = row.element.nativeElement.querySelector('igx-icon');
-        UIInteractions.simulateClickAndSelectEvent(icon.parentElement);
-        await wait(debounceTime);
-        fix.detectChanges();
-
-        resolve();
-    });
+    public static toggleMasterRowByClick =
+        async (fix, row: IgxGridRowComponent, debounceTime) => {
+            const icon = row.element.nativeElement.querySelector('igx-icon');
+            UIInteractions.simulateClickAndSelectEvent(icon.parentElement);
+            await wait(debounceTime);
+            fix.detectChanges();
+        };
 
     public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxRowDirective) {
         const rowDE = fix.debugElement.queryAll(By.directive(IgxRowDirective)).find(el => el.componentInstance === row);
@@ -738,7 +737,7 @@ export class GridFunctions {
     public static getApplyButtonExcelStyleFiltering(fix: ComponentFixture<any>, menu = null, grid = 'igx-grid') {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix, grid);
         const containedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--contained'));
-        const applyButton: any = containedButtons.find((rb: any) => rb.innerText === 'apply');
+        const applyButton: any = containedButtons.find((rb: any) => rb.innerText.toLowerCase() === 'apply');
         return applyButton;
     }
 
@@ -750,7 +749,7 @@ export class GridFunctions {
     public static clickCancelExcelStyleFiltering(fix: ComponentFixture<any>, menu = null) {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const flatButtons = Array.from(excelMenu.querySelectorAll('.igx-button--flat'));
-        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
+        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText.toLowerCase() === 'cancel');
         cancelButton.click();
     }
 
@@ -771,7 +770,7 @@ export class GridFunctions {
     public static getApplyExcelStyleCustomFiltering(fix: ComponentFixture<any>): HTMLElement {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
         const containedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--contained'));
-        const applyButton = containedButtons.find((rb: any) => rb.innerText === 'apply');
+        const applyButton = containedButtons.find((rb: any) => rb.innerText.toLowerCase() === 'apply');
         return applyButton as HTMLElement;
     }
 
@@ -804,7 +803,7 @@ export class GridFunctions {
     public static clickCancelExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
         const flatButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--flat'));
-        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
+        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText.toLowerCase() === 'cancel');
         cancelButton.click();
     }
 
@@ -827,8 +826,8 @@ export class GridFunctions {
         let pinUnpinIcon: any;
         if (isIconInHeader) {
             const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
-            const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin-left"') !== -1);
-            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin-left"') !== -1);
+            const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1);
+            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1);
             pinUnpinIcon = headerAreaPinIcon ? headerAreaPinIcon : headerAreaUnpinIcon;
         } else {
             const pinContainer = GridFunctions.getExcelFilteringPinContainer(fix);
@@ -864,7 +863,7 @@ export class GridFunctions {
      * Click the sort ascending button in the ESF.
      */
     public static clickSortAscInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortAscIcon: DebugElement = this.getIconFromButton('arrow_upward', fix);
+        const sortAscIcon: DebugElement = this.getIconFromButton('sort_asc', fix);
         sortAscIcon?.nativeElement.click();
     }
 
@@ -880,7 +879,7 @@ export class GridFunctions {
      * Click the sort descending button in the ESF.
      */
     public static clickSortDescInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortDescIcon: any = this.getIconFromButton('arrow_downward', fix);
+        const sortDescIcon: any = this.getIconFromButton('sort_desc', fix);
         sortDescIcon?.nativeElement.click();
     }
 
@@ -1270,7 +1269,7 @@ export class GridFunctions {
     public static getFilterRowInputCommitIcon(fix) {
         const suffix = GridFunctions.getFilterRowSuffix(fix);
         const commitIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
-            .find((icon: any) => icon.nativeElement.innerText === 'done');
+            .find((icon: any) => icon.nativeElement.innerText === 'check');
         return commitIcon;
     }
 
@@ -1445,7 +1444,7 @@ export class GridFunctions {
 
     public static getAdvancedFilteringHeaderText(fix: ComponentFixture<any>) {
         const header = GridFunctions.getAdvancedFilteringHeader(fix);
-        const title = header.querySelector('.ig-typography__h6');
+        const title = header.querySelector('.igx-query-builder__header > div');
         return title.innerText;
     }
 
@@ -1720,7 +1719,7 @@ export class GridFunctions {
         const actionButtons = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs-actions > button'));
         const commitButton = actionButtons.find((el: DebugElement) => {
             const icon = el.query(By.directive(IgxIconComponent)).componentInstance;
-            return icon.name === 'check';
+            return icon.name === 'confirm';
         }).nativeElement;
 
         return commitButton;
@@ -1892,8 +1891,6 @@ export class GridFunctions {
         } else {
             expect(group.expanded).toEqual(isExpanded);
             const text = isExpanded ? indicatorText[0] : indicatorText[1];
-            console.log(groupHeader);
-            debugger;
             expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeDefined();
             expect(GridFunctions.getColGroupExpandIndicator(groupHeader).innerText.trim()).toEqual(text);
         }
@@ -2057,7 +2054,7 @@ export class GridFunctions {
                     }
                 }
                 const expectedWidth = Math.max(parseFloat(cell.column.calcWidth) * cell.column.gridColumnSpan, sum);
-                expect(cellElem.clientWidth - expectedWidth).toBeLessThan(1);
+                expect(cellElem.getBoundingClientRect().width - expectedWidth).toBeLessThan(1);
                 // check height
                 const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
                 expect(cellElem.offsetHeight).toBe(expectedHeight);
@@ -2208,7 +2205,7 @@ export class GridSummaryFunctions {
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =
-        (fix, startCell, endCell, ctrl = false, shift = false) => new Promise<void>(async resolve => {
+        async (fix, startCell, endCell, ctrl = false, shift = false)  => {
             UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
             fix.detectChanges();
             await wait();
@@ -2218,8 +2215,7 @@ export class GridSelectionFunctions {
             UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement, shift, ctrl);
             await wait();
             fix.detectChanges();
-            resolve();
-        });
+        };
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
         UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
@@ -2231,7 +2227,7 @@ export class GridSelectionFunctions {
     }
 
     public static selectCellsRangeWithShiftKey =
-        (fix, startCell, endCell) => new Promise<void>(async resolve => {
+        async (fix, startCell, endCell) => {
             UIInteractions.simulateClickAndSelectEvent(startCell);
             await wait();
             fix.detectChanges();
@@ -2239,9 +2235,7 @@ export class GridSelectionFunctions {
             UIInteractions.simulateClickAndSelectEvent(endCell, true);
             await wait();
             fix.detectChanges();
-            resolve();
-            resolve();
-        });
+        };
 
     public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
         UIInteractions.simulateClickAndSelectEvent(startCell);

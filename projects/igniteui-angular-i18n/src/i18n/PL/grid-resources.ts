@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsPL_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Polish resource strings for IgxGrid
+ */
+export const GridResourceStringsPL = {
     igx_grid_groupByArea_message: 'Przeciągnij nagłówek kolumny i upuść go tutaj, aby grupować według tej kolumny.',
     igx_grid_groupByArea_select_message: 'Wybierz wszystkie wiersze w grupie o nazwie pola {0} i wartości {1}.',
     igx_grid_groupByArea_deselect_message: 'Odznacz wszystkie wiersze w grupie o nazwie pola {0} i wartości {1}.',
@@ -113,6 +116,7 @@ const GridResourceStringsPL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Odepnij wszystko',
     igx_grid_row_edit_btn_done: 'Gotowe',
     igx_grid_row_edit_btn_cancel: 'Anuluj',
+    igx_grid_row_edit_text: 'Masz {0} zmian w tym wierszu i {1} ukrytych kolumnach',
     igx_grid_toolbar_actions_filter_prompt: 'Filtruj listę kolumn...',
     igx_grid_toolbar_pinning_button_tooltip: 'Otwórz menu przypinania kolumn',
     igx_grid_toolbar_hiding_button_tooltip: 'Otwórz menu ukrywania kolumn',
@@ -166,9 +170,4 @@ const GridResourceStringsPL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Długość wpisu nie może przekraczać {0} znaków',
     igx_grid_email_validation_error: 'Należy podać prawidłowy adres e-mail',
     igx_grid_pattern_validation_error: 'Wpis nie pasuje do wymaganego wzorca'
-};
-
-/**
- * Polish resource strings for IgxGrid
- */
-export const GridResourceStringsPL = GridResourceStringsPL_ as ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

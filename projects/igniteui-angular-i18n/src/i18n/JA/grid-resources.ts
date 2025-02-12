@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsJA_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Japanese resource strings for IgxGrid
+ */
+export const GridResourceStringsJA = {
     igx_grid_groupByArea_message: '列ヘッダーをここへドラッグして列をグループ化します。',
     igx_grid_emptyFilteredGrid_message: 'レコードは見つかりませんでした。',
     igx_grid_emptyGrid_message: 'グリッドにデータがありません。',
@@ -111,6 +114,7 @@ const GridResourceStringsJA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'すべて固定解除',
     igx_grid_row_edit_btn_done: '完了',
     igx_grid_row_edit_btn_cancel: 'キャンセル',
+    igx_grid_row_edit_text: 'この行には {0} 個の変更があり、{1} 個の非表示の列があります',
     igx_grid_toolbar_actions_filter_prompt: '列リストのフィルター',
     igx_grid_toolbar_pinning_button_tooltip: '列ピン固定のドロップダウンを開く',
     igx_grid_toolbar_hiding_button_tooltip: '列非表示のドロップダウンを開く',
@@ -166,9 +170,4 @@ const GridResourceStringsJA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: '入力の長さは {0} 文字以下である必要があります',
     igx_grid_email_validation_error: '有効なメール アドレスを入力してください',
     igx_grid_pattern_validation_error: '入力が所定のパターンに一致しません'
-};
-
-/**
- * Japanese resource strings for IgxGrid
- */
-export const GridResourceStringsJA = GridResourceStringsJA_ as ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

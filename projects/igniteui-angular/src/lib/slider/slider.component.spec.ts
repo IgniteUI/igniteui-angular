@@ -43,6 +43,7 @@ describe('IgxSlider', () => {
                 SliderMinMaxComponent,
                 SliderTestComponent,
                 SliderWithLabelsComponent,
+                RangeSliderTestComponent,
                 RangeSliderWithLabelsComponent,
                 RangeSliderWithCustomTemplateComponent,
                 SliderTicksComponent,
@@ -438,7 +439,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
             await wait();
 
-            let activeThumb = fixture.debugElement.query(By.css(THUMB_TO_PRESSED_CLASS));
+            const activeThumb = fixture.debugElement.query(By.css(THUMB_TO_PRESSED_CLASS));
             expect(activeThumb).not.toBeNull();
             expect(sliderInstance.value).toBeGreaterThan(sliderInstance.minValue);
 
@@ -636,6 +637,22 @@ describe('IgxSlider', () => {
             expect(slider.value.upper).toBe(60);
         });
 
+        it('should reach max value with upper thumb in RANGE mode with decimal steps', () => {
+            slider.minValue = 0;
+            slider.maxValue = 10;
+            slider.step = 0.1;
+            slider.type = IgxSliderType.RANGE;
+            slider.value = { lower: 0, upper: 10 };
+            fixture.detectChanges();
+
+            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
+            toThumb.focus();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb, true);
+            fixture.detectChanges();
+
+            expect((slider.value as IRangeSliderValue).upper).toBe(10);
+        });
     });
 
     describe('Slider - List View', () => {
@@ -896,22 +913,6 @@ describe('IgxSlider', () => {
             expect(fromThumb).toBeDefined();
             expect(slider.upperBound).toBe(100);
             expect(slider.lowerBound).toBe(0);
-        });
-
-        it('aria properties should be successfully applied', () => {
-            const sliderElement = fixture.nativeElement.querySelector('igx-slider');
-            const sliderRole = fixture.nativeElement.querySelector('igx-slider[role="slider"]');
-
-            expect(sliderElement).toBeDefined();
-            expect(sliderRole).toBeDefined();
-
-            const minValue = parseInt(sliderElement.getAttribute('aria-valuemin'), 10);
-            const maxValue = parseInt(sliderElement.getAttribute('aria-valuemax'), 10);
-            const readOnly = sliderElement.getAttribute('aria-readonly');
-
-            expect(minValue).toBe(slider.minValue);
-            expect(maxValue).toBe(slider.maxValue);
-            expect(readOnly).toBe('false');
         });
     });
 
@@ -1195,22 +1196,6 @@ describe('IgxSlider', () => {
             expect(fromThumb).toBeFalsy();
             expect(slider.upperBound).toBe(slider.maxValue);
             expect(slider.lowerBound).toBe(slider.minValue);
-        });
-
-        it('aria properties should be successfully applied', () => {
-            const sliderElement = fixture.nativeElement.querySelector('igx-slider');
-            const sliderRole = fixture.nativeElement.querySelector('igx-slider[role="slider"]');
-
-            expect(sliderElement).toBeDefined();
-            expect(sliderRole).toBeDefined();
-
-            const minValue = parseInt(sliderElement.getAttribute('aria-valuemin'), 10);
-            const maxValue = parseInt(sliderElement.getAttribute('aria-valuemax'), 10);
-            const readOnly = sliderElement.getAttribute('aria-readonly');
-
-            expect(minValue).toBe(slider.minValue);
-            expect(maxValue).toBe(slider.maxValue);
-            expect(readOnly).toBe('false');
         });
     });
 
@@ -1849,6 +1834,211 @@ describe('IgxSlider', () => {
         }));
     });
 
+    describe('Accessibility: ARIA Attributes', () => {
+        let fixture: ComponentFixture<RangeSliderTestComponent>;
+        let slider: IgxSliderComponent;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+        });
+
+        it('should apply all ARIA properties correctly to both thumbs', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('role')).toBe('slider');
+            expect(thumbFrom.getAttribute('tabindex')).toBe('0');
+            expect(parseInt(thumbFrom.getAttribute('aria-valuenow'), 10)).toBe(slider.lowerValue);
+            expect(parseInt(thumbFrom.getAttribute('aria-valuemin'), 10)).toBe(slider.minValue);
+            expect(parseInt(thumbFrom.getAttribute('aria-valuemax'), 10)).toBe(slider.maxValue);
+            expect(thumbFrom.getAttribute('aria-label')).toBe('Slider thumb from');
+            expect(thumbFrom.getAttribute('aria-orientation')).toBe('horizontal');
+            expect(thumbFrom.getAttribute('aria-disabled')).toBe('false');
+
+            expect(thumbTo.getAttribute('role')).toBe('slider');
+            expect(thumbTo.getAttribute('tabindex')).toBe('0');
+            expect(parseInt(thumbTo.getAttribute('aria-valuenow'), 10)).toBe(slider.upperValue);
+            expect(parseInt(thumbTo.getAttribute('aria-valuemin'), 10)).toBe(slider.minValue);
+            expect(parseInt(thumbTo.getAttribute('aria-valuemax'), 10)).toBe(slider.maxValue);
+            expect(thumbTo.getAttribute('aria-label')).toBe('Slider thumb to');
+            expect(thumbTo.getAttribute('aria-orientation')).toBe('horizontal');
+            expect(thumbTo.getAttribute('aria-disabled')).toBe('false');
+
+            slider.labels = ['Low', 'Medium', 'High'];
+            fixture.detectChanges();
+            tick();
+
+            expect(thumbFrom.getAttribute('aria-valuetext')).toBe('Low');
+            expect(thumbTo.getAttribute('aria-valuetext')).toBe('High');
+
+            slider.disabled = true;
+            fixture.detectChanges();
+            tick();
+
+            expect(thumbFrom.getAttribute('aria-disabled')).toBe('true');
+            expect(thumbTo.getAttribute('aria-disabled')).toBe('true');
+        }));
+
+        it('should apply correct tabindex to thumbs', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('tabindex')).toBe('0');
+            expect(thumbTo.getAttribute('tabindex')).toBe('0');
+        }));
+
+        it('should apply correct role to thumbs', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('role')).toBe('slider');
+            expect(thumbTo.getAttribute('role')).toBe('slider');
+        }));
+
+        it('should apply aria-valuenow, aria-valuemin, and aria-valuemax to thumbs', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('aria-valuenow')).toBe(String(slider.lowerValue));
+            expect(thumbFrom.getAttribute('aria-valuemin')).toBe(String(slider.minValue));
+            expect(thumbFrom.getAttribute('aria-valuemax')).toBe(String(slider.maxValue));
+
+            expect(thumbTo.getAttribute('aria-valuenow')).toBe(String(slider.upperValue));
+            expect(thumbTo.getAttribute('aria-valuemin')).toBe(String(slider.minValue));
+            expect(thumbTo.getAttribute('aria-valuemax')).toBe(String(slider.maxValue));
+        }));
+
+        it('should apply aria-valuenow to the thumbs', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('aria-valuenow')).toBe(String(slider.lowerLabel));
+            expect(thumbTo.getAttribute('aria-valuenow')).toBe(String(slider.upperLabel));
+        }));
+
+        it('should update aria-valuenow when the slider value changes', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('aria-valuenow')).toBe(String(slider.lowerLabel));
+            expect(thumbTo.getAttribute('aria-valuenow')).toBe(String(slider.upperLabel));
+
+            slider.value = {
+                lower: 30,
+                upper: 70
+            };
+            fixture.detectChanges();
+            tick();
+
+            expect(thumbFrom.getAttribute('aria-valuenow')).toBe('30');
+            expect(thumbTo.getAttribute('aria-valuenow')).toBe('70');
+        }));
+
+        it('should apply aria-valuetext when labels are provided', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            slider.labels = ['Low', 'Medium', 'High'];
+            tick();
+            fixture.detectChanges();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('aria-valuetext')).toBe('Low');
+            expect(thumbTo.getAttribute('aria-valuetext')).toBe('High');
+
+            slider.value = {
+                lower: 1,
+                upper: 1
+            };
+            fixture.detectChanges();
+            tick();
+
+            expect(thumbFrom.getAttribute('aria-valuetext')).toBe('Medium');
+            expect(thumbTo.getAttribute('aria-valuetext')).toBe('Medium');
+        }));
+
+        it('should apply correct aria-label to thumbs', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('aria-label')).toBe('Slider thumb from');
+            expect(thumbTo.getAttribute('aria-label')).toBe('Slider thumb to');
+        }));
+
+        it('should apply correct aria-orientation to thumbs', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('aria-orientation')).toBe('horizontal');
+            expect(thumbTo.getAttribute('aria-orientation')).toBe('horizontal');
+        }));
+
+        it('should update aria-disabled when the slider is disabled', fakeAsync(() => {
+            fixture = TestBed.createComponent(RangeSliderTestComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+            tick();
+
+            const thumbFrom = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
+            const thumbTo = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
+
+            expect(thumbFrom.getAttribute('aria-disabled')).toBe('false');
+            expect(thumbTo.getAttribute('aria-disabled')).toBe('false');
+
+            slider.disabled = true;
+            fixture.detectChanges();
+            tick();
+
+            expect(thumbFrom.getAttribute('aria-disabled')).toBe('true');
+            expect(thumbTo.getAttribute('aria-disabled')).toBe('true');
+        }));
+    });
 
     const verifySecondaryTicsLabelsAreHidden = (ticks, hidden) => {
         const allTicks = Array.from(ticks.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}`));
@@ -1875,7 +2065,6 @@ describe('IgxSlider', () => {
     template: `
         <igx-slider [type]="type" [value]="value"></igx-slider>
     `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 export class SliderRtlComponent {
@@ -1904,7 +2093,6 @@ export class SliderRtlComponent {
             [secondaryTickLabels]="secondaryTickLabels"
             [tickLabelsOrientation]="tickLabelsOrientation"></igx-slider>
     `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 export class SliderTicksComponent {
@@ -1924,7 +2112,6 @@ export class SliderTicksComponent {
     selector: 'igx-slider-test-component',
     template: `<igx-slider #slider>
     </igx-slider>`,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 class SliderInitializeTestComponent {
@@ -1935,7 +2122,6 @@ class SliderInitializeTestComponent {
     template: `
         <igx-slider [maxValue]='maxValue' [minValue]='minValue'></igx-slider>
     `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 export class SliderMinMaxComponent {
@@ -1953,7 +2139,6 @@ export class SliderMinMaxComponent {
                                         [type]="type">
                     </igx-slider>
                 </div>`,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 class SliderTestComponent {
@@ -1976,11 +2161,20 @@ class SliderTestComponent {
     template: `
     <igx-slider [labels]="['Winter', 'Spring', 'Summer', 'Autumn']">
     </igx-slider> `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 class SliderWithLabelsComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
+}
+
+@Component({
+    template: `<igx-slider #slider [type]="type">
+    </igx-slider>`,
+    imports: [IgxSliderComponent]
+})
+class RangeSliderTestComponent {
+    @ViewChild(IgxSliderComponent, { static: true }) public slider: IgxSliderComponent;
+    public type = IgxSliderType.RANGE;
 }
 
 @Component({
@@ -1989,7 +2183,6 @@ class SliderWithLabelsComponent {
     [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"
     [type]="type">
     </igx-slider> `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 class RangeSliderWithLabelsComponent {
@@ -2011,7 +2204,6 @@ class RangeSliderWithLabelsComponent {
         </ng-template>
     </igx-slider>
     `,
-    standalone: true,
     imports: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective]
 })
 class RangeSliderWithCustomTemplateComponent {
@@ -2025,7 +2217,6 @@ class RangeSliderWithCustomTemplateComponent {
             <igx-slider [(ngModel)]="value" name="amount" [ngModelOptions]="{ updateOn: updateOn}"></igx-slider>
         </form>
     `,
-    standalone: true,
     imports: [IgxSliderComponent, FormsModule]
 })
 export class SliderTemplateFormComponent {
@@ -2042,7 +2233,6 @@ export class SliderTemplateFormComponent {
             <igx-slider [formControl]="formControl"></igx-slider>
         </form>
     `,
-    standalone: true,
     imports: [IgxSliderComponent, FormsModule, ReactiveFormsModule]
 })
 export class SliderReactiveFormComponent {
@@ -2055,7 +2245,6 @@ export class SliderReactiveFormComponent {
     template: `
         <igx-slider type="range" [value]="value" [lowerBound]="30" [upperBound]="40"></igx-slider>
     `,
-    standalone: true,
     imports: [IgxSliderComponent]
 })
 export class SliderWithValueAdjustmentComponent {

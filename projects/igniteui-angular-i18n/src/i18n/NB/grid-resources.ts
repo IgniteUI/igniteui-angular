@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsNB_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Norwegian resource strings for IgxGrid
+ */
+export const GridResourceStringsNB = {
     igx_grid_groupByArea_message: 'Dra en kolonneoverskrift og slipp den her for å gruppere etter den kolonnen.',
     igx_grid_groupByArea_select_message: 'Velg alle radene i gruppen med feltnavn {0} og verdi {1}.',
     igx_grid_groupByArea_deselect_message: 'Opphev valg av alle radene i gruppen med feltnavn {0} og verdi {1}.',
@@ -113,6 +116,7 @@ const GridResourceStringsNB_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Løsne alle',
     igx_grid_row_edit_btn_done: 'Ferdig',
     igx_grid_row_edit_btn_cancel: 'Avbryt',
+    igx_grid_row_edit_text: 'Du har {0} endringer i denne raden og {1} skjulte kolonner',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrer kolonneliste...',
     igx_grid_toolbar_pinning_button_tooltip: 'Åpne rullegardinmenyen for kolonnefester',
     igx_grid_toolbar_hiding_button_tooltip: 'Åpne kolonne som skjuler rullegardinmenyen',
@@ -166,9 +170,4 @@ const GridResourceStringsNB_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Oppføringen må ikke være mer enn {0} tegn(er) lang',
     igx_grid_email_validation_error: 'Du må angi en gyldig e-postadresse',
     igx_grid_pattern_validation_error: 'Oppføringen samsvarer ikke med det nødvendige mønsteret'
-};
-
-/**
- * Norwegian resource strings for IgxGrid
- */
-export const GridResourceStringsNB = GridResourceStringsNB_ as ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

@@ -9,12 +9,26 @@ import {
 import { IgxColumnComponent } from './column.component';
 import { IgxColumnGroupComponent } from './column-group.component';
 
-
+/* blazorIndirectRender */
+/* blazorElement */
+/* omitModule */
+/* wcElementTag: igc-column-layout */
+/* additionalIdentifier: Children.Field */
+/* jsonAPIManageCollectionInMarkup */
+/**
+ * Column layout for declaration of Multi-row Layout
+ *
+ * @igxParent IgxGridComponent
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnLayoutComponent) }],
     selector: 'igx-column-layout',
-    template: ``,
+    template: `@if (platform.isElements) {
+        <div #sink style="display: none;">
+            <ng-content select="igx-column,igc-column"></ng-content>
+        </div>
+    }`,
     standalone: true
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
@@ -29,10 +43,11 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * @memberof IgxColumnGroupComponent
      */
     public override get width(): any {
-        const width = this.getFilledChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);
+        const width = this.getFilledChildColumnSizes(this.children).reduce((acc, val) => acc + parseFloat(val), 0);
         return width;
     }
 
+    /* blazorSuppress */
     public override set width(val: any) { }
 
     public override get columnLayout() {
@@ -47,7 +62,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
 
         if (this.headerGroup && this.headerGroup.hasLastPinnedChildColumn) {
             const headerStyles = this.grid.document.defaultView.getComputedStyle(this.headerGroup.nativeElement.children[0]);
-            borderWidth = parseInt(headerStyles.borderRightWidth, 10);
+            borderWidth = parseFloat(headerStyles.borderRightWidth);
         }
 
         return super.getCalcWidth() + borderWidth;
@@ -93,6 +108,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         return this._hidden;
     }
 
+     /* blazorSuppress */
     /**
      * Sets the column layout hidden property.
      * ```typescript

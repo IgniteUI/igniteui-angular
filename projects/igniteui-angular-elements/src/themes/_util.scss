@@ -1,0 +1,114 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'sass:list';
+@use '../../../igniteui-angular/src/lib/core/styles/themes' as igx;
+@use './variables' as vars;
+
+/// Prefix used for 'global' component CSS vars
+$elements-var-prefix: 'ig';
+
+/// Prefix used in place of `igx-` in component selectors
+$elements-selector-prefix: 'igc';
+
+/// Filter out included items to get exclude list
+/// @access private
+/// @param {Map} $items - The items to include
+/// @param {Map} $register - The full components list `igx.$components`
+/// @return {Map} - The resulting difference of items for excluding
+@function include($items, $register) {
+    // @debug map.keys(igx.$components);
+    @return map.keys(map.remove($register, $items...));
+}
+
+/// Callback to update component's name (for var prefix) and selectors for Elements
+/// @access private
+/// @param {Map} $theme_schema - The component's theme schema
+/// @return {Map} - Updated component theme schema
+@function updateElementName($theme_schema) {
+    $prefix: 'ig';
+    $result: $theme_schema;
+
+    @if map.has-key($theme_schema, "name") {
+        $name: map.get($theme_schema, "name");
+        $selector: map.get($theme_schema, "selector") or $name;
+        $modified: ();
+
+        // @debug "name: #{$name}";
+
+        @if string.index($name, 'igx-') {
+            $name: list.nth(string.split($name, 'igx-'), -1);
+            $name: '#{$elements-var-prefix}-#{$name}';
+            // @debug "name after: #{$name}";
+            $modified: map.merge($modified, (name: $name));
+        }
+
+        // For exposed components also modify selector with updated element prefix:
+        @if list.index(vars.$allowed, map.get($theme_schema, "name")) {
+            // @debug "selector before: #{$selector}";
+            $selector: updateSelectors($selector);
+            // @debug "selector after: #{$selector}";
+        }
+
+        $modified: map.merge($modified, (selector: $selector));
+
+        @if map.has-key($theme_schema, 'themes') {
+            $themes: map.get($theme_schema, 'themes');
+            $newThemes: ();
+            @each $name, $sub_schema in $themes {
+                $newThemes: map.set($newThemes, $name, updateElementName($sub_schema));
+            }
+            $modified: map.merge($modified, (themes: $newThemes));
+        }
+
+        $result: map.merge($result, $modified);
+    }
+    @return $result;
+}
+
+/// Break down the selector and update `igx-` element selectors with matching `igc-` for exposed Elements
+/// @access private
+/// @param {String} $selector - The selector(s) to update
+/// @return {String} - Updated selector(s) with `igc-` prefixed equivalents
+@function updateSelectors($selector) {
+    $result: ();
+    $selectors: string.split($selector, ", ");
+
+    @each $sel in $selectors {
+        $result: list.append($result, $sel, comma);
+
+        @if string.index($sel, 'igx-') == 1 {
+            $igc-sel: list.nth(string.split($sel, 'igx-'), -1);
+            $igc-sel: '#{$elements-selector-prefix}-#{$igc-sel}';
+            $result: list.append($result, $igc-sel, comma);
+        }
+    }
+
+    @return "#{$result}";
+}
+
+/// Generates an Ignite UI for Angular Elements global theme.
+/// @param {Map} $palette - An palette to be used by the global theme.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the components.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Number} $roundness [null] - Sets the global roundness factor (the value can be any decimal fraction between 0 and 1) for all components.
+/// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
+/// @param {Map} $elevations [$elevations] - The elevation map to be used by all component themes.
+/// @requires $light-material-schema
+/// @requires {function} is-component
+/// @requires {function} is-used
+@mixin elements-theme(
+    $palette,
+    $schema,
+    $exclude,
+    // $roundness,
+    // $elevation,
+    // $elevations,
+) {
+    @include igx.theme-internal(
+        $palette: $palette,
+        $exclude: $exclude,
+        $schema: $schema,
+        $theme-handler: meta.get-function("updateElementName")
+    );
+}

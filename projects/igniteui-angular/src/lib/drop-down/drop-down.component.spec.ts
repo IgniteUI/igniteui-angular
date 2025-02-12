@@ -256,7 +256,6 @@ describe('IgxDropDown ', () => {
                 expect(positionStrategy.settings.horizontalDirection).toBe(HorizontalAlignment.Right);
                 expect(positionStrategy.settings.verticalDirection).toBe(VerticalAlignment.Bottom);
             });
-
             it('should apply custom overlay settings if provided', () => {
                 const toggle: IgxToggleDirective = (dropdown as any).toggleDirective;
                 const customOverlaySettings: OverlaySettings = {
@@ -1266,6 +1265,31 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.closing.emit).toHaveBeenCalledTimes(3);
                 expect(dropdown.closed.emit).toHaveBeenCalledTimes(3);
             }));
+            it('#15137 - should bind to custom target if provided', fakeAsync(() => {
+                const input = fixture.debugElement.query(By.css('input'));
+                dropdown.open({ target: input.nativeElement });
+                tick();
+                fixture.detectChanges();
+
+                const dropdownItems = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_ITEM}`));
+                expect(dropdownItems).not.toBeUndefined();
+
+                const inputRect = input.nativeElement.getBoundingClientRect();
+                let dropdownRect = dropdownItems[0].nativeElement.getBoundingClientRect();
+                expect(dropdownRect.left).toBe(inputRect.left);
+                expect(dropdownRect.top).toBe(inputRect.bottom);
+
+                dropdown.close();
+                tick();
+                fixture.detectChanges();
+                dropdown.open();
+                tick();
+                fixture.detectChanges();
+
+                dropdownRect = dropdownItems[0].nativeElement.getBoundingClientRect();
+                expect(dropdownRect.left).toBe(0);
+                expect(dropdownRect.top).toBe(0);
+            }));
         });
     });
 });
@@ -1279,7 +1303,6 @@ describe('IgxDropDown ', () => {
             {{item.field}}
         </igx-drop-down-item>
     </igx-drop-down>`,
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, NgFor]
 })
 class IgxDropDownTestComponent {
@@ -1324,7 +1347,6 @@ class IgxDropDownTestComponent {
         </igx-drop-down-item>
     </igx-drop-down>
     `,
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, NgFor]
 })
 class DoubleIgxDropDownComponent implements OnInit {
@@ -1343,7 +1365,6 @@ class DoubleIgxDropDownComponent implements OnInit {
         }
     }
 }
-
 @Component({
     template: `
     <input (click)="toggleDropDown()">
@@ -1381,7 +1402,6 @@ class DoubleIgxDropDownComponent implements OnInit {
             {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>`,
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, NgFor]
 })
 class IgxDropDownAnchorTestComponent {
@@ -1418,7 +1438,6 @@ class IgxDropDownAnchorTestComponent {
             {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>`,
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, NgFor]
 })
 class InputWithDropDownDirectiveComponent {
@@ -1444,7 +1463,6 @@ class InputWithDropDownDirectiveComponent {
             </igx-drop-down-item>
         </igx-drop-down-item-group>
     </igx-drop-down>`,
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, NgFor]
 })
 class GroupDropDownComponent {
@@ -1492,7 +1510,6 @@ class GroupDropDownComponent {
         height: 400px;
     }
     `],
-    standalone: true,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxForOfDirective, IgxButtonDirective, IgxDropDownItemNavigationDirective, IgxToggleActionDirective]
 })
 class VirtualizedDropDownComponent {

@@ -58,7 +58,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
      * this.tooltip.context = "Tooltip's context";
      * ```
      */
-    @Input('context')
+    @Input()
     public context;
 
     /**

@@ -68,8 +68,8 @@ export class IgxGridNavigationService {
 
     public dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
-            !this.grid.crudService.rowEditingBlocked && !this.grid.crudService.rowInEditMode) {
+        const cellOrRowInEdit = this.grid.crudService.cell || this.grid.crudService.row;
+        if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && cellOrRowInEdit))) {
             return;
         }
         const shift = event.shiftKey;
@@ -217,6 +217,9 @@ export class IgxGridNavigationService {
 
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {
         if (!this.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) {
+            if (cb) {
+                cb();
+            }
             return;
         }
         this.pendingNavigation = true;
@@ -337,6 +340,23 @@ export class IgxGridNavigationService {
         }
 
         return isChanged;
+    }
+
+    /** Focus the Grid section (header, body, footer) depending on the current activeNode */
+    public restoreActiveNodeFocus() {
+        if (!this.activeNode || !Object.keys(this.activeNode).length) {
+            return;
+        }
+
+        if (this.activeNode.row >= 0 && this.activeNode.row < this.grid.dataView.length) {
+            this.grid.tbody.nativeElement.focus();
+        }
+        if (this.activeNode.row === -1) {
+            this.grid.theadRow.nativeElement.focus();
+        }
+        if (this.activeNode.row === this.grid.dataView.length) {
+            this.grid.tfoot.nativeElement.focus();
+        }
     }
 
     protected getNextPosition(rowIndex: number, colIndex: number, key: string, shift: boolean, ctrl: boolean, event: KeyboardEvent) {

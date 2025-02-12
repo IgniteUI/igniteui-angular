@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsES_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * Spanish resource strings for IgxGrid
+ */
+export const GridResourceStringsES = {
     igx_grid_groupByArea_message: 'Arrastre un encabezado de columna y suéltelo aquí para agrupar por esa columna.',
     igx_grid_emptyFilteredGrid_message: 'No se encontraron registros.',
     igx_grid_emptyGrid_message: 'La cuadrícula no tiene datos.',
@@ -111,6 +114,7 @@ const GridResourceStringsES_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Desanclar todo',
     igx_grid_row_edit_btn_done: 'Listo',
     igx_grid_row_edit_btn_cancel: 'Cancelar',
+    igx_grid_row_edit_text: 'Tienes {0} cambios en esta fila y {1} columnas ocultas',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrar lista de columnas…',
     igx_grid_toolbar_pinning_button_tooltip: 'Abrir menú desplegable para anclar columnas',
     igx_grid_toolbar_hiding_button_tooltip: 'Abrir menú desplegable para ocultar columnas',
@@ -166,9 +170,4 @@ const GridResourceStringsES_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'No escriba más de {0} caracteres',
     igx_grid_email_validation_error: 'Debe introducirse una dirección de correo electrónico válida.',
     igx_grid_pattern_validation_error: 'La entrada no coincide con el patrón necesario.'
-};
-
-/**
- * Spanish resource strings for IgxGrid
- */
-export const GridResourceStringsES = GridResourceStringsES_ as ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

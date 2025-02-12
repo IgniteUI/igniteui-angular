@@ -18,18 +18,26 @@ import { IgxLinearProgressBarComponent } from '../../progressbar/progressbar.com
 import { IgxGridToolbarAdvancedFilteringComponent } from './grid-toolbar-advanced-filtering.component';
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 
-
+/* blazorElement */
+/* mustUseNGParentAnchor */
+/* wcElementTag: igc-grid-toolbar */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
+/* contentParent: GridBaseDirective */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
+/* jsonAPIManageItemInMarkup */
 /**
  * Provides a context-aware container component for UI operations for the grid components.
  *
  * @igxModule IgxGridToolbarModule
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent
  *
  */
 @Component({
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html',
     providers: [{ provide: IgxToolbarToken, useExisting: IgxGridToolbarComponent }],
-    standalone: true,
     imports: [NgIf, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, NgTemplateOutlet, IgxLinearProgressBarComponent]
 })
 export class IgxGridToolbarComponent implements OnDestroy {
@@ -95,8 +103,6 @@ export class IgxGridToolbarComponent implements OnDestroy {
     ) {
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
-        this.iconService.addIconRef(pinLeft.name, 'default', { name: pinLeft.name, family: 'imx-icons' });
-        this.iconService.addIconRef(unpinLeft.name, 'default', { name: unpinLeft.name, family: 'imx-icons' });
     }
 
     /** @hidden @internal */

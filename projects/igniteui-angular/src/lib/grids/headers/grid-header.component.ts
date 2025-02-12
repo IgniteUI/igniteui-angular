@@ -21,6 +21,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { SortingIndexPipe } from './pipes';
 import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
+import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
 
 /**
  * @hidden
@@ -29,7 +30,6 @@ import { IgxIconComponent } from '../../icon/icon.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header',
     templateUrl: 'grid-header.component.html',
-    standalone: true,
     imports: [IgxIconComponent, NgTemplateOutlet, NgIf, NgClass, SortingIndexPipe]
 })
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
@@ -106,15 +106,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     @HostBinding('class.igx-grid-th--selected')
     public get selectedStyle() {
         return this.selected;
-    }
-
-    @HostBinding('style.height.rem')
-    public get height() {
-        if (!this.grid.hasColumnGroups || this.grid.isPivot) {
-            return null;
-        }
-
-        return (this.grid.maxLevelHeaderDepth + 1 - this.column.level) * this.grid.defaultRowHeight / this.grid._baseFontSize;
     }
 
     /**
@@ -280,7 +271,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         if(!this.grid.advancedFilteringExpressionsTree) {
             return false;
         }
-        return !!this.grid.advancedFilteringExpressionsTree.find(this.column.field);
+        return !!ExpressionsTreeUtil.find(this.grid.advancedFilteringExpressionsTree, this.column.field);
     }
 
     private triggerSort() {

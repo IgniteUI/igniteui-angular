@@ -10,7 +10,8 @@
         <igx-icon
             *ngIf="!iconTemplate"
             family="default"
-            [name]="panel.collapsed ? 'expand' : 'collapse'">
+            [name]="panel.collapsed ? 'expand' : 'collapse'"
+            [attr.aria-hidden]="true">
         </igx-icon>
     </div>
 </div>

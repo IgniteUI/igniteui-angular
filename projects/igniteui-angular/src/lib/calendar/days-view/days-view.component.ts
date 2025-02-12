@@ -31,7 +31,6 @@ import {
     isDateInRanges,
 } from "../common/helpers";
 import { CalendarDay } from '../common/model';
-import { IgxIconService } from '../../icon/icon.service';
 
 let NEXT_ID = 0;
 
@@ -46,7 +45,6 @@ let NEXT_ID = 0;
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, NgFor, IgxDayItemComponent, TitleCasePipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
@@ -207,9 +205,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
         @Inject(LOCALE_ID) _localeId: string,
         protected el: ElementRef,
         public override cdr: ChangeDetectorRef,
-        protected override iconService: IgxIconService
     ) {
-        super(platform, _localeId, null, cdr, iconService);
+        super(platform, _localeId, null, cdr);
     }
 
     /**

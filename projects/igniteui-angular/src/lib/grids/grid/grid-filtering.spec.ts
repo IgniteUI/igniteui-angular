@@ -251,7 +251,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
             IgxDateFilteringOperand.instance().condition('after'));
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(2);
+        expect(grid.rowList.length).toEqual(1);
 
         // Before filter
         grid.clearFilter('ReleaseDate');
@@ -260,12 +260,12 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
             IgxDateFilteringOperand.instance().condition('before'));
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(4);
+        expect(grid.rowList.length).toEqual(5);
 
         // DoesNotEqual filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
+        grid.filter('ReleaseDate', today,
             IgxDateFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
@@ -273,7 +273,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         // Equals filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
+        grid.filter('ReleaseDate', today,
             IgxDateFilteringOperand.instance().condition('equals'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
@@ -527,7 +527,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
             IgxDateFilteringOperand.instance().condition('after'));
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(2);
+        expect(grid.rowList.length).toEqual(1);
 
         // Before filter
         grid.clearFilter('ReleaseDate');
@@ -536,12 +536,12 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
             IgxDateFilteringOperand.instance().condition('before'));
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(4);
+        expect(grid.rowList.length).toEqual(5);
 
         // DoesNotEqual filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
+        grid.filter('ReleaseDate', today,
             IgxDateFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
@@ -549,7 +549,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         // Equals filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
+        grid.filter('ReleaseDate', today,
             IgxDateFilteringOperand.instance().condition('equals'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
@@ -649,7 +649,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
             IgxDateFilteringOperand.instance().condition('after'));
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(2);
+        expect(grid.rowList.length).toEqual(1);
 
         // Before filter
         grid.clearFilter('ReleaseDate');
@@ -658,12 +658,12 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
             IgxDateFilteringOperand.instance().condition('before'));
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(4);
+        expect(grid.rowList.length).toEqual(5);
 
         // DoesNotEqual filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
+        grid.filter('ReleaseDate', today,
             IgxDateFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
@@ -671,7 +671,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         // Equals filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
+        grid.filter('ReleaseDate', today,
             IgxDateFilteringOperand.instance().condition('equals'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);

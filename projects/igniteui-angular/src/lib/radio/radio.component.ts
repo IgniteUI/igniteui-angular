@@ -10,8 +10,7 @@ import {
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-
+import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
 
 /**
  * **Ignite UI for Angular Radio Button** -
@@ -29,15 +28,16 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 @Component({
     selector: 'igx-radio',
     providers: [{
-        provide: EDITOR_PROVIDER,
-        useExisting: IgxRadioComponent,
-        multi: true
-    }],
+            provide: EDITOR_PROVIDER,
+            useExisting: IgxRadioComponent,
+            multi: true
+        }],
     templateUrl: 'radio.component.html',
-    standalone: true,
     imports: [IgxRippleDirective]
 })
-export class IgxRadioComponent extends IgxCheckboxComponent implements AfterViewInit, ControlValueAccessor, EditorProvider {
+export class IgxRadioComponent
+    extends CheckboxBaseDirective
+    implements AfterViewInit, ControlValueAccessor, EditorProvider {
     /** @hidden @internal */
     public blurRadio = new EventEmitter();
 
@@ -150,7 +150,11 @@ export class IgxRadioComponent extends IgxCheckboxComponent implements AfterView
     public select() {
         if (!this.checked) {
             this.checked = true;
-            this.change.emit({ value: this.value, owner: this, checked: this.checked });
+            this.change.emit({
+                value: this.value,
+                owner: this,
+                checked: this.checked,
+            });
             this._onChangeCallback(this.value);
         }
     }

@@ -21,16 +21,15 @@ import {
     IgxLabelDirective,
     IgxButtonDirective,
     IgxRippleDirective,
-    IgxDropDownItemComponent
+    IgxDropDownItemComponent,
+    IChangeCheckboxEventArgs
 } from 'igniteui-angular';
 import { IAnimationParams } from 'igniteui-angular/animations';
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-sample',
     styleUrls: ['overlay.sample.css'],
     templateUrl: './overlay.sample.html',
-    standalone: true,
     imports: [NgFor, IgxRadioComponent, FormsModule, IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class OverlaySampleComponent implements OnInit {
@@ -81,8 +80,8 @@ export class OverlaySampleComponent implements OnInit {
         }
     }
 
-    public onChange(ev) {
-        switch (ev.radio.name) {
+    public onChange(ev: IChangeCheckboxEventArgs) {
+        switch (ev.owner.name) {
             case 'ps':
                 this.removeSelectedClass('direction');
                 this.removeSelectedClass('start-point');
@@ -240,8 +239,8 @@ export class OverlaySampleComponent implements OnInit {
         this._overlaySettings.outlet = this.useOutlet ? this.outletElement : null;
     }
 
-    public onSwitchChange(ev) {
-        switch (ev.switch.name) {
+    public onSwitchChange(ev: IChangeCheckboxEventArgs) {
+        switch (ev.owner.name) {
             case 'close':
                 this._overlaySettings.closeOnOutsideClick = ev.checked;
                 break;
@@ -392,7 +391,7 @@ export class OverlaySampleComponent implements OnInit {
 
     private removeSelectedClass(type: string) {
         const items = document.getElementsByClassName(type);
-        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+
         for (let index = 0; index < items.length; index++) {
             const element = items[index];
             element.classList.remove('selected');

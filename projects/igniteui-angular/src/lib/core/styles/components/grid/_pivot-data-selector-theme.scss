@@ -29,6 +29,7 @@
 
     @return extend($theme, (
         name: $name,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -79,6 +80,12 @@
 
             %cbx-label {
                 font-size: rem(13px);
+            }
+        }
+
+        %cbx-composite-wrapper {
+            @if $variant == 'material' {
+                padding: 0;
             }
         }
 

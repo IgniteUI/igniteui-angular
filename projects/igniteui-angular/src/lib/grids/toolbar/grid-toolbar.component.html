@@ -1,17 +1,16 @@
-<ng-content select="[igxGridToolbarTitle],igx-grid-toolbar-title"></ng-content>
+<ng-content select="[igxGridToolbarTitle],igx-grid-toolbar-title,igc-grid-toolbar-title"></ng-content>
 
 <div class="igx-grid-toolbar__custom-content">
     <ng-content></ng-content>
 </div>
 
 <ng-template #actions>
-    <ng-content select="[igxGridToolbarActions],igx-grid-toolbar-actions"></ng-content>
+    <ng-content select="[igxGridToolbarActions],igx-grid-toolbar-actions,igc-grid-toolbar-actions"></ng-content>
 </ng-template>
 <igx-grid-toolbar-actions *ngIf="!hasActions">
-    <igx-grid-toolbar-advanced-filtering *ngIf="grid.allowAdvancedFiltering"></igx-grid-toolbar-advanced-filtering>
+    <igx-grid-toolbar-advanced-filtering *ngIf="grid?.allowAdvancedFiltering"></igx-grid-toolbar-advanced-filtering>
 </igx-grid-toolbar-actions>
 <ng-container *ngTemplateOutlet="actions"></ng-container>
-
 
 <div class="igx-grid-toolbar__progress-bar" *ngIf="showProgress">
     <igx-linear-bar [indeterminate]="true"></igx-linear-bar>

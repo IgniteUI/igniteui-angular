@@ -18,7 +18,6 @@ import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelCa
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { NgIf } from '@angular/common';
-import { IgxIconService } from '../icon/icon.service';
 
 /**
  * @hidden
@@ -34,7 +33,6 @@ export type ExpansionPanelHeaderIconPosition = (typeof ExpansionPanelHeaderIconP
 @Component({
     selector: 'igx-expansion-panel-header',
     templateUrl: 'expansion-panel-header.component.html',
-    standalone: true,
     imports: [NgIf, IgxIconComponent]
 })
 export class IgxExpansionPanelHeaderComponent {
@@ -216,37 +214,14 @@ export class IgxExpansionPanelHeaderComponent {
     // properties section
     private _iconTemplate = false;
     private _disabled = false;
-    private _icons = [
-        {
-            family: 'default',
-            name: 'expand',
-            ref: {
-                name: 'expand_more',
-                family: 'material',
-            }
-        },
-        {
-            family: 'default',
-            name: 'collapse',
-            ref: {
-                name: 'expand_less',
-                family: 'material',
-            }
-        }
-    ];
 
     constructor(
         @Host() @Inject(IGX_EXPANSION_PANEL_COMPONENT)
         public panel: IgxExpansionPanelBase,
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
-        protected iconsService: IgxIconService
     ) {
         this.id = `${this.panel.id}-header`;
-
-        for (const icon of this._icons) {
-            iconsService.addIconRef(icon.name, icon.family, icon.ref);
-        }
     }
 
     /**

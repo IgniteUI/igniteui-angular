@@ -126,7 +126,6 @@ const DATA2 = [
 
 @Component({
     template: `<igx-grid></igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent]
 })
 class NestedPropertiesGridComponent {
@@ -145,7 +144,6 @@ class NestedPropertiesGridComponent {
         <igx-column field='user.address.country' header='Country' editable='true' dataType='string'></igx-column>
         <igx-column field='active' header='Active' editable='true' dataType='boolean'></igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 class NestedPropertiesGrid2Component {
@@ -166,7 +164,6 @@ class NestedPropertiesGrid2Component {
             </ng-template>
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxComboComponent, FormsModule]
 })
 class NestedPropertyGridComponent {
@@ -206,7 +203,6 @@ describe('Grid - nested data source properties #grid', () => {
 
         const setupData = (data: Array<any>) => {
             grid.autoGenerate = true;
-            grid.shouldGenerate = true;
             grid.data = data;
             fixture.detectChanges();
         };

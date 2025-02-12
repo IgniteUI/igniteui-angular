@@ -1,0 +1,67 @@
+@use '../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+// Base setup
+@use 'palette' as *;
+@use 'typography' as *;
+
+// Modified themes
+@use './components/radio';
+@use './components/checkbox';
+@use './components/switch';
+@use './components/button';
+@use './components/card';
+@use './components/input-group';
+@use './components/tabs';
+@use './components/select';
+@use './components/combo';
+@use './components/dropdown';
+
+// Font
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700&display=swap');
+
+// Base schema
+$schema: $light-bootstrap-schema;
+
+:root {
+    --ig-theme: bootstrap;
+}
+
+@include core();
+@include typography(
+    $font-family: $typeface,
+    $type-scale: $type-scale
+);
+@include theme(
+    $palette: $palette,
+    $schema: $schema,
+    $exclude: (
+        'igx-card',
+        'igx-checkbox',
+        'igx-combo',
+        'igx-select',
+        'igx-date-range-picker',
+        'igx-grid',
+        'igx-input-group',
+        'igx-paginator',
+        'igx-radio',
+        'igx-switch', 
+        'igx-tabs',
+        'igx-time-picker',
+        'igx-tree'
+    )
+);
+
+@include radio.component();
+@include checkbox.component();
+@include button.component();
+@include card.component();
+@include switch.component();
+@include input-group.component();
+@include select.component();
+@include combo.component();
+@include dropdown.component();
+@include tabs.component();
+@include grid(grid-theme($schema));
+@include paginator(paginator-theme($schema));
+@include time-picker(time-picker-theme($schema));
+@include tree(tree-theme($schema));

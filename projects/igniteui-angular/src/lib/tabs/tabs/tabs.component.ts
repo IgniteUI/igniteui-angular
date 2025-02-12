@@ -1,5 +1,5 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, OnDestroy, Optional, ViewChild } from '@angular/core';
-import { getResizeObserver, mkenum } from '../../core/utils';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { getResizeObserver, mkenum, PlatformUtil } from '../../core/utils';
 import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
 import { AnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
@@ -8,7 +8,7 @@ import { IgxTabsDirective } from '../tabs.directive';
 import { NgClass, NgFor, NgTemplateOutlet, NgIf } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
-import { IgxIconService } from '../../icon/icon.service';
+import { IgxIconButtonDirective } from '../../directives/button/icon-button.directive';
 
 export const IgxTabsAlignment = /*@__PURE__*/mkenum({
     start: 'start',
@@ -63,8 +63,7 @@ let NEXT_TAB_ID = 0;
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
     providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }],
-    standalone: true,
-    imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgFor, NgTemplateOutlet, NgIf]
+    imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgFor, NgTemplateOutlet, NgIf, IgxIconButtonDirective]
 })
 
 export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit, OnDestroy {
@@ -84,6 +83,15 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
             this.realignSelectedIndicator();
         });
     }
+
+    /**
+     * Determines the tab activation.
+     * When set to auto, the tab is instantly selected while navigating with the Left/Right Arrows, Home or End keys and the corresponding panel is displayed.
+     * When set to manual, the tab is only focused. The selection happens after pressing Space or Enter.
+     * Defaults is auto.
+     */
+    @Input()
+    public activation: 'auto' | 'manual' = 'auto';
 
     /** @hidden */
     @ViewChild('headerContainer', { static: true })
@@ -131,20 +139,9 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         cdr: ChangeDetectorRef,
         private ngZone: NgZone,
         dir: IgxDirectionality,
-        @Optional() @Inject(IgxIconService)
-        protected iconService?: IgxIconService
+        private platform: PlatformUtil
     ) {
         super(animationService, cdr, dir);
-
-        iconService.addIconRef('prev', 'default', {
-            name: 'navigate_before',
-            family: 'material'
-        });
-
-        iconService.addIconRef('next', 'default', {
-            name: 'navigate_next',
-            family: 'material'
-        });
     }
 
 
@@ -153,12 +150,14 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         super.ngAfterViewInit();
 
         this.ngZone.runOutsideAngular(() => {
-            this._resizeObserver = new (getResizeObserver())(() => {
-                this.updateScrollButtons();
-                this.realignSelectedIndicator();
-            });
-            this._resizeObserver.observe(this.headerContainer.nativeElement);
-            this._resizeObserver.observe(this.viewPort.nativeElement);
+            if (this.platform.isBrowser) {
+                this._resizeObserver = new (getResizeObserver())(() => {
+                    this.updateScrollButtons();
+                    this.realignSelectedIndicator();
+                });
+                this._resizeObserver.observe(this.headerContainer.nativeElement);
+                this._resizeObserver.observe(this.viewPort.nativeElement);
+            }
         });
     }
 
@@ -358,4 +357,3 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         return this.dir.rtl ? this.itemsWrapper.nativeElement.offsetWidth - element.offsetLeft - element.offsetWidth : element.offsetLeft;
     }
 }
-

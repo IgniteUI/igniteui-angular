@@ -4,6 +4,7 @@ import {
     ElementRef,
     HostBinding,
     Inject,
+    Injector,
     ViewChild,
     ViewContainerRef,
     ViewEncapsulation
@@ -626,8 +627,10 @@ describe('igxOverlay', () => {
             expect(overlayInstance.contentAppending.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(1);
 
-            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledWith({ id: firstCallId, elementRef: jasmine.any(Object),
-                componentRef: jasmine.any(ComponentRef) as any, settings: os })
+            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledWith({
+                id: firstCallId, elementRef: jasmine.any(Object),
+                componentRef: jasmine.any(ComponentRef) as any, settings: os
+            })
         }));
 
         it('Should properly be able to override OverlaySettings using contentAppending event args', fakeAsync(() => {
@@ -1170,6 +1173,76 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         });
 
+        it('#14364 - Should provide injector to attach method', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const injector = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 100 },
+                ],
+            });
+            fixture.detectChanges();
+
+            const id = overlay.attach(SimpleDynamicComponent, { injector });
+            expect(id).toBeDefined();
+
+            const overlayInfo = overlay.getOverlayById(id);
+            expect(overlayInfo).toBeDefined();
+
+            const elementInjector = overlayInfo.componentRef.injector;
+            expect(elementInjector).toBeDefined();
+
+            const result = elementInjector.get('SomeConst');
+            expect(result).toEqual(100);
+
+            overlay.detachAll();
+        });
+
+        it('#14364 - Should provide different injectors to attach method to each component', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const injector1 = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 'First Value' },
+                ],
+            });
+            const injector2 = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [
+                    { provide: 'SomeConst', useValue: 'Second Value' },
+                ],
+            });
+            fixture.detectChanges();
+
+            const id1 = overlay.attach(SimpleDynamicComponent, { injector: injector1 });
+            expect(id1).toBeDefined();
+
+            const overlayInfo1 = overlay.getOverlayById(id1);
+            expect(overlayInfo1).toBeDefined();
+
+            const elementInjector1 = overlayInfo1.componentRef.injector;
+            expect(elementInjector1).toBeDefined();
+
+            const result1 = elementInjector1.get('SomeConst');
+            expect(result1).toEqual('First Value');
+
+            const id2 = overlay.attach(SimpleDynamicComponent, { injector: injector2 });
+            expect(id2).toBeDefined();
+
+            const overlayInfo2 = overlay.getOverlayById(id2);
+            expect(overlayInfo2).toBeDefined();
+
+            const elementInjector2 = overlayInfo2.componentRef.injector;
+            expect(elementInjector2).toBeDefined();
+
+            const result2 = elementInjector2.get('SomeConst');
+            expect(result2).toEqual('Second Value');
+
+            overlay.detachAll();
+        });
+
         // it('##6474 - should calculate correctly position', () => {
         //     const elastic: ElasticPositionStrategy = new ElasticPositionStrategy();
         //     const targetRect: ClientRect = {
@@ -1283,6 +1356,59 @@ describe('igxOverlay', () => {
             expect(wrapperElement.style.visibility).toEqual('hidden');
 
             overlay.detachAll();
+        }));
+
+        it('Should properly move computed size style to the overlay content container.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleRefComponent);
+            fixture.detectChanges();
+
+            fixture.componentInstance.item.nativeElement.style.setProperty('--ig-size', 'var(--ig-size-small)');
+            fixture.detectChanges();
+            const overlayInstance = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(),
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const firstCallId = overlayInstance.attach(fixture.componentInstance.item, overlaySettings);
+            overlayInstance.show(firstCallId);
+            tick();
+
+            const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+            expect(overlayContent.style.getPropertyValue('--ig-size')).toEqual('1');
+            overlayInstance.detach(firstCallId);
+        }));
+
+        it('#15228 - Should use provided in show overlay settings ', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleRefComponent);
+            fixture.detectChanges();
+            const overlayInstance = fixture.componentInstance.overlay;
+            const id = overlayInstance.attach(SimpleDynamicComponent);
+            const info = overlayInstance.getOverlayById(id);
+            const initialPositionSpy = spyOn(info.settings.positionStrategy, 'position').and.callThrough();
+
+            overlayInstance.show(id);
+            tick();
+
+            expect(initialPositionSpy).toHaveBeenCalledTimes(1);
+            overlayInstance.hide(id);
+            tick();
+
+            const os: OverlaySettings = {
+                excludeFromOutsideClick: [],
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: new CloseScrollStrategy(),
+                modal: false,
+                closeOnOutsideClick: false,
+                closeOnEscape: true
+            };
+            const lastPositionSpy = spyOn(os.positionStrategy, 'position').and.callThrough();
+            overlayInstance.show(id, os);
+            tick();
+
+            expect(lastPositionSpy).toHaveBeenCalledTimes(1);
+            expect(info.settings.scrollStrategy).toBe(os.scrollStrategy);
+            expect(info.settings.positionStrategy).toBe(os.positionStrategy);
         }));
     });
 
@@ -3145,7 +3271,7 @@ describe('igxOverlay', () => {
             expect(wrapperElement).toBeDefined();
             const styles = css(wrapperElement);
             expect(styles.findIndex(
-                (e) => e.includes('--background-color: var(--igx-overlay-background-color, hsla(var(--ig-gray-500), 0.54));')))
+                (e) => e.includes('--background-color: var(--igx-overlay-background-color, hsl(from var(--ig-gray-500) h s l/0.54));')))
                 .toBeGreaterThan(-1);
             expect(styles.findIndex(
                 (e) => e.includes('background: var(--background-color);')))
@@ -3171,7 +3297,7 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
             const styles = css(wrapperElement);
-            expect(styles.findIndex((e) => e.includes('--background-color: var(--igx-overlay-background-color, hsla(var(--ig-gray-500), 0.54));'))).toBeGreaterThan(-1);
+            expect(styles.findIndex((e) => e.includes('--background-color: var(--igx-overlay-background-color, hsl(from var(--ig-gray-500) h s l/0.54));'))).toBeGreaterThan(-1);
             expect(styles.findIndex((e) => e.includes('background: var(--background-color);'))).toBeGreaterThan(-1);
 
             fixture.componentInstance.overlay.detachAll();
@@ -4381,7 +4507,6 @@ describe('igxOverlay', () => {
 });
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
     selector: `simple - dynamic - component`,
     template: `<div style='width:100px; height: 100px; background-color: red;'></div>`,
     standalone: true
@@ -4391,7 +4516,7 @@ export class SimpleDynamicComponent {
     public hostDisplay = 'block';
     @HostBinding('style.width')
     @HostBinding('style.height')
-    public hostDimenstions = '100px';
+    public hostDimensions = '100px';
 }
 
 @Component({
@@ -4434,7 +4559,6 @@ export class SimpleBigSizeComponent {
                     <p> AAAAA </p>
                 </div>
             </div>`,
-    standalone: true,
     imports: [NgIf, IgxToggleDirective]
 })
 export class SimpleDynamicWithDirectiveComponent {
@@ -4481,7 +4605,8 @@ export class EmptyPageComponent {
 
     constructor(
         @Inject(IgxOverlayService) public overlay: IgxOverlayService,
-        public viewContainerRef: ViewContainerRef) { }
+        public viewContainerRef: ViewContainerRef,
+        public injector: Injector) { }
 
     public click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
@@ -4651,7 +4776,6 @@ export class WidthTestOverlayComponent {
             <p>AAAAA</p>
         </div>
     </div>`,
-    standalone: true,
     imports: [NgIf]
 })
 export class ScrollableComponent {

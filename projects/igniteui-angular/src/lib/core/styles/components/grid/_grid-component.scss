@@ -18,6 +18,7 @@
                 igx-checkbox,
                 igx-chip,
                 igx-grid-summary,
+                igx-icon-button,
                 igx-input-group,
                 igx-grid-toolbar,
                 igx-paginator,
@@ -587,6 +588,10 @@
 
         @include e(tr-pivot, $m: 'columnMultiRowSpan') {
             @extend %igx-grid__tr-pivot--columnMultiRowSpan !optional
+        }
+
+        @include e(tbody-pivot-mrl-dimension) {
+            @extend %igx-grid__tbody-pivot-mrl-dimension !optional
         }
 
         @include e(tr-pivot-toggle-icons) {

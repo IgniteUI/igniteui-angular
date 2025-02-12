@@ -18,7 +18,6 @@ import { NgIf } from '@angular/common';
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html',
-    standalone: true,
     imports: [NgIf, IgxCheckboxComponent]
 })
 export class IgxComboItemComponent extends IgxDropDownItemComponent {
@@ -34,7 +33,9 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     /** @hidden @internal */
     @HostBinding('style.height.rem')
     public get _itemHeightToRem() {
-        return rem(this.itemHeight);
+        if (this.itemHeight) {
+            return rem(this.itemHeight);
+        }
     }
 
     @HostBinding('attr.aria-label')

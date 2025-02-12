@@ -9,11 +9,11 @@ import { IPivotDimension, PivotRowHeaderGroupType } from './pivot-grid.interface
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxHeaderGroupStylePipe } from '../headers/pipes';
 import { IgxPivotResizeHandleDirective } from '../resizing/pivot-grid/pivot-resize-handle.directive';
-import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { NgIf, NgClass, NgStyle } from '@angular/common';
 import { IgxIconComponent } from '../../icon/icon.component';
+import { IMultiRowLayoutNode } from '../common/types';
 
 /**
  * @hidden
@@ -22,8 +22,7 @@ import { IgxIconComponent } from '../../icon/icon.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-header-group',
     templateUrl: './pivot-row-dimension-header-group.component.html',
-    standalone: true,
-    imports: [IgxIconComponent, NgIf, IgxPivotRowDimensionHeaderComponent, NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxGridFilteringCellComponent, IgxPivotResizeHandleDirective, IgxHeaderGroupStylePipe]
+    imports: [IgxIconComponent, NgIf, IgxPivotRowDimensionHeaderComponent, NgClass, NgStyle, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxPivotResizeHandleDirective, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroupComponent implements PivotRowHeaderGroupType {
 
@@ -49,6 +48,21 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      */
     @Input()
     public rowIndex: number;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public colIndex: number;
+
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public layout: IMultiRowLayoutNode;
 
     /**
     * @hidden
@@ -94,6 +108,10 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      * @internal
      */
     public get visibleIndex(): number {
+        if (this.grid.hasHorizontalLayout) {
+            return this.colIndex;
+        }
+
         const field = this.column.field;
         const rows = this.grid.rowDimensions;
         const rootDimension = this.findRootDimension(field);
@@ -113,10 +131,11 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
 
     protected override get activeNode() {
         this.grid.navigation.isRowHeaderActive = true;
+        this.grid.navigation.isRowDimensionHeaderActive = false;
         return {
             row: this.rowIndex, column: this.visibleIndex, level: null,
             mchCache: null,
-            layout: null
+            layout: this.layout || null
         };
     }
 

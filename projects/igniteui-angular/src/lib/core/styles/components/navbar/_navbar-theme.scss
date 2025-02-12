@@ -11,7 +11,6 @@
 ////
 
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The navbar background color.
 /// @param {Color} $text-color [null] - The navbar text color.
 /// @param {Color} $border-color [null] - The navbar border color.
@@ -26,7 +25,6 @@
 ///   @include css-vars($my-navbar-theme);
 @function navbar-theme(
     $schema: $light-material-schema,
-    $elevations: null,
     $background: null,
     $border-color: null,
     $text-color: null,
@@ -76,6 +74,7 @@
         idle-icon-color: $idle-icon-color,
         hover-icon-color: $hover-icon-color,
         shadow: $shadow,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -140,7 +139,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             igx-avatar,
             igc-icon-button,
             [igxIconButton] {
@@ -165,7 +164,7 @@
 
     %igx-navbar-left {
         &:not(:empty) {
-            @if $variant != 'indigo-design' {
+            @if $variant != 'indigo' {
                 margin-inline-end: rem(16px)
             }
         }
@@ -176,7 +175,7 @@
     }
 
     %igx-navbar-right {
-        gap: if($variant == 'indigo-design', rem(8px), rem(16px));
+        gap: if($variant == 'indigo', rem(8px), rem(16px));
     }
 
     %igx-navbar-left,
@@ -210,14 +209,12 @@
             user-select: none;
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             igx-icon,
             igc-icon {
                 --component-size: 2;
 
-                padding: rem(6px);
-                width: auto;
-                height: auto;
+                margin-inline: rem(6px);
             }
         }
     }

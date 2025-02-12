@@ -1,0 +1,125 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+      {
+        "name": "$elevations",
+        "owner": "badge-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "bottom-nav-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "button-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "card-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "carousel-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "chip-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "column-actions-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "dialog-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "drop-down-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "grid-toolbar-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "grid-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "icon-button-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "input-group-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "navbar-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "navdrawer-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "query-builder-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "snackbar-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "splitter-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$elevations",
+        "owner": "time-picker-theme",
+        "remove": true,
+        "type": "property"
+      },
+      {
+        "name": "$palette",
+        "owner": "color-classes",
+        "remove": true,
+        "type": "property"
+      }
+    ]
+  }

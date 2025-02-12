@@ -4,9 +4,9 @@
         <div class="sample-icons">
             <!-- Explicit ligature declaration -->
             <igx-icon class="custom-icon" family="default" name="accessible"></igx-icon>
-            <igx-icon name="account_balance"></igx-icon>
-            <igx-icon name="account_box"></igx-icon>
-            <igx-icon name="account_circle"></igx-icon>
+            <igx-icon name="fa-breeze" family="fa-solid"></igx-icon>
+            <igx-icon family="default" name="arrow_prev"></igx-icon>
+            <igx-icon family="default" name="arrow_next"></igx-icon>
             <igx-icon name="add_shopping_cart"></igx-icon>
             <igx-icon name="alarm"></igx-icon>
             <igx-icon name="android"></igx-icon>
@@ -93,6 +93,11 @@
         <div class="sample-icons">
             <button igxButton="contained" (click)="router.navigate(['lazyIconModule'])">Lazy load icon module</button>
         </div>
+    </article>
+    <article class="sample-column">
+        <h4 class="sample-title">Separate Instance of Icon Service w/ Runtime Theme Changes</h4>
+        <small style="margin-bottom: 24px">The first two icons (left and rigth chevron) should change to the theme-specific reference when the buttons bellow are pressed. The third icon is set in the component instance by the end user via the Icon Service, thus it shouldn't change.</small>
+        <app-themed-icon></app-themed-icon>
     </article>
 </section>
 

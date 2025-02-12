@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { ProjectType } from '../../schematics/utils/util';
+import { setupTestTree } from '../common/setup.spec';
 
 const version = '15.0.4';
 
@@ -43,20 +43,19 @@ describe(`Update to ${version}`, () => {
     };
 
     beforeEach(() => {
-        appTree = new UnitTestTree(new EmptyTree());
+        appTree = setupTestTree(configJson);
     });
 
     const migrationName = 'migration-27';
 
     it(`should add igniteui-theming to pacakage json and configure it`, async () => {
-        appTree.create('/angular.json', JSON.stringify(configJson));
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(JSON.parse(JSON.stringify(tree.readContent('angular.json')))).toContain("stylePreprocessorOptions");
     });
 
     it(`should not add igniteui-theming to library pacakage json and configure it`, async () => {
-        appTree.create('/angular.json', JSON.stringify(configJsonLib));
+        appTree.overwrite('/angular.json', JSON.stringify(configJsonLib));
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(JSON.parse(JSON.stringify(tree.readContent('angular.json')))).not.toContain("stylePreprocessorOptions");

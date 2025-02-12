@@ -19,7 +19,7 @@ import {
     IgxStringFilteringOperand, IgxDateTimeFilteringOperand, IgxTimeFilteringOperand
 } from '../../../data-operations/filtering-condition';
 import { Subject } from 'rxjs';
-import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from '../../../checkbox/checkbox.component';
+import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from '../../../checkbox/public_api';
 import { takeUntil } from 'rxjs/operators';
 import { cloneHierarchicalArray, PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
@@ -59,7 +59,6 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html',
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, NgIf, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, NgFor, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
@@ -585,11 +584,15 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     condition: this.createCondition('in'),
                     fieldName: this.esf.column.field,
                     ignoreCase: this.esf.column.filteringIgnoreCase,
-                    searchVal: new Set(this.esf.column.dataType === GridColumnDataType.Date ||
+                    searchVal: new Set(
+                        this.esf.column.dataType === GridColumnDataType.Date ?
+                            selectedItems.map(d => d.value.toDateString()) :
                         this.esf.column.dataType === GridColumnDataType.DateTime ?
-                        selectedItems.map(d => d.value.toISOString()) : this.esf.column.dataType === GridColumnDataType.Time ?
+                            selectedItems.map(d => d.value.toISOString()) :
+                        this.esf.column.dataType === GridColumnDataType.Time ?
                             selectedItems.map(e => e.value.toLocaleTimeString()) :
-                            selectedItems.map(e => e.value))
+                            selectedItems.map(e => e.value)
+                    )
                 });
 
                 if (blanksItem) {

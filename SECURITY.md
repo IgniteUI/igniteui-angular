@@ -4,13 +4,17 @@
 
 | Version  | Supported          |
 | -------- | ------------------ |
-| 17.0.x   | :white_check_mark: |
+| 19.0.x   | :white_check_mark: |
+| 18.2.x   | :white_check_mark: |
+| 18.1.x   | :x:                |
+| 18.0.x   | :x:                |
+| 17.2.x   | :white_check_mark: |
+| 17.1.x   | :x:                |
+| 17.0.x   | :x:                |
 | 16.1.x   | :white_check_mark: |
 | 16.0.x   | :x:                |
 | 15.1.x   | :white_check_mark: |
-| 15.0.x   | :x:                |
-| 14.2.x   | :white_check_mark: |
-| < 14.2.x | :x:                |
+| < 15.1.x | :x:                |
 
 ## Reporting a Vulnerability
 

@@ -115,7 +115,6 @@ class ExpressionOperandItem extends ExpressionItem {
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
-    standalone: true,
     imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe, IgxIconButtonDirective]
 })
 export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
@@ -767,12 +766,20 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public deleteGroup() {
-        const selectedGroup = this.contextualGroup;
-        const parent = selectedGroup.parent;
-        if (parent) {
-            const index = parent.children.indexOf(selectedGroup);
+        let selectedGroup = this.contextualGroup;
+        let parent = selectedGroup.parent;
+        if (!parent) {
+            this.rootGroup = null;
+        }
+
+        while (parent) {
+            let index = parent.children.indexOf(selectedGroup);
             parent.children.splice(index, 1);
-        } else {
+            selectedGroup = parent;
+            parent = parent.children.length === 0 ? parent.parent : null;
+        }
+
+        if (this.rootGroup?.children.length === 0) {
             this.rootGroup = null;
         }
 
@@ -910,14 +917,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
                 DEFAULT_PIPE_TIME_FORMAT : field.dataType === DataType.DateTime ?
                     DEFAULT_PIPE_DATE_TIME_FORMAT : DEFAULT_PIPE_DATE_FORMAT;
         }
-
-        if (!field.defaultDateTimeFormat) {
-            field.defaultDateTimeFormat = DEFAULT_DATE_TIME_FORMAT;
-        }
-
-        if (!field.defaultTimeFormat) {
-            field.defaultTimeFormat = DEFAULT_TIME_FORMAT;
-        }
     }
 
     private setFilters(field: FieldType) {
@@ -988,31 +987,33 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
         this.currentGroup = groupItem;
     }
 
-    private createExpressionGroupItem(expressionTree: IExpressionTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
-        let groupItem: ExpressionGroupItem;
-        if (expressionTree) {
-            groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
+    private createExpressionGroupItem(expressionTree: IExpressionTree, parent?: ExpressionGroupItem): ExpressionGroupItem | null {
+        if (!expressionTree) {
+            return null;
+        }
 
-            for (const expr of expressionTree.filteringOperands) {
-                if (expr instanceof FilteringExpressionsTree) {
-                    groupItem.children.push(this.createExpressionGroupItem(expr, groupItem));
-                } else {
-                    const filteringExpr = expr as IFilteringExpression;
-                    const exprCopy: IFilteringExpression = {
-                        fieldName: filteringExpr.fieldName,
-                        condition: filteringExpr.condition,
-                        searchVal: filteringExpr.searchVal,
-                        ignoreCase: filteringExpr.ignoreCase
-                    };
+        const groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
+
+        for (const expr of expressionTree.filteringOperands) {
+            if (expr instanceof FilteringExpressionsTree) {
+                const childGroup = this.createExpressionGroupItem(expr, groupItem);
+                if (childGroup) {
+                    groupItem.children.push(childGroup);
+                }
+            } else {
+                const filteringExpr = expr as IFilteringExpression;
+                const field = this.fields.find(el => el.field === filteringExpr.fieldName);
+
+                if (field) {
+                    const exprCopy: IFilteringExpression = { ...filteringExpr };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
-                    const field = this.fields.find(el => el.field === filteringExpr.fieldName);
                     operandItem.fieldLabel = field.label || field.header || field.field;
                     groupItem.children.push(operandItem);
                 }
             }
         }
 
-        return groupItem;
+        return groupItem.children.length > 0 ? groupItem : null;
     }
 
     private createExpressionTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
@@ -1211,35 +1212,6 @@ export class IgxQueryBuilderComponent implements AfterViewInit, OnDestroy {
 
         editorIcons.forEach((icon) => {
             this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
-            this.iconService.addIconRef(icon.name, 'default', {
-                name: icon.name,
-                family: 'imx-icons'
-            });
-        });
-
-        this.iconService.addIconRef('add', 'default', {
-            name: 'add',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('close', 'default', {
-            name: 'close',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('check', 'default', {
-            name: 'check',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('delete', 'default', {
-            name: 'delete',
-            family: 'material',
-        });
-
-        this.iconService.addIconRef('edit', 'default', {
-            name: 'edit',
-            family: 'material',
         });
     }
 }

@@ -65,7 +65,6 @@ export interface IListItemPanningEventArgs extends IBaseEventArgs {
  * Use it to wrap anything you want to be used as a thumbnail.
  */
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListThumbnail]',
     standalone: true
 })
@@ -76,7 +75,6 @@ export class IgxListThumbnailDirective { }
  * Use it to wrap anything you want to be used as a list action: icon, checkbox...
  */
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListAction]',
     standalone: true
 })
@@ -87,7 +85,6 @@ export class IgxListActionDirective { }
  * Use it to wrap anything you want to be used as a plane text.
  */
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListLine]',
     standalone: true
 })
@@ -98,7 +95,6 @@ export class IgxListLineDirective { }
  * Use it to make anything to look like list Title.
  */
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListLineTitle]',
     standalone: true
 })
@@ -112,7 +108,6 @@ export class IgxListLineTitleDirective {
  * Use it to make anything to look like list Subtitle.
  */
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListLineSubTitle]',
     standalone: true
 })
@@ -151,7 +146,6 @@ export class IgxListLineSubTitleDirective {
     selector: 'igx-list',
     templateUrl: 'list.component.html',
     providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
-    standalone: true,
     imports: [NgIf, NgTemplateOutlet]
 })
 export class IgxListComponent extends IgxListBaseDirective {
@@ -567,7 +561,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     /**
      * Gets the `context` object of the template binding.
      *
-     * @remark
+     * @remarks
      * Gets the `context` object which represents the `template context` binding into the `list container`
      * by providing the `$implicit` declaration which is the `IgxListComponent` itself.
      *

@@ -1,17 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DateRangeType, IgxButtonDirective, IgxCardComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxRippleDirective, IgxYearsViewComponent } from 'igniteui-angular';
+import { DateRangeType, IgxButtonDirective, IgxDaysViewComponent, IgxMonthsViewComponent, IgxRippleDirective, IgxYearsViewComponent } from 'igniteui-angular';
 
 
 @Component({
     selector: 'app-calendar-views-sample',
     templateUrl: 'calendar-views.sample.html',
     styleUrls: ['calendar-views.sample.scss'],
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormsModule,
-        IgxCardComponent,
         IgxMonthsViewComponent,
         IgxYearsViewComponent,
         IgxDaysViewComponent,

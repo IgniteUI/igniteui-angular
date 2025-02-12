@@ -203,7 +203,7 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.navDrawer.hasAnimateWidth).toBeTruthy();
-            expect(fixture.debugElement.query((x) => x.nativeNode.nodeName === 'ASIDE').nativeElement.classList)
+            expect(fixture.debugElement.query(By.css('.igx-nav-drawer__aside')).nativeElement.classList)
                 .toContain('igx-nav-drawer__aside--mini');
         }).catch((reason) => Promise.reject(reason));
     }));
@@ -262,7 +262,7 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.navDrawer.pin).toBeTruthy();
-            expect(fixture.debugElement.query((x) => x.nativeNode.nodeName === 'ASIDE').nativeElement.classList)
+            expect(fixture.debugElement.query(By.css('.igx-nav-drawer__aside')).nativeElement.classList)
                 .toContain('igx-nav-drawer__aside--pinned');
 
             expect(fixture.componentInstance.navDrawer.enableGestures).toBe(false);
@@ -291,7 +291,7 @@ describe('Navigation Drawer', () => {
                 fixture.detectChanges();
                 const windowHeight = window.innerHeight;
                 const container = fixture.debugElement.query(By.css('div')).nativeElement;
-                const navdrawer = fixture.debugElement.query(By.css('igx-nav-drawer > aside')).nativeElement;
+                const navdrawer = fixture.debugElement.query(By.css('igx-nav-drawer > .igx-nav-drawer__aside')).nativeElement;
 
                 fixture.componentInstance.pin = false;
                 fixture.detectChanges();
@@ -484,7 +484,7 @@ describe('Navigation Drawer', () => {
         fixture.detectChanges();
 
         // const comp: DebugElement = fixture.debugElement.query(By.component(IgxNavbarComponent));
-        const asideElem = fixture.debugElement.query(By.css('igx-nav-drawer > aside')).nativeElement;
+        const asideElem = fixture.debugElement.query(By.css('igx-nav-drawer > .igx-nav-drawer__aside')).nativeElement;
 
         const computedStyle = window.getComputedStyle(asideElem);
         let asideWidth = computedStyle.getPropertyValue('width');
@@ -587,7 +587,7 @@ describe('Navigation Drawer', () => {
 
     it('should get correct window width', (done) => {
         const originalWidth = window.innerWidth;
-        const platformUtil: PlatformUtil = new PlatformUtil(TestBed.inject(PLATFORM_ID));
+        const platformUtil = TestBed.inject(PlatformUtil);
         const drawer = new IgxNavigationDrawerComponent(null, null, null, null, platformUtil);
 
         // re-enable `getWindowWidth`
@@ -626,7 +626,7 @@ describe('Navigation Drawer', () => {
             let flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
 
             // Mini variant pinned by default
-            expect(flexBasis).toEqual('56px');;
+            expect(flexBasis).toEqual('57px');;
             expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
 
             fix.componentInstance.navDrawer.toggle();
@@ -681,7 +681,6 @@ describe('Navigation Drawer', () => {
 @Component({
     selector: 'igx-test-cmp',
     template: '<igx-nav-drawer class="markupClass"></igx-nav-drawer>',
-    standalone: true,
     imports: [IgxNavigationDrawerComponent]
 })
 class TestComponent {
@@ -692,7 +691,6 @@ class TestComponent {
     providers: [IgxNavigationService],
     selector: 'igx-test-cmp-di',
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    standalone: true,
     imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
 })
 class TestComponentDIComponent {
@@ -705,7 +703,6 @@ class TestComponentDIComponent {
     selector: 'igx-test-cmp-pin',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    standalone: true,
     imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
 })
 class TestComponentPinComponent extends TestComponentDIComponent {
@@ -718,7 +715,6 @@ class TestComponentPinComponent extends TestComponentDIComponent {
     selector: 'igx-test-cmp-mini',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    standalone: true,
     imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
 })
 class TestComponentMiniComponent extends TestComponentDIComponent {
@@ -728,7 +724,6 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
 @Component({
     selector: 'igx--test-fixed-mini',
     providers: [IgxNavigationService],
-    standalone: true,
     imports: [
         IgxLayoutModule,
         IgxNavbarModule,
@@ -762,6 +757,6 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
         <div class="main"></div>
       </div>
     </div>
-    `,
+    `
 })
 class TestFixedMiniComponent extends TestComponentDIComponent { }

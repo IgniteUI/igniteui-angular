@@ -1,99 +1,73 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgIf } from '@angular/common';
-import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { ExpansionPanelHeaderIconPosition, IExpansionPanelEventArgs, IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelHeaderComponent, IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective, IgxGridComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective } from 'igniteui-angular';
-import { growVerIn, growVerOut } from 'igniteui-angular/animations';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { IGX_EXPANSION_PANEL_DIRECTIVES } from 'igniteui-angular';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from '../properties-panel/property-change.service';
+import {
+    defineComponents,
+    IgcExpansionPanelComponent,
+} from 'igniteui-webcomponents';
 
-
+defineComponents(IgcExpansionPanelComponent);
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'expansion-panel-sample',
     templateUrl: './expansion-panel-sample.html',
     styleUrls: ['expansion-panel-sample.scss'],
-    standalone: true,
-    imports: [IgxButtonDirective, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, NgIf, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [IGX_EXPANSION_PANEL_DIRECTIVES]
 })
-export class ExpansionPanelSampleComponent implements OnInit {
-    @ViewChild(IgxExpansionPanelComponent, { static: true })
-    private igxExpansionPanel: IgxExpansionPanelComponent;
-
-    public animationSettings: { openAnimation: AnimationReferenceMetadata; closeAnimation: AnimationReferenceMetadata } = {
-        openAnimation: useAnimation(growVerIn, { params: {
-            startHeight: '0px',
-            endHeight: '*',
-            duration: '400ms'
-        }}),
-        closeAnimation: useAnimation(growVerOut, {
-            params: {
-                duration: '200ms'
+export class ExpansionPanelSampleComponent {
+    public panelConfig: PropertyPanelConfig = {
+        iconPosition: {
+            label: 'Indicator Position',
+            control: {
+                type: 'radio-inline',
+                options: ['left', 'right'],
+                defaultValue: 'left'
             }
-        })
-    };
-    public templatedIcon = false;
-    public score: number;
-    public data = [];
-    public winningPlayer;
-    public iconPosition: ExpansionPanelHeaderIconPosition = 'right';
-    private rounds = 5;
-    public get currentScore(): {
-        'Player 1': number;
-        'Player 2': number;
-    } {
-        return this.data.length === 0 ? [] : this.data.reduce((a, b) => ({
-                'Player 1': a['Player 1'] + b['Player 1'],
-                'Player 2': a['Player 2'] + b['Player 2'],
-            }));
-    }
-
-    public get getWinningScore(): number {
-        return Math.max(...Object.values(this.currentScore));
-    }
-    public get getWinningPlayer(): string {
-        const currentScore = this.currentScore;
-        return Object.keys(currentScore).sort((a, b) => currentScore[b] - currentScore[a])[0];
-    }
-
-    public ngOnInit() {
-        this.generateScore();
-    }
-
-    public resetScore(event: Event) {
-        this.data = [];
-        event.stopPropagation();
-        this.generateScore();
-    }
-
-    public collapsed() {
-        return this.igxExpansionPanel && this.igxExpansionPanel.collapsed;
-    }
-
-    public handleCollapsed(event) {
-        console.log(`I'm collapsing!`, event);
-    }
-    public handleExpanded(event) {
-        console.log(`I'm expanding!`, event);
-    }
-    public onInteraction(event: IExpansionPanelEventArgs) {
-        console.log(event.owner);
-        console.log(`Header's touched!`, event);
-    }
-
-    public templateIcon() {
-        this.templatedIcon = !this.templatedIcon;
-    }
-
-    public toggleLeftRight() {
-        this.iconPosition = this.iconPosition === 'right' ? 'left' : 'right';
-    }
-
-    private generateScore(): void {
-        for (let i = 0; i < this.rounds; i++) {
-            this.data.push({
-                Game: `Game ${i + 1}`,
-                'Player 1': Math.floor(Math.random() * 10) + 1,
-                'Player 2': Math.floor(Math.random() * 10) + 1
-            });
+        },
+        open: {
+            control: {
+                type: 'boolean'
+            }
+        },
+        disabled: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
         }
+    }
+
+    public properties: Properties;
+
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        const { unsubscribe } =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
+
+        this.destroyRef.onDestroy(() => unsubscribe);
+    }
+
+    private iconPositionMap = new Map<string, string>([
+        ['left', 'start'],
+        ['right', 'end']
+    ]);
+
+    protected get iconPositionWC() {
+        const position = this.propertyChangeService.getProperty('iconPosition');
+        return this.iconPositionMap.get(position);
     }
 }

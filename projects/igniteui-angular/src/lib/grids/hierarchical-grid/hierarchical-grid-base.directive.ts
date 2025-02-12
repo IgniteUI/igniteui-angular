@@ -40,7 +40,6 @@ import { State, Transaction, TransactionService } from '../../services/transacti
 import { IgxGridTransaction } from '../common/types';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 import { IgxTextHighlightService } from '../../directives/text-highlight/text-highlight.service';
-import { IgxIconService } from '../../icon/icon.service';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -49,6 +48,10 @@ export const IgxHierarchicalTransactionServiceFactory = {
     useFactory: hierarchicalTransactionServiceFactory
 };
 
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective implements GridType {
     /**
@@ -66,7 +69,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /**
      * Gets/Sets whether the expand/collapse all button in the header should be rendered.
      *
-     * @remark
+     * @remarks
      * The default value is false.
      * @example
      * ```html
@@ -89,6 +92,11 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     @Output()
     public dataPreLoad = new EventEmitter<IForOfState>();
 
+    /** @hidden @internal */
+    public override get type(): GridType["type"] {
+        return 'hierarchical';
+    }
+
     /**
      * @hidden
      */
@@ -99,16 +107,18 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         return this._maxLevelHeaderDepth;
     }
 
+    /* blazorSuppress */
     /**
      * Gets the outlet used to attach the grid's overlays to.
      *
-     * @remark
+     * @remarks
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
     public override get outlet() {
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
     }
 
+    /* blazorSuppress */
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
@@ -139,6 +149,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     public parentIsland: IgxRowIslandComponent;
     public abstract rootGrid: GridType;
 
+    /* blazorSuppress */
     public abstract expandChildren: boolean;
 
     constructor(
@@ -163,7 +174,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>,
-        @Optional() @Inject(IgxIconService) iconService?: IgxIconService,
     ) {
         super(
             validationService,
@@ -187,9 +197,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             localeId,
             platform,
             _diTransactions,
-            iconService
         );
     }
+
+    public override navigation: IgxHierarchicalGridNavigationService;
 
     /**
      * @hidden
@@ -198,6 +209,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         const columns = [];
         const topLevelCols = cols.filter(c => c.level === 0);
         topLevelCols.forEach((col) => {
+            col.grid = this;
             const ref = this._createColumn(col);
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);

@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { IgxButtonDirective, IgxIconComponent, IgxIconService } from 'igniteui-angular';
+import { ThemedIconComponent } from './ThemedComponent/themed-icon.component';
 
 @Component({
     selector: 'app-icon-sample',
     styleUrls: ['./icon.sample.scss'],
     templateUrl: 'icon.sample.html',
-    standalone: true,
-    imports: [IgxIconComponent, IgxButtonDirective]
+    encapsulation: ViewEncapsulation.None,
+    imports: [IgxIconComponent, IgxButtonDirective, ThemedIconComponent]
 })
 export class IconSampleComponent implements OnInit {
     constructor(private _iconService: IgxIconService, public router: Router) {}
 
     public ngOnInit(): void {
-        this._iconService.addIconRef('accessible', 'default', { family: 'svg-flags', name: 'copy' });
+        this._iconService.addIconRef('accessible', 'default', { family: 'material', name: 'rain', type: 'svg'});
 
         // register custom svg icons
         this._iconService.addSvgIcon('contains', '/assets/svg/filtering/contains.svg', 'svg-flags');

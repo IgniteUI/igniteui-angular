@@ -42,7 +42,6 @@ let NEXT_BOTTOM_NAV_ITEM_ID = 0;
     selector: 'igx-bottom-nav',
     templateUrl: 'bottom-nav.component.html',
     providers: [{ provide: IgxTabsBase, useExisting: IgxBottomNavComponent }],
-    standalone: true,
     imports: [NgFor, NgTemplateOutlet]
 })
 export class IgxBottomNavComponent extends IgxTabsDirective {

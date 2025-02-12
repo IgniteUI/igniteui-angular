@@ -1,6 +1,180 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 19.1.0
+### General
+- `IgxCarousel`
+    - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
+    - **Deprecation** - `CarouselIndicatorsOrientation` enum members `top` and `bottom` have been deprecated and will be removed in a future version. Use `start` and `end` instead.
+### New Features
+- `IgxBanner`
+    - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. The banner can now be programmatically set to expanded (visible) or collapsed (hidden) both initially and at runtime. Animations will trigger during runtime updates — the **open animation** plays when `expanded` is set to `true`, and the **close animation** plays when set to `false`. However, no animations will trigger when the property is set initially.
+    - The banner's event lifecycle (`opening`, `opened`, `closing`, `closed`) only triggers through **user interactions** (e.g., clicking to open/close). Programmatic updates using the `expanded` property will not fire any events.
+    - If the `expanded` property changes during an ongoing animation, the current animation will **stop** and the opposite animation will begin from the **point where the previous animation left off**. For instance, if the open animation (10 seconds) is interrupted at 6 seconds and `expanded` is set to `false`, the close animation (5 seconds) will start from its 3rd second.
+
+## 19.0.0
+### General
+- `IgxFilteringService`, `IgxGridBaseDirective`
+    - **Deprecation** The `filterGlobal` method has been deprecated and will be removed in a future version.
+### New Features
+- `IgxColumn`
+    - Introduced the `disabledSummaries` property, allowing users to specify which summaries should be disabled for a given column. This property accepts an array of strings corresponding to the summary keys, enabling selective control over both default summaries (e.g., 'Count', 'Min') and any custom summaries created by the user.
+- `Themes`
+    - **Deprecation** The utility mixins `light-theme`, `dark-theme`, `bootstrap-light-theme`, `bootstrap-dark-theme`, `fluent-light-theme`, `fluent-dark-theme`, `indigo-light-theme`, and `indigo-dark-theme` have been deprecated and will be removed in version 20 of Ignite UI for Angular. Switch to the more generic `theme` mixin instead.
+    Example:
+    ```scss
+    $my-light-palette: palette(
+        $primary: navy,
+        $secondary: rebeccapurple,
+        $surface: white,
+    );
+
+    // Before:
+    @include light-theme(
+        $palette: $my-light-palette
+    );
+
+    // After:
+    @include theme(
+        $palette: $my-light-palette,
+        $schema: $light-material-schema,
+    );
+    ```
+
+## 18.2.0
+### General
+- `IFilteringExpressionsTree`, `FilteringExpressionsTree`
+    - **Deprecation** The `find` and `findIndex` methods have been deprecated and will be removed in a future version. A `ExpressionsTreeUtil` class has been added which provides the same functionality.
+### New Features
+- `IgxSimpleCombo`
+    - Introduced ability for Simple Combo to automatically select and retain valid input on "Tab" press enhancing user experience by streamlining data entry and reducing the need for manual selection improving form navigation.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - To streamline the sorting of columns with custom formats, a new `FormattedValuesSortingStrategy` has been introduced. This strategy simplifies the sorting process by allowing direct sorting based on formatted values, eliminating the need to extend the `DefaultSortingStrategy` or implement a custom `ISortingStrategy`. This enhancement improves the ease of handling sorting with custom column formatters.
+- `IgxCarousel`
+    - Added support for vertical alignment. Can be configured via the `vertical` property. Defaults to `false`.
+    - Added support for showing/hiding the indicator controls (dots). Can be configured via the `indicators` property. Defaults to `true`.
+- `ColumnType`, `IgxColumn`
+    - The built-in editors for columns of type `date`, `dateTime` and `time` now use a default input format as per the `IgxGrid`'s `locale`. This is valid both for cell editors and the ones in the filtering UI for all modes - `quickFilter`, `excelStyle` and the Advanced filtering.
+    - In case the `pipeArgs.displayFormat` property of a date-time column is set and contains only numeric date-time parts or such that can be handled by the editors, the built-in editors input format is inferred from it.
+    - To configure the built-in editors, a new `editorOptions` property is added that allows to pass optional parameters. Accepts an `IColumnEditorOptions` object with the `dateTimeFormat` property, that is used as input format for the editors of
+    `date`, `dateTime` and `time` column data types:
+        ```ts
+            const editorOptions: IColumnEditorOptions = { Field?
+                dateTimeFormat: 'MM/dd/YYYY',
+            }
+        ```
+        ```html
+            <igx-column field="sampleDate" dataType="date" [editorOptions]="editorOptions"></igx-column>
+        ```
+- `FieldType` (`IgxQueryBuilder`)
+    - Similar to the above, the fields now accept an `editorOptions` object of type `IFieldEditorOptions`. Its `dateTimeFormat` property is used as input format for the query editors of date-time fields.
+- `IgxDateTimeEditor`, `IgxDatePicker`, `IgxTimePicker`, `IgxDateRangePicker`
+    - In case the `inputFormat` property is not set, the input format is inferred from
+    `displayFormat` if set and if it contains only numeric date-time parts.
+- `IgxTimePicker`
+    - The input and display formats are now adjusted based on the locale. For instance, day period time part (AM/PM or a/p) would not be displayed for locales that do not require it.
+- `IgxDateTimeEditor`
+    - Added a new `defaultFormatType` property (`date` | `time` | `dateTime`) which configures the date-time parts
+    according to the target type that the editor mask includes. Defaults to `date`.
+- `IgxTabs`
+    - Added `activation` property to control tab selection. In `auto` mode (default), tabs are selected instantly with Arrow or Home/End keys. In `manual` mode, tabs are focused with keys but only selected with Enter or Space.
+- `IgxGridState`
+    -  When possible the state directive nows reuses the column that already exists on the grid when restoring the state, instead of creating new column instances every time. This removes the need to set any complex objects manually back on the column on `columnInit`. The only instance where this is still necessary is when the column (or its children in case of column groups) have no `field` property so there's no way to uniquely identify the matching column.
+    - Added support for persisting Multi-Row Layout.
+
+### Themes
+- **Breaking Change** `Palettes`
+    - All palette colors have been migrated to the [CSS relative colors syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors). This means that color consumed as CSS variables no longer need to be wrapped in an `hsl` function. 
+
+    Example: 
+    ```css
+    /* 18.1.x and before: */
+    background: hsl(var(--ig-primary-600));
+
+    /* 18.2.0+: */
+    background: var(--ig-primary-600);
+    ```
+
+    This change also opens up the door for declaring the base (500) variants of each color in CSS from any color, including other CSS variables, whereas before the Sass `palette` function was needed to generate color shades from a base color.
+
+    Example: 
+    ```scss
+    /* 18.1.x and before: */
+    $my-palette: palette($primary: #09f, ...);
+
+    /* 18.2.0+: */
+    --ig-primary-500: #09f;
+    ```
+
+    This change adds to our continuous effort to make theming configurable in CSS as much as it is in Sass.
+
+#### Scrollbar: New CSS variables
+
+We have introduced new CSS variables to allow for more customizable scrollbars. This enhancement utilizes the available WebKit pseudo-selectors such as `::-webkit-scrollbar-track`. However, please note that these pseudo-selectors are prefixed with `-webkit-` and are only supported in WebKit-based browsers (e.g., Chrome, Safari).
+
+###### List of Available CSS Variables for `-webkit-` browsers:
+- `--sb-size`: Adjusts the scrollbar size (width and height).
+- `--sb-track-bg-color`: Sets the background color of the scrollbar track.
+- `--sb-track-bg-color-hover`: Sets the background color of the scrollbar track on hover.
+- `--sb-thumb-min-height`: Sets the minimum height of the scrollbar thumb.
+- `--sb-thumb-border-radius`: Sets the border radius of the scrollbar thumb.
+- `--sb-thumb-border-size`: Sets the border size of the scrollbar thumb.
+- `--sb-thumb-border-color`: Sets the border color of the scrollbar thumb.
+- `--sb-thumb-bg-color`: Sets the background color of the scrollbar thumb.
+- `--sb-thumb-bg-color-hover`: Sets the background color of the scrollbar thumb on hover.
+
+For Firefox users, we provide limited scrollbar styling options through the following CSS variables:
+
+- `--sb-size`: Adjusts the scrollbar size.
+- `--sb-thumb-bg-color`: Sets the background color of the scrollbar thumb.
+- `--sb-track-bg-color`: Sets the background color of the scrollbar track.
+
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - **Deprecation** The `shouldGenerate` property has been deprecated and will be removed in a future version. Column re-creation now relies on `autoGenerate` instead. Automatic migration to this is available and will be applied on `ng update`. Note that if `autoGenerate` is already set initially, there is no need to explicitly set it elsewhere in your code.
+
+- `IgxCarousel`
+    - `animationType` input property is now of type `CarouselAnimationType`. `HorizontalAnimationType` can also be used, however, to accommodate the new vertical mode, which supports vertical slide animations, it is recommended to use `CarouselAnimationType`.
+
+    - **Behavioral Changes** - the `keyboardSupport` input property now defaults to `false`.
+    - **Deprecation** - the `keyboardSupport` input property has been deprecated and will be removed in a future version. Keyboard navigation with `ArrowLeft`, `ArrowRight`, `Home`, and `End` keys will be supported when focusing the indicators' container via ` Tab`/`Shift+Tab`. 
+
+- `IgxCombo`:
+    - **Breaking Change** The deprecated `filterable` property is replaced with `disableFiltering`.
+    - The dropdown search field placeholder is now part of the Combo's localization resources. It now also uses two resource values depending on whether filtering is active, e.g. in the default `en` locale it remains `'Enter a Search Term'`, but changes to `'Add Item'` when `disableFiltering` and `allowCustomValues` are set to true. For that reason, the existing `searchPlaceholder` input is also **deprecated** in favor of the resources.
+    - **Deprecation** - `filterable` from the `filteringOptions` has been deprecated in favor of `disableFiltering`.
+
+- `IgxBadge`
+    - **Breaking Change** The `$border-width` property has been removed from the badge theme.
+    - New outlined variant of the badge component has been added. Users can switch to `outlined` by adding the newly created `outlined` property to a badge.
+
+## 18.1.0
+### New Features
+- `IgxPivotGrid`
+    - Added horizontal layout for row dimensions. Can be configured through the `pivotUI` `rowLayout` property.
+    - Added `horizontalSummary` property for each IPivotDimension, enabling summary row when using horizontal layout.
+    - Added `horizontalSummariesPosition` property to the `pivotUI`, configuring horizontal summaries position.
+    - Keyboard navigation now can move in to row headers back and forth from any row dimension headers or column headers.
+    - Added keyboard interactions for row dimension collapse using `Alt + Arrows` and row headers sorting using `Ctrl + Arrow Up/Down`.
+- `IgxIcon`, `IgxIconService`
+    - You can now register icons by reference via the `IgxIconService`. To learn more check out the [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon-service).
+    - All components now use icons by reference internally so that it's easy to replace them without explicitly providing custom templates.
+    - `registerFamilyAlias` has been deprecated in favor of `setFamily` to allow adding metadata for `type` and `prefix` when registering custom icon families. To migrate from `registerFamilyAlias`, do the following:
+        ```ts
+            this.iconService.registerFamilyAlias('my-family', 'my-family-class');
+            this.iconService.setFamily('my-family', { className: 'my-family-class' });
+        ```
+
+### General
+- `ColumnType`, `IgxColumn`, `IgxColumnGroup`, `IgxColumnLayout`
+    - The `children` query property has been deprecated and replaced by `childColumns` getter directly returning columns array.
+    - Several properties have been hidden from the public API, considered internal and not recommended for use. Those include:
+    `filterCell`, `headerCell`, `headerGroup`, `defaultMinWidth`, `gridRowSpan`, `gridColumnSpan` and `cells`.
+- `IgxPaginator`
+    - The `isFirstPageDisabled` and `isLastPageDisabled` have been deprecated in favor of the identical `isFirstPage` and `isLastPage` getter.
+- `IgxOverlayService`
+    - The `attach` method overload accepting `Type` and `OverlaySettings` now accepts `OverlayCreateSettings` as second parameter. This interface extends `OverlaySettings` with an additional `injector` property used as `ElementInjector` when creating the dynamic component.
+
 
 ## 18.0.0
 ### New Features
@@ -78,6 +252,7 @@ All notable changes for each version of this project will be documented in this 
     - The `contextMenu` event now fires when the end-user clicks to the right of the right-most cell in the grid in case the grid's columns don't span its full width. For this reason the event argument of the event is now of type `IGridContextMenuEventArgs` which contains the row object as well as the cell one. The latter will be `null` if the event didn't originate from a cell. **This is not a breaking change** as the new type extends the old.
 - `IgxSimpleCombo`
     - **Behavioral Change** The `selectionChanging` event will now trigger when typing the first character in the input if there is a previously selected value in the `IgxSimpleCombo`.
+    - **Behavioral Change** Updated behavior to maintain the entered text in the input field upon pressing Enter while the combo input is focused, ensuring uninterrupted focus for continuous filtering. Additionally, the dropdown menu now remains open to display filtered results.
 
 ## 17.1.0
 ### New Features
@@ -165,7 +340,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`,`IgxSimpleCombo`
     - **Breaking Change** The `displayValue` property now returns the display text as expected (instead of display values in array).
 
-=======
+
 ## 16.1.5
 ### General
 - `IgxButtonGroup`:
@@ -4559,4 +4734,3 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
-

@@ -18,7 +18,7 @@ import { ISortingOptions, IgxExcelStyleHeaderIconDirective, IgxGridToolbarAdvanc
 import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
+import { FormattedValuesSortingStrategy, ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxColumnLayoutComponent } from '../grids/columns/column-layout.component';
@@ -45,9 +45,7 @@ import { OverlaySettings } from '../services/public_api';
 import { IgxFocusDirective } from '../directives/focus/focus.directive';
 
 @Component({
-    template: GridTemplateStrings.declareGrid('', '',
-        `<igx-column field="ID" [hidden]="true"></igx-column>`),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid('', '', `<igx-column field="ID" [hidden]="true"></igx-column>`),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
@@ -66,7 +64,6 @@ export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
             </igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class GridAddColumnComponent extends BasicGridComponent implements OnInit {
@@ -83,9 +80,7 @@ export class GridAddColumnComponent extends BasicGridComponent implements OnInit
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid('', '',
-        ColumnDefinitions.idNameFormatter),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.idNameFormatter),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnCellFormatterComponent extends BasicGridComponent {
@@ -105,9 +100,7 @@ export class ColumnCellFormatterComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` height="500px"`, '',
-        ColumnDefinitions.productFilterable),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(` height="500px"`, '', ColumnDefinitions.productFilterable),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class FilteringComponent extends BasicGridComponent {
@@ -115,10 +108,7 @@ export class FilteringComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        ` [width]="width" [height]="height" [rowSelection]="'multiple'" [primaryKey]="'ProductID'" [selectedRows]="selectedRows"`,
-        '', ColumnDefinitions.productBasicNumberID, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(` [width]="width" [height]="height" [rowSelection]="'multiple'" [primaryKey]="'ProductID'" [selectedRows]="selectedRows"`, '', ColumnDefinitions.productBasicNumberID, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class RowSelectionComponent extends BasicGridComponent {
@@ -130,10 +120,7 @@ export class RowSelectionComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        ` [width]="width" [height]="height" [rowSelection]="'single'" [primaryKey]="'ProductID'"`,
-        '', ColumnDefinitions.productBasicNumberID),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(` [width]="width" [height]="height" [rowSelection]="'single'" [primaryKey]="'ProductID'"`, '', ColumnDefinitions.productBasicNumberID),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class SingleRowSelectionComponent extends BasicGridComponent {
@@ -143,11 +130,7 @@ export class SingleRowSelectionComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        ` [width]="width" [height]="height" [rowSelection]="'multiple'"`,
-        '',
-        ColumnDefinitions.idFirstLastNameSortable),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(` [width]="width" [height]="height" [rowSelection]="'multiple'"`, '', ColumnDefinitions.idFirstLastNameSortable),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class RowSelectionWithoutPrimaryKeyComponent extends BasicGridComponent {
@@ -157,13 +140,10 @@ export class RowSelectionWithoutPrimaryKeyComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        ` [primaryKey]="'ID'"
+    template: GridTemplateStrings.declareGrid(` [primaryKey]="'ID'"
           [width]="'900px'"
           [height]="'900px'"
-          [columnWidth]="'200px'"`,
-        '', ColumnDefinitions.idNameJobTitleCompany),
-    standalone: true,
+          [columnWidth]="'200px'"`, '', ColumnDefinitions.idNameJobTitleCompany),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class NoScrollsComponent extends GridWithSizeComponent {
@@ -185,10 +165,7 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
     }
 }
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        `  [primaryKey]="'ProductID'" [height]="null" [allowFiltering]="true"`,
-        '', ColumnDefinitions.productDefaultSummaries),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(`  [primaryKey]="'ProductID'" [height]="null" [allowFiltering]="true"`, '', ColumnDefinitions.productDefaultSummaries),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class SummaryColumnComponent extends BasicGridComponent {
@@ -202,7 +179,6 @@ export class SummaryColumnComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.productBasic, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class ProductsComponent extends BasicGridComponent {
@@ -216,7 +192,6 @@ export class ProductsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idFirstLastNameSortable),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridDeclaredColumnsComponent extends BasicGridComponent {
@@ -226,9 +201,7 @@ export class GridDeclaredColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate" [height]="height" [width]="width"`,
-        `${EventSubscriptions.columnInit}${EventSubscriptions.selected}`, ''),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate" [height]="height" [width]="width"`, `${EventSubscriptions.columnInit}${EventSubscriptions.selected}`, ''),
     imports: [IgxGridComponent]
 })
 export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
@@ -263,7 +236,6 @@ export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
             </igx-column-layout>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
@@ -293,10 +265,7 @@ export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`,
-        `${EventSubscriptions.selected}${EventSubscriptions.columnPin}`,
-        ColumnDefinitions.generatedWithWidth),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`, `${EventSubscriptions.selected}${EventSubscriptions.columnPin}`, ColumnDefinitions.generatedWithWidth),
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class PinningComponent extends GridWithSizeComponent
@@ -332,7 +301,6 @@ export class PinningComponent extends GridWithSizeComponent
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.productFilterSortPin),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridFeaturesComponent extends BasicGridComponent {
@@ -341,10 +309,7 @@ export class GridFeaturesComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        ` columnWidth="200" `,
-        '', ColumnDefinitions.idNameJobHireDate, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(` columnWidth="200" `, '', ColumnDefinitions.idNameJobHireDate, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
@@ -353,10 +318,7 @@ export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        ` columnWidth="200" [height]="null" `,
-        '', ColumnDefinitions.idNameJobTitleCompany, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(` columnWidth="200" [height]="null" `, '', ColumnDefinitions.idNameJobTitleCompany, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
@@ -365,10 +327,7 @@ export class GroupableGridSearchComponent extends ScrollableGridSearchComponent 
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        ` [height]="height" [width]="width" [columnWidth]="columnWidth" `,
-        '', ColumnDefinitions.productAllColumnFeatures),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width" [columnWidth]="columnWidth" `, '', ColumnDefinitions.productAllColumnFeatures),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridAllFeaturesComponent extends GridWithSizeComponent {
@@ -379,7 +338,6 @@ export class GridAllFeaturesComponent extends GridWithSizeComponent {
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.nameJobTitleId),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ReorderedColumnsComponent extends BasicGridComponent {
@@ -388,7 +346,6 @@ export class ReorderedColumnsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.simpleDatePercentColumns),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridUserMeetingDataComponent extends BasicGridComponent {
@@ -397,7 +354,6 @@ export class GridUserMeetingDataComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobTitleEditable),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridIDNameJobTitleComponent extends PagingComponent {
@@ -411,7 +367,6 @@ export class GridIDNameJobTitleComponent extends PagingComponent {
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobHoursHireDatePerformance),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridIDNameJobTitleHireDataPerformanceComponent extends BasicGridComponent {
@@ -420,7 +375,6 @@ export class GridIDNameJobTitleHireDataPerformanceComponent extends BasicGridCom
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.hireDate),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridHireDateComponent extends BasicGridComponent {
@@ -429,11 +383,7 @@ export class GridHireDateComponent extends BasicGridComponent {
 
 @Component({
     template: `<div style="margin: 50px;">
-            ${GridTemplateStrings.declareGrid(
-        '[height]="height" [moving]="true" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"',
-        EventSubscriptions.columnMovingStart + EventSubscriptions.columnMoving + EventSubscriptions.columnMovingEnd,
-        ColumnDefinitions.movableColumns)}</div>`,
-    standalone: true,
+            ${GridTemplateStrings.declareGrid('[height]="height" [moving]="true" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"', EventSubscriptions.columnMovingStart + EventSubscriptions.columnMoving + EventSubscriptions.columnMovingEnd, ColumnDefinitions.movableColumns)}</div>`,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class MovableColumnsComponent extends BasicGridComponent {
@@ -482,7 +432,6 @@ export class MovableColumnsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`[moving]="true" height="300px" width="500px"`, '', ColumnDefinitions.movableColumns),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class MovableTemplatedColumnsComponent extends BasicGridComponent {
@@ -493,9 +442,7 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="300px" width="500px" [moving]="true" [autoGenerate]="autoGenerate"`,
-        EventSubscriptions.columnInit, '', '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(`height="300px" width="500px" [moving]="true" [autoGenerate]="autoGenerate"`, EventSubscriptions.columnInit, '', '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
@@ -518,7 +465,6 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="800px"`, '', ColumnDefinitions.multiColHeadersColumns),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective]
 })
 export class MultiColumnHeadersComponent extends BasicGridComponent {
@@ -527,9 +473,7 @@ export class MultiColumnHeadersComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`[moving]="true" height="800px" width="500px"`, '',
-        ColumnDefinitions.multiColHeadersWithGroupingColumns),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(`[moving]="true" height="800px" width="500px"`, '', ColumnDefinitions.multiColHeadersWithGroupingColumns),
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class MultiColumnHeadersWithGroupingComponent extends BasicGridComponent {
@@ -540,7 +484,6 @@ export class MultiColumnHeadersWithGroupingComponent extends BasicGridComponent 
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.nameAvatar),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class GridWithAvatarComponent extends GridWithSizeComponent {
@@ -550,9 +493,7 @@ export class GridWithAvatarComponent extends GridWithSizeComponent {
 
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="1000px"  width="900px" primaryKey="ID"`, '',
-        ColumnDefinitions.summariesGroupByColumns, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(`height="1000px"  width="900px" primaryKey="ID"`, '', ColumnDefinitions.summariesGroupByColumns, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class SummariesGroupByComponent extends BasicGridComponent {
@@ -564,9 +505,7 @@ export class SummariesGroupByComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="600px"  width="900px" [batchEditing]="true" primaryKey="ID"`, '',
-    ColumnDefinitions.summariesGroupByTansColumns),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(`height="600px"  width="900px" [batchEditing]="true" primaryKey="ID"`, '', ColumnDefinitions.summariesGroupByTansColumns),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class SummariesGroupByTransactionsComponent extends BasicGridComponent {
@@ -614,9 +553,7 @@ class AgeSummaryTest extends IgxNumberSummaryOperand {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`[height]="gridHeight" [columnWidth]="defaultWidth" [width]="gridWidth"`,
-        `${EventSubscriptions.selected}`, ColumnDefinitions.generatedWithWidth),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(`[height]="gridHeight" [columnWidth]="defaultWidth" [width]="gridWidth"`, `${EventSubscriptions.selected}`, ColumnDefinitions.generatedWithWidth),
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class VirtualGridComponent extends BasicGridComponent {
@@ -668,10 +605,7 @@ export class VirtualGridComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        ` [primaryKey]="'ID'"`,
-        '', ColumnDefinitions.idNameJobHireWithTypes),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(` [primaryKey]="'ID'"`, '', ColumnDefinitions.idNameJobHireWithTypes),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
@@ -679,9 +613,7 @@ export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="300px"  width="600px" primaryKey="ID"`, '',
-        ColumnDefinitions.selectionWithScrollsColumns, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(`height="300px"  width="600px" primaryKey="ID"`, '', ColumnDefinitions.selectionWithScrollsColumns, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class SelectionWithScrollsComponent extends BasicGridComponent {
@@ -690,9 +622,7 @@ export class SelectionWithScrollsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="300px"  width="600px" primaryKey="ID" cellSelection="none"`, '',
-        ColumnDefinitions.selectionWithScrollsColumns),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(`height="300px"  width="600px" primaryKey="ID" cellSelection="none"`, '', ColumnDefinitions.selectionWithScrollsColumns),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class CellSelectionNoneComponent extends BasicGridComponent {
@@ -700,18 +630,14 @@ export class CellSelectionNoneComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="300px"  width="600px" primaryKey="ID" cellSelection="single"`, '',
-        ColumnDefinitions.selectionWithScrollsColumns),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(`height="300px"  width="600px" primaryKey="ID" cellSelection="single"`, '', ColumnDefinitions.selectionWithScrollsColumns),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class CellSelectionSingleComponent extends BasicGridComponent {
     public override data = SampleTestData.employeeGroupByData();
 }
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="300px"  width="600px" [batchEditing]="true" primaryKey="ID"`, '',
-        ColumnDefinitions.selectionWithScrollsColumns),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(`height="300px"  width="600px" [batchEditing]="true" primaryKey="ID"`, '', ColumnDefinitions.selectionWithScrollsColumns),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class SelectionWithTransactionsComponent extends BasicGridComponent {
@@ -749,7 +675,6 @@ export class CustomFilter extends IgxFilteringOperand {
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridFilteringComponent extends BasicGridComponent {
@@ -762,6 +687,16 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
         this.grid.allowFiltering = activate;
         this.grid.cdr.markForCheck();
     }
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
+        <igx-column width="100px" [field]="'Number'" [header]="'Number'" [filterable]="true" dataType="number"></igx-column>
+    </igx-grid>`,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class IgxGridFilteringNumericComponent extends BasicGridComponent {
+    public override data = SampleTestData.numericData();
 }
 
 @Component({
@@ -784,7 +719,6 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
             dataType="currency">
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridDatesFilteringComponent extends BasicGridComponent {
@@ -822,7 +756,6 @@ export class IgxGridDatesFilteringComponent extends BasicGridComponent {
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridExcelStyleFilteringComponent]
 })
 export class IgxGridExternalESFComponent extends BasicGridComponent implements AfterViewInit {
@@ -876,7 +809,6 @@ export class CustomFilterStrategy extends FilteringStrategy {
         <igx-column [field]="'JobTitle'" [filterable]="filterable" ></igx-column>
         <igx-column [field]="'Company'" [filterable]="filterable" ></igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class CustomFilteringStrategyComponent extends BasicGridComponent {
@@ -904,7 +836,6 @@ export class LoadOnDemandFilterStrategy extends FilteringStrategy {
         <igx-column width="100px" [field]="'ReleaseDate'" dataType="date">
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent {
@@ -947,7 +878,6 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
             <igx-excel-style-filter-operations>Filter Operations Template</igx-excel-style-filter-operations>
         </igx-grid-excel-style-filtering>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective]
 })
 export class IgxGridFilteringESFEmptyTemplatesComponent extends BasicGridComponent {
@@ -992,7 +922,6 @@ export class IgxGridFilteringESFEmptyTemplatesComponent extends BasicGridCompone
             <igx-icon>search</igx-icon>
     </ng-template>
     `,
-    standalone: true,
     imports: [
         IgxGridComponent,
         IgxColumnComponent,
@@ -1038,7 +967,6 @@ export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [
         IgxGridComponent,
         IgxColumnComponent,
@@ -1098,7 +1026,6 @@ export class IgxGridExternalESFTemplateComponent extends BasicGridComponent impl
         </div>
     </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective, IgxInputDirective, IgxFilterCellTemplateDirective, IgxIconComponent]
 })
 export class IgxGridFilteringTemplateComponent extends BasicGridComponent {
@@ -1121,7 +1048,6 @@ export class IgxGridFilteringTemplateComponent extends BasicGridComponent {
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridFilteringScrollComponent extends IgxGridFilteringComponent { }
@@ -1143,7 +1069,6 @@ export class IgxGridFilteringScrollComponent extends IgxGridFilteringComponent {
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent { }
@@ -1157,9 +1082,9 @@ export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent { }
         <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
         <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
+        <igx-column width="100px" [field]="'ReleaseTime'" dataType="time"></igx-column>
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent]
 })
 export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
@@ -1171,6 +1096,36 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
     public activateFiltering(activate: boolean) {
         this.grid.allowFiltering = activate;
         this.grid.cdr.markForCheck();
+    }
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
+        <igx-grid-toolbar></igx-grid-toolbar>
+        <igx-column *ngFor="let c of columns"
+            [field]="c.field"
+            [header]="c.header"
+            [width]="c.width"
+            [filterable]="true"
+            [dataType]="c.type">
+        </igx-column>
+    </igx-grid>`,
+    imports: [NgFor, IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent]
+})
+export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridComponent implements OnInit  {
+    public override data = [];
+    public columns = [];
+
+    public ngOnInit(): void {
+        this.columns = [
+            { field: 'ID', header: 'HeaderID', width: '100px', type: 'number' },
+            { field: 'ProductName', header: 'Product Name', width: '200px', type: 'string'},
+            { field: 'Downloads', header: 'Downloads', width: '100px', type: 'number' },
+            { field: 'Released', header: 'Released', width: '100px', type: 'boolean' },
+            { field: 'ReleaseDate', header: 'Release Date', width: '200px', type: 'date' },
+            { field: 'AnotherField', header: 'Another Field', width: '200px', type: 'string' },
+        ];
+        this.data = SampleTestData.excelFilteringData();
     }
 }
 
@@ -1190,7 +1145,6 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent]
 })
 export class IgxGridAdvancedFilteringOverlaySettingsComponent extends BasicGridComponent {
@@ -1216,7 +1170,6 @@ export class IgxGridAdvancedFilteringOverlaySettingsComponent extends BasicGridC
     </igx-grid>
     <igx-advanced-filtering-dialog [grid]="grid1">
     </igx-advanced-filtering-dialog>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxAdvancedFilteringDialogComponent]
 })
 export class IgxGridExternalAdvancedFilteringComponent extends BasicGridComponent {
@@ -1236,10 +1189,9 @@ export class IgxGridExternalAdvancedFilteringComponent extends BasicGridComponen
             <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
             <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
         </igx-column-group>
-        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
-        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter"></igx-column>
+        <igx-column width="100px" [field]="'DateTimeCreated'" dataType="dateTime"></igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridComponent {
@@ -1265,7 +1217,6 @@ export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridCompo
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
         <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridClipboardComponent extends BasicGridComponent {
@@ -1276,9 +1227,7 @@ export class IgxGridClipboardComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`id="testGridSum" [height]="height" [width]="width"`, ``,
-        ColumnDefinitions.generatedWithDataType),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(`id="testGridSum" [height]="height" [width]="width"`, ``, ColumnDefinitions.generatedWithDataType),
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class DynamicColumnsComponent extends GridWithSizeComponent {
@@ -1325,7 +1274,6 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
         <span>CUSTOM GROUP SELECTOR</span>
     </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxPaginatorComponent, IgxRowSelectorDirective, IgxHeadSelectorDirective, IgxGroupByRowSelectorDirective]
 })
 export class GridCustomSelectorsComponent extends BasicGridComponent implements OnInit {
@@ -1385,7 +1333,6 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" [editable]="true" width="200px"></igx-column>
         <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridRowEditingComponent extends BasicGridComponent {
@@ -1407,7 +1354,6 @@ export class IgxGridRowEditingComponent extends BasicGridComponent {
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class IgxGridRowEditingWithoutEditableColumnsComponent extends BasicGridComponent {
@@ -1444,7 +1390,6 @@ export class IgxGridRowEditingWithoutEditableColumnsComponent extends BasicGridC
         <igx-column field="Test" header="Test" [dataType]="'string'" [editable]="true" [hidden]="hiddenFlag" width="150px">
         </igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, NgIf]
 })
 export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
@@ -1476,7 +1421,6 @@ export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
         </ng-template>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxButtonDirective]
 })
 export class IgxGridCustomOverlayComponent extends BasicGridComponent {
@@ -1517,7 +1461,6 @@ export class IgxGridCustomOverlayComponent extends BasicGridComponent {
         </ng-template>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxRowEditTemplateDirective]
 })
 export class IgxGridEmptyRowEditTemplateComponent extends BasicGridComponent {
@@ -1543,7 +1486,6 @@ export class IgxGridEmptyRowEditTemplateComponent extends BasicGridComponent {
         CUSTOM EDIT TEXT
     </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxRowEditActionsDirective, IgxRowAddTextDirective, IgxRowEditTextDirective]
 })
 export class IgxGridCustomRowEditTemplateComponent extends BasicGridComponent {
@@ -1568,7 +1510,6 @@ export class IgxGridCustomRowEditTemplateComponent extends BasicGridComponent {
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="200px"></igx-column>
         <igx-paginator *ngIf="paging" [perPage]="7"></igx-paginator>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridRowEditingTransactionComponent extends BasicGridComponent {
@@ -1588,7 +1529,6 @@ export class IgxGridRowEditingTransactionComponent extends BasicGridComponent {
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="200px"></igx-column>
         <igx-paginator *ngIf="paging" [perPage]="7"></igx-paginator>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridCurrencyColumnComponent extends BasicGridComponent {
@@ -1605,7 +1545,6 @@ export class IgxGridCurrencyColumnComponent extends BasicGridComponent {
         <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'currency'" width="150px"></igx-column>
         <igx-column field="Discount" header="Order Date" [dataType]="'percent'" width="200px"></igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridPercentColumnComponent extends BasicGridComponent {
@@ -1618,13 +1557,13 @@ export class IgxGridPercentColumnComponent extends BasicGridComponent {
     [primaryKey]="'ProductID'" width="900px" height="900px">
         <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
-        <igx-column field="OrderDate" header="Order Date" [dataType]="'dateTime'" width="250px"></igx-column>
-        <igx-column field="ReceiveTime" header="Receive Time" [dataType]="'time'" width="200px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'dateTime'" width="250px" [editable]="true"></igx-column>
+        <igx-column field="ReceiveTime" header="Receive Time" [dataType]="'time'" width="200px" [editable]="true"></igx-column>
+        <igx-column field="ProducedDate" header="Produced Date" [dataType]="'date'" width="250px" [editable]="true"></igx-column>
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
         <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'currency'" width="150px"></igx-column>
         <igx-paginator *ngIf="paging" [perPage]="7"></igx-paginator>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridDateTimeColumnComponent extends BasicGridComponent {
@@ -1647,7 +1586,6 @@ export class IgxGridDateTimeColumnComponent extends BasicGridComponent {
             <span> Custom template </span>
         </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent]
 })
 export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
@@ -1694,7 +1632,6 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
             <span> Custom template </span>
         </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent]
 })
 export class IgxGridGroupByComponent extends DataParent implements OnInit {
@@ -1749,7 +1686,6 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
             <input name="fullName" [value]="cell.editValue" (change)="onChange($event,cell)"  [igxFocus]="true"/>
         </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxFocusDirective]
 })
 export class CellEditingCustomEditorTestComponent extends BasicGridComponent {
@@ -1775,7 +1711,6 @@ export class CellEditingCustomEditorTestComponent extends BasicGridComponent {
             <igx-column [editable]="true" field="personNumber" [dataType]="'number'"></igx-column>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class CellEditingTestComponent extends BasicGridComponent {
@@ -1798,7 +1733,6 @@ export class CellEditingTestComponent extends BasicGridComponent {
         </igx-grid>
         <button type="button" class="btnTest">Test</button>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class CellEditingScrollTestComponent extends BasicGridComponent {
@@ -1816,10 +1750,7 @@ export class CellEditingScrollTestComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        ` [width]="width" [height]="height" [primaryKey]="'ProductID'"`,
-        '', ColumnDefinitions.productBasic, '', '<igx-paginator [perPage]="perPage"></igx-paginator>' ),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid(` [width]="width" [height]="height" [primaryKey]="'ProductID'"`, '', ColumnDefinitions.productBasic, '', '<igx-paginator [perPage]="perPage"></igx-paginator>'),
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class GridWithUndefinedDataComponent implements OnInit {
@@ -1871,7 +1802,6 @@ export class GridWithUndefinedDataComponent implements OnInit {
         </igx-column-group>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class CollapsibleColumnGroupTestComponent {
@@ -1912,7 +1842,6 @@ export class CollapsibleColumnGroupTestComponent {
         </igx-column-group>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class ColumnSelectionGroupTestComponent {
@@ -1952,7 +1881,6 @@ export class ColumnSelectionGroupTestComponent {
         </igx-column-group>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconComponent, IgxCollapsibleIndicatorTemplateDirective]
 })
 export class CollapsibleGroupsTemplatesTestComponent {
@@ -1974,7 +1902,6 @@ export class CollapsibleGroupsTemplatesTestComponent {
             </igx-column-group>
         </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, NgFor]
 })
 export class CollapsibleGroupsDynamicColComponent {
@@ -2037,7 +1964,6 @@ export class CollapsibleGroupsDynamicColComponent {
         </igx-column-group>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class ColumnGroupsNavigationTestComponent {
@@ -2055,7 +1981,6 @@ export class ColumnGroupsNavigationTestComponent {
         <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
         <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridFilteringBindingComponent extends BasicGridComponent implements OnInit {
@@ -2086,7 +2011,6 @@ export class IgxGridFilteringBindingComponent extends BasicGridComponent impleme
         <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
         <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent implements OnInit {
@@ -2120,7 +2044,6 @@ export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent
         </igx-grid>
         <button type="button" class="btnTest">Test</button>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnEditablePropertyTestComponent extends BasicGridComponent {
@@ -2135,7 +2058,6 @@ export class ColumnEditablePropertyTestComponent extends BasicGridComponent {
     template: `
         <igx-grid [height]="'300px'" [width]="'800px'" [data]="data" [autoGenerate]="true"></igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent]
 })
 export class NoColumnWidthGridComponent extends BasicGridComponent {
@@ -2143,15 +2065,8 @@ export class NoColumnWidthGridComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        '',
-        '',
-        ColumnDefinitions.idFirstLastNameSortable,
-        '',
-        '',
-        TemplateDefinitions.sortIconTemplates)
-        +  ExternalTemplateDefinitions.sortIconTemplates,
-    standalone: true,
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.idFirstLastNameSortable, '', '', TemplateDefinitions.sortIconTemplates)
+        + ExternalTemplateDefinitions.sortIconTemplates,
     imports: [IgxGridComponent, IgxColumnComponent, IgxIconComponent, IgxSortHeaderIconDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective]
 })
 export class SortByParityComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
@@ -2181,14 +2096,7 @@ export class SortByParityComponent extends GridDeclaredColumnsComponent implemen
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        '',
-        '',
-        ColumnDefinitions.idFirstLastNameSortable,
-        '',
-        '',
-        ''),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.idFirstLastNameSortable, '', '', ''),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
@@ -2207,20 +2115,48 @@ export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent i
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        '[sortingOptions]="sortingOptions"',
-        '',
-        ColumnDefinitions.idFirstLastNameSortable,
-        '',
-        '',
-        ''),
-    standalone: true,
+    template: GridTemplateStrings.declareGrid('[sortingOptions]="sortingOptions"', '', ColumnDefinitions.idFirstLastNameSortable, '', '', ''),
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class SortOnInitComponent extends GridDeclaredColumnsComponent implements OnInit {
    public sortingOptions: ISortingOptions = { mode: 'single' };
    public ngOnInit(): void {
         this.grid.sortingExpressions = [{ fieldName: 'Name', dir: SortingDirection.Asc }];
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="600px">
+        <igx-column field="ProductID" header="Product ID" [sortable]="true"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [sortable]="true"
+                    [formatter]="formatProductName" [sortStrategy]="sortStrategy"></igx-column>
+        <igx-column field="QuantityPerUnit" header="Quantity Per Unit" [dataType]="'string'" [sortable]="true"
+                    [formatter]="formatQuantity" [sortStrategy]="sortStrategy"></igx-column>
+        <igx-column field="UnitPrice" header="Unit Price" [dataType]="'number'" [sortable]="true"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" [sortable]="true"></igx-column>
+    </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class IgxGridFormattedValuesSortingComponent extends BasicGridComponent {
+    public override data = SampleTestData.gridProductData();
+    public sortStrategy = new FormattedValuesSortingStrategy();
+
+    public formatProductName = (value: string) => {
+        if (!value) {
+            return 'a';
+        }
+        const prefix = value.length > 10 ? 'a' : 'b';
+        return `${prefix}-${value}`;
+    }
+
+    public formatQuantity = (value: string) => {
+        if (!value) {
+            return 'c';
+        }
+        const prefix = value.length > 10 ? 'c' : 'd';
+        return `${prefix}-${value}`;
     }
 }
 
@@ -2234,7 +2170,6 @@ export class SortOnInitComponent extends GridDeclaredColumnsComponent implements
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class MRLTestComponent {
@@ -2287,7 +2222,6 @@ export class MRLTestComponent {
     </ng-template>
 </igx-grid>
 `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxPaginatorComponent, IgxRowAddTextDirective, NgFor, NgIf]
 })
 export class IgxAddRowComponent implements OnInit {
@@ -2311,7 +2245,6 @@ export class IgxAddRowComponent implements OnInit {
         ];
 
         this.data = [
-            /* eslint-disable max-len */
             { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative' },
             { ID: 'ANATR', CompanyName: 'Ana Trujillo Emparedados y helados', ContactName: 'Ana Trujillo', ContactTitle: 'Owner' },
             { ID: 'ANTON', CompanyName: 'Antonio Moreno Taquería', ContactName: 'Antonio Moreno', ContactTitle: 'Owner' },
@@ -2340,13 +2273,11 @@ export class IgxAddRowComponent implements OnInit {
             { ID: 'FRANR', CompanyName: 'France restauration', ContactName: 'Carine Schmitt', ContactTitle: 'Marketing Manager', Address: '54, rue Royale', City: 'Nantes', Region: null, PostalCode: '44000', Country: 'France', Phone: '40.32.21.21', Fax: '40.32.21.20' },
             { ID: 'FRANS', CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261' }
         ];
-        /* eslint-enable max-len */
     }
 }
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [hideGroupedColumns]="true"`, '', ColumnDefinitions.exportGroupedDataColumns),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridExportGroupedDataComponent extends BasicGridComponent {
@@ -2355,7 +2286,6 @@ export class GridExportGroupedDataComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`[moving]="true" height="1000px"`, '', ColumnDefinitions.multiColHeadersExportColumns),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class MultiColumnHeadersExportComponent extends BasicGridComponent {
@@ -2364,7 +2294,6 @@ export class MultiColumnHeadersExportComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="1000px"`, '', ColumnDefinitions.multiColHeadersExportColumns),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent extends BasicGridComponent {
@@ -2384,7 +2313,6 @@ export class GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent ex
         <igx-column header="Name" field="Name"></igx-column>
         <igx-column header="JobTitle" field="JobTitle"></igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridWithEmptyColumnsComponent {
@@ -2397,7 +2325,6 @@ export class GridWithEmptyColumnsComponent {
     template: `
     <igx-grid #grid1 [data]="" [width]="'100%'" [height]="'700px'">
     </igx-grid>`,
-    standalone: true,
     imports: [IgxGridComponent]
 })
 export class EmptyGridComponent {
@@ -2407,7 +2334,6 @@ export class EmptyGridComponent {
 /** Issue 9872 */
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.generatedWithDataType),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnsAddedOnInitComponent extends BasicGridComponent implements OnInit {
@@ -2431,7 +2357,6 @@ export class ColumnsAddedOnInitComponent extends BasicGridComponent implements O
 
 @Component({
     template: GridTemplateStrings.declareGrid(' [hideGroupedColumns]="true"', '', ColumnDefinitions.generatedGroupableWithEnabledSummariesAndDataType),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class GroupedGridWithSummariesComponent extends BasicGridComponent implements OnInit {
@@ -2452,7 +2377,6 @@ export class GroupedGridWithSummariesComponent extends BasicGridComponent implem
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.generatedWithColumnBasedSummariesAndDataType),
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class GridCurrencySummariesComponent extends BasicGridComponent implements OnInit {
@@ -2473,6 +2397,197 @@ export class GridCurrencySummariesComponent extends BasicGridComponent implement
     }
 }
 
+class CustomSummaryWithNullAndZero {
+    public operate(): IgxSummaryResult[] {
+        const result = [];
+
+        result.push({
+        key: 'total',
+        label: null,
+        summaryResult: 0,
+        });
+
+        result.push({
+        key: 'totalDiscontinued',
+        label: 0,
+        summaryResult: null,
+        });
+        return result;
+    }
+}
+
+class CustomSummaryWithUndefinedZeroAndValidNumber {
+    public operate(): IgxSummaryResult[] {
+        const result = [];
+
+        result.push({
+        key: 'total',
+        label: undefined,
+        summaryResult: 0,
+        });
+
+        result.push({
+        key: 'totalDiscontinued',
+        label: 23,
+        summaryResult: undefined,
+        });
+        return result;
+    }
+}
+
+class CustomSummaryWithUndefinedAndNull {
+    public operate(): IgxSummaryResult[] {
+        const result = [];
+
+        result.push({
+        key: 'total',
+        label: undefined,
+        summaryResult: null,
+        });
+
+        result.push({
+        key: 'totalDiscontinued',
+        label: null,
+        summaryResult: undefined,
+        });
+        return result;
+    }
+}
+
+class DiscontinuedSummary {
+    public operate(data?: any[], allData = [], fieldName = ''): IgxSummaryResult[] {
+        const result = [];
+
+        result.push({
+            key: 'total',
+            label: IgxNumberSummaryOperand.sum(data).toString(),
+            summaryResult: '',
+        });
+
+        result.push({
+            key: 'totalDiscontinued',
+            label: IgxNumberSummaryOperand.sum(
+                allData.filter((rec) => rec['Discontinued']).map((r) => r[fieldName])
+            ).toString(),
+            summaryResult: '',
+        });
+        return result;
+    }
+}
+
+class CustomSummaryWithDate {
+    public operate(): IgxSummaryResult[] {
+        const result = [];
+
+        result.push({
+            key: 'total',
+            label: new Date(2015, 11, 8),
+            summaryResult: null,
+        });
+
+        result.push({
+            key: 'totalDiscontinued',
+            label: null,
+            summaryResult: new Date(2020, 4, 12),
+        });
+        return result;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data">
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+        </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class GridCustomSummaryComponent extends BasicGridComponent implements OnInit {
+    public override data = [];
+    public customSummary = DiscontinuedSummary;
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.gridCustomSummaryData();
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data">
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+        </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class GridCustomSummaryWithNullAndZeroComponent extends BasicGridComponent implements OnInit {
+    public override data = [];
+    public customSummary = CustomSummaryWithNullAndZero;
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.gridCustomSummaryData();
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data">
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+        </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class GridCustomSummaryWithUndefinedZeroAndValidNumberComponent extends BasicGridComponent implements OnInit {
+    public override data = [];
+    public customSummary = CustomSummaryWithUndefinedZeroAndValidNumber;
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.gridCustomSummaryData();
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data">
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+        </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class GridCustomSummaryWithUndefinedAndNullComponent extends BasicGridComponent implements OnInit {
+    public override data = [];
+    public customSummary = CustomSummaryWithUndefinedAndNull;
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.gridCustomSummaryData();
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data">
+            <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitPrice" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [summaries]="customSummary"></igx-column>
+        </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+})
+export class GridCustomSummaryWithDateComponent extends BasicGridComponent implements OnInit {
+    public override data = [];
+    public customSummary = CustomSummaryWithDate;
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.gridCustomSummaryData();
+    }
+}
 export class ObjectCloneStrategy implements IDataCloneStrategy {
     public clone(data: any): any {
         const clonedData = {};
@@ -2496,7 +2611,6 @@ export class ObjectCloneStrategy implements IDataCloneStrategy {
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
     </igx-grid>`,
-    standalone: true,
     imports: [IgxColumnComponent, IgxGridComponent]
 })
 export class IgxGridRowEditingDefinedColumnsComponent extends BasicGridComponent {

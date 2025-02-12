@@ -1,0 +1,10 @@
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+.igx-input-group.igx-input-group--fluent {
+    .igx-select__toggle-button,
+    .igx-select__clear-button {
+        .igx-icon {
+            --size: #{rem(18px)};
+        }
+    }
+}

@@ -1,28 +1,52 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, DestroyRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IGX_ACCORDION_DIRECTIVES, IgxAccordionComponent, IgxButtonDirective, IgxSwitchComponent } from 'igniteui-angular';
-import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
+import { IGX_ACCORDION_DIRECTIVES } from 'igniteui-angular';
+import {
+    IgcAccordionComponent,
+    IgcExpansionPanelComponent,
+    defineComponents
+} from 'igniteui-webcomponents';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig
+} from '../properties-panel/property-change.service';
+
+defineComponents(IgcAccordionComponent, IgcExpansionPanelComponent);
 
 @Component({
     selector: 'app-accordion-sample',
     templateUrl: 'accordion.sample.html',
     styleUrls: ['accordion.sample.scss'],
-    standalone: true,
-    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IGX_ACCORDION_DIRECTIVES]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [FormsModule, IGX_ACCORDION_DIRECTIVES]
 })
 export class AccordionSampleComponent {
-    @ViewChild('accordion', { static: true }) public accordion: IgxAccordionComponent;
-    public animationSettingsCustom = {
-        closeAnimation: slideOutRight,
-        openAnimation: slideInLeft
-    };
-
-    public singleBranchExpand = false;
-
-    public panelExpanding(event) {
-        console.log(event);
+    public panelConfig: PropertyPanelConfig = {
+        singleExpand: {
+            label: 'Single Branch Expand',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
     }
-    public panelExpanded(event) {
-        console.log(event);
+
+    public properties: Properties;
+
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        const { unsubscribe } =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
+
+        this.destroyRef.onDestroy(() => unsubscribe);
     }
 }

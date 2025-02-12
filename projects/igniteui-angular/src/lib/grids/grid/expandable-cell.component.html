@@ -28,7 +28,7 @@
 
     <igx-icon
         family="default"
-        [name]="value ? 'check' : 'close'"
+        [name]="value ? 'confirm' : 'close'"
         *ngIf="column.dataType === 'boolean' && !this.formatter"
         [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }">
     </igx-icon>
@@ -97,6 +97,8 @@
             [(value)]="editValue"
             [igxFocus]="true"
             [formControl]="formControl"
+            [inputFormat]="column.editorOptions?.dateTimeFormat"
+            [displayFormat]="column.pipeArgs.format"
         >
         </igx-date-picker>
     </ng-container>
@@ -106,10 +108,11 @@
             [outlet]="grid.outlet"
             mode="dropdown"
             [locale]="grid.locale"
-            [inputFormat]="column.defaultTimeFormat"
             [(value)]="editValue"
             [igxFocus]="true"
             [formControl]="formControl"
+            [inputFormat]="column.editorOptions?.dateTimeFormat"
+            [displayFormat]="column.pipeArgs.format"
         ></igx-time-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'dateTime'">
@@ -120,7 +123,10 @@
                 [attr.aria-invalid]="isInvalid"
                 [formControl]="formControl"
                 igxInput
-                [igxDateTimeEditor]="column.defaultDateTimeFormat"
+                [locale]="grid.locale"
+                [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat"
+                [defaultFormatType]="column.dataType"
+                [displayFormat]="column.pipeArgs.format"
                 [igxFocus]="true"
             />
         </igx-input-group>
@@ -186,10 +192,10 @@
 </ng-container>
 
 <ng-template #defaultExpandedTemplate>
-        <igx-icon family="default" name="expand"></igx-icon>
+        <igx-icon family="default" name="tree_collapse"></igx-icon>
 </ng-template>
 <ng-template #defaultCollapsedTemplate>
-        <igx-icon family="default" name="chevron_right"></igx-icon>
+        <igx-icon family="default" name="tree_expand"></igx-icon>
 </ng-template>
 
 <ng-template #defaultError>

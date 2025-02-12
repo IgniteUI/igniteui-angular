@@ -13,7 +13,6 @@
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $text-color [null] - The text color of a open time picker.
 /// @param {Color} $hover-text-color [null] - The hover text color of a open time picker.
 /// @param {Color} $selected-text-color [null] -  The text color of a selected item in time picker.
@@ -23,7 +22,6 @@
 /// @param {Color} $disabled-item-background [null] - The background color for disabled values .
 /// @param {Color} $header-background [null] - The header background color of a time picker.
 /// @param {Color} $header-hour-text-color [null] - The header hour text color of a time picker.
-/// @param {Color} $header-time-period-color [null] - The header AM/PM text color of a time picker.
 /// @param {Color} $background-color [null] - The time-picker panel background color.
 /// @param {Number} $time-item-size [null] - The height of the time item.
 /// @param {Color} $divider-color [null] - The color for the actions area divider.
@@ -42,7 +40,6 @@
 ///   @include css-vars($my-time-picker-theme);
 @function time-picker-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $border-radius: null,
     $active-item-border-radius: null,
@@ -56,7 +53,6 @@
     $disabled-item-background: null,
     $header-background: null,
     $header-hour-text-color: null,
-    $header-time-period-color: null,
     $background-color: null,
     $modal-shadow: null,
     $dropdown-shadow: null,
@@ -83,12 +79,6 @@
 
     @if not($header-hour-text-color) and $header-background {
         $header-hour-text-color: text-contrast($header-background);
-    }
-
-    @if not($header-time-period-color) and $header-background {
-        @if meta.type-of($header-background) == 'color' {
-            $header-time-period-color: rgba(text-contrast($header-background), .8);
-        }
     }
 
     @if not($selected-text-color) and $active-item-background {
@@ -135,7 +125,6 @@
         disabled-item-background: $disabled-item-background,
         header-background: $header-background,
         header-hour-text-color: $header-hour-text-color,
-        header-time-period-color: $header-time-period-color,
         background-color: $background-color,
         modal-shadow: $modal-shadow,
         dropdown-shadow: $dropdown-shadow,
@@ -144,6 +133,7 @@
         divider-color: $divider-color,
         time-item-size: $time-item-size,
         active-item-border-radius: $active-item-border-radius,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -160,17 +150,17 @@
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     $picker-buttons-padding: map.get((
-        material: rem(8px),
-        fluent: rem(8px),
-        bootstrap: rem(16px),
-        indigo-design: rem(8px) rem(16px),
+        'material': rem(8px),
+        'fluent': rem(8px),
+        'bootstrap': rem(8px),
+        'indigo': rem(8px) rem(16px),
     ), $variant);
 
     $picker-header-padding: map.get((
-        material: rem(24px) rem(16px),
-        fluent: rem(16px),
-        bootstrap: rem(16px),
-        indigo-design: rem(16px) rem(24px) ,
+        'material': rem(16px) rem(24px),
+        'fluent': rem(16px),
+        'bootstrap': rem(16px),
+        'indigo': rem(16px),
     ), $variant);
 
     %time-picker-display {
@@ -269,7 +259,7 @@
     }
 
     %time-picker__column {
-        width: if($variant == 'indigo-design', rem(54px), rem(64px));
+        width: if($variant == 'indigo', rem(54px), rem(64px));
         padding: 0;
         cursor: pointer;
         display: flex;
@@ -287,7 +277,7 @@
     }
 
     %time-picker__item {
-        width: if($variant == 'indigo-design', rem(46px), rem(54px));
+        width: rem(46px);
         padding: rem(5px) rem(10px);
         border-radius: var-get($theme, 'active-item-border-radius');
         height: var-get($theme, 'time-item-size');
@@ -340,7 +330,7 @@
 
         padding: $picker-header-padding;
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             gap: rem(2px);
         }
 
@@ -349,18 +339,14 @@
 
     %time-picker-display:not(%time-picker-display--vertical) {
         %time-picker__header {
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 border-block-end: rem(1px) solid var-get($theme, 'divider-color');
             }
         }
     }
 
-    %time-picker__header-ampm {
-        color: var-get($theme, 'header-time-period-color');
-    }
-
     %time-picker__header--vertical {
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             min-width: rem(136px);
             border-inline-end: rem(1px) solid var-get($theme, 'divider-color');
         } @else {
@@ -371,16 +357,12 @@
     %time-picker__header-hour {
         display: flex;
         color: var-get($theme, 'header-hour-text-color');
+        margin: 0;
 
         [dir='rtl'] & {
             flex-direction: row-reverse;
             justify-content: flex-end;
         }
-    }
-
-    %time-picker__header-ampm,
-    %time-picker__header-hour {
-        margin: 0;
     }
 
     %time-picker__buttons {
@@ -391,7 +373,7 @@
         padding: $picker-buttons-padding;
         gap: rem(8px);
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             [igxbutton] {
                 min-width: rem(88px);
             }
@@ -413,24 +395,20 @@
     header-hour: 'h4',
     selected-time: 'h5'
 )) {
-    $time-period: map.get($categories, 'header-time-period');
     $header-hour: map.get($categories, 'header-hour');
     $selected-time: map.get($categories, 'selected-time');
-
-
-    %time-picker__header-ampm {
-        @include type-style($time-period, false);
-    }
 
     %time-picker__header-hour {
         @include type-style($header-hour, false) {
             margin-top: 0;
+            margin-bottom: 0;
         }
     }
 
     %time-picker__item--selected {
         @include type-style($selected-time) {
             margin-top: 0;
+            margin-bottom: 0;
         }
     }
 }

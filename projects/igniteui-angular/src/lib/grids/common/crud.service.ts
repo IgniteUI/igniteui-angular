@@ -258,8 +258,10 @@ export class IgxCellCrudState {
         let activeElement;
         if (cellNode) {
             const document = cellNode.getRootNode() as Document | ShadowRoot;
-            activeElement = document.activeElement as HTMLElement;
-            activeElement.blur();
+            if (cellNode.contains(document.activeElement)) {
+                activeElement = document.activeElement as HTMLElement;
+                this.grid.tbody.nativeElement.focus();
+            }
         }
 
         const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);
@@ -682,12 +684,13 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             return;
         }
         this.endEdit(true, event);
-
-        if (parentRow != null && this.grid.expansionStates.get(parentRow.key)) {
-            this.grid.collapseRow(parentRow.key);
+        // work with copy of original row, since context may change on collapse.
+        const parentRowCopy = parentRow ? Object.assign(copyDescriptors(parentRow), parentRow) : null;
+        if (parentRowCopy != null && this.grid.expansionStates.get(parentRowCopy.key)) {
+            this.grid.collapseRow(parentRowCopy.key);
         }
 
-        this.createAddRow(parentRow, asChild);
+        this.createAddRow(parentRowCopy, asChild);
 
         this.grid.transactions.startPending();
         if (this.addRowParent.isPinned) {

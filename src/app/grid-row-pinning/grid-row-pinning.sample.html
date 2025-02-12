@@ -34,8 +34,8 @@
             </ng-template>
             <igx-column width='150px' [filterable]="false">
                 <ng-template igxCell let-cell="cell" let-val>
-                    <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)" family="imx-icons"
-                        name="{{cell.row.pinned ? 'unpin-left' : 'pin-left'}}">
+                    <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)" family="default"
+                        name="{{cell.row.pinned ? 'unpin' : 'pin'}}">
                     </igx-icon>
                 </ng-template>
             </igx-column>

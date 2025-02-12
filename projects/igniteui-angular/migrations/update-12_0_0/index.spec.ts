@@ -1,34 +1,19 @@
 import * as path from 'path';
 
-import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { setupTestTree } from '../common/setup.spec';
 
 const version = '12.0.0';
 
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
-    const configJson = {
-        projects: {
-            testProj: {
-                root: '/',
-                sourceRoot: '/testSrc'
-            }
-        },
-        schematics: {
-            '@schematics/angular:component': {
-                prefix: 'appPrefix'
-            }
-        }
-    };
-
     const migrationName = 'migration-20';
     // eslint-disable-next-line max-len
     const noteText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->`;
 
     beforeEach(() => {
-        appTree = new UnitTestTree(new EmptyTree());
-        appTree.create('/angular.json', JSON.stringify(configJson));
+        appTree = setupTestTree();
     });
 
     it('should update avatar theme args', async () => {
@@ -1422,14 +1407,10 @@ igx-bottom-nav-header {
     });
 
     it('should rename InteractionMode to PickerInteractionMode', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
-            `import { Component, ViewChild } from '@angular/core';
-import { InteractionMode, IgxIconComponent } from 'igniteui-angular';
+            `import { Component } from '@angular/core';
 import { InteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, InteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, InteractionMode, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'pickers-mode',
@@ -1444,11 +1425,8 @@ export class PickerModeComponent {
         const tree = await schematicRunner
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        const expectedContent = `import { Component, ViewChild } from '@angular/core';
-import { PickerInteractionMode, IgxIconComponent } from 'igniteui-angular';
+        const expectedContent = `import { Component } from '@angular/core';
 import { PickerInteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, PickerInteractionMode } from 'igniteui-angular';
-import { IgxIconComponent, PickerInteractionMode, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'pickers-mode',
@@ -1535,7 +1513,6 @@ export class HGridMultiRowDragComponent {
     });
 
     it('Should update toast output subscriptions', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/toast.component.ts', `
 import { IgxToastComponent } from 'igniteui-angular';
@@ -1553,7 +1530,7 @@ export class SimpleComponent {
         this.toast.hide();
     }
 }`);
-        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: true }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/toast.component.ts'))
             .toEqual(`

@@ -14,7 +14,6 @@
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {box-shadow} $shadow [null] - The shadow to be applied for the button group.
 /// @param {Color} $item-text-color [null]- The text color for button group items.
@@ -69,7 +68,6 @@
 ///   @include css-vars($my-button-group-theme);
 @function button-group-theme(
     $schema: $light-material-schema,
-    $elevations: null,
     $shadow: null,
 
     $item-text-color: null,
@@ -208,6 +206,7 @@
         shadow: $shadow,
         idle-shadow-color: $idle-shadow-color,
         selected-shadow-color: $selected-shadow-color,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -226,12 +225,12 @@
 
     $variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
-    $indigo-theme: $variant == 'indigo-design';
+    $indigo-theme: $variant == 'indigo';
     $group-item-min-width: map.get((
-        material: rem(42px),
-        fluent: rem(42px),
-        bootstrap: rem(42px),
-        indigo-design: rem(32px),
+        'material': rem(42px),
+        'fluent': rem(42px),
+        'bootstrap': rem(42px),
+        'indigo': rem(32px),
     ), $variant);
 
     %item-overlay {
@@ -316,7 +315,7 @@
             color: var-get($theme, 'item-hover-text-color');
             background: var-get($theme, 'item-hover-background');
             border-color: var-get($theme, 'item-hover-border-color');
-        
+
             igx-icon {
                 color: var-get($theme, 'item-hover-icon-color');
             }
@@ -369,7 +368,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
 
             igx-icon {
@@ -481,9 +480,9 @@
                 }
             }
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 color: var-get($theme, 'item-focused-text-color');
-                background: var-get($theme, 'item-focused-background'); 
+                background: var-get($theme, 'item-focused-background');
                 border-color: var-get($theme, 'item-focused-border-color');
                 z-index: 2;
 
@@ -618,7 +617,7 @@
             }
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             &:active {
                 background: var-get($theme, 'item-selected-hover-background');
                 color: var-get($theme, 'item-selected-hover-text-color');
@@ -720,7 +719,7 @@
                 }
             }
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'selected-shadow-color');
                 border-color: var-get($theme, 'item-selected-border-color');
                 background: var-get($theme, 'item-selected-background');
@@ -754,7 +753,7 @@
                 background: var-get($theme, 'disabled-selected-background');
             }
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 color: var-get($theme, 'disabled-selected-text-color');
                 background: var-get($theme, 'disabled-selected-background');
                 border: none;

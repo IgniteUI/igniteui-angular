@@ -9,6 +9,7 @@ import { IgxActionStripComponent } from '../../action-strip/public_api';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { first } from 'rxjs/operators';
 import { IRowDataCancelableEventArgs } from '../public_api';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     configureTestSuite();
@@ -47,8 +48,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
             expect(editActions.length).toBe(4);
 
-            expect(editActions[1].componentInstance.iconName).toBe('add-row');
-            expect(editActions[2].componentInstance.iconName).toBe('add-child');
+            expect(editActions[1].componentInstance.iconName).toBe('add_row');
+            expect(editActions[2].componentInstance.iconName).toBe('add_child');
         });
 
         it('should show action strip "add child" button for all rows.', () => {
@@ -57,7 +58,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
             expect(editActions.length).toBe(3);
-            expect(editActions[1].componentInstance.iconName).toBe('add-child');
+            expect(editActions[1].componentInstance.iconName).toBe('add_child');
         });
 
         it('should allow adding child to row via the UI.', () => {
@@ -68,7 +69,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             expect(treeGrid.rowList.length).toBe(8);
 
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
-            expect(editActions[1].componentInstance.iconName).toBe('add-child');
+            expect(editActions[1].componentInstance.iconName).toBe('add_child');
             const addChildBtn = editActions[1].componentInstance;
             addChildBtn.actionClick.emit();
             fix.detectChanges();
@@ -147,7 +148,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
 
-            expect(editActions[3].componentInstance.iconName).toBe('add-row');
+            expect(editActions[3].componentInstance.iconName).toBe('add_row');
             const addRowBtn = editActions[3].componentInstance;
             addRowBtn.actionClick.emit();
             fix.detectChanges();
@@ -181,7 +182,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
 
-            expect(editActions[3].componentInstance.iconName).toBe('add-row');
+            expect(editActions[3].componentInstance.iconName).toBe('add_row');
             const addRowBtn = editActions[3].componentInstance;
             addRowBtn.actionClick.emit();
             fix.detectChanges();
@@ -215,6 +216,48 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             expect(treeGrid.rowList.length).toBe(9);
             const addedRow = treeGrid.getRowByKey(newRowId);
             expect(addedRow.data[treeGrid.foreignKey]).toBe(2);
+        });
+
+        it('should collapse row when child row adding begins and it added row should go under correct parent.', async() => {
+            treeGrid.data = [
+                { ID: 1, ParentID: -1, Name: 'Casey Houston', JobTitle: 'Vice President', Age: 32 },
+                { ID: 2, ParentID: 10, Name: 'Gilberto Todd', JobTitle: 'Director', Age: 41 },
+                { ID: 3, ParentID: 10, Name: 'Tanya Bennett', JobTitle: 'Director', Age: 29 },
+                { ID: 4, ParentID: 6, Name: 'Jack Simon', JobTitle: 'Software Developer', Age: 33 },
+                { ID: 6, ParentID: -1, Name: 'Erma Walsh', JobTitle: 'CEO', Age: 52 },
+                { ID: 7, ParentID: 10, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', Age: 35 },
+                { ID: 9, ParentID: 10, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Age: 44 },
+                { ID: 10, ParentID: -1, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Age: 53 }
+            ];
+            fix.detectChanges();
+            treeGrid.collapseAll();
+            treeGrid.height = "350px";
+            fix.detectChanges();
+            const parentRow1 = treeGrid.rowList.toArray()[1] as IgxTreeGridRowComponent;
+            treeGrid.expandRow(parentRow1.key);
+            const parentRow2 = treeGrid.rowList.toArray()[3] as IgxTreeGridRowComponent;
+            treeGrid.expandRow(parentRow2.key);
+            treeGrid.triggerPipes();
+            fix.detectChanges();
+
+            // scroll bottom
+            treeGrid.verticalScrollContainer.scrollTo(treeGrid.dataView.length - 1);
+            await wait(50);
+            fix.detectChanges();
+            // start add row
+            parentRow2.beginAddChild();
+            fix.detectChanges();
+            // last row should be add row
+            const addRow = treeGrid.gridAPI.get_row_by_index(4);
+            expect(addRow.addRowUI).toBeTrue();
+            endTransition();
+
+            // end edit
+            treeGrid.gridAPI.crudService.endEdit(true);
+            fix.detectChanges();
+
+            // row should be added under correct parent
+            expect(treeGrid.data[treeGrid.data.length - 1].ParentID).toBe(10);
         });
     });
 });

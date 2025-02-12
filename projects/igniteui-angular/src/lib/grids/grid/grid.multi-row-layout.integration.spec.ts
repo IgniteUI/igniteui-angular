@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { ViewChild, Component } from '@angular/core';
+import { ViewChild, Component, DebugElement } from '@angular/core';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -30,6 +30,7 @@ interface ColGroupsType {
 describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let fixture: ComponentFixture<FixtureType>;
     let grid: IgxGridComponent;
+    const COLUMN_HEADER_CLASS = '.igx-grid-th';
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -900,6 +901,30 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeLessThanOrEqual(0);
         });
+
+        it('should create only one ghost element when dragging a column', async () => {
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            
+            const header = headers[1].nativeElement;
+            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
+            await wait();
+            fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
+            await wait(50);
+            fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointermove', header, 230, 30);
+            await wait();
+            fixture.detectChanges();
+
+            const ghost = fixture.debugElement.queryAll(By.css('.igx-grid__drag-ghost-image'));
+            expect(ghost.length).toEqual(1);
+
+            UIInteractions.simulatePointerEvent('pointerup', header, 230, 30);
+            await wait();
+            fixture.detectChanges();
+        });
     });
 
     describe('Resizing', () => {
@@ -1213,7 +1238,6 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent, NgIf, NgFor]
 })
 export class ColumnLayouHidingTestComponent {
@@ -1262,7 +1286,6 @@ export class ColumnLayouHidingTestComponent {
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent, NgFor, NgIf]
 })
 export class ColumnLayoutPinningTestComponent {
@@ -1306,7 +1329,6 @@ export class ColumnLayoutPinningTestComponent {
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestComponent {
@@ -1322,7 +1344,6 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestComponent {
@@ -1339,6 +1360,19 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
         { field: 'Country', rowStart: 2, colStart: 2, groupable: true },
         { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
     ];
+
+    public override colGroups: ColGroupsType[] = [
+        {
+            group: 'group1',
+            pinned: true,
+            columns: this.cols2
+        },
+        {
+            group: 'group2',
+            pinned: false,
+            columns: this.cols1
+        }
+    ];
 }
 @Component({
     template: `
@@ -1350,7 +1384,6 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
         </igx-column-layout>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutResizingTestComponent {

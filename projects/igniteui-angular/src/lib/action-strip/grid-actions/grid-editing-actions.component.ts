@@ -5,11 +5,20 @@ import { addRow, addChild } from '@igniteui/material-icons-extended';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { NgIf } from '@angular/common';
 
+
+/* blazorElement */
+/* wcElementTag: igc-grid-editing-actions */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
+/**
+ * Grid Editing Actions for the Action Strip
+ *
+ * @igxParent IgxActionStripComponent
+ */
 @Component({
     selector: 'igx-grid-editing-actions',
     templateUrl: 'grid-editing-actions.component.html',
     providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridEditingActionsComponent }],
-    standalone: true,
     imports: [NgIf, IgxGridActionButtonComponent]
 })
 
@@ -168,7 +177,5 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     private registerIcons() {
         this.iconService.addSvgIconFromText(addRow.name, addRow.value, 'imx-icons', true,);
         this.iconService.addSvgIconFromText(addChild.name, addChild.value, 'imx-icons', true);
-        this.iconService.addIconRef(addRow.name, 'default', { name: addRow.name, family: 'imx-icons' });
-        this.iconService.addIconRef(addChild.name, 'default', { name: addChild.name, family: 'imx-icons' });
     }
 }

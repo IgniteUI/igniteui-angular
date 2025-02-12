@@ -7,6 +7,11 @@ import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { NgIf, AsyncPipe } from '@angular/common';
 
+/* blazorElement */
+/* wcElementTag: igc-grid-toolbar-pinning */
+/* singleInstanceIdentifier */
+/* blazorIndirectRender */
+/* jsonAPIManageItemInMarkup */
 /**
  * Provides a pre-configured column pinning component for the grid.
  *
@@ -22,7 +27,6 @@ import { NgIf, AsyncPipe } from '@angular/common';
 @Component({
     selector: 'igx-grid-toolbar-pinning',
     templateUrl: './grid-toolbar-pinning.component.html',
-    standalone: true,
     imports: [NgIf, IgxButtonDirective, IgxIconComponent, IgxColumnActionsComponent, IgxColumnPinningDirective, IgxToggleDirective, AsyncPipe]
 })
 export class IgxGridToolbarPinningComponent extends BaseToolbarColumnActionsDirective {

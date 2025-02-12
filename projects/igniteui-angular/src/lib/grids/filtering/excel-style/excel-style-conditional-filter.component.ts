@@ -24,7 +24,6 @@ import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
 @Component({
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html',
-    standalone: true,
     imports: [NgIf, NgClass, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
@@ -41,7 +40,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     public subMenu: IgxDropDownComponent;
 
     protected get filterNumber() {
-        return this.esf.expressionsList.length;
+        return this.esf.expressionsList.filter(e => e.expression.condition).length;
     }
 
     private shouldOpenSubMenu = true;
@@ -146,6 +145,8 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         if (this.esf.expressionsList && this.esf.expressionsList.length &&
             this.esf.expressionsList[0].expression.condition.name !== 'in') {
             this.customDialog.expressionsList = this.esf.expressionsList;
+        } else {
+            this.customDialog.expressionsList = this.customDialog.expressionsList.filter(e => e.expression.fieldName === this.esf.column.field && e.expression.condition);
         }
 
         this.customDialog.selectedOperator = eventArgs.newSelection.value;

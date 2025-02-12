@@ -24,12 +24,10 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { IgxToggleActionDirective } from '../directives/toggle/toggle.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../directives/button/button.directive';
 import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxActionStripToken } from './token';
-import { IgxIconService } from '../icon/icon.service';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
@@ -39,6 +37,15 @@ export class IgxActionStripMenuItemDirective {
     constructor(public templateRef: TemplateRef<any>) {}
 }
 
+/* blazorElement */
+/* jsonAPIManageItemInMarkup */
+/* jsonAPIManageCollectionInMarkup */
+/* wcElementTag: igc-action-strip */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
+/* contentParent: GridBaseDirective */
+/* contentParent: RowIsland */
+/* contentParent: HierarchicalGrid */
 /**
  * Action Strip provides templatable area for one or more actions.
  *
@@ -49,6 +56,8 @@ export class IgxActionStripMenuItemDirective {
  * @igxKeywords action, strip, actionStrip, pinning, editing
  *
  * @igxGroup Data Entry & Display
+ *
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, *
  *
  * @remarks
  * The Ignite UI Action Strip is a container, overlaying its parent container,
@@ -63,12 +72,10 @@ export class IgxActionStripMenuItemDirective {
 @Component({
     selector: 'igx-action-strip',
     templateUrl: 'action-strip.component.html',
-    standalone: true,
     imports: [
         NgIf,
         NgFor,
         NgTemplateOutlet,
-        IgxButtonDirective,
         IgxIconButtonDirective,
         IgxRippleDirective,
         IgxToggleActionDirective,
@@ -80,6 +87,8 @@ export class IgxActionStripMenuItemDirective {
     providers: [{ provide: IgxActionStripToken, useExisting: IgxActionStripComponent }]
 })
 export class IgxActionStripComponent implements IgxActionStripToken, AfterContentInit, AfterViewInit {
+
+    /* blazorSuppress */
     /**
      * Sets the context of an action strip.
      * The context should be an instance of a @Component, that has element property.
@@ -92,6 +101,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
      */
     @Input()
     public context: any;
+
     /**
      * Menu Items ContentChildren inside the Action Strip
      *
@@ -102,6 +112,10 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
     public _menuItems: QueryList<IgxActionStripMenuItemDirective>;
 
 
+    /* blazorInclude */
+    /* contentChildren */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: GridActionsBaseDirectiveCollection */
     /**
      * ActionButton as ContentChildren inside the Action Strip
      *
@@ -176,6 +190,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
 
     private _hidden = false;
     private _resourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
+    private _originalParent!: HTMLElement;
 
     constructor(
         private _viewContainer: ViewContainerRef,
@@ -183,13 +198,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
         protected el: ElementRef,
         /** @hidden @internal **/
         public cdr: ChangeDetectorRef,
-        protected _iconService: IgxIconService,
-    ) {
-        this._iconService.addIconRef('more_vert', 'default', {
-            name: 'more_vert',
-            family: 'material',
-        });
-    }
+    ) { }
 
     /**
      * Menu Items list.
@@ -258,6 +267,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
                 button.actionClick.emit();
             }
         });
+        this._originalParent = this._viewContainer.element.nativeElement?.parentElement;
     }
 
     /**
@@ -296,7 +306,10 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
     public hide(): void {
         this.hidden = true;
         this.closeMenu();
-        if (this.context && this.context.element) {
+        if (this._originalParent) {
+            // D.P. fix(elements) don't detach native DOM, instead move back. Might not matter for Angular, but Elements will destroy
+            this.renderer.appendChild(this._originalParent, this._viewContainer.element.nativeElement);
+        } else if (this.context && this.context.element) {
             this.renderer.removeChild(this.context.element.nativeElement, this._viewContainer.element.nativeElement);
         }
     }
@@ -313,4 +326,3 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
         }
     }
 }
-

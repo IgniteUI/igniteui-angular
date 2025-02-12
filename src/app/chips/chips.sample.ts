@@ -1,248 +1,161 @@
-import { Component, ViewChild, ChangeDetectorRef, ElementRef } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import {
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    DestroyRef,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-    IBaseChipEventArgs,
-    IChipsAreaReorderEventArgs,
-    IChipsAreaSelectEventArgs,
     IgxAvatarComponent,
-    IgxButtonGroupComponent,
     IgxChipComponent,
-    IgxChipsAreaComponent,
-    IgxDropDirective,
     IgxIconComponent,
     IgxPrefixDirective,
-    IgxSelectComponent,
-    IgxSelectItemComponent,
     IgxSuffixDirective,
     IgxSwitchComponent,
     IgxCircularProgressBarComponent,
-    ButtonGroupAlignment
+    IgSizeDirective,
 } from 'igniteui-angular';
-import { SizeSelectorComponent } from '../size-selector/size-selector.component';
+import {
+    defineComponents,
+    IgcChipComponent,
+    IgcAvatarComponent,
+    IgcIconComponent,
+    IgcCircularProgressComponent,
+    registerIconFromText,
+} from 'igniteui-webcomponents';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from '../properties-panel/property-change.service';
+
+defineComponents(
+    IgcChipComponent,
+    IgcAvatarComponent,
+    IgcIconComponent,
+    IgcCircularProgressComponent
+);
+
+const icons = [
+    {
+        name: 'face',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/></svg>'
+    },
+    {
+        name: 'check_circle',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'
+    },
+    {
+        name: 'delete',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>'
+    },
+];
+
+icons.forEach((icon) => {
+    registerIconFromText(icon.name, icon.url);
+});
 
 @Component({
     selector: 'app-chips-sample',
     styleUrls: ['chips.sample.scss', '../app.component.scss'],
     templateUrl: 'chips.sample.html',
-    standalone: true,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [
-        IgxButtonGroupComponent,
         IgxChipComponent,
         IgxCircularProgressBarComponent,
         IgxIconComponent,
         IgxPrefixDirective,
-        IgxSelectComponent,
-        IgxSelectItemComponent,
         IgxSuffixDirective,
         IgxSwitchComponent,
-        IgxChipsAreaComponent,
-        NgFor,
-        NgIf,
         FormsModule,
         IgxAvatarComponent,
-        IgxDropDirective,
-        SizeSelectorComponent
+        IgSizeDirective
     ]
 })
-export class ChipsSampleComponent {
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
-    private chipsArea: IgxChipsAreaComponent;
+export class ChipsSampleComponent implements OnInit {
+    @ViewChild('customControls', { static: true })
+    public customControlsTemplate!: TemplateRef<any>;
 
-    @ViewChild('chipsAreaTo', { read: IgxChipsAreaComponent, static: true })
-    private chipsAreaTo: IgxChipsAreaComponent;
-
-    @ViewChild('chipsAreaCc', { read: IgxChipsAreaComponent, static: true })
-    private chipsAreaCc: IgxChipsAreaComponent;
-
-    @ViewChild('dropTo', { read: ElementRef, static: true })
-    private dropTo: ElementRef;
-
-    @ViewChild('dropCc', { read: ElementRef, static: true })
-    private dropCc: ElementRef;
-
-    public chipList = [
-        {
-            id: 'Country', text: 'Country',
-            disabled: false, icon: 'location_on'
+    public panelConfig: PropertyPanelConfig = {
+        variant: {
+            control: {
+                type: 'select',
+                options: [
+                    'default',
+                    'primary',
+                    'info',
+                    'success',
+                    'warning',
+                    'danger'
+                ]
+            }
         },
-        {
-            id: 'City', text: 'City',
-            disabled: true, icon: 'location_city'
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large'],
+                defaultValue: 'large'
+            }
         },
-        {
-            id: 'Town', text: 'Town',
-            disabled: false, icon: 'store_mall_directory'
+        disabled: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
         },
-        {
-            id: 'FirstName', text: 'First Name',
-            disabled: false, icon: 'person_pin'
+        selectable: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
         },
-    ];
-
-    public chipTypes = ['default', 'primary', 'info', 'success', 'warning', 'danger'];
-
-    public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
-
-    public chipListTo = [
-        {
-            id: '1',
-            text: 'Allen',
-            picture: '../../assets/images/avatar/1.jpg'
+        selected: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
         },
-        {
-            id: '2',
-            text: 'George',
-            picture: '../../assets/images/avatar/2.jpg'
+        removable: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
         },
-        {
-            id: '3',
-            text: 'Jessica',
-            picture: '../../assets/images/avatar/3.jpg'
-        },
-        {
-            id: '4',
-            text: 'Dana',
-            picture: '../../assets/images/avatar/4.jpg'
-        },
-    ];
+    };
 
-    public chipListCc = [];
+    public properties: Properties;
 
-    public draggingElem = false;
-    public dragEnteredArea = false;
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-    public isDisabled = false;
+        const { unsubscribe } =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
 
-    public isRemovable = false;
+        this.destroyRef.onDestroy(() => unsubscribe);
+    }
 
-    public isSelectable = false;
+    public ngOnInit() {
+        this.propertyChangeService.setCustomControls(
+            this.customControlsTemplate
+        );
+    }
 
     public hasSuffix = false;
-
     public hasPrefix = false;
-
     public hasAvatar = false;
-
     public hasProgressbar = false;
-
     public customIcons = false;
-
-    public isDraggable = false;
-
-    public selected: string;
-
-    public isSelected = false;
-
-    public size: string = 'large';
-
-    constructor(public cdr: ChangeDetectorRef) { }
-
-    public chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
-        const newChipList = [];
-        for (const chip of event.chipsArray) {
-            const chipItem = this.chipList.filter((item) => item.id === chip.id)[0];
-            newChipList.push(chipItem);
-        }
-        this.chipList = newChipList;
-        this.cdr.detectChanges();
-    }
-
-    public chipMovingEnded() {
-    }
-
-    public chipRemoved(event: IBaseChipEventArgs) {
-        this.chipList = this.chipList.filter((item) => item.id !== event.owner.id);
-        this.cdr.detectChanges();
-    }
 
     public removeChip(chip: IgxChipComponent) {
         chip.nativeElement.remove();
-    }
-
-    public onChipsSelected(event: IChipsAreaSelectEventArgs) {
-        console.log(event);
-    }
-
-    /**
-     * Chip Sample 2
-     */
-
-    public chipsOrderChangedTo(event) {
-        const newChipListTo = [];
-        for (const chip of event.chipsArray) {
-            const chipItem = this.chipListTo.filter((item) => item.id === chip.id)[0];
-            newChipListTo.push(chipItem);
-        }
-        this.chipListTo = newChipListTo;
-        this.cdr.detectChanges();
-    }
-
-    public chipsOrderChangedCc(event) {
-        const newChipListCc = [];
-        for (const chip of event.chipsArray) {
-            const chipItem = this.chipListCc.filter((item) => item.id === chip.id)[0];
-            newChipListCc.push(chipItem);
-        }
-        this.chipListCc = newChipListCc;
-        this.cdr.detectChanges();
-    }
-
-    public onDragEnterCc() {
-        this.dragEnteredArea = true;
-    }
-
-    public onDragLeaveCc() {
-        this.dragEnteredArea = false;
-    }
-
-    public onDropCc(event) {
-        event.cancel = true;
-
-        const chipSwapEl = this.chipListTo.find(val => val.id === event.drag.data.chip.id);
-        this.chipListCc.push(chipSwapEl);
-
-        this.chipsAreaCc.cdr.detectChanges();
-
-        this.chipListTo = this.chipListTo.filter(item => item.text !== chipSwapEl.text);
-
-        this.chipsAreaTo.cdr.detectChanges();
-        this.dropCc.nativeElement.style.visibility = 'hidden';
-    }
-
-    public onDropTo(event) {
-        event.cancel = true;
-
-        const chipSwapEl = this.chipListCc.find(val => val.id === event.drag.data.chip.id);
-        this.chipListTo.push(chipSwapEl);
-
-        this.chipsAreaTo.cdr.detectChanges();
-
-        this.chipListCc = this.chipListCc.filter(item => item.text !== chipSwapEl.text);
-
-        this.chipsAreaCc.cdr.detectChanges();
-        this.dropTo.nativeElement.style.visibility = 'hidden';
-    }
-
-    public onMoveStartTo() {
-        this.dropCc.nativeElement.style.visibility = 'visible';
-        this.dropCc.nativeElement.textContent = 'You can drop me here!';
-        this.dropTo.nativeElement.style.visibility = 'hidden';
-    }
-
-    public onMoveStartCc() {
-        this.dropTo.nativeElement.style.visibility = 'visible';
-        this.dropTo.nativeElement.textContent = 'You can drop me here!';
-        this.dropCc.nativeElement.style.visibility = 'hidden';
-    }
-
-    public moveEndedTo() {
-        this.dropTo.nativeElement.style.visibility = 'hidden';
-        this.dropCc.nativeElement.style.visibility = 'hidden';
-    }
-
-    public moveEndedCc() {
-        this.dropTo.nativeElement.style.visibility = 'hidden';
-        this.dropCc.nativeElement.style.visibility = 'hidden';
     }
 }

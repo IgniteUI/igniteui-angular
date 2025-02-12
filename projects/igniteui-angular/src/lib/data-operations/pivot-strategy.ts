@@ -7,10 +7,11 @@ import { cloneArray } from '../core/utils';
 import { IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { IDataCloneStrategy } from './data-clone-strategy';
 
+/* csSuppress */
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
     private static _instance: NoopPivotDimensionsStrategy = null;
 
-    public static instance() {
+    public static instance(): NoopPivotDimensionsStrategy {
         return this._instance || (this._instance = new NoopPivotDimensionsStrategy());
     }
 
@@ -32,7 +33,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         rows: IPivotDimension[],
         values: IPivotValue[],
         cloneStrategy: IDataCloneStrategy,
-        pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS,
+        pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
     ): IPivotGridRecord[] {
         let hierarchies;
         let data: IPivotGridRecord[];

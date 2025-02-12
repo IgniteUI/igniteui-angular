@@ -36,7 +36,7 @@ import {
     Validator
 } from '@angular/forms';
 import {
-    IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective,
+    IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective,
      IFormattingViews, IFormattingOptions
 } from '../calendar/public_api';
 import { isDateInRanges } from '../calendar/common/helpers';
@@ -69,7 +69,6 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
-import { IgxIconService } from '../icon/icon.service';
 
 let NEXT_ID = 0;
 
@@ -93,7 +92,6 @@ let NEXT_ID = 0;
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
     styles: [':host { display: block; }'],
-    standalone: true,
     imports: [
         NgIf,
         IgxInputGroupComponent,
@@ -412,6 +410,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
 
+    @ContentChild(IgxCalendarHeaderTitleTemplateDirective)
+    private headerTitleTemplate: IgxCalendarHeaderTitleTemplateDirective;
+
     @ContentChild(IgxCalendarHeaderTemplateDirective)
     private headerTemplate: IgxCalendarHeaderTemplateDirective;
 
@@ -468,6 +469,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _ngControl: NgControl = null;
     private _statusChanges$: Subscription;
     private _calendar: IgxCalendarComponent;
+    private _calendarContainer?: HTMLElement;
     private _specialDates: DateRangeDescriptor[] = null;
     private _disabledDates: DateRangeDescriptor[] = null;
     private _overlaySubFilter:
@@ -514,20 +516,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         private _renderer: Renderer2,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType,
-        @Optional() @Inject(IgxIconService) iconService?: IgxIconService) {
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
-
-        iconService?.addIconRef('clear', 'default', {
-            name: 'clear',
-            family: 'material',
-        });
-
-        iconService?.addIconRef('today', 'default', {
-            name: 'calendar_today',
-            family: 'material',
-        });
     }
 
     /** @hidden @internal */
@@ -544,6 +535,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public get pickerResourceStrings(): IDatePickerResourceStrings {
         return Object.assign({}, this._resourceStrings, this.resourceStrings);
+    }
+
+    protected override get toggleContainer(): HTMLElement | undefined {
+        return this._calendarContainer;
     }
 
     /** @hidden @internal */
@@ -909,17 +904,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             }
 
             this._initializeCalendarContainer(e.componentRef.instance);
+            this._calendarContainer = e.componentRef.location.nativeElement;
             this._collapsed = false;
         });
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.opened.emit({ owner: this });
 
-            // INFO: Commented out during the calendar refactoring as I couldn't
-            // determine why this is needed.
-            // if (this._calendar?.daysView?.selectedDates) {
-            //     return;
-            // }
+            this._calendar.wrapper?.nativeElement?.focus();
 
             if (this._targetViewDate) {
                 this._targetViewDate.setHours(0, 0, 0, 0);
@@ -937,7 +929,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                 return;
             }
             // do not focus the input if clicking outside in dropdown mode
-            if (this.getEditElement() && !(args.event && this.isDropdown)) {
+            const outsideEvent = args.event && (args.event as KeyboardEvent).key !== this.platform.KEYMAP.ESCAPE;
+            if (this.getEditElement() && !(outsideEvent && this.isDropdown)) {
                 this.inputDirective.focus();
             } else {
                 this._onTouchedCallback();
@@ -950,6 +943,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._overlayService.detach(this._overlayId);
             this._collapsed = true;
             this._overlayId = null;
+            this._calendar = null;
+            this._calendarContainer = undefined;
         });
     }
 
@@ -979,6 +974,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._calendar.locale = this.locale;
         this._calendar.weekStart = this.weekStart;
         this._calendar.specialDates = this.specialDates;
+        this._calendar.headerTitleTemplate = this.headerTitleTemplate;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
         this._calendar.headerOrientation = this.headerOrientation;

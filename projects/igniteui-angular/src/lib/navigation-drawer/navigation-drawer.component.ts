@@ -57,7 +57,6 @@ let NEXT_ID = 0;
             height: 100%;
         }
     `],
-    standalone: true,
     imports: [IgxNavDrawerItemDirective, NgTemplateOutlet]
 })
 export class IgxNavigationDrawerComponent implements
@@ -281,7 +280,6 @@ export class IgxNavigationDrawerComponent implements
     }
     public set isOpen(value) {
         this._isOpen = value;
-        console.log(value);
         this.isOpenChange.emit(this._isOpen);
     }
 

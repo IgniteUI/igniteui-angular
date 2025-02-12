@@ -49,19 +49,25 @@ import {
     IgxSummaryTemplateDirective,
     IgxCellValidationErrorDirective
 } from './templates.directive';
-import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
+import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs, IColumnEditorOptions } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
 import { Size } from '../common/enums';
+import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
 const DEFAULT_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_DIGITS_INFO = '1.0-3';
 
+/* blazorElement */
+/* contentParent: ColumnGroup */
+/* wcElementTag: igc-column */
+/* additionalIdentifier: Field */
+/* blazorIndirectRender */
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid#columns-configuration)
@@ -69,6 +75,8 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
  * The Ignite UI Column is used within an `igx-grid` element to define what data the column will show. Features such as sorting,
  * filtering & editing are enabled at the column level.  You can also provide a template containing custom content inside
  * the column using `ng-template` which will be used for all cells within the column.
+ *
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, IgxRowIslandComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -591,6 +599,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public headerGroupStyles = null;
 
+    /* treatAsRef */
     /**
      * Sets a conditional class selector of the column cells.
      * Accepts an object literal, containing key-value pairs,
@@ -613,6 +622,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public cellClasses: any;
 
+    /* treatAsRef */
     /**
      * Sets conditional style properties on the column cells.
      * Similar to `ngStyle` it accepts an object literal where the keys are
@@ -634,10 +644,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @WatchColumnChanges()
     @Input()
     public cellStyles = null;
+
+    /* blazorAlternateType: CellValueFormatterEventHandler */
+    /* blazorOnlyScript */
     /**
      * Applies display format to cell values in the column. Does not modify the underlying data.
      *
-     * @remark
+     * @remarks
      * Note: As the formatter is used in places like the Excel style filtering dialog, in certain
      * scenarios (remote filtering for example), the row data argument can be `undefined`.
      *
@@ -672,6 +685,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public formatter: (value: any, rowData?: any) => any;
 
+    /* blazorAlternateType: SummaryValueFormatterEventHandler */
+    /* blazorOnlyScript */
+    /* forceCastDelegate */
     /**
      * The summaryFormatter is used to format the display of the column summaries.
      *
@@ -1025,6 +1041,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
     }
 
+    /* treatAsRef */
     /**
      * Gets the column `summaries`.
      * ```typescript
@@ -1039,6 +1056,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get summaries(): any {
         return this._summaries;
     }
+
+    /* treatAsRef */
     /**
      * Sets the column `summaries`.
      * ```typescript
@@ -1058,6 +1077,33 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             this.grid.summaryService.resetSummaryHeight();
         }
     }
+
+    /**
+     * Sets/gets the summary operands to exclude from display.
+     * Accepts an array of string keys representing the summary types to disable, such as 'Min', 'Max', 'Count' etc.
+     * ```typescript
+     * let disabledSummaries = this.column.disabledSummaries;
+     * ```
+     * ```html
+     * <igx-column [disabledSummaries]="['min', 'max', 'average']"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public get disabledSummaries(): string[] {
+        return this._disabledSummaries;
+    }
+
+    public set disabledSummaries(value: string[]) {
+        this._disabledSummaries = value;
+        if (this.grid) {
+            this.grid.summaryService.removeSummariesCachePerColumn(this.field);
+            this.grid.summaryPipeTrigger++;
+            this.grid.summaryService.resetSummaryHeight();
+        }
+    }
+
     /**
      * Gets the column `filters`.
      * ```typescript
@@ -1105,6 +1151,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
     }
+
+    /* blazorSuppress */
     /**
      * Gets the function that compares values for grouping.
      * ```typescript
@@ -1117,6 +1165,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get groupingComparer(): (a: any, b: any, currRec?: any, groupRec?: any) => number {
         return this._groupingComparer;
     }
+
+    /* blazorSuppress */
     /**
      * Sets a custom function to compare values for grouping.
      * Subsequent values in the sorted data that the function returns 0 for are grouped.
@@ -1130,12 +1180,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this._groupingComparer = funcRef;
     }
     /**
-     * Gets the default minimum `width` of the column.
-     * ```typescript
-     * let defaultMinWidth =  this.column.defaultMinWidth;
-     * ```
-     *
-     * @memberof IgxColumnComponent
+     * @hidden @internal
      */
     public get defaultMinWidth(): string {
         if (!this.grid) {
@@ -1351,11 +1396,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /**
-     * Gets the cells of the column.
-     * ```typescript
-     * let columnCells = this.column.cells;
-     * ```
-     *
+     * @hidden @internal
      */
     public get cells(): CellType[] {
         return this.grid.dataView
@@ -1396,7 +1437,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
+
         let col = this;
         let vIndex = -1;
 
@@ -1424,6 +1465,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return vIndex;
     }
 
+    /* blazorCSSuppress - Blazor doesn't carry over the ColumnType interface + should translate as static bool value */
     /**
      * Returns a boolean indicating if the column is a `ColumnGroup`.
      * ```typescript
@@ -1435,6 +1477,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get columnGroup() {
         return false;
     }
+
+    /* blazorCSSuppress - Blazor doesn't carry over the ColumnType interface + should translate as static bool value */
     /**
      * Returns a boolean indicating if the column is a `ColumnLayout` for multi-row layout.
      * ```typescript
@@ -1455,8 +1499,16 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    public get columnLayoutChild() {
+    public get columnLayoutChild(): boolean {
         return this.parent && this.parent.columnLayout;
+    }
+
+    /**
+     * A list containing all the child columns under this column (if any).
+     * Empty without children or if this column is not Group or Layout.
+     */
+    public get childColumns(): ColumnType[] {
+        return [];
     }
 
     /** @hidden @internal **/
@@ -1502,9 +1554,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             null;
     }
 
+    /** @hidden @internal **/
     public get gridRowSpan(): number {
         return this.rowEnd && this.rowStart ? this.rowEnd - this.rowStart : 1;
     }
+    /** @hidden @internal **/
     public get gridColumnSpan(): number {
         return this.colEnd && this.colStart ? this.colEnd - this.colStart : 1;
     }
@@ -1533,6 +1587,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this._visibleWhenCollapsed;
     }
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor;React */
     /**
      * @remarks
      * Pass optional parameters for DatePipe and/or DecimalPipe to format the display value for date and numeric columns.
@@ -1560,8 +1615,34 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this.grid.summaryService.clearSummaryCache();
         this.grid.pipeTrigger++;
     }
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
     public get pipeArgs(): IColumnPipeArgs {
         return this._columnPipeArgs;
+    }
+
+    /**
+     * Pass optional properties for the default column editors.
+     * @remarks
+     * Options may be applicable only to specific column type editors.
+     * @example
+     * ```typescript
+     * const editorOptions: IColumnEditorOptions = {
+     *      dateTimeFormat: 'MM/dd/YYYY',
+     * }
+     * ```
+     * ```html
+     * <igx-column dataType="date" [editorOptions]="editorOptions"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public set editorOptions(value: IColumnEditorOptions) {
+        this._editorOptions = value;
+    }
+    public get editorOptions(): IColumnEditorOptions {
+        return this._editorOptions;
     }
 
     /**
@@ -1619,8 +1700,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     public get filteringExpressionsTree(): FilteringExpressionsTree {
-        return this.grid.filteringExpressionsTree.find(this.field) as FilteringExpressionsTree;
+        return ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, this.field) as FilteringExpressionsTree;
     }
+
+    /* alternateName: parentColumn */
     /**
      * Sets/gets the parent column.
      * ```typescript
@@ -1633,16 +1716,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     public parent = null;
+
+    /* blazorSuppress */
     /**
      * Sets/gets the children columns.
      * ```typescript
      * let columnChildren = this.column.children;
      * ```
-     * ```typescript
-     * this.column.children = childrenColumns;
-     * ```
      *
-     * @memberof IgxColumnComponent
+     * @deprecated in version 18.1.0. Use the `childColumns` property instead.
      */
     public children: QueryList<IgxColumnComponent>;
     /**
@@ -1688,6 +1770,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _summaries = null;
+    /**
+     * @hidden
+     */
+    private _disabledSummaries: string[] = [];
     /**
      * @hidden
      */
@@ -1758,6 +1844,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     private _field: string;
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
+    private _editorOptions: IColumnEditorOptions = { };
 
     constructor(
         @Inject(IGX_GRID_BASE) public grid: GridType,
@@ -1871,7 +1958,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public getGridTemplate(isRow: boolean): string {
         if (isRow) {
-            const rowsCount = !this.grid.isPivot ? this.grid.multiRowLayoutRowSize : this.children.length - 1;
+            const rowsCount = this.grid.type !== 'pivot' ? this.grid.multiRowLayoutRowSize : this.children.length - 1;
             return `repeat(${rowsCount},1fr)`;
         } else {
             return this.getColumnSizesString(this.children);
@@ -1897,7 +1984,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -1926,7 +2013,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -1940,7 +2027,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                         columnSizes[i] = {
                             ref: col,
                             width: col.width === 'fit-content' ? col.autoSize :
-                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                             colSpan: col.gridColumnSpan,
                             colEnd: col.colStart + col.gridColumnSpan,
                             widthSetByUser: col.widthSetByUser
@@ -2004,7 +2091,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             if (size && !!size.width) {
                 result.push(size.width + 'px');
             } else {
-                result.push(parseInt(this.grid.getPossibleColumnWidth(), 10) + 'px');
+                result.push(parseFloat(this.grid.getPossibleColumnWidth()) + 'px');
             }
         }
         return result;
@@ -2239,10 +2326,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             columns = columns.filter(c => c.level >= this.level && c !== this && c.parent !== this &&
                 c.topLevelParent === this.topLevelParent);
         }
-        /* eslint-disable max-len */
+
         // If isPreceding, find a target such that when the current column is placed after it, current colummn will receive a visibleIndex === index. This takes into account visible children of the columns.
         // If !isPreceding, finds a column of the same level and visible index that equals the passed index agument (c.visibleIndex === index). No need to consider the children here.
-        /* eslint-enable max-len */
+
         if (isPreceding) {
             columns = columns.filter(c => c.visibleIndex > this.visibleIndex);
             target = columns.find(c => c.level === this.level && c.visibleIndex + (c as any).calcChildren() - this.calcChildren() === index);
@@ -2291,47 +2378,31 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * let topLevelParent =  this.column.topLevelParent;
      * ```
-     *
-     * @memberof IgxColumnComponent
      */
-    public get topLevelParent() {
+    public get topLevelParent(): ColumnType | undefined {
         let parent = this.parent;
         while (parent && parent.parent) {
             parent = parent.parent;
         }
-        return parent;
+        return parent ?? undefined;
     }
 
     /**
-     * Returns a reference to the header of the column.
-     * ```typescript
-     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-     * let headerCell = column.headerCell;
-     * ```
-     *
-     * @memberof IgxColumnComponent
+     * @hidden @internal
      */
     public get headerCell(): IgxGridHeaderComponent {
         return this.grid.headerCellList.find((header) => header.column === this);
     }
 
     /**
-     * Returns a reference to the filter cell of the column.
-     * ```typescript
-     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-     * let filterell = column.filterell;
-     * ```
-     *
-     * @memberof IgxColumnComponent
+     * @hidden @internal
      */
     public get filterCell(): IgxGridFilteringCellComponent {
         return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
     }
 
     /**
-     * Returns a reference to the header group of the column.
-     *
-     * @memberof IgxColumnComponent
+     * @hidden @internal
      */
     public get headerGroup(): IgxGridHeaderGroupComponent {
         return this.grid.headerGroupsList.find(group => group.column === this);
@@ -2487,15 +2558,17 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         const isAutoWidth = colWidth && typeof colWidth === 'string' && colWidth === 'fit-content';
-        if (isPercentageWidth) {
-            this._calcWidth = Math.floor(parseFloat(colWidth) / 100 * this.grid.calcWidth);
+        if (isPercentageWidth && this.grid.isColumnWidthSum) {
+            this._calcWidth = this.grid.minColumnWidth;
+        } else if (isPercentageWidth) {
+            this._calcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
             this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
         } else {
             this._calcWidth = this.width;
         }
-        this.calcPixelWidth = parseInt(this._calcWidth, 10);
+        this.calcPixelWidth = parseFloat(this._calcWidth);
     }
 
     /**

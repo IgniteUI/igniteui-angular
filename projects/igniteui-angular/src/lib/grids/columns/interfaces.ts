@@ -47,7 +47,19 @@ export interface IFieldPipeArgs {
     weekStart?: WEEKDAYS | number;
 }
 
-export type IColumnPipeArgs = IFieldPipeArgs
+// D.P. Can't use `export type IColumnPipeArgs = IFieldPipeArgs` because TypeScripts Compiler API optimizes it away completely
+ 
+export interface IColumnPipeArgs extends IFieldPipeArgs {}
+
+export interface IFieldEditorOptions {
+    /**
+     * A custom input format string used for the built-in editors of date/time columns.
+     * See the Editing section under https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-types#datetime-date-and-time
+     */
+    dateTimeFormat?: string;
+}
+
+export interface IColumnEditorOptions extends IFieldEditorOptions {}
 
 export interface ISortingOptions {
     mode: 'single' | 'multiple';

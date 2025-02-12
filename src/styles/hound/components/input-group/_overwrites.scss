@@ -1,0 +1,99 @@
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+igx-input-group.igx-input-group--fluent {
+    .igx-input-group__bundle {
+        &:focus-within,
+        &:focus {
+            border-width: rem(1px);
+            box-shadow: 0 0 0 2px color($color: 'primary', $variant: 100);
+
+            .igx-input-group__bundle-end,
+            .igx-input-group__bundle-start {
+                margin-block: 0;
+                margin-inline: 0;
+            }
+
+            .igx-input-group__bundle-main {
+                margin-block-start: 0;
+            }
+
+            .igx-input-group__bundle-start:empty + .igx-input-group__bundle-main {
+                margin-inline-start: 0;
+            }
+        }
+    }
+}
+
+.igx-input-group--fluent .igx-input-group__label {
+    transition: none;
+}
+
+igx-input-group.igx-input-group--fluent.igx-input-group--textarea-group.igx-input-group--invalid,
+igx-input-group.igx-input-group--fluent.igx-input-group--invalid {
+    --igx-input-group-input-prefix-color: #{color($color: 'error')};
+    --igx-input-group-input-prefix-color--focused: #{color($color: 'error')};
+    --igx-input-group-input-prefix-color-filled: #{color($color: 'error')};
+
+    --igx-input-group-input-suffix-color: #{color($color: 'error')};
+    --igx-input-group-input-suffix-color--focused: #{color($color: 'error')};
+    --igx-input-group-input-suffix-color-filled: #{color($color: 'error')};
+
+    .igx-input-group__bundle {
+        &:focus-within,
+        &:focus {
+            box-shadow: 0 0 0 rem(2px) color($color: 'error', $variant: 100);
+        }
+    }
+}
+
+igx-input-group.igx-input-group--fluent.igx-input-group--textarea-group.igx-input-group--valid,
+igx-input-group.igx-input-group--fluent.igx-input-group--valid {
+    --igx-input-group-input-prefix-color: #{color($color: 'success')};
+    --igx-input-group-input-prefix-color--focused: #{color($color: 'success')};
+    --igx-input-group-input-prefix-color-filled: #{color($color: 'success')};
+
+    --igx-input-group-input-suffix-color: #{color($color: 'success')};
+    --igx-input-group-input-suffix-color--focused: #{color($color: 'success')};
+    --igx-input-group-input-suffix-color-filled: #{color($color: 'success')};
+
+    .igx-input-group__bundle {
+        &:focus-within,
+        &:focus {
+            box-shadow: 0 0 0 rem(2px) color($color: 'success', $variant: 100);
+        }
+    }
+}
+
+igx-input-group.igx-input-group--textarea-group.igx-input-group--disabled {
+    .igx-input-group__textarea {
+        resize: none;
+    }
+}
+
+igx-input-group.igx-input-group--fluent.igx-input-group--prefixed,
+igx-input-group.igx-input-group--fluent.igx-input-group--suffixed {
+    .igx-input-group__input {
+        padding-inline-start: 0;
+    }
+}
+
+igx-input-group.igx-input-group--fluent:not(.igx-input-group--prefixed) {
+    .igx-input-group__input {
+        padding-inline-start: rem(12px);
+    }
+}
+
+igx-input-group.igx-input-group--fluent:not(.igx-input-group--suffixed) {
+    .igx-input-group__input {
+        padding-inline-end: rem(12px);
+    }
+}
+
+igx-input-group.igx-input-group--fluent [igxPrefix],
+igx-input-group.igx-input-group--fluent [igxSuffix] {
+    padding-inline: rem(12px);
+}
+
+.igx-input-group--fluent.igx-input-group--focused.igx-input-group--textarea-group .igx-input-group__hint {
+    margin-block-start: unset !important;
+}

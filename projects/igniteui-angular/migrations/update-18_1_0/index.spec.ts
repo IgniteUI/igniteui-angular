@@ -1,7 +1,7 @@
 import * as path from 'path';
 
-import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { setupTestTree } from '../common/setup.spec';
 
 const version = '18.1.0';
 
@@ -9,36 +9,8 @@ describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
 
-    const configJson = {
-        projects: {
-            testProj: {
-                root: '/',
-                sourceRoot: '/testSrc',
-                architect: {
-                    build: {
-                        options: {
-                            styles: [
-                                "/testSrc/styles.scss"
-                            ] as (string | object)[]
-                        }
-                    }
-                }
-            }
-        },
-        schematics: {
-            '@schematics/angular:component': {
-                prefix: 'appPrefix'
-            }
-        }
-    };
-
     beforeEach(() => {
-        appTree = new UnitTestTree(new EmptyTree());
-        appTree.create('/angular.json', JSON.stringify(configJson));
-        appTree.create('/testSrc/styles.scss', `
-@use "mockStyles.scss";
-@forward something;
-`);
+        appTree = setupTestTree();
     });
 
     const migrationName = 'migration-39';
@@ -120,4 +92,84 @@ describe(`Update to ${version}`, () => {
         );
     });
 
+    it('Should replace deprecated `children` property of Columns', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/column-test.component.ts',
+            `import { Component } from '@angular/core';
+import { IgxColumnGroupComponent, ColumnType } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-columns-test',
+    templateUrl: './columns-test.component.html',
+    styleUrls: ['./columns-test.component.scss']
+})
+export class ColumnsTestComponent {
+    public toggleColumnGroup(columnGroup: IgxColumnGroupComponent) {
+        const columns = columnGroup.children.toArray();
+    }
+    public toggleColumnGroup2(columnGroup: ColumnType) {
+        const columns = columnGroup.children.toArray();
+    }
+}`
+        );
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+        const expectedContent =  `import { Component } from '@angular/core';
+import { IgxColumnGroupComponent, ColumnType } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-columns-test',
+    templateUrl: './columns-test.component.html',
+    styleUrls: ['./columns-test.component.scss']
+})
+export class ColumnsTestComponent {
+    public toggleColumnGroup(columnGroup: IgxColumnGroupComponent) {
+        const columns = columnGroup.childColumns;
+    }
+    public toggleColumnGroup2(columnGroup: ColumnType) {
+        const columns = columnGroup.childColumns;
+    }
+}`;
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/column-test.component.ts')
+        ).toEqual(expectedContent);
+    });
+
+
+    it('Should replace deprecated `isFirstPageDisabled`/`isLastPageDisabled` on paginator', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/paginator-test.component.ts',
+            `import { Component } from '@angular/core';
+import { IgxPaginatorComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-paginator-test',
+    templateUrl: './paginator-test.component.html',
+    styleUrls: ['./paginator-test.component.scss']
+})
+export class PaginatorTestComponent {
+    public paginator: IgxPaginatorComponent;
+    public testMethod() {
+        return this.paginator.isFirstPageDisabled || this.paginator.isLastPageDisabled;
+    }
+}`
+        );
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+        const expectedContent =  `import { Component } from '@angular/core';
+import { IgxPaginatorComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-paginator-test',
+    templateUrl: './paginator-test.component.html',
+    styleUrls: ['./paginator-test.component.scss']
+})
+export class PaginatorTestComponent {
+    public paginator: IgxPaginatorComponent;
+    public testMethod() {
+        return this.paginator.isFirstPage || this.paginator.isLastPage;
+    }
+}`;
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/paginator-test.component.ts')
+        ).toEqual(expectedContent);
+    });
 });

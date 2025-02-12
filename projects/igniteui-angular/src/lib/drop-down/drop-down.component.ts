@@ -54,7 +54,6 @@ import { ConnectedPositioningStrategy } from '../services/public_api';
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }],
-    standalone: true,
     imports: [IgxToggleDirective, NgIf]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
@@ -244,7 +243,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public open(overlaySettings?: OverlaySettings) {
-        const settings = overlaySettings || this.getDefaultOverlaySettings();
+        const settings = { ... {}, ...this.getDefaultOverlaySettings(), ...overlaySettings };
         this.toggleDirective.open(settings);
         this.updateScrollPosition();
     }

@@ -1,6 +1,5 @@
 import { Component, QueryList, ViewChildren } from '@angular/core';
 import {
-	IgxButtonDirective,
 	IgxDividerDirective, IgxHintDirective,
 	IgxIconComponent,
 	IgxInputDirective,
@@ -17,24 +16,22 @@ import {
 } from '@angular/forms';
 
 @Component({
-	selector: 'app-divider',
-	standalone: true,
-	imports: [
-		CommonModule,
-		FormsModule,
-		IgxSwitchComponent,
-		IgxButtonDirective,
-		IgxDividerDirective,
-		IgxInputGroupComponent,
-		IgxInputDirective,
-		IgxIconComponent,
-		IgxLabelDirective,
-		ReactiveFormsModule,
-		IgxSwitchComponent,
-		IgxHintDirective
-	],
-	templateUrl: './divider.component.html',
-	styleUrls: ['./divider.component.scss'],
+    selector: 'app-divider',
+    imports: [
+        CommonModule,
+        FormsModule,
+        IgxSwitchComponent,
+        IgxDividerDirective,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxIconComponent,
+        IgxLabelDirective,
+        ReactiveFormsModule,
+        IgxSwitchComponent,
+        IgxHintDirective
+    ],
+    templateUrl: './divider.component.html',
+    styleUrls: ['./divider.component.scss']
 })
 export class DividerComponent {
 	@ViewChildren(IgxDividerDirective) private dividers: QueryList<IgxDividerDirective>;

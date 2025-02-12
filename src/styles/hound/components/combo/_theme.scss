@@ -1,0 +1,27 @@
+@use 'sass:map';
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+$_base-schema: $light-fluent-schema;
+$_combo-schema: extend(map.get($_base-schema, 'combo'), (
+    toggle-button-background: color($color: 'gray', $variant: 500, $opacity: 0),
+    toggle-button-background-focus: color($color: 'gray', $variant: 500, $opacity: 0),
+    toggle-button-background-focus--border: color($color: 'gray', $variant: 500, $opacity: 0),
+    clear-button-background: color($color: 'gray', $variant: 500, $opacity: 0),
+    toggle-button-background-disabled: color($color: 'gray', $variant: 500, $opacity: 0),
+    clear-button-foreground: color($color: 'gray', $variant: 500),
+));
+
+@mixin component() {
+    @include combo(
+        combo-theme(
+            extend(
+                $_base-schema,
+                (
+                    combo: $_combo-schema,
+                )
+            )
+        )
+    );
+}
+
+

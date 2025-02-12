@@ -20,9 +20,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
             node-version: ${{ matrix.node-version }}
             cache: 'npm'
@@ -56,10 +56,22 @@ jobs:
         run: |
             npm run build:i18n
             npm run test:i18n:dist
+      - name: Build Elements
+        run: npm run elements:configure && npm run build:elements
+      - name: Check for Elements config changes
+        run: |
+            if [ -n "$(git status --porcelain -- projects/igniteui-angular-elements/**/elements.config.ts)" ]; then
+                echo "Error: There are changes to the Elements config. Run 'npm run elements:configure' and commit." >&2
+                exit 1
+            fi
+      - name: Test Elements
+        run: npm run test:elements
+      - name: Build Demos
+        run: npm run build
       - name: Bundle Tree-Shake & SSR Test
         run: npm run build:bundletest
       - name: Publish to coveralls.io
-        if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '18.x'
-        uses: coverallsapp/github-action@v1.2.1
+        if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '20.x'
+        uses: coverallsapp/github-action@v2.3.4
         with:
             github-token: ${{ github.token }}

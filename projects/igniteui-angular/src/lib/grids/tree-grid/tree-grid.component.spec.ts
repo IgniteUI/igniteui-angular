@@ -152,6 +152,33 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
             expect(grid.dataView.length).toBeGreaterThan(0);
         });
+
+        it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            const warnSpy = spyOn(console, 'warn');
+            grid.primaryKey = 'testField';
+            fix.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledTimes(1);
+            expect(console.warn).toHaveBeenCalledWith(
+                `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
+            );
+            warnSpy.calls.reset();
+
+            const oldData = fix.componentInstance.data;
+            const newData = fix.componentInstance.data.map(rec => Object.assign({}, rec, { testField: 0 }));
+            fix.componentInstance.data = newData;
+            fix.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledTimes(0);
+
+            fix.componentInstance.data = oldData;
+            fix.detectChanges();
+
+            expect(console.warn).toHaveBeenCalledTimes(1);
+            expect(console.warn).toHaveBeenCalledWith(
+                `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
+            );
+        });
     });
 
     describe('Auto-generated columns', () => {
@@ -174,10 +201,18 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         //     element.remove();
         // });
 
-        it('should auto-generate all columns', () => {
+        it('should auto-generate all columns', fakeAsync(() => {
+            grid.data = [];
+            tick();
+            fix.detectChanges();
+
             grid.data = SampleTestData.employeePrimaryForeignKeyTreeData();
+            tick();
+            fix.detectChanges();
+
             grid.primaryKey = 'ID';
             grid.foreignKey = 'ParentID';
+            tick();
             fix.detectChanges();
 
             const expectedColumns = [...Object.keys(grid.data[0])];
@@ -185,11 +220,19 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
             // Verify that records are also rendered by checking the first record cell
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
-        });
+        }));
 
-        it('should auto-generate columns without childDataKey', () => {
+        it('should auto-generate columns without childDataKey', fakeAsync(() => {
+            grid.data = [];
+            tick();
+            fix.detectChanges();
+
+            grid.childDataKey = 'Employees';
+            tick();
+            fix.detectChanges();
+
             grid.data = SampleTestData.employeeAllTypesTreeData();
-            grid.childDataKey ='Employees';
+            tick();
             fix.detectChanges();
 
             const expectedColumns = [...Object.keys(grid.data[0])].filter(col => col !== grid.childDataKey);
@@ -198,7 +241,39 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
             // Verify that records are also rendered by checking the first record cell
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
-        });
+        }));
+
+        it('should recreate columns when data changes and autoGenerate is true', fakeAsync(() => {
+            grid.width = '500px';
+            grid.height = '500px';
+            grid.autoGenerate = true;
+            fix.detectChanges();
+
+            const initialData = [
+                { id: 1, name: 'John' },
+                { id: 2, name: 'Jane' }
+            ];
+            grid.data = initialData;
+            tick();
+            fix.detectChanges();
+
+            expect(grid.columns.length).toBe(2);
+            expect(grid.columns[0].field).toBe('id');
+            expect(grid.columns[1].field).toBe('name');
+
+            const newData = [
+                { id: 1, firstName: 'John', lastName: 'Doe' },
+                { id: 2, firstName: 'Jane', lastName: 'Smith' }
+            ];
+            grid.data = newData;
+            tick();
+            fix.detectChanges();
+
+            expect(grid.columns.length).toBe(3);
+            expect(grid.columns[0].field).toBe('id');
+            expect(grid.columns[1].field).toBe('firstName');
+            expect(grid.columns[2].field).toBe('lastName');
+        }));
     });
 
     describe('Loading Template', () => {

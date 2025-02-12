@@ -61,6 +61,9 @@ interface IDataSelectorPanel {
     dragChannels: string[];
 }
 
+/* blazorIndirectRender
+   blazorComponent */
+/* wcElementTag: igc-pivot-data-selector */
 /**
  * Pivot Data Selector provides means to configure the pivot state of the Pivot Grid via a vertical panel UI
  *
@@ -82,7 +85,6 @@ interface IDataSelectorPanel {
 @Component({
     selector: "igx-pivot-data-selector",
     templateUrl: "./pivot-data-selector.component.html",
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, IgxListComponent, NgFor, IgxListItemComponent, IgxCheckboxComponent, IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxDropDirective, IgxExpansionPanelTitleDirective, IgxChipComponent, IgxExpansionPanelBodyComponent, NgIf, IgxDragDirective, IgxDropDownItemNavigationDirective, IgxDragHandleDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxFilterPivotItemsPipe]
 })
 export class IgxPivotDataSelectorComponent {
@@ -198,7 +200,7 @@ export class IgxPivotDataSelectorComponent {
     protected get size(): Size {
         return this.grid?.gridSize;
     }
-    
+
     /** @hidden @internal **/
     public dimensions: IPivotDimension[];
 
@@ -215,6 +217,8 @@ export class IgxPivotDataSelectorComponent {
         ),
         scrollStrategy: new AbsoluteScrollStrategy(),
     };
+
+    /* blazorSuppress */
     public animationSettings = {
         closeAnimation: useAnimation(fadeOut, {
             params: {
@@ -300,6 +304,7 @@ export class IgxPivotDataSelectorComponent {
     ];
 
 
+    /* treatAsRef */
     /**
      * Sets the grid.
      */
@@ -308,6 +313,7 @@ export class IgxPivotDataSelectorComponent {
         this._grid = value;
     }
 
+    /* treatAsRef */
     /**
      * Returns the grid.
      */

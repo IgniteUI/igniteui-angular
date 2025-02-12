@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IgxComboComponent, IgxExcelExporterOptions, IgxExcelExporterService, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension } from 'igniteui-angular';
+import { IgxComboComponent, IgxExcelExporterOptions, IgxExcelExporterService, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension, IPivotUISettings, PivotRowLayoutType } from 'igniteui-angular';
 import { DATA } from '../shared/pivot-data';
 
 @Component({
@@ -8,7 +8,6 @@ import { DATA } from '../shared/pivot-data';
     selector: 'app-pivot-grid-hierarchy-sample',
     styleUrls: ['pivot-grid-hierarchy.sample.scss'],
     templateUrl: 'pivot-grid-hierarchy.sample.html',
-    standalone: true,
     imports: [IgxComboComponent, FormsModule, IgxPivotGridComponent]
 })
 
@@ -50,6 +49,7 @@ export class PivotGridHierarchySampleComponent {
             enabled: true,
         }
     ];
+    public pivotUI: IPivotUISettings = { showRowHeaders: true, rowLayout: PivotRowLayoutType.Horizontal };
     public selected: IPivotDimension[] = [ this.dimensions[1], this.dimensions[2]];
 
     constructor(private excelExportService: IgxExcelExporterService) {

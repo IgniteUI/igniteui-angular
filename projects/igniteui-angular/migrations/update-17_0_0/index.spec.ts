@@ -1,7 +1,7 @@
 import * as path from 'path';
 
-import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { setupTestTree } from '../common/setup.spec';
 
 const version = '17.0.0';
 
@@ -9,23 +9,8 @@ describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
 
-    const configJson = {
-        projects: {
-            testProj: {
-                root: '/',
-                sourceRoot: '/testSrc'
-            }
-        },
-        schematics: {
-            '@schematics/angular:component': {
-                prefix: 'appPrefix'
-            }
-        }
-    };
-
     beforeEach(() => {
-        appTree = new UnitTestTree(new EmptyTree());
-        appTree.create('/angular.json', JSON.stringify(configJson));
+        appTree = setupTestTree();
     });
 
     const migrationName = 'migration-32';
@@ -207,7 +192,6 @@ describe(`Update to ${version}`, () => {
     });
 
     it('Should properly rename newSelection and oldSelection property to newValue and oldValue in Combo', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
         import { IgxComboComponent, IComboSelectionChangingEventArgs } from 'igniteui-angular';
@@ -237,10 +221,9 @@ describe(`Update to ${version}`, () => {
     });
 
     it('Should properly rename newSelection and oldSelection property to newValue and oldValue SimpleCombo', async () => {
-        pending('set up tests for migrations through lang service');
         appTree.create('/testSrc/appPrefix/component/test.component.ts',
         `
-        import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from 'igniteui-angular';
+        import { ISimpleComboSelectionChangingEventArgs } from 'igniteui-angular';
         export class MyClass {
             public handleSelectionChanging(e: ISimpleComboSelectionChangingEventArgs) {
                 const newSelection = e.newSelection;
@@ -255,9 +238,9 @@ describe(`Update to ${version}`, () => {
             tree.readContent('/testSrc/appPrefix/component/test.component.ts')
         ).toEqual(
         `
-        import { IgxComboComponent, IComboSelectionChangingEventArgs } from 'igniteui-angular';
+        import { ISimpleComboSelectionChangingEventArgs } from 'igniteui-angular';
         export class MyClass {
-            public handleSelectionChanging(e: IComboSelectionChangingEventArgs) {
+            public handleSelectionChanging(e: ISimpleComboSelectionChangingEventArgs) {
                 const newSelection = e.newValue;
                 const oldSelection = e.oldValue;
             }

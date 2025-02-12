@@ -71,7 +71,6 @@ import { IgxChipComponent } from '../chips/chip.component';
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html',
     providers: [HammerGesturesManager],
-    standalone: true,
     imports: [
         NgIf,
         NgClass,
@@ -694,6 +693,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('class.igx-grid__td--row-pinned-first')
     public displayPinnedChip = false;
 
+    @HostBinding('style.min-height.px')
+    protected get minHeight() {
+        if ((this.grid as any).isCustomSetRowHeight) {
+            return this.grid.renderedRowHeight;
+        }
+    }
 
     @ViewChild('defaultCell', { read: TemplateRef, static: true })
     protected defaultCellTemplate: TemplateRef<any>;
@@ -1019,7 +1024,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public pointerenter = (event: PointerEvent) => {
-        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        const isHierarchicalGrid = this.grid.type === 'hierarchical';
         if (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID || this.grid.navigation.activeNode.gridID !== this.gridID)) {
             return;
         }
@@ -1049,7 +1054,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public pointerup = (event: PointerEvent) => {
-        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        const isHierarchicalGrid = this.grid.type === 'hierarchical';
         if (!this.platformUtil.isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID ||
             this.grid.navigation.activeNode.gridID !== this.gridID))) {
             return;

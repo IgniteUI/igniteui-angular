@@ -2,13 +2,18 @@ import { AfterViewInit, Component, Inject, Input } from '@angular/core';
 import { IgxToolbarToken } from './token';
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IgxIconComponent } from '../../icon/icon.component';
-import { NgClass, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 
-
+/* blazorElement */
+/* wcElementTag: igc-grid-toolbar-advanced-filtering */
+/* blazorIndirectRender */
+/* blazorAlternateBaseType: GridToolbarBaseAction */
+/* jsonAPIManageItemInMarkup */
+/* singleInstanceIdentifier */
 /**
  * Provides a pre-configured button to open the advanced filtering dialog of the grid.
  *
@@ -25,13 +30,13 @@ import { IFilteringExpression } from '../../data-operations/filtering-expression
 @Component({
     selector: 'igx-grid-toolbar-advanced-filtering',
     templateUrl: './grid-toolbar-advanced-filtering.component.html',
-    standalone: true,
-    imports: [IgxButtonDirective, IgxRippleDirective, NgClass, IgxIconComponent, NgIf]
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, NgIf]
 })
 export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
     protected numberOfColumns: number;
     /**
      * Returns the grid containing this component.
+     * @hidden @internal
      */
     public get grid() {
         return this.toolbar.grid;

@@ -12,7 +12,6 @@
 
 /// Dialog Theme
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The dialog background color.
 /// @param {Color} $title-color [null] - The dialog title text color.
 /// @param {Color} $message-color [null] - The dialog message text color.
@@ -26,7 +25,6 @@
 ///   @include css-vars($my-dialog-theme);
 @function dialog-theme(
     $schema: $light-material-schema,
-    $elevations: null,
 
     $border-radius: null,
     $border-color: null,
@@ -74,6 +72,7 @@
         message-color: $message-color,
         shadow: $shadow,
         border-color: $border-color,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -87,33 +86,33 @@
     @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'variant');
-    $bootstrap-theme: map.get($theme, variant) == 'bootstrap';
+    $bootstrap-theme: map.get($theme, '_meta', 'variant') == 'bootstrap';
 
     $dialog-min-width: map.get((
-        material: rem(280px),
-        fluent: rem(288px),
-        bootstrap: rem(288px),
+        'material': rem(280px),
+        'fluent': rem(288px),
+        'bootstrap': rem(288px),
     ), $variant);
 
     $dialog-title-padding: map.get((
-        material: rem(24px) rem(24px) rem(12px) rem(24px),
-        fluent: rem(16px) rem(24px) rem(24px) rem(24px),
-        bootstrap: rem(16px),
-        indigo-design: rem(24px) rem(24px) 0 rem(24px),
+        'material': rem(16px) rem(24px) rem(0px) rem(24px),
+        'fluent': rem(16px) rem(24px) rem(24px) rem(24px),
+        'bootstrap': rem(16px),
+        'indigo': rem(24px) rem(24px) 0 rem(24px),
     ), $variant);
 
     $dialog-message-padding: map.get((
-        material: rem(12px) rem(24px),
-        fluent: 0 rem(24px) rem(20px) rem(24px),
-        bootstrap: rem(16px),
-        indigo-design: rem(16px) rem(24px),
+        'material': rem(14px) rem(24px),
+        'fluent': 0 rem(24px) rem(20px) rem(24px),
+        'bootstrap': rem(16px),
+        'indigo': rem(16px) rem(24px),
     ), $variant);
 
     $dialog-actions-padding: map.get((
-        material: rem(8px),
-        fluent: 0 rem(24px) rem(24px) rem(24px),
-        bootstrap: rem(16px),
-        indigo-design: rem(16px) rem(24px) rem(24px) rem(24px),
+        'material': 0 rem(8px) rem(8px),
+        'fluent': 0 rem(24px) rem(24px) rem(24px),
+        'bootstrap': rem(16px),
+        'indigo': rem(16px) rem(24px) rem(24px) rem(24px),
     ), $variant);
 
     %igx-dialog-display {
@@ -167,10 +166,10 @@
         @media all and (-ms-high-contrast: none)
         {
             max-width: map.get((
-                material: 62ch,
-                fluent: 48ch,
-                bootstrap: 60ch,
-                indigo-design: 48ch,
+                'material': 62ch,
+                'fluent': 48ch,
+                'bootstrap': 60ch,
+                'indigo': 48ch,
             ), $variant);
         }
     }
@@ -180,22 +179,15 @@
         flex-flow: row nowrap;
         justify-content: flex-end;
         padding: $dialog-actions-padding;
+        gap: if($variant == 'indigo', rem(16px), rem(8px));
 
         @if $bootstrap-theme {
             border-top: rem(1px) solid var-get($theme, 'border-color');
         }
 
-        button + button {
-            margin-inline-start: rem(8px);
-        }
-
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             .igx-button {
                 --ig-size: 2;
-            }
-
-            button + button {
-                margin-inline-start: rem(16px);
             }
         }
     }

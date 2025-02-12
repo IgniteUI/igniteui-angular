@@ -61,6 +61,7 @@
         text-color: $text-color,
         border-radius: $border-radius,
         shadow: $shadow,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -86,7 +87,7 @@
         padding: 0 rem(8px);
         min-height: rem(24px);
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             padding: rem(4px) rem(8px);
         }
     }

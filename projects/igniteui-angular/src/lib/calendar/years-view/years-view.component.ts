@@ -30,8 +30,7 @@ import { calendarRange } from "../common/helpers";
     ],
     selector: "igx-years-view",
     templateUrl: "years-view.component.html",
-    standalone: true,
-    imports: [NgFor, IgxCalendarYearDirective],
+    imports: [NgFor, IgxCalendarYearDirective]
 })
 export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     #standalone = true;
@@ -154,5 +153,14 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
         this._formatter = new Intl.DateTimeFormat(this._locale, {
             year: this.yearFormat,
         });
+    }
+
+    /**
+     * @hidden
+     */
+    protected onMouseDown() {
+        if (this.tabIndex !== -1) {
+            this.el.nativeElement.focus();
+        }
     }
 }

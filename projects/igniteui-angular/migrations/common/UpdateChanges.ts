@@ -10,13 +10,14 @@ import {
 } from './schema';
 import {
     getLanguageService, getRenamePositions, getIdentifierPositions,
-    createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME, findMatches
+    isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME, findMatches
 } from './tsUtils';
 import {
     getProjectPaths, getWorkspace, getProjects, escapeRegExp, replaceMatch,
     getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage, getPackageVersion
 } from './util';
 import { ServerHost } from './ServerHost';
+import { serviceContainer } from './project-service-container';
 
 const TSCONFIG_PATH = 'tsconfig.json';
 
@@ -38,7 +39,6 @@ interface AppliedChange {
 /* eslint-disable arrow-parens */
 export class UpdateChanges {
     protected tsconfigPath = TSCONFIG_PATH;
-    protected _projectService: tss.server.ProjectService;
 
     public _shouldInvokeLS = true;
     public get shouldInvokeLS(): boolean {
@@ -54,40 +54,18 @@ export class UpdateChanges {
     }
 
     public get projectService(): tss.server.ProjectService {
-        if (!this._projectService) {
-            this._projectService = createProjectService(this.serverHost);
-            // Force Angular service to compile project on initial load w/ configure project
-            // otherwise if the first compilation occurs on an HTML file the project won't have proper refs
-            // and no actual angular metadata will be resolved for the rest of the migration
-
-            // TODO: this patter/issue might be obsolete; if so, should be safe to return _projectService directly
-            const mainRelPath = this.getWorkspaceProjectEntryPath();
-            if (!mainRelPath) {
-                return null;
-            }
-
-            // patch TSConfig so it includes angularOptions.strictTemplates
-            // ivy ls requires this in order to function properly on templates
-            this.patchTsConfig();
-            const mainAbsPath = path.resolve(this._projectService.currentDirectory, mainRelPath);
-            const scriptInfo = this._projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.toNormalizedPath(mainAbsPath), false);
-            this._projectService.openClientFile(scriptInfo.fileName);
-
-
-            try {
-                const project = this._projectService.findProject(scriptInfo.containingProjects[0].getProjectName());
-                project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
-            } catch (err) {
-                this.context.logger.warn(
-                    "An error occurred during TypeScript project service setup. Some migrations relying on language services might not be applied."
-                );
-            }
+        const projectService = serviceContainer.projectService;
+        if (!serviceContainer.configured) {
+            this.configureForAngularLS(projectService);
+            serviceContainer.configured = true;
         }
 
-        return this._projectService;
+        return projectService;
     }
 
-    protected serverHost: ServerHost;
+    protected get serverHost(): ServerHost {
+        return serviceContainer.serverHost;
+    }
     protected workspace: WorkspaceSchema;
     protected sourcePaths: string[];
     protected classChanges: ClassChanges;
@@ -176,7 +154,8 @@ export class UpdateChanges {
         this.themeChanges = this.loadConfig('theme-changes.json');
         this.importsChanges = this.loadConfig('imports.json');
         this.membersChanges = this.loadConfig('members.json');
-        this.serverHost = new ServerHost(this.host);
+        // update LS server host with the schematics tree:
+        this.serverHost.host = this.host;
     }
 
     /** Apply configured changes to the Host Tree */
@@ -682,7 +661,7 @@ export class UpdateChanges {
         }
 
         // attempt to find a main tsconfig from workspace:
-        const wsProject = this.workspace.projects[0];
+        const wsProject = Object.values(this.workspace.projects)[0];
         // technically could be per-project, but assuming there's at least one main tsconfig for IDE support
         const projectConfig = wsProject.architect?.build?.options['tsConfig'];
 
@@ -835,6 +814,36 @@ export class UpdateChanges {
         return project;
     }
 
+    /**
+     * Force Angular service to compile project on initial load w/ configured project
+     * otherwise if the first compilation occurs on an HTML file the project won't have proper refs
+     * and no actual angular metadata will be resolved for the rest of the migration
+     */
+    private configureForAngularLS(projectService: ts.server.ProjectService): void {
+        // TODO: this pattern/issue might be obsolete
+        const mainRelPath = this.getWorkspaceProjectEntryPath();
+        if (!mainRelPath) {
+            return;
+        }
+
+        // patch TSConfig so it includes angularOptions.strictTemplates
+        // ivy ls requires this in order to function properly on templates
+        this.patchTsConfig();
+        const mainAbsPath = path.resolve(projectService.currentDirectory, mainRelPath);
+        const scriptInfo = projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.toNormalizedPath(mainAbsPath), false);
+        projectService.openClientFile(scriptInfo.fileName);
+
+
+        try {
+            const project = projectService.findProject(scriptInfo.containingProjects[0].getProjectName());
+            project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
+        } catch (err) {
+            this.context.logger.warn(
+                "An error occurred during TypeScript project service setup. Some migrations relying on language services might not be applied."
+            );
+        }
+    }
+
     private getWorkspaceProjectEntryPath(): string | null {
         const projectKeys = Object.keys(this.workspace.projects);
         if (!projectKeys.length) {
@@ -847,8 +856,8 @@ export class UpdateChanges {
         for (const key of projectKeys) {
             const wsProject = this.workspace.projects[key];
             // intentionally compare against string values of the enum to avoid hard import
-            if (wsProject.projectType == "application" && wsProject.architect?.build?.options['main']) {
-                return wsProject.architect.build.options['main'];
+            if (wsProject.projectType == "application" && wsProject.architect?.build?.options) {
+                return wsProject.architect.build.options['browser'] || wsProject.architect.build.options['main'];
             } else if (wsProject.projectType == "library") {
                 // TODO: attempt to resolve from project ng-package.json or tsConfig
             }

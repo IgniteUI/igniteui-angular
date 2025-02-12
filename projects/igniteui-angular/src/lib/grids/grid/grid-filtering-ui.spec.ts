@@ -26,6 +26,7 @@ import { igxI18N } from '../../core/i18n/resources';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeFr from '@angular/common/locales/fr';
+import localeBg from '@angular/common/locales/bg';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
@@ -42,7 +43,8 @@ import {
     IgxGridExternalESFComponent,
     IgxGridExternalESFTemplateComponent,
     IgxGridDatesFilteringComponent,
-    LoadOnDemandFilterStrategy
+    LoadOnDemandFilterStrategy,
+    IgxGridFilteringNumericComponent
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode, Size } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
@@ -52,6 +54,8 @@ import { formatDate, getComponentSize } from '../../core/utils';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
 import { GridResourceStringsEN } from '../../core/i18n/grid-resources';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
+import { IgxTimePickerComponent } from '../../time-picker/time-picker.component';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -71,7 +75,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridFilteringScrollComponent,
                 IgxGridFilteringMCHComponent,
                 IgxGridFilteringTemplateComponent,
-                IgxGridDatesFilteringComponent
+                IgxGridDatesFilteringComponent,
+                IgxGridFilteringNumericComponent
             ]
         });
     }));
@@ -449,6 +454,77 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const expectedResult = today.getFullYear() - 3;
             expect(month.innerHTML.trim()).toEqual(expectedResult.toString());
         }));
+
+        it('Time/DateTime: Should set editorOptions.dateTimeFormat as inputFormat to the quick filter editor', fakeAsync(() => {
+            const releaseDateTimeCol = grid.getColumnByName('ReleaseDateTime');
+            const releaseTimeCol = grid.getColumnByName('ReleaseTime');
+            releaseDateTimeCol.editorOptions = {
+                dateTimeFormat: 'dd-MM-yyyy'
+            };
+            releaseDateTimeCol.pipeArgs = {
+                format: 'yyyy-dd-MM'
+            };
+
+            releaseTimeCol.editorOptions = {
+                dateTimeFormat: 'hh:mm'
+            };
+            releaseTimeCol.pipeArgs = {
+                format: 'longTime'
+            };
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
+
+            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            let inputDirectiveInstance  = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
+                                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(inputDirectiveInstance.inputFormat).toMatch('dd-MM-yyyy');
+            expect(inputDirectiveInstance.displayFormat).toMatch('yyyy-dd-MM');
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseTime');
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            inputDirectiveInstance = filterUIRow.query(By.directive(IgxTimePickerComponent)).componentInstance;
+            expect(inputDirectiveInstance.inputFormat).toMatch('hh:mm');
+            expect(inputDirectiveInstance.displayFormat).toMatch('longTime');
+        }));
+
+        it('Time/DateTime: Should set pipeArgs.format as inputFormat to the quick filter editor if numeric and editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            const releaseDateTimeCol = grid.getColumnByName('ReleaseDateTime');
+            const releaseTimeCol = grid.getColumnByName('ReleaseTime');
+
+            releaseDateTimeCol.pipeArgs = {
+                format: 'yyyy--dd--MM'
+            };
+
+            releaseTimeCol.pipeArgs = {
+                format: 'shortTime'
+            };
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDateTime');
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            let dateTimeEditor  = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
+                                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat).toMatch('yyyy--dd--MM');
+            expect(dateTimeEditor.displayFormat).toMatch('yyyy--dd--MM');
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseTime');
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            dateTimeEditor = filterUIRow.query(By.directive(IgxDateTimeEditorDirective))
+                                                .injector.get(IgxDateTimeEditorDirective);
+            // since 'shortTime' is numeric, input format will include its numeric parts
+            expect(dateTimeEditor.inputFormat.normalize('NFKC')).toMatch('hh:mm tt');
+            expect(dateTimeEditor.displayFormat).toMatch('shortTime');
+        }));
+
 
         // UI tests custom column
         it('UI tests on custom column', fakeAsync(() => {
@@ -902,6 +978,38 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chips[0].componentInstance.selected).toBeTruthy();
             expect(GridFunctions.getChipText(chips[0])).toEqual('Empty');
             expect(input.properties.readOnly).toBeTruthy();
+        }));
+
+        it('should correctly filter negative values', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridFilteringNumericComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+
+            GridFunctions.clickFilterCellChip(fix, 'Number');
+
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const input = filteringRow.query(By.directive(IgxInputDirective));
+
+            // Set input and confirm
+            GridFunctions.typeValueInFilterRowInput('-1', fix);
+
+            expect(input.componentInstance.value).toEqual('-1');
+            expect(grid.rowList.length).toEqual(1);
+
+            GridFunctions.typeValueInFilterRowInput('0', fix);
+
+            expect(input.componentInstance.value).toEqual('0');
+            expect(grid.rowList.length).toEqual(0);
+
+            GridFunctions.typeValueInFilterRowInput('-0.5', fix);
+
+            expect(input.componentInstance.value).toEqual('-0.5');
+            expect(grid.rowList.length).toEqual(1);
+
+            GridFunctions.typeValueInFilterRowInput('', fix);
+
+            expect(input.componentInstance.value).toEqual(null);
+            expect(grid.rowList.length).toEqual(3);
         }));
 
         it('Should focus input .', fakeAsync(() => {
@@ -1963,7 +2071,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             let calendar = outlet.getElementsByClassName('igx-calendar')[0];
             const todayDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date--current');
-            todayDayItem.firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayDayItem.firstChild);
             grid.filteringRow.onInputGroupFocusout();
             tick(100);
             fix.detectChanges();
@@ -2015,7 +2123,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Select the first day
             const firstDayItem: HTMLElement = calendar.querySelector('.igx-days-view__date:not(.igx-days-view__date--inactive)');
 
-            firstDayItem.firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(firstDayItem.firstChild);
             grid.filteringRow.onInputGroupFocusout();
             tick(200);
             fix.detectChanges();
@@ -2115,7 +2223,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const currentDay = document.querySelector('.igx-days-view__date--current');
 
-            currentDay.firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(currentDay.firstChild);
             tick();
             fix.detectChanges();
 
@@ -2638,6 +2746,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
                 GridFunctions.clickFilterCellChip(fix, 'AnotherField');
                 fix.detectChanges();
+                grid.cdr.detectChanges();
 
                 // check if it is positioned at the bottom of the thead.
                 const theadWrapper = grid.theadRow.nativeElement.firstElementChild;
@@ -2751,6 +2860,30 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             expect(filterUIRow).toBeNull('Default filter template was found on a column with custom filtering.');
         }));
+
+        it('Should not prevent mousedown event when target is within the filter cell template', fakeAsync(() => {
+            const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
+            const input = filterCell.query(By.css('input')).nativeElement;
+
+            const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
+            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
+            input.dispatchEvent(mousedownEvent, { bubbles: true });
+            fix.detectChanges();
+
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+        }));
+
+        it('Should prevent mousedown event when target is filter cell or its parent elements', fakeAsync(() => {
+            const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
+            const firstCell = filteringCells[0].nativeElement;
+
+            const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
+            const preventDefaultSpy = spyOn(mousedownEvent, 'preventDefault');
+            firstCell.dispatchEvent(mousedownEvent);
+            fix.detectChanges();
+
+            expect(preventDefaultSpy).toHaveBeenCalled();
+        }));
     });
 
     describe(null, () => {
@@ -2817,7 +2950,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const currentDay = calendar.querySelector('.igx-days-view__date--current');
 
-            currentDay.firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(currentDay.firstChild);
 
             flush();
             fix.detectChanges();
@@ -2827,6 +2960,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.rowList.length).toEqual(1);
         }));
+
     });
 
     describe('Filtering events', () => {
@@ -4234,15 +4368,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
-            expect(scrollbar.scrollTop >= 670 && scrollbar.scrollTop <= 700).toBe(true,
+            expect(scrollbar.scrollTop >= 660 && scrollbar.scrollTop <= 700).toBe(true,
                 'search scrollbar has incorrect scrollTop: ' + scrollbar.scrollTop);
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
-            expect(displayContainerRect.height).toBe(216, 'incorrect search display container height');
+            expect(displayContainerRect.height).toBe(240, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(10, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -4902,7 +5036,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
             tick(100);
             fix.detectChanges();
             flush();
@@ -4984,7 +5118,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
             tick(100);
             fix.detectChanges();
             flush();
@@ -5031,7 +5165,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
             tick(100);
             fix.detectChanges();
             flush();
@@ -5051,6 +5185,121 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(1);
         }));
 
+        it('DateTime: Should use editorOptions.dateTimeFormat as inputFormat to the filter editor in the custom filtering dialog', fakeAsync(() => {
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDateTime = rec.ReleaseDateTime ? rec.ReleaseDateTime.toISOString() : null;
+                return newRec;
+            });
+            const column = grid.getColumnByName('ReleaseDateTime');
+            column.editorOptions = {
+                dateTimeFormat: 'dd-MM-yyyy HH:mm aaaaa'
+            }
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDateTime');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                    .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditor.inputFormat).toMatch(column.editorOptions.dateTimeFormat);
+            expect(dateTimeEditor.displayFormat).toMatch(column.pipeArgs.format);
+        }));
+
+        it('DateTime: Should use pipeArgs.format as inputFormat to the filter editor in the custom filtering dialog if editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDateTime = rec.ReleaseDateTime ? rec.ReleaseDateTime.toISOString() : null;
+                return newRec;
+            });
+            const column = grid.getColumnByName('ReleaseDateTime');
+            column.pipeArgs = {
+                format: 'dd-MM-yyyy'
+            }
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDateTime');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat.normalize('NFKC')).toMatch('dd-MM-yyyy');
+            expect(dateTimeEditorDirective.displayFormat.normalize('NFKC')).toMatch('dd-MM-yyyy');
+        }));
+
+        it('DateTime: custom filtering dialog input locale should be set as the grid locale', fakeAsync(() => {
+            registerLocaleData(localeBg, 'bg');
+            grid.locale = 'bg';
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDateTime = rec.ReleaseDateTime ? rec.ReleaseDateTime.toISOString() : null;
+                return newRec;
+            });
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDateTime');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.locale).toMatch(grid.locale);
+        }));
+
+        it('Time: Should use editorOptions.dateTimeFormat as inputFormat to the filter editor in the custom filtering dialog', fakeAsync(() => {
+            const column = grid.getColumnByName('ReleaseTime');
+            column.editorOptions = {
+                dateTimeFormat: 'HH:mm'
+            }
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseTime');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat).toMatch(column.editorOptions.dateTimeFormat);
+            expect(dateTimeEditorDirective.displayFormat).toMatch(column.pipeArgs.format);
+        }));
+
+        it('Time: Should use pipeArgs.format as inputFormat to the filter editor in the custom filtering dialog if editorOptions.dateTimeFormat not set', fakeAsync(() => {
+            const column = grid.getColumnByName('ReleaseTime');
+            column.pipeArgs = {
+                format: 'HH:mm'
+            }
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseTime');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const dateTimeEditorDirective = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
+                                            .injector.get(IgxDateTimeEditorDirective);
+            expect(dateTimeEditorDirective.inputFormat).toMatch(column.pipeArgs.format);
+            expect(dateTimeEditorDirective.displayFormat).toMatch(column.pipeArgs.format);
+        }));
         it('Should filter grid through custom date filter dialog when using pipeArgs for the column', fakeAsync(() => {
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
@@ -5083,7 +5332,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
             tick(100);
             fix.detectChanges();
             flush();
@@ -5136,7 +5385,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            (todayItem as HTMLElement).firstChild.dispatchEvent(new Event('mousedown'));
+            UIInteractions.simulateClickAndSelectEvent(todayItem.firstChild);
             tick();
             fix.detectChanges();
 
@@ -5314,6 +5563,63 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
                 expect(excelMenu).toBeNull();
             }));
+
+        it('Should filter ISO 8601 dates for date column ignoring the time portion - issue #14643', fakeAsync(() => {
+            // Add hours part to the ReleaseDate so some records differ only by the time portion
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+
+                if (rec.ReleaseDate) {
+                    const date = new Date(rec.ReleaseDate);
+                    date.setHours(date.getHours() + Math.floor(Math.random() * 24));
+                    newRec.ReleaseDate = date.toISOString();
+                } else {
+                    newRec.ReleaseDate = null;
+                }
+
+                return newRec;
+            });
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu)[1];
+
+            checkbox.click();
+            tick();
+            fix.detectChanges();
+
+            const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix);
+            applyButton.focus();
+            fix.detectChanges();
+
+            expect(document.activeElement).toBe(applyButton);
+
+            UIInteractions.simulateClickEvent(applyButton);
+            fix.detectChanges();
+
+            const rows = GridFunctions.getRows(fix);
+            const cell1 = GridFunctions.getRowCells(fix, 0)[4].nativeElement;
+            const cell2 = GridFunctions.getRowCells(fix, 3)[4].nativeElement;
+            expect(cell1.textContent.toString()).toEqual(cell2.textContent.toString());
+            expect(rows.length).toBe(6, 'incorrect number of rows');
+
+            //Check if checkboxes have correct state on ESF menu reopening
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix));
+            expect(checkboxes[0].indeterminate).toBeTrue();
+            expect(checkboxes[1].checked).toBeFalse();
+            const listItemsCheckboxes = checkboxes.slice(2, checkboxes.length-1);
+            for (const checkboxItem of listItemsCheckboxes) {
+                ControlsFunction.verifyCheckboxState(checkboxItem.parentElement);
+            }
+        }));
 
         it('Should filter date by input string', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
@@ -5521,6 +5827,32 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             expect(gridCellValues.length).toEqual(1);
             expect(gridCellValues).toEqual(listItems);
+        }));
+
+        it('Should filter grid correctly with case insensitive duplicates', fakeAsync(() => {
+            grid.data = SampleTestData.excelFilteringDataDuplicateValues();
+            fix.detectChanges();
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'cust', fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Get the results and verify their count.
+            const gridCellValues = GridFunctions.getColumnCells(fix, 'AnotherField')
+                .map(c => c.nativeElement.innerText)
+                .sort();
+
+            expect(gridCellValues.length).toEqual(5);
         }));
 
         it('Should disable the apply button when there are no results.', fakeAsync(() => {
@@ -5941,6 +6273,41 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 ['Select All', '1:00:00 AM', '12:00:00 PM', '11:00:00 PM'],
                 [true, true, true, true]);
         }));
+
+        it('should clear all filters in the custom dialog when clicking "Clear Filter" button', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 5);
+            tick();
+            fix.detectChanges();
+
+            const expressions = GridFunctions.getExcelCustomFilteringDateExpressions(fix);
+            const lastExpression = expressions[expressions.length - 1];
+            (lastExpression.querySelector('igx-select').querySelector('igx-input-group') as HTMLElement).click();
+            tick();
+            fix.detectChanges();
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+ 
+            const todayItem = dropdownList.children[0].children.find(item => item.nativeElement?.innerText === 'Today');
+            todayItem.nativeElement.click();
+            tick();
+            fix.detectChanges();
+            
+            GridFunctions.clickClearFilterExcelStyleCustomFiltering(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.getExcelCustomFilteringDateExpressions(fix).forEach(expr => {
+                const input = expr.children[0].querySelector('input');
+                expect(input.value).toBe('');
+            });
+        }));
     });
 
     describe('Templates: ', () => {
@@ -6161,31 +6528,31 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Select column
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Scroll the search list to the bottom.
             let scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
             scrollbar.scrollTop = 3000;
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Select another column
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
             // Update scrollbar
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
-            await wait(100);
+            await wait();
             fix.detectChanges();
 
-            // Get the display container and its parent and verify if the display contaier is at start
+            // Get the display container and its parent and verify that the display container is at start
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
             const parentContainerRect = displayContainer.parentElement.getBoundingClientRect();
-
+            
             expect(displayContainerRect.top - parentContainerRect.top <= 1).toBe(true, 'search scrollbar did not reset');
         });
     });
@@ -6645,6 +7012,30 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         }));
 
+        it('should discard filters through esf menu properly on cancel button click', fakeAsync(() => {
+            grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+
+            expect(fix.debugElement.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(2);
+            tick(200);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.setOperatorESF(fix, 1, 0);
+            GridFunctions.setInputValueESF(fix, 1, 'Angular');
+            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+
+            expect(fix.debugElement.nativeElement.querySelector('.igx-excel-filter__filter-number').textContent).toContain('(1)');
+            expect(grid.filteredData.length).toEqual(2);
+        }));
+
     });
 });
 
@@ -6860,9 +7251,9 @@ const verifyPinningHidingSize = (fix: ComponentFixture<any>, expectedSize: Size)
     const headerTitle = excelMenu.querySelector('h4');
     const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix, excelMenu);
     const headerAreaPinIcon: HTMLElement =
-        headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin-left"') !== -1) as HTMLElement;
+        headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1) as HTMLElement;
     const headerAreaUnpinIcon: HTMLElement
-        = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin-left"') !== -1) as HTMLElement;
+        = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1) as HTMLElement;
     const headerAreaColumnHidingIcon: HTMLElement =
         headerIcons.find((buttonIcon: any) => buttonIcon.innerText === 'visibility_off') as HTMLElement;
 

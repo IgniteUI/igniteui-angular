@@ -25,6 +25,7 @@ import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 export interface ToggleViewEventArgs extends IBaseEventArgs {
     /** Id of the toggle view */
     id: string;
+    /* blazorSuppress */
     event?: Event;
 }
 
@@ -220,17 +221,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         const closeAnimationStarted = info?.closeAnimationPlayer?.hasStarted() ?? false;
         if (openAnimationStarted || !(this._collapsed || closeAnimationStarted)) {
             return;
-        }
-
-        const target = overlaySettings && overlaySettings.target;
-
-        // Get the size from the target element
-        if (target && target instanceof Element) {
-            const styles = window.getComputedStyle(target);
-            const componentSize = styles.getPropertyValue('--component-size');
-            const globalSize = styles.getPropertyValue('--ig-size');
-            const size = componentSize || globalSize || '3';
-            this.elementRef.nativeElement.style.setProperty('--ig-size', size);
         }
 
         this._collapsed = false;

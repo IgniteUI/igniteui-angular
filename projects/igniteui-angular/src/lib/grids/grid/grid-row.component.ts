@@ -8,12 +8,13 @@ import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive'
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { NgTemplateOutlet, NgIf, NgFor, NgStyle, NgClass } from '@angular/common';
 
+/* blazorIndirectRender */
+/* blazorElement */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-row',
     templateUrl: './grid-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxGridRowComponent) }],
-    standalone: true,
     imports: [NgTemplateOutlet, NgIf, IgxRowDragDirective, NgFor, IgxGridForOfDirective, NgStyle, IgxCheckboxComponent, IgxGridCellComponent, NgClass, IgxGridExpandableCellComponent, IgxGridNotGroupedPipe, IgxGridTopLevelColumns, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe]
 })
 export class IgxGridRowComponent extends IgxRowDirective {

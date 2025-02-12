@@ -24,7 +24,6 @@ import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive'
     selector: 'igx-pivot-row',
     templateUrl: './pivot-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }],
-    standalone: true,
     imports: [IgxGridForOfDirective, IgxGridCellComponent, NgClass, NgStyle, IgxCheckboxComponent, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe, IgxPivotGridCellStyleClassesPipe]
 })
 export class IgxPivotRowComponent extends IgxRowDirective {
@@ -177,6 +176,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         const node = nav.activeNode;
         return node && Object.keys(node).length !== 0 ?
             !nav.isRowHeaderActive &&
+            !nav.isRowDimensionHeaderActive &&
             super.isCellActive(visibleColumnIndex) :
             false;
     }

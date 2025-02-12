@@ -56,7 +56,6 @@ let DIALOG_ID = 0;
 @Component({
     selector: 'igx-dialog',
     templateUrl: 'dialog-content.component.html',
-    standalone: true,
     imports: [IgxToggleDirective, IgxFocusTrapDirective, NgIf, IgxFocusDirective, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, AfterContentInit {
@@ -479,6 +478,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         const eventArgs: IDialogCancellableEventArgs = { dialog: this, event: null, cancel: false };
         this.opening.emit(eventArgs);
         if (!eventArgs.cancel) {
+            overlaySettings = { ...{}, ... this._overlayDefaultSettings, ...overlaySettings };
             this.toggleRef.open(overlaySettings);
             this.isOpenChange.emit(true);
             if (!this.leftButtonLabel && !this.rightButtonLabel) {

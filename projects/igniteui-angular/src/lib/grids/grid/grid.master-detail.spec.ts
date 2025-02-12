@@ -590,13 +590,14 @@ describe('IgxGrid Master Detail #grid', () => {
             setupGridScrollDetection(fix, grid);
             const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
@@ -1280,7 +1281,6 @@ describe('IgxGrid Master Detail #grid', () => {
         </div>
     </ng-template>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxInputGroupComponent, IgxInputDirective, NgIf, NgFor]
 })
 export class DefaultGridMasterDetailComponent {
@@ -1322,7 +1322,6 @@ export class DefaultGridMasterDetailComponent {
         </ng-template>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, NgIf, NgFor]
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
@@ -1365,7 +1364,6 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
         </ng-template>
     </igx-grid>
     `,
-    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, IgxPaginatorComponent, NgIf, NgFor]
 })
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }

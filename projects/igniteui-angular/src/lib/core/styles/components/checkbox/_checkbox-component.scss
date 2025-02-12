@@ -18,16 +18,8 @@
                 @extend %cbx-ripple--hover !optional;
             }
 
-            @include e(composite) {
-                @extend %cbx-composite--hover !optional;
-            }
-
             @include e(composite-mark) {
                 @extend %cbx-composite-mark--fluent !optional;
-            }
-
-            @include e(label) {
-                @extend %cbx-label--hover !optional;
             }
         }
 
@@ -66,6 +58,32 @@
 
         @include e(ripple) {
             @extend %cbx-ripple !optional;
+        }
+
+        @include m(bootstrap) {
+            @include e(composite) {
+                &:hover {
+                    @extend %cbx-composite--hover !optional;
+                }
+            }
+        }
+
+        @include m(indigo) {
+            @include e(composite) {
+                &:hover {
+                    @extend %cbx-composite--hover !optional;
+                }
+            }
+
+            @include e(composite-mark) {
+                @extend %cbx-composite-mark-indigo !optional;
+            }
+
+            @include e(label) {
+                &:hover {
+                    @extend %cbx-label--hover !optional;
+                }
+            }
         }
 
         @include m(invalid) {
@@ -127,12 +145,34 @@
             }
 
             &:hover {
-                @extend %igx-checkbox--focused-hovered !optional;
-                
                 @include e(ripple) {
                     @extend %cbx-ripple--focused !optional;
                 }
             }
+        }
+
+        @include mx(indigo, focused) {
+            @extend %igx-checkbox--focused-indigo !optional;
+        }
+
+        @include mx(fluent, focused) {
+            @extend %igx-checkbox--focused-fluent !optional;
+        }
+
+        @include mx(bootstrap, focused) {
+            @extend %igx-checkbox--focused-bootstrap !optional;
+
+            &:hover {
+                @extend %igx-checkbox--focused-hovered !optional;
+            }
+        }
+
+        @include mx(indigo, focused, checked) {
+            @extend %igx-checkbox--focused-checked-indigo !optional;
+        }
+
+        @include mx(bootstrap, focused, checked) {
+            @extend %igx-checkbox--focused-checked-bootstrap !optional;
         }
 
         @include mx(focused, checked) {
@@ -140,11 +180,17 @@
         }
 
         @include mx(focused, invalid) {
-            @extend %igx-checkbox--focused-invalid !optional;
-
             @include e(ripple) {
                 @extend %cbx-ripple--focused-invalid !optional;
             }
+        }
+
+        @include mx(indigo, focused, invalid) {
+            @extend %igx-checkbox--focused-invalid-indigo !optional;
+        }
+
+        @include mx(bootstrap, focused, invalid) {
+            @extend %igx-checkbox--focused-invalid-bootstrap !optional;
         }
 
         @include m(indeterminate) {
@@ -178,6 +224,14 @@
             }
         }
 
+        @include mx(indigo, indeterminate) {
+            @extend %igx-checkbox--indeterminate-indigo !optional;
+        }
+
+        @include mx(fluent, indeterminate) {
+            @extend %igx-checkbox--indeterminate-fluent !optional;
+        }
+
         @include mx(invalid, indeterminate) {
             @extend %igx-checkbox--indeterminate--invalid !optional;
 
@@ -188,8 +242,24 @@
             }
         }
 
-        @include mx(focused, indeterminate) {
-            @extend %igx-checkbox--focused-checked !optional;
+        @include mx(material, disabled, indeterminate) {
+            @extend %igx-checkbox--disabled-indeterminate-material !optional;
+        }
+
+        @include mx(fluent, disabled, indeterminate) {
+            @extend %igx-checkbox--disabled-indeterminate-fluent !optional;
+        }
+
+        @include mx(indigo, disabled, indeterminate) {
+            @extend %igx-checkbox--disabled-indeterminate-indigo !optional;
+        }
+
+        @include mx(indigo, focused, indeterminate) {
+            @extend %igx-checkbox--focused-checked-indigo !optional;
+        }
+
+        @include mx(bootstrap, focused, indeterminate) {
+            @extend %igx-checkbox--focused-checked-bootstrap !optional;
         }
 
         @include m(checked) {

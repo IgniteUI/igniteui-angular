@@ -174,3 +174,9 @@ module.exports.sassdocImportJson = sassdocImportJson;
 module.exports.sassdocBuildJson = sassdocBuildJson;
 module.exports.sassdocBuildJA = series(sassdocCleanOutputDir, sassdocBuildJA);
 module.exports.sassdocBuildEN = series(sassdocCleanOutputDir, sassdocBuildEN);
+
+module.exports.copyPackageForElements = (cb) => {
+    return gulp.src([
+        path.join(__dirname, 'projects/igniteui-angular-elements/package.json')
+    ]).pipe(gulp.dest(path.join(__dirname, 'dist/igniteui-angular-elements/browser')));
+};

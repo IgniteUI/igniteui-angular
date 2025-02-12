@@ -1,7 +1,10 @@
 import { IGridResourceStrings } from 'igniteui-angular';
 
-// exported below as re-cast to create declaration type with expanded properties
-const GridResourceStringsFR_: ExpandRequire<IGridResourceStrings> = {
+// only use `satisfies` operator so export is typed by its schema
+/**
+ * French resource strings for IgxGrid
+ */
+export const GridResourceStringsFR = {
     igx_grid_groupByArea_message: 'Faites glisser un en-tête de colonne et déposez-le ici pour le regrouper par cette colonne.',
     igx_grid_emptyFilteredGrid_message: 'Aucun enregistrement trouvé.',
     igx_grid_emptyGrid_message: 'La grille n\'a pas de données.',
@@ -111,6 +114,7 @@ const GridResourceStringsFR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pinning_uncheck_all_label: 'Détacher tout',
     igx_grid_row_edit_btn_done: 'Terminé',
     igx_grid_row_edit_btn_cancel: 'Annuler',
+    igx_grid_row_edit_text: 'Vous avez {0} modifications dans cette ligne et {1} colonnes masquées',
     igx_grid_toolbar_actions_filter_prompt: 'Filtre liste des colonnes ...',
     igx_grid_toolbar_pinning_button_tooltip: 'Ouvrir le menu pour attacher les colonnes',
     igx_grid_toolbar_hiding_button_tooltip: 'Ouvrir le menu pour masquer les colonnes',
@@ -166,9 +170,4 @@ const GridResourceStringsFR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Veuillez sélectionner au maximum {0} caractères',
     igx_grid_email_validation_error: 'Une adresse e-mail valide doit être saisie',
     igx_grid_pattern_validation_error: 'La valeur entrée ne correspond pas au schéma requis'
-};
-
-/**
- * French resource strings for IgxGrid
- */
-export const GridResourceStringsFR = GridResourceStringsFR_ as ExpandRequire<IGridResourceStrings>;
+} satisfies MakeRequired<IGridResourceStrings>;

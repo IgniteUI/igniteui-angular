@@ -40,14 +40,14 @@
                 (click)="onCommitClick()"
                 tabindex="0"
                 family="default"
-                name="selected">
+                name="confirm">
             </igx-icon>
             <igx-icon
                 (keydown)="onClearKeyDown($event)"
                 (click)="onClearClick()"
                 tabindex="0"
                 family="default"
-                name="clear">
+                name="input_clear">
             </igx-icon>
         </igx-suffix>
     </igx-input-group>
@@ -81,14 +81,14 @@
                 (keydown)="onCommitKeyDown($event)"
                 (click)="onCommitClick($event)"
                 family="default"
-                name="selected">
+                name="confirm">
             </igx-icon>
             <igx-icon
                 tabindex="0"
                 (keydown)="onClearKeyDown($event)"
                 (click)="clearInput($event)"
                 family="default"
-                name="clear">
+                name="input_clear">
             </igx-icon>
         </igx-suffix>
         <!-- disable default icons -->
@@ -100,7 +100,8 @@
 <ng-template #defaultTimeUI>
     <igx-time-picker #picker
         [(value)]="value"
-        [inputFormat]="column.defaultTimeFormat"
+        [inputFormat]="column.editorOptions?.dateTimeFormat"
+        [displayFormat]="column.pipeArgs.format"
         [locale]="filteringService.grid.locale"
         [formatter]="column.formatter"
         [outlet]="filteringService.grid.outlet"
@@ -125,14 +126,14 @@
                 (keydown)="onCommitKeyDown($event)"
                 (click)="onCommitClick($event)"
                 family="default"
-                name="selected">
+                name="confirm">
             </igx-icon>
             <igx-icon
                 tabindex="0"
                 (keydown)="onClearKeyDown($event)"
                 (click)="clearInput($event)"
                 family="default"
-                name="clear">
+                name="input_clear">
             </igx-icon>
         </igx-suffix>
         <!-- disable default icons -->
@@ -155,7 +156,10 @@
             igxInput
             tabindex="0"
             [placeholder]="placeholder"
-            [igxDateTimeEditor]="column.defaultDateTimeFormat"
+            [locale]="filteringService.grid.locale"
+            [displayFormat]="column.pipeArgs.format"
+            [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat"
+            defaultFormatType="dateTime"
             [value]="value"
             (valueChange)="onInput($event)"
             [readonly]="isUnaryCondition"
@@ -168,14 +172,14 @@
                     (click)="onCommitClick()"
                     tabindex="0"
                     family="default"
-                    name="selected">
+                    name="confirm">
                 </igx-icon>
                 <igx-icon
                     (keydown)="onClearKeyDown($event)"
                     (click)="onClearClick()"
                     tabindex="0"
                     family="default"
-                    name="clear">
+                    name="input_clear">
                 </igx-icon>
             </igx-suffix>
     </igx-input-group>
@@ -215,7 +219,7 @@
                         (click)="toggleOperatorsDropDown($event, i)"
                         [igxDropDownItemNavigation]="operators"
                         [style.--ig-size]="filteringElementsSize">
-                        <igx-icon family="default" name="expand"></igx-icon>
+                        <igx-icon family="default" name="expand_more"></igx-icon>
                         <span>{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
                     </button>
                     <igx-drop-down #operators (selectionChanging)="onLogicOperatorChanged($event, item)">

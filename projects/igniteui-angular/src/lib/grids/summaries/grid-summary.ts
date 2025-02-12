@@ -1,12 +1,19 @@
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 
+/* tsPlainInterface */
+/* marshalByValue */
 export interface ISummaryExpression {
     fieldName: string;
+    /* blazorCSSuppress */
     customSummary?: any;
 }
+
+/* tsPlainInterface */
+/* marshalByValue */
 export interface IgxSummaryResult {
     key: string;
     label: string;
+    /* blazorAlternateName: Result */
     summaryResult: any;
     /**
      * Apply default formatting based on the grid column type.
@@ -33,6 +40,7 @@ const clear = (el) => el === 0 || Boolean(el);
 const first = (arr) => arr[0];
 const last = (arr) => arr[arr.length - 1];
 
+/* blazorCSSuppress */
 export class IgxSummaryOperand {
     /**
      * Counts all the records in the data source.
@@ -86,6 +94,7 @@ export class IgxSummaryOperand {
     }
 }
 
+/* blazorCSSuppress */
 // @dynamic
 export class IgxNumberSummaryOperand extends IgxSummaryOperand {
     /**
@@ -201,6 +210,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
     }
 }
 
+/* blazorCSSuppress */
 // @dynamic
 export class IgxDateSummaryOperand extends IgxSummaryOperand {
     /**
@@ -277,6 +287,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
     }
 }
 
+/* blazorCSSuppress */
 // @dynamic
 export class IgxTimeSummaryOperand extends IgxSummaryOperand {
     /**

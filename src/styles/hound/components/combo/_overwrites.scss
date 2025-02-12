@@ -1,0 +1,32 @@
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+.igx-input-group.igx-input-group--fluent {
+    igx-prefix,
+    igx-suffix {
+        padding-inline: rem(12px);
+    }
+}
+
+.igx-input-group.igx-input-group--fluent {
+    .igx-combo__clear-button {
+        &::after {
+            content: '';
+            position: absolute;
+            width: rem(1px);
+            height: rem(20px);
+            inset-inline-start: 100%;
+            inset-block-start: 50%;
+            transform: translateY(-50%);
+            background: color($color: 'gray', $variant: 200);
+        }
+    }
+
+    .igx-combo__toggle-button,
+    .igx-combo__clear-button {
+        border: none;
+
+        .igx-icon {
+            --size: #{rem(18px)};
+        }
+    }
+}

@@ -10,7 +10,7 @@ export class IgxGridSummaryService {
     public grid: GridType;
     public rootSummaryID = 'igxGridRootSummary';
     public summaryHeight = 0;
-    public maxSummariesLenght = 0;
+    public maxSummariesLength = 0;
     public groupingExpressions = [];
     public retriggerRootPipe = 0;
     public deleteOperation = false;
@@ -57,7 +57,7 @@ export class IgxGridSummaryService {
         if (this.summaryCacheMap.size === 1 && this.summaryCacheMap.has(this.rootSummaryID)) {
             return;
         }
-        if (this.isTreeGrid) {
+        if (this.grid.type === 'tree') {
             if (this.grid.transactions.enabled && this.deleteOperation) {
                 this.deleteOperation = false;
                 // TODO: this.removeChildRowSummaries(rowID, columnName);
@@ -65,7 +65,7 @@ export class IgxGridSummaryService {
                 return;
             }
             this.removeAllTreeGridSummaries(rowID, columnName);
-        } else if (this.isHierarchicalGrid) {
+        } else if (this.grid.type === 'hierarchical') {
             if (this.grid.transactions.enabled && this.deleteOperation) {
                 this.deleteOperation = false;
                 this.summaryCacheMap.clear();
@@ -98,14 +98,16 @@ export class IgxGridSummaryService {
         }
         let maxSummaryLength = 0;
         this.grid.columns.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
-            const getCurrentSummaryColumn = column.summaries.operate([], [], column.field).length;
-            if (getCurrentSummaryColumn) {
-                if (maxSummaryLength < getCurrentSummaryColumn) {
-                    maxSummaryLength = getCurrentSummaryColumn;
-                }
+            const getCurrentSummary = column.summaries.operate([], [], column.field);
+            const getCurrentSummaryColumn = column.disabledSummaries.length > 0
+                ? getCurrentSummary.filter(s => !column.disabledSummaries.includes(s.key)).length
+                : getCurrentSummary.length;
+
+            if (maxSummaryLength < getCurrentSummaryColumn) {
+                maxSummaryLength = getCurrentSummaryColumn;
             }
         });
-        this.maxSummariesLenght = maxSummaryLength;
+        this.maxSummariesLength = maxSummaryLength;
         this.summaryHeight = maxSummaryLength * this.grid.defaultSummaryHeight;
         return this.summaryHeight;
     }
@@ -116,16 +118,30 @@ export class IgxGridSummaryService {
             rowSummaries = new Map<string, IgxSummaryResult[]>();
             this.summaryCacheMap.set(rowID, rowSummaries);
         }
+
         if (!this.hasSummarizedColumns || !data) {
             return rowSummaries;
         }
+
         this.grid.columns.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
-                const summaryResult = column.summaries.operate(data.map(r => resolveNestedPath(r, column.field)),
-                    data, column.field, groupRecord, this.grid.locale, column.pipeArgs);
+                let summaryResult = column.summaries.operate(
+                    data.map(r => resolveNestedPath(r, column.field)),
+                    data,
+                    column.field,
+                    groupRecord,
+                    this.grid.locale,
+                    column.pipeArgs
+                );
+
+                summaryResult = column.disabledSummaries.length > 0
+                    ? summaryResult.filter(s => !column.disabledSummaries.includes(s.key))
+                    : summaryResult;
+
                 rowSummaries.set(column.field, summaryResult);
             }
         });
+
         return rowSummaries;
     }
 
@@ -244,13 +260,4 @@ export class IgxGridSummaryService {
             });
         }
     }
-
-    private get isTreeGrid() {
-        return this.grid.nativeElement.tagName.toLowerCase() === 'igx-tree-grid';
-    }
-
-    private get isHierarchicalGrid() {
-        return this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
-    }
-
 }

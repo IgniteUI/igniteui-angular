@@ -19,7 +19,7 @@
 @use '../components/list/list-theme' as *;
 @use '../components/navbar/navbar-theme' as *;
 @use '../components/navdrawer/navdrawer-theme' as *;
-@use '../components/progress/progress-theme' as *;
+@use '../components/progress/linear/linear-theme' as *;
 @use '../components/radio/radio-theme' as *;
 @use '../components/slider/slider-theme' as *;
 @use '../components/snackbar/snackbar-theme' as *;
@@ -30,8 +30,9 @@
 @use '../components/toast/toast-theme' as *;
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
+@use '../components/label/label-theme' as *;
 
-@mixin typography() {
+@mixin typography($type-scale) {
     @include badge-typography($categories: (
         text: 'button',
     ));
@@ -57,9 +58,6 @@
         label: 'body-2',
     ));
     @include chip-typography();
-    @include circular-bar-typography($categories: (
-        text: 'subtitle-2'
-    ));
     @include column-actions-typography();
     @include date-range-typography();
     @include dialog-typography($categories: (
@@ -104,9 +102,12 @@
     @include switch-typography($categories: (
         label: 'body-2'
     ));
-    @include tabs-typography();
+    @include tabs-typography($categories: (
+        label: 'subtitle-2',
+    )) {
+        --ig-subtitle-2-text-transform: uppercase;
+    };
     @include time-picker-typography($categories: (
-        header-time-period: 'subtitle-1',
         header-hour: 'h5',
         selected-time: 'h6'
     ));
@@ -121,4 +122,7 @@
         tooltip-text: 'subtitle-2'
     ));
     @include tree-typography();
+    @include label-typography($categories: (
+        label: 'caption'
+    ));
 }

@@ -1,7 +1,9 @@
 import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { IgxIconComponent } from "./icon.component";
-import { IconFamily, IconType, IgxIconService } from "./icon.service";
+import { IgxIconService } from "./icon.service";
+import { IconFamily } from './types';
+import type { IconType } from './types';
 
 import { configureTestSuite } from "../test-utils/configure-suite";
 import { By } from "@angular/platform-browser";
@@ -34,7 +36,6 @@ describe("Icon", () => {
             fixture.detectChanges();
 
             expect(instance.getFamily).toBe("material");
-            expect(instance.ariaHidden).toBe(true);
             expect(instance.getActive).toBe(true);
         });
 
@@ -220,8 +221,7 @@ function assertRenderedIcon(el: HTMLElement, icon: ProtoIgxIcon) {
 
 @Component({
     template: `<igx-icon class="my-class" name="home"></igx-icon>`,
-    standalone: true,
-    imports: [IgxIconComponent],
+    imports: [IgxIconComponent]
 })
 class IconTestComponent {}
 
@@ -231,7 +231,6 @@ class IconTestComponent {}
         family="default"
         name="home"
     ></igx-icon>`,
-    standalone: true,
-    imports: [IgxIconComponent],
+    imports: [IgxIconComponent]
 })
 class MetaIconComponent {}

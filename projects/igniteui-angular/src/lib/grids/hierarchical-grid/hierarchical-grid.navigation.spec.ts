@@ -10,7 +10,8 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
-import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
+import { IGridCellEventArgs, IgxColumnComponent, IPathSegment } from '../public_api';
+import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 
 const DEBOUNCE_TIME = 50;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
@@ -950,6 +951,73 @@ describe('IgxHierarchicalGrid Navigation', () => {
             expect(secondChildCell.active).toBe(true);
         });
     });
+
+    describe('IgxHierarchicalGrid Navigation API #hGrid', () => {
+        beforeEach(waitForAsync(() => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
+            baseHGridContent = GridFunctions.getGridContent(fixture);
+            GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
+        }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
+
+        it('should navigate to exact child grid with navigateToChildGrid.', (done) => {
+            hierarchicalGrid.primaryKey = 'ID';
+            hierarchicalGrid.expandChildren = false;
+            fixture.detectChanges();
+            const path: IPathSegment = {
+                rowKey: 10,
+                rowIslandKey: 'childData2',
+                rowID: 10
+            };
+            hierarchicalGrid.navigation.navigateToChildGrid([path], () => {
+                fixture.detectChanges();
+                const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([path]).nativeElement;
+                expect(childGrid).not.toBe(undefined);
+
+                const parentBottom = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+                const parentTop = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().top;
+                // check it's in view within its parent
+                expect(childGrid.getBoundingClientRect().bottom <= parentBottom && childGrid.getBoundingClientRect().top >= parentTop);
+                done();
+            });
+        });
+        it('should navigate to exact nested child grid with navigateToChildGrid.', (done) => {
+            hierarchicalGrid.expandChildren = false;
+            hierarchicalGrid.primaryKey = 'ID';
+            hierarchicalGrid.childLayoutList.toArray()[0].primaryKey = 'ID';
+            fixture.detectChanges();
+            const targetRoot: IPathSegment = {
+                rowKey: 10,
+                rowIslandKey: 'childData',
+                rowID: 10
+            };
+            const targetNested: IPathSegment = {
+                rowKey: 5,
+                rowIslandKey: 'childData2',
+                rowID: 5
+            };
+
+            hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested], () => {
+                fixture.detectChanges();
+                const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot]).nativeElement;
+                expect(childGrid).not.toBe(undefined);
+                const childGridNested =  hierarchicalGrid.gridAPI.getChildGrid([targetRoot, targetNested]).nativeElement;
+                expect(childGridNested).not.toBe(undefined);
+
+                const parentBottom = childGrid.getBoundingClientRect().bottom;
+                const parentTop = childGrid.getBoundingClientRect().top;
+                // check it's in view within its parent
+                expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
+                done();
+            });
+        });
+    });
 });
 
 
@@ -962,8 +1030,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent ]
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -1006,7 +1073,6 @@ export class IgxHierarchicalGridTestBaseComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestComplexComponent extends IgxHierarchicalGridTestBaseComponent {
@@ -1028,7 +1094,6 @@ export class IgxHierarchicalGridTestComplexComponent extends IgxHierarchicalGrid
         <igx-row-island [key]="'childData2'" [autoGenerate]="true" [height]="'150px'">
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {}
@@ -1059,7 +1124,6 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxColumnComponent]
 })
 export class IgxHierarchicalGridSmallerChildComponent extends IgxHierarchicalGridTestBaseComponent {}

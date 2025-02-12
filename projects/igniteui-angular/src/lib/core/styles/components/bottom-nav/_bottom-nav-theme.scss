@@ -14,7 +14,6 @@
 /// If only background color is specified,
 /// the label and icon colors will be assigned automatically to a contrasting color.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The background color used for the toast.
 /// @param {Color} $label-color [null] - The label color used in idle state.
 /// @param {Color} $icon-color [null] - The icon color used in idle state.
@@ -31,7 +30,6 @@
 ///   @include css-vars($my-bottom-nav-theme);
 @function bottom-nav-theme(
     $schema: $light-material-schema,
-    $elevations: null,
     $background: null,
     $icon-color: null,
     $icon-selected-color: null,
@@ -107,6 +105,7 @@
         label-disabled-color: $label-disabled-color,
         border-color: $border-color,
         shadow: $shadow,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')
@@ -186,14 +185,14 @@
         igx-icon {
             --component-size: 3;
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo' {
                 --size: rem(16px);
             }
         }
     }
 
     %igx-bottom-nav-menu-item--disabled {
-        @if $variant != 'indigo-design' {
+        @if $variant != 'indigo' {
             opacity: .5;
         }
 
@@ -226,7 +225,7 @@
         justify-content: center;
         color: var-get($theme, 'icon-color');
 
-        @if $variant != 'indigo-design' {
+        @if $variant != 'indigo' {
             padding: 0 rem(8px);
             height: rem(24px);
             transform: translateZ(0);
@@ -250,7 +249,7 @@
         color: var-get($theme, 'label-selected-color');
     }
 
-    @if $variant != 'indigo-design' {
+    @if $variant != 'indigo' {
         %igx-tab-icon--selected {
             transform: translateY(-2px);
         }

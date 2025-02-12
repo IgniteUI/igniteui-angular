@@ -1,0 +1,26 @@
+@use 'sass:map';
+@use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
+
+$_base-schema: $light-fluent-schema;
+$_dropdown-schema: extend(map.get($_base-schema, 'drop-down'), (
+    border-radius: rem(6px),
+    item-border-radius: rem(4px),
+    selected-item-background: color($color: 'primary', $variant: 50),
+    selected-focus-item-background: color($color: 'primary', $variant: 100),
+    selected-hover-item-background: color($color: 'primary', $variant: 100),
+));
+
+@mixin component() {
+    @include drop-down(
+        drop-down-theme(
+            extend(
+                $_base-schema,
+                (
+                    drop-down: $_dropdown-schema,
+                )
+            )
+        )
+    );
+}
+
+

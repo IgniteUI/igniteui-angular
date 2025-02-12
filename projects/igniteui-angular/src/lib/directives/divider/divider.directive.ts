@@ -10,7 +10,6 @@ export type IgxDividerType = (typeof IgxDividerType)[keyof typeof IgxDividerType
 let NEXT_ID = 0;
 
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-divider',
     standalone: true
 })
@@ -83,6 +82,7 @@ export class IgxDividerDirective {
      * ```
      */
     @HostBinding('style.--inset')
+    @Input()
     public set inset(value: string) {
         this._inset = value;
     }
@@ -105,7 +105,6 @@ export class IgxDividerDirective {
      * <igx-divider inset="16px"></igx-divider>
      * ```
      */
-    @Input('inset')
     private _inset = '0';
 
     /**

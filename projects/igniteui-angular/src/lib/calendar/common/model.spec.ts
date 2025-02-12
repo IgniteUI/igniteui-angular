@@ -39,22 +39,17 @@ describe("Calendar Day Model", () => {
         describe("Deltas", () => {
             it("day", () => {
                 expect(firstOfJan.add("day", 0).equalTo(firstOfJan)).toBeTrue();
-                expect(
-                    firstOfJan.add("day", 1).greaterThan(firstOfJan),
-                ).toBeTrue();
-                expect(
-                    firstOfJan.add("day", -1).lessThan(firstOfJan),
-                ).toBeTrue();
+                expect(firstOfJan.add("day", 1).greaterThan(firstOfJan)).toBeTrue();
+                expect(firstOfJan.add("day", -1).lessThan(firstOfJan)).toBeTrue();
             });
 
             it("quarters", () => {
-                for (let i = 1; i < 5; i++) {
-                    console.log(firstOfJan.add("quarter", i).toString());
-                }
-
-                for (let i = -1; i > -5; i--) {
-                    console.log(firstOfJan.add("quarter", i).toString());
-                }
+                expect(firstOfJan.add("quarter", 0).equalTo(firstOfJan)).toBeTrue();
+                const nextQ = firstOfJan.add("quarter", 1);
+                expect(nextQ.month).toEqual(3);
+                const prevQ = firstOfJan.add("quarter", -1);
+                expect(prevQ.year).toEqual(2023);
+                expect(prevQ.month).toEqual(9);
             });
         });
 

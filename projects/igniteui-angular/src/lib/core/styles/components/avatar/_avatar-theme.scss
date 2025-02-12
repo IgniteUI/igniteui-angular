@@ -54,6 +54,7 @@
         icon-color: $icon-color,
         border-radius: $border-radius,
         size: $size,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme')
         )),
@@ -67,23 +68,7 @@
     @include css-vars($theme);
 
     $variant: map.get($theme, '_meta', 'variant');
-    $bootstrap-theme: $variant == 'bootstrap';
-    $box-shadow: map.get((
-        material: null,
-        fluent: null,
-        bootstrap: 0 0 0 rem(3px) var-get($theme, 'background'),
-        indigo-design: null,
-    ), $variant);
-
-    %igx-avatar-outline {
-        position: absolute;
-        content: '';
-        width: 100%;
-        height: 100%;
-        border-radius: inherit;
-        opacity: .5;
-    }
-
+ 
     %igx-avatar-display {
         @include sizable();
 
@@ -108,24 +93,10 @@
             color: var-get($theme, 'icon-color');
         }
 
-        @if $variant == 'indigo-design' {
+        @if $variant == 'indigo' {
             igx-icon {
                 --component-size: 1;
             }
-        }
-
-        &::after {
-            box-shadow: none;
-
-            @if $bootstrap-theme {
-                @extend %igx-avatar-outline;
-            }
-
-            transition: box-shadow .15s $in-out-quad;
-        }
-
-        &:focus::after {
-            box-shadow: $box-shadow;
         }
     }
 

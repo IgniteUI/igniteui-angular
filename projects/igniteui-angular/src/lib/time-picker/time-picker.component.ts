@@ -60,7 +60,6 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxDividerDirective } from '../directives/divider/divider.directive';
-import { IgxIconService } from '../icon/icon.service';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -92,7 +91,6 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
             display: block;
         }`
     ],
-    standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, NgIf, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, NgFor, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe, IgxDividerDirective]
 })
 export class IgxTimePickerComponent extends PickerBaseDirective
@@ -140,7 +138,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public override inputFormat: string = DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT;
+    public override inputFormat: string;
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
@@ -334,37 +332,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @ViewChild(IgxToggleDirective)
     private toggleRef: IgxToggleDirective;
 
-    private _icons = [
-        {
-            name: 'clear',
-            family: 'default',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'cancel',
-                    family: 'material',
-                },
-                'all': {
-                    name: 'clear',
-                    family: 'material'
-                }
-            }))
-        },
-        {
-            name: 'clock',
-            family: 'default',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'access_time',
-                    family: 'material'
-                },
-                'all': {
-                    name: 'access_time',
-                    family: 'material'
-                }
-            }))
-        }
-    ];
-
     /** @hidden */
     public cleared = false;
 
@@ -392,27 +359,27 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden */
     public get showHoursList(): boolean {
-        return this.inputFormat.indexOf('h') !== - 1 || this.inputFormat.indexOf('H') !== - 1;
+        return this.appliedFormat?.indexOf('h') !== - 1 || this.appliedFormat?.indexOf('H') !== - 1;
     }
 
     /** @hidden */
     public get showMinutesList(): boolean {
-        return this.inputFormat.indexOf('m') !== - 1;
+        return this.appliedFormat?.indexOf('m') !== - 1;
     }
 
     /** @hidden */
     public get showSecondsList(): boolean {
-        return this.inputFormat.indexOf('s') !== - 1;
+        return this.appliedFormat?.indexOf('s') !== - 1;
     }
 
     /** @hidden */
     public get showAmPmList(): boolean {
-        return this.inputFormat.indexOf('t') !== - 1 || this.inputFormat.indexOf('a') !== - 1;
+        return this.appliedFormat?.indexOf('t') !== - 1 || this.appliedFormat?.indexOf('a') !== - 1;
     }
 
     /** @hidden */
     public get isTwelveHourFormat(): boolean {
-        return this.inputFormat.indexOf('h') !== - 1;
+        return this.appliedFormat?.indexOf('h') !== - 1;
     }
 
     /** @hidden @internal */
@@ -445,6 +412,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
 
         return this._dateMaxValue;
+    }
+
+    /** @hidden @internal */
+    public get appliedFormat(): string {
+        return this.inputFormat || this.dateTimeEditor?.inputFormat;
+    }
+
+    protected override get toggleContainer(): HTMLElement | undefined {
+        return this.toggleRef?.element;
     }
 
     private get required(): boolean {
@@ -645,8 +621,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         private _injector: Injector,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
-        @Optional() @Inject(IgxIconService)
-        protected iconService?: IgxIconService
     ) {
         super(element, _localeId, _inputGroupType);
         this.locale = this.locale || this._localeId;
@@ -678,9 +652,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public getPartValue(value: Date, type: string): string {
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.inputFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.appliedFormat);
         const part = inputDateParts.find(element => element.type === type);
-        return DateTimeUtil.getPartValue(value, part, part.format.length);
+        return DateTimeUtil.getPartValue(value, part, part.format?.length);
     }
 
     /** @hidden @internal */
@@ -754,24 +728,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this.minDropdownValue = this.setMinMaxDropdownValue('min', this.minDateValue);
         this.maxDropdownValue = this.setMinMaxDropdownValue('max', this.maxDateValue);
         this.setSelectedValue(this._dateValue);
-
-        for (const icon of this._icons) {
-            switch (this.inputGroup?.theme) {
-                case "material":
-                    this.iconService?.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get("material"),
-                    );
-                    break;
-                default:
-                    this.iconService?.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get("all"),
-                    );
-            }
-        }
     }
 
     /** @hidden */

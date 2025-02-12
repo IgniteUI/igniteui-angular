@@ -13,7 +13,7 @@ import {
 	booleanAttribute,
     HostListener,
 } from '@angular/core';
-import { NgIf, NgTemplateOutlet, NgStyle, NgFor, DatePipe } from '@angular/common';
+import { NgIf, NgTemplateOutlet, NgFor, DatePipe } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import {
@@ -58,21 +58,20 @@ let NEXT_ID = 0;
  * ```
  */
 @Component({
-	providers: [
-		{
-			multi: true,
-			provide: NG_VALUE_ACCESSOR,
-			useExisting: IgxCalendarComponent,
-		},
+    providers: [
+        {
+            multi: true,
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: IgxCalendarComponent,
+        },
         {
             multi: false,
             provide: KeyboardNavigationService,
         },
-	],
-	selector: 'igx-calendar',
-	templateUrl: 'calendar.component.html',
-	standalone: true,
-	imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollPageDirective, NgStyle, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar],
+    ],
+    selector: 'igx-calendar',
+    templateUrl: 'calendar.component.html',
+    imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollPageDirective, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
 })
 export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit, OnDestroy {
     /**
@@ -400,7 +399,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
      * @hidden
      * @internal
      */
-    // eslint-disable-next-line max-len
     @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true })
     private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
 
@@ -518,16 +516,12 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
         });
     }
 
-    private onWrapperFocus(event: FocusEvent) {
-        event.stopPropagation();
-
+    private onWrapperFocus(_event: FocusEvent) {
         this.showActiveDay = true;
         this.monthViews.forEach(view => view.changePreviewRange(this.activeDate));
     }
 
-    private onWrapperBlur(event: FocusEvent) {
-        event.stopPropagation();
-
+    private onWrapperBlur(_event: FocusEvent) {
         this.showActiveDay = false;
         this.monthViews.forEach(view => view.clearPreviewRange());
         this._onTouchedCallback();
@@ -535,7 +529,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
     private handleArrowKeydown(event: KeyboardEvent, delta: number) {
         event.preventDefault();
-        event.stopPropagation();
 
         const date = getClosestActiveDate(
             CalendarDay.from(this.activeDate),
@@ -556,7 +549,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
     private handlePageUpDown(event: KeyboardEvent, delta: number) {
         event.preventDefault();
-        event.stopPropagation();
 
         const dir = delta > 0 ? ScrollDirection.NEXT : ScrollDirection.PREV;
 
@@ -638,8 +630,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     }
 
     private onEnter(event: KeyboardEvent) {
-        event.stopPropagation();
-
         if (this.activeView === IgxCalendarView.Month) {
             this.handleDateSelection(this.activeDate);
             this.cdr.detectChanges();
@@ -657,8 +647,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     }
 
     private onHome(event: KeyboardEvent) {
-        event.stopPropagation();
-
         if (this.activeView === IgxCalendarView.Month) {
             const dates = this.monthViews.toArray()
                 .flatMap((view) => view.dates.toArray())
@@ -678,8 +666,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     }
 
     private onEnd(event: KeyboardEvent) {
-        event.stopPropagation();
-
         if (this.activeView === IgxCalendarView.Month) {
             const dates = this.monthViews.toArray()
                 .flatMap((view) => view.dates.toArray())

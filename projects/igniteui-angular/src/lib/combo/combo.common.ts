@@ -45,7 +45,6 @@ import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_ap
 import { ComboResourceStringsEN, IComboResourceStrings } from '../core/i18n/combo-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { DOCUMENT } from '@angular/common';
-import { Size } from '../grids/common/enums';
 import { isEqual } from 'lodash-es';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
@@ -82,19 +81,6 @@ export interface IgxComboBase {
 
 let NEXT_ID = 0;
 
-/**
- * @hidden
- * The default number of items that should be in the combo's
- * drop-down list if no `[itemsMaxHeight]` is specified
- */
-const itemsInContainer = 10; // TODO: make private readonly
-
-/** @hidden @internal */
-const ItemHeights = {
-    "3": 40,
-    "2": 32,
-    "1": 28
-};
 
 /** @hidden @internal */
 export const enum DataTypes {
@@ -108,8 +94,11 @@ export const enum DataTypes {
 export interface IComboFilteringOptions {
     /** Defines filtering case-sensitivity */
     caseSensitive?: boolean;
-    /** Defines whether filtering is allowed */
-    filterable: boolean;
+    /**
+     * Defines whether filtering is allowed
+     * @deprecated in version 18.2.0. Use the `disableFiltering` property instead.
+    */
+    filterable?: boolean;
     /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
     filteringKey?: string;
 }
@@ -176,16 +165,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             return;
         }
         const selection = this.selectionService.get(this._id);
+        this.selectionService.clear(this._id);
         this._id = value;
         if (selection) {
             this.selectionService.set(this._id, selection);
-        }
-        if (this.dropdown.open) {
-            this.dropdown.close();
-        }
-        if (this.inputGroup?.isFocused) {
-            this.inputGroup.element.nativeElement.blur();
-            this.inputGroup.isFocused = false;
         }
     }
 
@@ -237,8 +220,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input()
     public get itemsMaxHeight(): number {
-        if (this._itemsMaxHeight === null || this._itemsMaxHeight === undefined) {
-            return this.itemHeight * itemsInContainer;
+        if (this.itemHeight && !this._itemsMaxHeight) {
+            return this.itemHeight * this.itemsInContainer;
         }
         return this._itemsMaxHeight;
     }
@@ -249,15 +232,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden */
     public get itemsMaxHeightInRem() {
-        return rem(this.itemsMaxHeight);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public get comboSize(): Size {
-        return this.computedStyles?.getPropertyValue('--ig-size') || Size.Large;
+        if (this.itemsMaxHeight) {
+            return rem(this.itemsMaxHeight);
+        }
     }
 
     /**
@@ -275,9 +252,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input()
     public get itemHeight(): number {
-        if (this._itemHeight === null || this._itemHeight === undefined) {
-            return ItemHeights[this.comboSize];
-        }
         return this._itemHeight;
     }
 
@@ -946,6 +920,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public set filteringOptions(value: IComboFilteringOptions) {
         this._filteringOptions = value;
     }
+
+    protected containerSize = undefined;
+    protected itemSize = undefined;
     protected _data = [];
     protected _value = [];
     protected _displayValue = '';
@@ -966,70 +943,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _id: string = `igx-combo-${NEXT_ID++}`;
     private _type = null;
     private _dataType = '';
-    private _itemHeight = null;
+    private _itemHeight = undefined;
     private _itemsMaxHeight = null;
     private _overlaySettings: OverlaySettings;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
     private _filteringOptions: IComboFilteringOptions;
-    private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false, filterable: true };
-    private _icons = [
-        {
-            name: 'expand',
-            family: 'combo',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'expand_more',
-                    family: 'material',
-                },
-                'all': {
-                    name: 'arrow_drop_down',
-                    family: 'material'
-                }
-            }))
-        },
-        {
-            name: 'collapse',
-            family: 'combo',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'expand_less',
-                    family: 'material',
-                },
-                'all': {
-                    name: 'arrow_drop_up',
-                    family: 'material'
-                }
-            }))
-        },
-        {
-            name: 'clear',
-            family: 'default',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'cancel',
-                    family: 'material',
-                },
-                'all': {
-                    name: 'clear',
-                    family: 'material'
-                }
-            }))
-        },
-        {
-            name: 'case-sensitive',
-            family: 'combo',
-            ref: new Map(Object.entries({
-                'material': {
-                    name: 'case-sensitive',
-                    family: 'imx-icons'
-                },
-                'all': {
-                    name: 'case-sensitive',
-                    family: 'imx-icons'
-                }
-            }))
-        }
-    ];
+    private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false };
+    private itemsInContainer = 10;
 
     public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
@@ -1076,24 +996,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.selectionService.set(this.id, new Set());
         this._iconService?.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
         this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
-
-        for (const icon of this._icons) {
-            switch (this.inputGroup?.theme) {
-                case "material":
-                    this._iconService?.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get("material"),
-                    );
-                    break;
-                default:
-                    this._iconService?.addIconRef(
-                        icon.name,
-                        icon.family,
-                        icon.ref.get("all"),
-                    );
-            }
-        }
     }
 
     /** @hidden @internal */
@@ -1107,6 +1009,16 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.virtDir.chunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
             const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
             this.dataPreLoad.emit(eventArgs);
+        });
+        this.dropdown?.opening.subscribe((_args: IBaseCancelableBrowserEventArgs) => {
+            // calculate the container size and item size based on the sizes from the DOM
+            const dropdownContainerHeight = this.dropdownContainer.nativeElement.getBoundingClientRect().height;
+            if (dropdownContainerHeight) {
+                this.containerSize = parseFloat(dropdownContainerHeight);
+            }
+            if (this.dropdown.children?.first) {
+                this.itemSize = this.dropdown.children.first.element.nativeElement.getBoundingClientRect().height;
+            }
         });
     }
 
@@ -1200,7 +1112,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public get toggleIcon(): string {
-        return this.dropdown.collapsed ? 'expand' : 'collapse';
+        return this.dropdown.collapsed ? 'input_expand' : 'input_collapse';
     }
 
     /** @hidden @internal */
@@ -1281,6 +1193,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.searchValue = '';
         if (!e.event) {
             this.comboInput?.nativeElement.focus();
+        } else {
+            this._onTouchedCallback();
+            this.updateValidity();
         }
     }
 
@@ -1326,11 +1241,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public onBlur() {
         if (this.collapsed) {
             this._onTouchedCallback();
-            if (this.ngControl && this.ngControl.invalid) {
-                this.valid = IgxInputState.INVALID;
-            } else {
-                this.valid = IgxInputState.INITIAL;
-            }
+            this.updateValidity();
         }
     }
 
@@ -1357,6 +1268,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         }
         this.manageRequiredAsterisk();
     };
+
+    private updateValidity() {
+        if (this.ngControl && this.ngControl.invalid) {
+            this.valid = IgxInputState.INVALID;
+        } else {
+            this.valid = IgxInputState.INITIAL;
+        }
+    }
 
     private get isTouchedOrDirty(): boolean {
         return (this.ngControl.control.touched || this.ngControl.control.dirty);
@@ -1392,14 +1311,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     protected manageRequiredAsterisk(): void {
         if (this.ngControl) {
-            if (this.ngControl.control.validator) {
-                // Run the validation with empty object to check if required is enabled.
-                const error = this.ngControl.control.validator({} as AbstractControl);
-                this.inputGroup.isRequired = error && error.required;
-            } else {
-                // P.M. 18 May 2022: IgxCombo's asterisk not removed when removing required validator dynamically in reactive form #11543
-                this.inputGroup.isRequired = false;
-            }
+            this.inputGroup.isRequired = this.required;
         }
     }
 

@@ -1,6 +1,8 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { IBaseEventArgs } from '../core/utils';
+import { ExpressionsTreeUtil } from './expressions-tree-util';
 
+/* mustCoerceToInt */
 export enum FilteringExpressionsTreeType {
     Regular,
     Advanced
@@ -12,14 +14,27 @@ export declare interface IExpressionTree {
     fieldName?: string;
 }
 
+/* marshalByValue */
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpressionTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
+    /* alternateName: treeType */
     type?: FilteringExpressionsTreeType;
 
-    find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
-    findIndex(fieldName: string): number;
+    /* blazorSuppress */
+    /**
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.find` instead.
+     */
+    find?: (fieldName: string) => IFilteringExpressionsTree | IFilteringExpression;
+
+    /* blazorSuppress */
+    /**
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.findIndex` instead.
+     */
+    findIndex?: (fieldName: string) => number;
 }
 
+/* marshalByValue */
+/* jsonAPIPlainObject */
 export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     /**
@@ -70,6 +85,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      */
     public fieldName?: string;
 
+    /* alternateName: treeType */
     /**
      * Sets/gets the type of the filtering expressions tree.
      * ```typescript
@@ -98,6 +114,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
         return !expressionTree || !expressionTree.filteringOperands || !expressionTree.filteringOperands.length;
     }
 
+    /* blazorSuppress */
     /**
      * Returns the filtering expression for a column with the provided fieldName.
      * ```typescript
@@ -105,17 +122,13 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```
      *
      * @memberof FilteringExpressionsTree
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.find` instead.
      */
     public find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression {
-        const index = this.findIndex(fieldName);
-
-        if (index > -1) {
-            return this.filteringOperands[index];
-        }
-
-        return null;
+        return ExpressionsTreeUtil.find(this, fieldName);
     }
 
+    /* blazorSuppress */
     /**
      * Returns the index of the filtering expression for a column with the provided fieldName.
      * ```typescript
@@ -123,37 +136,9 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```
      *
      * @memberof FilteringExpressionsTree
+     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.findIndex` instead.
      */
     public findIndex(fieldName: string): number {
-        let expr;
-        for (let i = 0; i < this.filteringOperands.length; i++) {
-            expr = this.filteringOperands[i];
-            if (expr instanceof FilteringExpressionsTree) {
-                if (this.isFilteringExpressionsTreeForColumn(expr, fieldName)) {
-                    return i;
-                }
-            } else {
-                if ((expr as IFilteringExpression).fieldName === fieldName) {
-                    return i;
-                }
-            }
-        }
-
-        return -1;
-    }
-
-    protected isFilteringExpressionsTreeForColumn(expressionsTree: IFilteringExpressionsTree, fieldName: string): boolean {
-        if (expressionsTree.fieldName === fieldName) {
-            return true;
-        }
-
-        for (const expr of expressionsTree.filteringOperands) {
-            if ((expr instanceof FilteringExpressionsTree)) {
-                return this.isFilteringExpressionsTreeForColumn(expr, fieldName);
-            } else if ((expr as IFilteringExpression).fieldName === fieldName) {
-                return true;
-            }
-        }
-        return false;
+        return ExpressionsTreeUtil.findIndex(this, fieldName);
     }
 }

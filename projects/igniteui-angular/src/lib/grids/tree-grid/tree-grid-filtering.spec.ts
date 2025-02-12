@@ -388,14 +388,14 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
             const icon = GridFunctions.getExcelFilterTreeNodeIcon(fix, 0);
             let iconText = icon.children[0].innerText;
-            expect(iconText).toBe('keyboard_arrow_right', 'incorrect rendered icon');
+            expect(iconText).toBe('chevron_right', 'incorrect rendered icon');
 
             GridFunctions.clickExcelTreeNodeExpandIcon(fix, 0);
             fix.detectChanges();
             tick();
 
             iconText = icon.children[0].innerText;
-            expect(iconText).toBe('keyboard_arrow_down', 'incorrect rendered icon');
+            expect(iconText).toBe('expand_more', 'incorrect rendered icon');
         }));
 
         it('Should display Select All item', fakeAsync(() => {

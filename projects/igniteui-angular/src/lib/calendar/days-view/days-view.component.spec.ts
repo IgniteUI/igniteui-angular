@@ -5,8 +5,10 @@ import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { UIInteractions } from "../../test-utils/ui-interactions.spec";
 import { CalendarDay } from "../common/model";
-import { DateRangeDescriptor, DateRangeType } from "igniteui-webcomponents";
+import { DateRangeDescriptor, DateRangeType } from 'igniteui-webcomponents';
 import { ScrollDirection } from "../calendar";
+
+const TODAY = new Date(2024, 6, 12);
 
 describe("Days View Component", () => {
     configureTestSuite();
@@ -71,10 +73,9 @@ describe("Days View Component", () => {
     });
 
     it("should set activeDate to the first day of the current month when no value is provided", () => {
-        const today = new Date();
         const firstMonthDay = new Date(
-            today.getFullYear(),
-            today.getMonth(),
+            TODAY.getFullYear(),
+            TODAY.getMonth(),
             1,
         );
         const fixture = TestBed.createComponent(InitDaysViewComponent);
@@ -115,12 +116,11 @@ describe("Days View Component", () => {
         let fixture: ComponentFixture<InitDaysViewComponent>;
         let el: HTMLElement;
         let instance: IgxDaysViewComponent;
-        const today = new Date();
         const firstDay = CalendarDay.from(
-            new Date(today.getFullYear(), today.getMonth(), 1),
+            new Date(TODAY.getFullYear(), TODAY.getMonth(), 1),
         );
         const lastDay = CalendarDay.from(
-            new Date(today.getFullYear(), today.getMonth() + 1, 0),
+            new Date(TODAY.getFullYear(), TODAY.getMonth() + 1, 0),
         );
 
         beforeEach(waitForAsync(() => {
@@ -310,7 +310,7 @@ describe("Days View Component", () => {
                 ),
             );
 
-            UIInteractions.simulateMouseDownEvent(day.nativeElement.firstChild);
+            UIInteractions.simulateClickAndSelectEvent(day.nativeElement.firstChild);
             fixture.detectChanges();
 
             expect(instance.dateSelected.emit).toHaveBeenCalledWith(
@@ -331,7 +331,7 @@ describe("Days View Component", () => {
                 By.css(".igx-days-view__date--inactive"),
             );
 
-            UIInteractions.simulateMouseDownEvent(
+            UIInteractions.simulateClickAndSelectEvent(
                 days.at(0).nativeElement.firstChild,
             );
             fixture.detectChanges();
@@ -346,7 +346,7 @@ describe("Days View Component", () => {
                 By.css(".igx-days-view__date--inactive"),
             );
 
-            UIInteractions.simulateMouseDownEvent(
+            UIInteractions.simulateClickAndSelectEvent(
                 days.at(-1).nativeElement.firstChild,
             );
             fixture.detectChanges();
@@ -391,19 +391,18 @@ function getInactiveDays(fixture: ComponentFixture<InitDaysViewComponent>) {
         [value]="date"
         [disabledDates]="disabledDates"
     ></igx-days-view>`,
-    standalone: true,
-    imports: [IgxDaysViewComponent],
+    imports: [IgxDaysViewComponent]
 })
 class InitDaysViewComponent {
     @ViewChild(IgxDaysViewComponent, { static: true })
     public instance: IgxDaysViewComponent;
-    protected date = new Date();
+    public date = TODAY;
     protected disabledDates: DateRangeDescriptor[] = [
         {
             type: DateRangeType.Specific,
             dateRange: [
-                new Date(this.date.getFullYear(), this.date.getMonth(), 12),
-                new Date(this.date.getFullYear(), this.date.getMonth(), 24),
+                new Date(TODAY.getFullYear(), TODAY.getMonth(), 12),
+                new Date(TODAY.getFullYear(), TODAY.getMonth(), 24),
             ],
         },
     ];

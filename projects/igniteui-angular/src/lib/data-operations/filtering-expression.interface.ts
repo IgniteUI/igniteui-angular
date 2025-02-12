@@ -1,10 +1,13 @@
 import { IFilteringOperation } from './filtering-condition';
 
+/* mustCoerceToInt */
 export enum FilteringLogic {
     And,
     Or
 }
 
+/* tsPlainInterface */
+/* marshalByValue */
 /**
  * Represents filtering expressions.
  */

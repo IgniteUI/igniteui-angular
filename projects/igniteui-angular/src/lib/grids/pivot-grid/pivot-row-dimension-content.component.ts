@@ -5,6 +5,7 @@ import {
     createComponent,
     ElementRef,
     EnvironmentInjector,
+    HostBinding,
     Inject,
     Injector,
     Input,
@@ -25,6 +26,7 @@ import { PivotUtil } from './pivot-util';
 import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from '../headers/pipes';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgClass, NgStyle } from '@angular/common';
+import { IMultiRowLayoutNode } from '../common/types';
 
 /**
  *
@@ -38,16 +40,45 @@ import { NgClass, NgStyle } from '@angular/common';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-content',
     templateUrl: './pivot-row-dimension-content.component.html',
-    standalone: true,
     imports: [IgxPivotRowDimensionHeaderGroupComponent, NgClass, NgStyle, IgxIconComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowComponent implements OnChanges {
+    @HostBinding('style.grid-row-start')
+    public get rowStart(): string {
+        return this.layout ? `${this.layout.rowStart}` : "";
+    }
+
+    @HostBinding('style.grid-row-end')
+    public get rowsEnd(): string {
+        return this.layout ? `${this.layout.rowEnd}` : "";
+    }
+
+    @HostBinding('style.grid-column-start')
+    public get colStart(): string {
+        return this.layout ? `${this.layout.colStart}` : "";
+    }
+
+    @HostBinding('style.grid-column-end')
+    public get colEnd(): string {
+        return this.layout ? `${this.layout.colEnd}` : "";
+    }
+
     /**
      * @hidden
      * @internal
      */
     @Input()
     public rowIndex: number;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public colIndex: number;
+
+    @Input()
+    public layout: IMultiRowLayoutNode;
 
     @Input()
     public dimension: IPivotDimension;
@@ -116,7 +147,8 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     * @internal
     */
     public toggleRowDimension(event) {
-        this.grid.toggleRow(this.getRowDimensionKey())
+        this.grid.toggleRow(this.getRowDimensionKey());
+        this.grid.navigation.onRowToggle(this.getExpandState(), this.dimension, this.rowData, this.layout);
         event?.stopPropagation();
     }
 
@@ -136,17 +168,26 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     }
 
     public getLevel() {
-        return this.dimension.level;
+        return this.grid.hasHorizontalLayout ? 0 : this.dimension.level;
+    }
+
+    protected getHeaderWidthFromDimension() {
+        if (this.grid.hasHorizontalLayout) {
+            return this.width === -1 ? 'fit-content' : this.width;
+        }
+        return this.grid.rowDimensionWidth(this.rootDimension);
     }
 
     protected extractFromDimensions() {
-        const col = this.extractFromDimension(this.dimension, this.rowData);
-        const prevDims = [];
-        this.rowDimensionData = {
-            column: col,
-            dimension: this.dimension,
-            prevDimensions: prevDims
-        };
+        if (this.dimension && this.rowData) {
+            const col = this.extractFromDimension(this.dimension, this.rowData);
+            const prevDims = [];
+            this.rowDimensionData = {
+                column: col,
+                dimension: this.dimension,
+                prevDimensions: prevDims
+            };
+        }
     }
 
     protected extractFromDimension(dim: IPivotDimension, rowData: IPivotGridGroupRecord) {
@@ -163,7 +204,9 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         ref.instance.width = this.grid.rowDimensionWidthToPixels(this.rootDimension) + 'px';
         ref.instance.resizable = this.grid.rowDimensionResizing;
         (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * this.grid.pivotConfiguration.rows.length;
-        if (dim.childLevel) {
+
+
+        if (header && dim.childLevel && (!this.rowData.totalRecordDimensionName || this.rowData.totalRecordDimensionName !== dim.memberName)) {
             ref.instance.headerTemplate = this.headerTemplate;
         } else {
             ref.instance.headerTemplate = this.headerTemplateDefault;

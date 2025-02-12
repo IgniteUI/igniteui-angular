@@ -1,18 +1,23 @@
 import { Component, Directive, HostBinding, TemplateRef } from '@angular/core';
 import { GridType } from '../common/grid.interface';
 
-@Directive({// eslint-disable-next-line @angular-eslint/directive-selector
+@Directive({ 
     selector: '[excelText],excel-text',
     standalone: true
 })
 export class IgxExcelTextDirective { }
 
-@Directive({// eslint-disable-next-line @angular-eslint/directive-selector
+@Directive({ 
     selector: '[csvText],csv-text',
     standalone: true
 })
 export class IgxCSVTextDirective { }
 
+/* blazorElement */
+/* wcElementTag: igc-grid-toolbar-title */
+/* blazorAlternateBaseType: GridToolbarContent */
+/* blazorIndirectRender */
+/* singleInstanceIdentifier */
 /**
  * Provides a way to template the title portion of the toolbar in the grid.
  *
@@ -39,6 +44,11 @@ export class IgxGridToolbarTitleComponent {
     public cssClass = 'igx-grid-toolbar__title';
 }
 
+/* blazorElement */
+/* blazorIndirectRender */
+/* blazorAlternateBaseType: GridToolbarContent */
+/* wcElementTag: igc-grid-toolbar-actions */
+/* singleInstanceIdentifier */
 /**
  * Provides a way to template the action portion of the toolbar in the grid.
  *
