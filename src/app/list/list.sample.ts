@@ -86,7 +86,8 @@ export class ListSampleComponent {
         size: {
             control: {
                 type: 'button-group',
-                options: ['small', 'medium', 'large']
+                options: ['small', 'medium', 'large'],
+                defaultValue: 'medium'
             }
         },
         hideTitle: {
