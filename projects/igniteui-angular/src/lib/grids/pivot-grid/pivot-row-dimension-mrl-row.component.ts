@@ -119,7 +119,7 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
     /**
      * @hidden @internal
      */
-    public getGroupKey(group: IPivotGridHorizontalGroup) {
+    protected getGroupKey(group: IPivotGridHorizontalGroup) {
         const rec = group.records[0];
         const key = PivotUtil.getRecordKey(rec, group.rootDimension);
         return key;
