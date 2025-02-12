@@ -13,7 +13,8 @@ import {
     TemplateRef,
     ViewChild,
     Directive,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 
 
@@ -99,6 +100,7 @@ export class IgxListLineDirective { }
     standalone: true
 })
 export class IgxListLineTitleDirective {
+    @HostBinding('class.igx-list-item__title')
     @HostBinding('class.igx-list__item-line-title')
     public cssClass = 'igx-list__item-line-title';
 }
@@ -112,6 +114,7 @@ export class IgxListLineTitleDirective {
     standalone: true
 })
 export class IgxListLineSubTitleDirective {
+    @HostBinding('class.igx-list-item__subtitle')
     @HostBinding('class.igx-list__item-line-subtitle')
     public cssClass = 'igx-list__item-line-subtitle';
 }
@@ -145,7 +148,9 @@ export class IgxListLineSubTitleDirective {
 @Component({
     selector: 'igx-list',
     templateUrl: 'list.component.html',
+    styleUrl: 'list.component.css',
     providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
+    encapsulation: ViewEncapsulation.None,
     imports: [NgIf, NgTemplateOutlet]
 })
 export class IgxListComponent extends IgxListBaseDirective {
@@ -497,6 +502,14 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     /**
+     * @hidden
+     * @internal
+     *
+     */
+    @HostBinding('class.igx-list')
+    public cssClass = "igx-list";
+
+    /**
      * Gets a boolean indicating if the list is empty.
      *
      * @example
@@ -507,15 +520,6 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('class.igx-list--empty')
     public get isListEmpty(): boolean {
         return !this.children || this.children.length === 0;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-list')
-    public get cssClass(): boolean {
-        return !this.isListEmpty;
     }
 
     /**
