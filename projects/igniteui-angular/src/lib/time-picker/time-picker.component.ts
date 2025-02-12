@@ -735,7 +735,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public override ngAfterViewInit(): void {
         super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
-        this.subscribeToToggleDirectiveEvents();
+
+        if (this.platform.isBrowser) {
+            this.subscribeToToggleDirectiveEvents();
+        }
 
         this._defaultDropDownOverlaySettings.excludeFromOutsideClick = [this._inputGroup.element.nativeElement];
 
