@@ -3192,12 +3192,14 @@
     @include excel-filtering($theme);
 
     %advanced-filtering-dialog {
-	    // The background color here should be the same as the Query Builder background
-        $light-variant: contrast-color($color: 'gray', $variant: 900);
-	    $dark-variant: color($color: 'surface', $variant: 500);
-	    $dark-indigo-variant: color($color: 'gray', $variant: 50);
+	    @if $variant == 'indigo' {
+		    $light-variant: contrast-color($color: 'gray', $variant: 900);
+		    $dark-variant: color($color: 'gray', $variant: 50);
+		    background: if($theme-variant == 'light', $light-variant,  $dark-variant);
+	    } @else {
+		    background: color($color: 'surface', $variant: 500);
+	    }
 	    
-        background: if($theme-variant == 'light', $light-variant, if($variant == 'indigo', $dark-indigo-variant, $dark-variant));
         box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 24));
 
         @if $variant == 'material' or $variant == 'bootstrap' {
