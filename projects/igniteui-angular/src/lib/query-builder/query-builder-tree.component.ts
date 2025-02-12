@@ -727,7 +727,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.contextualGroup = groupItem;
         this.initialOperator = null;
 
-        this._lastFocusedChipIndex = this._lastFocusedChipIndex == undefined ? -1 : this._lastFocusedChipIndex;
+        this._lastFocusedChipIndex = this._lastFocusedChipIndex === undefined ? -1 : this._lastFocusedChipIndex;
 
         if (parent) {
             if (afterExpression) {
@@ -1545,7 +1545,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 return groupItem;
             }
 
-            for (const expr of expressionTree.filteringOperands) {
+            for (let i = 0 ; i < expressionTree.filteringOperands.length; i++) {
+                const expr = expressionTree.filteringOperands[i];
+
                 if (isTree(expr)) {
                     groupItem.children.push(this.createExpressionGroupItem(expr, groupItem, expressionTree.entity));
                 } else {
@@ -1593,7 +1595,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         const expressionTree = new FilteringExpressionsTree(groupItem.operator, undefined, entity, returnFields);
 
-        for (const item of groupItem.children) {
+        for (let i = 0; i < groupItem.children.length; i++) {
+            const item = groupItem.children[i];
+
             if (item instanceof ExpressionGroupItem) {
                 const subTree = this.createExpressionTreeFromGroupItem((item as ExpressionGroupItem), entity, returnFields);
                 expressionTree.filteringOperands.push(subTree);
