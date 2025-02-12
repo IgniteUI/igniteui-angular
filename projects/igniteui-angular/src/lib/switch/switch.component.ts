@@ -3,7 +3,8 @@ import {
     HostBinding,
     Input,
     AfterViewInit,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
@@ -40,6 +41,8 @@ import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
     }],
     selector: 'igx-switch',
     templateUrl: 'switch.component.html',
+    styleUrl: 'switch.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxRippleDirective]
 })
 export class IgxSwitchComponent

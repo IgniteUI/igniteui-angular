@@ -592,13 +592,13 @@
     //     @include snackbar($snackbar-theme-map);
     // }
 
-    @if is-used('igx-switch', $exclude) {
-        $switch-theme-map: switch-theme(
-            $schema: $schema,
-        );
-        $switch-theme-map: meta.call($theme-handler, $switch-theme-map);
-        @include switch($switch-theme-map);
-    }
+    // @if is-used('igx-switch', $exclude) {
+    //     $switch-theme-map: switch-theme(
+    //         $schema: $schema,
+    //     );
+    //     $switch-theme-map: meta.call($theme-handler, $switch-theme-map);
+    //     @include switch($switch-theme-map);
+    // }
 
     @if is-used('igx-tabs', $exclude) {
         $tabs-theme-map: tabs-theme(
