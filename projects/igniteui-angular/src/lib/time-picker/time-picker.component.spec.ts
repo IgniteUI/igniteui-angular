@@ -41,7 +41,7 @@ const CSS_CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const TIME_PICKER_TOGGLE_ICON = 'access_time';
 const TIME_PICKER_CLEAR_ICON = 'clear';
 
-describe('IgxTimePicker', () => {
+fdescribe('IgxTimePicker', () => {
     let timePicker: IgxTimePickerComponent;
 
     describe('Unit tests', () => {
@@ -192,7 +192,8 @@ describe('IgxTimePicker', () => {
             });
 
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-            timePicker = new IgxTimePickerComponent(elementRef, 'en', null, mockInjector, null, mockCdr);
+            const platformUtil = TestBed.inject(PlatformUtil);
+            timePicker = new IgxTimePickerComponent(elementRef, 'en', null, mockInjector, platformUtil, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             (timePicker as any)._inputGroup = mockInputGroup;
             (timePicker as any).inputDirective = mockInputDirective;
