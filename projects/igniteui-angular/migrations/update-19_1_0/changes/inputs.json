@@ -9,6 +9,14 @@
                 "selector": "igx-query-builder",
                 "type": "component"
             }
+        },
+        {
+            "name": "showLegend",
+            "remove": true,
+            "owner": {
+                "selector": "igx-query-builder-header",
+                "type": "component"
+            }
         }
     ]
 }
