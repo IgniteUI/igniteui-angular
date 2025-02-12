@@ -8,6 +8,7 @@ $_theme: $indigo;
 
 @include themed-block(igx-chip, indigo) {
     %disabled-item {
+        // not working
         background: color($color: 'primary', $variant: 400, $opacity: .5);
         color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
         border-color: transparent;
@@ -135,47 +136,57 @@ $_theme: $indigo;
 
     @include m(disabled) {
         @include e(item, $m: 'selected') {
-            @extend %disabled-item;
-        }
+            // @extend %disabled-item;
 
-        @include m(primary) {
-            @extend %disabled-item;
+            background: color($color: 'primary', $variant: 400, $opacity: .5);
+            color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
+            border-color: transparent;
         }
+    }
 
-        @include m(info) {
-            @include e(item) {
-                color: contrast-color($color: 'info', $variant: 900);
-                background: color($color: 'info', $variant: 500);
-                border-color: color($color: 'info', $variant: 500);
-                opacity: .4;
-            }
+    @include mx(disabled, primary) {
+        @include e(item) {
+            // @extend %disabled-item;
+
+            background: color($color: 'primary', $variant: 400, $opacity: .5);
+            color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
+            border-color: transparent;
         }
+    }
 
-        @include m(success) {
-            @include e(item) {
-                color: contrast-color($color: 'success', $variant: 900);
-                background: color($color: 'success', $variant: 500);
-                border-color: color($color: 'success', $variant: 500);
-                opacity: .4;
-            }
+    @include mx(disabled, info) {
+        @include e(item) {
+            color: contrast-color($color: 'info', $variant: 900);
+            background: color($color: 'info', $variant: 500);
+            border-color: color($color: 'info', $variant: 500);
+            opacity: .4;
         }
+    }
 
-        @include m(warning) {
-            @include e(item) {
-                color: contrast-color($color: 'warn', $variant: 900);
-                background: color($color: 'warn', $variant: 500);
-                border-color: color($color: 'warn', $variant: 500);
-                opacity: .4;
-            }
+    @include mx(disabled, success) {
+        @include e(item) {
+            color: contrast-color($color: 'success', $variant: 900);
+            background: color($color: 'success', $variant: 500);
+            border-color: color($color: 'success', $variant: 500);
+            opacity: .4;
         }
+    }
 
-        @include m(danger) {
-            @include e(item) {
-                color: contrast-color($color: 'error', $variant: 900);
-                background: color($color: 'error', $variant: 500);
-                border-color: color($color: 'error', $variant: 500);
-                opacity: .4;
-            }
+    @include mx(disabled, warning) {
+        @include e(item) {
+            color: contrast-color($color: 'warn', $variant: 900);
+            background: color($color: 'warn', $variant: 500);
+            border-color: color($color: 'warn', $variant: 500);
+            opacity: .4;
+        }
+    }
+
+    @include mx(disabled, danger) {
+        @include e(item) {
+            color: contrast-color($color: 'error', $variant: 900);
+            background: color($color: 'error', $variant: 500);
+            border-color: color($color: 'error', $variant: 500);
+            opacity: .4;
         }
     }
 }

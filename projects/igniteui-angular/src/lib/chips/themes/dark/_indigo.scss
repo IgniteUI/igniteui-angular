@@ -41,11 +41,11 @@
         @include e(item, $m: 'selected') {
             color: contrast-color($color: 'primary', $variant: 900, $opacity: .2);
         }
+    }
 
-        @include m(primary) {
-            @include e(item) {
-                color: contrast-color($color: 'primary', $variant: 900, $opacity: .2);
-            }
+    @include mx(disabled, primary) {
+        @include e(item) {
+            color: contrast-color($color: 'primary', $variant: 900, $opacity: .2);
         }
     }
 }

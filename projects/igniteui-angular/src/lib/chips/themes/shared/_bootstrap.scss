@@ -68,4 +68,10 @@ $_theme: $bootstrap;
             }
         }
     }
+
+    @include m(disabled) {
+        @include e(item) {
+            color: var-get($_theme, 'disabled-text-color');
+        }
+    }
 }
