@@ -83,34 +83,34 @@
             </div>
         }
         <igx-tree #tree selection="Cascading"  (nodeSelection)="onNodeSelectionChange($event)">
-            @for (item of displayedListData; track item) {
+            @for (item of displayedListData; track item.value) {
                 <igx-tree-node [data]="item" [selected]="item.isSelected">
                     <div>{{item.label}}</div>
-                    @for (childLevel1 of item.children; track childLevel1) {
+                    @for (childLevel1 of item.children; track childLevel1.value) {
                         <igx-tree-node [data]="childLevel1" [selected]="childLevel1.isSelected">
                             <div>{{childLevel1.label}}</div>
-                            @for (childLevel2 of childLevel1.children; track childLevel2) {
+                            @for (childLevel2 of childLevel1.children; track childLevel2.value) {
                                 <igx-tree-node [data]="childLevel2" [selected]="childLevel2.isSelected">
                                     <div>{{childLevel2.label}}</div>
-                                    @for (childLevel3 of childLevel2.children; track childLevel3) {
+                                    @for (childLevel3 of childLevel2.children; track childLevel3.value) {
                                         <igx-tree-node [data]="childLevel3" [selected]="childLevel3.isSelected">
                                             <div>{{childLevel3.label}}</div>
-                                            @for (childLevel4 of childLevel3.children; track childLevel4) {
+                                            @for (childLevel4 of childLevel3.children; track childLevel4.value) {
                                                 <igx-tree-node [data]="childLevel4" [selected]="childLevel4.isSelected">
                                                     <div>{{childLevel4.label}}</div>
-                                                    @for (childLevel5 of childLevel4.children; track childLevel5) {
+                                                    @for (childLevel5 of childLevel4.children; track childLevel5.value) {
                                                         <igx-tree-node [data]="childLevel5" [selected]="childLevel5.isSelected">
                                                             <div>{{childLevel5.label}}</div>
-                                                            @for (childLevel6 of childLevel5.children; track childLevel6) {
+                                                            @for (childLevel6 of childLevel5.children; track childLevel6.value) {
                                                                 <igx-tree-node [data]="childLevel6" [selected]="childLevel6.isSelected">
                                                                     <div>{{childLevel6.label}}</div>
-                                                                    @for (childLevel7 of childLevel6.children; track childLevel7) {
+                                                                    @for (childLevel7 of childLevel6.children; track childLevel7.value) {
                                                                         <igx-tree-node [data]="childLevel7" [selected]="childLevel7.isSelected">
                                                                             <div>{{childLevel7.label}}</div>
-                                                                            @for (childLevel8 of childLevel7.children; track childLevel8) {
+                                                                            @for (childLevel8 of childLevel7.children; track childLevel8.value) {
                                                                                 <igx-tree-node [data]="childLevel8" [selected]="childLevel8.isSelected">
                                                                                     <div>{{childLevel8.label}}</div>
-                                                                                    @for (childLevel9 of childLevel8.children; track childLevel9) {
+                                                                                    @for (childLevel9 of childLevel8.children; track childLevel9.value) {
                                                                                         <igx-tree-node [data]="childLevel9" [selected]="childLevel9.isSelected">
                                                                                             <div>{{childLevel9.label}}</div>
                                                                                         </igx-tree-node>

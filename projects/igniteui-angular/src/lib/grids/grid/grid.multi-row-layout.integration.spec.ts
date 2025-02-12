@@ -1286,7 +1286,7 @@ export class ColumnLayouHidingTestComponent {
                 </igx-grid-toolbar-actions>
             </igx-grid-toolbar>
         }
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track group.group) {
             <igx-column-layout [field]='group.group' [pinned]='group.pinned'>
                 @for (col of group.columns; track col) {
                     <igx-column
@@ -1396,7 +1396,7 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px">
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track group.group) {
             <igx-column-layout>
                 @for (col of group.columns; track col) {
                     <igx-column [field]='col.field' [width]='col.width' [resizable]='col.resizable'

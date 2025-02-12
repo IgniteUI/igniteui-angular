@@ -1124,7 +1124,7 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
         <igx-grid-toolbar></igx-grid-toolbar>
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column
                 [field]="c.field"
                 [header]="c.header"
