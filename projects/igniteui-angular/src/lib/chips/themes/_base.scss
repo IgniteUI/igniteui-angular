@@ -10,26 +10,7 @@
 $_theme: $material;
 
 @include layer(base) {
-    --affix-margin: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
-
-    %igx-chip {
-        @include sizable();
-
-        --component-size: var(--ig-size, #{var-get($_theme, 'default-size')});
-        --chip-size: var(--component-size);
-
-        position: relative;
-        display: inline-flex;
-        flex-shrink: 0;
-
-        // Fix: The grid resizing does not autosize the filter header cells with the default filter chips
-        // https://github.com/IgniteUI/igniteui-angular/pull/12770/files/efd2a274038c051e82561903f8799fd03265fd74#r1150993630
-        min-width: max-content;
-        touch-action: none;
-        outline: none;
-    }
-
-    %igx-chip__part {
+    %chip-part {
         display: flex;
         align-items: center;
         position: relative;
@@ -52,12 +33,11 @@ $_theme: $material;
     }
 
     @include b(igx-chip) {
-        // @extend %igx-chip;
-
         @include sizable();
 
         --component-size: var(--ig-size, #{var-get($_theme, 'default-size')});
         --chip-size: var(--component-size);
+        --affix-margin: calc(#{sizable(rem(0), rem(4px), rem(8px))} * -1);
 
         position: relative;
         display: inline-flex;
@@ -154,7 +134,7 @@ $_theme: $material;
         }
 
         @include e(start) {
-            @extend %igx-chip__part;
+            @extend %chip-part;
 
             > igx-avatar,
             > igx-circular-bar {
@@ -175,7 +155,7 @@ $_theme: $material;
         }
 
         @include e(end) {
-            @extend %igx-chip__part;
+            @extend %chip-part;
 
             > igx-avatar,
             > igx-circular-bar {
@@ -337,7 +317,7 @@ $_theme: $material;
             max-width: rem(24px);
             opacity: 1;
             z-index: 1;
-            // transition: max-width .12s $in-out-quad, opacity .12s $in-out-quad .06s;
+            transition: max-width .12s $ease-in-out-quad, opacity .12s $ease-in-out-quad .06s;
             transition-behavior: allow-discrete;
 
             @starting-style {
@@ -354,24 +334,14 @@ $_theme: $material;
                 display: none;
             }
 
-            // FIX IE11 and Edge focus styles.
-            // [focus-within] is not supported by IE & Edge.
             &:focus {
                 igx-icon {
                     color: var-get($_theme, 'remove-icon-color-focus');
                 }
             }
-
-            igx-icon {
-                &:focus{
-                    outline-style: none;
-                }
-            }
         }
 
         @include e(ghost) {
-            @extend %igx-chip;
-
             position: absolute;
             box-shadow: var-get($_theme, 'ghost-elevation');
             overflow: hidden;

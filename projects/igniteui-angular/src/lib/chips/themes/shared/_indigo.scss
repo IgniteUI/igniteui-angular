@@ -7,13 +7,6 @@
 $_theme: $indigo;
 
 @include themed-block(igx-chip, indigo) {
-    %disabled-item {
-        // not working
-        background: color($color: 'primary', $variant: 400, $opacity: .5);
-        color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
-        border-color: transparent;
-    }
-
     @include e(item) {
         --igx-icon-size: #{sizable(rem(14px), rem(14px), rem(16px))};
         --affix-margin: calc(#{sizable(rem(1px), rem(3px), rem(4px))} * -1);
@@ -136,8 +129,6 @@ $_theme: $indigo;
 
     @include m(disabled) {
         @include e(item, $m: 'selected') {
-            // @extend %disabled-item;
-
             background: color($color: 'primary', $variant: 400, $opacity: .5);
             color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
             border-color: transparent;
@@ -146,8 +137,6 @@ $_theme: $indigo;
 
     @include mx(disabled, primary) {
         @include e(item) {
-            // @extend %disabled-item;
-
             background: color($color: 'primary', $variant: 400, $opacity: .5);
             color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
             border-color: transparent;
