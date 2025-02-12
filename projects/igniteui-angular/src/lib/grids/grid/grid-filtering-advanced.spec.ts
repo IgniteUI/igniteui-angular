@@ -224,7 +224,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 .toBe(false, 'Button indicates there is active filtering.');
         }));
 
-        it('The Clear/Cancel/Apply buttons type should be set to "button"', () => {
+        it('The Clear/Cancel/Apply buttons type should be set to "button"',  fakeAsync(() => {
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
@@ -240,7 +240,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(clearButtonType).toBe(expectedButtonType, 'Clear button type is not "button"');
             expect(cancelButtonType).toBe(expectedButtonType, 'Cancel button type is not "button"');
             expect(applyButtonType).toBe(expectedButtonType, 'Apply button type is not "button"');
-        });
+        }));
 
         it('Should emit the filtering event when applying filters.', fakeAsync(() => {
             spyOn(grid.filtering, 'emit');
