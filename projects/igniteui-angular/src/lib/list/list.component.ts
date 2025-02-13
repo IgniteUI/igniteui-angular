@@ -507,7 +507,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      *
      */
     @HostBinding('class.igx-list')
-    public cssClass = "igx-list";
+    public cssClass = 'igx-list';
 
     /**
      * Gets a boolean indicating if the list is empty.
