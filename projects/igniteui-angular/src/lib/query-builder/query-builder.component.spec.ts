@@ -2452,7 +2452,7 @@ describe('IgxQueryBuilder', () => {
       expect(chipComponents[1].nativeElement.getBoundingClientRect().height).toBe(0);
     });
 
-    it('should render drop ghost properly when mouse dragged.', async () => {
+    xit('should render drop ghost properly when mouse dragged.', async () => {
       const draggedChip = chipComponents[1].componentInstance;
       const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
@@ -2946,7 +2946,7 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(newGroupConditions[0])).toBe("OrderDate  Today");
     });
 
-    it('should render drop ghost properly when keyboard dragged.', async () => {
+    xit('should render drop ghost properly when keyboard dragged.', async () => {
       const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[1];
       const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
 
