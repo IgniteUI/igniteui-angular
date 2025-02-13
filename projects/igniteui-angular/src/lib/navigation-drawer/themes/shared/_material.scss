@@ -1,0 +1,65 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $material;
+
+@include themed-block(igx-nav-drawer, material) {
+    --aside-padding: #{rem(8px)};
+    --item-padding: #{rem(12px) rem(8px)};
+    --item-gap: #{rem(32px)};
+    --item-min-height: #{rem(48px)};
+    --mini-size: #{rem(56px)};
+
+    @include e(item) {
+        @include type-style('subtitle-2');
+
+        border-radius: initial;
+        $reduce-size: rem(8px);
+
+        // The clip path here fixes a bug: https://github.com/IgniteUI/igniteui-angular/issues/14554
+        clip-path: inset(calc($reduce-size / 2) 0 round var-get($_theme, 'item-border-radius'));
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            inset-block-start: rem(4px);
+            inset-inline-start: 0;
+            height: calc(100% - #{$reduce-size});
+            border-radius: var-get($_theme, 'item-border-radius');
+            z-index: -1;
+        }
+
+        &:hover,
+        &:focus {
+            background: unset;
+
+            &::after {
+                background: var-get($_theme, 'item-hover-background');
+            }
+        }
+    }
+
+    @include e(item, active) {
+        background: unset;
+
+        &::after {
+            background: var-get($_theme, 'item-active-background');
+        }
+
+        &:hover,
+        &:focus {
+            background: unset;
+
+            &::after {
+                background: var-get($_theme, 'item-active-background');
+            }
+        }
+    }
+
+    @include e(item, header) {
+        @include type-style('subtitle-1');
+    }
+}

@@ -1,0 +1,26 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-nav-drawer, bootstrap) {
+    --aside-padding: #{rem(16px)};
+    --item-padding: #{rem(8px) rem(16px)};
+    --item-gap: #{rem(8px)};
+    --item-min-height: #{rem(40px)};
+    --mini-size: #{rem(88px)};
+
+    @include e(item) {
+        @include type-style('body-2');
+    }
+
+    @include e(item, header) {
+        @include type-style('caption');
+    }
+
+    @include e(aside, mini) {
+        .igx-nav-drawer__item,
+        .igx-nav-drawer__item--active {
+            width: rem(56px);
+        }
+    }
+}

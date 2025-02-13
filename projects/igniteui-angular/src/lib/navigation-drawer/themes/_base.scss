@@ -1,0 +1,266 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$_theme: $material;
+
+@include layer(base) {
+    %item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex-flow: row nowrap;
+        color: var-get($_theme, 'item-text-color');
+        max-height: var(--item-min-height);
+        gap: var(--item-gap);
+        padding: var(--item-padding);
+        cursor: pointer;
+        user-select: none;
+        outline: transparent;
+        white-space: nowrap;
+        border-radius: var-get($_theme, 'item-border-radius');
+        text-decoration: none;
+        border: none;
+        justify-content: flex-start;
+
+        igx-icon {
+            --component-size: 3;
+
+            color: var-get($_theme, 'item-icon-color');
+        }
+
+        &[igxButton] {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+
+            igx-icon {
+                width: var(--igx-icon-size, rem(24px));
+                height: var(--igx-icon-size, rem(24px));
+                font-size: var(--igx-icon-size, rem(24px));
+                margin: 0;
+            }
+
+            &:hover,
+            &:focus {
+                box-shadow: none;
+                border: none;
+            }
+        }
+
+        &%igx-button--fab {
+            min-height: auto;
+        }
+
+        &%igx-icon-button-display {
+            height: auto;
+            transition: none;
+        }
+
+        &:hover,
+        &:focus {
+            background: var-get($_theme, 'item-hover-background');
+            color: var-get($_theme, 'item-hover-text-color');
+            box-shadow: none;
+
+            igx-icon {
+                color: var-get($_theme, 'item-hover-icon-color');
+            }
+        }
+    }
+
+    %active {
+        color: var-get($_theme, 'item-active-text-color');
+        background: var-get($_theme, 'item-active-background');
+
+        igx-icon {
+            color: var-get($_theme, 'item-active-icon-color');
+        }
+    }
+
+    @include b(igx-nav-drawer) {
+        --igx-nav-drawer-size: #{rem(240px)};
+        --mini-size: #{rem(56px)};
+
+        flex-basis: 0;
+        transition: flex-basis;
+        transition-duration: .3s;
+        transition-timing-function: $ease-out-quad;
+        flex-shrink: 0;
+
+        @include m(pinned) {
+            flex-basis: var(--igx-nav-drawer-size);
+        }
+
+        @include mx(mini, pinned) {
+            flex-basis: calc(var(--igx-mini-nav-drawer-size, var(--mini-size)) + rem(1px));
+        }
+
+        @include e(aside) {
+            position: fixed;
+            height: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+            background: var-get($_theme, 'background');
+            top: 0;
+            bottom: 0;
+            width: var(--igx-nav-drawer-size);
+            inset-inline-start: 0;
+            z-index: 999;
+            transition: width, padding, transform;
+            transition-timing-function: $ease-in-out-quad;
+            box-shadow: var-get($_theme, 'elevation');
+            padding: var(--aside-padding);
+            border-inline-end: rem(1px) solid var-get($_theme, 'border-color');
+            border-radius: var-get($_theme, 'border-radius');
+
+            &.panning {
+                overflow-x: hidden;
+                transition: none;
+            }
+        }
+
+        @include e(aside, collapsed) {
+            transform: translate3d(-300px, 0, 0);
+
+            [dir='rtl'] & {
+                transform: translate3d(300px, 0, 0);
+            }
+
+            box-shadow: none;
+
+            &.igx-nav-drawer__aside--right {
+                transform: translate3d(300px, 0, 0);
+                box-shadow: none;
+
+                [dir='rtl'] & {
+                    transform: translate3d(-300px, 0, 0);
+                }
+            }
+        }
+
+        @include e(aside, right) {
+            inset-inline-start: auto;
+            inset-inline-end: 0;
+            border-inline-end: none;
+            border-inline-start: rem(1px) solid var-get($_theme, 'border-color');
+        }
+
+        @include e(aside, mini) {
+            transition-duration: .3s;
+            width: var(--mini-size);
+            min-width: fit-content;
+
+            %item {
+                justify-content: center;
+                min-width: fit-content;
+
+                igx-icon {
+                    margin-inline-start: 0;
+                }
+            }
+        }
+
+        @include e(aside, normal) {
+            transition-duration: .3s;
+            width: var(--igx-nav-drawer-size);
+        }
+
+        @include e(aside, pinned) {
+            position: relative;
+            box-shadow: none;
+            z-index: 0;
+
+            &.igx-nav-drawer__aside--collapsed {
+                transform: none;
+                width: 0;
+                overflow: hidden;
+                border: none;
+                padding: 0;
+            }
+        }
+
+        @include e(overlay) {
+            opacity: 1;
+            background: color(null, 'gray', 500, .54);
+            transition: opacity, visibility;
+            transition-duration: .3s, .3s;
+            transition-timing-function: ease-in, step-start;
+            transition-delay: 0s, 0s;
+            position: absolute;
+            inset-inline-start: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            visibility: visible;
+            z-index: 999;
+
+            &.panning {
+                transform: translate3d(0, 0, 0);
+                transition: none;
+
+                &.igx-nav-drawer__overlay--hidden {
+                    /* must be visible during pan.. */
+                    visibility: visible;
+                }
+            }
+        }
+
+        @include e(overlay, hidden) {
+            transition-timing-function: ease-in-out, step-end;
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        // Style Dummy(hidden) used for measures
+        @include e(style-dummy) {
+            height: 0;
+            background: none;
+            box-shadow: none;
+            transition: none;
+            visibility: hidden;
+        }
+
+        @include e(item) {
+            @extend %item;
+        }
+
+        @include e(item, active) {
+            @extend %item;
+            @extend %active;
+
+            &:focus,
+            &:hover {
+                @extend %active;
+            }
+        }
+
+        @include e(item, header) {
+            display: flex;
+            align-items: center;
+            padding: var(--item-padding);
+            min-height: var(--item-min-height);
+            white-space: nowrap;
+            color: var-get($_theme, 'item-header-text-color');
+        }
+
+        @include e(item, disabled) {
+            background: none;
+            color: var-get($_theme, 'item-disabled-text-color');
+            cursor: default;
+            pointer-events: none;
+
+            igx-icon {
+                color: var-get($_theme, 'item-disabled-icon-color');
+            }
+        }
+
+        @include m(disable-animation) {
+            transition-duration: 0s;
+        }
+    }
+}

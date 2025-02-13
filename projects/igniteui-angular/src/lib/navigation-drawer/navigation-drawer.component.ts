@@ -15,7 +15,8 @@ import {
     SimpleChange,
     ViewChild,
     Renderer2,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
@@ -57,6 +58,8 @@ let NEXT_ID = 0;
             height: 100%;
         }
     `],
+    styleUrl: 'navigation-drawer.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxNavDrawerItemDirective, NgTemplateOutlet]
 })
 export class IgxNavigationDrawerComponent implements

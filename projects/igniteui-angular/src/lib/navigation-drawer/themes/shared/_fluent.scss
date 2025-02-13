@@ -1,0 +1,26 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-nav-drawer, fluent) {
+    --aside-padding: 0;
+    --item-padding: #{rem(10px) rem(8px)};
+    --item-gap: #{rem(8px)};
+    --item-min-height: #{rem(44px)};
+    --mini-size: #{rem(40px)};
+
+    @include e(aside) {
+        border: rem(1px) solid var-get($_theme, 'border-color');
+    }
+
+    @include e(item) {
+        @include type-style('body-2');
+    }
+
+    @include e(item, header) {
+        @include type-style('subtitle-1');
+    }
+}
