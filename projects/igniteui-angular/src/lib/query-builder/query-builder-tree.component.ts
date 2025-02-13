@@ -100,6 +100,8 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
     IgxTooltipDirective,
     IgxTooltipTargetDirective,
     NgClass,
+    NgFor,
+    NgIf,
     NgTemplateOutlet
 ]
 })
