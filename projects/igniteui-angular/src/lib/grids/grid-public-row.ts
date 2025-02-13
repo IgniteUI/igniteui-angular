@@ -792,27 +792,41 @@ export class IgxSummaryRow implements RowType {
     }
 }
 
-export class IgxPivotGridRow extends BaseRow {
-    /**
-      * @hidden
-      */
-     constructor(
-         public override grid: GridType,
-         public override index: number, data?: any
-     ) {
-         super();
-         this._data = data && data.addRow && data.recordRef ? data.recordRef : data;
-     }
+export class IgxPivotGridRow implements RowType {
+    public index: number;
+    public grid: GridType;
+    private _data?: any;
 
-     /**
-      * Gets the rendered cells in the row component.
-      */
-     public override get cells(): CellType[] {
-         const res: CellType[] = [];
-         this.grid.columns.forEach(col => {
-             const cell: CellType = new IgxGridCell(this.grid, this.index, col);
-             res.push(cell);
-         });
-         return res;
-     }
- }
+    constructor(grid: GridType, index: number, data?: any) {
+        this.grid = grid;
+        this.index = index;
+        this._data = data && data.addRow && data.recordRef ? data.recordRef : data;
+    }
+
+    public get data(): any {
+        return this._data ?? this.grid.dataView[this.index];
+    }
+
+    public get viewIndex(): number {
+        return this.index + this.grid.page * this.grid.perPage;
+    }
+
+    public get key(): any {
+        const data = this._data ?? this.grid.dataView[this.index];
+        const primaryKey = this.grid.primaryKey;
+        return primaryKey ? data[primaryKey] : data;
+    }
+
+    public get selected(): boolean {
+        return this.grid.selectionService.isRowSelected(this.key);
+    }
+
+    public set selected(val: boolean) {
+        if (val) {
+            this.grid.selectionService.selectRowsWithNoEvent([this.key]);
+        } else {
+            this.grid.selectionService.deselectRowsWithNoEvent([this.key]);
+        }
+        this.grid.cdr.markForCheck();
+    }
+}
