@@ -30,8 +30,7 @@ describe('IgxQueryBuilder', () => {
   afterAll(()=> {
     const head = document.getElementsByTagName('head')[0];
     const styles = head.getElementsByTagName('style');
-    for (let i = 0; i < styles.length; i++)
-    {
+    for (let i = 0; i < styles.length; i++) {
       head.removeChild(styles[i]);
     }
   });
