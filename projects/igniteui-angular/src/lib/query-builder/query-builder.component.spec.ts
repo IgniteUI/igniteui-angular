@@ -2957,7 +2957,7 @@ describe('IgxQueryBuilder', () => {
       const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
 
       //pass 1 down to bottom
-      let keyPress = new KeyboardEvent('keydown', { code: 'ArrowDown' });
+      let keyPress = new KeyboardEvent('keydown', { key: 'ArrowDown' });
       for (let i = 0; i <= 5; i++) {
         tree.nativeElement.dispatchEvent(keyPress);
         wait();
@@ -2997,7 +2997,7 @@ describe('IgxQueryBuilder', () => {
       }
 
       //pass 2 up to top
-      keyPress = new KeyboardEvent('keydown', { code: 'ArrowUp' });
+      keyPress = new KeyboardEvent('keydown', { key: 'ArrowUp' });
       for (let i = 0; i <= 10; i++) {
         tree.nativeElement.dispatchEvent(keyPress);
         wait();
@@ -3043,7 +3043,7 @@ describe('IgxQueryBuilder', () => {
       }
 
       //pass 3 down to bottom again
-      keyPress = new KeyboardEvent('keydown', { code: 'ArrowDown' });
+      keyPress = new KeyboardEvent('keydown', { key: 'ArrowDown' });
       for (let i = 0; i <= 10; i++) {
         tree.nativeElement.dispatchEvent(keyPress);
         wait();

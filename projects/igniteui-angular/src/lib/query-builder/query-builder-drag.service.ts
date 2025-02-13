@@ -350,23 +350,23 @@ export class IgxQueryBuilderDragService {
     private listenToKeyboard() {
         this._keyboardSubscription$?.unsubscribe();
         this._keyboardSubscription$ = fromEvent<KeyboardEvent>(this.mainExpressionTree, 'keydown')
-            .pipe(filter(key => ['ArrowUp', 'ArrowDown', 'Enter', 'Space', 'Escape', 'Tab'].includes(key.code)))
+            .pipe(filter(e => ['ArrowUp', 'ArrowDown', 'Enter', 'Space', 'Escape', 'Tab'].includes(e.key)))
             .pipe(tap(e => {
                 //Inhibit Tabs if keyboard drag is underway
                 if (e.key !== 'Tab' || this.dropGhostElement) e.preventDefault();
             }))
             .pipe(filter(event => !event.repeat))
-            .subscribe(key => {
-                if (key.code == 'Escape') {
+            .subscribe(e => {
+                if (e.key == 'Escape') {
                     //TODO cancel mouse drag
                     this.resetDragAndDrop(false);
                     //Regain focus on the drag icon after keyboard drag cancel
                     if (this._isKeyboardDrag) {
                         (this.sourceElement.firstElementChild.firstElementChild.firstElementChild.firstElementChild as HTMLElement).focus();
                     }
-                } else if (key.code == 'ArrowUp' || key.code == 'ArrowDown') {
-                    this.arrowDrag(key);
-                } else if (key.code == 'Enter' || key.code == 'Space') {
+                } else if (e.key == 'ArrowUp' || e.key == 'ArrowDown') {
+                    this.arrowDrag(e.key);
+                } else if (e.key == 'Enter' || e.key == 'Space') {
                     //this.platform.isActivationKey(eventArgs) Maybe use this rather that Enter/Space?
                     this.onChipDropped();
                     this._keyboardSubscription$.unsubscribe();
@@ -375,7 +375,7 @@ export class IgxQueryBuilderDragService {
     }
 
     //Perform up/down movement of drop ghost along the expression tree
-    private arrowDrag(key: KeyboardEvent) {
+    private arrowDrag(key: string) {
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         if (this._keyDragFirstMove) {
@@ -390,10 +390,10 @@ export class IgxQueryBuilderDragService {
         if (index === -1) console.error("Dragged expression not found");
 
         let newKeyIndexOffset = 0;
-        if (key.code == 'ArrowUp') {
+        if (key == 'ArrowUp') {
             //decrease index offset capped at top of tree
             newKeyIndexOffset = this._keyDragOffsetIndex - 1 >= index * -2 - 1 ? this._keyDragOffsetIndex - 1 : this._keyDragOffsetIndex;
-        } else if (key.code == 'ArrowDown') {
+        } else if (key == 'ArrowDown') {
             //increase index offset capped at bottom of tree
             newKeyIndexOffset = this._keyDragOffsetIndex + 1 <= (this._dropZonesList.length - 2 - index) * 2 + 2 ? this._keyDragOffsetIndex + 1 : this._keyDragOffsetIndex;
         } else {
