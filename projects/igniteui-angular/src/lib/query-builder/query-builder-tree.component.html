@@ -176,7 +176,7 @@
                             )
                         }}
                     </span>
-                    @if (expressionItem.expression.condition?.isUnary) {
+                    @if (!expressionItem.expression.condition?.isUnary) {
                         <span>
                             @if (expressionItem.expression.searchTree) {
                                 <ng-container>
