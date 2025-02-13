@@ -6,7 +6,7 @@ import {
     Output,
     TemplateRef
 } from '@angular/core';
-import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
+import { getLocaleFirstDayOfWeek, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
