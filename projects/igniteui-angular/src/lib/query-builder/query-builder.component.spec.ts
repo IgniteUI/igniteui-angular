@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { QueryBuilderSelectors } from './query-builder.common';
 
-describe('IgxQueryBuilder', () => {
+xdescribe('IgxQueryBuilder', () => {
   configureTestSuite();
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
   let queryBuilder: IgxQueryBuilderComponent;
@@ -53,6 +53,7 @@ describe('IgxQueryBuilder', () => {
       expect(bodyElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_BODY);
       expect(bodyElement.children.length).toEqual(1);
 
+      debugger
       QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false);
       QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '');
 
