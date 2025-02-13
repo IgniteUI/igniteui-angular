@@ -260,6 +260,9 @@ export class IgxQueryBuilderDragService {
             (dragCopy.firstChild.firstChild.firstChild as HTMLElement).replaceChildren(span);
             (dragCopy.firstChild.firstChild as HTMLElement).classList.add(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_GHOST);
         }
+        else{
+            (dragCopy.firstChild.firstChild as HTMLElement).classList.add('igx-chip__ghost');
+        }
         return dragCopy;
     }
 
