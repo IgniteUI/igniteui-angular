@@ -27,14 +27,6 @@ describe('IgxQueryBuilder', () => {
     }).compileComponents();
   }));
 
-  afterAll(()=> {
-    const head = document.getElementsByTagName('head')[0];
-    const styles = head.getElementsByTagName('style');
-    for (let i = 0; i < styles.length; i++) {
-      head.removeChild(styles[i]);
-    }
-  });
-
   beforeEach(fakeAsync(() => {
     fix = TestBed.createComponent(IgxQueryBuilderSampleTestComponent);
     fix.detectChanges();
@@ -2172,7 +2164,7 @@ describe('IgxQueryBuilder', () => {
     }));
   });
 
-  xdescribe('Keyboard navigation', () => {
+  describe('Keyboard navigation', () => {
     it('Should navigate with Tab/Shift+Tab through entity and fields inputs, chips, their respective drop & delete icons and operator drop-down button', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
@@ -2246,7 +2238,7 @@ describe('IgxQueryBuilder', () => {
     }));
   });
 
-  xdescribe('Templates', () => {
+  describe('Templates', () => {
     let fixture: ComponentFixture<IgxQueryBuilderCustomTemplateSampleTestComponent>;
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(IgxQueryBuilderCustomTemplateSampleTestComponent);
