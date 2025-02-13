@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { QueryBuilderSelectors } from './query-builder.common';
 
-xdescribe('IgxQueryBuilder', () => {
+describe('IgxQueryBuilder', () => {
   configureTestSuite();
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
   let queryBuilder: IgxQueryBuilderComponent;
@@ -26,6 +26,15 @@ xdescribe('IgxQueryBuilder', () => {
       ]
     }).compileComponents();
   }));
+
+  afterAll(()=> {
+    const head = document.getElementsByTagName('head')[0];
+    const styles = head.getElementsByTagName('style');
+    for (let i = 0; i < styles.length; i++)
+    {
+      head.removeChild(styles[i]);
+    }
+  });
 
   beforeEach(fakeAsync(() => {
     fix = TestBed.createComponent(IgxQueryBuilderSampleTestComponent);
