@@ -255,14 +255,14 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     private createInitialExpressionUIElement() {
         let firstExprUI = new ExpressionUI();
-        if (this.expressionsList.length == 1 && this.expressionsList[0].expression.condition.name === this.selectedOperator) {
+        if (this.expressionsList.length == 1 && this.expressionsList[0].expression.condition?.name === this.selectedOperator) {
             firstExprUI = this.expressionsList.pop();
         } else {
             this.expressionsList = [];
             const cond = this.createCondition(this.selectedOperator);
             firstExprUI.expression = {
                 condition: cond,
-                conditionName: cond.name,
+                conditionName: cond?.name,
                 fieldName: this.column.field,
                 ignoreCase: this.column.filteringIgnoreCase,
                 searchVal: null
