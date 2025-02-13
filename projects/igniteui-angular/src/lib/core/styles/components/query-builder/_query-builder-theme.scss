@@ -120,6 +120,10 @@
         border-radius: $border-radius;
         box-shadow: var-get($theme, 'elevation');
         overflow: hidden;
+	    
+	    .igx-chip__ghost {
+		    position: relative;
+	    }
     }
 
     %query-builder-tree {
