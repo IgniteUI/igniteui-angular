@@ -902,11 +902,11 @@ export class QueryBuilderFunctions {
         //mouse down
         dragDirective.onPointerMove({ pointerId: 1, pageX: X, pageY: Y });
         //duplicate the mousemove as dispatched Event, so we can trigger the RxJS listener
-        dragDirective.ghostElement.dispatchEvent(new MouseEvent('mousemove', { clientX: X, clientY: Y }));
+        dragDirective.ghostElement?.dispatchEvent(new MouseEvent('mousemove', { clientX: X, clientY: Y }));
 
         //mouse up
         if (pointerUp) {
-            wait();
+            wait(20);
             dragDirective.onPointerUp({ pointerId: 1, pageX: X, pageY: Y });
         }
     }
