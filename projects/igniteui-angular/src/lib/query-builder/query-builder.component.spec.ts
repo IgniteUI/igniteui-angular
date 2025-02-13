@@ -2479,7 +2479,7 @@ describe('IgxQueryBuilder', () => {
         Y += 5 * inc;
 
         QueryBuilderFunctions.dragMove(dragDir, X, Y);
-        await wait();
+        await wait(10);
         fix.detectChanges();
 
         const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
@@ -2487,7 +2487,7 @@ describe('IgxQueryBuilder', () => {
         const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
 
         if (i < 8 && !ghostPositionVisits[0]) {
-          await wait(100);
+          await wait(50);
           if (!dropGhost) ghostPositionVisits[0] = true;
         }
 
@@ -2516,7 +2516,7 @@ describe('IgxQueryBuilder', () => {
         }
 
         if (i > 63 && !ghostPositionVisits[7]) {
-          await wait(100);
+          await wait(50);
           if (!dropGhost) ghostPositionVisits[7] = true;
         }
 
@@ -2744,7 +2744,7 @@ describe('IgxQueryBuilder', () => {
 
       //drop condition
       dragDir.onPointerUp({ pointerId: 1, pageX: addConditionButtonCenter.X, pageY: addConditionButtonCenter.Y });
-      wait();
+      wait(20);
       fix.detectChanges();
 
       const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
@@ -2946,7 +2946,7 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(newGroupConditions[0])).toBe("OrderDate  Today");
     });
 
-    it('should render drop ghost properly when keyboard dragged.', () => {
+    it('should render drop ghost properly when keyboard dragged.', async () => {
       const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[1];
       const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
 
@@ -2960,7 +2960,7 @@ describe('IgxQueryBuilder', () => {
       let keyPress = new KeyboardEvent('keydown', { key: 'ArrowDown' });
       for (let i = 0; i <= 5; i++) {
         tree.nativeElement.dispatchEvent(keyPress);
-        wait();
+        wait(20);
         fix.detectChanges();
 
         const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
@@ -3000,7 +3000,7 @@ describe('IgxQueryBuilder', () => {
       keyPress = new KeyboardEvent('keydown', { key: 'ArrowUp' });
       for (let i = 0; i <= 10; i++) {
         tree.nativeElement.dispatchEvent(keyPress);
-        wait();
+        wait(20);
         fix.detectChanges();
 
         const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
@@ -3046,7 +3046,7 @@ describe('IgxQueryBuilder', () => {
       keyPress = new KeyboardEvent('keydown', { key: 'ArrowDown' });
       for (let i = 0; i <= 10; i++) {
         tree.nativeElement.dispatchEvent(keyPress);
-        wait();
+        wait(20);
         fix.detectChanges();
 
         const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
