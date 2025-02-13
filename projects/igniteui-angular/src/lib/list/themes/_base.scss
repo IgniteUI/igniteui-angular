@@ -172,11 +172,18 @@ $theme: $base;
             display: flex;
             align-items: center;
             position: relative;
+            color: var-get($theme, 'item-text-color');
+            background: var-get($theme, 'item-background');
+            transition: background 0.15s ease-out, transform 0.3s $out-quad;
             border-radius: var-get($theme, 'item-border-radius');
-            backface-visibility: hidden;
             z-index: 2;
             gap: rem(16px);
-            transition: transform 0.3s $out-quad;
+
+            &:hover,
+            &:focus-within {
+                color: var-get($theme, 'item-text-color-hover');
+                background: var-get($theme, 'item-background-hover');
+            }
         }
 
         @include e(left) {
@@ -202,15 +209,6 @@ $theme: $base;
 
         @include m(base) {
             border-radius: var-get($theme, 'item-border-radius');
-            color: var-get($theme, 'item-text-color');
-            background: var-get($theme, 'item-background');
-            transition: background 0.15s ease-out;
-
-            &:hover,
-            &:focus-within {
-                color: var-get($theme, 'item-text-color-hover');
-                background: var-get($theme, 'item-background-hover');
-            }
         }
 
         @include m(active) {

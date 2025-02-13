@@ -192,7 +192,7 @@ export class IgxListItemComponent implements IListChild {
      * @memberof IgxListItemComponent
      */
     public get contentElement() {
-        const candidates = this.element.getElementsByClassName('igx-list__item-content');
+        const candidates = this.element.getElementsByClassName('igx-list-item__content');
         return (candidates && candidates.length > 0) ? candidates[0] : null;
     }
 
