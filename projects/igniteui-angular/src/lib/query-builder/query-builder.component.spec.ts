@@ -2716,7 +2716,7 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
     });
 
-    it('should drop the condition at the last position of the root group when dropped above the buttons.', () => {
+    it('should drop the condition at the last position of the root group when dropped above the buttons.', async () => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
       const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
@@ -2744,7 +2744,7 @@ describe('IgxQueryBuilder', () => {
 
       //drop condition
       dragDir.onPointerUp({ pointerId: 1, pageX: addConditionButtonCenter.X, pageY: addConditionButtonCenter.Y });
-      wait(20);
+      await wait(20);
       fix.detectChanges();
 
       const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
@@ -2960,7 +2960,7 @@ describe('IgxQueryBuilder', () => {
       let keyPress = new KeyboardEvent('keydown', { key: 'ArrowDown' });
       for (let i = 0; i <= 5; i++) {
         tree.nativeElement.dispatchEvent(keyPress);
-        wait(20);
+        await wait(20);
         fix.detectChanges();
 
         const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
@@ -3000,7 +3000,7 @@ describe('IgxQueryBuilder', () => {
       keyPress = new KeyboardEvent('keydown', { key: 'ArrowUp' });
       for (let i = 0; i <= 10; i++) {
         tree.nativeElement.dispatchEvent(keyPress);
-        wait(20);
+        await wait(20);
         fix.detectChanges();
 
         const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
@@ -3046,7 +3046,7 @@ describe('IgxQueryBuilder', () => {
       keyPress = new KeyboardEvent('keydown', { key: 'ArrowDown' });
       for (let i = 0; i <= 10; i++) {
         tree.nativeElement.dispatchEvent(keyPress);
-        wait(20);
+        await wait(20);
         fix.detectChanges();
 
         const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
