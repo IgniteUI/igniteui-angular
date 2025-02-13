@@ -1,6 +1,5 @@
 import { DOCUMENT, NgIf, NgTemplateOutlet, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import {
-    AfterViewInit,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -35,7 +34,7 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
     imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
 })
-export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit {
+export class IgxInputGroupComponent implements IgxInputGroupBase {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -219,15 +218,13 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
         private themeToken: ThemeToken
     ) {
         this._theme = this.themeToken.theme;
-
-        const { unsubscribe } = this.themeToken.onChange((theme) => {
+        const themeChange = this.themeToken.onChange((theme) => {
             if (this._theme !== theme) {
                 this._theme = theme;
                 this.cdr.detectChanges();
             }
         });
-
-        this._destroyRef.onDestroy(() => unsubscribe);
+        this._destroyRef.onDestroy(() => themeChange.unsubscribe());
     }
 
     /** @hidden */
@@ -457,7 +454,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterViewInit 
     }
 
     /** @hidden @internal */
-    public ngAfterViewInit() {
+    public ngAfterContentChecked() {
         this.setComponentTheme();
     }
 }
