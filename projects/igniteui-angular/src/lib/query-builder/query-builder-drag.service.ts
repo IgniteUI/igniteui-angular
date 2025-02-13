@@ -17,7 +17,7 @@ export class IgxQueryBuilderDragService {
         @Inject(IgxQueryBuilderTreeComponent)
         private _queryBuilderFocusChipAfterDrag: (index: number) => void,
     ) { }
-    
+
     public dropGhostChipNode: Node;
     private sourceExpressionItem: ExpressionItem;
     private sourceElement: HTMLElement;
@@ -259,8 +259,7 @@ export class IgxQueryBuilderDragService {
             dragCopy.firstChild.firstChild.removeChild(dragCopy.firstChild.firstChild.childNodes[1]);
             (dragCopy.firstChild.firstChild.firstChild as HTMLElement).replaceChildren(span);
             (dragCopy.firstChild.firstChild as HTMLElement).classList.add(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_GHOST);
-        }
-        else{
+        } else {
             (dragCopy.firstChild.firstChild as HTMLElement).classList.add('igx-chip__ghost');
         }
         return dragCopy;
@@ -535,8 +534,8 @@ export class IgxQueryBuilderDragService {
     private calculateDropLocationIndex(targetExpressionItem: ExpressionItem, sourceExpressionItem: ExpressionItem, dropUnder: boolean): number {
         const expressions = this.getListedExpressions(this._queryBuilderTreeComponent.rootGroup);
 
-        let ixt = expressions.indexOf(targetExpressionItem);
-        let ixs = expressions.indexOf(sourceExpressionItem);
+        const ixt = expressions.indexOf(targetExpressionItem);
+        const ixs = expressions.indexOf(sourceExpressionItem);
 
         let dropLocationIndex = ixt - 1;
         dropLocationIndex -= (expressions.filter((ex, ix) => !ex['expression'] && ix < ixt).length - 1); //deduct group roots
