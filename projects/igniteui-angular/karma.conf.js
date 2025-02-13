@@ -48,9 +48,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['ChromeHeadlessNoSandbox'],
-    captureTimeout: 40000,
-    browserDisconnectTimeout: 40000,
-    browserNoActivityTimeout: 60000,
+    browserDisconnectTimeout: 4000,
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
