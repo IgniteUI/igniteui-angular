@@ -39,9 +39,11 @@
             <button igxButton="contained" igxRipple (click)="discardExpressionTree()">discard</button>
         </div>
 
-        <div *ngIf="this.queryResult" style="margin-top: 1em">
-            {{ this.queryResult }}
-        </div>
+        @if (this.queryResult) {
+            <div style="margin-top: 1em">
+                {{ this.queryResult }}
+            </div>
+        }
 
         <div class="qb-output-area">
             <pre>{{ printExpressionTree(queryBuilder.expressionTree) }}</pre>
