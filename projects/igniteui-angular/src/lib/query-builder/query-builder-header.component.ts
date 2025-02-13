@@ -22,6 +22,18 @@ export class IgxQueryBuilderHeaderComponent {
     public title: string;
 
     /**
+     * Show/hide the legend.
+     *
+     * @example
+     * ```html
+     * <igx-query-builder-header [showLegend]="false"></igx-query-builder-header>
+     * ```
+     * @deprecated in version 19.1.0.
+     */
+    @Input()
+    public showLegend = true;
+
+    /**
      * Sets the resource strings.
      * By default it uses EN resources.
      */

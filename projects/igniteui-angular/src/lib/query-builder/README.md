@@ -5,7 +5,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 ## Usage
 ```html
 <igx-query-builder
-    [fields]="fields"
+    [entities]="entities"
     [expressionTree]="customExpressionTree">
 
     <!-- Custom header -->
@@ -23,17 +23,18 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| `fields`  | FieldType[]  | An array of fields to be filtered. Contains information about  label, field, type, operands. |
+| `entities`  | EntityType[]  | An array of entities. Contains information about name and fields. |
 | `expressionTree`  | IExpressionTree  | Gets/Sets the displayed expressions tree. |
 | `locale`  | string  | Locale settings for the component. If this locale is not set, its value to be determined based on the global Angular application LOCALE_ID. |
 | Content Cell  | Content Cell  | Content Cell |
 | `resourceStrings`  | IQueryBuilderResourceStrings  | Gets/sets the resource strings. |
+| `showEntityChangeDialog` | boolean | Gets/sets whether the confirmation dialog should be shown when changing entity. |
 
 #### Events
 
 | Name | Description |
 | :--- | :--- |
-| `expressionTreeChange` | Emitted when condition, field, operand, value is changed. | no | - |
+| `expressionTreeChange` | Emitted when entity, return fields, condition, field, operand, value is changed. | no | - |
 
 ### igx-query-builder-header
 
