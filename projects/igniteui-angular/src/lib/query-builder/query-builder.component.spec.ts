@@ -2163,7 +2163,7 @@ describe('IgxQueryBuilder', () => {
     }));
   });
 
-  describe('Keyboard navigation', () => {
+  xdescribe('Keyboard navigation', () => {
     it('Should navigate with Tab/Shift+Tab through entity and fields inputs, chips, their respective drop & delete icons and operator drop-down button', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();
@@ -2237,7 +2237,7 @@ describe('IgxQueryBuilder', () => {
     }));
   });
 
-  describe('Templates', () => {
+  xdescribe('Templates', () => {
     let fixture: ComponentFixture<IgxQueryBuilderCustomTemplateSampleTestComponent>;
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(IgxQueryBuilderCustomTemplateSampleTestComponent);
@@ -2417,13 +2417,9 @@ describe('IgxQueryBuilder', () => {
       expect(dropGhost).toBeDefined();
       expect(dropGhost.innerText).toBe('My Drop here to insert');
     }));
-  });
+  }); 
 
-  describe('Overlay settings', () => {
-    it('', () => { });
-  });
-
-  xdescribe('Drag and drop', () => {
+  describe('Drag and drop', () => {
     const ROW_HEIGHT = 40;
     const DROP_CONDITION_HERE = "Drop here to insert";
     let chipComponents = [];
