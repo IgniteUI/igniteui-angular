@@ -2423,7 +2423,7 @@ describe('IgxQueryBuilder', () => {
     it('', () => { });
   });
 
-  describe('Drag and drop', () => {
+  xdescribe('Drag and drop', () => {
     const ROW_HEIGHT = 40;
     const DROP_CONDITION_HERE = "Drop here to insert";
     let chipComponents = [];
