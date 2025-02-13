@@ -14,9 +14,10 @@ import {
 } from '@angular/core';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { IPivotDimension, IPivotDimensionData, IPivotGridRecord } from './pivot-grid.interface';
+import { IPivotDimension, IPivotDimensionData, IPivotGridHorizontalGroup, IPivotGridRecord } from './pivot-grid.interface';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridHorizontalRowCellMerging } from './pivot-grid.pipes';
+import { PivotUtil } from './pivot-util';
 
 /**
  *
@@ -113,5 +114,11 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
             }
         }
         return resWidth;
+    }
+
+    protected getGroupKey(group: IPivotGridHorizontalGroup) {
+        const rec = group.records[0];
+        const key = PivotUtil.getRecordKey(rec, group.rootDimension);
+        return key;
     }
 }

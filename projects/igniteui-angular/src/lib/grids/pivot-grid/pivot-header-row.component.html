@@ -63,7 +63,7 @@
                                     <span id='empty' igxDrop (dropped)="onDimDrop($event, rowArea, 0)"
                                         class='igx-grid__pivot-empty-chip-area'>{{grid.resourceStrings.igx_grid_pivot_empty_row_drop_area}}</span>
                                 }
-                                @for (row of grid.rowDimensions; track row; let last = $last) {
+                                @for (row of grid.rowDimensions; track row.memberName; let last = $last) {
                                     <span class="igx-grid__tr-pivot--chip_drop_indicator"
                                     [style.height.px]='getAreaHeight(rowArea)'></span>
                                     <igx-chip [draggable]="true" [id]="row.memberName" [data]="{ pivotArea: 'row' }"
@@ -113,7 +113,7 @@
                                     class='igx-grid__pivot-empty-chip-area'>
                                 {{grid.resourceStrings.igx_grid_pivot_empty_column_drop_area}}</span>
                             }
-                            @for (col of grid.columnDimensions; track col; let last = $last) {
+                            @for (col of grid.columnDimensions; track col.memberName; let last = $last) {
                                 <span class="igx-grid__tr-pivot--chip_drop_indicator"
                                   [style.height.px]='getAreaHeight(colArea)'></span>
                                 <igx-chip [draggable]="true" [id]="col.memberName" [data]="{ pivotArea: 'column' }"
@@ -209,7 +209,7 @@
                                 <span id='empty' igxDrop (dropped)="onDimDrop($event, rowArea, 0)"
                                 class='igx-grid__pivot-empty-chip-area'>{{grid.resourceStrings.igx_grid_pivot_empty_row_drop_area}}</span>
                             }
-                            @for (row of grid.rowDimensions; track row; let last = $last) {
+                            @for (row of grid.rowDimensions; track row.memberName; let last = $last) {
                                 <span class="igx-grid__tr-pivot--chip_drop_indicator"
                                     [style.height.px]='getAreaHeight(rowArea)'></span>
                                 <igx-chip [draggable]="true" [id]="row.memberName" [data]="{ pivotArea: 'row' }"
@@ -317,7 +317,7 @@
 </div>
 
 <igx-drop-down #dropdown (selectionChanging)='onAggregationChange($event)'>
-    @for (item of aggregateList; track item) {
+    @for (item of aggregateList; track item.key) {
         <igx-drop-down-item [selected]='isSelected(item)' [value]='item'>
             {{ item.label }}
         </igx-drop-down-item>

@@ -12,7 +12,7 @@
     <igx-list>
         @for (
             item of dims | filterPivotItems: input.value:grid?.pipeTrigger;
-            track item
+            track item.memberName
         ) {
             <igx-list-item [id]="item.memberName">
                 <igx-checkbox
@@ -74,7 +74,7 @@
                     <igx-list>
                         @for (
                             item of this.grid[panel.dataKey];
-                            track item
+                            track (item.memberName || item.member)
                         ) {
                             <igx-list-item
                                 igxDrop
