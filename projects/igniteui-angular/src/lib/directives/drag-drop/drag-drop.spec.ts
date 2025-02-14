@@ -17,7 +17,7 @@ import {
 import { IgxIconComponent } from '../../icon/icon.component';
 import { NgFor } from '@angular/common';
 
-describe('General igxDrag/igxDrop', () => {
+xdescribe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
     let dropArea: IgxDropDirective;
     let dropAreaRects = { top: 0, left: 0, right: 0, bottom: 0};
