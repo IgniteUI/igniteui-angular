@@ -1,0 +1,127 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    @include b(igx-calendar-view) {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --dropdown-size: var(--component-size);
+
+        display: flex;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+        grid-column: 1 / -1;
+        padding-inline: pad-inline(rem(8px), rem(8px), rem(16px));
+        color: var-get($theme, 'content-foreground');
+        background: var-get($theme, 'content-background');
+        box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
+        border-radius: var-get($theme, 'border-radius');
+        padding-block: pad-block(rem(16px));
+
+        &:focus,
+        &:focus-within,
+        &:focus-visible {
+            outline: none;
+        }
+
+        @include type-style(body-1, false) {
+            font-size: sizable(var(--ig-body-2-font-size), var(--ig-body-2-font-size), var(--ig-body-1-font-size));
+            font-weight: sizable(var(--ig-body-2-font-weight), var(--ig-body-2-font-weight), var(--ig-body-1-font-weight));
+            font-style: sizable(var(--ig-body-2-font-style), var(--ig-body-2-font-style), var(--ig-body-1-font-style));
+            line-height: sizable(var(--ig-body-2-line-height), var(--ig-body-2-line-height), var(--ig-body-1-line-height));
+            letter-spacing: sizable(var(--ig-body-2-letter-spacing), var(--ig-body-2-letter-spacing), var(--ig-body-1-letter-spacing));
+            text-transform: sizable(var(--ig-body-2-text-transform), var(--ig-body-2-text-transform), var(--ig-body-1-text-transform));
+            margin: 0;
+        }
+
+        @include e(items) {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(max-content, 1fr));
+            row-gap: rem(4px);
+            column-gap: rem(8px);
+            width: 100%;
+        }
+
+        @include e(item) {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @include e(item, 'current') {
+            .igx-calendar-view__item-inner {
+                color: var-get($theme, 'ym-current-foreground');
+                background: var-get($theme, 'ym-current-background');
+
+                &:hover {
+                    color: var-get($theme, 'ym-current-hover-foreground');
+                    background: var-get($theme, 'ym-current-hover-background');
+                }
+            }
+        }
+
+        @include e(item, 'selected') {
+            .igx-calendar-view__item-inner {
+                color: var-get($theme, 'ym-selected-foreground');
+                background: var-get($theme, 'ym-selected-background');
+
+                &:hover {
+                    color: var-get($theme, 'ym-selected-hover-foreground');
+                    background: var-get($theme, 'ym-selected-hover-background');
+                }
+            }
+        }
+
+        @include e(item, $mods: ('selected', 'active')) {
+            .igx-calendar-view__item-inner {
+                color: var-get($theme, 'ym-selected-hover-foreground');
+                background: var-get($theme, 'ym-selected-hover-background');
+            }
+        }
+
+        @include e(item, $mods: ('selected', 'current')) {
+            .igx-calendar-view__item-inner {
+                color: var-get($theme, 'ym-selected-current-foreground');
+                background: var-get($theme, 'ym-selected-current-background');
+
+                &:hover {
+                    color: var-get($theme, 'ym-selected-current-hover-foreground');
+                    background: var-get($theme, 'ym-selected-current-hover-background');
+                }
+            }
+        }
+
+        @include e(item, $mods: ('selected', 'current', 'active')) {
+            .igx-calendar-view__item-inner {
+                color: var-get($theme, 'ym-selected-current-hover-foreground');
+                background: var-get($theme, 'ym-selected-current-hover-background');
+            }
+        }
+
+        @include e(item-inner) {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: var-get($theme, 'size');
+            width: 100%;
+            border-radius: var-get($theme, 'ym-border-radius');
+            padding: 0 rem(12px);
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            max-width: rem(240px);
+
+            &:hover {
+                color: var-get($theme, 'ym-hover-foreground');
+                background: var-get($theme, 'ym-hover-background');
+            }
+        }
+    }
+}

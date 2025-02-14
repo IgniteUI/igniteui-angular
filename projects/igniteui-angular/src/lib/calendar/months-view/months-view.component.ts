@@ -4,7 +4,7 @@ import {
     HostBinding,
     ElementRef,
     booleanAttribute,
-    Inject,
+    Inject, ViewEncapsulation,
 } from "@angular/core";
 import { IgxCalendarMonthDirective } from "../calendar.directives";
 import { NgFor, TitleCasePipe } from "@angular/common";
@@ -33,6 +33,8 @@ let NEXT_ID = 0;
     ],
     selector: "igx-months-view",
     templateUrl: "months-view.component.html",
+    styleUrl: 'months-view.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe]
 })
 export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {

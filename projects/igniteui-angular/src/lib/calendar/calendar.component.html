@@ -164,13 +164,13 @@
     aria-labelledby="igx-aria-calendar-title-month igx-aria-calendar-title-year"
     class="igx-calendar__header"
     *ngIf="selection === 'single' && hasHeader || selection === 'range' && hasHeader">
-    <h5 id="igx-aria-calendar-title-year" class="igx-calendar__header-year">
+    <span id="igx-aria-calendar-title-year" class="igx-calendar__header-year">
         <ng-container *ngTemplateOutlet="headerTitleTemplate ?? defaultHeaderTitle; context: headerContext"></ng-container>
-    </h5>
-    <h2 id="igx-aria-calendar-title-month" class="igx-calendar__header-date">
+    </span>
+    <span id="igx-aria-calendar-title-month" class="igx-calendar__header-date">
         <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate : defaultHeaderDate; context: headerContext">
         </ng-container>
-    </h2>
+    </span>
 </header>
 
 

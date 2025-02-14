@@ -192,13 +192,13 @@
         @include banner($banner-theme-map);
     }
 
-    @if is-used('igx-calendar', $exclude) {
-        $calendar-theme-map: calendar-theme(
-            $schema: $schema,
-        );
-        $calendar-theme-map: meta.call($theme-handler, $calendar-theme-map);
-        @include calendar($calendar-theme-map);
-    }
+    //@if is-used('igx-calendar', $exclude) {
+    //    $calendar-theme-map: calendar-theme(
+    //        $schema: $schema,
+    //    );
+    //    $calendar-theme-map: meta.call($theme-handler, $calendar-theme-map);
+    //    @include calendar($calendar-theme-map);
+    //}
 
     @if is-used('igx-card', $exclude) {
         $card-theme-map: card-theme(

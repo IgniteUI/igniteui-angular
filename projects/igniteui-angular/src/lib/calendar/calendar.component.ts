@@ -11,7 +11,7 @@ import {
 	QueryList,
 	OnDestroy,
 	booleanAttribute,
-    HostListener,
+	HostListener, ViewEncapsulation,
 } from '@angular/core';
 import { NgIf, NgTemplateOutlet, NgFor, DatePipe } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -71,6 +71,8 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html',
+	styleUrl: 'calendar.component.css',
+	encapsulation: ViewEncapsulation.None,
     imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollPageDirective, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
 })
 export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit, OnDestroy {

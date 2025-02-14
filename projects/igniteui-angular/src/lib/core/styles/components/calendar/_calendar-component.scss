@@ -4,99 +4,99 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin component {
-    @include b(igx-calendar) {
-        $this: bem--selector-to-string(&);
-        @include register-component(
-            $name: string.slice($this, 2, -1),
-            $deps: (
-                igx-icon,
-            )
-        );
-
-        @extend %calendar !optional;
-
-        @include e(header) {
-            @extend %header-display !optional;
-        }
-
-        @include e(wrapper) {
-            @extend %calendar-wrapper !optional;
-        }
-
-        @include e(wrapper, $m: 'vertical') {
-            @extend %calendar-wrapper--vertical !optional;
-        }
-
-        @include e(pickers) {
-            @extend %pickers-display !optional;
-        }
-
-        @include e(pickers, $m: 'vertical') {
-            @extend %pickers-display--vertical !optional;
-        }
-
-        @include e(pickers, $m: 'days') {
-            @extend %pickers-display--days !optional;
-        }
-
-        @include e(body) {
-            @extend %body-display !optional;
-        }
-
-        @include e(body, $m: 'vertical') {
-            @extend %body-display--vertical !optional;
-        }
-
-        @include e(header-year) {
-            @extend %header-year !optional;
-        }
-
-        @include e(header-date) {
-            @extend %header-date !optional;
-        }
-
-        @include m(vertical) {
-            @extend %calendar !optional;
-            @extend %calendar-vertical !optional;
-
-            @include e(header) {
-                @extend %header-display-vertical !optional;
-            }
-
-            @include e(header-date) {
-                @extend %header-date !optional;
-                @extend %header-date-vertical !optional;
-            }
-        }
-
-        @include e(aria-off-screen) {
-            @extend %calendar__aria-off-screen !optional;
-        }
-    }
-
-    @include b(igx-calendar-picker) {
-        @extend %views-navigation !optional;
-
-        @include e(dates) {
-            @extend %picker-dates !optional;
-        }
-
-        @include e(nav) {
-            @extend %picker__nav !optional;
-        }
-
-        @include e(date) {
-            @extend %picker-date !optional;
-        }
-
-        @include e(prev) {
-            @extend %picker-arrow !optional;
-        }
-
-        @include e(next) {
-            @extend %picker-arrow !optional;
-        }
-    }
+    //@include b(igx-calendar) {
+    //    $this: bem--selector-to-string(&);
+    //    @include register-component(
+    //        $name: string.slice($this, 2, -1),
+    //        $deps: (
+    //            igx-icon,
+    //        )
+    //    );
+    //
+    //    @extend %calendar !optional;
+    //
+    //    @include e(header) {
+    //        @extend %header-display !optional;
+    //    }
+    //
+    //    @include e(wrapper) {
+    //        @extend %calendar-wrapper !optional;
+    //    }
+    //
+    //    @include e(wrapper, $m: 'vertical') {
+    //        @extend %calendar-wrapper--vertical !optional;
+    //    }
+    //
+    //    @include e(pickers) {
+    //        @extend %pickers-display !optional;
+    //    }
+    //
+    //    @include e(pickers, $m: 'vertical') {
+    //        @extend %pickers-display--vertical !optional;
+    //    }
+    //
+    //    @include e(pickers, $m: 'days') {
+    //        @extend %pickers-display--days !optional;
+    //    }
+    //
+    //    @include e(body) {
+    //        @extend %body-display !optional;
+    //    }
+    //
+    //    @include e(body, $m: 'vertical') {
+    //        @extend %body-display--vertical !optional;
+    //    }
+    //
+    //    @include e(header-year) {
+    //        @extend %header-year !optional;
+    //    }
+    //
+    //    @include e(header-date) {
+    //        @extend %header-date !optional;
+    //    }
+    //
+    //    @include m(vertical) {
+    //        @extend %calendar !optional;
+    //        @extend %calendar-vertical !optional;
+    //
+    //        @include e(header) {
+    //            @extend %header-display-vertical !optional;
+    //        }
+    //
+    //        @include e(header-date) {
+    //            @extend %header-date !optional;
+    //            @extend %header-date-vertical !optional;
+    //        }
+    //    }
+    //
+    //    @include e(aria-off-screen) {
+    //        @extend %calendar__aria-off-screen !optional;
+    //    }
+    //}
+    //
+    //@include b(igx-calendar-picker) {
+    //    @extend %views-navigation !optional;
+    //
+    //    @include e(dates) {
+    //        @extend %picker-dates !optional;
+    //    }
+    //
+    //    @include e(nav) {
+    //        @extend %picker__nav !optional;
+    //    }
+    //
+    //    @include e(date) {
+    //        @extend %picker-date !optional;
+    //    }
+    //
+    //    @include e(prev) {
+    //        @extend %picker-arrow !optional;
+    //    }
+    //
+    //    @include e(next) {
+    //        @extend %picker-arrow !optional;
+    //    }
+    //}
 
     @include b(igx-days-view) {
         @extend %calendar !optional;
@@ -495,51 +495,51 @@
         }
     }
 
-    @include b(igx-calendar-view) {
-        @extend %calendar-view !optional;
-
-        @include e(items) {
-            @extend %calendar-items !optional;
-        }
-
-        @include e(item) {
-            @extend %view-item !optional;
-        }
-
-        @include e(item, 'current') {
-            @extend %calendar-view__item-current !optional;
-        }
-
-        @include e(item, $mods: ('current', 'active')) {
-            @extend %calendar-view__item-current-active !optional;
-        }
-
-        @include e(item, 'selected') {
-            @extend %calendar-view__item-selected !optional;
-        }
-
-        @include e(item, $mods: ('selected', 'active')) {
-            @extend %calendar-view__item-selected-active !optional;
-        }
-
-        @include e(item, $mods: ('selected', 'current')) {
-            @extend %calendar-view__item-selected-current !optional;
-        }
-
-        @include e(item, $mods: ('selected', 'current', 'active')) {
-            @extend %calendar-view__item-selected-current-active !optional;
-        }
-
-        @include e(item-inner) {
-            @extend %calendar-view__item-inner !optional;
-
-            &:hover {
-                @extend %calendar-view__item-inner-hover !optional;
-            }
-        }
-    }
-
-    @include b(igx-month-picker) {
-        @extend %month-picker !optional;
-    }
+    //@include b(igx-calendar-view) {
+    //    @extend %calendar-view !optional;
+    //
+    //    @include e(items) {
+    //        @extend %calendar-items !optional;
+    //    }
+    //
+    //    @include e(item) {
+    //        @extend %view-item !optional;
+    //    }
+    //
+    //    @include e(item, 'current') {
+    //        @extend %calendar-view__item-current !optional;
+    //    }
+    //
+    //    @include e(item, $mods: ('current', 'active')) {
+    //        @extend %calendar-view__item-current-active !optional;
+    //    }
+    //
+    //    @include e(item, 'selected') {
+    //        @extend %calendar-view__item-selected !optional;
+    //    }
+    //
+    //    @include e(item, $mods: ('selected', 'active')) {
+    //        @extend %calendar-view__item-selected-active !optional;
+    //    }
+    //
+    //    @include e(item, $mods: ('selected', 'current')) {
+    //        @extend %calendar-view__item-selected-current !optional;
+    //    }
+    //
+    //    @include e(item, $mods: ('selected', 'current', 'active')) {
+    //        @extend %calendar-view__item-selected-current-active !optional;
+    //    }
+    //
+    //    @include e(item-inner) {
+    //        @extend %calendar-view__item-inner !optional;
+    //
+    //        &:hover {
+    //            @extend %calendar-view__item-inner-hover !optional;
+    //        }
+    //    }
+    //}
+    //
+    //@include b(igx-month-picker) {
+    //    @extend %month-picker !optional;
+    //}
 }

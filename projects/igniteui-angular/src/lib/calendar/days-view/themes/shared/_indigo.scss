@@ -1,0 +1,516 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
+@use 'igniteui-theming/sass/animations/index' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-days-view, indigo) {
+    $date-view-row-gap: rem(4px);
+    $date-size: var-get($_theme, 'size');
+    $date-inner-size: var-get($_theme, 'inner-size');
+    $date-height: $date-size;
+    $border-size: rem(2px);
+
+    @include e(date) {
+        .igx-days-view__date-inner--week-number {
+            border: 0;
+
+            &::before {
+                height: $date-view-row-gap;
+                inset-block-start: 100%;
+                inset-inline-start: 0;
+                border: 0;
+            }
+        }
+    }
+
+    @include e(date-inner) {
+        border-width: $border-size;
+
+        &::after {
+            border-radius: inherit;
+            border-width: $border-size;
+            width: $date-size;
+            height: $date-size;
+        }
+    }
+
+    @include e(date, 'selected') {
+        .igx-days-view__date-inner {
+            &::after {
+                width: $date-inner-size;
+                height: $date-inner-size;
+            }
+        }
+    }
+
+    @include e(date, $mods: ('selected', 'range')) {
+        .igx-days-view__date-inner {
+            &::after {
+                width: $date-size;
+                height: $date-size;
+            }
+        }
+    }
+
+    @include e(date, $mods: ('selected', 'special','range')) {
+        .igx-days-view__date-inner {
+            &:hover {
+                &::after {
+                    border-color: var-get($_theme, 'date-special-hover-border-color');
+                }
+            }
+
+            &::after {
+                border-color: var-get($_theme, 'date-special-border-color');
+            }
+        }
+    }
+
+    @include e(date, $mods: ('selected', 'special', 'range', 'first')) {
+        .igx-days-view__date-inner {
+            &::after {
+                width: $date-inner-size;
+                height: $date-inner-size;
+                border-color: var-get($_theme, 'date-selected-special-border-color');
+            }
+
+            &:hover {
+                &::after {
+                    border-color: var-get($_theme, 'date-selected-special-border-color');
+                }
+            }
+        }
+    }
+    @include e(date, $mods: ('selected', 'special', 'range', 'last')) {
+        .igx-days-view__date-inner {
+            &::after {
+                width: $date-inner-size;
+                height: $date-inner-size;
+                border-color: var-get($_theme, 'date-selected-special-border-color');
+            }
+
+            &:hover {
+                &::after {
+                    border-color: var-get($_theme, 'date-selected-special-border-color');
+                }
+            }
+        }
+    }
+
+    @include e(date, $mods: ('selected', 'special', 'active', 'range')) {
+        .igx-days-view__date-inner {
+            &::after {
+                //border-color: var-get($_theme, 'date-special-range-border-color');
+            }
+
+            &:hover {
+                &::after {
+                    //border-color: var-get($_theme, 'date-special-hover-border-color');
+                }
+            }
+        }
+    }
+
+    @include e(date, 'range') {
+        .igx-days-view__date-inner {
+            height: $date-size;
+        }
+    }
+
+    @include e(date, 'range-preview') {
+        border-block-style: dashed;
+
+        //.igx-days-view__date-inner {
+        //    &:hover {
+        //        color: var-get($_theme, 'date-selected-range-hover-foreground');
+        //    }
+        //}
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'first')) {
+        &::after {
+            border-block: calc(#{$border-size} / 2);
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'last')) {
+        &::after {
+            border-block: calc(#{$border-size} / 2);
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'special', 'first', 'last')) {
+        .igx-days-view__date-inner {
+            &::after {
+                border-color: var-get($_theme, 'date-current-border-color');
+            }
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'current')) {
+        .igx-days-view__date-inner {
+            border-color: transparent;
+
+            &::after {
+                border-color: var-get($_theme, 'date-current-border-color');
+            }
+
+            &:hover {
+                border-color: transparent;
+
+                &::after {
+                    border-color: var-get($_theme, 'date-current-hover-border-color');
+                }
+            }
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'current', 'active')) {
+        .igx-days-view__date-inner {
+            border-color: transparent;
+
+            &::after {
+                border-color: var-get($_theme, 'date-current-focus-border-color');
+            }
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'current', 'special')) {
+        .igx-days-view__date-inner {
+            color: var-get($_theme, 'date-special-range-foreground');
+            border-color: var-get($_theme, 'date-current-border-color');
+
+            &:hover {
+                color: var-get($_theme, 'date-special-hover-foreground');
+
+                &::after {
+                    border-color: var-get($_theme, 'date-special-hover-border-color');
+                }
+
+                background: var-get($_theme, 'date-selected-current-range-hover-background');
+                border-color: var-get($_theme, 'date-current-hover-border-color');
+            }
+
+            &::after {
+                width:  calc($date-inner-size - #{rem(4px)});
+                height:  calc($date-inner-size - #{rem(4px)});
+                border-color: var-get($_theme, 'date-special-range-border-color');
+            }
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'current', 'special', 'active')) {
+        :not(.igx-days-view__date--first),
+        :not(.igx-days-view__date--last) {
+            .igx-days-view__date-inner {
+                color: var-get($_theme, 'date-special-focus-foreground');
+
+                background: var-get($_theme, 'date-selected-current-range-focus-background');
+                border-color: var-get($_theme, 'date-current-focus-border-color');
+
+                &::after {
+                    border-color: var-get($_theme, 'date-special-hover-border-color');
+                }
+            }
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'current', 'first')) {
+        .igx-days-view__date-inner {
+            &::after {
+                border-color: var-get($_theme, 'date-current-border-color');
+            }
+
+            &:hover {
+                &::after {
+                    border-color: var-get($_theme, 'date-current-hover-border-color');
+                }
+            }
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'current', 'last')) {
+        .igx-days-view__date-inner {
+            &::after {
+                border-color: var-get($_theme, 'date-current-border-color');
+            }
+
+            &:hover {
+                &::after {
+                    border-color: var-get($_theme, 'date-current-hover-border-color');
+                }
+            }
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'current', 'first', 'special')) {
+        .igx-days-view__date-inner {
+            color: var-get($_theme, 'date-selected-foreground');
+            background: var-get($_theme, 'date-selected-background');
+
+            &::after {
+                width: calc($date-inner-size - #{rem(4px)});
+                height: calc($date-inner-size - #{rem(4px)});
+                border-color: var-get($_theme, 'date-selected-special-border-color');
+            }
+
+            &:hover {
+                color: var-get($_theme, 'date-selected-hover-foreground');
+                background: var-get($_theme, 'date-selected-hover-background');
+
+                // stylelint-disable-next-line
+                &::after {
+                    border-color: var-get($_theme, 'date-selected-special-hover-border-color');
+                }
+            }
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'current', 'last', 'special')) {
+        .igx-days-view__date-inner {
+            color: var-get($_theme, 'date-selected-foreground');
+            background: var-get($_theme, 'date-selected-background');
+
+            &::after {
+                width: calc($date-inner-size - #{rem(4px)});
+                height: calc($date-inner-size - #{rem(4px)});
+                border-color: var-get($_theme, 'date-selected-special-border-color');
+            }
+
+            &:hover {
+                color: var-get($_theme, 'date-selected-hover-foreground');
+                background: var-get($_theme, 'date-selected-hover-background');
+
+                // stylelint-disable-next-line
+                &::after {
+                    border-color: var-get($_theme, 'date-selected-special-hover-border-color');
+                }
+            }
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'current', 'first', 'special', 'active')) {
+        .igx-days-view__date-inner {
+            color: var-get($_theme, 'date-selected-focus-foreground') !important;
+            background: var-get($_theme, 'date-selected-focus-background') !important;
+
+            &::after {
+                width: calc($date-inner-size - #{rem(4px)});
+                height: calc($date-inner-size - #{rem(4px)});
+            }
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'current', 'last', 'special', 'active')) {
+        .igx-days-view__date-inner {
+            color: var-get($_theme, 'date-selected-focus-foreground') !important;
+            background: var-get($_theme, 'date-selected-focus-background') !important;
+
+            &::after {
+                width: calc($date-inner-size - #{rem(4px)});
+                height: calc($date-inner-size - #{rem(4px)});
+            }
+        }
+    }
+
+    //@include e(date, 'weekend') {
+    //    .igx-days-view__date-inner {
+    //        &:hover {
+    //            color: var-get($_theme, 'date-hover-foreground');
+    //        }
+    //    }
+    //}
+
+    @include e(date, 'current') {
+        &:not(.igx-days-view__date--selected) {
+            .igx-days-view__date-inner  {
+                background: var-get($_theme, 'date-current-background');
+
+                &:hover {
+                    background: var-get($_theme, 'date-current-hover-background');
+                }
+
+                &::after {
+                    width: $date-size;
+                    height: $date-size;
+                }
+            }
+        }
+    }
+
+    @include e(date, $mods: ('current', 'selected', 'special')) {
+        .igx-days-view__date-inner {
+            &::after {
+                border-color: var-get($_theme, 'date-selected-special-border-color');
+            }
+
+            &:hover {
+                &::after {
+                    border-color: var-get($_theme, 'date-selected-special-hover-border-color');
+                }
+            }
+        }
+    }
+
+    @include e(date, $mods: ('current', 'selected', 'special', 'active')) {
+        .igx-days-view__date-inner {
+            &::after {
+                border-color: var-get($_theme, 'date-selected-special-focus-border-color');
+            }
+        }
+    }
+
+    @include e(date, 'special') {
+        .igx-days-view__date-inner {
+            font-weight: 700;
+        }
+    }
+
+    @include e(date, $mods: ('special', 'current')) {
+        &:not(.igx-days-view__date--selected) {
+            .igx-days-view__date-inner {
+                background: var-get($_theme, 'date-current-background');
+                border-color: var-get($_theme, 'date-current-border-color');
+
+                &:hover {
+                    color: var-get($_theme, 'date-special-hover-foreground');
+                    background: var-get($_theme, 'date-current-hover-background');
+                    border-color: var-get($_theme, 'date-current-hover-border-color');
+                }
+
+                &::after {
+                    width: calc($date-inner-size - #{rem(4px)});
+                    height: calc($date-inner-size - #{rem(4px)});
+                }
+            }
+        }
+    }
+
+    @include e(date, $mods: ('special', 'current', 'selected')) {
+        .igx-days-view__date-inner {
+            &::after {
+                width: calc($date-inner-size - #{rem(4px)});
+                height: calc($date-inner-size - #{rem(4px)});
+            }
+        }
+    }
+
+    @include e(date, $mods: ('special', 'current', 'active')) {
+        .igx-days-view__date-inner {
+            //color: var-get($_theme, 'date-special-focus-foreground');
+            //background: var-get($_theme, 'date-current-focus-background');
+            //border-color: var-get($_theme, 'date-current-focus-border-color');
+            //
+            //&:hover {
+            //    color: var-get($_theme, 'date-special-hover-foreground');
+            //    background: var-get($_theme, 'date-current-hover-background');
+            //    border-color: var-get($_theme, 'date-current-hover-border-color');
+            //}
+
+            &::after {
+                width: calc($date-inner-size - #{rem(4px)});
+                height: calc($date-inner-size - #{rem(4px)});
+            }
+        }
+    }
+
+    @include e(date, $mods: ('special', 'current', 'active', 'range')) {
+        .igx-days-view__date-inner {
+            color: var-get($_theme, 'date-special-focus-foreground');
+            background: var-get($_theme, 'date-current-focus-background');
+            border-color: var-get($_theme, 'date-current-focus-border-color');
+
+            &:hover {
+                color: var-get($_theme, 'date-special-hover-foreground');
+                background: var-get($_theme, 'date-current-hover-background');
+                border-color: var-get($_theme, 'date-current-hover-border-color');
+            }
+
+            &::after {
+                width: calc($date-inner-size - #{rem(4px)});
+                height: calc($date-inner-size - #{rem(4px)});
+            }
+        }
+    }
+
+    @include e(date, $mods: ('first', 'range-preview')) {
+        &::after {
+            border-width: calc(#{$border-size} / 2);
+            width: calc(50% + #{rem(1px)});
+            border-inline-color: transparent;
+            border-style: dashed;
+        }
+    }
+
+    @include e(date, $mods: ('last', 'range-preview')) {
+        &::after {
+            border-width: calc(#{$border-size} / 2);
+            width: calc(50% + #{rem(1px)});
+            border-inline-color: transparent;
+            border-style: dashed;
+        }
+    }
+
+    @include e(label) {
+        height: $date-height;
+
+        .igx-days-view__date-inner--week-number {
+            border: 0;
+
+            &::before {
+                height: $date-view-row-gap;
+                inset-block-start: 100%;
+                inset-inline-start: 0;
+                border: 0;
+            }
+        }
+    }
+
+    @include e(label, 'week-number') {
+        span {
+            color: var-get($_theme, 'week-number-foreground');
+            background: var-get($_theme, 'week-number-background');
+            border: 0;
+
+            &::before {
+                content: '';
+                position: absolute;
+                background: var-get($_theme, 'week-number-background');
+                border-inline: rem(1px) solid var-get($_theme, 'week-number-background');
+                inset-block-start: 100%;
+                height: $date-view-row-gap;
+                width: $date-size;
+                inset-inline-start: 0;
+                border: 0;
+            }
+        }
+    }
+
+    @include e(date, $mods: ('disabled', 'current', 'special')) {
+        .igx-days-view__date-inner {
+            color: var-get($_theme, 'date-special-foreground');
+        }
+    }
+
+    @include e(date, $mods: ('disabled', 'single', 'current', 'special', 'selected')) {
+        .igx-days-view__date-inner {
+            color: var-get($_theme, 'date-selected-foreground');
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'first', 'disabled')) {
+        &::before {
+            background: var-get($_theme, 'content-background');
+        }
+    }
+
+    @include e(date, $mods: ('range', 'selected', 'last', 'disabled')) {
+        &::before {
+            background: var-get($_theme, 'content-background');
+        }
+    }
+}

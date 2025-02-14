@@ -1,0 +1,65 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
+
+@include themed-block(igx-calendar, bootstrap) {
+    @include e(header) {
+        padding: rem(16px);
+    }
+
+    @include e(pickers, $m: 'vertical') {
+        .igx-calendar-picker__prev,
+        .igx-calendar-picker__next, {
+            transform: rotate(90deg)
+        }
+    }
+
+    @include e(header-year) {
+        @include type-style(body-2);
+        min-height: rem(24px);
+        margin: 0;
+    }
+
+    @include e(header-date) {
+        @include type-style(h4);
+        padding-block-end: rem(8px);
+        margin: 0;
+    }
+
+    @include m(vertical) {
+        @include e(header) {
+            min-width: rem(136px);
+            width: rem(136px);
+        }
+
+        @include e(header-date) {
+            padding-block-end: rem(8px);
+        }
+    }
+}
+
+@include themed-block(igx-calendar-picker, bootstrap) {
+    height: rem(56px);
+    padding-inline: rem(16px);
+
+    igx-icon {
+        --size: #{rem(24px)};
+    }
+
+    @include e(nav) {
+        gap: rem(24px);
+    }
+
+    @include e(prev) {
+        top: rem(4px);
+    }
+
+    @include e(next) {
+        top: rem(4px);
+    }
+}
