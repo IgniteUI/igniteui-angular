@@ -2,7 +2,20 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 19.1.0
+### General
+- `IgxCarousel`
+    - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
+    - **Deprecation** - `CarouselIndicatorsOrientation` enum members `top` and `bottom` have been deprecated and will be removed in a future version. Use `start` and `end` instead.
+- `IgxQueryBuilderHeader
+    - **Behavioral Changes**
+    - Legend is no longer shown.
+    - **Deprecation**
+    - The `showLegend` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
 ### New Features
+- `IgxBanner`
+    - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. The banner can now be programmatically set to expanded (visible) or collapsed (hidden) both initially and at runtime. Animations will trigger during runtime updates — the **open animation** plays when `expanded` is set to `true`, and the **close animation** plays when set to `false`. However, no animations will trigger when the property is set initially.
+    - The banner's event lifecycle (`opening`, `opened`, `closing`, `closed`) only triggers through **user interactions** (e.g., clicking to open/close). Programmatic updates using the `expanded` property will not fire any events.
+    - If the `expanded` property changes during an ongoing animation, the current animation will **stop** and the opposite animation will begin from the **point where the previous animation left off**. For instance, if the open animation (10 seconds) is interrupted at 6 seconds and `expanded` is set to `false`, the close animation (5 seconds) will start from its 3rd second.
 - `IgxQueryBuilder`
     - Introduced the ability to create nested queries by specifying IN/NOT IN operators.
     - Added the `entities` property that accepts an array of `EntityType` objects describing an entity with its name and an array of fields. The `fields` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
@@ -21,23 +34,15 @@ All notable changes for each version of this project will be documented in this 
         }
     </ng-template> 
     ```
+    - **Behavioral Changes** 
+    - Expression enters edit mode on single click, `Enter` or `Space`.
+    - Selecting conditions inside the `IgxQueryBuilderComponent` is no longer supported. Grouping/ungrouping expressions is now achieved via the newly exposed Drag & Drop functionality.
+    - Deleting multiple expressions through the context menu is no longer supported.
 - `IFilteringExpression`
     - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
 - `IFilteringOperation`
     - A new optional property called `isNestedQuery` has been introduced. It's used to indicate whether the condition leads to a nested query creation.
-- **Behavioral Changes** 
-    - Expression enters edit mode on single click, `Enter` or `Space`.
-    - Selection of chips inside the `IgxQueryBuilderComponent` is removed. For grouping/ungrouping expressions could be used the newly exposed Drag&Drop functionality.
-    - Deleting multiple expressions through context menu is removed.
-### General
-- `IgxCarousel`
-    - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
-    - **Deprecation** - `CarouselIndicatorsOrientation` enum members `top` and `bottom` have been deprecated and will be removed in a future version. Use `start` and `end` instead.
-### New Features
-- `IgxBanner`
-    - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. The banner can now be programmatically set to expanded (visible) or collapsed (hidden) both initially and at runtime. Animations will trigger during runtime updates — the **open animation** plays when `expanded` is set to `true`, and the **close animation** plays when set to `false`. However, no animations will trigger when the property is set initially.
-    - The banner's event lifecycle (`opening`, `opened`, `closing`, `closed`) only triggers through **user interactions** (e.g., clicking to open/close). Programmatic updates using the `expanded` property will not fire any events.
-    - If the `expanded` property changes during an ongoing animation, the current animation will **stop** and the opposite animation will begin from the **point where the previous animation left off**. For instance, if the open animation (10 seconds) is interrupted at 6 seconds and `expanded` is set to `false`, the close animation (5 seconds) will start from its 3rd second.
+
 
 ## 19.0.0
 ### General
