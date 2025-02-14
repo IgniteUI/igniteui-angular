@@ -69,7 +69,6 @@ describe('List', () => {
         expect(list.items instanceof Array).toBeTruthy();
         expect(list.cssClass).toBeTruthy();
         expect(list.isListEmpty).toBeFalsy();
-        debugger;
         expect(list.items.length).toBe(3);
         expect(list.items[0] instanceof IgxListItemComponent).toBeTruthy();
         expect(list.headers instanceof Array).toBeTruthy();
