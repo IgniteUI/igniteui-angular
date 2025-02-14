@@ -2637,7 +2637,7 @@ fdescribe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getVisibleChips(fix).length).toBe(3);
     });
 
-    it('should drop the condition above the target condition on dragging up.', () => {
+    it('should drop the condition above the target condition on dragging up.', async () => {
       const secondChip = chipComponents[1].componentInstance; // "OrderId In Products/ OrderId" chip
 
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderName  Equals  foo");
@@ -2651,6 +2651,7 @@ fdescribe('IgxQueryBuilder', () => {
       //drag
       QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 2 * ROW_HEIGHT, true);
       fix.detectChanges();
+      // await wait(20);
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
       expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderId  In Products / OrderId");

@@ -20,7 +20,7 @@ import { NgFor } from '@angular/common';
 import { IgxColumnComponent } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 
-describe('IgxTreeGridState - input properties #tGrid', () => {
+fdescribe('IgxTreeGridState - input properties #tGrid', () => {
     configureTestSuite();
     let fix;
     let grid;

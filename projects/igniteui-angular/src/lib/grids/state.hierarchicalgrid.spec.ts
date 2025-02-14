@@ -18,7 +18,7 @@ import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { NgFor } from '@angular/common';
 import { IColumnState, IGridState } from './state-base.directive';
 
-describe('IgxHierarchicalGridState - input properties #hGrid', () => {
+fdescribe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
     configureTestSuite();

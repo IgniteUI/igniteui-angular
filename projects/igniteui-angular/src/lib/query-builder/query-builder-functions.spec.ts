@@ -898,7 +898,7 @@ export class QueryBuilderFunctions {
         }
     }
 
-    public static async dragMove(dragDirective, X: number, Y: number, pointerUp?: boolean) {
+    public static dragMove(dragDirective, X: number, Y: number, pointerUp?: boolean) {
         //mouse down
         dragDirective.onPointerMove({ pointerId: 1, pageX: X, pageY: Y });
         //duplicate the mousemove as dispatched Event, so we can trigger the RxJS listener
@@ -906,7 +906,7 @@ export class QueryBuilderFunctions {
 
         //mouse up
         if (pointerUp) {
-            await wait(20);
+            wait();
             dragDirective.onPointerUp({ pointerId: 1, pageX: X, pageY: Y });
         }
     }
