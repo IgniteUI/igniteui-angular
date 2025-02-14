@@ -10,7 +10,6 @@ $_theme: $material;
     --item-padding: #{rem(12px) rem(8px)};
     --item-gap: #{rem(32px)};
     --item-min-height: #{rem(48px)};
-    --mini-size: #{rem(56px)};
 
     @include e(item) {
         @include type-style('subtitle-2');

@@ -1,3 +1,5 @@
+@use 'igniteui-theming/sass/typography' as *;
+
 ////
 /// @group themes
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
@@ -128,6 +130,10 @@
         syntax: '<integer>';
         initial-value: 0;
         inherits: true;
+    }
+
+    igx-nav-drawer {
+        --igx-nav-drawer-size--mini: #{rem(56px)};
     }
 
     // Component styles

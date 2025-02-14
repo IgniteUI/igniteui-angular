@@ -7,7 +7,7 @@
     --item-padding: #{rem(8px) rem(16px)};
     --item-gap: #{rem(16px)};
     --item-min-height: #{rem(32px)};
-    --mini-size: #{rem(48px)};
+    --igx-nav-drawer-size--mini: #{rem(48px)};
 
     @include e(item) {
         @include type-style('subtitle-2');

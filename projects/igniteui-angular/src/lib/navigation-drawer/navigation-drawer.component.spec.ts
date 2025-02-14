@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, ViewChild, PLATFORM_ID } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
@@ -626,7 +626,7 @@ describe('Navigation Drawer', () => {
             let flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
 
             // Mini variant pinned by default
-            expect(flexBasis).toEqual('57px');;
+            expect(flexBasis).toEqual('57px');
             expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
 
             fix.componentInstance.navDrawer.toggle();
@@ -637,7 +637,7 @@ describe('Navigation Drawer', () => {
 
             flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
 
-            expect(flexBasis).toEqual('240px');;
+            expect(flexBasis).toEqual('240px');
             expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
     });
 

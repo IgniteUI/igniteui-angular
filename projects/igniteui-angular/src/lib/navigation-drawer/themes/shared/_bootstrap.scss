@@ -7,7 +7,7 @@
     --item-padding: #{rem(8px) rem(16px)};
     --item-gap: #{rem(8px)};
     --item-min-height: #{rem(40px)};
-    --mini-size: #{rem(88px)};
+    --igx-nav-drawer-size--mini: #{rem(88px)};
 
     @include e(item) {
         @include type-style('body-2');

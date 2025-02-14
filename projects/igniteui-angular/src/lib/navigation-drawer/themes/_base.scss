@@ -84,7 +84,6 @@ $_theme: $material;
 
     @include b(igx-nav-drawer) {
         --igx-nav-drawer-size: #{rem(240px)};
-        --mini-size: #{rem(56px)};
 
         flex-basis: 0;
         transition: flex-basis;
@@ -97,7 +96,7 @@ $_theme: $material;
         }
 
         @include mx(mini, pinned) {
-            flex-basis: calc(var(--igx-mini-nav-drawer-size, var(--mini-size)) + rem(1px));
+            flex-basis: calc(var(--igx-mini-nav-drawer-size, #{var(--igx-nav-drawer-size--mini)}) + rem(1px));
         }
 
         @include e(aside) {
@@ -152,7 +151,7 @@ $_theme: $material;
 
         @include e(aside, mini) {
             transition-duration: .3s;
-            width: var(--mini-size);
+            width: #{var(--igx-nav-drawer-size--mini)};
             min-width: fit-content;
 
             %item {
