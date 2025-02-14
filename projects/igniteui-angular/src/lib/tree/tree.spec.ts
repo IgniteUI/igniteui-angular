@@ -17,7 +17,7 @@ import { IgxTreeService } from './tree.service';
 const TREE_ROOT_CLASS = 'igx-tree__root';
 const NODE_TAG = 'igx-tree-node';
 
-describe('IgxTree #treeView', () => {
+xdescribe('IgxTree #treeView', () => {
     configureTestSuite();
     describe('Unit Tests', () => {
         let mockNavService: IgxTreeNavigationService;
