@@ -1,11 +1,11 @@
 
-<div *ngIf="!isHeader && list.listItemLeftPanningTemplate" #leftPanningTmpl class="igx-list__item-right"
+<div *ngIf="!isHeader && list.listItemLeftPanningTemplate" #leftPanningTmpl class="igx-list-item__right igx-list__item-right"
     [style.width.rem]="offsetWidthInRem" [style.height.rem]="offsetHeightInRem">
     <ng-container *ngTemplateOutlet="list.listItemLeftPanningTemplate.template; context: context">
     </ng-container>
 </div>
 
-<div *ngIf="!isHeader && list.listItemRightPanningTemplate" #rightPanningTmpl class="igx-list__item-left"
+<div *ngIf="!isHeader && list.listItemRightPanningTemplate" #rightPanningTmpl class="igx-list-item__left igx-list__item-left"
     [style.width.rem]="offsetWidthInRem" [style.height.rem]="offsetHeightInRem">
     <ng-container *ngTemplateOutlet="list.listItemRightPanningTemplate.template; context: context">
     </ng-container>
@@ -16,20 +16,20 @@
 </ng-template>
 
 <ng-template #itemThumbnails>
-    <div class="igx-list__item-thumbnail">
-        <ng-content select="[igxListThumbnail], igx-list__item-thumbnail, igx-avatar"></ng-content>
+    <div class="igx-list-item__thumbnail igx-list__item-thumbnail">
+        <ng-content select="[igxListThumbnail], .igx-list-item__thumbnail, .igx-list__item-thumbnail, igx-avatar"></ng-content>
     </div>
 </ng-template>
 
 <ng-template #itemLines>
-    <div class="igx-list__item-lines">
-        <ng-content select="[igxListLine], .igx-list__item-lines, [igxListLineTitle], [igxListLineSubTitle], .igx-list__item-line-title, .igx-list__item-line-subtitle"></ng-content>
+    <div class="igx-list-item__lines igx-list__item-lines">
+        <ng-content select="[igxListLine], .igx-list-item__lines, .igx-list__item-lines, [igxListLineTitle], [igxListLineSubTitle], .igx-list-item__title .igx-list__item-line-title, .igx-list-item__subtitle, .igx-list__item-line-subtitle"></ng-content>
     </div>
 </ng-template>
 
 <ng-template #itemActions>
-    <div class="igx-list__item-actions">
-        <ng-content select="[igxListAction], .igx-list__item-actions"></ng-content>
+    <div class="igx-list-item__actions igx-list__item-actions">
+        <ng-content select="[igxListAction], .igx-list-item__actions, .igx-list__item-actions"></ng-content>
     </div>
 </ng-template>
 
@@ -38,7 +38,7 @@
 </ng-container>
 
 <ng-container *ngIf="!isHeader">
-    <div class="igx-list__item-content">
+    <div class="igx-list-item__content igx-list__item-content">
         <ng-container *ngTemplateOutlet="itemThumbnails"></ng-container>
         <ng-container *ngTemplateOutlet="itemLines"></ng-container>
         <ng-container *ngTemplateOutlet="itemActions"></ng-container>

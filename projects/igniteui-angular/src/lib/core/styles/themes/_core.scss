@@ -130,6 +130,18 @@
         inherits: true;
     }
 
+    @property --ig-theme {
+        syntax: 'material | indigo | fluent | bootstrap';
+        initial-value: material;
+        inherits: true;
+    }
+
+    @property --ig-theme-variant {
+        syntax: 'light | dark';
+        initial-value: light;
+        inherits: true;
+    }
+
     // Component styles
     @include ripple.component();
     @include action-strip.component();

@@ -1,0 +1,35 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-list-item, fluent) {
+    @include e(lines) {
+        @include type-style(caption) {
+            margin: 0;
+        }
+    }
+
+    @include e(title) {
+        @include type-style(caption) {
+            margin: 0;
+        }
+    }
+
+    @include e(subtitle) {
+        @include type-style(caption) {
+            margin: 0;
+        }
+    }
+
+    @include m(base) {
+        border-bottom: var-get($_theme, 'border-width') solid
+            var-get($_theme, 'border-color');
+
+        &:last-of-type {
+            border-bottom: none;
+        }
+    }
+}

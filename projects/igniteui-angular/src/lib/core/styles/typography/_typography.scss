@@ -59,6 +59,8 @@
     }
 
     @if not(list.index($exclude, 'global')) {
-        @include theming.typography($font-family, $type-scale);
+        @layer ig.typography {
+            @include theming.typography($font-family, $type-scale);
+        }
     }
 }
