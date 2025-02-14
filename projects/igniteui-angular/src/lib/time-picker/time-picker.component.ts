@@ -945,7 +945,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             }
             case 'ampmList': {
                 let hour = this._selectedDate.getHours();
-                hour = DateTimeUtil.isAm(item) ? hour - 12 : hour + 12;
+                hour = DateTimeUtil.isAm(item)
+                    ? hour % 12
+                    : (hour % 12) + 12;
+
                 date.setHours(hour);
                 date = this.validateDropdownValue(date, true);
                 this.setSelectedValue(date);
