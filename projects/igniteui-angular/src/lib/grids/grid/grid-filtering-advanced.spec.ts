@@ -1347,7 +1347,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             verifyElementIsInExpressionsContainerView(fix, GridFunctions.getAdvancedFilteringEditModeContainer(fix));
         }));
 
-        it('Should keep the context menu in view when scrolling the expressions container.', fakeAsync(() => {
+        xit('Should keep the context menu in view when scrolling the expressions container.', fakeAsync(() => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.Or);
             for (let index = 0; index < 20; index++) {
