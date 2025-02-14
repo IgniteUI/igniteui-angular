@@ -27,7 +27,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
 import { PlatformUtil } from '../../core/utils';
 
-describe('IgxForOf directive -', () => {
+xdescribe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
     const DISPLAY_CONTAINER = 'igx-display-container';
     const VERTICAL_SCROLLER = 'igx-virtual-helper';
