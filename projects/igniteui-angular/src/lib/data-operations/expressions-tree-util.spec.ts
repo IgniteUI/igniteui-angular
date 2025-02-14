@@ -22,7 +22,7 @@ function checkOp(op: IFilteringExpression, reconstructedOp: IFilteringExpression
     }
 }
 
-describe('Unit testing FilteringUtil', () => {
+fdescribe('Unit testing FilteringUtil', () => {
     it('Expressions should resolve correctly when rehydrating with fields', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.Or, 'myField', 'myEntity', ['*']);
         const currDate = new Date();

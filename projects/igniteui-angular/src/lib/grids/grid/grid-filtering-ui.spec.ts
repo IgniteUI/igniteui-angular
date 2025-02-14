@@ -3210,7 +3210,7 @@ fdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
     });
 });
 
-describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
+fdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -7052,7 +7052,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     });
 });
 
-describe('IgxGrid - Custom Filtering Strategy #grid', () => {
+fdescribe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
     configureTestSuite((() => {

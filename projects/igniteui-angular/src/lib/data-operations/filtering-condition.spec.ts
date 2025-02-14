@@ -4,7 +4,7 @@ import { IgxStringFilteringOperand,
     IgxBooleanFilteringOperand,
     IgxFilteringOperand} from './filtering-condition';
 
-describe('Unit testing FilteringCondition', () => {
+fdescribe('Unit testing FilteringCondition', () => {
     it('tests string conditions', () => {
         const fc = IgxStringFilteringOperand.instance();
         // contains

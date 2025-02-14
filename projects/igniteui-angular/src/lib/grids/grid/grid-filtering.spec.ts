@@ -1158,7 +1158,7 @@ fdescribe('IgxGrid - Filtering actions #grid', () => {
     }));
 });
 
-describe('IgxGrid - Filtering expression tree bindings #grid', () => {
+fdescribe('IgxGrid - Filtering expression tree bindings #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [

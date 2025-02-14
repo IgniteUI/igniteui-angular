@@ -5,7 +5,7 @@ import { FilteringLogic } from './filtering-expression.interface';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxBooleanFilteringOperand } from './filtering-condition';
 
 
-describe('Unit testing FilteringStrategy', () => {
+fdescribe('Unit testing FilteringStrategy', () => {
     let dataGenerator: DataGenerator;
     let data: any[];
     let fs: FilteringStrategy;

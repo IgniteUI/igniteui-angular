@@ -30,7 +30,7 @@ import { getComponentSize } from '../../core/utils';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 
-describe('IgxGrid Component Tests #grid', () => {
+fdescribe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
 
