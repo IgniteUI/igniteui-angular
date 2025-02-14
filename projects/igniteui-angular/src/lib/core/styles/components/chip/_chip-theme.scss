@@ -504,7 +504,7 @@
         @if $variant == 'bootstrap' {
             color: contrast-color($color: 'success', $variant: 600);
         } @else {
-            color: contrast-color($color: 'success', $variant: if($variant = 'indigo', 900, 500));
+            color: contrast-color($color: 'success', $variant: if($variant == 'indigo', 900, 500));
         }
         background: color($color: 'success', $variant: 500);
         border-color: color($color: 'success', $variant: 500);
@@ -590,7 +590,7 @@
         @if $variant == 'bootstrap' {
             color: contrast-color($color: 'error', $variant: 600);
         } @else {
-            color: contrast-color($color: 'error', $variant: if($variant = 'indigo', 900, 500));
+            color: contrast-color($color: 'error', $variant: if($variant == 'indigo', 900, 500));
         }
         background: color($color: 'error', $variant: 500);
         border-color: color($color: 'error', $variant: 500);
