@@ -488,13 +488,13 @@
         @include input-group($input-group-theme-map);
     }
 
-    @if is-used('igx-list', $exclude) {
-        $list-theme-map: list-theme(
-            $schema: $schema,
-        );
-        $list-theme-map: meta.call($theme-handler, $list-theme-map);
-        @include list($list-theme-map);
-    }
+    // @if is-used('igx-list', $exclude) {
+    //     $list-theme-map: list-theme(
+    //         $schema: $schema,
+    //     );
+    //     $list-theme-map: meta.call($theme-handler, $list-theme-map);
+    //     @include list($list-theme-map);
+    // }
 
     @if is-used('igx-label', $exclude) {
         $label-theme-map: label-theme(

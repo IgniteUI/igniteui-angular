@@ -7,17 +7,22 @@
 $_theme: $material;
 
 @include themed-block(igx-switch, material) {
+    --transform-thumb: calc(var(--switch-width) - var(--switch-thumb-size));
     --switch-width: #{rem(36px)};
     --switch-height: #{rem(14px)};
     --switch-thumb-size: #{rem(20px)};
     --switch-on-offset: #{rem(1px)};
-    --switch-off-offset: #{rem(-1px)};
+    --switch-off-offset: 0;
     --label-margin: #{rem(12px)};
-    
+
     @include e(label) {
         @include type-style(subtitle-1) {
             margin-block: 0;
         }
+    }
+
+    @include e(composite) {
+        border-width: 0;
     }
 
     @include e(ripple) {

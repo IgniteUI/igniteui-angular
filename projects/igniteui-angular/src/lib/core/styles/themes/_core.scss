@@ -132,6 +132,18 @@
         inherits: true;
     }
 
+    @property --ig-theme {
+        syntax: 'material | indigo | fluent | bootstrap';
+        initial-value: material;
+        inherits: true;
+    }
+
+    @property --ig-theme-variant {
+        syntax: 'light | dark';
+        initial-value: light;
+        inherits: true;
+    }
+  
     igx-nav-drawer {
         --igx-nav-drawer-size--mini: #{rem(56px)};
     }

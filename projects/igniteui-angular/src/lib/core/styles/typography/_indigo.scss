@@ -78,12 +78,12 @@
         input-text: 'body-2'
     ));
     @include linear-bar-typography();
-    @include list-typography($categories: (
-        header: 'overline',
-        item: 'body-2',
-        title: 'body-2',
-        subtitle: 'body-2'
-    ));
+    // @include list-typography($categories: (
+    //     header: 'overline',
+    //     item: 'body-2',
+    //     title: 'body-2',
+    //     subtitle: 'body-2'
+    // ));
     @include navbar-typography($categories: (
         title: 'h5',
     ));

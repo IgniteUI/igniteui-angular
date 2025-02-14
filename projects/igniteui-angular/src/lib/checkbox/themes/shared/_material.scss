@@ -8,6 +8,7 @@ $_theme: $material;
 
 @include themed-block(igx-checkbox, material) {
     --label-margin: #{rem(2px)};
+    --composite-padding: #{rem(20px)};
 
     @include e(label) {
         @include type-style(subtitle-1);
@@ -18,7 +19,7 @@ $_theme: $material;
     }
 
     @include e(composite-wrapper) {
-        padding: rem(20px);
+        padding: var(--composite-padding);
     }
 
     @include mx(invalid, checked) {
