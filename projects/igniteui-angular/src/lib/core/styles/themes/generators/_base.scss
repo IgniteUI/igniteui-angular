@@ -360,13 +360,13 @@
         @include select($select-theme-map);
     }
 
-    @if is-used('igx-date-picker', $exclude) {
-        $calendar-theme-map: calendar-theme(
-            $schema: $schema,
-        );
-        $calendar-theme-map: meta.call($theme-handler, $calendar-theme-map);
-        @include date-picker($calendar-theme-map);
-    }
+    //@if is-used('igx-date-picker', $exclude) {
+    //    $calendar-theme-map: calendar-theme(
+    //        $schema: $schema,
+    //    );
+    //    $calendar-theme-map: meta.call($theme-handler, $calendar-theme-map);
+    //    @include date-picker($calendar-theme-map);
+    //}
 
     @if is-used('igx-date-range-picker', $exclude) {
         $date-range-picker-theme-map: date-range-picker-theme(

@@ -2,7 +2,7 @@ import {
     AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
     EventEmitter, HostBinding, HostListener, Inject, Injector, Input, LOCALE_ID,
     OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
-    SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
+    SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
 import { NgTemplateOutlet, NgIf, getLocaleFirstDayOfWeek } from '@angular/common';
 import {
@@ -63,6 +63,8 @@ const SingleInputDatesConcatenationString = ' - ';
 @Component({
     selector: 'igx-date-range-picker',
     templateUrl: './date-range-picker.component.html',
+    styleUrls: ['date-range-picker.component.css'],
+    encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateRangePickerComponent, multi: true },
         { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }

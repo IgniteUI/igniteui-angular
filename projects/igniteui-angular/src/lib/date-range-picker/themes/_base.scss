@@ -1,0 +1,66 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/elevations' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    @include b(igx-date-range-picker) {
+
+        display: flex;
+
+        > igx-icon {
+            cursor: pointer;
+        }
+
+        igx-input-group {
+            flex: 1;
+        }
+
+        igx-calendar {
+            box-shadow: none;
+        }
+
+        igx-date-range-start,
+        igx-date-range-end {
+            flex: 1 0 0%;
+        }
+
+        @include e(label) {
+            display: flex;
+            align-items: center;
+            color: var-get($theme, 'label-color');
+            margin: 0 rem(8px);
+        }
+
+        @include e(start) {
+            flex: 1 0 0%;
+        }
+
+        @include e(end) {
+            flex: 1 0 0%;
+        }
+    }
+
+    @include b(igx-date-range-picker-buttons) {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 rem(16px) rem(16px);
+
+        > * {
+            margin-inline-end: rem(8px);
+
+            &:last-of-type {
+                margin-inline-end: 0;
+            }
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+}
