@@ -49,7 +49,7 @@
                     <ng-template igxComboHeader>
                         <div
                             class="igx-drop-down__item igx-drop-down__item--query-builder"
-                            (click)="onSelectAllClicked($event)"
+                            (click)="onSelectAllClicked()"
                             [ngClass]="{'igx-drop-down__item--selected': this.selectedEntity && this.selectedReturnFields && this.selectedEntity.fields.length === this.selectedReturnFields.length}"
                         >
                             <igx-checkbox

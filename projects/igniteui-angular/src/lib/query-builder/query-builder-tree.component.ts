@@ -1425,7 +1425,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return exprTreeCopy;
     }
 
-    public onSelectAllClicked(_event) {
+    public onSelectAllClicked() {
         if (
             (this._selectedReturnFields.length > 0 && this._selectedReturnFields.length < this._selectedEntity.fields.length) ||
             this._selectedReturnFields.length == this._selectedEntity.fields.length
