@@ -14,7 +14,7 @@ $_theme: $fluent;
     --switch-on-offset: #{rem(5px)};
     --switch-off-offset: #{rem(3px)};
     --label-margin: #{rem(8px)};
-    
+
     @include e(label) {
         @include type-style(body-2) {
             margin-block: 0;

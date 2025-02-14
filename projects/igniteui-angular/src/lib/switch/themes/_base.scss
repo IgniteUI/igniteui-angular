@@ -20,12 +20,17 @@ $_theme: $material;
         color: var-get($_theme, 'label-color');
         user-select: none;
         word-wrap: break-all;
-        transition: $input-transition;
+        transition: color 0.2s $ease-in-out-quad;
         transition-delay: var(--_transition-delay);
 
         &:empty {
             display: none;
         }
+    }
+
+    %thumb-transition {
+        transition: $input-transition;
+        transition-delay: var(--_transition-delay);
     }
 
     %switch-ripple-empty {
@@ -74,6 +79,10 @@ $_theme: $material;
                 border-color: var-get($_theme, 'border-hover-color');
             }
 
+            @include e(composite-thumb) {
+                @extend %thumb-transition;
+            }
+
             @include e(thumb) {
                 background: var-get($_theme, 'border-hover-color');
             }
@@ -84,6 +93,12 @@ $_theme: $material;
 
             @include e(label, $m: before) {
                 color: var-get($_theme, 'label-hover-color');
+            }
+        }
+
+        &:focus-within {
+            @include e(composite-thumb) {
+                @extend %thumb-transition;
             }
         }
 
@@ -114,13 +129,12 @@ $_theme: $material;
         }
 
         @include e(composite-thumb) {
+            position: relative;
             width: var(--switch-thumb-size);
             height: var(--switch-thumb-size);
             min-width: var(--switch-thumb-size);
-            border-radius: var-get($_theme, 'border-radius-thumb');
-            transition: $input-transition;
             transform: translateX(var(--switch-off-offset));
-            transition-delay: var(--_transition-delay);
+            border-radius: var-get($_theme, 'border-radius-thumb');
 
             [dir='rtl'] & {
                 transform: translateX(calc(var(--switch-off-offset) * -1));
@@ -145,7 +159,7 @@ $_theme: $material;
             display: none;
             position: absolute;
             top: calc(50% - calc(var(--_ripple-size) / 2));
-            inset-inline-start: calc(50% - calc(var(--_ripple-size) / 2));
+            inset-inline-start: -50%;
             width: var(--_ripple-size);
             aspect-ratio: 1;
             overflow: hidden;
