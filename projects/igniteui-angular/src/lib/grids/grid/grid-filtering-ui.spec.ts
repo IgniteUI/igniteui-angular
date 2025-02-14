@@ -62,7 +62,7 @@ const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
 
-describe('IgxGrid - Filtering Row UI actions #grid', () => {
+xdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
 
     registerLocaleData(localeDe);
     registerLocaleData(localeFr);

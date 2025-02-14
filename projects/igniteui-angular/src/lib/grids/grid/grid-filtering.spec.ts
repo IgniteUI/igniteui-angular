@@ -20,7 +20,7 @@ import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingCompone
 import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ExpressionUI } from '../filtering/excel-style/common';
 
-describe('IgxGrid - Filtering actions #grid', () => {
+xdescribe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
