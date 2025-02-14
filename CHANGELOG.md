@@ -25,6 +25,8 @@ All notable changes for each version of this project will be documented in this 
     - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
 - `IFilteringOperation`
     - A new optional property called `isNestedQuery` has been introduced. It's used to indicate whether the condition leads to a nested query creation.
+- `Drag and drop`
+    - A new functionality to reposition condition chips using mouse drag or keyboard Up/Down.
 - **Behavioral Changes** 
     - Expression enters edit mode on single click, `Enter` or `Space`.
     - Selection of chips inside the `IgxQueryBuilderComponent` is removed. For grouping/ungrouping expressions could be used the newly exposed Drag&Drop functionality.
