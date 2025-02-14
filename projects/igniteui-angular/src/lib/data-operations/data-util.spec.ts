@@ -625,7 +625,7 @@ const testMerging = () => {
 };
 /* //Test merging */
 
-xdescribe('DataUtil', () => {
+describe('DataUtil', () => {
     testSort();
     testGroupBy();
     testFilter();
