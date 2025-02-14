@@ -23,7 +23,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
-fdescribe('CSV Grid Exporter', () => {
+describe('CSV Grid Exporter', () => {
     configureTestSuite();
     let exporter: IgxCsvExporterService;
     let options: IgxCsvExporterOptions;

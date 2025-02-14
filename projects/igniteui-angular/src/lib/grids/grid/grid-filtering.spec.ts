@@ -20,7 +20,7 @@ import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingCompone
 import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ExpressionUI } from '../filtering/excel-style/common';
 
-fdescribe('IgxGrid - Filtering actions #grid', () => {
+describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -1158,7 +1158,7 @@ fdescribe('IgxGrid - Filtering actions #grid', () => {
     }));
 });
 
-fdescribe('IgxGrid - Filtering expression tree bindings #grid', () => {
+describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [

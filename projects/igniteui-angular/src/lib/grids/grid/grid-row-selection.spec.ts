@@ -24,7 +24,7 @@ const DEBOUNCETIME = 30;
 const SCROLL_DEBOUNCETIME = 100;
 
 
-fdescribe('IgxGrid - Row Selection #grid', () => {
+describe('IgxGrid - Row Selection #grid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
