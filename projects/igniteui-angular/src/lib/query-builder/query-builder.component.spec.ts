@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { QueryBuilderSelectors } from './query-builder.common';
 
-fdescribe('IgxQueryBuilder', () => {
+describe('IgxQueryBuilder', () => {
   configureTestSuite();
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
   let queryBuilder: IgxQueryBuilderComponent;

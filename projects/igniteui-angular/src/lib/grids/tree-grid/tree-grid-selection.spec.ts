@@ -31,7 +31,7 @@ import { IRowSelectionEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridCell } from '../public_api';
 
-fdescribe('IgxTreeGrid - Selection #tGrid', () => {
+describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;

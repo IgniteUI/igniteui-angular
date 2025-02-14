@@ -62,7 +62,7 @@ const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
 
-fdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
+describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
     registerLocaleData(localeDe);
     registerLocaleData(localeFr);
@@ -3210,7 +3210,7 @@ fdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
     });
 });
 
-fdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
+describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -7052,7 +7052,7 @@ fdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     });
 });
 
-fdescribe('IgxGrid - Custom Filtering Strategy #grid', () => {
+describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
     configureTestSuite((() => {

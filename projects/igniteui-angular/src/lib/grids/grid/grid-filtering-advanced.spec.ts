@@ -27,7 +27,7 @@ import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { QueryBuilderSelectors } from '../../query-builder/query-builder.common';
 
-fdescribe('IgxGrid - Advanced Filtering #grid - ', () => {
+describe('IgxGrid - Advanced Filtering #grid - ', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
