@@ -19,17 +19,17 @@
 /// @requires {mixin} b
 /// @example scss
 @mixin themed-block($component, $theme, $variant: null) {
-    $_theme: "" + $theme;
+    $_theme: '' + $theme;
 
     @layer ig.#{$_theme} {
         @if $variant {
-            @container style(--theme: #{$_theme}) and style(--ig-theme-variant: #{$variant}) {
+            @container style(--ig-theme: #{$_theme}) and style(--ig-theme-variant: #{$variant}) {
                 @include b($component) {
                     @content;
                 }
             }
         } @else {
-            @container style(--theme: #{$_theme}) {
+            @container style(--ig-theme: #{$_theme}) {
                 @include b($component) {
                     @content;
                 }
