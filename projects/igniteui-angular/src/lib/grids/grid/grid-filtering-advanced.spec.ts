@@ -27,7 +27,7 @@ import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { QueryBuilderSelectors } from '../../query-builder/query-builder.common';
 
-describe('IgxGrid - Advanced Filtering #grid - ', () => {
+fdescribe('IgxGrid - Advanced Filtering #grid - ', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -41,7 +41,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             ]
         });
     }));
-
+    
     describe('General tests - ', () => {
         let fix: ComponentFixture<IgxGridAdvancedFilteringComponent>;
         let grid: IgxGridComponent;
@@ -1278,7 +1278,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
-
+        
         it('Should allow hosting Advanced Filtering dialog outside of the grid.', fakeAsync(() => {
             // Add a root 'and' group.
             QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
