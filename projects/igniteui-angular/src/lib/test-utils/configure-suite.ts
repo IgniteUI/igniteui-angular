@@ -59,8 +59,9 @@ const myReporter = {
     },
   
     suiteStarted: function(result) {
-      console.log('Suite started: ' + result.description
+      console.log('Suite started: ' + result.description + 'at: ' + window.location
         + ' whose full description is: ' + result.fullName);
+
     },
   
     suiteDone: function(result) {
