@@ -18,6 +18,7 @@ All notable changes for each version of this project will be documented in this 
     - If the `expanded` property changes during an ongoing animation, the current animation will **stop** and the opposite animation will begin from the **point where the previous animation left off**. For instance, if the open animation (10 seconds) is interrupted at 6 seconds and `expanded` is set to `false`, the close animation (5 seconds) will start from its 3rd second.
 - `IgxQueryBuilder`
     - Introduced the ability to create nested queries by specifying IN/NOT IN operators.
+    - Introduced the ability to reposition condition chips by dragging or using `Arrow Up/Down`.
     - Added the `entities` property that accepts an array of `EntityType` objects describing an entity with its name and an array of fields. The `fields` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
     - Added the `canCommit`, `commit` and `discard` public methods that allows the user to save/discard the current state of the expression tree.
     - Added option to template the search value input:
@@ -42,7 +43,6 @@ All notable changes for each version of this project will be documented in this 
     - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
 - `IFilteringOperation`
     - A new optional property called `isNestedQuery` has been introduced. It's used to indicate whether the condition leads to a nested query creation.
-
 
 ## 19.0.0
 ### General
