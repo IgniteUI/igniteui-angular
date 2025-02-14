@@ -735,10 +735,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public override ngAfterViewInit(): void {
         super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
-
-        if (this.platform.isBrowser) {
-            this.subscribeToToggleDirectiveEvents();
-        }
+        this.subscribeToToggleDirectiveEvents();
 
         this._defaultDropDownOverlaySettings.excludeFromOutsideClick = [this._inputGroup.element.nativeElement];
 
@@ -1253,7 +1250,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private subscribeToToggleDirectiveEvents(): void {
         if (this.toggleRef) {
-            if (this._inputGroup) {
+            if (this._inputGroup && this.platform.isBrowser) {
                 this.toggleRef.element.style.width = this._inputGroup.element.nativeElement.getBoundingClientRect().width + 'px';
             }
 
