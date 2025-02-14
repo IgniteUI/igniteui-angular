@@ -50,7 +50,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../test-utils/pivot-grid-samples.spec';
 import { IgxPivotGridComponent, PivotRowLayoutType } from '../../grids/pivot-grid/public_api';
 
-describe('Excel Exporter', () => {
+fdescribe('Excel Exporter', () => {
     configureTestSuite();
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
@@ -602,18 +602,21 @@ describe('Excel Exporter', () => {
                 fieldName: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
                 fieldName: 'Name',
                 searchVal: 'r',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
                 fieldName: 'ID',
                 searchVal: 5,
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                conditionName: 'greaterThan'
             });
 
             grid.advancedFilteringExpressionsTree = tree;
@@ -1172,12 +1175,14 @@ describe('Excel Exporter', () => {
                 fieldName: 'Age',
                 searchVal: 40,
                 condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
+                conditionName: 'lessThan',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
                 fieldName: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
 

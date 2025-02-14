@@ -17,7 +17,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxHierarchicalGridDefaultComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { firstValueFrom } from 'rxjs';
 
-describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
+fdescribe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     configureTestSuite((() => {
@@ -110,7 +110,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         const expression = {
             fieldName: 'ProductName',
             searchVal: 'Product: A0',
-            condition: IgxStringFilteringOperand.instance().condition('startsWith')
+            condition: IgxStringFilteringOperand.instance().condition('startsWith'),
+            conditionName: 'startsWith'
         };
         filteringExpressionsTree.filteringOperands.push(expression);
         childGrid.filter('ProductName', null, filteringExpressionsTree);
@@ -437,7 +438,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 });
 
-describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
+fdescribe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [

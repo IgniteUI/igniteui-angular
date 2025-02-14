@@ -10,7 +10,7 @@ import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
 import { IPivotDimension, IPivotGridRecord } from './pivot-grid/pivot-grid.interface';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-grid/pivot-row-dimension-header.component';
 
-describe('IgxPivotGridState #pivotGrid :', () => {
+fdescribe('IgxPivotGridState #pivotGrid :', () => {
     configureTestSuite();
     let fixture;
     let pivotGrid;

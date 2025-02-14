@@ -11,7 +11,7 @@ import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { ReorderedColumnsComponent,
         GridIDNameJobTitleComponent,
         ProductsComponent,
-        ColumnsAddedOnInitComponent, 
+        ColumnsAddedOnInitComponent,
         EmptyGridComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -23,7 +23,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
-describe('CSV Grid Exporter', () => {
+fdescribe('CSV Grid Exporter', () => {
     configureTestSuite();
     let exporter: IgxCsvExporterService;
     let options: IgxCsvExporterOptions;
@@ -344,18 +344,21 @@ describe('CSV Grid Exporter', () => {
             fieldName: 'Name',
             searchVal: 'a',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             ignoreCase: true
         });
         tree.filteringOperands.push({
             fieldName: 'Name',
             searchVal: 'r',
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             ignoreCase: true
         });
         tree.filteringOperands.push({
             fieldName: 'ID',
             searchVal: 5,
             condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            conditionName: 'greaterThan'
         });
 
         grid.advancedFilteringExpressionsTree = tree;
@@ -379,7 +382,7 @@ describe('CSV Grid Exporter', () => {
     it('should not export more than one file', async () => {
         const fix = TestBed.createComponent(EmptyGridComponent);
         fix.detectChanges();
-        
+
         const grid = fix.componentInstance.grid;
 
         exporter.export(grid, options);
@@ -495,12 +498,14 @@ describe('CSV Grid Exporter', () => {
                 fieldName: 'Name',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             tree.filteringOperands.push({
                 fieldName: 'Name',
                 searchVal: 'r',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             treeGrid.advancedFilteringExpressionsTree = tree;

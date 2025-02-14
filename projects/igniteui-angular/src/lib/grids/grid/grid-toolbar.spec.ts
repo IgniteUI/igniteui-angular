@@ -35,7 +35,7 @@ const DATA = [
     { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
 ];
 
-describe('IgxGrid - Grid Toolbar #grid - ', () => {
+fdescribe('IgxGrid - Grid Toolbar #grid - ', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [

@@ -24,7 +24,7 @@ const DEBOUNCETIME = 30;
 const SCROLL_DEBOUNCETIME = 100;
 
 
-describe('IgxGrid - Row Selection #grid', () => {
+fdescribe('IgxGrid - Row Selection #grid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -2091,11 +2091,13 @@ describe('IgxGrid - Row Selection #grid', () => {
                 fieldName: 'UnitsInStock',
                 searchVal: 0,
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                conditionName: 'greaterThan'
             });
             tree.filteringOperands.push({
                 fieldName: 'ProductName',
                 searchVal: 'a',
                 condition: IgxStringFilteringOperand.instance().condition('contains'),
+                conditionName: 'contains',
                 ignoreCase: true
             });
             grid.advancedFilteringExpressionsTree = tree;

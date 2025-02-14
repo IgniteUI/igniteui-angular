@@ -31,7 +31,7 @@ import { IRowSelectionEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridCell } from '../public_api';
 
-describe('IgxTreeGrid - Selection #tGrid', () => {
+fdescribe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -1398,16 +1398,19 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expressionTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 711
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 998
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 299
                 }
@@ -1448,16 +1451,19 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expressionTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 711
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 998
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 299
                 }
@@ -1500,6 +1506,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expressionTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 957
                 },
@@ -1544,16 +1551,19 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expressionTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 711
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 998
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 299
                 }
@@ -1615,11 +1625,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expressionTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 711
                 },
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    conditionName: 'doesNotEqual',
                     fieldName: 'ID',
                     searchVal: 998
                 }

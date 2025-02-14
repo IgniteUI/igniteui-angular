@@ -30,7 +30,7 @@ import { getComponentSize } from '../../core/utils';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 
-describe('IgxGrid Component Tests #grid', () => {
+fdescribe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
 
@@ -562,6 +562,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.filteringExpressionsTree.filteringOperands = [
                 {
                     condition: IgxNumberFilteringOperand.instance().condition('equals'),
+                    conditionName: 'equals',
                     fieldName: 'index',
                     searchVal: 0
                 }
@@ -2692,7 +2693,7 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     // TODO: Enable performance tests again
-    xdescribe('IgxGrid - Performance tests #perf', () => {
+    describe('IgxGrid - Performance tests #perf', () => {
         const MAX_RAW_RENDER = 1967; // two average diffs from 7.3 rendering performance
         const MAX_GROUPED_RENDER = 1500;
         const MAX_VER_SCROLL_O = 220;

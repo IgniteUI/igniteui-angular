@@ -58,4 +58,36 @@ describe(`Update to ${version}`, () => {
                 );`
             );
     });
+
+    it('should replace Query Builder deprecated property `fields` with `entities`', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-query-builder [fields]="[{ field: 'ID', dataType: 'number' }, { field: 'Name', dataType: 'string' }]"></igx-query-builder>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-query-builder [entities]="[{ name: '', fields: [{ field: 'ID', dataType: 'number' }, { field: 'Name', dataType: 'string' }]}]"></igx-query-builder>
+        `
+        );
+    });
+
+    it('should remove Query Builder Header deprecated property `showLegend`', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-query-builder-header [showLegend]="false"></igx-query-builder-header>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-query-builder-header></igx-query-builder-header>
+        `
+        );
+    });
 });

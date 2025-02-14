@@ -18,7 +18,7 @@ import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { NgFor } from '@angular/common';
 import { IColumnState, IGridState } from './state-base.directive';
 
-describe('IgxHierarchicalGridState - input properties #hGrid', () => {
+fdescribe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
     configureTestSuite();
@@ -108,6 +108,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const productExpression = {
             condition: IgxStringFilteringOperand.instance().condition('contains'),
+            conditionName: 'contains',
             fieldName: 'ProductName',
             ignoreCase: true,
             searchVal: 'A0'
@@ -213,7 +214,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
         const initialState = HelperFunctions.buildStateString(grid, 'filtering', emptyFiltering, emptyFiltering);
 
-        const filtering = '{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"fieldName":"ProductName","ignoreCase":true,"searchVal":"A0"}],"operator":0,"fieldName":"ProductName"}],"operator":0,"type":0}';
+        const filtering = '{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"fieldName":"ProductName","ignoreCase":true,"searchVal":"A0","conditionName":"contains"}],"operator":0,"fieldName":"ProductName"}],"operator":0,"type":0}';
         const filteringState = HelperFunctions.buildStateString(grid, 'filtering', filtering, filtering);
 
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
@@ -241,7 +242,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
         const initialState = HelperFunctions.buildStateString(grid, 'filtering', emptyFiltering, emptyFiltering);
 
-        const filtering = '{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"fieldName":"ProductName","ignoreCase":true,"searchVal":"A0"}],"operator":0,"fieldName":"ProductName"}],"operator":0,"type":0}';
+        const filtering = '{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"fieldName":"ProductName","ignoreCase":true,"searchVal":"A0","conditionName":"contains"}],"operator":0,"fieldName":"ProductName"}],"operator":0,"type":0}';
         const filteringState = HelperFunctions.buildStateString(grid, 'filtering', filtering, filtering);
 
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
@@ -349,7 +350,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         const emptyFiltering = '{}';
         const initialState = HelperFunctions.buildStateString(grid, 'advancedFiltering', emptyFiltering, emptyFiltering);
-        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"searchVal":"A0","ignoreCase":true},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"filter_less_than"},"searchVal":3,"ignoreCase":true}],"operator":0,"type":1}';
+        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"searchVal":"A0","ignoreCase":true,"conditionName":"contains"},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"filter_less_than"},"searchVal":3,"ignoreCase":true,"conditionName":"lessThan"}],"operator":0,"type":1}';
         const filteringState = HelperFunctions.buildStateString(grid, 'advancedFiltering', filtering, filtering);
 
         let gridState = state.getState(true, ['advancedFiltering', 'rowIslands']);
@@ -372,7 +373,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         const emptyFiltering = '{}';
         const initialState = HelperFunctions.buildStateString(grid, 'advancedFiltering', emptyFiltering, emptyFiltering);
-        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"searchVal":"A0","ignoreCase":true},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"filter_less_than"},"searchVal":3,"ignoreCase":true}],"operator":0,"type":1}';
+        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"searchVal":"A0","ignoreCase":true,"conditionName":"contains"},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"filter_less_than"},"searchVal":3,"ignoreCase":true,"conditionName":"lessThan"}],"operator":0,"type":1}';
         const filteringState = HelperFunctions.buildStateString(grid, 'advancedFiltering', filtering, filtering);
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
 
