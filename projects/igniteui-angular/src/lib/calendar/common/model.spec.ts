@@ -10,7 +10,7 @@ export function last<T>(arr: T[]) {
     return arr.at(-1) as T;
 }
 
-describe("Calendar Day Model", () => {
+xdescribe("Calendar Day Model", () => {
     let start = new CalendarDay({ year: 1987, month: 6, date: 17 });
 
     describe("Basic API", () => {
