@@ -36,7 +36,6 @@ const CSS_CLASS_SECONDSLIST = '.igx-time-picker__secondsList';
 const CSS_CLASS_AMPMLIST = 'igx-time-picker__ampmList';
 const CSS_CLASS_SELECTED_ITEM = '.igx-time-picker__item--selected';
 const CSS_CLASS_HEADER_HOUR = '.igx-time-picker__header-hour';
-const CSS_CLASS_OVERLAY = 'igx-overlay';
 const CSS_CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const TIME_PICKER_TOGGLE_ICON = 'access_time';
 const TIME_PICKER_CLEAR_ICON = 'clear';
@@ -1123,8 +1122,12 @@ describe('IgxTimePicker', () => {
                 expect(selectedMinutes).toEqual('45');
                 expect(selectedAMPM).toEqual('PM');
 
-                // ensure there is content in each element of the spinner
-                expect(minutesColumn.queryAll(By.css('span')).every(e => !!e.nativeElement.innerText));
+                // ensure there is content in each element of the spinners
+                // '08', '09', '10', '11', '12', '01', '02'
+                expect(hourColumn.queryAll(By.css('span')).every(e => !!e.nativeElement.innerText)).toBeTrue();
+
+                // '00', '15', '30', '45', '', '', '' - three empty elements to align the minutes spinner length with the hours spinner length
+                expect(minutesColumn.queryAll(By.css('span')).filter(e => !!e.nativeElement.innerText).length).toEqual(4);
             }));
         });
 
