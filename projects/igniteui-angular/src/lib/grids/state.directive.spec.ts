@@ -21,7 +21,7 @@ import { NgFor } from '@angular/common';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 
-xdescribe('IgxGridState - input properties #grid', () => {
+describe('IgxGridState - input properties #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
