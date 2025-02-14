@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2 } from '@angular/core';
+import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2, DebugElement } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
@@ -1922,29 +1922,69 @@ describe('Nested igxDrag elements', () => {
     });
 })
 
-describe('GhostClasses', () => {
+describe('Ghost Classes', () => {
+    let fix: ComponentFixture<TestGhostClassesComponent>;
+    let draggable: DebugElement[];
+
+    const GHOST_CLASS = 'ghostElement';
+    const CASPER_CLASS = 'casper';
+    const DRAG_OFFSET = 10;
+
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [TestGhostClassesComponent]
-        })
-        .compileComponents();
+        }).compileComponents();
     }));
 
-    it('should correctly apply all ghost classes.', async () => {
-        const fix = TestBed.createComponent(TestGhostClassesComponent);
+    beforeEach(() => {
+        fix = TestBed.createComponent(TestGhostClassesComponent);
         fix.detectChanges();
-
-        const firstDrag = fix.componentInstance.dragElems.first;
-        const firstElement = firstDrag.element.nativeElement;
-        expect(firstElement.getAttribute('ng-reflect-ghost-class')).toMatch('ghostElement');
-
-        const secondDrag = fix.componentInstance.dragElems.toArray()[1];
-        const secondElement = secondDrag.element.nativeElement;
-        expect(secondElement.getAttribute('ng-reflect-ghost-classes')).toContain('ghostElement');
-        expect(secondElement.getAttribute('ng-reflect-ghost-classes')).toContain('casper');
+        draggable = fix.debugElement.queryAll(By.directive(IgxDragDirective));
     });
-})
+
+    afterEach(() => {
+        fix.destroy();
+    });
+
+    it('should apply single ghost class when using ghostClass input', async () => {
+        const chip = draggable[0];
+        const dragDirective = chip.injector.get(IgxDragDirective);
+
+        const coords = {
+            x: chip.nativeElement.offsetLeft,
+            y: chip.nativeElement.offsetTop
+        };
+
+        await simulateDrag(chip.nativeElement, coords);
+
+        expect(dragDirective.ghostElement.classList.contains(GHOST_CLASS)).toBeTruthy();
+        expect(dragDirective.ghostElement.classList.length).toBe(3);
+    });
+
+    it('should apply multiple ghost classes when using ghostClasses input', async () => {
+        const chip = draggable[1];
+        const dragDirective = chip.injector.get(IgxDragDirective);
+
+        const coords = {
+            x: chip.nativeElement.offsetLeft,
+            y: chip.nativeElement.offsetTop
+        };
+
+        await simulateDrag(chip.nativeElement, coords);
+
+        expect(dragDirective.ghostElement.classList.contains(GHOST_CLASS)).toBeTruthy();
+        expect(dragDirective.ghostElement.classList.contains(CASPER_CLASS)).toBeTruthy();
+        expect(dragDirective.ghostElement.classList.length).toBe(4);
+    });
+
+    async function simulateDrag(element: HTMLElement, coords: { x: number, y: number }): Promise<void> {
+        UIInteractions.simulatePointerEvent('pointerdown', element, coords.x, coords.y);
+        UIInteractions.simulatePointerEvent('pointermove', element, coords.x + DRAG_OFFSET, coords.y + DRAG_OFFSET);
+        fix.detectChanges();
+        await wait(100);
+    }
+});
 
 const getDragDirsRects = (dragDirs: QueryList<IgxDragDirective>) => {
     const dragDirsRects = [];
@@ -2025,13 +2065,11 @@ const generalStyles = [`
     `,
     imports: [IgxDragDirective, IgxDragHandleDirective]
 })
-class TestGhostClassesComponent {
-    @ViewChildren(IgxDragDirective)
-    public dragElems: QueryList<IgxDragDirective>;
-}
+class TestGhostClassesComponent {}
 
 @Component({
     styles: generalStyles,
+    imports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective],
     template: `
         <h3>Draggable elements:</h3>
         <div #container class="container">
@@ -2057,7 +2095,6 @@ class TestGhostClassesComponent {
         <h3>Drop area:</h3>
         <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }"></div>
     `,
-    imports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective]
 })
 class TestDragDropComponent {
     @ViewChildren(IgxDragDirective)
