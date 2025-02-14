@@ -62,6 +62,7 @@ interface IDataSelectorPanel {
 
 /* blazorIndirectRender
    blazorComponent */
+/* wcElementTag: igc-pivot-data-selector */
 /**
  * Pivot Data Selector provides means to configure the pivot state of the Pivot Grid via a vertical panel UI
  *

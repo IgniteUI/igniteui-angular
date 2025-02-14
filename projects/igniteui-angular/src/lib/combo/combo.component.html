@@ -43,7 +43,7 @@
     (opened)="handleOpened()" (closed)="handleClosed()">
     @if (displaySearchInput) {
         <div class="igx-combo__search">
-            <igx-input-group>
+            <igx-input-group type="line">
                 <input igxInput #searchInput name="searchInput" autocomplete="off" type="text"
                     [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
                     (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="getSearchPlaceholderText()"
