@@ -23,23 +23,17 @@ defineComponents(IgcCircularProgressComponent);
 
 export class CircularProgressSampleComponent {
     public panelConfig: PropertyPanelConfig = {
+        hasAnimation: {
+            label: 'Enable none indeterminate animation (angular)',
+            control: {
+                type: 'boolean',
+                defaultValue: true
+            }
+        },
         indeterminate: {
             control: {
                 type: 'boolean',
                 defaultValue: false
-            }
-        },
-        hideLabel: {
-            label: 'Hide Label',
-            control: {
-                type: 'boolean',
-                defaultValue: false
-            }
-        },
-        value: {
-            control: {
-                type: 'number',
-                defaultValue: 66
             }
         },
         animationDuration: {
@@ -49,6 +43,31 @@ export class CircularProgressSampleComponent {
                 defaultValue: 300
             }
         },
+        max: {
+            control: {
+                type: 'number',
+                defaultValue: 100
+            }
+        },
+        value: {
+            control: {
+                type: 'number',
+                defaultValue: 66
+            }
+        },
+        text: {
+            control: {
+                type: 'text',
+                defaultValue: null
+            }
+        },
+        hideLabel: {
+            label: 'Hide Label',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
         variant: {
             label: 'Variant (WebComponents)',
             control: {
@@ -56,7 +75,13 @@ export class CircularProgressSampleComponent {
                 options: ['primary', 'info', 'success', 'warning', 'danger'],
                 defaultValue: 'primary'
             }
-        }
+        },
+        diameter: {
+            control: {
+                type: 'number',
+                defaultValue: null
+            }
+        },
     }
 
     public properties: Properties;

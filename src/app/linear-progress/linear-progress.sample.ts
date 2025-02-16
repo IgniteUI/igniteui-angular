@@ -23,10 +23,11 @@ defineComponents(IgcLinearProgressComponent);
 
 export class LinearProgressSampleComponent {
     public panelConfig: PropertyPanelConfig = {
-        striped: {
+        hasAnimation: {
+            label: 'Enable none indeterminate animation (Angular)',
             control: {
                 type: 'boolean',
-                defaultValue: false
+                defaultValue: true
             }
         },
         indeterminate: {
@@ -35,11 +36,29 @@ export class LinearProgressSampleComponent {
                 defaultValue: false
             }
         },
-        hideLabel: {
-            label: 'Hide Label',
+        animationDuration: {
+            label: 'Animation Duration in (ms)',
             control: {
-                type: 'boolean',
-                defaultValue: false
+                type: 'number',
+                defaultValue: 500
+            }
+        },
+        max: {
+            control: {
+                type: 'number',
+                defaultValue: 100
+            }
+        },
+        value: {
+            control: {
+                type: 'number',
+                defaultValue: 50
+            }
+        },
+        text: {
+            control: {
+                type: 'text',
+                defaultValue: null
             }
         },
         labelAlign: {
@@ -57,17 +76,17 @@ export class LinearProgressSampleComponent {
                 defaultValue: 'top-start'
             }
         },
-        value: {
+        hideLabel: {
+            label: 'Hide Label',
             control: {
-                type: 'number',
-                defaultValue: 66
+                type: 'boolean',
+                defaultValue: false
             }
         },
-        animationDuration: {
-            label: 'Animation Duration',
+        striped: {
             control: {
-                type: 'number',
-                defaultValue: 300
+                type: 'boolean',
+                defaultValue: false
             }
         },
         variant: {
