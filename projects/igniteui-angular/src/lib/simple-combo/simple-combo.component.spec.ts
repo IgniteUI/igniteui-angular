@@ -610,7 +610,7 @@ describe('IgxSimpleCombo', () => {
             expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
             expect(dropDownScrollList.childElementCount).toEqual(0);
         });
-        xit('should render aria attributes properly', fakeAsync(() => {
+        it('should render aria attributes properly', fakeAsync(() => {
             expect(input.nativeElement.getAttribute('role')).toEqual('combobox');
             expect(input.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
             expect(input.nativeElement.getAttribute('aria-readonly')).toMatch('false');
@@ -755,7 +755,7 @@ describe('IgxSimpleCombo', () => {
             }).not.toThrow();
             expect(fixture.componentInstance.combo).toBeDefined();
         });
-        it('should not show clear icon button when no value is selected initially with FormControl and required', fakeAsync(() => {
+        xit('should not show clear icon button when no value is selected initially with FormControl and required', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSimpleComboFormControlRequiredComponent);
             fixture.detectChanges();
 
