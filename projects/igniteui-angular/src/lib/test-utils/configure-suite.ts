@@ -23,7 +23,6 @@ export const configureTestSuite = (configureAction?: () => TestBed) => {
         testBed.resetTestingModule();
         testBed.resetTestingModule = () => testBed;
         jasmine.getEnv().allowRespy(true);
-        jasmine.getEnv().addReporter(myReporter);
     });
 
     if (configureAction) {
@@ -54,33 +53,23 @@ export const configureTestSuite = (configureAction?: () => TestBed) => {
 };
 
 const myReporter = {
-    jasmineStarted: function(suiteInfo) {
-      console.log('Running suite with ' + suiteInfo.totalSpecsDefined);
-    },
-  
     suiteStarted: function(result) {
-      console.log('Suite started: ' + result.description + 'at: ' + window.location
-        + ' whose full description is: ' + result.fullName);
+        const id = new URLSearchParams(window.parent.location.search).get('id');
+        console.log(`[${id}] Suite started: ${result.fullName}`);
 
     },
-  
+
     suiteDone: function(result) {
-      console.log('Suite: ' + result.description + ' was ' + result.status);
-      for (const expectation of result.failedExpectations) {
+        const id = new URLSearchParams(window.parent.location.search).get('id');
+        console.log(`[${id}] Suite: ${result.fullName} has ${result.status}`);
+        for (const expectation of result.failedExpectations) {
         console.log('Suite ' + expectation.message);
         console.log(expectation.stack);
-      }
+        }
         var memory = (performance as any).memory;
-        console.log(`totalJSHeapSize: ${memory['totalJSHeapSize']} usedJSHeapSize: ${memory['usedJSHeapSize']} jsHeapSizeLimit: ${memory['jsHeapSizeLimit']}`);
+        console.log(`[${id}] totalJSHeapSize: ${memory['totalJSHeapSize']} usedJSHeapSize: ${memory['usedJSHeapSize']} jsHeapSizeLimit: ${memory['jsHeapSizeLimit']}`);
         if (memory['totalJSHeapSize'] >= memory['jsHeapSizeLimit'] )
             console.log( '--------------------Heap Size limit reached!!!-------------------');
     },
-  
-    jasmineDone: function(result) {
-      console.log('Finished suite: ' + result.overallStatus);
-      for (const expectation of result.failedExpectations) {
-        console.log('Global ' + expectation.message);
-        console.log(expectation.stack);
-      }
-    }
-  };
+};
+jasmine.getEnv().addReporter(myReporter);
