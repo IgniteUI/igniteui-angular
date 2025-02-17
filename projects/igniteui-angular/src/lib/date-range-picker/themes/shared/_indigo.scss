@@ -7,6 +7,4 @@
 
 $_theme: $indigo;
 
-@include themed-block(igx-date-range-picker, indigo) {
-
-}
+@include themed-block(igx-date-range-picker, indigo) {}

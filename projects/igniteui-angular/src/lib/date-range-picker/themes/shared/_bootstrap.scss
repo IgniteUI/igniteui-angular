@@ -7,6 +7,4 @@
 
 $_theme: $bootstrap;
 
-@include themed-block(igx-date-range-picker, bootstrap) {
-
-}
+@include themed-block(igx-date-range-picker, bootstrap) {}

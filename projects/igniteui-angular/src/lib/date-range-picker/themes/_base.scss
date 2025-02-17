@@ -7,10 +7,10 @@
 @use 'light/tokens' as *;
 
 $theme: $material;
+$theme-range: $material-range;
 
 @include layer(base) {
     @include b(igx-date-range-picker) {
-
         display: flex;
 
         > igx-icon {
@@ -33,7 +33,7 @@ $theme: $material;
         @include e(label) {
             display: flex;
             align-items: center;
-            color: var-get($theme, 'label-color');
+            color: var-get($theme-range, 'label-color');
             margin: 0 rem(8px);
         }
 

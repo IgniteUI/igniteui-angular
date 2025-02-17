@@ -6,6 +6,4 @@
 
 $_theme: $material;
 
-@include themed-block(igx-date-range-picker, material) {
-
-}
+@include themed-block(igx-date-range-picker, material) {}
