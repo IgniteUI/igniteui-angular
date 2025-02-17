@@ -30,7 +30,7 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
     }
 };
 
-xdescribe('IgxGrid - Grid Paging #grid', () => {
+describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, PagingComponent,
@@ -43,7 +43,7 @@ xdescribe('IgxGrid - Grid Paging #grid', () => {
     let grid;
     let paginator;
 
-    xdescribe('General', () => {
+    describe('General', () => {
 
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(PagingComponent);

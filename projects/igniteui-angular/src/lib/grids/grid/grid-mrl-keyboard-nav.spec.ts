@@ -20,7 +20,7 @@ const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const CELL_BLOCK = `.${GRID_MRL_BLOCK}`;
 
-xdescribe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
+describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
 
     configureTestSuite();
@@ -35,8 +35,8 @@ xdescribe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         fix = TestBed.createComponent(ColumnLayoutTestComponent);
     });
 
-    xdescribe('Navigation without scrolling', () => {
-        xdescribe('General', () => {
+    describe('Navigation without scrolling', () => {
+        describe('General', () => {
             it('should navigate through a single layout with right and left arrow keys', () => {
                 fix.detectChanges();
 
@@ -810,7 +810,7 @@ xdescribe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             });
         });
 
-        xdescribe('GroupBy Integration', () => {
+        describe('GroupBy Integration', () => {
             it('should allow navigation through group rows with arrow keys starting from group row.', () => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
@@ -965,7 +965,7 @@ xdescribe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             });
         });
 
-        xdescribe('Column Moving Integration', () => {
+        describe('Column Moving Integration', () => {
             it('tab navigation should follow correct sequence if a column is moved.', fakeAsync(() => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
@@ -1011,7 +1011,7 @@ xdescribe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             }));
         });
 
-        xdescribe('Pinning integration', () => {
+        describe('Pinning integration', () => {
             it('tab navigation should follow correct sequence if a column is pinned runtime.', () => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
@@ -1350,7 +1350,7 @@ xdescribe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             });
         });
 
-        xdescribe('Row Edit integration', () => {
+        describe('Row Edit integration', () => {
             it('shift+tab navigation should go through edit row buttons when navigating in row edit mode. ', () => {
                 fix.componentInstance.colGroups = [
                     {
@@ -1415,8 +1415,8 @@ xdescribe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
     // Note: Some tests execute await wait() and etc two times, because the grid scrolls two times.
     // This means that we need to wait chunkLoad event from the igxForOf two times.
-    xdescribe('Navigation with scrolling', () => {
-        xdescribe('General', () => {
+    describe('Navigation with scrolling', () => {
+        describe('General', () => {
             it('should allow navigating down with scrolling', async () => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
@@ -2085,7 +2085,7 @@ xdescribe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             });
         });
 
-        xdescribe('Pinning', () => {
+        describe('Pinning', () => {
             it('should navigate from pinned to unpinned area and backwards', async () => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
@@ -2392,7 +2392,7 @@ xdescribe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             });
         });
 
-        xdescribe('Row Edit', () => {
+        describe('Row Edit', () => {
             it('tab navigation should should skip non-editable cells when navigating in row edit mode. ', async () => {
                 fix.componentInstance.colGroups = [
                     {
@@ -2456,7 +2456,7 @@ xdescribe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         });
     });
 
-    xdescribe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
+    describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
 
         it('navigateTo method should work in multi-row layout grid.', async () => {
             fix.componentInstance.colGroups = [

@@ -31,7 +31,7 @@ import { IRowSelectionEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridCell } from '../public_api';
 
-xdescribe('IgxTreeGrid - Selection #tGrid', () => {
+describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -59,7 +59,7 @@ xdescribe('IgxTreeGrid - Selection #tGrid', () => {
         }).compileComponents();
     }));
 
-    xdescribe('API Row Selection', () => {
+    describe('API Row Selection', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
@@ -300,7 +300,7 @@ xdescribe('IgxTreeGrid - Selection #tGrid', () => {
         });
     });
 
-    xdescribe('UI Row Selection', () => {
+    describe('UI Row Selection', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
@@ -546,7 +546,7 @@ xdescribe('IgxTreeGrid - Selection #tGrid', () => {
         });
     });
 
-    xdescribe('Row Selection with transactions - Hierarchical DS', () => {
+    describe('Row Selection with transactions - Hierarchical DS', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionWithTransactionComponent);
@@ -731,7 +731,7 @@ xdescribe('IgxTreeGrid - Selection #tGrid', () => {
         });
     });
 
-    xdescribe('Row Selection with transactions - flat DS', () => {
+    describe('Row Selection with transactions - flat DS', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
 
@@ -775,7 +775,7 @@ xdescribe('IgxTreeGrid - Selection #tGrid', () => {
         });
     });
 
-    xdescribe('Cell Selection', () => {
+    describe('Cell Selection', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
@@ -968,7 +968,7 @@ xdescribe('IgxTreeGrid - Selection #tGrid', () => {
         });
     });
 
-    xdescribe('Cell/Row Selection With Row Editing', () => {
+    describe('Cell/Row Selection With Row Editing', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionRowEditingComponent);
@@ -1027,7 +1027,7 @@ xdescribe('IgxTreeGrid - Selection #tGrid', () => {
         }));
     });
 
-    xdescribe('Cascading Row Selection - Child collection data', () => {
+    describe('Cascading Row Selection - Child collection data', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridCascadingSelectionComponent);
             fix.detectChanges();
@@ -1825,7 +1825,7 @@ xdescribe('IgxTreeGrid - Selection #tGrid', () => {
         });
     });
 
-    xdescribe('Cascading Row Selection - Primary/Foreign key data', () => {
+    describe('Cascading Row Selection - Primary/Foreign key data', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent);
             fix.detectChanges();
@@ -2004,7 +2004,7 @@ xdescribe('IgxTreeGrid - Selection #tGrid', () => {
         }));
     });
 
-    xdescribe('Cascading Row Selection with Transaction', () => {
+    describe('Cascading Row Selection with Transaction', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridCascadingSelectionTransactionComponent);
             fix.detectChanges();
@@ -2171,7 +2171,7 @@ xdescribe('IgxTreeGrid - Selection #tGrid', () => {
 
     });
 
-    xdescribe('Custom row selectors', () => {
+    describe('Custom row selectors', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridCustomRowSelectorsComponent);
             fix.detectChanges();

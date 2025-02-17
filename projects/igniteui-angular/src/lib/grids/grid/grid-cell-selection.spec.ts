@@ -19,7 +19,7 @@ import { DebugElement } from '@angular/core';
 import { DropPosition } from '../moving/moving.service';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
-xdescribe('IgxGrid - Cell selection #grid', () => {
+describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -32,7 +32,7 @@ xdescribe('IgxGrid - Cell selection #grid', () => {
         });
     }));
 
-    xdescribe('Base', () => {
+    describe('Base', () => {
         let fix;
         let grid: IgxGridComponent;
         let detect;
@@ -484,7 +484,7 @@ xdescribe('IgxGrid - Cell selection #grid', () => {
         });
     });
 
-    xdescribe('API', () => {
+    describe('API', () => {
         let fix;
         let grid;
         let detect;
@@ -942,7 +942,7 @@ xdescribe('IgxGrid - Cell selection #grid', () => {
         }));
     });
 
-    xdescribe('Keyboard navigation', () => {
+    describe('Keyboard navigation', () => {
         let fix: ComponentFixture<any>;
         let grid;
         let detect;
@@ -1704,7 +1704,7 @@ xdescribe('IgxGrid - Cell selection #grid', () => {
         }));
     });
 
-    xdescribe('Features integration', () => {
+    describe('Features integration', () => {
         let fix;
         let grid;
         let detect;
@@ -2808,7 +2808,7 @@ xdescribe('IgxGrid - Cell selection #grid', () => {
 
     });
 
-    xdescribe('CRUD - transaction enabled', () => {
+    describe('CRUD - transaction enabled', () => {
         let fix;
         let grid;
 
@@ -2974,7 +2974,7 @@ xdescribe('IgxGrid - Cell selection #grid', () => {
         });
     });
 
-    xdescribe('None selection', () => {
+    describe('None selection', () => {
         let fix;
         let grid: IgxGridComponent;
         let detect;
@@ -3133,7 +3133,7 @@ xdescribe('IgxGrid - Cell selection #grid', () => {
         });
     });
 
-    xdescribe('Single selection', () => {
+    describe('Single selection', () => {
         let fix;
         let grid: IgxGridComponent;
         let detect;

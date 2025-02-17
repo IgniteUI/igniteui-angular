@@ -11,7 +11,7 @@ import { NgFor } from '@angular/common';
 import { IgxColumnComponent } from '../../grids/public_api';
 
 
-xdescribe('igxGridPinningActions #grid ', () => {
+describe('igxGridPinningActions #grid ', () => {
     let fixture;
     let actionStrip: IgxActionStripComponent;
     let grid: IgxGridComponent;
@@ -26,7 +26,7 @@ xdescribe('igxGridPinningActions #grid ', () => {
         }).compileComponents();
     }));
 
-    xdescribe('Base ', () => {
+    describe('Base ', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
             fixture.detectChanges();
@@ -75,7 +75,7 @@ xdescribe('igxGridPinningActions #grid ', () => {
         });
     });
 
-    xdescribe('Menu ', () => {
+    describe('Menu ', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripPinMenuComponent);
             fixture.detectChanges();

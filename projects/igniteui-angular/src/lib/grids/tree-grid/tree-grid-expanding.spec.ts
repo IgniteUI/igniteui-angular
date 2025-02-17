@@ -20,7 +20,7 @@ import { QueryList } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { CellType } from '../public_api';
 
-xdescribe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
+describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -40,7 +40,7 @@ xdescribe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         }).compileComponents();
     }));
 
-    xdescribe('Child Collection', () => {
+    describe('Child Collection', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
             fix.detectChanges();
@@ -481,7 +481,7 @@ xdescribe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         });
     });
 
-    xdescribe('Primary/Foreign key', () => {
+    describe('Primary/Foreign key', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             treeGrid = fix.componentInstance.treeGrid;
@@ -916,9 +916,9 @@ xdescribe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         });
     });
 
-    xdescribe('Load On Demand', () => {
+    describe('Load On Demand', () => {
 
-        xdescribe('Primary/Foreign key', () => {
+        describe('Primary/Foreign key', () => {
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandComponent);
                 fix.detectChanges();
@@ -1045,7 +1045,7 @@ xdescribe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             }));
         });
 
-        xdescribe('ChildDataKey', () => {
+        describe('ChildDataKey', () => {
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandChildDataComponent);
                 fix.detectChanges();
@@ -1105,7 +1105,7 @@ xdescribe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             }));
         });
 
-        xdescribe('HasChildrenKey', () => {
+        describe('HasChildrenKey', () => {
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandHasChildrenComponent);
                 fix.detectChanges();
@@ -1146,7 +1146,7 @@ xdescribe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         });
     });
 
-    xdescribe('Row editing expanding/collapsing #tGrid', () => {
+    describe('Row editing expanding/collapsing #tGrid', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
@@ -1384,7 +1384,7 @@ xdescribe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         });
     });
 
-    xdescribe('Custom expand/collapse template #tGrid', () => {
+    describe('Custom expand/collapse template #tGrid', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridCustomExpandersTemplateComponent);
             fix.detectChanges();

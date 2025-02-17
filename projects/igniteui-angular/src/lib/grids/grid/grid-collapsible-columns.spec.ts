@@ -13,7 +13,7 @@ import { DropPosition } from '../moving/moving.service';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 
-xdescribe('IgxGrid - multi-column headers #grid', () => {
+describe('IgxGrid - multi-column headers #grid', () => {
     let contactInf;
     let countryInf;
     let addressInf: IgxColumnGroupComponent;
@@ -34,7 +34,7 @@ xdescribe('IgxGrid - multi-column headers #grid', () => {
         });
     }));
 
-    xdescribe('Base Tests', () => {
+    describe('Base Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
 
@@ -263,7 +263,7 @@ xdescribe('IgxGrid - multi-column headers #grid', () => {
         });
     });
 
-    xdescribe('Templates Tests', () => {
+    describe('Templates Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
 
@@ -308,7 +308,7 @@ xdescribe('IgxGrid - multi-column headers #grid', () => {
         }));
     });
 
-    xdescribe('Dynamic Columns Tests', () => {
+    describe('Dynamic Columns Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
 
@@ -394,7 +394,7 @@ xdescribe('IgxGrid - multi-column headers #grid', () => {
         });
     });
 
-    xdescribe('Integration Tests', () => {
+    describe('Integration Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
 

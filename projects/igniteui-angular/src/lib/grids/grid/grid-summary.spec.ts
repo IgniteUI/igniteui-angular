@@ -23,7 +23,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IColumnPipeArgs, IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, IgxGroupByRow, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult, IgxSummaryRow } from '../public_api';
 
-xdescribe('IgxGrid - Summaries #grid', () => {
+describe('IgxGrid - Summaries #grid', () => {
 
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
@@ -46,8 +46,8 @@ xdescribe('IgxGrid - Summaries #grid', () => {
         });
     }));
 
-    xdescribe('Base tests: ', () => {
-        xdescribe('in grid with no summaries defined: ', () => {
+    describe('Base tests: ', () => {
+        describe('in grid with no summaries defined: ', () => {
             let fixture: ComponentFixture<ProductsComponent>;
             let grid: IgxGridComponent;
             beforeEach(() => {
@@ -207,7 +207,7 @@ xdescribe('IgxGrid - Summaries #grid', () => {
             }));
         });
 
-        xdescribe('custom summaries: ', () => {
+        describe('custom summaries: ', () => {
             let fixture: ComponentFixture<CustomSummariesComponent>;
             let grid: IgxGridComponent;
 
@@ -338,7 +338,7 @@ xdescribe('IgxGrid - Summaries #grid', () => {
             }));
         });
 
-        xdescribe('specific data: ', () => {
+        describe('specific data: ', () => {
             let fixture: ComponentFixture<FilteringComponent>;
             let grid: IgxGridComponent;
             beforeEach(() => {
@@ -367,7 +367,7 @@ xdescribe('IgxGrid - Summaries #grid', () => {
             });
         });
 
-        xdescribe('', () => {
+        describe('', () => {
             let fix;
             let grid: IgxGridComponent;
             beforeEach(() => {
@@ -683,8 +683,8 @@ xdescribe('IgxGrid - Summaries #grid', () => {
         });
     });
 
-    xdescribe('Integration Scenarios: ', () => {
-        xdescribe('', () => {
+    describe('Integration Scenarios: ', () => {
+        describe('', () => {
             let fix;
             let grid: IgxGridComponent;
             beforeEach(() => {
@@ -941,7 +941,7 @@ xdescribe('IgxGrid - Summaries #grid', () => {
         });
     });
 
-    xdescribe('Keyboard Navigation', () => {
+    describe('Keyboard Navigation', () => {
         let fix;
         let grid: IgxGridComponent;
         beforeEach(() => {
@@ -1207,7 +1207,7 @@ xdescribe('IgxGrid - Summaries #grid', () => {
         });
     });
 
-    xdescribe('CRUD with transactions: ', () => {
+    describe('CRUD with transactions: ', () => {
         let fix;
         let grid;
         beforeEach(() => {
@@ -1835,7 +1835,7 @@ xdescribe('IgxGrid - Summaries #grid', () => {
         });
     });
 
-    xdescribe('Grouping tests: ', () => {
+    describe('Grouping tests: ', () => {
         let fix;
         let grid;
         beforeEach(() => {

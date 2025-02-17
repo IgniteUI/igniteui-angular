@@ -7,7 +7,7 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
-xdescribe('IgxTreeGrid - Sorting #tGrid', () => {
+describe('IgxTreeGrid - Sorting #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -24,7 +24,7 @@ xdescribe('IgxTreeGrid - Sorting #tGrid', () => {
         treeGrid = fix.componentInstance.treeGrid;
     });
 
-    xdescribe('API sorting', () => {
+    describe('API sorting', () => {
         it('should sort descending all treeGrid levels by column name through API', () => {
             treeGrid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false,
                 strategy: DefaultSortingStrategy.instance() });
@@ -196,7 +196,7 @@ xdescribe('IgxTreeGrid - Sorting #tGrid', () => {
         });
     });
 
-    xdescribe('UI sorting', () => {
+    describe('UI sorting', () => {
         it('should sort descending all treeGrid levels by column name through UI', () => {
             const header =  TreeGridFunctions.getHeaderCell(fix, 'Name');
             GridFunctions.clickHeaderSortIcon(header);

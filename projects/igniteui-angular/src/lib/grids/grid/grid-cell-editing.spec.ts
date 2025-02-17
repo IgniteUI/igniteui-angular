@@ -24,7 +24,7 @@ const CELL_CSS_CLASS_NUMBER_FORMAT = '.igx-grid__td--number';
 const CELL_CLASS_IN_EDIT_MODE = 'igx-grid__td--editing';
 const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
-xdescribe('IgxGrid - Cell Editing #grid', () => {
+describe('IgxGrid - Cell Editing #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -37,7 +37,7 @@ xdescribe('IgxGrid - Cell Editing #grid', () => {
         });
     }));
 
-    xdescribe('Base Tests', () => {
+    describe('Base Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
@@ -363,7 +363,7 @@ xdescribe('IgxGrid - Cell Editing #grid', () => {
         }));
     });
 
-    xdescribe('Scroll, pin and blur', () => {
+    describe('Scroll, pin and blur', () => {
         let fixture;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
@@ -597,7 +597,7 @@ xdescribe('IgxGrid - Cell Editing #grid', () => {
         }));
     });
 
-    xdescribe('Events', () => {
+    describe('Events', () => {
         let fixture;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
@@ -1167,7 +1167,7 @@ xdescribe('IgxGrid - Cell Editing #grid', () => {
         });
     });
 
-    xdescribe('Integration tests', () => {
+    describe('Integration tests', () => {
         let fixture;
         let grid: IgxGridComponent;
         let gridContent;

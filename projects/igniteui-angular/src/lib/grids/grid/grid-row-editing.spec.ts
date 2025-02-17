@@ -36,7 +36,7 @@ const SUMMARY_ROW = 'igx-grid-summary-row';
 const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 const DEBOUNCETIME = 30;
 
-xdescribe('IgxGrid - Row Editing #grid', () => {
+describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -53,7 +53,7 @@ xdescribe('IgxGrid - Row Editing #grid', () => {
         });
     }));
 
-    xdescribe('General tests', () => {
+    describe('General tests', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: CellType;
@@ -536,7 +536,7 @@ xdescribe('IgxGrid - Row Editing #grid', () => {
         });
     });
 
-    xdescribe('Navigation - Keyboard', () => {
+    describe('Navigation - Keyboard', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
@@ -1000,7 +1000,7 @@ xdescribe('IgxGrid - Row Editing #grid', () => {
         });
     });
 
-    xdescribe('Exit row editing', () => {
+    describe('Exit row editing', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: CellType;
@@ -1255,7 +1255,7 @@ xdescribe('IgxGrid - Row Editing #grid', () => {
         });
     });
 
-    xdescribe('Integration', () => {
+    describe('Integration', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: CellType;
@@ -1684,7 +1684,7 @@ xdescribe('IgxGrid - Row Editing #grid', () => {
         }));
     });
 
-    xdescribe('Events', () => {
+    describe('Events', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: CellType;
@@ -2154,7 +2154,7 @@ xdescribe('IgxGrid - Row Editing #grid', () => {
         });
     });
 
-    xdescribe('Column editable property', () => {
+    describe('Column editable property', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
@@ -2236,7 +2236,7 @@ xdescribe('IgxGrid - Row Editing #grid', () => {
         }));
     });
 
-    xdescribe('Custom overlay', () => {
+    describe('Custom overlay', () => {
 
         it('Custom overlay', () => {
             const fix = TestBed.createComponent(IgxGridCustomOverlayComponent);
@@ -2329,7 +2329,7 @@ xdescribe('IgxGrid - Row Editing #grid', () => {
         });
     });
 
-    xdescribe('Transaction', () => {
+    describe('Transaction', () => {
         let fix;
         let grid;
         let cell: CellType;
@@ -2858,7 +2858,7 @@ xdescribe('IgxGrid - Row Editing #grid', () => {
         });
     });
 
-    xdescribe('Row Editing - Grouping', () => {
+    describe('Row Editing - Grouping', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: CellType;
@@ -2949,7 +2949,7 @@ xdescribe('IgxGrid - Row Editing #grid', () => {
         });
     });
 
-    xdescribe('Transactions service', () => {
+    describe('Transactions service', () => {
         let trans;
         let fix;
         let grid;

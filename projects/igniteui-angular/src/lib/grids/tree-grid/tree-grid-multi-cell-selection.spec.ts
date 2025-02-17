@@ -13,7 +13,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 
-xdescribe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
+describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -28,7 +28,7 @@ xdescribe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         }).compileComponents();
     }));
 
-    xdescribe('Flat Data', () => {
+    describe('Flat Data', () => {
         let fix;
         let treeGrid;
         let detect;
@@ -552,7 +552,7 @@ xdescribe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         });
     });
 
-    xdescribe('ChildDataKey', () => {
+    describe('ChildDataKey', () => {
         let fix;
         let treeGrid;
         let detect;
@@ -665,7 +665,7 @@ xdescribe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         });
     });
 
-    xdescribe('ChildDataKeyGrid with transactions enabled', () => {
+    describe('ChildDataKeyGrid with transactions enabled', () => {
         let fix;
         let treeGrid;
 
@@ -795,7 +795,7 @@ xdescribe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
     });
 
-    xdescribe('FlatGrid with transactions enabled', () => {
+    describe('FlatGrid with transactions enabled', () => {
         let fix;
         let treeGrid;
 

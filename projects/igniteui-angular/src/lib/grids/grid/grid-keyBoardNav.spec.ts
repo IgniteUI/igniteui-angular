@@ -19,9 +19,9 @@ import { CellType } from '../common/grid.interface';
 
 const DEBOUNCETIME = 30;
 
-xdescribe('IgxGrid - Keyboard navigation #grid', () => {
+describe('IgxGrid - Keyboard navigation #grid', () => {
 
-    xdescribe('in not virtualized grid', () => {
+    describe('in not virtualized grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
@@ -202,7 +202,7 @@ xdescribe('IgxGrid - Keyboard navigation #grid', () => {
         });
     });
 
-    xdescribe('in virtualized grid', () => {
+    describe('in virtualized grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
@@ -685,7 +685,7 @@ xdescribe('IgxGrid - Keyboard navigation #grid', () => {
         });
     });
 
-    xdescribe('Group By navigation ', () => {
+    describe('Group By navigation ', () => {
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
                 imports: [IgxGridGroupByComponent, NoopAnimationsModule]

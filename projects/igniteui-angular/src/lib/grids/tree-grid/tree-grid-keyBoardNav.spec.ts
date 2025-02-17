@@ -13,7 +13,7 @@ import { firstValueFrom } from 'rxjs';
 
 const DEBOUNCETIME = 30;
 
-xdescribe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
+describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -25,7 +25,7 @@ xdescribe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         }).compileComponents();
     }));
 
-    xdescribe('Navigation with no scroll', () => {
+    describe('Navigation with no scroll', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
         let gridContent;
@@ -391,7 +391,7 @@ xdescribe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
     });
 
-    xdescribe('Navigation with scrolls', () => {
+    describe('Navigation with scrolls', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
         let gridContent: DebugElement;

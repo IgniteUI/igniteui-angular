@@ -27,7 +27,7 @@ import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { QueryBuilderSelectors } from '../../query-builder/query-builder.common';
 
-xdescribe('IgxGrid - Advanced Filtering #grid - ', () => {
+describe('IgxGrid - Advanced Filtering #grid - ', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -42,7 +42,7 @@ xdescribe('IgxGrid - Advanced Filtering #grid - ', () => {
         });
     }));
     
-    xdescribe('General tests - ', () => {
+    describe('General tests - ', () => {
         let fix: ComponentFixture<IgxGridAdvancedFilteringComponent>;
         let grid: IgxGridComponent;
 
@@ -1194,7 +1194,7 @@ xdescribe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
     });
 
-    xdescribe('Localization - ', () => {
+    describe('Localization - ', () => {
         it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
             const grid: IgxGridComponent = fix.componentInstance.grid;
@@ -1242,7 +1242,7 @@ xdescribe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
     });
 
-    xdescribe('Column groups - ', () => {
+    describe('Column groups - ', () => {
         let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringColumnGroupComponent);
@@ -1271,7 +1271,7 @@ xdescribe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
     });
 
-    xdescribe('External - ', () => {
+    describe('External - ', () => {
         let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridExternalAdvancedFilteringComponent);
@@ -1344,7 +1344,7 @@ xdescribe('IgxGrid - Advanced Filtering #grid - ', () => {
 
     });
 
-    xdescribe('Expression tree bindings - ', () => {
+    describe('Expression tree bindings - ', () => {
         let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringBindingComponent);

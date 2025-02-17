@@ -12,7 +12,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
 
-xdescribe('IgxTreeGrid - Indentation #tGrid', () => {
+describe('IgxTreeGrid - Indentation #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -23,7 +23,7 @@ xdescribe('IgxTreeGrid - Indentation #tGrid', () => {
         }).compileComponents();
     }));
 
-    xdescribe('Child Collection', () => {
+    describe('Child Collection', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
@@ -187,7 +187,7 @@ xdescribe('IgxTreeGrid - Indentation #tGrid', () => {
         }));
     });
 
-    xdescribe('Primary/Foreign key', () => {
+    describe('Primary/Foreign key', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);

@@ -17,7 +17,7 @@ const DEBOUNCE_TIME = 50;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 
-xdescribe('IgxHierarchicalGrid Navigation', () => {
+describe('IgxHierarchicalGrid Navigation', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let baseHGridContent: DebugElement;
@@ -39,7 +39,7 @@ xdescribe('IgxHierarchicalGrid Navigation', () => {
 
     afterAll(() => jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout);
 
-    xdescribe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
+    describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
@@ -638,7 +638,7 @@ xdescribe('IgxHierarchicalGrid Navigation', () => {
     });
 
 
-    xdescribe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
+    describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComplexComponent);
@@ -753,7 +753,7 @@ xdescribe('IgxHierarchicalGrid Navigation', () => {
         });
     });
 
-    xdescribe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
+    describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
@@ -874,7 +874,7 @@ xdescribe('IgxHierarchicalGrid Navigation', () => {
         });
     });
 
-    xdescribe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
+    describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridSmallerChildComponent);
@@ -952,7 +952,7 @@ xdescribe('IgxHierarchicalGrid Navigation', () => {
         });
     });
 
-    xdescribe('IgxHierarchicalGrid Navigation API #hGrid', () => {
+    describe('IgxHierarchicalGrid Navigation API #hGrid', () => {
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
             fixture.detectChanges();

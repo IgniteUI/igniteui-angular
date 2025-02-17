@@ -28,7 +28,7 @@ import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IPinningConfig } from '../public_api';
 
-xdescribe('IgxGrid - Column Pinning #grid', () => {
+describe('IgxGrid - Column Pinning #grid', () => {
 
     const DEBOUNCETIME = 30;
 
@@ -47,9 +47,9 @@ xdescribe('IgxGrid - Column Pinning #grid', () => {
         }).compileComponents();
     }))
 
-    xdescribe('To Start', () => {
+    describe('To Start', () => {
 
-        xdescribe('Initially pinned columns', () => {
+        describe('Initially pinned columns', () => {
 
             let fix;
             let grid: IgxGridComponent;
@@ -270,7 +270,7 @@ xdescribe('IgxGrid - Column Pinning #grid', () => {
             }));
         });
 
-        xdescribe('Features', () => {
+        describe('Features', () => {
 
             let fix;
             let grid: IgxGridComponent;
@@ -327,7 +327,7 @@ xdescribe('IgxGrid - Column Pinning #grid', () => {
 
         });
 
-        xdescribe('', () => {
+        describe('', () => {
 
             let fix;
             let grid: IgxGridComponent;
@@ -479,12 +479,12 @@ xdescribe('IgxGrid - Column Pinning #grid', () => {
         });
     });
 
-    xdescribe('To End', () => {
+    describe('To End', () => {
         let fix;
         let grid: IgxGridComponent;
         const pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
 
-        xdescribe('', () => {
+        describe('', () => {
 
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(PinOnInitAndSelectionComponent);
@@ -680,7 +680,7 @@ xdescribe('IgxGrid - Column Pinning #grid', () => {
             }));
         });
 
-        xdescribe('MRL/MCH', () => {
+        describe('MRL/MCH', () => {
             it('should correctly pin column groups to end.', fakeAsync(() => {
 
                 fix = TestBed.createComponent(MultiColumnHeadersWithGroupingComponent);

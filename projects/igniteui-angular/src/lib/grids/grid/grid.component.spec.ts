@@ -30,7 +30,7 @@ import { getComponentSize } from '../../core/utils';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 
-xdescribe('IgxGrid Component Tests #grid', () => {
+describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
 
@@ -39,7 +39,7 @@ xdescribe('IgxGrid Component Tests #grid', () => {
 
     configureTestSuite();
 
-    xdescribe('IgxGrid - input properties', () => {
+    describe('IgxGrid - input properties', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
@@ -706,7 +706,7 @@ xdescribe('IgxGrid Component Tests #grid', () => {
         });
     });
 
-    xdescribe('IgxGrid - virtualization tests', () => {
+    describe('IgxGrid - virtualization tests', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
@@ -839,7 +839,7 @@ xdescribe('IgxGrid Component Tests #grid', () => {
         }));
     });
 
-    xdescribe('IgxGrid - default rendering for rows and columns', () => {
+    describe('IgxGrid - default rendering for rows and columns', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
@@ -2008,7 +2008,7 @@ xdescribe('IgxGrid Component Tests #grid', () => {
         }));
     });
 
-    xdescribe('IgxGrid - API methods', () => {
+    describe('IgxGrid - API methods', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
@@ -2475,7 +2475,7 @@ xdescribe('IgxGrid Component Tests #grid', () => {
         }));
     });
 
-    xdescribe('IgxGrid - Integration with other Igx Controls', () => {
+    describe('IgxGrid - Integration with other Igx Controls', () => {
         let fix;
 
         beforeAll(waitForAsync(() => {
@@ -2639,7 +2639,7 @@ xdescribe('IgxGrid Component Tests #grid', () => {
         });
     });
 
-    xdescribe('IgxGrid - footer section', () => {
+    describe('IgxGrid - footer section', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
@@ -2665,7 +2665,7 @@ xdescribe('IgxGrid Component Tests #grid', () => {
         });
     });
 
-    xdescribe('IgxGrid - with custom pagination template', () => {
+    describe('IgxGrid - with custom pagination template', () => {
 
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
@@ -2693,7 +2693,7 @@ xdescribe('IgxGrid Component Tests #grid', () => {
     });
 
     // TODO: Enable performance tests again
-    xdescribe('IgxGrid - Performance tests #perf', () => {
+    describe('IgxGrid - Performance tests #perf', () => {
         const MAX_RAW_RENDER = 1967; // two average diffs from 7.3 rendering performance
         const MAX_GROUPED_RENDER = 1500;
         const MAX_VER_SCROLL_O = 220;
@@ -2892,7 +2892,7 @@ xdescribe('IgxGrid Component Tests #grid', () => {
         });
     });
 
-    xdescribe('Setting null data', () => {
+    describe('Setting null data', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [

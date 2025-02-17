@@ -19,8 +19,8 @@ import { ISortingStrategy, SortingDirection } from '../../data-operations/sortin
 
 const DEBOUNCETIME = 30;
 
-xdescribe('IgxGrid - Headers Keyboard navigation #grid', () => {
-    xdescribe('Headers Navigation', () => {
+describe('IgxGrid - Headers Keyboard navigation #grid', () => {
+    describe('Headers Navigation', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
@@ -723,7 +723,7 @@ xdescribe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
     });
 
-    xdescribe('MRL Headers Navigation', () => {
+    describe('MRL Headers Navigation', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
@@ -925,7 +925,7 @@ xdescribe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
     });
 
-    xdescribe('MCH Headers Navigation', () => {
+    describe('MCH Headers Navigation', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;

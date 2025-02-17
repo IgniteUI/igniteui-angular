@@ -19,7 +19,7 @@ import { IGridFormGroupCreatedEventArgs } from '../common/grid.interface';
 import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { IgxGridComponent } from './grid.component';
 
-xdescribe('IgxGrid - Validation #grid', () => {
+describe('IgxGrid - Validation #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
@@ -33,7 +33,7 @@ xdescribe('IgxGrid - Validation #grid', () => {
         });
     }));
 
-    xdescribe('Basic Validation - ', () => {
+    describe('Basic Validation - ', () => {
         let fixture;
         const $destroyer = new Subject<boolean>();
 
@@ -340,7 +340,7 @@ xdescribe('IgxGrid - Validation #grid', () => {
         });
     });
 
-    xdescribe('Custom Validation - ', () => {
+    describe('Custom Validation - ', () => {
         let fixture;
 
         beforeEach(fakeAsync(() => {
@@ -370,7 +370,7 @@ xdescribe('IgxGrid - Validation #grid', () => {
         });
     });
 
-    xdescribe('Custom Editor Templates - ', () => {
+    describe('Custom Editor Templates - ', () => {
         let fixture;
 
         beforeEach(fakeAsync(() => {
@@ -446,7 +446,7 @@ xdescribe('IgxGrid - Validation #grid', () => {
         });
     });
 
-    xdescribe('Transactions integration - ', () => {
+    describe('Transactions integration - ', () => {
         let fixture;
 
         beforeEach(fakeAsync(() => {
@@ -612,7 +612,7 @@ xdescribe('IgxGrid - Validation #grid', () => {
         });
     });
 
-    xdescribe('TreeGrid integration - ', () => {
+    describe('TreeGrid integration - ', () => {
         let fixture;
 
         beforeEach(fakeAsync(() => {

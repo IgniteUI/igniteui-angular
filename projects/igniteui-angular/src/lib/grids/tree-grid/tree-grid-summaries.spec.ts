@@ -17,7 +17,7 @@ import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 
-xdescribe('IgxTreeGrid - Summaries #tGrid', () => {
+describe('IgxTreeGrid - Summaries #tGrid', () => {
     configureTestSuite();
     const DEBOUNCETIME = 30;
 
@@ -35,7 +35,7 @@ xdescribe('IgxTreeGrid - Summaries #tGrid', () => {
         }).compileComponents();
     }));
 
-    xdescribe('', () => {
+    describe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
         beforeEach(() => {
@@ -861,7 +861,7 @@ xdescribe('IgxTreeGrid - Summaries #tGrid', () => {
         });
     });
 
-    xdescribe('CRUD with transactions', () => {
+    describe('CRUD with transactions', () => {
         let fix;
         let treeGrid;
         beforeEach(() => {
@@ -1381,7 +1381,7 @@ xdescribe('IgxTreeGrid - Summaries #tGrid', () => {
         });
     });
 
-    xdescribe('Keyboard Navigation', () => {
+    describe('Keyboard Navigation', () => {
         let fix;
         let treeGrid;
         let gridContent: DebugElement;

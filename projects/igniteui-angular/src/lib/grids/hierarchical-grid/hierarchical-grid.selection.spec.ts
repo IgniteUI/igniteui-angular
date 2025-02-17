@@ -19,7 +19,7 @@ import { CellType } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
-xdescribe('IgxHierarchicalGrid selection #hGrid', () => {
+describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let rowIsland1;
@@ -41,7 +41,7 @@ xdescribe('IgxHierarchicalGrid selection #hGrid', () => {
         }).compileComponents();
     }))
 
-    xdescribe('Cell selection', () => {
+    describe('Cell selection', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fix.detectChanges();
@@ -479,7 +479,7 @@ xdescribe('IgxHierarchicalGrid selection #hGrid', () => {
 
     });
 
-    xdescribe('Row Selection', () => {
+    describe('Row Selection', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridRowSelectionComponent);
             fix.detectChanges();
@@ -1299,7 +1299,7 @@ xdescribe('IgxHierarchicalGrid selection #hGrid', () => {
         });
     });
 
-    xdescribe('Row Selection CRUD', () => {
+    describe('Row Selection CRUD', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridRowSelectionNoTransactionsComponent);
             fix.detectChanges();
@@ -1377,7 +1377,7 @@ xdescribe('IgxHierarchicalGrid selection #hGrid', () => {
         });
     });
 
-    xdescribe('Custom row selectors', () => {
+    describe('Custom row selectors', () => {
         let hGrid;
 
         beforeEach(() => {

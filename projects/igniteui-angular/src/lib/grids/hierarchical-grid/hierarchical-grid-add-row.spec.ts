@@ -7,7 +7,7 @@ import { IgxHierarchicalGridActionStripComponent } from '../../test-utils/hierar
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 
-xdescribe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
+describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let _actionStrip: IgxActionStripComponent;
@@ -23,7 +23,7 @@ xdescribe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
         });
     }));
 
-    xdescribe(' Basic', () => {
+    describe(' Basic', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridActionStripComponent);
             fixture.detectChanges();

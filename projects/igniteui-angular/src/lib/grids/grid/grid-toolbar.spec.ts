@@ -35,7 +35,7 @@ const DATA = [
     { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
 ];
 
-xdescribe('IgxGrid - Grid Toolbar #grid - ', () => {
+describe('IgxGrid - Grid Toolbar #grid - ', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -50,7 +50,7 @@ xdescribe('IgxGrid - Grid Toolbar #grid - ', () => {
         });
     }));
 
-    xdescribe('Basic Tests - ', () => {
+    describe('Basic Tests - ', () => {
         let fixture: ComponentFixture<DefaultToolbarComponent>;
 
         const $ = (selector: string) => fixture.debugElement.nativeElement.querySelector(selector) as HTMLElement;
@@ -109,7 +109,7 @@ xdescribe('IgxGrid - Grid Toolbar #grid - ', () => {
         });
     });
 
-    xdescribe('Toolbar actions - ', () => {
+    describe('Toolbar actions - ', () => {
         let fixture: ComponentFixture<ToolbarActionsComponent>;
         let instance: ToolbarActionsComponent;
 

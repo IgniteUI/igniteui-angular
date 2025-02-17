@@ -62,7 +62,7 @@ const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
 
-xdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
+describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
     registerLocaleData(localeDe);
     registerLocaleData(localeFr);
@@ -81,7 +81,7 @@ xdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
         });
     }));
 
-    xdescribe(null, () => {
+    describe(null, () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
         const today = SampleTestData.today;
@@ -2357,7 +2357,7 @@ xdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
     });
 
-    xdescribe('Integration scenarios', () => {
+    describe('Integration scenarios', () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
 
@@ -2689,7 +2689,7 @@ xdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
     });
 
-    xdescribe(null, () => {
+    describe(null, () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
@@ -2796,7 +2796,7 @@ xdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
     });
 
-    xdescribe(null, () => {
+    describe(null, () => {
         let fix; let grid;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringScrollComponent);
@@ -2826,7 +2826,7 @@ xdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
         });
     });
 
-    xdescribe(null, () => {
+    describe(null, () => {
         let fix;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringTemplateComponent);
@@ -2899,7 +2899,7 @@ xdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
     });
 
-    xdescribe(null, () => {
+    describe(null, () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
         const today = SampleTestData.today;
@@ -2976,7 +2976,7 @@ xdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
 
     });
 
-    xdescribe('Filtering events', () => {
+    describe('Filtering events', () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
 
@@ -3210,7 +3210,7 @@ xdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
     });
 });
 
-xdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
+describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -3226,7 +3226,7 @@ xdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         });
     }));
 
-    xdescribe(null, () => {
+    describe(null, () => {
         let fix: ComponentFixture<IgxGridFilteringComponent>;
         let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
@@ -6323,7 +6323,7 @@ xdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
     });
 
-    xdescribe('Templates: ', () => {
+    describe('Templates: ', () => {
         let fix; let grid;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringESFTemplatesComponent);
@@ -6570,7 +6570,7 @@ xdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         });
     });
 
-    xdescribe('Load values on demand', () => {
+    describe('Load values on demand', () => {
         let fix;
         let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
@@ -6877,7 +6877,7 @@ xdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
     });
 
-    xdescribe(null, () => {
+    describe(null, () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
@@ -6927,7 +6927,7 @@ xdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
     });
 
-    xdescribe('External Excel Style Filtering', () => {
+    describe('External Excel Style Filtering', () => {
         let fix; let grid;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridExternalESFComponent);
@@ -7052,7 +7052,7 @@ xdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     });
 });
 
-xdescribe('IgxGrid - Custom Filtering Strategy #grid', () => {
+describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
     configureTestSuite((() => {

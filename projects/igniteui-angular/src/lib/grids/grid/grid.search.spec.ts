@@ -16,7 +16,7 @@ import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { firstValueFrom } from 'rxjs';
 
-xdescribe('IgxGrid - search API #grid', () => {
+describe('IgxGrid - search API #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const HIGHLIGHT_CSS_CLASS = '.igx-highlight';
     const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
@@ -37,7 +37,7 @@ xdescribe('IgxGrid - search API #grid', () => {
         }).compileComponents();
     }))
 
-    xdescribe('BasicGrid - ', () => {
+    describe('BasicGrid - ', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(BasicGridSearchComponent);
             fix.componentInstance.data = SampleTestData.personJobDataFull();
@@ -722,7 +722,7 @@ xdescribe('IgxGrid - search API #grid', () => {
         });
     });
 
-    xdescribe('ScrollableGrid - ', () => {
+    describe('ScrollableGrid - ', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(ScrollableGridSearchComponent);
             component = fix.componentInstance;
@@ -878,7 +878,7 @@ xdescribe('IgxGrid - search API #grid', () => {
         });
     });
 
-    xdescribe('Groupable Grid', () => {
+    describe('Groupable Grid', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GroupableGridSearchComponent);
             fix.detectChanges();
@@ -1201,7 +1201,7 @@ xdescribe('IgxGrid - search API #grid', () => {
         });
     });
 
-    xdescribe('Grid with Avatar - ', () => {
+    describe('Grid with Avatar - ', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GridWithAvatarComponent);
             grid = fix.componentInstance.grid;

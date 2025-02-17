@@ -16,7 +16,7 @@ import { By } from '@angular/platform-browser';
 
 const IGX_CHECKBOX_LABEL = '.igx-checkbox__label';
 
-xdescribe('IgxTreeGrid - Filtering actions #tGrid', () => {
+describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     configureTestSuite();
     let fix;
     let grid;
@@ -351,7 +351,7 @@ xdescribe('IgxTreeGrid - Filtering actions #tGrid', () => {
         expect(items[1].textContent).toBe(' (Blanks) ');
     }));
 
-    xdescribe('Tree grid ESF', () => {
+    describe('Tree grid ESF', () => {
         let tGrid: IgxTreeGridComponent;
 
         beforeEach(waitForAsync(() => {
@@ -753,7 +753,7 @@ xdescribe('IgxTreeGrid - Filtering actions #tGrid', () => {
         }));
     });
 
-    xdescribe('Tree grid ESF templates', () => {
+    describe('Tree grid ESF templates', () => {
         let tGrid: IgxTreeGridComponent;
 
         beforeEach(waitForAsync(() => {
@@ -832,7 +832,7 @@ xdescribe('IgxTreeGrid - Filtering actions #tGrid', () => {
         });
     });
 
-    xdescribe('Filtering: Row editing', () => {
+    describe('Filtering: Row editing', () => {
         let treeGrid: IgxTreeGridComponent;
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);

@@ -17,7 +17,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxHierarchicalGridDefaultComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { firstValueFrom } from 'rxjs';
 
-xdescribe('IgxHierarchicalGrid Virtualization #hGrid', () => {
+describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     configureTestSuite((() => {
@@ -438,7 +438,7 @@ xdescribe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 });
 
-xdescribe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
+describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [

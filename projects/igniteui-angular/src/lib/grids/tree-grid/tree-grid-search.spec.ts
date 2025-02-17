@@ -14,7 +14,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
 
-xdescribe('IgxTreeGrid - search API #tGrid', () => {
+describe('IgxTreeGrid - search API #tGrid', () => {
     configureTestSuite();
     let fix;
     let fixNativeElement;
@@ -31,7 +31,7 @@ xdescribe('IgxTreeGrid - search API #tGrid', () => {
         }).compileComponents();
     }));
 
-    xdescribe('Child Collection', () => {
+    describe('Child Collection', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSearchComponent);
             fix.detectChanges();
@@ -108,7 +108,7 @@ xdescribe('IgxTreeGrid - search API #tGrid', () => {
         });
     });
 
-    xdescribe('Primary/Foreign key', () => {
+    describe('Primary/Foreign key', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
@@ -310,7 +310,7 @@ xdescribe('IgxTreeGrid - search API #tGrid', () => {
         });
     });
 
-    xdescribe('Scrollable TreeGrid', () => {
+    describe('Scrollable TreeGrid', () => {
         beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
             fix.detectChanges();
