@@ -274,6 +274,14 @@
         }
     }
 
+    @if $variant == 'material' {
+        %form-group-bundle:not(%form-group-bundle--disabled):hover {
+            %igx-combo__toggle-button {
+                background: var-get($theme, 'toggle-button-background');
+            }
+        }
+    }
+
     .igx-input-group--filled {
         %igx-combo__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-filled');
