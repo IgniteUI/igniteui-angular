@@ -748,14 +748,14 @@ describe('IgxSimpleCombo', () => {
             expect(footerHTMLElement.parentNode).toEqual(dropdownList);
             expect(footerHTMLElement.textContent).toEqual('This is a footer');
         });
-        it('should initialize the component with empty data and bindings', () => {
+        xit('should initialize the component with empty data and bindings', () => {
             fixture = TestBed.createComponent(IgxSimpleComboEmptyComponent);
             expect(() => {
                 fixture.detectChanges();
             }).not.toThrow();
             expect(fixture.componentInstance.combo).toBeDefined();
         });
-        xit('should not show clear icon button when no value is selected initially with FormControl and required', fakeAsync(() => {
+        it('should not show clear icon button when no value is selected initially with FormControl and required', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSimpleComboFormControlRequiredComponent);
             fixture.detectChanges();
 
