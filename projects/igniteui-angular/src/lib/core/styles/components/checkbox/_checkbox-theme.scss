@@ -172,6 +172,7 @@
         flex-flow: row nowrap;
         align-items: center;
         outline-style: none;
+        cursor: pointer;
     }
 
     %cbx-display--disabled {
@@ -208,7 +209,6 @@
     %cbx-composite {
         position: relative;
         display: inline-block;
-        cursor: pointer;
         width: $size;
         height: $size;
         min-width: $size;
@@ -377,6 +377,12 @@
                 z-index: 1;
             }
         }
+    }
+
+    %igx-checkbox--disabled-indeterminate-fluent {
+        %cbx-composite-mark {
+            stroke: transparent;
+        }
 
         %cbx-composite--x--disabled {
             background: transparent;
@@ -387,7 +393,7 @@
         }
     }
 
-    %igx-checkbox--indeterminate-material {
+    %igx-checkbox--disabled-indeterminate-material {
         %cbx-composite--x--disabled {
             border-color: var-get($theme, 'disabled-indeterminate-color');
             background: var-get($theme, 'disabled-indeterminate-color');
@@ -476,7 +482,6 @@
     %cbx-label {
         display: inline-block;
         color: var-get($theme, 'label-color');
-        cursor: pointer;
         user-select: none;
         word-wrap: break-all;
         transition: color .2s $ease-out-quad;
