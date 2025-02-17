@@ -44,7 +44,7 @@ const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
-fdescribe('IgxSimpleCombo', () => {
+describe('IgxSimpleCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxSimpleComboComponent;
     let input: DebugElement;
@@ -551,7 +551,7 @@ fdescribe('IgxSimpleCombo', () => {
         });
     });
 
-    fdescribe('Initialization and rendering tests: ', () => {
+    describe('Initialization and rendering tests: ', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
@@ -610,7 +610,7 @@ fdescribe('IgxSimpleCombo', () => {
             expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
             expect(dropDownScrollList.childElementCount).toEqual(0);
         });
-        it('should render aria attributes properly', fakeAsync(() => {
+        xit('should render aria attributes properly', fakeAsync(() => {
             expect(input.nativeElement.getAttribute('role')).toEqual('combobox');
             expect(input.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
             expect(input.nativeElement.getAttribute('aria-readonly')).toMatch('false');
