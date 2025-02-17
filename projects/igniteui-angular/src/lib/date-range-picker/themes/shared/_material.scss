@@ -6,4 +6,9 @@
 
 $_theme: $material;
 
-@include themed-block(igx-date-range-picker, material) {}
+@include themed-block(igx-date-picker, material) {
+    @include e(actions) {
+        min-height: sizable(rem(40px), rem(46px), rem(52px));
+        padding: rem(8px);
+    }
+}

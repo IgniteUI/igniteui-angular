@@ -8,6 +8,9 @@
 
 $_theme: $fluent;
 
-@include themed-block(igx-date-range-picker, fluent) {
-
+@include themed-block(igx-date-picker, fluent) {
+    @include e(actions) {
+        min-height: sizable(rem(40px), rem(48px), rem(54px));
+        padding: rem(8px);
+    }
 }

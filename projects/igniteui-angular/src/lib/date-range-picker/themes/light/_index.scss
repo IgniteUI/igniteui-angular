@@ -4,4 +4,3 @@
 
 $tokens: meta.module-variables(tokens);
 @include themes(igx-date-picker, $tokens, light);
-@include themes(igx-date-range-picker, $tokens, light);

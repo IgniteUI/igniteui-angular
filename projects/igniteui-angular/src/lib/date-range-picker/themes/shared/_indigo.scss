@@ -7,4 +7,9 @@
 
 $_theme: $indigo;
 
-@include themed-block(igx-date-range-picker, indigo) {}
+@include themed-block(igx-date-picker, indigo) {
+    @include e(actions) {
+        min-height: sizable(rem(40px), rem(44px), rem(48px));
+        padding: rem(8px) rem(16px);
+    }
+}

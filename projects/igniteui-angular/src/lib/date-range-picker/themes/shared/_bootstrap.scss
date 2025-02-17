@@ -7,4 +7,9 @@
 
 $_theme: $bootstrap;
 
-@include themed-block(igx-date-range-picker, bootstrap) {}
+@include themed-block(igx-date-picker, bootstrap) {
+    @include e(actions) {
+        min-height: sizable(rem(47px), rem(54px), rem(64px));
+        padding: rem(8px);
+    }
+}

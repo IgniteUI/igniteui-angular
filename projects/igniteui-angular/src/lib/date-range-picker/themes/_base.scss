@@ -10,24 +10,68 @@ $theme: $material;
 $theme-range: $material-range;
 
 @include layer(base) {
+    @include b(igx-date-picker) {
+        $border-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
+
+        display: block;
+        // TODO move the shadow in the schemas
+        box-shadow: $border-shadow, elevation(24),;
+        border-radius: var-get($theme, 'border-radius');
+        background: var-get($theme, 'content-background');
+        overflow: hidden;
+
+        igx-calendar,
+        igx-days-view,
+        igx-months-view,
+        igx-years-view{
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        igx-divider {
+            --color: #{var-get($theme, 'actions-divider-color')};
+        }
+
+        @include e(actions) {
+            @include sizable();
+
+            --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+
+            display: flex;
+            justify-content: flex-end;
+
+            gap: rem(8px);
+
+            // TODO remove this line after the override (--component-size: var(--ig-size, var(--ig-size-large)) is removed
+            [igxButton] {
+                --component-size: var(--ig-size, #{var-get($theme, 'default-size')}) !important;
+            }
+        }
+
+        @include e(buttons) {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: rem(8px);
+        }
+
+        @include m(dropdown) {
+            display: flex;
+            flex: 1 0 0;
+            flex-direction: column;
+            box-shadow: $border-shadow, elevation(3);
+        }
+    }
+
     @include b(igx-date-range-picker) {
-        display: flex;
+        display: grid;
 
         > igx-icon {
             cursor: pointer;
         }
 
-        igx-input-group {
-            flex: 1;
-        }
-
-        igx-calendar {
-            box-shadow: none;
-        }
-
-        igx-date-range-start,
-        igx-date-range-end {
-            flex: 1 0 0%;
+        &:has(.igx-date-range-picker__label) {
+            grid-template-columns: 1fr auto 1fr;
         }
 
         @include e(label) {
@@ -35,14 +79,6 @@ $theme-range: $material-range;
             align-items: center;
             color: var-get($theme-range, 'label-color');
             margin: 0 rem(8px);
-        }
-
-        @include e(start) {
-            flex: 1 0 0%;
-        }
-
-        @include e(end) {
-            flex: 1 0 0%;
         }
     }
 
