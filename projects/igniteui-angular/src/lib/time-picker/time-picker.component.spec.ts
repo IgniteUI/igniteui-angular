@@ -191,7 +191,8 @@ describe('IgxTimePicker', () => {
             });
 
             mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-            timePicker = new IgxTimePickerComponent(elementRef, 'en', null, mockInjector, null, mockCdr);
+            const platformUtil = TestBed.inject(PlatformUtil);
+            timePicker = new IgxTimePickerComponent(elementRef, 'en', null, mockInjector, platformUtil, mockCdr);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             (timePicker as any)._inputGroup = mockInputGroup;
             (timePicker as any).inputDirective = mockInputDirective;
