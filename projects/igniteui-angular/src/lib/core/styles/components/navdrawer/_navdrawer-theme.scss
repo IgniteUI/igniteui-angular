@@ -89,7 +89,7 @@
 
     @if not($item-active-background) and $background {
         @if meta.type-of($background) == 'color' {
-            $item-active-background: rgba(text-contrast($background), .24);
+            $item-active-background: color-mix(in oklch, text-contrast($background) 24%, transparent);
         }
     }
 
@@ -103,7 +103,7 @@
 
     @if not($item-hover-background) and $background {
         @if meta.type-of($background) == 'color' {
-            $item-hover-background: rgba(text-contrast($background), .08);
+            $item-hover-background: color-mix(in oklch, text-contrast($background) 8%, transparent);
         }
     }
 

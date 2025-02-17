@@ -142,7 +142,7 @@
 
     @if not($item-subtitle-color) and $item-background {
         @if meta.type-of($item-background) == 'color' {
-            $item-subtitle-color: rgba(text-contrast($item-background), .74);
+            $item-subtitle-color: color-mix(in oklch, text-contrast($item-background) 74%, transparent);
         }
     }
 
@@ -168,7 +168,7 @@
 
     @if not($item-subtitle-color-hover) and $item-background-hover {
         @if meta.type-of($item-background-hover) == 'color' {
-            $item-subtitle-color-hover: rgba(text-contrast($item-background-hover), .74);
+            $item-subtitle-color-hover: color-mix(in oklch, text-contrast($item-background-hover) 74%, transparent);
         }
     }
 
@@ -194,7 +194,7 @@
 
     @if not($item-subtitle-color-active) and $item-background-active {
         @if meta.type-of($item-background-active) == 'color' {
-            $item-subtitle-color-active: rgba(text-contrast($item-background-active), .74);
+            $item-subtitle-color-active: color-mix(in oklch, text-contrast($item-background-active) 74%, transparent);
         }
     }
 

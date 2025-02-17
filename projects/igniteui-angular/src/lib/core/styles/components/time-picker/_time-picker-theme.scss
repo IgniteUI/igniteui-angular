@@ -87,13 +87,13 @@
 
     @if not($active-item-background) and $background-color {
         @if meta.type-of($background-color) == 'color' {
-            $active-item-background: rgba(text-contrast($background-color), .12);
+            $active-item-background: color-mix(in oklch, text-contrast($background-color) 12%, transparent);
         }
     }
 
     @if not($disabled-text-color) and $disabled-item-background {
         @if meta.type-of($disabled-item-background) == 'color' {
-            $disabled-text-color: rgba(text-contrast($disabled-item-background), .6);
+            $disabled-text-color: color-mix(in oklch, text-contrast($disabled-item-background) 6%, transparent);
         }
     }
 

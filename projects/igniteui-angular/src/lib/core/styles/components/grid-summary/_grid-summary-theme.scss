@@ -60,13 +60,13 @@
 
     @if not($border-color) and $background-color {
         @if type-of($background-color) == 'color' {
-            $border-color: rgba(text-contrast($background-color), .26);
+            $border-color: color-mix(in oklch, text-contrast($background-color) 26%, transparent);
         }
     }
 
     @if not($pinned-border-color) and $background-color {
         @if type-of($background-color) == 'color' {
-            $pinned-border-color: rgba(text-contrast($background-color), .26);
+            $pinned-border-color: color-mix(in oklch, text-contrast($background-color) 26%, transparent);
         }
     }
 

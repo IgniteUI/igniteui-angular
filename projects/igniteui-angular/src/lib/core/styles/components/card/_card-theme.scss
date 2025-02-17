@@ -60,19 +60,19 @@
 
     @if not($actions-text-color) and $background {
         @if meta.type-of($background) == 'color' {
-            $actions-text-color: rgba(text-contrast($background), .5);
+            $actions-text-color: color-mix(in oklch, text-contrast($background) 50%, transparent)
         }
     }
 
     @if not($content-text-color) and $background {
         @if meta.type-of($background) == 'color' {
-            $content-text-color: rgba(text-contrast($background), .7);
+            $content-text-color: color-mix(in oklch, text-contrast($background) 70%, transparent)
         }
     }
 
     @if not($subtitle-text-color) and $background {
         @if meta.type-of($background) == 'color' {
-            $subtitle-text-color: rgba(text-contrast($background), .7);
+            $subtitle-text-color: color-mix(in oklch, text-contrast($background) 70%, transparent)
         }
     }
 

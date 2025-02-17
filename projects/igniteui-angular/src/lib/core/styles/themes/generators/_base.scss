@@ -95,6 +95,12 @@
         --ig-spacing-block-large: 1;
     }
 
+    #{$scope} {
+        --ig-contrast-a: 0.67;
+        --ig-contrast-aa: 0.6;
+        --ig-contrast-aaa: 0.56;
+    }
+
     @if not(list.index($exclude, 'palette')) {
         @include palette($palette);
     }

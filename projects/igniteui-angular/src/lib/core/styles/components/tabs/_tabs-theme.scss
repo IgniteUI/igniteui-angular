@@ -82,7 +82,7 @@
 
     @if not($item-text-color) and $item-background {
         @if meta.type-of($item-background) == 'color' {
-            $item-text-color: rgba(text-contrast($item-background), .54);
+            $item-text-color: color-mix(in oklch, text-contrast($item-background) 50%, transparent);
         }
     }
 

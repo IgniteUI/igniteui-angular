@@ -54,7 +54,7 @@
 
     @if not($message-color) and $background{
         @if meta.type-of($background) == 'color' {
-            $message-color: rgba(text-contrast($background), .8);
+            $message-color: color-mix(in oklch, text-contrast($background) 80%, transparent);
         }
     }
 
