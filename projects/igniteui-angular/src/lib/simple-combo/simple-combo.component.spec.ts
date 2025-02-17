@@ -1119,7 +1119,8 @@ describe('IgxSimpleCombo', () => {
                     IgxSimpleComboSampleComponent,
                     IgxComboInContainerTestComponent,
                     IgxSimpleComboIconTemplatesComponent,
-                    IgxSimpleComboDirtyCheckTestComponent
+                    IgxSimpleComboDirtyCheckTestComponent,
+                    IgxSimpleComboTabBehaviorTestComponent
                 ]
             }).compileComponents();
         }));
@@ -2112,6 +2113,35 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             expect(reactiveForm.dirty).toBe(false);
+        }));
+
+        it('should focus on the next combo when Tab is pressed', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboTabBehaviorTestComponent);
+            fixture.detectChanges();
+
+            const combos = fixture.debugElement.queryAll(By.directive(IgxSimpleComboComponent));
+            expect(combos.length).toBe(3);
+
+            const firstComboInput = combos[0].query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+            const secondComboInput = combos[1].query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+            const thirdComboInput = combos[2].query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+
+            firstComboInput.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(firstComboInput.nativeElement);
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', firstComboInput);
+            secondComboInput.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(secondComboInput.nativeElement);
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', secondComboInput);
+            thirdComboInput.nativeElement.focus();
+            tick();
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(thirdComboInput.nativeElement);
         }));
     });
 
@@ -3428,6 +3458,66 @@ export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {
 
     public form = new FormGroup({
         city: new FormControl<number>({ value: undefined, disabled: false }),
+    });
+
+    public ngOnInit(): void {
+        this.cities = [
+            { id: 1, name: 'New York' },
+            { id: 2, name: 'Los Angeles' },
+            { id: 3, name: 'Chicago' },
+            { id: 4, name: 'Houston' },
+            { id: 5, name: 'Phoenix' }
+        ];
+    }
+}
+
+@Component({
+    template: `
+    <form [formGroup]="form">
+        <div class="combo-section">
+            <igx-simple-combo
+                #combo
+                [data]="cities"
+                [displayKey]="'name'"
+                [valueKey]="'id'"
+                formControlName="city"
+            >
+            </igx-simple-combo>
+
+            <igx-simple-combo
+                #combo2
+                [data]="cities"
+                [displayKey]="'name'"
+                [valueKey]="'id'"
+                formControlName="city2"
+            ></igx-simple-combo>
+
+            <igx-simple-combo
+                #combo3
+                [data]="cities"
+                [displayKey]="'name'"
+                [valueKey]="'id'"
+                formControlName="city3"
+            ></igx-simple-combo>
+        </div>
+    </form>
+    `,
+    imports: [IgxSimpleComboComponent, ReactiveFormsModule]
+})
+export class IgxSimpleComboTabBehaviorTestComponent implements OnInit {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+    @ViewChild('combo2', { read: IgxSimpleComboComponent, static: true })
+    public combo2: IgxSimpleComboComponent;
+    @ViewChild('combo3', { read: IgxSimpleComboComponent, static: true })
+    public combo3: IgxSimpleComboComponent;
+
+    public cities = [];
+
+    public form = new FormGroup({
+        city: new FormControl<number>({ value: undefined, disabled: false }),
+        city2: new FormControl<number>({ value: undefined, disabled: false }),
+        city3: new FormControl<number>({ value: undefined, disabled: false }),
     });
 
     public ngOnInit(): void {
