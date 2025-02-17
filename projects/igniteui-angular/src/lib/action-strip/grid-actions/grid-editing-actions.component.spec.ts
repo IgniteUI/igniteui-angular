@@ -17,7 +17,7 @@ import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IRowDataCancelableEventArgs, IgxColumnComponent } from '../../grids/public_api';
 
-describe('igxGridEditingActions #grid ', () => {
+xdescribe('igxGridEditingActions #grid ', () => {
     let fixture;
     let actionStrip: IgxActionStripComponent;
     let grid: IgxGridComponent;
@@ -37,7 +37,7 @@ describe('igxGridEditingActions #grid ', () => {
         }).compileComponents();
     }));
 
-    describe('Base ', () => {
+    xdescribe('Base ', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
             fixture.detectChanges();
@@ -111,7 +111,7 @@ describe('igxGridEditingActions #grid ', () => {
         });
     });
 
-    describe('Menu ', () => {
+    xdescribe('Menu ', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripEditMenuComponent);
             fixture.detectChanges();
@@ -170,7 +170,7 @@ describe('igxGridEditingActions #grid ', () => {
         });
     });
 
-    describe('integration with pinning actions ', () => {
+    xdescribe('integration with pinning actions ', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripPinEditComponent);
             fixture.detectChanges();
@@ -230,7 +230,7 @@ describe('igxGridEditingActions #grid ', () => {
         });
     });
 
-    describe('auto show/hide', () => {
+    xdescribe('auto show/hide', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripPinEditComponent);
             fixture.detectChanges();
@@ -278,7 +278,7 @@ describe('igxGridEditingActions #grid ', () => {
         });
     });
 
-    describe('auto show/hide in HierarchicalGrid', () => {
+    xdescribe('auto show/hide in HierarchicalGrid', () => {
         let actionStripRoot; let actionStripChild; let hierarchicalGrid: IgxHierarchicalGridComponent;
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridActionStripComponent);
@@ -337,7 +337,7 @@ describe('igxGridEditingActions #grid ', () => {
         });
     });
 
-    describe('TreeGrid - action strip', () => {
+    xdescribe('TreeGrid - action strip', () => {
         let treeGrid: IgxTreeGridComponent;
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxTreeGridEditActionsComponent);

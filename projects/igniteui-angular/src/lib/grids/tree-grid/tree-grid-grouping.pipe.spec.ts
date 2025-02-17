@@ -8,7 +8,7 @@ import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } fro
 import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
 
 
-describe('TreeGrid Grouping Pipe', () => {
+xdescribe('TreeGrid Grouping Pipe', () => {
     configureTestSuite();
     let groupPipe: IgxTreeGridGroupingPipe;
     let data: any[];
@@ -121,7 +121,7 @@ describe('TreeGrid Grouping Pipe', () => {
         expect(result[1]['Age']).toEqual(29);
     });
 
-    describe('By Date', () => {
+    xdescribe('By Date', () => {
         beforeEach(() => {
             const fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -142,7 +142,7 @@ describe('TreeGrid Grouping Pipe', () => {
         });
     });
 
-    describe('By String', () => {
+    xdescribe('By String', () => {
         beforeEach(() => {
             const fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();

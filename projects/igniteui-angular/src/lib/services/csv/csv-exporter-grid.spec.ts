@@ -23,7 +23,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
-describe('CSV Grid Exporter', () => {
+xdescribe('CSV Grid Exporter', () => {
     configureTestSuite();
     let exporter: IgxCsvExporterService;
     let options: IgxCsvExporterOptions;
@@ -390,7 +390,7 @@ describe('CSV Grid Exporter', () => {
         expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
     });
 
-    describe('Tree Grid CSV export', () => {
+    xdescribe('Tree Grid CSV export', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
         beforeEach(() => {

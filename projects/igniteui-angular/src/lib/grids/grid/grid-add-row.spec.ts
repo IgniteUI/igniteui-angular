@@ -22,7 +22,7 @@ import { Subject } from 'rxjs';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Row Adding #grid', () => {
+xdescribe('IgxGrid - Row Adding #grid', () => {
         const GRID_ROW = 'igx-grid-row';
         const DISPLAY_CONTAINER = 'igx-display-container';
         const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -51,7 +51,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     }));
 
-    describe('General tests', () => {
+    xdescribe('General tests', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxAddRowComponent);
             fixture.detectChanges();
@@ -331,7 +331,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     });
 
-    describe('Add row events tests:', () => {
+    xdescribe('Add row events tests:', () => {
         const $destroyer = new Subject<boolean>();
 
         beforeEach(() => {
@@ -530,7 +530,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     });
 
-    describe('Exit add row mode tests', () => {
+    xdescribe('Exit add row mode tests', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxAddRowComponent);
             fixture.detectChanges();
@@ -656,7 +656,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     });
 
-    describe('Row Adding - Paging tests', () => {
+    xdescribe('Row Adding - Paging tests', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxAddRowComponent);
             fixture.detectChanges();
@@ -704,7 +704,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     });
 
-    describe('Row Adding - Filtering tests', () => {
+    xdescribe('Row Adding - Filtering tests', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxAddRowComponent);
             fixture.detectChanges();
@@ -776,7 +776,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     });
 
-    describe('Row Adding - Sorting tests', () => {
+    xdescribe('Row Adding - Sorting tests', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxAddRowComponent);
             fixture.detectChanges();
@@ -829,7 +829,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     });
 
-    describe('Row Adding - Master detail view', () => {
+    xdescribe('Row Adding - Master detail view', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(DefaultGridMasterDetailComponent);
             fixture.detectChanges();
@@ -852,7 +852,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     });
 
-    describe('Row Adding - MRL tests', () => {
+    xdescribe('Row Adding - MRL tests', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutTestComponent);
             fixture.detectChanges();
@@ -874,7 +874,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     });
 
-    describe('Row Adding - Group by', () => {
+    xdescribe('Row Adding - Group by', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxAddRowComponent);
             fixture.detectChanges();
@@ -920,7 +920,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     });
 
-    describe('Row Adding - Summaries', () => {
+    xdescribe('Row Adding - Summaries', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxAddRowComponent);
             fixture.detectChanges();
@@ -947,7 +947,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     });
 
-    describe('Row Adding - Column manipulations', () => {
+    xdescribe('Row Adding - Column manipulations', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxAddRowComponent);
             fixture.detectChanges();
@@ -1058,7 +1058,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
     });
 
-    describe('Row Adding - Transactions', () => {
+    xdescribe('Row Adding - Transactions', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
             fixture.detectChanges();

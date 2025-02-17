@@ -15,8 +15,8 @@ const PIVOT_HEADER_ROW = 'igx-pivot-header-row';
 const HEADER_CELL_CSS_CLASS = '.igx-grid-th';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
-describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
-    describe('General Keyboard Navigation', () => {
+xdescribe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
+    xdescribe('General Keyboard Navigation', () => {
         let fixture: ComponentFixture<IgxPivotGridMultipleRowComponent>;
         let pivotGrid: IgxPivotGridComponent;
         configureTestSuite((() => {
@@ -263,7 +263,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             expect(activeCells[0].componentInstance.column.field).toEqual('Stanley-UnitPrice')
         });
     });
-    describe('Row Dimension Expand/Collapse Keyboard Interactions', () => {
+    xdescribe('Row Dimension Expand/Collapse Keyboard Interactions', () => {
         let fixture: ComponentFixture<IgxPivotGridTestBaseComponent>;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({

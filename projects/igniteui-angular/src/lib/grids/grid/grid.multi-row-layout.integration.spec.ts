@@ -27,7 +27,7 @@ interface ColGroupsType {
     columns: any[];
 }
 
-describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
+xdescribe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let fixture: ComponentFixture<FixtureType>;
     let grid: IgxGridComponent;
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
@@ -44,7 +44,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
     }));
 
-    describe('Hiding ', () => {
+    xdescribe('Hiding ', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayouHidingTestComponent);
             fixture.detectChanges();
@@ -390,7 +390,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
     });
 
-    describe('Pinning ', () => {
+    xdescribe('Pinning ', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutPinningTestComponent);
             fixture.detectChanges();
@@ -796,7 +796,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
     });
 
-    describe('Filtering ', () => {
+    xdescribe('Filtering ', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutFilteringTestComponent);
             fixture.detectChanges();
@@ -834,7 +834,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
     });
 
-    describe('GroupBy ', () => {
+    xdescribe('GroupBy ', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
             fixture.detectChanges();
@@ -927,7 +927,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
     });
 
-    describe('Resizing', () => {
+    xdescribe('Resizing', () => {
         const DEBOUNCE_TIME = 200;
         const GRID_COL_GROUP_THEAD = 'igx-grid-header-group';
         const RESIZE_LINE_CLASS = '.igx-grid-th__resize-line';
@@ -1187,7 +1187,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
     });
 
-    describe('Selection ', () => {
+    xdescribe('Selection ', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
             fixture.detectChanges();

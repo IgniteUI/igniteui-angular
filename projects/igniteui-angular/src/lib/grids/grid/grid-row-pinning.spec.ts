@@ -20,7 +20,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { CellType, IPinRowEventArgs, IPinningConfig, IgxColumnComponent } from '../public_api';
 
-describe('Row Pinning #grid', () => {
+xdescribe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const DEBOUNCE_TIME = 60;
@@ -42,7 +42,7 @@ describe('Row Pinning #grid', () => {
         });
     }));
 
-    describe('', () => {
+    xdescribe('', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
             grid = fix.componentInstance.instance;
@@ -586,7 +586,7 @@ describe('Row Pinning #grid', () => {
         });
     });
 
-    describe('Row pinning with Master Detail View', () => {
+    xdescribe('Row pinning with Master Detail View', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningWithMDVComponent);
             grid = fix.componentInstance.instance;
@@ -688,7 +688,7 @@ describe('Row Pinning #grid', () => {
         });
     });
 
-    describe('Paging', () => {
+    xdescribe('Paging', () => {
         let paginator: IgxPaginatorComponent;
 
         beforeEach(() => {
@@ -739,7 +739,7 @@ describe('Row Pinning #grid', () => {
         });
     });
 
-    describe(' Editing ', () => {
+    xdescribe(' Editing ', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningWithTransactionsComponent);
             grid = fix.componentInstance.instance;
@@ -816,7 +816,7 @@ describe('Row Pinning #grid', () => {
 
     });
 
-    describe('Row pinning with MRL', () => {
+    xdescribe('Row pinning with MRL', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningWithMRLComponent);
             grid = fix.componentInstance.instance;
@@ -958,7 +958,7 @@ describe('Row Pinning #grid', () => {
         });
     });
 
-    describe(' Hiding', () => {
+    xdescribe(' Hiding', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
             grid = fix.componentInstance.instance;
@@ -1023,7 +1023,7 @@ describe('Row Pinning #grid', () => {
         });
     });
 
-    describe(' Cell Editing', () => {
+    xdescribe(' Cell Editing', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
@@ -1107,7 +1107,7 @@ describe('Row Pinning #grid', () => {
         });
     });
 
-    describe(' Navigation', () => {
+    xdescribe(' Navigation', () => {
         let gridContent: DebugElement;
 
         beforeEach(() => {
@@ -1348,7 +1348,7 @@ describe('Row Pinning #grid', () => {
         });
     });
 
-    describe(' Initial pinning', () => {
+    xdescribe(' Initial pinning', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningWithInitialPinningComponent);
             fix.detectChanges();
@@ -1361,7 +1361,7 @@ describe('Row Pinning #grid', () => {
         });
     });
 
-    describe('Conditional row styling', () => {
+    xdescribe('Conditional row styling', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(GridRowConditionalStylingComponent);

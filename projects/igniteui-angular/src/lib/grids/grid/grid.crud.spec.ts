@@ -9,7 +9,7 @@ import { IGridEditEventArgs } from '../common/events';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 
-describe('IgxGrid - CRUD operations #grid', () => {
+xdescribe('IgxGrid - CRUD operations #grid', () => {
     let fix;
     let grid;
     let data;

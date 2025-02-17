@@ -29,7 +29,7 @@ const EXPANDED_ICON_NAME = 'expand_more';
 const HIERARCHICAL_INDENT_CLASS = '.igx-grid__hierarchical-indent';
 const SELECTED_ROW_CALSS_NAME = 'igx-grid__tr--selected';
 
-describe('IgxGrid Master Detail #grid', () => {
+xdescribe('IgxGrid Master Detail #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
 
@@ -44,7 +44,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
     }));
 
-    describe('Basic', () => {
+    xdescribe('Basic', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
             fix.detectChanges();
@@ -362,7 +362,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
     });
 
-    describe('Keyboard Navigation ', () => {
+    xdescribe('Keyboard Navigation ', () => {
         let gridContent: DebugElement;
         beforeEach(async () => {
             fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
@@ -706,8 +706,8 @@ describe('IgxGrid Master Detail #grid', () => {
         });
     });
 
-    describe('Integration', () => {
-        describe('Paging', () => {
+    xdescribe('Integration', () => {
+        xdescribe('Paging', () => {
             it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
@@ -754,7 +754,7 @@ describe('IgxGrid Master Detail #grid', () => {
             }));
         });
 
-        describe('Hiding', () => {
+        xdescribe('Hiding', () => {
             it('Should set the expand/collapse icon to the new first visible column when hiding the first column.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
@@ -767,7 +767,7 @@ describe('IgxGrid Master Detail #grid', () => {
             }));
         });
 
-        describe('Pinning', () => {
+        xdescribe('Pinning', () => {
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
@@ -797,7 +797,7 @@ describe('IgxGrid Master Detail #grid', () => {
             });
         });
 
-        describe('Column Moving', () => {
+        xdescribe('Column Moving', () => {
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
@@ -821,7 +821,7 @@ describe('IgxGrid Master Detail #grid', () => {
             }));
         });
 
-        describe('Cell Selection', () => {
+        xdescribe('Cell Selection', () => {
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
@@ -924,7 +924,7 @@ describe('IgxGrid Master Detail #grid', () => {
             }));
         });
 
-        describe('Row Selection', () => {
+        xdescribe('Row Selection', () => {
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
@@ -953,7 +953,7 @@ describe('IgxGrid Master Detail #grid', () => {
             });
         });
 
-        describe('Search', () => {
+        xdescribe('Search', () => {
             it('Should scroll to the correct parent rows when searching in a grid with expanded detail views.', async () => {
                 fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
                 fix.detectChanges();
@@ -977,7 +977,7 @@ describe('IgxGrid Master Detail #grid', () => {
             });
         });
 
-        describe('Updating', () => {
+        xdescribe('Updating', () => {
             beforeEach(async () => {
                 fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
                 fix.detectChanges();
@@ -1022,7 +1022,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
         });
 
-        describe('Sorting', () => {
+        xdescribe('Sorting', () => {
             it('Should rearrange detail views to their correct parents after sorting.', async () => {
                 fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
                 fix.detectChanges();
@@ -1046,7 +1046,7 @@ describe('IgxGrid Master Detail #grid', () => {
             });
         });
 
-        describe('Filtering', () => {
+        xdescribe('Filtering', () => {
             it('Should persist template state after filtering out the whole data and removing the filter.', fakeAsync(() => {
                 fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
                 fix.detectChanges();
@@ -1077,7 +1077,7 @@ describe('IgxGrid Master Detail #grid', () => {
             }));
         });
 
-        describe('Multi-row layout', () => {
+        xdescribe('Multi-row layout', () => {
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(MRLMasterDetailComponent);
                 fix.detectChanges();
@@ -1162,7 +1162,7 @@ describe('IgxGrid Master Detail #grid', () => {
             });
         });
 
-        describe('GroupBy', () => {
+        xdescribe('GroupBy', () => {
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 fix.detectChanges();

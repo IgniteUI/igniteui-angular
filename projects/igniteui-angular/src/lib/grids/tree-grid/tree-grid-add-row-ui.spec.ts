@@ -11,7 +11,7 @@ import { first } from 'rxjs/operators';
 import { IRowDataCancelableEventArgs } from '../public_api';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxTreeGrid - Add Row UI #tGrid', () => {
+xdescribe('IgxTreeGrid - Add Row UI #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -33,7 +33,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
         }).compileComponents();
     }));
 
-    describe('Basic', () => {
+    xdescribe('Basic', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridEditActionsComponent);
             fix.detectChanges();

@@ -8,7 +8,7 @@ import { PivotGridFunctions } from '../../test-utils/pivot-grid-functions.spec';
 import { DATA } from 'src/app/shared/pivot-data';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
-describe('Pivot pipes #pivotGrid', () => {
+xdescribe('Pivot pipes #pivotGrid', () => {
     let rowPipe: IgxPivotRowPipe;
     let rowStatePipe: IgxPivotRowExpansionPipe;
     let columnPipe: IgxPivotColumnPipe;

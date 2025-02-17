@@ -12,7 +12,7 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeSelectionSampleComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
 
-xdescribe('IgxTree - Selection #treeView', () => {
+describe('IgxTree - Selection #treeView', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({

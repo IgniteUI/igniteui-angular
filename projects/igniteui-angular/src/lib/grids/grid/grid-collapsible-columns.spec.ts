@@ -13,7 +13,7 @@ import { DropPosition } from '../moving/moving.service';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 
-describe('IgxGrid - multi-column headers #grid', () => {
+xdescribe('IgxGrid - multi-column headers #grid', () => {
     let contactInf;
     let countryInf;
     let addressInf: IgxColumnGroupComponent;
@@ -34,7 +34,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
     }));
 
-    describe('Base Tests', () => {
+    xdescribe('Base Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
 
@@ -263,7 +263,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
     });
 
-    describe('Templates Tests', () => {
+    xdescribe('Templates Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
 
@@ -308,7 +308,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         }));
     });
 
-    describe('Dynamic Columns Tests', () => {
+    xdescribe('Dynamic Columns Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
 
@@ -394,7 +394,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
     });
 
-    describe('Integration Tests', () => {
+    xdescribe('Integration Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
 

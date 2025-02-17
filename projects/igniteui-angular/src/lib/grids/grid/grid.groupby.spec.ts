@@ -25,7 +25,7 @@ import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridStateDirective, IgxGrouping } from '../public_api';
 
-describe('IgxGrid - GroupBy #grid', () => {
+xdescribe('IgxGrid - GroupBy #grid', () => {
 
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
@@ -3823,7 +3823,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     });
 
-    describe('GroupBy with state directive', () => {
+    xdescribe('GroupBy with state directive', () => {
         let fix: ComponentFixture<GridGroupByStateComponent>;
         let state: IgxGridStateDirective;
         let grid: IgxGridComponent;

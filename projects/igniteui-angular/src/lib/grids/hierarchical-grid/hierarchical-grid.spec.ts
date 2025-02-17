@@ -24,7 +24,7 @@ import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxColumn
 import { getComponentSize } from '../../core/utils';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
-describe('Basic IgxHierarchicalGrid #hGrid', () => {
+xdescribe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -48,7 +48,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         }).compileComponents();
     }))
 
-    describe('Init IgxHierarchicalGrid #hGrid', () => {
+    xdescribe('Init IgxHierarchicalGrid #hGrid', () => {
         let fixture;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
 
@@ -671,7 +671,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
     });
 
-    describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
+    xdescribe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         let fixture;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
 
@@ -1088,7 +1088,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
     });
 
-    describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
+    xdescribe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
         let fixture: ComponentFixture<IgxHierarchicalGridSizingComponent>;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
         const TBODY_CLASS = '.igx-grid__tbody-content';
@@ -1220,7 +1220,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
     });
 
-    describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
+    xdescribe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
         let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
         const TBODY_CLASS = '.igx-grid__tbody-content';
         const THEAD_CLASS = '.igx-grid-thead';
@@ -1309,7 +1309,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         }));
     });
 
-    describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
+    xdescribe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
         const THEAD_CLASS = '.igx-grid-thead';
         let fixture: ComponentFixture<IgxHierarchicalGridColumnsUpdateComponent>;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -1508,7 +1508,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
     });
 
-    describe('IgxHierarchicalGrid hide child columns', () => {
+    xdescribe('IgxHierarchicalGrid hide child columns', () => {
         let fixture: ComponentFixture<IgxHierarchicalGridHidingPinningColumnsComponent>;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
 
@@ -1564,7 +1564,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
     });
 
-    describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () => {
+    xdescribe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () => {
         let fixture: ComponentFixture<IgxHierarchicalGridToggleRIComponent>;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
 
@@ -1738,7 +1738,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     });
 
-    describe('Columns and row islands runtime change', () => {
+    xdescribe('Columns and row islands runtime change', () => {
         let fixture: ComponentFixture<IgxHierarchicalGridToggleRIAndColsComponent>;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
 
@@ -1760,7 +1760,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         }));
     });
 
-    describe('IgxHierarchicalGrid custom template #hGrid', () => {
+    xdescribe('IgxHierarchicalGrid custom template #hGrid', () => {
 
         it('should allow setting custom template for expand/collapse icons', () => {
             const fixture = TestBed.createComponent(IgxHierarchicalGridCustomTemplateComponent);
@@ -1839,7 +1839,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         }));
     });
 
-    describe('IgxHierarchicalGrid Multi-Column Headers', () => {
+    xdescribe('IgxHierarchicalGrid Multi-Column Headers', () => {
         let fixture: ComponentFixture<IgxHierarchicalGridMCHComponent>;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
 

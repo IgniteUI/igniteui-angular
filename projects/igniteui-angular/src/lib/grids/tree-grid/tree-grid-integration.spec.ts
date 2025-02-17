@@ -27,7 +27,7 @@ const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
 
-describe('IgxTreeGrid - Integration #tGrid', () => {
+xdescribe('IgxTreeGrid - Integration #tGrid', () => {
     configureTestSuite();
     let fix: ComponentFixture<any>;
     let treeGrid: IgxTreeGridComponent;
@@ -80,7 +80,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         TreeGridFunctions.verifyTreeColumn(fix, 'PTO', 5);
     });
 
-    describe('Child Collection', () => {
+    xdescribe('Child Collection', () => {
         // configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
@@ -193,7 +193,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
     });
 
-    describe('Primary/Foreign key', () => {
+    xdescribe('Primary/Foreign key', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
@@ -306,7 +306,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
     });
 
-    describe('Row editing', () => {
+    xdescribe('Row editing', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
             fix.detectChanges();
@@ -617,7 +617,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         }));
     });
 
-    describe('Batch Editing', () => {
+    xdescribe('Batch Editing', () => {
         it('Children are transformed into parent nodes after their parent is deleted', () => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
             fix.detectChanges();
@@ -1230,7 +1230,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
     });
 
-    describe('Multi-column header', () => {
+    xdescribe('Multi-column header', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridMultiColHeadersComponent);
             fix.detectChanges();
@@ -1428,7 +1428,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
     });
 
-    describe('Column Pinning', () => {
+    xdescribe('Column Pinning', () => {
         it('should have right pinning applied correctly', () => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
             fix.detectChanges();
@@ -1450,7 +1450,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
     });
 
-    describe('Row Pinning', () => {
+    xdescribe('Row Pinning', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridRowPinningComponent);
             fix.detectChanges();

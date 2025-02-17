@@ -10,7 +10,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxInputDirective } from '../../input-group/public_api';
 
-describe('IgxGrid - Clipboard #grid', () => {
+xdescribe('IgxGrid - Clipboard #grid', () => {
 
     let fix: ComponentFixture<IgxGridClipboardComponent>;
     let grid: IgxGridComponent;

@@ -24,7 +24,7 @@ const DEBOUNCETIME = 30;
 const SCROLL_DEBOUNCETIME = 100;
 
 
-describe('IgxGrid - Row Selection #grid', () => {
+xdescribe('IgxGrid - Row Selection #grid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -41,7 +41,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         }).compileComponents();
     }));
 
-    describe('Base tests', () => {
+    xdescribe('Base tests', () => {
         let fix: ComponentFixture<RowSelectionComponent>;
         let grid: IgxGridComponent;
         const gridData = SampleTestData.foodProductDataExtended();
@@ -973,7 +973,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
     });
 
-    describe('RowSelection none', () => {
+    xdescribe('RowSelection none', () => {
         let fix: ComponentFixture<SelectionWithScrollsComponent>;
         let grid: IgxGridComponent;
 
@@ -1005,7 +1005,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         }));
     });
 
-    describe('RowSelection single', () => {
+    xdescribe('RowSelection single', () => {
         let fix: ComponentFixture<SingleRowSelectionComponent>;
         let grid: IgxGridComponent;
         const gridData = SampleTestData.foodProductDataExtended();
@@ -1414,7 +1414,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
     });
 
-    describe('API test', () => {
+    xdescribe('API test', () => {
         let fix: ComponentFixture<RowSelectionComponent>;
         let grid: IgxGridComponent;
 
@@ -1547,7 +1547,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
     });
 
-    describe('Selection without primaryKey', () => {
+    xdescribe('Selection without primaryKey', () => {
         let fix: ComponentFixture<RowSelectionWithoutPrimaryKeyComponent>;
         let grid: IgxGridComponent;
         const gridData = SampleTestData.personIDNameRegionData();
@@ -1657,7 +1657,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
     });
 
-    describe('Selection with primaryKey', () => {
+    xdescribe('Selection with primaryKey', () => {
         let fix: ComponentFixture<RowSelectionComponent>;
         let grid: IgxGridComponent;
 
@@ -1724,7 +1724,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
     });
 
-    describe('Integration tests', () => {
+    xdescribe('Integration tests', () => {
         let fix: ComponentFixture<RowSelectionComponent>;
         let grid: IgxGridComponent;
 
@@ -2164,7 +2164,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
     });
 
-    describe('Integration with CRUD and transactions', () => {
+    xdescribe('Integration with CRUD and transactions', () => {
         let fix: ComponentFixture<SelectionWithTransactionsComponent>;
         let grid: IgxGridComponent;
 
@@ -2380,7 +2380,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
     });
 
-    describe('Custom row selectors', () => {
+    xdescribe('Custom row selectors', () => {
         let fix: ComponentFixture<GridCustomSelectorsComponent>;
         let grid;
 

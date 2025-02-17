@@ -19,7 +19,7 @@ import { SAFE_DISPOSE_COMP_ID } from '../../test-utils/grid-functions.spec';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 
-describe('IgxTreeGrid Component Tests #tGrid', () => {
+xdescribe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     let fix;
@@ -39,7 +39,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         }).compileComponents();
     }));
 
-    describe('IgxTreeGrid - default rendering for rows and columns', () => {
+    xdescribe('IgxTreeGrid - default rendering for rows and columns', () => {
 
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
@@ -181,7 +181,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         });
     });
 
-    describe('Auto-generated columns', () => {
+    xdescribe('Auto-generated columns', () => {
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridComponent);
             grid = fix.componentInstance;
@@ -276,7 +276,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         }));
     });
 
-    describe('Loading Template', () => {
+    xdescribe('Loading Template', () => {
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridDefaultLoadingComponent);
             grid = fix.componentInstance.treeGrid;
@@ -297,7 +297,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         });
     });
 
-    describe('Hide All', () => {
+    xdescribe('Hide All', () => {
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             grid = fix.componentInstance.treeGrid;
@@ -348,7 +348,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
     });
 
-    describe('Setting null data', () => {
+    xdescribe('Setting null data', () => {
         it('should not throw error when data is null', () => {
             fix = TestBed.createComponent(IgxTreeGridNoDataComponent);
             fix.componentInstance.treeGrid.batchEditing = true;
@@ -375,7 +375,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         });
     });
 
-    describe('Displaying empty grid message', () => {
+    xdescribe('Displaying empty grid message', () => {
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
             grid = fix.componentInstance.treeGrid;

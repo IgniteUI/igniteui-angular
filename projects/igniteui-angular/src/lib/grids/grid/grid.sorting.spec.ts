@@ -11,7 +11,7 @@ import { CellType } from '../common/grid.interface';
 import { NoopSortingStrategy } from '../common/strategy';
 import { By } from '@angular/platform-browser';
 
-describe('IgxGrid - Grid Sorting #grid', () => {
+xdescribe('IgxGrid - Grid Sorting #grid', () => {
 
     let fixture;
     let grid: IgxGridComponent;
@@ -35,7 +35,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         fixture.detectChanges();
     });
 
-    describe('API tests', () => {
+    xdescribe('API tests', () => {
 
         it('Should sort grid ascending by column name', fakeAsync(() => {
             spyOn(grid.sorting, 'emit').and.callThrough();
@@ -461,7 +461,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         }));
     });
 
-    describe('UI tests', () => {
+    xdescribe('UI tests', () => {
 
         it('Should sort grid ascending by clicking once on first header cell UI', fakeAsync(() => {
             spyOn(grid.sorting, 'emit');

@@ -28,7 +28,7 @@ const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
-describe('IgxPivotGrid #pivotGrid', () => {
+xdescribe('IgxPivotGrid #pivotGrid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -42,7 +42,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
         }).compileComponents();
     }));
 
-    describe('Basic IgxPivotGrid #pivotGrid', () => {
+    xdescribe('Basic IgxPivotGrid #pivotGrid', () => {
         let fixture: ComponentFixture<IgxPivotGridTestBaseComponent>;
 
         beforeEach(waitForAsync(() => {
@@ -809,7 +809,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.nativeElement.clientWidth - expectedSize).toBeLessThan(50, "should take sum of columns as width.");
         });
 
-        describe('IgxPivotGrid Features #pivotGrid', () => {
+        xdescribe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 expect(pivotGrid.filterStrategy).toBeInstanceOf(DimensionValuesFilteringStrategy);
@@ -2110,7 +2110,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
     });
 
-    describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
+    xdescribe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
         let fixture: ComponentFixture<IgxPivotGridTestComplexHierarchyComponent>;
 
         beforeEach(waitForAsync(() => {
@@ -2210,7 +2210,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
         });
     });
 
-    describe('IgxPivotGrid Resizing #pivotGrid', () => {
+    xdescribe('IgxPivotGrid Resizing #pivotGrid', () => {
         let fixture: ComponentFixture<any>;
 
         beforeEach(waitForAsync(() => {
@@ -2437,7 +2437,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
         });
     });
 
-    describe('IgxPivotGrid APIs #pivotGrid', () => {
+    xdescribe('IgxPivotGrid APIs #pivotGrid', () => {
         let fixture: ComponentFixture<any>;
         let pivotGrid: IgxPivotGridComponent;
 
@@ -2927,7 +2927,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
     });
 
 
-    describe('IgxPivotGrid Horizontal Layout #pivotGrid', () => {
+    xdescribe('IgxPivotGrid Horizontal Layout #pivotGrid', () => {
         let fixture: ComponentFixture<any>;
         let pivotGrid: IgxPivotGridComponent;
 

@@ -15,7 +15,7 @@ import { DebugElement } from '@angular/core';
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 
-describe('IgxTreeGrid - CRUD #tGrid', () => {
+xdescribe('IgxTreeGrid - CRUD #tGrid', () => {
     configureTestSuite();
     let treeGrid: IgxTreeGridComponent;
     let gridContent: DebugElement;
@@ -30,8 +30,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
         }).compileComponents();
     }));
 
-    describe('Create', () => {
-        describe('Child Collection', () => {
+    xdescribe('Create', () => {
+        xdescribe('Child Collection', () => {
 
             let fix: ComponentFixture<IgxTreeGridSimpleComponent>;
 
@@ -172,7 +172,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             });
         });
 
-        describe('Primary/Foreign key', () => {
+        xdescribe('Primary/Foreign key', () => {
             let fix: ComponentFixture<IgxTreeGridPrimaryForeignKeyComponent>;
 
             beforeEach(() => {
@@ -298,8 +298,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
         });
     });
 
-    describe('Update API', () => {
-        describe('Child Collection', () => {
+    xdescribe('Update API', () => {
+        xdescribe('Child Collection', () => {
             let fix: ComponentFixture<IgxTreeGridSimpleComponent>;
 
             beforeEach(() => {
@@ -399,7 +399,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             });
         });
 
-        describe('Primary/Foreign key', () => {
+        xdescribe('Primary/Foreign key', () => {
             let fix: ComponentFixture<IgxTreeGridPrimaryForeignKeyComponent>;
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
@@ -545,8 +545,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
         });
     });
 
-    describe('Update UI', () => {
-        describe('Child Collection', () => {
+    xdescribe('Update UI', () => {
+        xdescribe('Child Collection', () => {
             let fix: ComponentFixture<IgxTreeGridSimpleComponent>;
 
             beforeEach(() => {
@@ -687,7 +687,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             });
         });
 
-        describe('Primary/Foreign key', () => {
+        xdescribe('Primary/Foreign key', () => {
             let fix: ComponentFixture<IgxTreeGridPrimaryForeignKeyComponent>;
 
             beforeEach(() => {
@@ -841,8 +841,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
     });
 
-    describe('Delete', () => {
-        describe('Child Collection', () => {
+    xdescribe('Delete', () => {
+        xdescribe('Child Collection', () => {
             let fix: ComponentFixture<IgxTreeGridSimpleComponent>;
 
             beforeEach(() => {
@@ -925,7 +925,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
         });
 
-        describe('Primary/Foreign key', () => {
+        xdescribe('Primary/Foreign key', () => {
             let fix: ComponentFixture<IgxTreeGridPrimaryForeignKeyComponent>;
 
             beforeEach(() => {

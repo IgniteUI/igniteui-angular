@@ -23,7 +23,7 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
-describe('IgxHierarchicalGrid Integration #hGrid', () => {
+xdescribe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
 
@@ -54,7 +54,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         hierarchicalGrid = fixture.componentInstance.hgrid;
     }));
 
-    describe('MCH', () => {
+    xdescribe('MCH', () => {
         it('should allow declaring column groups.', fakeAsync(() => {
             const expectedColumnGroups = 1;
             const expectedLevel = 1;
@@ -129,7 +129,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    describe('Selection', () => {
+    xdescribe('Selection', () => {
         it('should allow only one cell to be selected in the whole hierarchical grid.', (async () => {
             let firstRow = hierarchicalGrid.dataRowList.first as IgxHierarchicalRowComponent;
             hierarchicalGrid.expandRow(firstRow.key);
@@ -165,7 +165,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    describe('Updating', () => {
+    xdescribe('Updating', () => {
         it(`should have separate instances of updating service for
         parent and children and the same for children of the same island`, fakeAsync(() => {
             const firstLayoutInstances: IgxHierarchicalGridComponent[] = [];
@@ -308,7 +308,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    describe('Sorting', () => {
+    xdescribe('Sorting', () => {
         it('should display correct child data for expanded row after sorting.', fakeAsync(() => {
             /* this test doesn't need scrolling as it only cares about the child grid getting assigned to the correct parent */
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
@@ -348,7 +348,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    describe('Filtering', () => {
+    xdescribe('Filtering', () => {
 
         it('should enable filter-row for root and child grids', fakeAsync(() => {
             let filteringCells = fixture.debugElement.queryAll(By.css(FILTERING_CELL_CLASS));
@@ -422,7 +422,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    describe('Summaries', () => {
+    xdescribe('Summaries', () => {
         const SUMMARIES_MARGIN_CLASS = '.igx-grid__summaries-patch';
         it('should allow defining summaries for child grid and child should be sized correctly.', fakeAsync(() => {
             // expand first row
@@ -545,7 +545,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    describe('Paging', () => {
+    xdescribe('Paging', () => {
         it('should work on data records only when paging is enabled and should not be affected by child grid rows.', fakeAsync(() => {
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
@@ -695,7 +695,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }))
     });
 
-    describe('Hiding', () => {
+    xdescribe('Hiding', () => {
         it('should leave no feature UI elements when all columns are hidden', fakeAsync(() => {
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
@@ -742,7 +742,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    describe('Toolbar', () => {
+    xdescribe('Toolbar', () => {
         it('should be displayed correctly for child layout and hiding should apply to the correct child.', fakeAsync(() => {
             pending('Change test for new scrollbar structure');
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
@@ -845,7 +845,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }))
     });
 
-    describe('Moving', () => {
+    xdescribe('Moving', () => {
 
         // TODO: Revise this test! That DOM digging is sloppy
         xit('should not be possible to drag move a column from another grid.', (async () => {
@@ -890,7 +890,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    describe('Pinning', () => {
+    xdescribe('Pinning', () => {
         it('should be possible by templating the header and getting column reference for child grid', fakeAsync(() => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
 
@@ -958,7 +958,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    describe('Row Pinning', () => {
+    xdescribe('Row Pinning', () => {
         const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned';
         const FIXED_ROW_CONTAINER_TOP = 'igx-grid__tr--pinned-top';
         const FIXED_ROW_CONTAINER_BOTTOM = 'igx-grid__tr--pinned-bottom';

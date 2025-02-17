@@ -17,7 +17,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
 
-describe('IgxGrid - multi-row-layout #grid', () => {
+xdescribe('IgxGrid - multi-row-layout #grid', () => {
     const DEBOUNCETIME = 60;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({

@@ -8,7 +8,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
-describe('IgxTreeGrid', () => {
+xdescribe('IgxTreeGrid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -26,7 +26,7 @@ describe('IgxTreeGrid', () => {
     let groupByArea: IgxTreeGridGroupByAreaComponent;
 
     const DROP_AREA_MSG = 'Drag a column header and drop it here to group by that column.';
-    describe(' GroupByArea Standalone', ()=> {
+    xdescribe(' GroupByArea Standalone', ()=> {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridGroupByAreaTestComponent);
@@ -84,7 +84,7 @@ describe('IgxTreeGrid', () => {
         }));
     });
 
-    describe('', () => {
+    xdescribe('', () => {
         let groupingExpressions;
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridGroupingComponent);

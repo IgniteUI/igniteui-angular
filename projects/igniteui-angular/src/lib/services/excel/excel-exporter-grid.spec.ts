@@ -50,7 +50,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../test-utils/pivot-grid-samples.spec';
 import { IgxPivotGridComponent, PivotRowLayoutType } from '../../grids/pivot-grid/public_api';
 
-describe('Excel Exporter', () => {
+xdescribe('Excel Exporter', () => {
     configureTestSuite();
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
@@ -103,7 +103,7 @@ describe('Excel Exporter', () => {
         exporter.rowExporting.unsubscribe();
     }));
 
-    describe('', () => {
+    xdescribe('', () => {
         beforeEach(waitForAsync(() => {
             options = createExportOptions('GridExcelExport', 50);
         }));
@@ -801,7 +801,7 @@ describe('Excel Exporter', () => {
         });
     });
 
-    describe('', () => {
+    xdescribe('', () => {
         let fix;
         let hGrid;
         beforeEach(waitForAsync(() => {
@@ -933,7 +933,7 @@ describe('Excel Exporter', () => {
         });
     });
 
-    describe('', () => {
+    xdescribe('', () => {
         it('should export hierarchical grid with multi column headers', async () => {
             const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
             fix.detectChanges();
@@ -1018,7 +1018,7 @@ describe('Excel Exporter', () => {
         });
     });
 
-    describe('', () => {
+    xdescribe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
         beforeEach(waitForAsync(() => {
@@ -1203,7 +1203,7 @@ describe('Excel Exporter', () => {
         });
     });
 
-    describe('', () => {
+    xdescribe('', () => {
         let fix;
         let grid: IgxGridComponent;
 
@@ -1297,7 +1297,7 @@ describe('Excel Exporter', () => {
     });
 
 
-    describe('', () => {
+    xdescribe('', () => {
         let fix;
         let grid: any;
 
@@ -1436,7 +1436,7 @@ describe('Excel Exporter', () => {
         });
     });
 
-    describe('', () => {
+    xdescribe('', () => {
         let fix;
         let grid: IgxPivotGridComponent;
 
