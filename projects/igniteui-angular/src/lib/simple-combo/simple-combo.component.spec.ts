@@ -44,7 +44,7 @@ const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
-describe('IgxSimpleCombo', () => {
+fdescribe('IgxSimpleCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxSimpleComboComponent;
     let input: DebugElement;
@@ -551,7 +551,7 @@ describe('IgxSimpleCombo', () => {
         });
     });
 
-    xdescribe('Initialization and rendering tests: ', () => {
+    fdescribe('Initialization and rendering tests: ', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
