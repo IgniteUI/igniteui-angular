@@ -1384,6 +1384,14 @@ describe('General igxDrag/igxDrop', () => {
         expect(dragDirsRects[0].top + 50).toBeLessThan(currTop);
         expect(currTop).toBeLessThanOrEqual(dragDirsRects[0].top + 100);
     });
+
+    afterAll(()=> {
+        const head = document.getElementsByTagName('head')[0];
+        const styles = head.getElementsByTagName('style');
+        for (let i = 0; i < styles.length; i++) {
+            head.removeChild(styles[i]);
+        }
+    });
 });
 
 describe('Linked igxDrag/igxDrop ', () => {
