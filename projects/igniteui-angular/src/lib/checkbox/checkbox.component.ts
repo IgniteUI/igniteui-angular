@@ -7,14 +7,9 @@ import {
 } from '@angular/core';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { CheckboxBaseDirective } from './checkbox-base.directive';
-import { IBaseEventArgs } from '../core/utils';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 
-export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
-    checked: boolean;
-    value?: any;
-}
 /**
  * Allows users to make a binary choice for a certain condition.
  *
