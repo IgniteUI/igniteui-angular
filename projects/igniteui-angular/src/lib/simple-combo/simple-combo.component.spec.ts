@@ -3518,6 +3518,7 @@ export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {
         </div>
     </form>
     `,
+    standalone: true,
     imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
 export class IgxSimpleComboTabBehaviorTestComponent implements OnInit {
