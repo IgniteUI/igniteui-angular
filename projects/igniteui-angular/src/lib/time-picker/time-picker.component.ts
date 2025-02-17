@@ -1249,7 +1249,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private subscribeToToggleDirectiveEvents(): void {
         if (this.toggleRef) {
-            if (this._inputGroup) {
+            if (this._inputGroup && this.platform.isBrowser) {
                 this.toggleRef.element.style.width = this._inputGroup.element.nativeElement.getBoundingClientRect().width + 'px';
             }
 
