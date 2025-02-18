@@ -130,14 +130,23 @@
 </ng-template>
 
 <ng-template #defaultRowDimensionsTemplate>
-    <div tabindex="0" [style.height.px]="totalHeight" *ngFor="let dim of rowDimensions; let dimIndex = index;" #rowDimensionContainer role="rowgroup" class="igx-grid__tbody-pivot-dimension" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
-        <ng-template igxGridFor let-rowData [igxGridForOf]="dataView
-        | pivotGridCellMerging:pivotConfiguration:dim:pipeTrigger"
-                     let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
-                     [igxForContainerSize]="calcHeight"
-                     [igxForItemSize]="renderedRowHeight"
-                     [igxForSizePropName]="'height'"
-                     #verticalRowDimScrollContainer>
+    <div #rowDimensionContainer
+        *ngFor="let dim of rowDimensions; let dimIndex = index;"
+        tabindex="0"
+        role="rowgroup"
+        class="igx-grid__tbody-pivot-dimension"
+        [style.height.px]="totalHeight"
+        (focus)="navigation.focusTbody($event)"
+        (keydown)="navigation.handleNavigation($event)"
+        [style.width.px]="rowDimensionWidthToPixels(dim)">
+        <ng-template igxGridFor let-rowData [igxGridForOf]="dataView | pivotGridCellMerging:pivotConfiguration:dim:pipeTrigger"
+            let-rowIndex="index"
+            [igxForScrollOrientation]="'vertical'"
+            [igxForScrollContainer]="verticalScroll"
+            [igxForContainerSize]="calcHeight"
+            [igxForItemSize]="renderedRowHeight"
+            [igxForSizePropName]="'height'"
+            #verticalRowDimScrollContainer>
             <igx-pivot-row-dimension-content role="row" class="igx-grid-thead" [grid]="this"
                                              [dimension]="rowData.dimensions[dimIndex]"
                                              [rootDimension]="dim"
@@ -146,7 +155,11 @@
                                              [width]="rowDimensionWidthToPixels(dim)">
             </igx-pivot-row-dimension-content>
         </ng-template>
+        <div *ngIf="remainingBottomSize > 0" class="igx-grid-thead__wrapper" [style.width]="'100%'" [style.height.px]="remainingBottomSize">
+            <div class="igx-grid-th" [style.width]="'100%'" [style.height]="'100%'"></div>
+        </div>
     </div>
+
 </ng-template>
 
 <ng-template #horizontalRowDimensionsTemplate>
@@ -163,6 +176,9 @@
                 <igx-pivot-row-dimension-mrl-row [rowIndex]="rowIndex" [rowGroup]="rowGroup" [groupedData]="groupedData" [style.height.px]="renderedRowHeight * rowGroup.length"></igx-pivot-row-dimension-mrl-row>
             </ng-template>
         </ng-container>
+        <div *ngIf="remainingBottomSize > 0" class="igx-grid-thead__wrapper" [style.width.px]="'100%'" [style.height.px]="remainingBottomSize">
+            <div class="igx-grid-th" [style.width]="'100%'" [style.height]="'100%'"></div>
+        </div>
     </div>
 </ng-template>
 
