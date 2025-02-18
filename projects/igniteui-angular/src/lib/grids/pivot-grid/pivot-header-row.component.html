@@ -255,19 +255,20 @@
                     </igx-grid-header-group>
                 </ng-container>
             </ng-container>
-            <div class="igx-grid-thead--virtualizationWrapper"  [style.max-height.px]='maxContainerHeight' (click)="grid.navigation.focusOutRowHeader($event)">
-                <div class="igx-grid-thead__group igx-grid-thead--virtualizationContainer" [style.height.px]='totalDepth > 1 ? grid.rowHeight : undefined' *ngFor='let dimLevelColumns of columnDimensionsByLevel; let i = index' [style.width.px]='grid.unpinnedWidth'>
+            <div class="igx-grid-thead--virtualizationWrapper"  [style.max-height.px]="maxContainerHeight" (click)="grid.navigation.focusOutRowHeader($event)">
+                <div class="igx-grid-thead__group igx-grid-thead--virtualizationContainer" [style.height.px]="totalDepth > 1 ? grid.rowHeight : undefined"
+                        *ngFor="let dimLevelColumns of columnDimensionsByLevel; let i = index; trackBy: trackColumnDimensionByLevel;" [style.width.px]="grid.unpinnedWidth">
                     <ng-template igxGridFor #headerVirtualContainer let-column
-                                 [igxGridForOf]="dimLevelColumns" [igxGridForOfUniqueSizeCache] = 'true' [igxForScrollContainer]="grid.parentVirtDir"
+                                 [igxGridForOf]="dimLevelColumns" [igxGridForOfUniqueSizeCache]="true" [igxForScrollContainer]="grid.parentVirtDir"
                                  [igxForContainerSize]="grid.unpinnedWidth" [igxForTrackBy]="grid.trackColumnChanges"
                                  [igxForSizePropName]="'calcPixelWidth'" [igxForScrollOrientation]="'horizontal'">
                         <igx-grid-header-group [ngClass]="column.headerGroupClasses"
-                                               [style.height.px]='totalDepth > 1 ? calcHeight(column, i) : undefined'
+                                               [style.height.px]="totalDepth > 1 ? calcHeight(column, i) : undefined"
                                                [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                                                [style.min-width]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                                                [style.flex-basis]="column.resolvedWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                                               [class.igx-grid__tr-pivot--columnDimensionLeaf] = 'isDuplicateOfExistingParent(column, i)'
-                                               [class.igx-grid__tr-pivot--columnMultiRowSpan] = 'isMultiRow(column, i)'
+                                               [class.igx-grid__tr-pivot--columnDimensionLeaf]="isDuplicateOfExistingParent(column, i)"
+                                               [class.igx-grid__tr-pivot--columnMultiRowSpan]="isMultiRow(column, i)"
                         >
                         </igx-grid-header-group>
                     </ng-template>
