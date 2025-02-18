@@ -351,44 +351,9 @@ $_theme: $material;
             //the chip would hide behind it's parent grid as it has a z-index of 1
             z-index: 10;
 
-            igx-avatar,
-            igx-circular-bar,
-            igx-icon {
-                --component-size: var(--chip-size);
-            }
-
             &:hover,
             &:focus {
                 background: var-get($_theme, 'ghost-background');
-            }
-
-            &:focus {
-                .igx-chip__item {
-                    outline-style: none;
-                    color: var-get($_theme, 'focus-text-color');
-                    background: var-get($_theme, 'focus-background');
-                    border-color: var-get($_theme, 'focus-border-color');
-                }
-
-                .igx-chip__item--selected {
-                    color: var-get($_theme, 'focus-selected-text-color');
-                    background: var-get($_theme, 'focus-selected-background');
-                    border-color: var-get($_theme, 'focus-selected-border-color');
-                }
-            }
-
-            &:hover {
-                .igx-chip__item {
-                    color: var-get($_theme, 'hover-text-color');
-                    background: var-get($_theme, 'hover-background');
-                    border-color: var-get($_theme, 'hover-border-color');
-                }
-
-                .igx-chip__item--selected {
-                    color: var-get($_theme, 'hover-selected-text-color');
-                    background: var-get($_theme, 'hover-selected-background');
-                    border-color: var-get($_theme, 'hover-selected-border-color');
-                }
             }
         }
 
