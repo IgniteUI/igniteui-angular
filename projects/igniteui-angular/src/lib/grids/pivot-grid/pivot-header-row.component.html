@@ -227,8 +227,8 @@
                 </div>
             </ng-container>
 
-            <ng-container *ngIf="grid.pivotUI.showRowHeaders && grid.visibleRowDimensions.length > 0">
-                <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="grid.pivotRowWidths - 1">
+            <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="grid.pivotRowWidths - 1">
+                <ng-container *ngIf="grid.pivotUI.showRowHeaders && grid.visibleRowDimensions.length > 0">
                     <ng-container *ngFor="let dim of grid.visibleRowDimensions; index as colIndex;last as isLast">
                         <igx-pivot-row-header-group #rowDimensionHeaders *ngIf="getRowDimensionColumn(dim) as dimCol"
                             [ngClass]="dimCol.headerGroupClasses"
@@ -241,8 +241,8 @@
                             [rowIndex]="-1" >
                         </igx-pivot-row-header-group>
                     </ng-container>
-                </div>
-            </ng-container>
+                </ng-container>
+            </div>
 
             <!-- Pinned columns collection from the start -->
             <ng-container *ngIf="pinnedColumnCollection.length && grid.isPinningToStart">
