@@ -3493,7 +3493,7 @@
     }
 
     .igx-grid__tbody-pivot-dimension {
-        & > .igx-grid-thead__wrapper {
+        > .igx-grid-thead__wrapper {
             border-bottom: initial;
         }
     }
@@ -3503,7 +3503,7 @@
             border-bottom: none;
         }
 
-        & > .igx-grid-thead__wrapper {
+        > .igx-grid-thead__wrapper {
             border-bottom: initial;
         }
     }
