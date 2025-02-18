@@ -269,7 +269,7 @@
                     #editingInputs
                     igxDrop
                     (enter)="dragService.onChipEnter(editingInputsContainer, expressionItem)"
-                    (over)="dragService.onDivOver(editingInputsContainer, expressionItem)"
+                    (over)="dragService.onChipEnter(editingInputsContainer, expressionItem)"
                     (leave)="dragService.onChipLeave()"
                     (dropped)="dragService.onDivDropped(expressionItem)"
                     class="igx-filter-tree__inputs"

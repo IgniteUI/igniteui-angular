@@ -60,6 +60,7 @@ const IGX_FILTER_TREE = 'igx-filter-tree';
  */
 export const QueryBuilderSelectors = {
     DRAG_INDICATOR: 'igx-drag-indicator',
+    CHIP_GHOST: 'igx-chip__ghost',
 
     DROP_DOWN_LIST_SCROLL: 'igx-drop-down__list-scroll',
     DROP_DOWN_ITEM_DISABLED: 'igx-drop-down__item--disabled',

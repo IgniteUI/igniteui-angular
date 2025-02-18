@@ -81,11 +81,6 @@ export class IgxQueryBuilderDragService {
         this._keyboardSubscription$?.unsubscribe();
     }
 
-    //On entering a drop area of another chip
-    public onDivEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
-        this.onChipEnter(targetDragElement, targetExpressionItem)
-    }
-
     public onChipEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
         // console.log('Entering:', targetDragElement, targetExpressionItem);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
@@ -260,7 +255,7 @@ export class IgxQueryBuilderDragService {
             (dragCopy.firstChild.firstChild.firstChild as HTMLElement).replaceChildren(span);
             (dragCopy.firstChild.firstChild as HTMLElement).classList.add(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_GHOST);
         } else {
-            (dragCopy.firstChild.firstChild as HTMLElement).classList.add('igx-chip__ghost');
+            (dragCopy.firstChild.firstChild as HTMLElement).classList.add(QueryBuilderSelectors.CHIP_GHOST);
         }
         return dragCopy;
     }
