@@ -404,9 +404,9 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
             const listener = navDrawer.renderer.listen(document.body, 'panmove', () => {
-
+                console.log('here');
                 // mid gesture
-                expect(navDrawer.drawer.classList).toContain('panning');
+                expect(navDrawer.drawer.classList).toContain('igx-nav-drawer__aside--panning');
                 expect(navDrawer.drawer.style.transform)
                     .toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/, 'Drawer should be moving with the pan');
                 listener();

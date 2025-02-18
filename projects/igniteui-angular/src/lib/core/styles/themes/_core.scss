@@ -145,7 +145,7 @@
     }
   
     igx-nav-drawer {
-        --igx-nav-drawer-size--mini: #{rem(56px)};
+        --igx-nav-drawer-size--mini: var(--nav-drawer-size--mini);
     }
 
     // Component styles

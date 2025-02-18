@@ -9,67 +9,23 @@
 $_theme: $material;
 
 @include layer(base) {
+    // This placeholder is needed to fix the specificity order
     %item {
-        position: relative;
-        display: flex;
-        align-items: center;
-        flex-flow: row nowrap;
         color: var-get($_theme, 'item-text-color');
-        max-height: var(--item-min-height);
-        gap: var(--item-gap);
-        padding: var(--item-padding);
-        cursor: pointer;
-        user-select: none;
-        outline: transparent;
-        white-space: nowrap;
-        border-radius: var-get($_theme, 'item-border-radius');
-        text-decoration: none;
-        border: none;
-        justify-content: flex-start;
 
         igx-icon {
-            --component-size: 3;
-
             color: var-get($_theme, 'item-icon-color');
         }
+    }
 
-        &[igxButton] {
-            background: transparent;
-            border: none;
-            box-shadow: none;
+    // This placeholder is needed to fix the specificity order
+    %hover-item {
+        background: var-get($_theme, 'item-hover-background');
+        color: var-get($_theme, 'item-hover-text-color');
+        box-shadow: none;
 
-            igx-icon {
-                width: var(--igx-icon-size, rem(24px));
-                height: var(--igx-icon-size, rem(24px));
-                font-size: var(--igx-icon-size, rem(24px));
-                margin: 0;
-            }
-
-            &:hover,
-            &:focus {
-                box-shadow: none;
-                border: none;
-            }
-        }
-
-        &%igx-button--fab {
-            min-height: auto;
-        }
-
-        &%igx-icon-button-display {
-            height: auto;
-            transition: none;
-        }
-
-        &:hover,
-        &:focus {
-            background: var-get($_theme, 'item-hover-background');
-            color: var-get($_theme, 'item-hover-text-color');
-            box-shadow: none;
-
-            igx-icon {
-                color: var-get($_theme, 'item-hover-icon-color');
-            }
+        igx-icon {
+            color: var-get($_theme, 'item-hover-icon-color');
         }
     }
 
@@ -116,29 +72,28 @@ $_theme: $material;
             padding: var(--aside-padding);
             border-inline-end: rem(1px) solid var-get($_theme, 'border-color');
             border-radius: var-get($_theme, 'border-radius');
+        }
 
-            &.panning {
-                overflow-x: hidden;
-                transition: none;
-            }
+        @include e(aside, panning) {
+            overflow-x: hidden;
+            transition: none;
         }
 
         @include e(aside, collapsed) {
             transform: translate3d(-300px, 0, 0);
+            box-shadow: none;
 
             [dir='rtl'] & {
                 transform: translate3d(300px, 0, 0);
             }
+        }
 
+        @include e(aside, $mods: (collapsed, right)) {
+            transform: translate3d(300px, 0, 0);
             box-shadow: none;
 
-            &.igx-nav-drawer__aside--right {
-                transform: translate3d(300px, 0, 0);
-                box-shadow: none;
-
-                [dir='rtl'] & {
-                    transform: translate3d(-300px, 0, 0);
-                }
+            [dir='rtl'] & {
+                transform: translate3d(-300px, 0, 0);
             }
         }
 
@@ -154,9 +109,10 @@ $_theme: $material;
             width: #{var(--igx-nav-drawer-size--mini)};
             min-width: fit-content;
 
-            %item {
+            [igxDrawerItem] {
                 justify-content: center;
                 min-width: fit-content;
+                width: #{var(--item-mini-width)};
 
                 igx-icon {
                     margin-inline-start: 0;
@@ -173,14 +129,14 @@ $_theme: $material;
             position: relative;
             box-shadow: none;
             z-index: 0;
+        }
 
-            &.igx-nav-drawer__aside--collapsed {
-                transform: none;
-                width: 0;
-                overflow: hidden;
-                border: none;
-                padding: 0;
-            }
+        @include e(aside, $mods: (pinned, collapsed)) {
+            transform: none;
+            width: 0;
+            overflow: hidden;
+            border: none;
+            padding: 0;
         }
 
         @include e(overlay) {
@@ -197,16 +153,16 @@ $_theme: $material;
             height: 100%;
             visibility: visible;
             z-index: 999;
+        }
 
-            &.panning {
-                transform: translate3d(0, 0, 0);
-                transition: none;
+        @include e(overlay, panning) {
+            transform: translate3d(0, 0, 0);
+            transition: none;
+        }
 
-                &.igx-nav-drawer__overlay--hidden {
-                    /* must be visible during pan.. */
-                    visibility: visible;
-                }
-            }
+        @include e(overlay, $mods: (panning, hidden)) {
+            /* must be visible during pan.. */
+            visibility: visible;
         }
 
         @include e(overlay, hidden) {
@@ -224,12 +180,59 @@ $_theme: $material;
             visibility: hidden;
         }
 
-        @include e(item) {
-            @extend %item;
+        @include m(disable-animation) {
+            transition-duration: 0s;
+        }
+    }
+
+    @include b(igx-nav-drawer-item) {
+        @extend %item;
+
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex-flow: row nowrap;
+        max-height: var(--item-min-height);
+        gap: var(--item-gap);
+        padding: var(--item-padding);
+        cursor: pointer;
+        user-select: none;
+        outline: transparent;
+        white-space: nowrap;
+        border-radius: var-get($_theme, 'item-border-radius');
+        text-decoration: none;
+        border: none;
+        justify-content: flex-start;
+
+        igx-icon {
+            --component-size: 3;
         }
 
-        @include e(item, active) {
-            @extend %item;
+        &[igxButton] {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+
+            igx-icon {
+                width: var(--igx-icon-size, rem(24px));
+                height: var(--igx-icon-size, rem(24px));
+                font-size: var(--igx-icon-size, rem(24px));
+                margin: 0;
+            }
+
+            &:hover,
+            &:focus {
+                box-shadow: none;
+                border: none;
+            }
+        }
+
+        &:hover,
+        &:focus {
+            @extend %hover-item;
+        }
+
+        @include m(active) {
             @extend %active;
 
             &:focus,
@@ -238,7 +241,7 @@ $_theme: $material;
             }
         }
 
-        @include e(item, header) {
+        @include m(header) {
             display: flex;
             align-items: center;
             padding: var(--item-padding);
@@ -247,7 +250,7 @@ $_theme: $material;
             color: var-get($_theme, 'item-header-text-color');
         }
 
-        @include e(item, disabled) {
+        @include m(disabled) {
             background: none;
             color: var-get($_theme, 'item-disabled-text-color');
             cursor: default;
@@ -256,10 +259,6 @@ $_theme: $material;
             igx-icon {
                 color: var-get($_theme, 'item-disabled-icon-color');
             }
-        }
-
-        @include m(disable-animation) {
-            transition-duration: 0s;
         }
     }
 }

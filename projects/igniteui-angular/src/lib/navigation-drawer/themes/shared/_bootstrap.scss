@@ -7,20 +7,14 @@
     --item-padding: #{rem(8px) rem(16px)};
     --item-gap: #{rem(8px)};
     --item-min-height: #{rem(40px)};
-    --igx-nav-drawer-size--mini: #{rem(88px)};
+    --item-mini-width: #{rem(56px)};
+    --nav-drawer-size--mini: #{rem(88px)};
+}
 
-    @include e(item) {
-        @include type-style('body-2');
-    }
+@include themed-block(igx-nav-drawer-item, bootstrap) {
+    @include type-style('body-2');
 
-    @include e(item, header) {
+    @include m(header) {
         @include type-style('caption');
-    }
-
-    @include e(aside, mini) {
-        .igx-nav-drawer__item,
-        .igx-nav-drawer__item--active {
-            width: rem(56px);
-        }
     }
 }
