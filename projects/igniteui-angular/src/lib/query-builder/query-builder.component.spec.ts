@@ -780,7 +780,8 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
 
       // Should render empty query builder tree
-      const nestedTree = fix.debugElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
+      const queryTreeElement = fix.debugElement.queryAll(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE))[0]
+      const nestedTree = queryTreeElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
       expect(nestedTree).toBeDefined();
 
       QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
@@ -856,7 +857,8 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
 
       // Should render empty query builder tree
-      const nestedTree = fix.debugElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
+      const queryTreeElement = fix.debugElement.queryAll(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE))[0]
+      const nestedTree = queryTreeElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
       expect(nestedTree).toBeDefined();
 
       QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
