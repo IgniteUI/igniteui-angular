@@ -906,7 +906,7 @@ export class QueryBuilderFunctions {
 
         //mouse up
         if (pointerUp) {
-            wait();
+            tick();
             dragDirective.onPointerUp({ pointerId: 1, pageX: X, pageY: Y });
         }
     }
