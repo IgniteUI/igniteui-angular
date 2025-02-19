@@ -300,8 +300,10 @@
     }
 
     .igx-input-group.igx-input-group--focused:not(.igx-input-group--box) {
-        %igx-combo__toggle-button {
-            background: var-get($theme, 'toggle-button-background-focus--border');
+        @if $variant != 'fluent' {
+            %igx-combo__toggle-button {
+                background: var-get($theme, 'toggle-button-background-focus--border');
+            }
         }
     }
 
