@@ -21,14 +21,13 @@ import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 import { CommonModule } from '@angular/common';
 import { IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular/src/lib/query-builder/query-builder.directives';
 import { FormsModule } from '@angular/forms';
-import { IgxQueryBuilderTreeComponent } from "igniteui-angular/src/lib/query-builder/query-builder-tree.component";
 
 @Component({
     providers: [],
     selector: 'app-query-builder-sample',
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
-    imports: [FormsModule, IGX_DIALOG_DIRECTIVES, IgxComboComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, CommonModule, IgxQueryBuilderSearchValueTemplateDirective, IgxQueryBuilderTreeComponent]
+    imports: [FormsModule, IGX_DIALOG_DIRECTIVES, IgxComboComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, CommonModule, IgxQueryBuilderSearchValueTemplateDirective]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })
