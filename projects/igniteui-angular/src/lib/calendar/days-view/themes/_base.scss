@@ -233,11 +233,11 @@ $theme: $material;
                     color: var-get($theme, 'date-special-hover-foreground');
                     background: var-get($theme, 'date-special-hover-background');
 
-                    /* stylelint-disable max-depth */
+                    /* stylelint-disable max-nesting-depth */
                     &::after {
                         border-color: var-get($theme, 'date-special-hover-border-color');
                     }
-                    /* stylelint-enable max-depth */
+                    /* stylelint-enable max-nesting-depth */
                 }
             }
         }
@@ -290,11 +290,11 @@ $theme: $material;
                 }
 
                 &:hover {
-                    /* stylelint-disable max-depth */
+                    /* stylelint-disable max-nesting-depth */
                     &::after {
                         border-color: var-get($theme, 'date-selected-special-hover-border-color');
                     }
-                    /* stylelint-enable max-depth */
+                    /* stylelint-enable max-nesting-depth */
                 }
             }
         }

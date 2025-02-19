@@ -3,7 +3,6 @@
 @use 'igniteui-theming/sass/typography/index' as *;
 @use 'styles/themes/standalone' as *;
 @use 'light/tokens' as *;
-@use '../../shared-themes/calendar-picker/igx-calendar-picker' as *;
 
 $theme: $material;
 @include layer(base) {
