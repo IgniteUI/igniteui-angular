@@ -67,24 +67,3 @@ $_theme: $indigo;
     }
 
 }
-
-@include themed-block(igx-calendar-picker, indigo) {
-    height: rem(50px);
-    padding-inline: rem(16px);
-
-    igx-icon {
-        --size: #{rem(14px)};
-    }
-
-    @include e(nav) {
-        gap: rem(8px);
-    }
-
-    @include e(prev) {
-        padding: rem(5px);
-    }
-
-    @include e(next) {
-        padding: rem(5px);
-    }
-}

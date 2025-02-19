@@ -42,22 +42,3 @@ $_theme: $fluent;
         }
     }
 }
-
-@include themed-block(igx-calendar-picker, fluent) {
-    height: rem(56px);
-    padding-inline: rem(16px);
-
-    igx-icon {
-        --size: #{rem(24px)};
-    }
-
-    @include e(nav) {
-        gap: rem(8px);
-    }
-
-    @include e(date) {
-        @include type-style(subtitle-2) {
-            margin: 0;
-        }
-    }
-}

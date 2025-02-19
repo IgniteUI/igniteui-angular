@@ -1,0 +1,36 @@
+@use 'sass:math';
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
+
+@include themed-block(igx-calendar-picker, bootstrap) {
+    height: rem(56px);
+    padding-inline: rem(16px);
+
+    igx-icon {
+        --size: #{rem(24px)};
+    }
+
+    @include e(dates) {
+        @include type-style(subtitle-1) {
+            margin: 0;
+        }
+    }
+
+    @include e(nav) {
+        gap: rem(24px);
+    }
+
+    @include e(prev) {
+        top: rem(4px);
+    }
+
+    @include e(next) {
+        top: rem(4px);
+    }
+}

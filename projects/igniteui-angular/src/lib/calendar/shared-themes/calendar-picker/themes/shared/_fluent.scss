@@ -16,15 +16,13 @@ $_theme: $fluent;
         --size: #{rem(24px)};
     }
 
-    @include e(nav) {
-        gap: rem(8px);
-    }
-}
-
-@include b(igx-calendar-picker) {
-    @include e(date) {
+    @include e(dates) {
         @include type-style(subtitle-2) {
             margin: 0;
         }
+    }
+
+    @include e(nav) {
+        gap: rem(8px);
     }
 }

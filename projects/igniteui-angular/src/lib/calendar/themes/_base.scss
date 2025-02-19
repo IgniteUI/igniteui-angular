@@ -4,7 +4,6 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'styles/themes/standalone' as *;
 @use 'light/tokens' as *;
-@use '../shared-themes/igx-calendar-picker' as *;
 
 $theme: $material;
 
@@ -160,30 +159,6 @@ $theme: $material;
             &:focus {
                 outline: none;
             }
-        }
-    }
-
-    @include b(igx-calendar-picker) {
-        @extend %igx-calendar-picker;
-
-        @include e(dates) {
-            @extend %igx-calendar-picker__dates;
-        }
-
-        @include e(nav) {
-            @extend %igx-calendar-picker__nav;
-        }
-
-        @include e(date) {
-            @extend %igx-calendar-picker__date;
-        }
-
-        @include e(prev) {
-            @extend %igx-calendar-picker__prev-next;
-        }
-
-        @include e(next) {
-            @extend %igx-calendar-picker__prev-next;
         }
     }
 }

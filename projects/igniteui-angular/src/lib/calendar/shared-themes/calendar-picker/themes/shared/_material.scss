@@ -17,4 +17,10 @@ $_theme: $material;
     @include e(nav) {
         gap: rem(24px);
     }
+
+    @include e(dates) {
+        @include type-style(subtitle-1) {
+            margin: 0;
+        }
+    }
 }

@@ -13,24 +13,3 @@ $_theme: $bootstrap;
         border-block-end: rem(1px) solid var-get($_theme, 'border-color');
     }
 }
-
-@include themed-block(igx-calendar-picker, bootstrap) {
-    height: rem(56px);
-    padding-inline: rem(16px);
-
-    igx-icon {
-        --size: #{rem(24px)};
-    }
-
-    @include e(nav) {
-        gap: rem(24px);
-    }
-
-    @include e(prev) {
-        top: rem(4px);
-    }
-
-    @include e(next) {
-        top: rem(4px);
-    }
-}

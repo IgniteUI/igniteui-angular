@@ -15,6 +15,12 @@ $_theme: $indigo;
         --size: #{rem(14px)};
     }
 
+    @include e(dates) {
+        @include type-style(subtitle-2) {
+            margin: 0;
+        }
+    }
+
     @include e(nav) {
         gap: rem(8px);
     }

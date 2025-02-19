@@ -38,7 +38,7 @@ let NEXT_ID = 0;
     ],
     selector: "igx-month-picker",
     templateUrl: "month-picker.component.html",
-    styleUrl: 'month-picker.component.css',
+    styleUrls: ['month-picker.component.css', '../shared-themes/calendar-picker/calendar-picker.component.css'],
     encapsulation: ViewEncapsulation.None,
     imports: [
         NgIf,

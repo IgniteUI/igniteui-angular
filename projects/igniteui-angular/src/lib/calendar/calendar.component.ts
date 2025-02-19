@@ -71,7 +71,7 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html',
-	styleUrl: 'calendar.component.css',
+	styleUrls: ['calendar.component.css', 'shared-themes/calendar-picker/calendar-picker.component.css'],
 	encapsulation: ViewEncapsulation.None,
     imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollPageDirective, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
 })
