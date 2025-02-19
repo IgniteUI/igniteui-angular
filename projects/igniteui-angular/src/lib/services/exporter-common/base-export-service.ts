@@ -43,6 +43,7 @@ export interface IExportRecord {
     hidden?: boolean;
     summaryKey?: string;
     hierarchicalOwner?: string;
+    references?: IColumnInfo[];
 }
 
 export interface IColumnList {
@@ -484,8 +485,7 @@ export abstract class IgxBaseExporter {
                     return a;
                 }, {});
             } else {
-                const filteredHeaders = ownerCols.filter(c => c.skip).map(c => c.header ? c.header : c.field);
-                record.data = record.data.filter(d => filteredHeaders.indexOf(d) === -1);
+                record.data = record.data.filter((_, i) => !record.references[i].skip)
             }
         }
 
@@ -762,9 +762,8 @@ export abstract class IgxBaseExporter {
         childData: any[], expansionStateVal: boolean, grid: GridType) {
         const hierarchicalOwner = `${GRID_CHILD}${++this.rowIslandCounter}`;
         const columnList = this._ownersMap.get(island).columns;
-        const columnHeader = columnList
-            .filter(col => col.headerType === ExportHeaderType.ColumnHeader)
-            .map(col => col.header ? col.header : col.field);
+        const columnHeaders = columnList.filter(col => col.headerType === ExportHeaderType.ColumnHeader);
+        const columnHeader = columnHeaders.map(col => col.header ? col.header : col.field);
 
         const headerRecord: IExportRecord = {
             data: columnHeader,
@@ -772,6 +771,7 @@ export abstract class IgxBaseExporter {
             type: ExportRecordType.HeaderRecord,
             owner: island,
             hidden: !expansionStateVal,
+            references: columnHeaders,
             hierarchicalOwner
         };
 
