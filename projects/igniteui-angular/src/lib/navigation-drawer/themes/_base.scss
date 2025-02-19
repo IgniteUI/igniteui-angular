@@ -39,7 +39,9 @@ $_theme: $material;
     }
 
     @include b(igx-nav-drawer) {
+        // TODO: These should probably be a part of the design tokens schema
         --igx-nav-drawer-size: #{rem(240px)};
+        --igx-nav-drawer-size--mini: var(--nav-drawer-size--mini);
 
         flex-basis: 0;
         transition: flex-basis;

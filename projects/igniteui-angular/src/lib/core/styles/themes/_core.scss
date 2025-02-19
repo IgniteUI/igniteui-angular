@@ -143,10 +143,6 @@
         initial-value: light;
         inherits: true;
     }
-  
-    igx-nav-drawer {
-        --igx-nav-drawer-size--mini: var(--nav-drawer-size--mini);
-    }
 
     // Component styles
     @include ripple.component();
