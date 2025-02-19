@@ -151,6 +151,12 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public disableEntityChange = false;
 
     /**
+     * Disables subsequent entity changes at the root level after the initial selection.
+     */
+     @Input()
+     public disableFieldsChange = false;
+
+    /**
      * Event fired as the expression tree is changed.
      *
      * ```html

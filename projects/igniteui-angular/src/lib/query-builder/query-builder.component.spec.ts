@@ -86,6 +86,12 @@ describe('IgxQueryBuilder', () => {
       expect(queryTreeExpressionContainer).toHaveClass('igx-filter-tree');
       expect(queryTreeExpressionContainer.children[1]).toHaveClass('igx-filter-tree__expressions');
 
+      const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalse();
+
+      const fieldsCombo = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 0);
+      expect(fieldsCombo.children[0].classList.contains('igx-input-group--disabled')).toBeFalse();
+
       const expressionItems = queryTreeExpressionContainer.children[1].children[1].querySelectorAll(':scope > .igx-filter-tree__expression-item');
       expect(expressionItems.length).toEqual(queryBuilder.expressionTree.filteringOperands.length);
       // entity select should have proper value
@@ -1957,6 +1963,15 @@ describe('IgxQueryBuilder', () => {
 
       expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
     }));
+
+    it('Should disable changing the selected fields when "disableFieldsChange"=true', () => {
+      queryBuilder.disableFieldsChange = true;
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+      fix.detectChanges();
+
+      const fieldsCombo = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 0);
+      expect(fieldsCombo.children[0].classList.contains('igx-input-group--disabled')).toBeTrue();
+    });
 
     it(`Should show 'Ungroup' as disabled in root group context menu.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();

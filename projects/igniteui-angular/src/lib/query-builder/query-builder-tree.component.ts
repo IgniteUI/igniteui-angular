@@ -478,6 +478,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
+     * Returns if the fields combo at the root level is disabled.
+     */
+     public get disableFieldsChange(): boolean {
+
+        return !this.selectedEntity || this.queryBuilder.disableFieldsChange;
+    }
+
+    /**
      * Returns the current level.
      */
     public get level(): number {
