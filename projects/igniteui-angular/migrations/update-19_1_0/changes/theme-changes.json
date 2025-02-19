@@ -114,6 +114,12 @@
         "owner": "time-picker-theme",
         "remove": true,
         "type": "property"
+      },
+      {
+        "name": "$palette",
+        "owner": "color-classes",
+        "remove": true,
+        "type": "property"
       }
     ]
   }

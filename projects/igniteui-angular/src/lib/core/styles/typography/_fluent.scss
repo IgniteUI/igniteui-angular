@@ -83,12 +83,12 @@
         input-text: 'body-2'
     ));
     @include linear-bar-typography();
-    @include list-typography($categories: (
-        header: 'overline',
-        item: 'caption',
-        title: 'caption',
-        subtitle: 'caption'
-    ));
+    // @include list-typography($categories: (
+    //     header: 'overline',
+    //     item: 'caption',
+    //     title: 'caption',
+    //     subtitle: 'caption'
+    // ));
     @include navbar-typography($categories: (
         title: 'subtitle-2'
     ));
