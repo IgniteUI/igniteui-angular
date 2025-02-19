@@ -158,7 +158,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * ```
      */
     @Output()
-    public expressionTreeChange = new EventEmitter();
+    public expressionTreeChange = new EventEmitter<IExpressionTree>();
 
     /**
      * @hidden @internal
@@ -267,7 +267,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
             this._expressionTree = tree;
         }
         if (this._shouldEmitTreeChange) {
-            this.expressionTreeChange.emit();
+            this.expressionTreeChange.emit(tree);
         }
     }
 
