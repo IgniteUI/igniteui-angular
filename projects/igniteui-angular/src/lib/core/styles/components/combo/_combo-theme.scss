@@ -261,7 +261,6 @@
         }
     }
 
-    %form-group-bundle:not(%form-group-bundle--disabled):hover,
     %form-group-bundle:not(%form-group-bundle--disabled):focus-within {
         %igx-combo__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-focus');
@@ -274,10 +273,10 @@
         }
     }
 
-    @if $variant == 'material' {
+    @if $variant == 'indigo' {
         %form-group-bundle:not(%form-group-bundle--disabled):hover {
             %igx-combo__toggle-button {
-                background: var-get($theme, 'toggle-button-background');
+                color: var-get($theme, 'toggle-button-foreground-focus');
             }
         }
     }

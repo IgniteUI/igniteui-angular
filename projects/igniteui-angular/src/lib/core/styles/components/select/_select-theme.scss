@@ -101,10 +101,17 @@
         }
     }
 
-    %form-group-bundle:hover,
     %form-group-bundle:focus-within {
         %igx-select__toggle-button {
             color: var-get($theme, 'toggle-button-foreground-focus');
+        }
+    }
+
+    @if $variant == 'indigo' {
+        %form-group-bundle:hover {
+            %igx-select__toggle-button {
+                color: var-get($theme, 'toggle-button-foreground-focus');
+            }
         }
     }
 

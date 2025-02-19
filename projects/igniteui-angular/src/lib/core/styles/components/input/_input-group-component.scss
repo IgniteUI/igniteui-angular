@@ -407,6 +407,10 @@
 
             @include e(bundle) {
                 @extend %form-group-bundle--border !optional;
+
+                &:hover {
+                    @extend %form-group-bundle--border--hover !optional;
+                }
             }
 
             @include e(bundle-main) {

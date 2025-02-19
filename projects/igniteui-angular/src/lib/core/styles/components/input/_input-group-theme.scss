@@ -805,6 +805,25 @@
         }
     }
 
+    %form-group-bundle--border--hover {
+        %form-group-bundle-start {
+            border-color: var-get($theme, 'hover-border-color');
+        }
+
+        %igx-input-group__filler {
+            border-color: var-get($theme, 'hover-border-color');
+        }
+
+        %igx-input-group__notch {
+            border-block-start-color: var-get($theme, 'hover-border-color');
+            border-block-end-color: var-get($theme, 'hover-border-color');
+        }
+
+        %form-group-bundle-end {
+            border-color: var-get($theme, 'hover-border-color');
+        }
+    }
+
     %form-group-bundle-border--disabled {
         background: var-get($theme, 'border-disabled-background');
     }
