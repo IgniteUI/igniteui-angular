@@ -101,14 +101,16 @@ $_theme: $material;
             filter: opacity(1);
 
             igx-avatar {
+                --dimension: #{sizable(rem(14px), rem(18px), rem(24px))};
+
                 display: flex !important;
                 align-items: center;
                 justify-content: center;
-                font-size: 50%;
+                font-size: calc(var(--dimension) / 2);
                 max-height: 100%;
-                width: sizable(rem(14px), rem(18px), rem(24px));
-                max-width: sizable(rem(14px), rem(18px), rem(24px));
-                height: sizable(rem(14px), rem(18px), rem(24px));
+                width: var(--dimension);
+                max-width: var(--dimension);
+                height: var(--dimension);
             }
 
             igx-icon {
