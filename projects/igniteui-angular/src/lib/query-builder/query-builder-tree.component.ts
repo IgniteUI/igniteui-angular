@@ -840,8 +840,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    private deleteItem = (expressionItem: ExpressionItem) => {
-        //console.log('deleteItem', expressionItem)
+    private deleteItem = (expressionItem: ExpressionItem, skipEmit: boolean = false) => {
         if (!expressionItem.parent) {
             this.rootGroup = null;
             this.currentGroup = null;
@@ -861,10 +860,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup, entity, returnFields); // TODO: don't recreate if not necessary
 
         if (!children.length) {
-            this.deleteItem(expressionItem.parent);
+            this.deleteItem(expressionItem.parent, true);
         }
 
-        if (!this.parentExpression) {
+        if (!this.parentExpression && !skipEmit) {
             this.expressionTreeChange.emit(this._expressionTree);
         }
     }
