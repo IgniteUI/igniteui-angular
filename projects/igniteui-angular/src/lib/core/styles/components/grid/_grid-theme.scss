@@ -1204,7 +1204,7 @@
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
 
-            %igx-icon-display {
+            igx-icon {
                 opacity: if($theme-variant == 'light', .75, .85);
 
                 &:hover {
@@ -1458,12 +1458,12 @@
         } @else {
             padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
 
-            %igx-icon-display {
+            igx-icon {
                 opacity: if($theme-variant == 'light', .75, .85);
             }
 
             &:hover {
-                %igx-icon-display {
+                igx-icon {
                     opacity: 1;
                 }
             }
@@ -2035,13 +2035,10 @@
             position: relative;
             display: flex;
 
-            igx-icon {
-                @if $variant == 'indigo' {
-                    --component-size: 2;
-                } @else {
-                    width: var(--igx-icon-size, #{rem(15px)});
-                    height: var(--igx-icon-size, #{rem(15px)});
-                    font-size: var(--igx-icon-size, #{rem(15px)});
+
+            @if $variant != 'indigo' {
+                igx-icon {
+                    --size: var(--igx-icon-size, #{rem(15px)});
                 }
             }
 
@@ -2147,7 +2144,7 @@
             %grid-excel-icon {
                 color: var-get($theme, 'header-selected-text-color');
 
-                %igx-icon-display {
+                igx-icon {
                     color: var-get($theme, 'header-selected-text-color');
                 }
 
@@ -2155,7 +2152,7 @@
                 &:hover {
                     color: var-get($theme, 'header-selected-text-color');
 
-                    %igx-icon-display {
+                    igx-icon {
                         color: var-get($theme, 'header-selected-text-color');
                     }
                 }
@@ -2499,7 +2496,7 @@
     }
 
     %igx-group-label__icon {
-        &.igx-icon {
+        @at-root igx-icon#{&} {
             --component-size: #{if($variant == 'indigo', 2, 1)};
 
             color: var-get($theme, 'group-label-icon');
@@ -3447,9 +3444,8 @@
             }
 
             @if $variant == 'indigo' {
-                %igx-icon-display {
+                igx-icon {
                     opacity: if($theme-variant == 'light', .75, .85);
-
 
                     &:hover {
                         opacity: 1;

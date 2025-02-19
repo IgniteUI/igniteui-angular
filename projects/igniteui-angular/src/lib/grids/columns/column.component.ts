@@ -1437,7 +1437,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
-         
+
         let col = this;
         let vIndex = -1;
 
@@ -1984,7 +1984,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -2013,7 +2013,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -2027,7 +2027,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                         columnSizes[i] = {
                             ref: col,
                             width: col.width === 'fit-content' ? col.autoSize :
-                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                             colSpan: col.gridColumnSpan,
                             colEnd: col.colStart + col.gridColumnSpan,
                             widthSetByUser: col.widthSetByUser
@@ -2091,7 +2091,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             if (size && !!size.width) {
                 result.push(size.width + 'px');
             } else {
-                result.push(parseInt(this.grid.getPossibleColumnWidth(), 10) + 'px');
+                result.push(parseFloat(this.grid.getPossibleColumnWidth()) + 'px');
             }
         }
         return result;
@@ -2326,10 +2326,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             columns = columns.filter(c => c.level >= this.level && c !== this && c.parent !== this &&
                 c.topLevelParent === this.topLevelParent);
         }
-         
+
         // If isPreceding, find a target such that when the current column is placed after it, current colummn will receive a visibleIndex === index. This takes into account visible children of the columns.
         // If !isPreceding, finds a column of the same level and visible index that equals the passed index agument (c.visibleIndex === index). No need to consider the children here.
-         
+
         if (isPreceding) {
             columns = columns.filter(c => c.visibleIndex > this.visibleIndex);
             target = columns.find(c => c.level === this.level && c.visibleIndex + (c as any).calcChildren() - this.calcChildren() === index);
@@ -2558,15 +2558,17 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         const isAutoWidth = colWidth && typeof colWidth === 'string' && colWidth === 'fit-content';
-        if (isPercentageWidth) {
-            this._calcWidth = Math.floor(parseFloat(colWidth) / 100 * this.grid.calcWidth);
+        if (isPercentageWidth && this.grid.isColumnWidthSum) {
+            this._calcWidth = this.grid.minColumnWidth;
+        } else if (isPercentageWidth) {
+            this._calcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
             this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
         } else {
             this._calcWidth = this.width;
         }
-        this.calcPixelWidth = parseInt(this._calcWidth, 10);
+        this.calcPixelWidth = parseFloat(this._calcWidth);
     }
 
     /**
