@@ -92,10 +92,10 @@
     @include navbar-typography($categories: (
         title: 'subtitle-2'
     ));
-    @include navdrawer-typography($categories: (
-        item: 'body-2',
-        header: 'subtitle-1'
-    ));
+    // @include navdrawer-typography($categories: (
+    //     item: 'body-2',
+    //     header: 'subtitle-1'
+    // ));
     @include radio-typography($categories: (
         label: 'body-2'
     ));

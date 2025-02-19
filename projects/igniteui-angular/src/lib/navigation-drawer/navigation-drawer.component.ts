@@ -15,7 +15,8 @@ import {
     SimpleChange,
     ViewChild,
     Renderer2,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
@@ -57,6 +58,8 @@ let NEXT_ID = 0;
             height: 100%;
         }
     `],
+    styleUrl: 'navigation-drawer.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxNavDrawerItemDirective, NgTemplateOutlet]
 })
 export class IgxNavigationDrawerComponent implements
@@ -750,8 +753,8 @@ export class IgxNavigationDrawerComponent implements
             this._panStartWidth = this.getExpectedWidth(!this.isOpen);
             this._panLimit = this.getExpectedWidth(this.isOpen);
 
-            this.renderer.addClass(this.overlay, 'panning');
-            this.renderer.addClass(this.drawer, 'panning');
+            this.renderer.addClass(this.overlay, 'igx-nav-drawer__overlay--panning');
+            this.renderer.addClass(this.drawer, 'igx-nav-drawer__aside--panning');
         }
     };
 
@@ -821,8 +824,8 @@ export class IgxNavigationDrawerComponent implements
         this._panning = false;
         /* styles fail to apply when set on parent due to extra attributes, prob ng bug */
         /* styles fail to apply when set on parent due to extra attributes, prob ng bug */
-        this.renderer.removeClass(this.overlay, 'panning');
-        this.renderer.removeClass(this.drawer, 'panning');
+        this.renderer.removeClass(this.overlay, 'igx-nav-drawer__overlay--panning');
+        this.renderer.removeClass(this.drawer, 'igx-nav-drawer__aside--panning');
         this.setXSize(0, '');
     }
 

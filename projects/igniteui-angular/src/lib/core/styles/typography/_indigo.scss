@@ -87,10 +87,10 @@
     @include navbar-typography($categories: (
         title: 'h5',
     ));
-    @include navdrawer-typography($categories: (
-        item: 'subtitle-2',
-        header: 'overline'
-    ));
+    // @include navdrawer-typography($categories: (
+    //     item: 'subtitle-2',
+    //     header: 'overline'
+    // ));
     @include radio-typography($categories: (
         label: 'body-2'
     ));
