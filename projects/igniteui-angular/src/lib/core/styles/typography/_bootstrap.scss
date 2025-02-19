@@ -55,7 +55,7 @@
     @include checkbox-typography($categories: (
         label: 'body-1',
     ));
-    @include chip-typography();
+    // @include chip-typography();
     @include column-actions-typography();
     @include date-range-typography();
     @include dialog-typography($categories: (

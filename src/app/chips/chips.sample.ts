@@ -123,6 +123,12 @@ export class ChipsSampleComponent implements OnInit {
                 defaultValue: false
             }
         },
+        draggable: {
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
     };
 
     public properties: Properties;
