@@ -116,7 +116,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
             if (this.entities && expressionTree) {
                 this._expressionTree = recreateTree(expressionTree, this.entities);
             } else {
-                this._expressionTree = expressionTree ?? this._expressionTree;
+                this._expressionTree = expressionTree;
             }
         }
     }
