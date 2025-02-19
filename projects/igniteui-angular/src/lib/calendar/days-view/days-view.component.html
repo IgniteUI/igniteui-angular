@@ -1,12 +1,16 @@
 <div
     role="row"
-    class="igx-days-view__row"
+    class="igx-days-row"
     [title]="weekNumberHeader.long | titlecase"
 >
     <div
         role="columnheader"
         *ngIf="showWeekNumbers"
-        class="igx-days-view__label igx-days-view__label--week-number"
+        class="
+        igx-day-label
+        igx-day-label--week-number
+        igx-days-row__label
+        igx-days-row__label--week-number"
     >
         <span>
             <i>{{ weekNumberHeader.short | titlecase }}</i>
@@ -16,9 +20,9 @@
         role="columnheader"
         [attr.aria-label]="dayName.long"
         *ngFor="let dayName of weekHeaderLabels"
-        class="igx-days-view__label"
+        class="igx-day-label igx-days-row__label"
     >
-        <span class="igx-days-view__label-inner">
+        <span class="igx-day-label__inner">
             {{ dayName.formatted | titlecase }}
         </span>
     </span>
@@ -31,16 +35,24 @@
         index as i;
         trackBy: rowTracker
     "
-    class="igx-days-view__row"
+    class="igx-days-row"
     role="row"
 >
     <div
         *ngIf="showWeekNumbers"
-        class="igx-days-view__date igx-days-view__date--week-number"
+        class="
+        igx-day-item
+        igx-day-item--week-number
+        igx-days-row__day
+        igx-days-row__day--week-number"
     >
         <span
             role="rowheader"
-            class="igx-days-view__date-inner igx-days-view__date-inner--week-number"
+            class="
+            igx-day-item__inner
+            igx-day-item__inner--week-number
+            igx-days-row__day-inner
+            igx-days-row__day-inner--week-number"
         >
             {{ getWeekNumber(week[0]) }}
         </span>
@@ -49,7 +61,7 @@
     <igx-day-item
         #item
         *ngFor="let day of week; trackBy: dateTracker"
-        class="igx-days-view__date"
+        class="igx-day-item igx-day-item__day"
         role="gridcell"
         [attr.id]="item.isCurrentMonth && day.timestamp"
         [attr.aria-selected]="isSelected(day)"

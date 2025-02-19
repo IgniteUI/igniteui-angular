@@ -8,32 +8,26 @@
 $_theme: $bootstrap;
 
 @include themed-block(igx-days-view, bootstrap) {
-    $cal-picker-padding: rem(8px);
-    $date-size: var-get($_theme, 'size');
-    $date-inner-size: var-get($_theme, 'inner-size');
-    $date-height: $date-size;
-    $border-size: rem(1px);
-
-    padding-block-end: rem(16px);
     padding-block-start: 0;
+    padding-block-end: rem(16px);
     padding-inline: 0;
 
     + .igx-days-view {
-        .igx-days-view__row {
+        .igx-days-row {
             padding-inline-start: rem(22px);
         }
     }
 
     &:first-child,
     &:nth-child(even) {
-        .igx-days-view__row {
+        .igx-days-row {
             padding-inline-end: rem(22px);
         }
     }
 
     &:last-child,
     &:first-child:only-child {
-        .igx-days-view__row {
+        .igx-days-row {
             padding-inline-end: rem(12px);
         }
     }
@@ -47,31 +41,39 @@ $_theme: $bootstrap;
 
         .igx-calendar-picker__prev,
         .igx-calendar-picker__next {
-            top: $cal-picker-padding;
+            top: rem(8px);
+        }
+    }
+}
+
+@include themed-block(igx-days-row, bootstrap) {
+    padding-inline: pad-inline(rem(12px));
+
+    &:nth-child(2) {
+        @include e(inner, $m: border-radius) {
+            border-start-start-radius: var-get($_theme, 'week-number-border-radius');
+            border-start-end-radius: var-get($_theme, 'week-number-border-radius');
         }
     }
 
-    @include e(row) {
-        padding-inline: pad-inline(rem(12px));
-
-        &:nth-child(2) {
-            .igx-days-view__date-inner--week-number {
-                border-start-start-radius: var-get($_theme, 'week-number-border-radius');
-                border-start-end-radius: var-get($_theme, 'week-number-border-radius');
-            }
-        }
-
-        &:first-of-type {
-            background: var-get($_theme, 'header-background');
-            border-block-end: rem(1px) solid var-get($_theme, 'border-color');
-        }
-
-        &:last-of-type {
-            margin-block-end: 0;
-        }
+    &:first-of-type {
+        background: var-get($_theme, 'header-background');
+        border-block-end: rem(1px) solid var-get($_theme, 'border-color');
     }
 
-    @include e(date-inner) {
+    &:last-of-type {
+        margin-block-end: 0;
+    }
+}
+
+@include themed-block(igx-day-item, bootstrap) {
+    $cal-picker-padding: rem(8px);
+    $date-size: var-get($_theme, 'size');
+    $date-inner-size: var-get($_theme, 'inner-size');
+    $date-height: $date-size;
+    $border-size: rem(1px);
+
+    @include e(inner) {
         border-width: $border-size;
 
         &::after {
@@ -82,8 +84,13 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(date, 'selected') {
-        .igx-days-view__date-inner {
+    @include e(inner, 'week-number') {
+        // Important is needed in order to override the typography styles
+        font-style: italic !important;
+    }
+
+    @include m('selected') {
+        @include e(inner) {
             &::after {
                 width: $date-inner-size;
                 height: $date-inner-size;
@@ -91,8 +98,8 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(date, $mods: ('selected', 'range')) {
-        .igx-days-view__date-inner {
+    @include mx('selected', 'range') {
+        @include e(inner) {
             &::after {
                 width: $date-size;
                 height: $date-size;
@@ -100,77 +107,77 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(date, $mods: ('selected', 'special','range')) {
-        .igx-days-view__date-inner {
+    @include mx('selected', 'special','range') {
+        @include e(inner) {
             &::after {
                 border-color: var-get($_theme, 'date-special-border-color');
             }
         }
     }
 
-    @include e(date, $mods: ('selected', 'special', 'active', 'range')) {
-        .igx-days-view__date-inner {
+    @include mx('selected', 'special', 'active', 'range') {
+        @include e(inner) {
             &::after {
                 border-color: var-get($_theme, 'date-special-border-color');
             }
         }
     }
 
-    @include e(date, 'range') {
-        .igx-days-view__date-inner {
+    @include m('range') {
+        @include e(inner) {
             height: $date-size;
         }
     }
 
-    @include e(date, 'range-preview') {
+    @include m('range-preview') {
         background: var-get($_theme, 'date-selected-range-background');
 
         &::after {
             background: var-get($_theme, 'date-selected-range-background');
         }
 
-        .igx-days-view__date-inner {
+        @include e(inner) {
             &:hover {
                 color: var-get($_theme, 'date-selected-foreground');
             }
         }
     }
 
-    @include e(date, $mods: ('range-preview', 'current')) {
-        .igx-days-view__date-inner {
+    @include mx('range-preview', 'current') {
+        @include e(inner) {
             color: var-get($_theme, 'date-selected-current-range-foreground');
             background: var-get($_theme, 'date-selected-current-range-background');
         }
     }
 
-    @include e(date, $mods: ('range', 'selected')) {
-        .igx-days-view__date-inner {
+    @include mx('range', 'selected') {
+        @include e(inner) {
             border-inline-color: transparent;
         }
     }
 
-    @include e(date, $mods: ('range', 'selected', 'first')) {
+    @include mx('range', 'selected', 'first') {
         &::after {
             border-width: $border-size;
         }
     }
 
-    @include e(date, $mods: ('range', 'selected', 'last')) {
+    @include mx('range', 'selected', 'last') {
         &::after {
             border-width: $border-size;
         }
     }
 
-    @include e(date, $mods: ('range', 'selected', 'special', 'first', 'last')) {
-        .igx-days-view__date-inner {
+    @include mx('range', 'selected', 'special', 'first', 'last') {
+        @include e(inner) {
             &::after {
                 border-color: var-get($_theme, 'date-selected-foreground');
             }
         }
     }
 
-    @include e(date, $mods: ('range', 'selected', 'current')) {
-        .igx-days-view__date-inner {
+    @include mx('range', 'selected', 'current') {
+        @include e(inner) {
             border-color: var-get($_theme, 'date-selected-current-border-color');
 
             &:hover {
@@ -179,22 +186,22 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(date, $mods: ('range', 'selected', 'current', 'active')) {
-        .igx-days-view__date-inner {
+    @include mx('range', 'selected', 'current', 'active') {
+        @include e(inner) {
             border-color: var-get($_theme, 'date-selected-current-focus-border-color');
         }
     }
 
-    @include e(date, $mods: ('range', 'selected', 'current', 'special')) {
-        .igx-days-view__date-inner {
+    @include mx('range', 'selected', 'current', 'special') {
+        @include e(inner) {
             color: var-get($_theme, 'date-special-range-foreground');
 
             &:hover {
                 color: var-get($_theme, 'date-special-hover-foreground');
 
                 &::after {
-                        border-color: var-get($_theme, 'date-special-hover-border-color');
-                    }
+                    border-color: var-get($_theme, 'date-special-hover-border-color');
+                }
             }
 
             &::after {
@@ -205,8 +212,8 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(date, $mods: ('range', 'selected', 'current', 'first', 'special')) {
-        .igx-days-view__date-inner {
+    @include mx('range', 'selected', 'current', 'first', 'special') {
+        @include e(inner) {
             color: var-get($_theme, 'date-selected-foreground');
 
             &::after {
@@ -215,8 +222,8 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(date, $mods: ('range', 'selected', 'current', 'last', 'special')) {
-        .igx-days-view__date-inner {
+    @include mx('range', 'selected', 'current', 'last', 'special') {
+        @include e(inner) {
             color: var-get($_theme, 'date-selected-foreground');
 
             &::after {
@@ -225,14 +232,8 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(date, 'current') {
-        .igx-days-view__date-inner {
-            //background: var-get($_theme, 'date-current-background');
-            //
-            //&:hover {
-            //    background: var-get($_theme, 'date-current-hover-background');
-            //}
-
+    @include m('current') {
+        @include e(inner) {
             &::after {
                 width: $date-inner-size;
                 height: $date-inner-size;
@@ -241,15 +242,15 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(date, 'special') {
-        .igx-days-view__date-inner {
+    @include m('special') {
+        @include e(inner) {
             &::after {
                 border-radius: $date-size;
             }
         }
     }
 
-    @include e(date, $mods: ('first', 'range-preview')) {
+    @include mx('first', 'range-preview') {
         background: transparent;
 
         &::after {
@@ -259,13 +260,13 @@ $_theme: $bootstrap;
             border-style: solid;
         }
 
-        .igx-days-view__date-inner {
+        @include e(inner) {
             color: var-get($_theme, 'date-selected-foreground');
             background: var-get($_theme, 'date-selected-background');
         }
     }
 
-    @include e(date, $mods: ('last', 'range-preview')) {
+    @include mx('last', 'range-preview') {
         background: transparent;
 
         &::after {
@@ -275,14 +276,14 @@ $_theme: $bootstrap;
             border-style: solid;
         }
 
-        .igx-days-view__date-inner {
+        @include e(inner) {
             color: var-get($_theme, 'date-selected-foreground');
             background: var-get($_theme, 'date-selected-background');
         }
     }
 
-    @include e(date, $mods: ('first', 'range-preview', 'special')) {
-        .igx-days-view__date-inner {
+    @include mx('first', 'range-preview', 'special') {
+        @include e(inner) {
             &::after {
                 width: var-get($_theme, 'inner-size');
                 height: var-get($_theme, 'inner-size');
@@ -291,8 +292,8 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(date, $mods: ('last', 'range-preview', 'special')) {
-        .igx-days-view__date-inner {
+    @include mx('last', 'range-preview', 'special') {
+        @include e(inner) {
             &::after {
                 width: var-get($_theme, 'inner-size');
                 height: var-get($_theme, 'inner-size');
@@ -301,8 +302,8 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(date, $mods: ('first', 'range', 'special')) {
-        .igx-days-view__date-inner {
+    @include mx('first', 'range', 'special') {
+        @include e(inner) {
             &::after {
                 width: var-get($_theme, 'inner-size');
                 height: var-get($_theme, 'inner-size');
@@ -311,8 +312,8 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(date, $mods: ('last', 'range', 'special')) {
-        .igx-days-view__date-inner {
+    @include mx('last', 'range', 'special') {
+        @include e(inner) {
             &::after {
                 width: var-get($_theme, 'inner-size');
                 height: var-get($_theme, 'inner-size');
@@ -321,39 +322,34 @@ $_theme: $bootstrap;
         }
     }
 
-    @include e(label) {
-        // Important is needed in order to override the typography styles
-        font-style: italic !important;
-    }
-
-    @include e(label, 'week-number') {
-        text-align: center;
-
-        span {
-            color: var-get($_theme, 'weekday-color');
-        }
-    }
-
-    @include e(date-inner, 'week-number') {
-        // Important is needed in order to override the typography styles
-        font-style: italic !important;
-    }
-
-    @include e(date, $mods: ('disabled', 'range-preview')) {
-        .igx-days-view__date-inner {
+    @include mx('disabled', 'range-preview') {
+        @include e(inner) {
             color: var-get($_theme, 'date-disabled-range-foreground');
         }
     }
 
-    @include e(date, $mods: ('range', 'selected', 'first', 'disabled')) {
+    @include mx('range', 'selected', 'first', 'disabled') {
         &::before {
             background: var-get($_theme, 'content-background');
         }
     }
 
-    @include e(date, $mods: ('range', 'selected', 'last', 'disabled')) {
+    @include mx('range', 'selected', 'last', 'disabled') {
         &::before {
             background: var-get($_theme, 'content-background');
+        }
+    }
+}
+
+@include themed-block(igx-day-label, bootstrap) {
+    // Important is needed in order to override the typography styles
+    font-style: italic !important;
+
+    @include m('week-number') {
+        text-align: center;
+
+        span {
+            color: var-get($_theme, 'weekday-color');
         }
     }
 }

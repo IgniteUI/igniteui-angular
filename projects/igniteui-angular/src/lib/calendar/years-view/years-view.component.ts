@@ -30,7 +30,7 @@ import { calendarRange } from "../common/helpers";
     ],
     selector: "igx-years-view",
     templateUrl: "years-view.component.html",
-    styleUrl: 'years-view.component.css',
+    styleUrl: '../shared-themes/years-months/years-months.component.css',
     encapsulation: ViewEncapsulation.None,
     imports: [NgFor, IgxCalendarYearDirective]
 })

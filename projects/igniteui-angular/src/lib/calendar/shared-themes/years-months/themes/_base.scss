@@ -1,6 +1,6 @@
-@use 'igniteui-theming/sass/bem' as *;
-@use 'igniteui-theming/sass/themes' as *;
-@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/themes/index' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
 @use 'styles/themes/standalone' as *;
 @use 'light/tokens' as *;
 
@@ -123,9 +123,5 @@ $theme: $material;
                 background: var-get($theme, 'ym-hover-background');
             }
         }
-    }
-
-    @include b(sad) {
-
     }
 }

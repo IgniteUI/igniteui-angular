@@ -63,7 +63,7 @@ const SingleInputDatesConcatenationString = ' - ';
 @Component({
     selector: 'igx-date-range-picker',
     templateUrl: './date-range-picker.component.html',
-    styleUrls: ['date-range-picker.component.css'],
+    styleUrls: ['../date-picker/date-picker.component.css', 'date-range-picker.component.css'],
     encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateRangePickerComponent, multi: true },

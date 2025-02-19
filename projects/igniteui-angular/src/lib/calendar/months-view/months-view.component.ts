@@ -33,7 +33,7 @@ let NEXT_ID = 0;
     ],
     selector: "igx-months-view",
     templateUrl: "months-view.component.html",
-    styleUrl: 'months-view.component.css',
+    styleUrl: '../shared-themes/years-months/years-months.component.css',
     encapsulation: ViewEncapsulation.None,
     imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe]
 })

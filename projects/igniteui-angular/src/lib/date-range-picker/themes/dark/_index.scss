@@ -3,5 +3,5 @@
 @use 'styles/themes/standalone' as *;
 
 $tokens: meta.module-variables(tokens);
-@include themes(igx-date-picker, $tokens, dark);
+@include themes(igx-date-range-picker, $tokens, dark);
 

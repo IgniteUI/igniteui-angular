@@ -4,30 +4,30 @@ import { By } from '@angular/platform-browser';
 export class HelperTestFunctions {
     public static DAYS_VIEW = 'igx-days-view';
     public static CALENDAR = 'igx-calendar';
-    public static SELECTED_DATE = 'igx-days-view__date--selected';
+    public static SELECTED_DATE = 'igx-day-item--selected';
     public static ICON_CSSCLASS = '.igx-icon';
     public static OVERLAY_CSSCLASS = '.igx-overlay';
     public static MODAL_OVERLAY_CSSCLASS = 'igx-overlay__wrapper--modal';
 
     public static CALENDAR_CSSCLASS = '.igx-calendar';
     public static CALENDAR_WRAPPER_CLASS = '.igx-calendar__wrapper';
-    public static CALENDAR_WEEK_NUMBER_CLASS = '.igx-days-view__date--week-number';
-    public static CALENDAR_WEEK_NUMBER_ITEM_CLASS = '.igx-days-view__date-inner--week-number';
-    public static CALENDAR_WEEK_NUMBER_LABEL_CLASS = '.igx-days-view__label--week-number';
+    public static CALENDAR_WEEK_NUMBER_CLASS = '.igx-day-item--week-number';
+    public static CALENDAR_WEEK_NUMBER_ITEM_CLASS = '.igx-day-item__inner--week-number';
+    public static CALENDAR_WEEK_NUMBER_LABEL_CLASS = '.igx-day-label--week-number';
     public static CALENDAR_HEADER_CSSCLASS = '.igx-calendar__header';
     public static CALENDAR_HEADER_YEAR_CSSCLASS = '.igx-calendar__header-year';
     public static CALENDAR_HEADER_DATE_CSSCLASS = '.igx-calendar__header-date';
     public static WEEKSTART_LABEL_CSSCLASS = '.igx-days-view__label';
     public static VERTICAL_CALENDAR_CSSCLASS = '.igx-calendar__wrapper--vertical';
-    public static DAY_CSSCLASS = '.igx-days-view__date';
-    public static CURRENT_MONTH_DATES = '.igx-days-view__date:not(.igx-days-view__date--inactive)';
-    public static CURRENT_DATE_CSSCLASS = '.igx-days-view__date--current';
-    public static INACTIVE_DAYS_CSSCLASS = '.igx-days-view__date--inactive';
-    public static HIDDEN_DAYS_CSSCLASS = '.igx-days-view__date--hidden';
-    public static SELECTED_DATE_CSSCLASS = '.igx-days-view__date--selected';
-    public static RANGE_CSSCLASS = 'igx-days-view__date--range';
-    public static CALENDAR_ROW_CSSCLASS = '.igx-days-view__row';
-    public static CALENDAR_ROW_WRAP_CSSCLASS = '.igx-days-view__row--wrap';
+    public static DAY_CSSCLASS = '.igx-day-item';
+    public static CURRENT_MONTH_DATES = '.igx-day-item:not(.igx-day-item--inactive)';
+    public static CURRENT_DATE_CSSCLASS = '.igx-day-item--current';
+    public static INACTIVE_DAYS_CSSCLASS = '.igx-day-item--inactive';
+    public static HIDDEN_DAYS_CSSCLASS = '.igx-day-item--hidden';
+    public static SELECTED_DATE_CSSCLASS = '.igx-day-item--selected';
+    public static RANGE_CSSCLASS = 'igx-day-item--range';
+    public static CALENDAR_ROW_CSSCLASS = '.igx-days-row';
+    public static CALENDAR_ROW_WRAP_CSSCLASS = '.igx-days-row--wrap';
     public static MONTH_CSSCLASS = '.igx-calendar-view__item';
     public static CURRENT_MONTH_CSSCLASS = '.igx-calendar-view__item--selected';
     public static YEAR_CSSCLASS = '.igx-calendar-view__item';
@@ -70,9 +70,9 @@ export class HelperTestFunctions {
     }
 
     public static verifyNoRangeSelectionCreated(fixture, monthNumber: number) {
-        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-days-view__date--range')).toBeNull();
-        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-days-view__date--first')).toBeNull();
-        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-days-view__date--last')).toBeNull();
+        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-day-item--range')).toBeNull();
+        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-day-item--first')).toBeNull();
+        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-day-item--last')).toBeNull();
     }
 
     public static verifyCalendarSubHeader(fixture, monthNumber: number, viewDate: Date) {

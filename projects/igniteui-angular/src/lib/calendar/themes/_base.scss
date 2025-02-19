@@ -4,6 +4,7 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'styles/themes/standalone' as *;
 @use 'light/tokens' as *;
+@use '../shared-themes/igx-calendar-picker' as *;
 
 $theme: $material;
 
@@ -163,93 +164,26 @@ $theme: $material;
     }
 
     @include b(igx-calendar-picker) {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: rem(24px);
-        position: relative;
-        color: var-get($theme, 'picker-foreground');
-        background: var-get($theme, 'picker-background');
-        margin: 0;
-
-        &:focus,
-        &:focus-within {
-            outline: none;
-        }
+        @extend %igx-calendar-picker;
 
         @include e(dates) {
-            display: flex;
-            gap: rem(4px);
+            @extend %igx-calendar-picker__dates;
         }
 
         @include e(nav) {
-            display: flex;
-            position: absolute;
-            inset-inline-end: rem(16px);
+            @extend %igx-calendar-picker__nav;
         }
 
         @include e(date) {
-            @include type-style(subtitle-1) {
-                margin: 0;
-            }
-
-            color: var-get($theme, 'picker-foreground');
-            text-align: center;
-            outline: none;
-            transition: color 150ms ease-in-out 0s;
-
-            &:hover {
-                color: var-get($theme, 'picker-hover-foreground');
-                cursor: pointer;
-            }
-
-            &:focus {
-                color: var-get($theme, 'picker-focus-foreground');
-            }
+            @extend %igx-calendar-picker__date;
         }
 
         @include e(prev) {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var-get($theme, 'navigation-color');
-            user-select: none;
-            outline: none;
-            cursor: pointer;
-
-            &:hover {
-                color: var-get($theme, 'navigation-hover-color');
-            }
-
-            &:focus {
-                color: var-get($theme, 'navigation-focus-color');
-            }
-
-            [dir='rtl'] & {
-                transform: scaleX(-1);
-            }
+            @extend %igx-calendar-picker__prev-next;
         }
 
         @include e(next) {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var-get($theme, 'navigation-color');
-            user-select: none;
-            outline: none;
-            cursor: pointer;
-
-            &:hover {
-                color: var-get($theme, 'navigation-hover-color');
-            }
-
-            &:focus {
-                color: var-get($theme, 'navigation-focus-color');
-            }
-
-            [dir='rtl'] & {
-                transform: scaleX(-1);
-            }
+            @extend %igx-calendar-picker__prev-next;
         }
     }
 }

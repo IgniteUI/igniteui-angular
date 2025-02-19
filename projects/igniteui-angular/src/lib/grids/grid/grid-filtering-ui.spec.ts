@@ -5085,7 +5085,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Get Calendar component.
             const calendar = document.querySelector('igx-calendar');
 
-            const daysOfWeek = calendar.querySelector('.igx-days-view__row');
+            const daysOfWeek = calendar.querySelector('.igx-days-row');
             const weekStart = daysOfWeek.firstElementChild as HTMLSpanElement;
 
             expect(weekStart.innerText).toMatch('Fri');
@@ -6293,12 +6293,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick();
             fix.detectChanges();
             const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
- 
+
             const todayItem = dropdownList.children[0].children.find(item => item.nativeElement?.innerText === 'Today');
             todayItem.nativeElement.click();
             tick();
             fix.detectChanges();
-            
+
             GridFunctions.clickClearFilterExcelStyleCustomFiltering(fix);
             tick();
             fix.detectChanges();
@@ -6552,7 +6552,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
             const parentContainerRect = displayContainer.parentElement.getBoundingClientRect();
-            
+
             expect(displayContainerRect.top - parentContainerRect.top <= 1).toBe(true, 'search scrollbar did not reset');
         });
     });
