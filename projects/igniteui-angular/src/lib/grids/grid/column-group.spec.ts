@@ -26,7 +26,7 @@ const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid-thead__title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid-thead__group';
 
- 
+
 describe('IgxGrid - multi-column headers #grid', () => {
     let fixture: ComponentFixture<any>; let grid: IgxGridComponent; let componentInstance;
 
@@ -76,7 +76,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             const headerHeight = grid.nativeElement
             .querySelector("igx-grid-header-row")
             .getBoundingClientRect().height;
-            
+
             expect(Math.round(headerHeight)).toEqual(expectedGridHeaderHeight);
         });
 
@@ -1112,8 +1112,9 @@ describe('IgxGrid - multi-column headers #grid', () => {
             grAdressInf.pinned = true;
             fixture.detectChanges();
 
-            // Verify group and all its children are not pinned
+            // Verify group and all its children are pinned
             testColumnPinning(grAdressInf, true);
+            expect(grid.pinnedColumnsCount).toEqual(10);
 
             expect(grid.getCellByColumn(0, 'ID')).toBeDefined();
             expect(grid.getCellByColumn(0, 'Country')).toBeDefined();
@@ -1828,4 +1829,4 @@ class NestedColGroupsTests {
             'slaveColGroup', masterColGroupChildrenCount);
     }
 }
- 
+

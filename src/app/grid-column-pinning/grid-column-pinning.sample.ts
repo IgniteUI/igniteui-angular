@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ColumnPinningPosition, GridSelectionMode, IPinningConfig, IgxButtonDirective, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent, IgxSwitchComponent, RowPinningPosition, RowType } from 'igniteui-angular';
 
@@ -10,7 +9,7 @@ import { ColumnPinningPosition, GridSelectionMode, IPinningConfig, IgxButtonDire
     selector: 'app-grid-column-pinning-sample',
     styleUrls: ['grid-column-pinning.sample.scss'],
     templateUrl: 'grid-column-pinning.sample.html',
-    imports: [IgxButtonDirective, IgxGridComponent, NgIf, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, NgFor, IgxColumnComponent, IgxSwitchComponent, FormsModule]
+    imports: [IgxButtonDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxColumnComponent, IgxSwitchComponent, FormsModule]
 })
 export class GridColumnPinningSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true })

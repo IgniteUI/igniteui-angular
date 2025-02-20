@@ -40,7 +40,6 @@ import { IgxExpansionPanelComponent } from "../../expansion-panel/expansion-pane
 import { IgxAccordionComponent } from "../../accordion/accordion.component";
 import { IgxCheckboxComponent } from "../../checkbox/checkbox.component";
 import { IgxListItemComponent } from "../../list/list-item.component";
-import { NgFor, NgIf } from "@angular/common";
 import { IgxListComponent } from "../../list/list.component";
 import { IgxInputDirective } from "../../directives/input/input.directive";
 import { IgxPrefixDirective } from "../../directives/prefix/prefix.directive";
@@ -85,7 +84,7 @@ interface IDataSelectorPanel {
 @Component({
     selector: "igx-pivot-data-selector",
     templateUrl: "./pivot-data-selector.component.html",
-    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, IgxListComponent, NgFor, IgxListItemComponent, IgxCheckboxComponent, IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxDropDirective, IgxExpansionPanelTitleDirective, IgxChipComponent, IgxExpansionPanelBodyComponent, NgIf, IgxDragDirective, IgxDropDownItemNavigationDirective, IgxDragHandleDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxFilterPivotItemsPipe]
+    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, IgxListComponent, IgxListItemComponent, IgxCheckboxComponent, IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxDropDirective, IgxExpansionPanelTitleDirective, IgxChipComponent, IgxExpansionPanelBodyComponent, IgxDragDirective, IgxDropDownItemNavigationDirective, IgxDragHandleDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxFilterPivotItemsPipe]
 })
 export class IgxPivotDataSelectorComponent {
 

@@ -19,7 +19,7 @@
     AfterViewInit,
     booleanAttribute
 } from '@angular/core';
-import { formatPercent, NgIf, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
+import { formatPercent, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { first, takeUntil, takeWhile } from 'rxjs/operators';
@@ -72,7 +72,6 @@ import { IgxChipComponent } from '../chips/chip.component';
     templateUrl: './cell.component.html',
     providers: [HammerGesturesManager],
     imports: [
-        NgIf,
         NgClass,
         NgTemplateOutlet,
         DecimalPipe,

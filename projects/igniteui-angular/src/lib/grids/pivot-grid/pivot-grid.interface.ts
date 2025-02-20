@@ -112,7 +112,7 @@ export interface IPivotConfiguration {
 export interface IPivotDimension {
     /** Allows defining a hierarchy when multiple sub groups need to be extracted from single member. */
     childLevel?: IPivotDimension;
-    /** Field name to use in order to extract value. */
+    /** Unique member to extract related data field value or the result of the memberFunction. */
     memberName: string;
 
     /* csTreatAsEvent: MemberFunctionHandler */
@@ -151,7 +151,7 @@ export interface IPivotDimension {
 * Configuration of a pivot value aggregation.
 */
 export interface IPivotValue {
-    /** Field name to use in order to extract value. */
+    /** Unique member to extract related data field value for aggregations. */
     member: string;
     /** Display name to show instead of member for the column header of this value. **/
     displayName?: string;

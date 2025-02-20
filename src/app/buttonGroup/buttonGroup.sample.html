@@ -9,7 +9,7 @@
                 [alignment]="properties.alignment"
                 [disabled]="properties.disabled"
             >
-                @for(city of cities; track city) {
+                @for (city of cities; track city) {
                 <button
                     igxButton
                     [selected]="city.selected"
@@ -67,7 +67,7 @@
                 [alignment]="properties.alignment"
                 [disabled]="properties.disabled"
             >
-                @for(city of cities; track city){
+                @for (city of cities; track city){
                 <igc-toggle-button
                     [value]="city"
                     [selected]="city.selected"

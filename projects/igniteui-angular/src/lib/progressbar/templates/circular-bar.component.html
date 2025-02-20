@@ -21,7 +21,7 @@
     </ng-template>
 </svg>
 
-@if(textVisibility) {
+@if (textVisibility) {
     <span class="igx-circular-bar__text" [ngClass]="hasFraction ? 'igx-circular-bar__value--fraction' : ''">
         <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate;
             context: context">

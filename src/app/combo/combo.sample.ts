@@ -31,6 +31,7 @@ import {
     IComboSearchInputEventArgs,
     IComboSelectionChangingEventArgs,
     IForOfState,
+    IGX_COMBO_DIRECTIVES,
     ISimpleComboSelectionChangingEventArgs,
     IgxButtonDirective,
     IgxButtonGroupComponent,
@@ -60,7 +61,7 @@ import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
         IgxSimpleComboComponent,
         IgxLabelDirective,
         IgxHintDirective,
-        IgxComboComponent,
+        IGX_COMBO_DIRECTIVES,
         IgxButtonDirective,
         ReactiveFormsModule,
         IgxToastComponent,
@@ -126,7 +127,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private itemCount = 0;
 
     public valueKeyVar = 'field';
-    public currentDataType = '';
 
     public genres = [];
     public user: UntypedFormGroup;

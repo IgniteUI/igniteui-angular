@@ -10,7 +10,6 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
-import { NgFor, NgIf } from '@angular/common';
 import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
 
 describe('Carousel', () => {
@@ -108,22 +107,22 @@ describe('Carousel', () => {
         });
 
         it('add/remove slides tests', () => {
-            let currentSlide = carousel.get(carousel.current);
-            carousel.remove(currentSlide);
+            const slide1 = carousel.get(carousel.current);
+            carousel.remove(slide1);
 
             fixture.detectChanges();
             expect(carousel.slides.length).toEqual(3);
             expect(carousel.total).toEqual(3);
 
-            currentSlide = carousel.get(carousel.current);
-            carousel.remove(currentSlide);
+            const slide2 = carousel.get(carousel.current);
+            carousel.remove(slide2);
 
             fixture.detectChanges();
             expect(carousel.slides.length).toEqual(2);
             expect(carousel.total).toEqual(2);
 
-            carousel.add(currentSlide);
-            carousel.add(currentSlide);
+            carousel.add(slide1);
+            carousel.add(slide2);
 
             fixture.detectChanges();
             expect(carousel.slides.length).toEqual(4);
@@ -187,11 +186,12 @@ describe('Carousel', () => {
             expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(3);
 
             spyOn(carousel.slideAdded, 'emit');
-            carousel.add(carousel.get(carousel.current));
+            const newSlide = new IgxSlideComponent(null, null);
+            carousel.add(newSlide);
             fixture.detectChanges();
             args = {
                 carousel,
-                slide: carousel.get(carousel.current)
+                slide: newSlide
             };
             expect(carousel.slideAdded.emit).toHaveBeenCalledWith(args);
 
@@ -1213,8 +1213,12 @@ class CarouselTemplateSetInMarkupTestComponent {
         </ng-template>
 
         <ng-template #customIndicatorTemplate2 let-slide>
-            <span *ngIf="!slide.active"> {{slide.index}}  </span>
-            <span *ngIf="slide.active"> {{slide.index}}: Active  </span>
+            @if (!slide.active) {
+                <span> {{slide.index}}  </span>
+            }
+            @if (slide.active) {
+                <span> {{slide.index}}: Active  </span>
+            }
         </ng-template>
 
         <ng-template #customNextTemplate>
@@ -1232,7 +1236,7 @@ class CarouselTemplateSetInMarkupTestComponent {
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
     `,
-    imports: [IgxCarouselComponent, IgxSlideComponent, NgIf]
+    imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselTemplateSetInTypescriptTestComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -1249,12 +1253,14 @@ class CarouselTemplateSetInTypescriptTestComponent {
 @Component({
     template: `
         <igx-carousel #carousel [loop]="loop" [animationType]="'none'">
-            <igx-slide *ngFor="let slide of slides" [active]="slide.active">
-               <igx-slide><h3>{{slide.text}}</h3></igx-slide>
-            </igx-slide>
+            @for (slide of slides; track slide) {
+                <igx-slide [active]="slide.active">
+                    <igx-slide><h3>{{slide.text}}</h3></igx-slide>
+                </igx-slide>
+            }
         </igx-carousel>
     `,
-    imports: [IgxCarouselComponent, IgxSlideComponent, NgFor]
+    imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselDynamicSlidesComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
