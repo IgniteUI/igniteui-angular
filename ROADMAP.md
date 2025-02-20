@@ -13,7 +13,7 @@
 1. Provide an option to modify the default enter edit mode conditions, to e.g. allow edit mode start on a single click [#14658](https://github.com/IgniteUI/igniteui-angular/issues/14658)
 2. Provide an excel-like navigation mode for editing where all arrow keys navigate the cell in edit mode. [#14659](https://github.com/IgniteUI/igniteui-angular/issues/14659)
 3. Extend the 18.2 editorOptions property to allow modifying numeric editors to not change the value on up/down arrow press [#14660](https://github.com/IgniteUI/igniteui-angular/issues/14660)
-4. Tile Manager - new component [#239](https://github.com/IgniteUI/igniteui-angular/issues/239)
+4. Tile Manager - layout component [#239](https://github.com/IgniteUI/igniteui-angular/issues/239)
 
 # Previous Milestone
 
