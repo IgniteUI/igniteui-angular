@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { QueryBuilderFunctions, SampleEntities } from './query-builder-functions.spec';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { QueryBuilderSelectors } from './query-builder.common';
@@ -53,7 +53,6 @@ describe('IgxQueryBuilder', () => {
       expect(bodyElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_BODY);
       expect(bodyElement.children.length).toEqual(1);
 
-      debugger
       QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, false);
       QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '');
 
@@ -1950,7 +1949,7 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
-      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue();
     });
 
     it('Should disable changing a selected entity when "disableEntityChange"=true only after initial selection', fakeAsync(() => {
@@ -1958,10 +1957,10 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
-      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalse;
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalse();
       QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 0);
 
-      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue;
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue();
     }));
 
     it('Should disable changing the selected fields when "disableFieldsChange"=true', () => {
