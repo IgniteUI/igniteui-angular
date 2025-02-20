@@ -180,20 +180,17 @@ $date-view-row-gap: rem(4px);
         }
     }
 
-    @include mx('range', 'selected', 'current', 'special', 'active') {
-        //:not(.igx-days-view__date--first),
-        //:not(.igx-days-view__date--last) {
-        //     @include e(inner) {
-        //        color: var-get($_theme, 'date-special-focus-foreground');
-        //
-        //        background: var-get($_theme, 'date-selected-current-range-focus-background');
-        //        border-color: var-get($_theme, 'date-current-focus-border-color');
-        //
-        //        &::after {
-        //            border-color: var-get($_theme, 'date-special-hover-border-color');
-        //        }
-        //    }
-        //}
+    @include mx('range', 'selected', 'current', 'special', 'active', ('not': ('first', 'last'))) {
+         @include e(inner) {
+            color: var-get($_theme, 'date-special-focus-foreground');
+
+            background: var-get($_theme, 'date-selected-current-range-focus-background');
+            border-color: var-get($_theme, 'date-current-focus-border-color');
+
+            &::after {
+                border-color: var-get($_theme, 'date-special-hover-border-color');
+            }
+        }
     }
 
     @include mx('range', 'selected', 'current', 'first') {
@@ -294,21 +291,19 @@ $date-view-row-gap: rem(4px);
         }
     }
 
-    @include m('current') {
-        //&:not(.igx-days-view__date--selected) {
-        //     @include e(inner)  {
-        //        background: var-get($_theme, 'date-current-background');
-        //
-        //        &:hover {
-        //            background: var-get($_theme, 'date-current-hover-background');
-        //        }
-        //
-        //        &::after {
-        //            width: $date-size;
-        //            height: $date-size;
-        //        }
-        //    }
-        //}
+    @include m('current', $not: 'selected') {
+         @include e(inner)  {
+            background: var-get($_theme, 'date-current-background');
+
+            &:hover {
+                background: var-get($_theme, 'date-current-hover-background');
+            }
+
+            &::after {
+                width: $date-size;
+                height: $date-size;
+            }
+        }
     }
 
     @include mx('current', 'selected', 'special') {
@@ -339,24 +334,22 @@ $date-view-row-gap: rem(4px);
         }
     }
 
-    @include mx('special', 'current') {
-        //&:not(.igx-days-view__date--selected) {
-        //     @include e(inner) {
-        //        background: var-get($_theme, 'date-current-background');
-        //        border-color: var-get($_theme, 'date-current-border-color');
-        //
-        //        &:hover {
-        //            color: var-get($_theme, 'date-special-hover-foreground');
-        //            background: var-get($_theme, 'date-current-hover-background');
-        //            border-color: var-get($_theme, 'date-current-hover-border-color');
-        //        }
-        //
-        //        &::after {
-        //            width: calc($date-inner-size - #{rem(4px)});
-        //            height: calc($date-inner-size - #{rem(4px)});
-        //        }
-        //    }
-        //}
+    @include mx('special', 'current', ('not': 'selected')) {
+         @include e(inner) {
+            background: var-get($_theme, 'date-current-background');
+            border-color: var-get($_theme, 'date-current-border-color');
+
+            &:hover {
+                color: var-get($_theme, 'date-special-hover-foreground');
+                background: var-get($_theme, 'date-current-hover-background');
+                border-color: var-get($_theme, 'date-current-hover-border-color');
+            }
+
+            &::after {
+                width: calc($date-inner-size - #{rem(4px)});
+                height: calc($date-inner-size - #{rem(4px)});
+            }
+        }
     }
 
     @include mx('special', 'current', 'selected') {
@@ -430,7 +423,7 @@ $date-view-row-gap: rem(4px);
         }
     }
 
-    @include mx('disabled', 'single', 'current', 'special', 'selected') {
+    @include mx('disabled', 'single', 'current', 'special',) {
          @include e(inner) {
             color: var-get($_theme, 'date-selected-foreground');
         }

@@ -52,7 +52,7 @@ $_theme: $material;
         }
     }
 
-    @include mx('selected', 'special','range') {
+    @include mx('special','range') {
         @include e(inner) {
             &::after {
                 border-color: var-get($_theme, 'date-special-range-border-color');
@@ -132,12 +132,10 @@ $_theme: $material;
         }
     }
 
-    @include mx('range', 'selected', 'current', 'special', 'active') {
-        //&:not(.igx-days-view__date--first) {
-        //    @include e(inner) {
-        //        color: var-get($_theme, 'date-special-focus-foreground');
-        //    }
-        //}
+    @include mx('range', 'selected', 'current', 'special', 'active', ('not': 'first')) {
+        @include e(inner) {
+            color: var-get($_theme, 'date-special-focus-foreground');
+        }
     }
 
     @include mx('range', 'selected', 'current', 'first', 'special') {

@@ -328,6 +328,12 @@ $_theme: $bootstrap;
         }
     }
 
+    @include mx('disabled', 'special', 'range') {
+        @include e(inner) {
+            color: var-get($_theme, 'date-disabled-range-foreground');
+        }
+    }
+
     @include mx('range', 'selected', 'first', 'disabled') {
         &::before {
             background: var-get($_theme, 'content-background');

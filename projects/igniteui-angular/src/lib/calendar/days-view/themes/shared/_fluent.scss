@@ -132,12 +132,10 @@ $_theme: $fluent;
         }
     }
 
-    @include mx('range', 'selected', 'current', 'special', 'active') {
-        //:not(.igx-days-view__date--first) {
-        //    @include e(inner) {
-        //        color: var-get($_theme, 'date-special-focus-foreground');
-        //    }
-        //}
+    @include mx('range', 'selected', 'current', 'special', 'active', ('not': 'first')) {
+        @include e(inner) {
+            color: var-get($_theme, 'date-special-focus-foreground');
+        }
     }
 
     @include mx('range', 'selected', 'current', 'first', 'special') {
@@ -254,19 +252,25 @@ $_theme: $fluent;
         }
     }
 
-    @include mx('disabled', 'range') {
-        @include e(inner) {
-            opacity: .38;
-        }
-    }
-
-    @include mx('disabled', 'special', 'selected') {
+    @include mx('disabled', 'special') {
         @include e(inner) {
             color: var-get($_theme, 'date-selected-foreground');
         }
     }
 
-    @include mx('disabled', 'current', 'selected') {
+    @include mx('disabled', 'special', 'range', ('not': 'current')) {
+        @include e(inner) {
+            color: var-get($_theme, 'date-disabled-range-foreground');
+        }
+    }
+
+    @include mx('disabled', 'range-preview') {
+        @include e(inner) {
+            color: var-get($_theme, 'date-disabled-range-foreground');
+        }
+    }
+
+    @include mx('disabled', 'current') {
         @include e(inner) {
             color: var-get($_theme, 'date-current-foreground');
         }

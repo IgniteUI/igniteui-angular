@@ -43,7 +43,6 @@
         class="
         igx-day-item
         igx-day-item--week-number
-        igx-days-row__day
         igx-days-row__day--week-number"
     >
         <span
@@ -61,7 +60,7 @@
     <igx-day-item
         #item
         *ngFor="let day of week; trackBy: dateTracker"
-        class="igx-day-item igx-day-item__day"
+        class="igx-day-item"
         role="gridcell"
         [attr.id]="item.isCurrentMonth && day.timestamp"
         [attr.aria-selected]="isSelected(day)"
