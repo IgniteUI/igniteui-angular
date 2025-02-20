@@ -598,6 +598,7 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
         </igx-row-island>
     </igx-hierarchical-grid>
     `,
+    standalone: true,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMCHCollapsibleComponent {
