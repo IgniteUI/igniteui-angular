@@ -44,6 +44,14 @@ export function hasClass(element: HTMLElement, className: string, expected: bool
     expect(element.classList.contains(className)).toBe(expected);
 }
 
+type YMD = `${string}-${string}-${string}`;
+
+/** Convert a YMD string to local timezone date */
+export function ymd(str: YMD): Date {
+    return new Date(str + 'T00:00');
+}
+
+
 @Injectable()
 export class TestNgZone extends NgZone {
     public override onStable: EventEmitter<any> = new EventEmitter(false);

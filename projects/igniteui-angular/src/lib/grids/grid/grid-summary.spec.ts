@@ -13,7 +13,7 @@ import {
     SummariesGroupByComponent,
     SummariesGroupByTransactionsComponent
 } from '../../test-utils/grid-samples.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection, ymd } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -108,7 +108,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 fixture.detectChanges();
 
                 grid.addRow({
-                    ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: new Date('2018-03-01')
+                    ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: ymd('2018-03-01')
                 });
                 await wait(30);
                 fixture.detectChanges();
@@ -836,7 +836,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             it('CRUD: should recalculate summary functions rowAdded', () => {
                 grid.addRow({
-                    ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: new Date('2018-03-01')
+                    ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: ymd('2018-03-01')
                 });
                 fix.detectChanges();
 
@@ -872,7 +872,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 expect(unitsInStockCell.value).toBe(2760);
 
                 grid.updateRow({
-                    ProductID: 1, ProductName: 'Spearmint', InStock: true, UnitsInStock: 510000, OrderDate: new Date('1984-03-21')
+                    ProductID: 1, ProductName: 'Spearmint', InStock: true, UnitsInStock: 510000, OrderDate: ymd('1984-03-21')
                 }, 1);
                 fix.detectChanges();
 
@@ -2780,4 +2780,3 @@ export class CustomSummariesComponent {
     };
     public locale = 'en-US';
 }
-

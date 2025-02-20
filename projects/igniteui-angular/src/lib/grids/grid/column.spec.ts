@@ -1244,7 +1244,7 @@ describe('IgxGrid - Column properties #grid', () => {
             firstCell.setEditMode(false);
             fix.detectChanges();
 
-            expect(firstCell.nativeElement.innerText).toContain('8:37:11 AM GMT+');
+            expect(firstCell.nativeElement.innerText).toContain('8:37:11 AM GMT');
 
             firstCell.setEditMode(true);
             fix.detectChanges();

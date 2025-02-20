@@ -796,7 +796,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('__/__/____ 2_:__:__:___');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                date = new Date(2010, 10, 10, 2, 0, 0);
+                date = new Date(2000, 0, 1, 2, 0, 0);
                 result = formatDate(date, 'longTime', 'en-US');
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
