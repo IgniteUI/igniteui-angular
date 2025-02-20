@@ -2873,15 +2873,15 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
     }));
 
-    it('should prevent dragging a top-level condition while a sub-query is expanded.', () => {
+    it('should be able to drag a top-level condition while a sub-query is expanded.', () => {
       chipComponents[1].nativeElement.click();
 
       const draggedChip = chipComponents[0].componentInstance;
       const draggedChipElem = draggedChip.nativeElement;
 
-      expect(draggedChip.draggable).toBeFalse();
+      expect(draggedChip.draggable).toBeTrue();
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChipElem.offsetHeight, false);
-      expect(QueryBuilderFunctions.getDropGhost(fix)).toBe(null);
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBe(null);
     });
 
     it('should allow dragging a sub-query condition while a sub-query is expanded.', () => {

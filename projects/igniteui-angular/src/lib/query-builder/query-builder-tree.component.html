@@ -140,10 +140,10 @@
             >
                 <igx-chip
                     #expressionChip
-                    [draggable]="canBeDragged()"
+                    [draggable]="true"
                     [hideBaseOnDrag]="false"
                     [animateOnRelease]="false"
-                    (moveStart)="canBeDragged() ? dragService.onMoveStart(dragRef, expressionItem, false): null"
+                    (moveStart)="dragService.onMoveStart(dragRef, expressionItem, false)"
                     (moveEnd)="dragService.onMoveEnd()"
                     (dragEnter)="dragService.onChipEnter(dragRef, expressionItem)"
                     (dragOver)="dragService.onChipOver(dragRef)"
