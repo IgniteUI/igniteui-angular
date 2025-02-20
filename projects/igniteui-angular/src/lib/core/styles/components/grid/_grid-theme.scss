@@ -3492,8 +3492,23 @@
         }
     }
 
-    %igx-grid__tbody-pivot-mrl-dimension {
+    .igx-grid__tbody-pivot-dimension {
+        > .igx-grid-thead__wrapper {
+            border-bottom: initial;
+        }
+
         .igx-grid-th {
+            height: 100%;
+        }
+    }
+
+    %igx-grid__tbody-pivot-mrl-dimension {
+        > .igx-grid-thead__wrapper {
+            border-bottom: initial;
+        }
+
+        .igx-grid-th {
+            height: 100%;
             border-bottom: none;
         }
     }

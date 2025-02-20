@@ -38,6 +38,7 @@ import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive
 import { NgIf, NgFor, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
+import { IgxColumnComponent } from '../columns/column.component';
 
 /**
  *
@@ -66,7 +67,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     public filterDropdownDimensions: Set<any> = new Set<any>();
     public filterAreaDimensions: Set<any> = new Set<any>();
     private _dropPos = DropPosition.AfterDropTarget;
-    private valueData: Map<string, IPivotAggregator[]>;
     private _subMenuPositionSettings: PositionSettings = {
         verticalStartPoint: VerticalAlignment.Bottom,
         closeAnimation: undefined
@@ -188,7 +188,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         if (columnDimensions.length === 0) {
             return 1;
         }
-        let totalDepth = columnDimensions.map(x => PivotUtil.getDimensionDepth(x) + 1).reduce((acc, val) => acc + val);
+        let totalDepth = columnDimensions.map(x => this.grid.data.length > 0 ? PivotUtil.getDimensionDepth(x) + 1 : 0).reduce((acc, val) => acc + val);
         if (this.grid.hasMultipleValues) {
             totalDepth += 1;
         }
@@ -201,6 +201,15 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public get maxContainerHeight() {
         return this.totalDepth * this.grid.renderedRowHeight;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    * Use tracking function to fix ngFor not clearing old records from the DOM while updating it, causing incorrect header height during _calculateGridBodyHeight.
+    */
+    public trackColumnDimensionByLevel(_, item: IgxColumnComponent[]) {
+        return item.map(col => col.field).join('-');
     }
 
     /**
