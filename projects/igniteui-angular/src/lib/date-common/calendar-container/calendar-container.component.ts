@@ -12,7 +12,7 @@ import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxPickerActionsDirective } from '../picker-icons.common';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
-import { IgxDividerDirective } from "../../directives/divider/divider.directive";
+import { IgxDividerComponent } from "../../directives/divider/divider.component";
 
 /** @hidden */
 @Component({
@@ -25,7 +25,7 @@ import { IgxDividerDirective } from "../../directives/divider/divider.directive"
         IgxRippleDirective,
         IgxCalendarComponent,
         NgTemplateOutlet,
-        IgxDividerDirective,
+        IgxDividerComponent,
     ]
 })
 export class IgxCalendarContainerComponent {

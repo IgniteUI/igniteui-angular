@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, ViewChild, PLATFORM_ID } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
@@ -404,9 +404,8 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
             const listener = navDrawer.renderer.listen(document.body, 'panmove', () => {
-
                 // mid gesture
-                expect(navDrawer.drawer.classList).toContain('panning');
+                expect(navDrawer.drawer.classList).toContain('igx-nav-drawer__aside--panning');
                 expect(navDrawer.drawer.style.transform)
                     .toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/, 'Drawer should be moving with the pan');
                 listener();
@@ -626,7 +625,7 @@ describe('Navigation Drawer', () => {
             let flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
 
             // Mini variant pinned by default
-            expect(flexBasis).toEqual('57px');;
+            expect(flexBasis).toEqual('57px');
             expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
 
             fix.componentInstance.navDrawer.toggle();
@@ -637,7 +636,7 @@ describe('Navigation Drawer', () => {
 
             flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
 
-            expect(flexBasis).toEqual('240px');;
+            expect(flexBasis).toEqual('240px');
             expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
     });
 

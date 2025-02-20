@@ -59,7 +59,7 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { IgxDividerDirective } from '../directives/divider/divider.directive';
+import { IgxDividerComponent } from '../directives/divider/divider.component';
 
 let NEXT_ID = 0;
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
@@ -91,7 +91,7 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
             display: block;
         }`
     ],
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, NgIf, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, NgFor, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe, IgxDividerDirective]
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, NgIf, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, NgFor, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe, IgxDividerComponent]
 })
 export class IgxTimePickerComponent extends PickerBaseDirective
     implements

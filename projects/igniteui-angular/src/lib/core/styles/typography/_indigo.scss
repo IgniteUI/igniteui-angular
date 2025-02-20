@@ -57,7 +57,7 @@
     @include checkbox-typography($categories: (
         label: 'body-2',
     ));
-    @include chip-typography();
+    // @include chip-typography();
     @include column-actions-typography();
     @include date-range-typography();
     @include dialog-typography($categories: (
@@ -78,19 +78,19 @@
         input-text: 'body-2'
     ));
     @include linear-bar-typography();
-    @include list-typography($categories: (
-        header: 'overline',
-        item: 'body-2',
-        title: 'body-2',
-        subtitle: 'body-2'
-    ));
+    // @include list-typography($categories: (
+    //     header: 'overline',
+    //     item: 'body-2',
+    //     title: 'body-2',
+    //     subtitle: 'body-2'
+    // ));
     @include navbar-typography($categories: (
         title: 'h5',
     ));
-    @include navdrawer-typography($categories: (
-        item: 'subtitle-2',
-        header: 'overline'
-    ));
+    // @include navdrawer-typography($categories: (
+    //     item: 'subtitle-2',
+    //     header: 'overline'
+    // ));
     @include radio-typography($categories: (
         label: 'body-2'
     ));
@@ -98,7 +98,7 @@
         ticks-label: 'body-2',
         thumb-label: 'subtitle-2',
     ));
-    @include snackbar-typography();
+    // @include snackbar-typography();
     @include switch-typography($categories: (
         label: 'body-2'
     ));
@@ -117,7 +117,7 @@
         indicator: 'button',
         body-content: 'body-2'
     ));
-    @include toast-typography();
+    // @include toast-typography();
     @include tooltip-typography($categories: (
         tooltip-text: 'subtitle-2'
     ));

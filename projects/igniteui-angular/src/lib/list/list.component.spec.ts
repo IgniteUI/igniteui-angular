@@ -57,7 +57,7 @@ describe('List', () => {
         expect(list).toBeDefined();
         expect(list.id).toContain('igx-list-');
         expect(list instanceof IgxListComponent).toBeTruthy();
-        expect(list.cssClass).toBeFalsy();
+        expect(list.cssClass).toBeTruthy();
         expect(list.isListEmpty).toBeTruthy();
         expect(list.items instanceof Array).toBeTruthy();
         expect(list.items.length).toBe(0);
@@ -231,7 +231,7 @@ describe('List', () => {
         fixture.detectChanges();
 
         verifyItemsCount(list, 0);
-        expect(list.cssClass).toBeFalsy();
+        expect(list.cssClass).toBeTruthy();
         expect(list.isListEmpty).toBeTruthy();
 
         const noItemsMessage = fixture.debugElement.query(By.css('.igx-list__message'));
@@ -246,7 +246,7 @@ describe('List', () => {
         fixture.detectChanges();
 
         verifyItemsCount(list, 0);
-        expect(list.cssClass).toBeFalsy();
+        expect(list.cssClass).toBeTruthy();
         expect(list.isListEmpty).toBeTruthy();
 
         const noItemsParagraphEl = fixture.debugElement.query(By.css('h3'));
@@ -261,7 +261,7 @@ describe('List', () => {
         fixture.detectChanges();
 
         verifyItemsCount(list, 0);
-        expect(list.cssClass).toBeFalsy();
+        expect(list.cssClass).toBeTruthy();
         expect(list.isListEmpty).toBeTruthy();
 
         const noItemsMessage = fixture.debugElement.query(By.css('.igx-list__message'));
@@ -295,7 +295,7 @@ describe('List', () => {
         fixture.detectChanges();
 
         verifyItemsCount(list, 0);
-        expect(list.cssClass).toBeFalsy();
+        expect(list.cssClass).toBeTruthy();
         expect(list.isListEmpty).toBeTruthy();
 
         const noItemsParagraphEl = fixture.debugElement.query(By.css('h3'));

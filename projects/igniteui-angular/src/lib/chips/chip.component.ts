@@ -13,7 +13,8 @@ import {
     OnDestroy,
     booleanAttribute,
     OnInit,
-    Inject
+    Inject,
+    ViewEncapsulation
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
@@ -83,6 +84,8 @@ let CHIP_ID = 0;
 @Component({
     selector: 'igx-chip',
     templateUrl: 'chip.component.html',
+    styleUrl: 'chip.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, NgIf, IgxIconComponent]
 })
 export class IgxChipComponent implements OnInit, OnDestroy {

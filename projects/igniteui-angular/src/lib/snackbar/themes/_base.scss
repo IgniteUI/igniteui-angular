@@ -1,0 +1,57 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    @include fade-in();
+
+    @include b(igx-snackbar) {
+        --_min-height: #{rem(48px)};
+        --_padding: #{rem(7px)} #{rem(24px)};
+
+        // TODO: These properties work now, but they alter the design compared to before,
+        // we need to verify if they are needed at all.
+        // Seems like the --igx-button-foreground is needed in the fluent theme;
+        // --igx-button-background: transparent;
+        // --igx-button-foreground: #{var-get($theme, 'button-color')};
+
+        position: relative;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-between;
+        min-height: var(--_min-height);
+        padding: var(--_padding);
+        margin: rem(8px);
+        gap: rem(24px);
+        color: var-get($theme, 'text-color');
+        background: var-get($theme, 'background');
+        backface-visibility: hidden;
+        // TODO: This is listed as 'shadow' in the theme, and elevation in the schema
+        box-shadow: var-get($theme, 'elevation');
+        border-radius: var-get($theme, 'border-radius');
+        backdrop-filter: blur(8px);
+
+        [igxButton] {
+            @include animation(fade-in 0.35s ease-out);
+            --ig-size: 1;
+            box-shadow: none;
+        }
+
+        @include e(message) {
+            @include animation(fade-in 0.35s ease-out);
+            @include type-style(body-2) {
+                margin: 0;
+            }
+        }
+
+        @include e(button) {
+            display: contents;
+        }
+    }
+}

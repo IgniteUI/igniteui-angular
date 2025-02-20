@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/badge' as *;
+
+$base: digest-schema($light-badge);
+$material: digest-schema($material-badge);
+$bootstrap: digest-schema($bootstrap-badge);
+$fluent: digest-schema($fluent-badge);
+$indigo: digest-schema($indigo-badge);
