@@ -32,7 +32,7 @@ export class IgxQueryBuilderDragService {
     private _dropZonesList: HTMLElement[];   //stores a flat ordered list of all chips, including +Condition button, while performing the keyboard drag&drop
     private _expressionsList: ExpressionItem[]; //stores a flat ordered list of all expressions, including +Condition button, while performing the keyboard drag&drop
     private _timeoutId: any;
-
+    private _dropGhost: ExpressionItem;
 
 
     //Get the dragged ghost as a HTMLElement
@@ -53,6 +53,7 @@ export class IgxQueryBuilderDragService {
     public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean): void {
         //console.log('Picked up:', event, sourceDragElement);
         this.resetDragAndDrop(true);
+        this._queryBuilderTreeComponent._expressionTreeCopy = this._queryBuilderTreeComponent._expressionTree;
         this._isKeyboardDrag = isKeyboardDrag;
         this.sourceExpressionItem = sourceExpressionItem;
         this.sourceElement = sourceDragElement;
@@ -82,7 +83,7 @@ export class IgxQueryBuilderDragService {
     }
 
     public onChipEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
-        // console.log('Entering:', targetDragElement, targetExpressionItem);
+         console.log('Entering:', targetDragElement, targetExpressionItem);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         //If entering the one that's been picked up
@@ -126,9 +127,9 @@ export class IgxQueryBuilderDragService {
         //console.log('Leaving:', targetDragElement.textContent.trim());
 
         //if the drag ghost is on the drop ghost row don't trigger leave
-        if (this.dragGhostIsOnDropGhostRow(this.dragGhostElement, this.dropGhostChipNode?.firstChild as HTMLElement)) {
-            return;
-        }
+        // if (this.dragGhostIsOnDropGhostRow(this.dragGhostElement, this.dropGhostChipNode?.firstChild as HTMLElement)) {
+        //     return;
+        // }
 
         if (this.targetElement) {
             this.resetDragAndDrop(false)
@@ -148,6 +149,8 @@ export class IgxQueryBuilderDragService {
 
         const dropLocationIndex = this.calculateDropLocationIndex(this.targetExpressionItem, this.sourceExpressionItem, this.dropUnder);
 
+        this.clearDropGhost();
+        
         this.moveDraggedChipToNewLocation(this.sourceExpressionItem, this.targetExpressionItem, this.dropUnder);
 
         this._queryBuilderFocusChipAfterDrag(dropLocationIndex);
@@ -262,7 +265,22 @@ export class IgxQueryBuilderDragService {
 
     //Make a copy of the drag chip and place it in the DOM north or south of the drop chip
     private renderDropGhostChip(appendToElement: HTMLElement, appendUnder: boolean, keyboardMode?: boolean): void {
-        const dragCopy = this.createDropGhost(keyboardMode);
+        this.clearDropGhost();
+        
+        //Copy dragged chip
+        const dragCopy = { ...this.sourceExpressionItem };
+        dragCopy.parent = this.targetExpressionItem.parent;
+        this._dropGhost = dragCopy;
+
+        //Paste on new place
+        const pasteIndex = this.targetExpressionItem.parent.children.indexOf(this.targetExpressionItem);
+        this.targetExpressionItem.parent.children.splice(pasteIndex + (this.dropUnder ? 1 : 0), 0, dragCopy);
+
+        // //Delete from old place
+        // const children = this.sourceExpressionItem.parent.children;
+        // const delIndex = children.indexOf(this.sourceExpressionItem);
+        // children.splice(delIndex, 1);
+        /*const dragCopy = this.createDropGhost(keyboardMode);
 
         //Append the ghost
         if ((!appendUnder && this.dropUnder !== false) || //mouse mode
@@ -294,7 +312,7 @@ export class IgxQueryBuilderDragService {
                 this.onChipLeave();
             });
         }
-
+*/
         this.setDragCursor('grab');
     }
 
@@ -318,6 +336,14 @@ export class IgxQueryBuilderDragService {
         //Delete from old place
         this._queryBuilderTreeComponentDeleteItem(sourceExpressionItem);
     }
+    private clearDropGhost(){
+        if (this._dropGhost) {
+            const children = this._dropGhost.parent.children;
+            const delIndex = children.indexOf(this._dropGhost);
+            children.splice(delIndex, 1);
+            this._dropGhost = null;
+        }
+    }
 
     //Reset Drag&Drop vars. Optionally the drag source vars too
     private resetDragAndDrop(clearDragged: boolean) {
@@ -330,11 +356,18 @@ export class IgxQueryBuilderDragService {
         this._keyDragFirstMove = true;
         this.setDragCursor('no-drop');
 
+        //TODO see if we ned it here
+        //this.clearDropGhost();
+
+        if (this._queryBuilderTreeComponent._expressionTreeCopy)
+            this._queryBuilderTreeComponent._expressionTree = this._queryBuilderTreeComponent._expressionTreeCopy;
+
         if ((clearDragged || this._isKeyboardDrag) && this.sourceElement) {
             this.sourceElement.style.display = '';
         }
 
         if (clearDragged) {
+            this._queryBuilderTreeComponent._expressionTreeCopy = null;
             this.sourceExpressionItem = null;
             this.sourceElement = null;
             this._dropZonesList = null;

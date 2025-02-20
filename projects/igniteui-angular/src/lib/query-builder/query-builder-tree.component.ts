@@ -464,7 +464,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _prevFocusedContainer: ElementRef;
     private _expandedExpressions: IFilteringExpression[] = [];
     private _fields: FieldType[];
-    private _expressionTree: IExpressionTree;
+    public _expressionTree: IExpressionTree;
+    public _expressionTreeCopy: IExpressionTree;
     private _locale;
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
