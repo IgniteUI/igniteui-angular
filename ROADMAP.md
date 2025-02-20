@@ -4,7 +4,7 @@
 
 ## Milestone 36,  version 19.1 (Due by Feb, 2025)
 
-1. Query Builder component update [#14979](https://github.com/IgniteUI/igniteui-angular/issues/14979)
+1. Query Builder multi-table query support [#14979](https://github.com/IgniteUI/igniteui-angular/issues/14979)
 2. IgxBannerComponent - Support collapsed input [#14890](https://github.com/IgniteUI/igniteui-angular/issues/14890)
 3. Update of the carousel component [#15025](https://github.com/IgniteUI/igniteui-angular/issues/15025)
 
