@@ -240,7 +240,7 @@
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         @if meta.type-of($ghost-header-background) == 'color' {
-            $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
+            $ghost-header-icon-color: color-mix(in oklch, text-contrast($ghost-header-background) 7%, transparent);
         }
     }
 
@@ -262,7 +262,7 @@
 
     @if not($header-border-color) and $header-background {
         @if meta.type-of($header-background) == 'color' {
-            $header-border-color: rgba(text-contrast($header-background), .24);
+            $header-border-color: color-mix(in oklch, text-contrast($header-background) 24%, transparent);
         }
     }
 
@@ -300,7 +300,7 @@
 
     @if not($row-hover-background) and $content-background {
         @if meta.type-of($content-background) == 'color' {
-            $row-hover-background: to-opaque(rgba(text-contrast($content-background), .08), $content-background)
+            $row-hover-background: to-opaque(color-mix(in oklch, text-contrast($content-background) 80%, transparent), $content-background);
         }
     }
 
@@ -322,13 +322,13 @@
 
     @if not($row-border-color) and $content-background {
         @if meta.type-of($content-background) == 'color' {
-            $row-border-color: rgba(text-contrast($content-background), .08)
+            $row-border-color: text-contrast($content-background, .08);
         }
     }
 
     @if not($pinned-border-color) and $content-background {
         @if meta.type-of($content-background) == 'color' {
-            $pinned-border-color: rgba(text-contrast($content-background), .08)
+            $pinned-border-color: text-contrast($content-background, .08);
         }
     }
 
@@ -354,7 +354,7 @@
 
     @if not($expand-all-icon-color) and $header-background {
         @if meta.type-of($header-background) == 'color' {
-            $expand-all-icon-color: rgba(text-contrast($header-background), .87);
+            $expand-all-icon-color: text-contrast($header-background, .87);
         }
     }
 
@@ -380,13 +380,13 @@
 
     @if not($grouparea-color) and $grouparea-background {
         @if meta.type-of($grouparea-background) == 'color' {
-            $grouparea-color: rgba(text-contrast($grouparea-background), .8)
+            $grouparea-color: text-contrast($grouparea-background, .8)
         }
     }
 
     @if not($grouparea-color) and $header-background {
         @if meta.type-of($header-background) == 'color' {
-            $grouparea-color: rgba(text-contrast($header-background), .8)
+            $grouparea-color: text-contrast($header-background, .8)
         }
     }
 
