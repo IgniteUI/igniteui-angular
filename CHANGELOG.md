@@ -6,7 +6,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCarousel`
     - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
     - **Deprecation** - `CarouselIndicatorsOrientation` enum members `top` and `bottom` have been deprecated and will be removed in a future version. Use `start` and `end` instead.
-- `IgxQueryBuilderHeader
+- `IgxQueryBuilderHeader`
     - **Behavioral Changes**
     - Legend is no longer shown.
     - If the `title` input property is not set, by default it would be empty string.
