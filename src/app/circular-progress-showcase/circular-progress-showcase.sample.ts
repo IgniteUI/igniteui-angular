@@ -101,4 +101,17 @@ export class CircularProgressSampleComponent {
 
         this.destroyRef.onDestroy(() => unsubscribe);
     }
+
+    protected get variantAngular() {
+        const variantValue = this.propertyChangeService.getProperty('variant');
+
+        switch (variantValue) {
+            case 'primary':
+                return 'default';
+            case 'danger':
+                return 'error';
+            default:
+                return variantValue;
+        }
+    }
 }
