@@ -519,7 +519,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     templateUrl: 'templates/circular-bar.component.html',
     imports: [NgTemplateOutlet, NgClass]
 })
-export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterViewInit, AfterContentInit {
+export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterContentInit {
     /**
      * @hidden
      */
@@ -603,15 +603,57 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
         super();
     }
 
+    /**
+     * Set type of the `IgxCircularProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `error`.
+     * ```html
+     * <igx-circular-bar [type]="'error'"></igx-circular-bar>
+     * ```
+     */
+    @Input()
+    public type = 'default';
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-circular-bar--danger')
+    public get error() {
+        return this.type === IgxProgressType.ERROR;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-circular-bar--info')
+    public get info() {
+        return this.type === IgxProgressType.INFO;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-circular-bar--warning')
+    public get warning() {
+        return this.type === IgxProgressType.WARNING;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-circular-bar--success')
+    public get success() {
+        return this.type === IgxProgressType.SUCCESS;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('style.stroke')
+    public get strokeStyle() {
+        return this.type === 'default' ? `url(#${this.gradientId})` : 'none';
+    }
+
     public ngAfterContentInit() {
         this._contentInit = true;
     }
 
-    public ngAfterViewInit() {
-        this.renderer.setStyle(
-            this._svgCircle.nativeElement,
-            'stroke',
-            `url(#${this.gradientId})`
-        );
-    }
 }

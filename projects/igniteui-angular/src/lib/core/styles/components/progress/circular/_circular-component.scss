@@ -49,6 +49,12 @@
             }
         }
 
+        @each $modifier in ('danger', 'warning', 'info', 'success') {
+            @include m($modifier) {
+                @extend %display-circular--#{$modifier} !optional;
+            }
+        }
+
         @include m(animation-none) {
             @extend %animation-none !optional;
         }

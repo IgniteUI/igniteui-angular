@@ -9,7 +9,11 @@
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $base-circle-color [null] - The base circle fill color.
-/// @param {Color | List<Color>} $progress-circle-color [null] - The progress circle fill color.
+/// @param {Color | List<Color>} $fill-color-default [null] - The progress circle fill color.
+/// @param {Color} $fill-color-danger [null] - The track danger fill color.
+/// @param {Color} $fill-color-warning [null] - The track warning fill color.
+/// @param {Color} $fill-color-info [null] - The track info fill color.
+/// @param {Color} $fill-color-success [null] - The track success fill color.
 /// @param {Color} $text-color [null] - The value text color.
 /// @param {Number} $diameter [null] - The progress circle diameter.
 ///
@@ -17,14 +21,18 @@
 ///
 /// @example scss Change the circle progress color
 ///   $my-progress-circular-theme: progress-circular-theme(
-///     $progress-circle-color: purple
+///     $fill-color-default: purple
 ///   );
 ///   // Pass the theme to the igx-progress-circular component mixin
 ///   @include igx-progress-circular($my-progress-circle-theme);
 @function progress-circular-theme(
     $schema: $light-material-schema,
     $base-circle-color: null,
-    $progress-circle-color: null,
+    $fill-color-default: null,
+    $fill-color-danger: null,
+    $fill-color-warning: null,
+    $fill-color-info: null,
+    $fill-color-success: null,
     $text-color: null,
     $diameter: null
 ) {
@@ -40,24 +48,28 @@
     $theme: digest-schema($circular-bar-schema);
     $meta: map.get($theme, '_meta');
 
-    $progress-circle-color-start: map.get($theme, 'progress-circle-color');
-    $progress-circle-color-end: map.get($theme, 'progress-circle-color');
+    $fill-color-default-start: map.get($theme, 'fill-color-default');
+    $fill-color-default-end: map.get($theme, 'fill-color-default');
 
-    @if meta.type-of($progress-circle-color) == 'color' {
-        $progress-circle-color-start: $progress-circle-color;
-        $progress-circle-color-end: $progress-circle-color;
+    @if meta.type-of($fill-color-default) == 'color' {
+        $fill-color-default-start: $fill-color-default;
+        $fill-color-default-end: $fill-color-default;
     }
 
-    @if list.length($progress-circle-color) == 2 {
-        $progress-circle-color-start: list.nth($progress-circle-color, 1);
-        $progress-circle-color-end: list.nth($progress-circle-color, 2);
+    @if list.length($fill-color-default) == 2 {
+        $fill-color-default-start: list.nth($fill-color-default, 1);
+        $fill-color-default-end: list.nth($fill-color-default, 2);
     }
 
     @return extend($theme, (
         name: $name,
         base-circle-color: $base-circle-color,
-        progress-circle-color-start: $progress-circle-color-start,
-        progress-circle-color-end: $progress-circle-color-end,
+        fill-color-default-start: $fill-color-default-start,
+        fill-color-default-end: $fill-color-default-end,
+        fill-color-danger: $fill-color-danger,
+        fill-color-warning: $fill-color-warning,
+        fill-color-info: $fill-color-info,
+        fill-color-success: $fill-color-success,
         text-color: $text-color,
         diameter: $diameter,
         theme: map.get($schema, '_meta', 'theme'),
@@ -238,6 +250,14 @@
         }
     }
 
+    @each $mod in ('success','info','warning','danger') {
+        %display-circular--#{$mod} {
+            svg %outer {
+                stroke: var-get($theme, 'fill-color-#{$mod}');
+            }
+        }
+    }
+
     %outer--indeterminate {
         stroke-dasharray: 289;
         @include animation(igx-indeterminate-accordion var(--_transition-duration) cubic-bezier(0, .085, .68, .53) normal infinite);
@@ -292,11 +312,11 @@
     }
 
     %gradient-start {
-        stop-color: var-get($theme, 'progress-circle-color-start');
+        stop-color: var-get($theme, 'fill-color-default-start');
     }
 
     %gradient-end {
-        stop-color: var-get($theme, 'progress-circle-color-end');
+        stop-color: var-get($theme, 'fill-color-default-end');
     }
 
     @keyframes igx-indeterminate-accordion {
