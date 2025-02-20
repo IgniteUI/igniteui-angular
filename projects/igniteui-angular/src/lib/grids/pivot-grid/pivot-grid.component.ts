@@ -1294,7 +1294,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /** @hidden @internal */
     public get pivotContentCalcWidth() {
         if (!this.visibleRowDimensions.length) {
-            return this.calcWidth - this.pivotRowWidths;
+            return Math.max(0, this.calcWidth - this.pivotRowWidths);
         }
 
         const totalDimWidth = this.visibleRowDimensions.length > 0 ?
