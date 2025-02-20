@@ -52,9 +52,10 @@ export const configureTestSuite = (configureAction?: () => TestBed) => {
     });
 };
 
-// should be accessible on re-run by selecting enable debug logging
+// TODO: enable on re-run by selecting enable debug logging
 // https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/troubleshooting-workflows/enabling-debug-logging
-if (process.env.ACTIONS_RUNNER_DEBUG) {
+const shardLogging = false;
+if (shardLogging) {
     const myReporter = {
         suiteStarted: function(result) {
             const id = new URLSearchParams(window.parent.location.search).get('id');
