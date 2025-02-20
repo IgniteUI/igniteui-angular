@@ -52,6 +52,7 @@ jobs:
             npm run test:i18n
         env:
             NODE_OPTIONS: --max_old_space_size=4096
+            TZ: America/New_York
       - name: Build i18n & validate output
         run: |
             npm run build:i18n
