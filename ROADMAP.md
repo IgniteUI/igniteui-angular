@@ -6,7 +6,7 @@
 
 1. Query Builder multi-table query support [#14979](https://github.com/IgniteUI/igniteui-angular/issues/14979)
 2. IgxBannerComponent - Support collapsed input [#14890](https://github.com/IgniteUI/igniteui-angular/issues/14890)
-3. Update of the carousel component [#15025](https://github.com/IgniteUI/igniteui-angular/issues/15025)
+3. Carousel component vertical orientation support [#15025](https://github.com/IgniteUI/igniteui-angular/issues/15025)
 
 ## Going down the road
 
