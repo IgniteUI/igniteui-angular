@@ -1,6 +1,7 @@
 import { Calendar } from '../calendar/calendar';
 import { cloneValue } from '../core/utils';
 import { ValueData } from '../services/excel/test-data.service.spec';
+import { ymd } from './helper-utils.spec';
 
 export class SampleTestData {
 
@@ -659,16 +660,16 @@ export class SampleTestData {
     /* Data fields: ProductID: number, ProductName: string, InStock: boolean, UnitsInStock: number, OrderDate: Date;
         10 items, sorted by ID. */
     public static foodProductData = () => ([
-        { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date('2005-03-21') },
-        { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date('2008-01-15') },
-        { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date('2010-11-20') },
-        { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date('2007-10-11') },
-        { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date('2001-07-27') },
-        { ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date('1990-05-17') },
-        { ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date('2005-03-03') },
-        { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date('2017-09-09') },
-        { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date('2025-12-25') },
-        { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
+        { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: ymd('2005-03-21') },
+        { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: ymd('2008-01-15') },
+        { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: ymd('2010-11-20') },
+        { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: ymd('2007-10-11') },
+        { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: ymd('2001-07-27') },
+        { ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: ymd('1990-05-17') },
+        { ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: ymd('2005-03-03') },
+        { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: ymd('2017-09-09') },
+        { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: ymd('2025-12-25') },
+        { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: ymd('2018-03-01') }
     ]);
 
     public static foodProductDateTimeData = () => ([
@@ -695,41 +696,41 @@ export class SampleTestData {
     ]);
 
     public static foodPercentProductData = () => ([
-        { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date('2005-03-21'), Discount: 0.27 },
-        { ProductID: 2, ProductName: 'Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date('2008-01-15'), Discount: 0.83 },
-        { ProductID: 3, ProductName: 'Seasoning', InStock: true, UnitsInStock: 5, OrderDate: new Date('2010-11-20'), Discount: -0.7 },
-        { ProductID: 4, ProductName: 'Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date('2007-10-11'), Discount: 11 },
-        { ProductID: 5, ProductName: 'Bobs Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date('2001-07-27'), Discount: -0.5},
-        { ProductID: 6, ProductName: 'Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date('1990-05-17'), Discount: 0.027 },
-        { ProductID: 7, ProductName: 'Queso Cabrale', InStock: false, UnitsInStock: 0, OrderDate: new Date('2005-03-03'), Discount: 0.099 },
-        { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date('2017-09-09'), Discount: 10 },
-        { ProductID: 9, ProductName: 'Chocolate', InStock: true, UnitsInStock: 698, OrderDate: new Date('2025-12-25'), Discount: .123},
-        { ProductID: 10, ProductName: 'Biscuits', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01'), Discount: 0.39 }
+        { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: ymd('2005-03-21'), Discount: 0.27 },
+        { ProductID: 2, ProductName: 'Syrup', InStock: false, UnitsInStock: 198, OrderDate: ymd('2008-01-15'), Discount: 0.83 },
+        { ProductID: 3, ProductName: 'Seasoning', InStock: true, UnitsInStock: 5, OrderDate: ymd('2010-11-20'), Discount: -0.7 },
+        { ProductID: 4, ProductName: 'Spread', InStock: false, UnitsInStock: 0, OrderDate: ymd('2007-10-11'), Discount: 11 },
+        { ProductID: 5, ProductName: 'Bobs Pears', InStock: false, UnitsInStock: 0, OrderDate: ymd('2001-07-27'), Discount: -0.5},
+        { ProductID: 6, ProductName: 'Sauce', InStock: true, UnitsInStock: 1098, OrderDate: ymd('1990-05-17'), Discount: 0.027 },
+        { ProductID: 7, ProductName: 'Queso Cabrale', InStock: false, UnitsInStock: 0, OrderDate: ymd('2005-03-03'), Discount: 0.099 },
+        { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: ymd('2017-09-09'), Discount: 10 },
+        { ProductID: 9, ProductName: 'Chocolate', InStock: true, UnitsInStock: 698, OrderDate: ymd('2025-12-25'), Discount: .123},
+        { ProductID: 10, ProductName: 'Biscuits', InStock: true, UnitsInStock: 20000, OrderDate: ymd('2018-03-01'), Discount: 0.39 }
     ]);
 
 
     /* Data fields: ProductID: number, ProductName: string, InStock: boolean, UnitsInStock: number, OrderDate: Date;
         19 items, sorted by ID. */
     public static foodProductDataExtended = () => ([
-        { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date('2005-03-21') },
-        { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date('2008-01-15') },
-        { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date('2010-11-20') },
-        { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date('2007-10-11') },
-        { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date('2001-07-27') },
-        { ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date('1990-05-17') },
-        { ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date('2005-03-03') },
-        { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date('2017-09-09') },
-        { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date('2025-12-25') },
-        { ProductID: 10, ProductName: 'Pie', InStock: true, UnitsInStock: 1000, OrderDate: new Date('2017-05-07') },
-        { ProductID: 11, ProductName: 'Pasta', InStock: false, UnitsInStock: 198, OrderDate: new Date('2001-02-15') },
-        { ProductID: 12, ProductName: 'Krusty krab\'s burger', InStock: true, UnitsInStock: 52, OrderDate: new Date('2012-09-25') },
-        { ProductID: 13, ProductName: 'Lasagna', InStock: false, UnitsInStock: 0, OrderDate: new Date('2015-02-09') },
-        { ProductID: 14, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date('2008-03-17') },
-        { ProductID: 15, ProductName: 'Cheese', InStock: true, UnitsInStock: 1098, OrderDate: new Date('1990-11-27') },
-        { ProductID: 16, ProductName: 'Devil\'s Hot Chilli Sauce', InStock: false, UnitsInStock: 0, OrderDate: new Date('2012-08-14') },
-        { ProductID: 17, ProductName: 'Parmesan', InStock: true, UnitsInStock: 4898, OrderDate: new Date('2017-09-09') },
-        { ProductID: 18, ProductName: 'Steaks', InStock: true, UnitsInStock: 3098, OrderDate: new Date('2025-12-25') },
-        { ProductID: 19, ProductName: 'Biscuits', InStock: true, UnitsInStock: 10570, OrderDate: new Date('2018-03-01') }
+        { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: ymd('2005-03-21') },
+        { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: ymd('2008-01-15') },
+        { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: ymd('2010-11-20') },
+        { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: ymd('2007-10-11') },
+        { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: ymd('2001-07-27') },
+        { ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: ymd('1990-05-17') },
+        { ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: ymd('2005-03-03') },
+        { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: ymd('2017-09-09') },
+        { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: ymd('2025-12-25') },
+        { ProductID: 10, ProductName: 'Pie', InStock: true, UnitsInStock: 1000, OrderDate: ymd('2017-05-07') },
+        { ProductID: 11, ProductName: 'Pasta', InStock: false, UnitsInStock: 198, OrderDate: ymd('2001-02-15') },
+        { ProductID: 12, ProductName: 'Krusty krab\'s burger', InStock: true, UnitsInStock: 52, OrderDate: ymd('2012-09-25') },
+        { ProductID: 13, ProductName: 'Lasagna', InStock: false, UnitsInStock: 0, OrderDate: ymd('2015-02-09') },
+        { ProductID: 14, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: ymd('2008-03-17') },
+        { ProductID: 15, ProductName: 'Cheese', InStock: true, UnitsInStock: 1098, OrderDate: ymd('1990-11-27') },
+        { ProductID: 16, ProductName: 'Devil\'s Hot Chilli Sauce', InStock: false, UnitsInStock: 0, OrderDate: ymd('2012-08-14') },
+        { ProductID: 17, ProductName: 'Parmesan', InStock: true, UnitsInStock: 4898, OrderDate: ymd('2017-09-09') },
+        { ProductID: 18, ProductName: 'Steaks', InStock: true, UnitsInStock: 3098, OrderDate: ymd('2025-12-25') },
+        { ProductID: 19, ProductName: 'Biscuits', InStock: true, UnitsInStock: 10570, OrderDate: ymd('2018-03-01') }
     ]);
 
     /* Generates data with the following data fields: index: number, value: number, other: number, another: number. */
@@ -4701,37 +4702,37 @@ export class SampleTestData {
             {
                 ProductID: 1,
                 ProductName: 'Product1',
-                DateField: new Date('2012-02-12'),
-                TimeField: new Date(new Date('2012-02-12').setHours(3, 20, 0, 1)),
-                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20, 5)),
+                DateField: ymd('2012-02-12'),
+                TimeField: new Date(ymd('2012-02-12').setHours(3, 20, 0, 1)),
+                DateTimeField: new Date(ymd('2003-03-17').setHours(3, 20, 5)),
             },
             {
                 ProductID: 2,
                 ProductName: 'Product2',
-                DateField: new Date('2012-02-13'),
-                TimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
-                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20)),
+                DateField: ymd('2012-02-13'),
+                TimeField: new Date(ymd('2003-03-17').setHours(3, 20, 0, 1)),
+                DateTimeField: new Date(ymd('2003-03-17').setHours(3, 20)),
             },
             {
                 ProductID: 3,
                 ProductName: 'Product3',
-                DateField: new Date('2012-02-12').setHours(1, 55),
-                TimeField: new Date(new Date('2012-02-12').setHours(4, 4)),
-                DateTimeField: new Date(new Date('2006-03-17').setHours(1, 55)),
+                DateField: ymd('2012-02-12').setHours(1, 55),
+                TimeField: new Date(ymd('2012-02-12').setHours(4, 4)),
+                DateTimeField: new Date(ymd('2006-03-17').setHours(1, 55)),
             },
             {
                 ProductID: 4,
                 ProductName: 'Product3',
-                DateField: new Date(new Date('2006-03-17').setHours(11, 11)),
-                TimeField: new Date(new Date('2006-03-17').setHours(11, 11)),
-                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
+                DateField: new Date(ymd('2006-03-17').setHours(11, 11)),
+                TimeField: new Date(ymd('2006-03-17').setHours(11, 11)),
+                DateTimeField: new Date(ymd('2003-03-17').setHours(3, 20, 0, 1)),
             },
             {
                 ProductID: 5,
                 ProductName: 'Product5',
-                DateField: new Date(new Date('2006-03-17').setHours(11, 11)),
-                TimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
-                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
+                DateField: new Date(ymd('2006-03-17').setHours(11, 11)),
+                TimeField: new Date(ymd('2003-03-17').setHours(3, 20, 0, 1)),
+                DateTimeField: new Date(ymd('2003-03-17').setHours(3, 20, 0, 1)),
             }
         ];
     };
