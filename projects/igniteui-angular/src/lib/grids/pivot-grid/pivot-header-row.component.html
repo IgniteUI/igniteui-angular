@@ -164,7 +164,7 @@
                                 <span id='empty' (dropped)="onValueDrop($event, valueArea)" igxDrop
                                 class='igx-grid__pivot-empty-chip-area'>{{grid.resourceStrings.igx_grid_pivot_empty_value_drop_area}}</span>
                             }
-                            @for (value of grid.values; track value; let last = $last) {
+                            @for (value of grid.values; track value.member; let last = $last) {
                                 <span class="igx-grid__tr-pivot--chip_drop_indicator"
                                   [style.height.px]='getAreaHeight(valueArea)'></span>
                                 <igx-chip #currChip [draggable]="true" [id]="value.displayName || value.member" [data]="{ pivotArea: 'value' }"
