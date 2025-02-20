@@ -7,7 +7,6 @@ import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../
 import { IExpressionTree } from '../data-operations/filtering-expressions-tree';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { EntityType, FieldType } from '../grids/common/grid.interface';
-import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from '../icon/icon.service';
@@ -29,7 +28,7 @@ import { recreateTree } from '../data-operations/expressions-tree-util';
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
-    imports: [IgxQueryBuilderHeaderComponent, IgxQueryBuilderTreeComponent]
+    imports: [IgxQueryBuilderTreeComponent]
 })
 export class IgxQueryBuilderComponent implements OnDestroy {
     /**
@@ -165,12 +164,6 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     @Output()
     public expressionTreeChange = new EventEmitter<IExpressionTree>();
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxQueryBuilderHeaderComponent)
-    public headerContent: IgxQueryBuilderHeaderComponent;
 
     /**
      * @hidden @internal

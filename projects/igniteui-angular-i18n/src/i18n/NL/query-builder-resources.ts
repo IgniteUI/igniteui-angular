@@ -42,7 +42,6 @@ export const QueryBuilderResourceStringsNL = {
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
     igx_query_builder_filter_all: 'Alles',
-    igx_query_builder_title: 'Query Builder',
     igx_query_builder_from_label: 'From',
     igx_query_builder_select_label: 'Select',
     igx_query_builder_where_label: 'Where',

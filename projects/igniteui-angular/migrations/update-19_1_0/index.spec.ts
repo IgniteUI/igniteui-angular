@@ -75,10 +75,10 @@ describe(`Update to ${version}`, () => {
         );
     });
 
-    it('should remove Query Builder Header deprecated property `showLegend`', async () => {
+    it('should remove Query Builder Header deprecated `showLegend` and `resourceStrings` properties', async () => {
         appTree.create(`/testSrc/appPrefix/component/test.component.html`,
         `
-        <igx-query-builder-header [showLegend]="false"></igx-query-builder-header>
+        <igx-query-builder-header [showLegend]="false" [resourceStrings]="resourceStrings"></igx-query-builder-header>
         `
         );
 

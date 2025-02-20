@@ -42,7 +42,6 @@ export const QueryBuilderResourceStringsKO = {
     igx_query_builder_filter_true: '참',
     igx_query_builder_filter_false: '거짓',
     igx_query_builder_filter_all: '모두',
-    igx_query_builder_title: 'Query Builder',
     igx_query_builder_from_label: 'From',
     igx_query_builder_select_label: 'Select',
     igx_query_builder_where_label: 'Where',

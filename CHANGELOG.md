@@ -9,8 +9,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxQueryBuilderHeader
     - **Behavioral Changes**
     - Legend is no longer shown.
+    - If the `title` input property is not set, by default it would be empty string.
     - **Deprecation**
-    - The `showLegend` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
+    - The `showLegend` and `resourceStrings` input properties have been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
 ### New Features
 - `IgxBanner`
     - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. The banner can now be programmatically set to expanded (visible) or collapsed (hidden) both initially and at runtime. Animations will trigger during runtime updates — the **open animation** plays when `expanded` is set to `true`, and the **close animation** plays when set to `false`. However, no animations will trigger when the property is set initially.
@@ -41,6 +42,12 @@ All notable changes for each version of this project will be documented in this 
     - Expression enters edit mode on single click, `Enter` or `Space`.
     - Selecting conditions inside the `IgxQueryBuilderComponent` is no longer supported. Grouping/ungrouping expressions is now achieved via the newly exposed Drag & Drop functionality.
     - Deleting multiple expressions through the context menu is no longer supported.
+    - `IgxQueryBuilderHeader` will no longer be visible by default. In order to add the header, you will need to add it to the `IgxQueryBuilderComponent`as follows:
+    ```
+    <igx-query-builder [entities]="this.entities">
+        <igx-query-builder-header [title]="'Query Builder'"></igx-query-builder-header>
+    </igx-query-builder>
+    ```
 - `IFilteringExpression`
     - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
 - `IFilteringOperation`

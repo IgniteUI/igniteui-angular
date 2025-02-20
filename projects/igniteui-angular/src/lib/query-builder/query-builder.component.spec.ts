@@ -39,11 +39,9 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
       const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER}`))[0].nativeElement;
       expect(queryBuilderElement).toBeDefined();
-      expect(queryBuilderElement.children.length).toEqual(2);
+      expect(queryBuilderElement.children.length).toEqual(1);
 
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' Query Builder ');
-
-      const queryTreeElement = queryBuilderElement.children[1];
+      const queryTreeElement = queryBuilderElement.children[0];
       expect(queryTreeElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_TREE);
 
       expect(queryBuilder.expressionTree).toBeUndefined();
@@ -1743,7 +1741,7 @@ describe('IgxQueryBuilder', () => {
 
       //New empty inner query should be displayed
       const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER}`))[0].nativeElement;
-      const bodyElement = queryBuilderElement.children[1].children[0];
+      const bodyElement = queryBuilderElement.children[0].children[0];
       const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
       expect(actionArea).toBeNull();
       expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1]).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_TREE);
@@ -2374,7 +2372,6 @@ describe('IgxQueryBuilder', () => {
   describe('Localization', () => {
     it('Should correctly change resource strings for Query Builder.', fakeAsync(() => {
       queryBuilder.resourceStrings = Object.assign({}, queryBuilder.resourceStrings, {
-        igx_query_builder_title: 'My advanced filter',
         igx_query_builder_filter_operator_and: 'My and',
         igx_query_builder_filter_operator_or: 'My or',
         igx_query_builder_and_label: 'My and',
@@ -2397,7 +2394,6 @@ describe('IgxQueryBuilder', () => {
       tick(100);
       fix.detectChanges();
 
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' My advanced filter ');
       expect((QueryBuilderFunctions.getQueryBuilderInitialAddConditionBtn(fix, 0) as HTMLElement).querySelector('span').innerText)
         .toBe('My condition');
 

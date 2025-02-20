@@ -290,12 +290,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChildren(IgxChipComponent, { read: IgxChipComponent })
     private expressionsChips: QueryList<IgxChipComponent>;
 
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxQueryBuilderHeaderComponent)
-    public headerContent: IgxQueryBuilderHeaderComponent;
-
     @ViewChild('editingInputsContainer', { read: ElementRef })
     protected set editingInputsContainer(value: ElementRef) {
         if ((value && !this._editingInputsContainer) ||

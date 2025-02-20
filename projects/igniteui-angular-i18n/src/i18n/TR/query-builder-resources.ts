@@ -42,7 +42,6 @@ export const QueryBuilderResourceStringsTR = {
     igx_query_builder_filter_true: 'Doğru',
     igx_query_builder_filter_false: 'Yanlış',
     igx_query_builder_filter_all: 'Tümü',
-    igx_query_builder_title: 'Query Builder',
     igx_query_builder_from_label: 'From',
     igx_query_builder_select_label: 'Select',
     igx_query_builder_where_label: 'Where',
