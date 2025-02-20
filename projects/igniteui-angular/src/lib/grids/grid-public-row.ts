@@ -791,3 +791,42 @@ export class IgxSummaryRow implements RowType {
         return row;
     }
 }
+
+export class IgxPivotGridRow implements RowType {
+    public index: number;
+    public grid: GridType;
+    private _data?: any;
+
+    constructor(grid: GridType, index: number, data?: any) {
+        this.grid = grid;
+        this.index = index;
+        this._data = data && data.addRow && data.recordRef ? data.recordRef : data;
+    }
+
+    public get data(): any {
+        return this._data ?? this.grid.dataView[this.index];
+    }
+
+    public get viewIndex(): number {
+        return this.index + this.grid.page * this.grid.perPage;
+    }
+
+    public get key(): any {
+        const data = this._data ?? this.grid.dataView[this.index];
+        const primaryKey = this.grid.primaryKey;
+        return primaryKey ? data[primaryKey] : data;
+    }
+
+    public get selected(): boolean {
+        return this.grid.selectionService.isRowSelected(this.key);
+    }
+
+    public set selected(val: boolean) {
+        if (val) {
+            this.grid.selectionService.selectRowsWithNoEvent([this.key]);
+        } else {
+            this.grid.selectionService.deselectRowsWithNoEvent([this.key]);
+        }
+        this.grid.cdr.markForCheck();
+    }
+}
