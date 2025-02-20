@@ -1,12 +1,10 @@
-import { Component, Input, booleanAttribute } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
-import { NgIf } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 @Component({
     selector: 'igx-query-builder-header',
-    templateUrl: 'query-builder-header.component.html',
-    imports: [NgIf]
+    templateUrl: 'query-builder-header.component.html'
 })
 export class IgxQueryBuilderHeaderComponent {
 
@@ -30,8 +28,9 @@ export class IgxQueryBuilderHeaderComponent {
      * ```html
      * <igx-query-builder-header [showLegend]="false"></igx-query-builder-header>
      * ```
+     * @deprecated in version 19.1.0.
      */
-    @Input({ transform: booleanAttribute })
+    @Input()
     public showLegend = true;
 
     /**
