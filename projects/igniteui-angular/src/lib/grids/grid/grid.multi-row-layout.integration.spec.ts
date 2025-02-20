@@ -1288,7 +1288,7 @@ export class ColumnLayouHidingTestComponent {
         }
         @for (group of colGroups; track group.group) {
             <igx-column-layout [field]='group.group' [pinned]='group.pinned'>
-                @for (col of group.columns; track col) {
+                @for (col of group.columns; track col.field) {
                     <igx-column
                         [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
                         [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
