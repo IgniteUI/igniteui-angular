@@ -12,7 +12,7 @@ import {
     booleanAttribute,
     ElementRef,
     ChangeDetectorRef,
-    ChangeDetectionStrategy,
+    ChangeDetectionStrategy, ViewEncapsulation,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgIf, NgFor, TitleCasePipe } from '@angular/common';
@@ -44,6 +44,8 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html',
+    styleUrl: 'days-view.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgIf, NgFor, IgxDayItemComponent, TitleCasePipe]
 })
