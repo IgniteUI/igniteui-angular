@@ -125,6 +125,17 @@
 
     <ng-template #operandTemplate let-expressionItem>
         @if (!expressionItem.inEditMode) {
+            @if(dragService.dropGhostExpression && expressionItem === dragService.dropGhostExpression && dragService.isKeyboardDrag === false){
+                <!-- TODO QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST -->
+                <div [ngClass]="'igx-filter-tree__expression-item'+ 'igx-filter-tree__expression-item-drop-ghost'">
+                <igx-chip #dropGhost>
+                    <span>
+                        {{this.resourceStrings.igx_query_builder_drop_ghost_text}}
+                    </span>
+                </igx-chip>
+            </div>
+            }
+            @else {
             <div
                 #dragRef
                 igxDrop
@@ -262,6 +273,7 @@
                     </div>
                 }
             </div>
+        }
         }
         <div #editingInputsContainer class="igx-filter-tree__subquery" >            
             @if (expressionItem.inEditMode) {

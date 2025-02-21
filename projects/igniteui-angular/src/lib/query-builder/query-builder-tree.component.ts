@@ -56,7 +56,7 @@ import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component'
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { isTree } from '../data-operations/expressions-tree-util';
-import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
+import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe, QueryBuilderSelectors } from './query-builder.common';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -70,38 +70,38 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
     templateUrl: './query-builder-tree.component.html',
     host: { 'class': 'igx-query-builder-tree' },
     imports: [
-    DatePipe,
-    FormsModule,
-    IgxButtonDirective,
-    IgxCheckboxComponent,
-    IgxChipComponent,
-    IgxComboComponent,
-    IgxComboHeaderDirective,
-    IgxDatePickerComponent,
-    IgxDateTimeEditorDirective,
-    IgxDialogComponent,
-    IgxDragIgnoreDirective,
-    IgxDropDirective,
-    IgxDropDownComponent,
-    IgxDropDownItemComponent,
-    IgxDropDownItemNavigationDirective,
-    IgxFieldFormatterPipe,
-    IgxIconButtonDirective,
-    IgxIconComponent,
-    IgxInputDirective,
-    IgxInputGroupComponent,
-    IgxOverlayOutletDirective,
-    IgxPickerClearComponent,
-    IgxPickerToggleComponent,
-    IgxPrefixDirective,
-    IgxSelectComponent,
-    IgxSelectItemComponent,
-    IgxTimePickerComponent,
-    IgxTooltipDirective,
-    IgxTooltipTargetDirective,
-    NgClass,
-    NgTemplateOutlet
-]
+        DatePipe,
+        FormsModule,
+        IgxButtonDirective,
+        IgxCheckboxComponent,
+        IgxChipComponent,
+        IgxComboComponent,
+        IgxComboHeaderDirective,
+        IgxDatePickerComponent,
+        IgxDateTimeEditorDirective,
+        IgxDialogComponent,
+        IgxDragIgnoreDirective,
+        IgxDropDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxDropDownItemNavigationDirective,
+        IgxFieldFormatterPipe,
+        IgxIconButtonDirective,
+        IgxIconComponent,
+        IgxInputDirective,
+        IgxInputGroupComponent,
+        IgxOverlayOutletDirective,
+        IgxPickerClearComponent,
+        IgxPickerToggleComponent,
+        IgxPrefixDirective,
+        IgxSelectComponent,
+        IgxSelectItemComponent,
+        IgxTimePickerComponent,
+        IgxTooltipDirective,
+        IgxTooltipTargetDirective,
+        NgClass,
+        NgTemplateOutlet
+    ]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
@@ -288,7 +288,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private groupContextMenuDropDown: IgxDropDownComponent;
 
     @ViewChildren(IgxChipComponent, { read: IgxChipComponent })
-    private expressionsChips: QueryList<IgxChipComponent>;
+    public expressionsChips: QueryList<IgxChipComponent>;
 
     /**
      * @hidden @internal
@@ -338,6 +338,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChildren(IgxQueryBuilderTreeComponent)
     private innerQueries: QueryList<IgxQueryBuilderTreeComponent>;
+
+    @ViewChild('dropGhost')
+    public dropGhostElement: ElementRef;
 
     /**
      * @hidden @internal
@@ -469,6 +472,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _locale;
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+
 
     /**
      * Returns if the select entity dropdown at the root level is disabled after the initial selection.
@@ -1029,7 +1033,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.focusEditedExpressionChip();
     }
 
-    public dragService: IgxQueryBuilderDragService = new IgxQueryBuilderDragService(this, this.el, this.deleteItem, this.focusChipAfterDrag);
+    public dragService: IgxQueryBuilderDragService = new IgxQueryBuilderDragService(
+        this,
+        this.el,
+        this.deleteItem,
+        this.focusChipAfterDrag
+    );
 
     /**
      * @hidden @internal
@@ -1132,8 +1141,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 expressionItem.expression.condition.name :
                 null;
         this.searchValue.value = expressionItem.expression.searchVal instanceof Set ?
-                                    Array.from(expressionItem.expression.searchVal) :
-                                    expressionItem.expression.searchVal;
+            Array.from(expressionItem.expression.searchVal) :
+            expressionItem.expression.searchVal;
 
         expressionItem.inEditMode = true;
         this._editedExpression = expressionItem;
@@ -1168,7 +1177,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             input?.focus();
         }
 
-        (this.editingInputs?.nativeElement.parentElement as HTMLElement)?.scrollIntoView({block: "nearest", inline: "nearest"});
+        (this.editingInputs?.nativeElement.parentElement as HTMLElement)?.scrollIntoView({ block: "nearest", inline: "nearest" });
     }
 
     /**
@@ -1306,7 +1315,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public invokeClick(eventArgs: KeyboardEvent) {
-        if (!this.dragService.dropGhostChipNode && this.platform.isActivationKey(eventArgs)) {
+        if (!this.dragService.dropGhostExpression && this.platform.isActivationKey(eventArgs)) {
             eventArgs.preventDefault();
             (eventArgs.currentTarget as HTMLElement).click();
         }
@@ -1538,7 +1547,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 return groupItem;
             }
 
-            for (let i = 0 ; i < expressionTree.filteringOperands.length; i++) {
+            for (let i = 0; i < expressionTree.filteringOperands.length; i++) {
                 const expr = expressionTree.filteringOperands[i];
 
                 if (isTree(expr)) {
@@ -1621,6 +1630,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._timeoutId = setTimeout(() => {
             if (this._lastFocusedChipIndex != -1) {
+                //TODO see if we need sort after refactor
                 //Sort the expression chip list. 
                 //If there was a recent drag&drop and the tree hasn't rerendered(child query), they will be unordered
                 const sortedChips = this.expressionsChips.toArray().sort(function (a, b) {
