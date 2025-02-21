@@ -148,7 +148,7 @@ export class GridSaveStateComponent implements OnInit {
         }
         try {
             window.localStorage.setItem(`${stateDirective.grid.id}-state`, state);
-        } catch (e) {
+        } catch (_e) {
             console.log('Storage is full, or the value that you try to se is too long to be written in single item, Please empty data');
         }
         } else {
@@ -159,7 +159,7 @@ export class GridSaveStateComponent implements OnInit {
             }
             try {
             window.localStorage.setItem(`${stateDir.grid.id}-state`, state);
-            } catch (e) {
+            } catch (_e) {
                 console.log('Storage is full, or the value that you try to se is too long to be written in single item, Please empty data');
             }
         });

@@ -32,6 +32,7 @@
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
 @use '../components/label/label-theme' as *;
+@use '../components/query-builder/query-builder-theme' as *;
 
 @mixin typography($type-scale) {
     @include badge-typography();
@@ -113,4 +114,7 @@
     @include label-typography($categories: (
         label: 'body-1'
     ));
+	@include query-builder-typography($categories: (
+		title: 'h5'
+	));
 }

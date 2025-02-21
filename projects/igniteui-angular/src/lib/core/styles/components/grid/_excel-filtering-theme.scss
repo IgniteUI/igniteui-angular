@@ -175,7 +175,7 @@
             @if $theme-variant == 'light' {
                 background: contrast-color($color: 'gray', $variant: 900);
             } @else {
-                background: color($color: 'gray', $variant: 50);
+                background: color($color: 'surface', $variant: 500);
             }
 
             %igx-group-display {
@@ -720,20 +720,14 @@
     }
 
     %grid-excel-menu__secondary-footer {
-        padding: rem(8px) rem(16px);
+        --ig-size: 2;
+
+        padding-inline: if($variant != 'bootstrap', rem(24px), rem(16px));
+        padding-block-end: if($variant != 'bootstrap', rem(24px), rem(16px));
 
         @if $bootstrap-theme {
-            border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
-        } @else {
-            border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
-        }
-
-        @if $variant == 'indigo' and $theme-variant == 'dark' {
-            border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
-        }
-
-        @if $variant == 'indigo' {
-            padding: rem(16px);
+            padding-block-start: rem(16px);
+            border-top: rem(1px) solid color($color: 'gray', $variant: 300);
         }
 
         %grid-excel-filter__apply,

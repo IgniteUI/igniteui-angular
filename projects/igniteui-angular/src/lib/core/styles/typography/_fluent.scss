@@ -31,6 +31,7 @@
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
 @use '../components/label/label-theme' as *;
+@use '../components/query-builder/query-builder-theme' as *;
 
 @mixin typography() {
     @include badge-typography();
@@ -119,4 +120,5 @@
     @include label-typography($categories: (
         label: 'subtitle-2'
     ));
+	@include query-builder-typography();
 }
