@@ -24,16 +24,14 @@ $_theme: $material;
     }
 
     @include e(body) {
-        column-gap: rem(44px);
-
         &:not(.igx-calendar__body--vertical) {
             .igx-days-view + .igx-days-view {
-                padding-inline-start: 0;
+                padding-inline-start: rem(22px);
             }
 
             .igx-days-view:first-child,
             .igx-days-view:nth-child(even) {
-                padding-inline-end: 0;
+                padding-inline-end: rem(22px);
             }
 
             .igx-days-view:last-child {
