@@ -450,7 +450,7 @@ export var registerConfig = [
     parents: [IgxGridToolbarComponent],
     contentQueries: [],
     additionalProperties: [],
-    methods: [],
+    methods: ["ngOnInit"],
   },
   {
     component: IgxGridToolbarComponent,
