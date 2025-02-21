@@ -946,16 +946,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         return this._indicators.toArray();
     }
 
-    private focusElement() {
-        const focusedElement = this.document.activeElement;
-
-        if (focusedElement.classList.contains('igx-carousel-indicators__indicator')) {
-            this.indicatorsElements[this.current].nativeElement.focus();
-        } else {
-            this.focusSlideElement();
-        }
-    }
-
     private getIndicatorsClass(): string {
         switch (this.indicatorsOrientation) {
             case CarouselIndicatorsOrientation.top:
@@ -1113,18 +1103,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             });
         }
     }
-    private focusSlideElement() {
-        if (this.leaveAnimationPlayer) {
-            this.leaveAnimationPlayer.animationEnd
-                .pipe(takeUntil(this.destroy$))
-                .subscribe(() => {
-                    this.slides.find(s => s.active).nativeElement.focus();
-                });
-        } else {
-            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
-        }
-    }
-
 }
 
 export interface ISlideEventArgs extends IBaseEventArgs {
