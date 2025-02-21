@@ -42,7 +42,6 @@ export const QueryBuilderResourceStringsHU = {
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
     igx_query_builder_filter_all: 'Összes',
-    igx_query_builder_title: 'Query Builder',
     igx_query_builder_from_label: 'Kezdete',
     igx_query_builder_select_label: 'Kiválasztás',
     igx_query_builder_where_label: 'Ahol',

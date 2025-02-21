@@ -37,7 +37,7 @@
                     [data]="fields"
                     [displayKey]="'field'"
                     [valueKey]="'field'"
-                    [disabled]="!selectedEntity"
+                    [disabled]="disableFieldsChange"
                     [(ngModel)]="selectedReturnFields"
                     [overlaySettings]="returnFieldSelectOverlaySettings"
                     [placeholder]="this.resourceStrings.igx_query_builder_select_return_fields"

@@ -42,7 +42,6 @@ export const QueryBuilderResourceStringsJA = {
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
     igx_query_builder_filter_all: 'すべて',
-    igx_query_builder_title: 'Query Builder',
     igx_query_builder_from_label: 'から',
     igx_query_builder_select_label: '選択',
     igx_query_builder_where_label: '条件',

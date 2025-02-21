@@ -290,12 +290,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChildren(IgxChipComponent, { read: IgxChipComponent })
     private expressionsChips: QueryList<IgxChipComponent>;
 
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxQueryBuilderHeaderComponent)
-    public headerContent: IgxQueryBuilderHeaderComponent;
-
     @ViewChild('editingInputsContainer', { read: ElementRef })
     protected set editingInputsContainer(value: ElementRef) {
         if ((value && !this._editingInputsContainer) ||
@@ -475,6 +469,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public get disableEntityChange(): boolean {
 
         return !this.parentExpression && this.selectedEntity ? this.queryBuilder.disableEntityChange : false;
+    }
+
+    /**
+     * Returns if the fields combo at the root level is disabled.
+     */
+     public get disableFieldsChange(): boolean {
+
+        return !this.selectedEntity || this.queryBuilder.disableFieldsChange;
     }
 
     /**

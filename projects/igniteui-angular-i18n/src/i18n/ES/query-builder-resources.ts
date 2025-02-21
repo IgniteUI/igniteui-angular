@@ -42,7 +42,6 @@ export const QueryBuilderResourceStringsES = {
     igx_query_builder_filter_true: 'Verdadero',
     igx_query_builder_filter_false: 'Falso',
     igx_query_builder_filter_all: 'Todo',
-    igx_query_builder_title: 'Query Builder',
     igx_query_builder_from_label: 'Desde',
     igx_query_builder_select_label: 'Seleccionar',
     igx_query_builder_where_label: 'Donde',

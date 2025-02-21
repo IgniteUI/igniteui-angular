@@ -17,6 +17,14 @@
                 "selector": "igx-query-builder-header",
                 "type": "component"
             }
+        },
+        {
+            "name": "resourceStrings",
+            "remove": true,
+            "owner": {
+                "selector": "igx-query-builder-header",
+                "type": "component"
+            }
         }
     ]
 }

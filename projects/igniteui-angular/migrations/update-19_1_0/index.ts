@@ -16,5 +16,16 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         args.value = `[{ name: '', fields: ${args.value}}]`;
     });
 
+    // remove igx_query_builder_title from resources
+    for (const entryPath of update.tsFiles) {
+        let content = host.read(entryPath).toString();
+        const regex = new RegExp(String.raw`,?\s*igx_query_builder_title\s*:\s*'[^']*'`, 'g');
+
+        if (regex.test(content)) {
+            content = content.replace(regex, '');
+            host.overwrite(entryPath, content);
+        }
+    }
+
     update.applyChanges();
 };

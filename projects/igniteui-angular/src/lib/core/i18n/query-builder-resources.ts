@@ -36,8 +36,7 @@ export interface IQueryBuilderResourceStrings {
     igx_query_builder_filter_lessThanOrEqualTo?: string;
     igx_query_builder_filter_true?: string;
     igx_query_builder_filter_false?: string;
-    igx_query_builder_filter_all?: string;    
-    igx_query_builder_title?: string;
+    igx_query_builder_filter_all?: string;
     igx_query_builder_from_label?: string;
     igx_query_builder_select_label?: string;
     igx_query_builder_where_label?: string;
@@ -112,8 +111,7 @@ export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
     igx_query_builder_filter_lessThanOrEqualTo: 'Less Than Or Equal To',
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
-    igx_query_builder_filter_all: 'All',    
-    igx_query_builder_title: 'Query Builder',
+    igx_query_builder_filter_all: 'All',
     igx_query_builder_from_label: 'From',
     igx_query_builder_select_label: 'Select',
     igx_query_builder_where_label: 'Where',
