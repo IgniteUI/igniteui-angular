@@ -7,7 +7,6 @@ $palette: igx.$light-fluent-palette;
 
 @include igx.core();
 @include igx.typography($font-family: igx.$fluent-typeface, $type-scale: igx.$fluent-type-scale);
-@include igx.fluent-light-theme($palette: $palette, $exclude: vars.$unused-themes);
 
 @include util.elements-theme(
     $palette: $palette,
