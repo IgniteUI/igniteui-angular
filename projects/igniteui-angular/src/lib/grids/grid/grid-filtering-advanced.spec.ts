@@ -16,13 +16,14 @@ import {
     IgxGridExternalAdvancedFilteringComponent,
     IgxGridAdvancedFilteringBindingComponent,
     IgxGridAdvancedFilteringOverlaySettingsComponent,
-    IgxGridAdvancedFilteringDynamicColumnsComponent
+    IgxGridAdvancedFilteringDynamicColumnsComponent,
+    IgxGridAdvancedFilteringWithToolbarComponent
 } from '../../test-utils/grid-samples.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
-import { IFilteringEventArgs } from '../public_api';
+import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
@@ -43,7 +44,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxGridExternalAdvancedFilteringComponent,
                 IgxGridAdvancedFilteringBindingComponent,
                 IgxHierGridExternalAdvancedFilteringComponent,
-                IgxGridAdvancedFilteringDynamicColumnsComponent
+                IgxGridAdvancedFilteringDynamicColumnsComponent,
+                IgxGridAdvancedFilteringWithToolbarComponent
             ]
         });
     }));
@@ -115,26 +117,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify AF dialog is closed.
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
-        }));
-
-        it('Should set initial Advanced Filtering', fakeAsync(() => {
-            // Set filtering expressions tree
-            const tree = new FilteringExpressionsTree(FilteringLogic.And);
-            tree.filteringOperands.push({
-                fieldName: 'ProductName',
-                condition: IgxStringFilteringOperand.instance().condition('contains'),
-                searchVal: 'angular',
-                ignoreCase: true
-            });
-
-            // Add filters to the grid
-            const advancedFilteringTree: FilteringExpressionsTree = tree;
-            grid.advancedFilteringExpressionsTree = advancedFilteringTree;
-            fix.detectChanges();
-
-            // Verify number of advanced filters is correct
-            const advancedFilters = grid.advancedFilteringExpressionsTree.filteringOperands;
-            expect(advancedFilters.length).toEqual(1);
         }));
 
         it('Should close Advanced Filtering dialog through API by respecting \'applyChanges\' argument.', fakeAsync(() => {
@@ -1938,7 +1920,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             verifyChildrenSelection(GridFunctions.getAdvancedFilteringTreeItem(fix, [1]), false);
         }));
 
-        
+
         it('Should remove all empty groups when clicking `delete` on a group\'s operator line\'s context menu.', fakeAsync(() => {
             // Apply advanced filter through API.
             const rootTree = new FilteringExpressionsTree(FilteringLogic.And);
@@ -3177,6 +3159,65 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         });
 
     });
+
+    describe('Advanced filtering with toolbar', () => {
+        let fix: ComponentFixture<IgxGridAdvancedFilteringWithToolbarComponent>;
+        let grid: IgxGridComponent;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridAdvancedFilteringWithToolbarComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('Should update toolbar when advancedFilteringExpressionsTreeChange emits a new value', fakeAsync(() => {
+            // Set initial filtering expressions tree
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'ProductName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'angular',
+                ignoreCase: true
+            });
+
+            // Apply the initial filtering tree
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Create a new filtering tree with more filters
+            const updatedTree = new FilteringExpressionsTree(FilteringLogic.And);
+            updatedTree.filteringOperands.push({
+                fieldName: 'Downloads',
+                condition: IgxStringFilteringOperand.instance().condition('equals'),
+                searchVal: 10,
+                ignoreCase: true
+            });
+            updatedTree.filteringOperands.push({
+                fieldName: 'ProductName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'angular',
+                ignoreCase: true
+            });
+            updatedTree.filteringOperands.push({
+                fieldName: 'Category',
+                condition: IgxStringFilteringOperand.instance().condition('equals'),
+                searchVal: 'electronics',
+                ignoreCase: false
+            });
+
+            // Update the filtering expressions tree
+            grid.advancedFilteringExpressionsTree = updatedTree;
+            fix.detectChanges();
+
+            // Verify the correct number of filters
+            const toolbarDebugElement = fix.debugElement.query(By.directive(IgxGridToolbarAdvancedFilteringComponent));
+            const toolbarComponent = toolbarDebugElement.componentInstance as IgxGridToolbarAdvancedFilteringComponent;
+            const numberOfFilters = (toolbarComponent as any).numberOfColumns;
+
+            expect(grid.advancedFilteringExpressionsTree.filteringOperands.length).toEqual(3);
+            expect(numberOfFilters).toEqual(3);
+        }));
+    })
 
     describe('Localization - ', () => {
         it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
