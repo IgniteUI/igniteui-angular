@@ -90,4 +90,31 @@ describe(`Update to ${version}`, () => {
         `
         );
     });
+
+    it('should remove igx_query_builder_title from resources ', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.ts`,
+        `
+        export class TestComponent {
+            public resourceStrings = {
+                igx_query_builder_add_condition: '+ Add Condition',
+                igx_query_builder_title: 'Query Builder Title',
+                igx_query_builder_add_group: '+ Add Group',
+            };
+        }
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(
+        `
+        export class TestComponent {
+            public resourceStrings = {
+                igx_query_builder_add_condition: '+ Add Condition',
+                igx_query_builder_add_group: '+ Add Group',
+            };
+        }
+        `
+        );
+    });
 });
