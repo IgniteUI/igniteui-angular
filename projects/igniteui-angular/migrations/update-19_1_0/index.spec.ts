@@ -37,6 +37,28 @@ describe(`Update to ${version}`, () => {
         });
     });
 
+    it('should remove the $palette property from the color-classes mixin', async () => {
+            const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
+
+            appTree.create(
+                testFilePath,
+                `@include color-classes(
+                    $palette: $some-palette,
+                    $prop: 'color',
+                    $prefix: 'bg'
+                );`
+            );
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(testFilePath)).toEqual(
+                `@include color-classes(
+                    $prop: 'color',
+                    $prefix: 'bg'
+                );`
+            );
+    });
+
     it('should remove igx-caroursel property `keyboardSupport` in template', async () => {
         appTree.create(`/testSrc/appPrefix/component/test.component.html`,
         `

@@ -1,4 +1,4 @@
-<igx-input-group #inputGroup class="input-group" (click)="inputGroupClick($event)" [type]="type">
+<igx-input-group #inputGroup class="input-group" (click)="inputGroupClick($event)" [type]="type === 'search' ? 'line' : type">
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>

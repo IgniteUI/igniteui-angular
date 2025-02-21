@@ -7,8 +7,11 @@
             [indeterminate]="properties.indeterminate"
             [value]="properties.value"
             [type]="variantAngular"
+            [text]="properties.text"
             [animationDuration]="properties.animationDuration"
             [textVisibility]="!properties.hideLabel"
+            [animate]="properties.hasAnimation"
+            [max]="properties.max"
             [textTop]="getTextAlignmentConfig(properties.labelAlign).textTop"
             [textAlign]="getTextAlignmentConfig(properties.labelAlign).textAlign">
             </igx-linear-bar>
@@ -18,8 +21,10 @@
         <div class="linear-container">
             <igc-linear-progress
             [striped]="properties.striped"
-            [indeterminate]="properties.indeterminate"
+            [labelFormat]="properties.text"
+            [attr.indeterminate]="properties.indeterminate ? true : null"
             [animationDuration]="properties.animationDuration"
+            [max]="properties.max"
             [value]="properties.value"
             [variant]="properties.variant"
             [hideLabel]="properties.hideLabel"
