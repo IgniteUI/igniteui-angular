@@ -1269,7 +1269,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             const calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-            const sundayLabel = calendar.querySelectorAll('.igx-days-view__label')[0].textContent;
+            const sundayLabel = calendar.querySelectorAll('.igx-day-label')[0].textContent;
 
             expect(sundayLabel.trim()).toEqual('Mo');
         }));

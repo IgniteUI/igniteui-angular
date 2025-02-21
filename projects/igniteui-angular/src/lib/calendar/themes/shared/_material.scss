@@ -54,13 +54,8 @@ $_theme: $material;
 
     @include m(vertical) {
         @include e(header) {
-            min-width: rem(136px);
-            width: rem(136px);
-        }
-
-        @include e(header-date) {
-            margin: 0;
+            min-width: rem(168px);
+            width: rem(168px);
         }
     }
-
 }

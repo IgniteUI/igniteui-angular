@@ -17,7 +17,7 @@ export class HelperTestFunctions {
     public static CALENDAR_HEADER_CSSCLASS = '.igx-calendar__header';
     public static CALENDAR_HEADER_YEAR_CSSCLASS = '.igx-calendar__header-year';
     public static CALENDAR_HEADER_DATE_CSSCLASS = '.igx-calendar__header-date';
-    public static WEEKSTART_LABEL_CSSCLASS = '.igx-days-view__label';
+    public static WEEKSTART_LABEL_CSSCLASS = '.igx-day-label';
     public static VERTICAL_CALENDAR_CSSCLASS = '.igx-calendar__wrapper--vertical';
     public static DAY_CSSCLASS = '.igx-day-item';
     public static CURRENT_MONTH_DATES = '.igx-day-item:not(.igx-day-item--inactive)';

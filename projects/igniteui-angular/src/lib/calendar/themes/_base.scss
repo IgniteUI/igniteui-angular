@@ -108,37 +108,9 @@ $theme: $material;
         }
 
         @include m(vertical) {
-            @include sizable();
-
-            --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
-            --dropdown-size: var(--component-size);
-
-            display: flex;
             flex-flow: row nowrap;
-            width: 100%;
-            color: var-get($theme, 'content-foreground');
-            background: var-get($theme, 'content-background');
-            box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
-            border-radius: var-get($theme, 'border-radius');
-            min-width: sizable(rem(290px), rem(314px), rem(360px));
-            overflow: hidden;
-            outline: none;
-
-            .igx-days-view,
-            .igx-calendar-view {
-                background: inherit;
-                color: inherit;
-                box-shadow: none;
-            }
-
-            .igx-days-view,
-            .igx-calendar-view,
-            .igx-calendar-picker {
-                border-radius: 0;
-            }
 
             @include e(header-date) {
-                display: flex;
                 flex-wrap: wrap;
             }
         }
