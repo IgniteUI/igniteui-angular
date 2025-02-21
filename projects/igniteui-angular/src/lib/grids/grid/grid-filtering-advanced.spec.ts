@@ -23,7 +23,7 @@ import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
-import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent } from '../public_api';
+import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
