@@ -2466,7 +2466,7 @@ describe('IgxQueryBuilder', () => {
       const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
 
-      let X = 100, Y = 150;
+      let X = 100, Y = 95;
 
       //pickup chip
       dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
