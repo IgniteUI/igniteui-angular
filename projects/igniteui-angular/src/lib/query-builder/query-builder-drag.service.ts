@@ -6,6 +6,7 @@ import { ExpressionGroupItem, ExpressionItem, QueryBuilderSelectors } from './qu
 const DEFAULT_SET_Z_INDEX_DELAY = 10;
 const Z_INDEX_TO_SET = 10010; //overlay z-index is 10005
 
+/** @hidden @internal */
 @Injectable()
 export class IgxQueryBuilderDragService {
     constructor(
@@ -51,7 +52,13 @@ export class IgxQueryBuilderDragService {
         return this._queryBuilderTreeComponentElRef.nativeElement.querySelector(`.${QueryBuilderSelectors.FILTER_TREE}`);
     }
 
-    /** When we pick up a chip */
+    /** When chip is picked up for dragging
+     * 
+     * @param sourceDragElement The HTML element of the chip that's been dragged
+     * @param sourceExpressionItem The expressionItem of the chip that's been dragged
+     * @param isKeyboardDrag If it's a mouse drag or keyboard reorder
+     * 
+    */
     public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean): void {
         //console.log('Picked up:', event, sourceDragElement);
         this.resetDragAndDrop(true);
@@ -67,7 +74,7 @@ export class IgxQueryBuilderDragService {
         }
     }
 
-    /** When we let go a chip outside a proper drop zone */
+    /** When dragged chip is let go outside a proper drop zone */
     public onMoveEnd(): void {
         // console.log('Let go:');
         if (!this.sourceElement || !this.sourceExpressionItem) return;
@@ -83,7 +90,11 @@ export class IgxQueryBuilderDragService {
         this._keyboardSubscription$?.unsubscribe();
     }
 
-    public onChipEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
+    /** When mouse drag enters a chip's area
+     * @param targetDragElement The HTML element of the drop area chip that's been dragged to
+     * @param targetExpressionItem The expressionItem of the drop area chip that's been dragged to
+    */
+    public onChipEnter(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem): void {
         // console.log('Entering:', targetDragElement, targetExpressionItem);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
@@ -104,8 +115,11 @@ export class IgxQueryBuilderDragService {
         this.renderDropGhostChip(targetDragElement, appendUnder);
     }
 
-    /** On moving the dragged chip in a drop area */
-    public onDivOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem) {
+    /** When mouse drag moves in a div's drop area 
+     * @param targetDragElement The HTML element of the drop area chip that's been dragged to
+     * @param targetExpressionItem The expressionItem of the drop area chip that's been dragged to
+    */
+    public onDivOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionItem): void {
         if (this.targetExpressionItem === targetExpressionItem) {
             this.onChipOver(targetDragElement)
         } else {
@@ -113,6 +127,9 @@ export class IgxQueryBuilderDragService {
         }
     }
 
+    /** When mouse drag moves in a chip's drop area 
+     * @param targetDragElement The HTML element of the drop area chip that's been dragged to
+    */
     public onChipOver(targetDragElement: HTMLElement): void {
         //console.log('Over:', targetDragElement, 'type: ', typeof event);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
@@ -123,7 +140,8 @@ export class IgxQueryBuilderDragService {
         this.renderDropGhostChip(targetDragElement, appendUnder);
     }
 
-    public onChipLeave() {
+    /** When mouse drag leaves a chip's drop area */
+    public onChipLeave(): void {
         if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
         //console.log('Leaving:', targetDragElement.textContent.trim());
 
@@ -137,14 +155,17 @@ export class IgxQueryBuilderDragService {
         }
     }
 
-    /** On dropped in a drop area of another chip*/
-    public onDivDropped(targetExpressionItem: ExpressionItem) {
+    /** When dragged chip is let go in div's drop area 
+     * @param targetExpressionItem The expressionItem of the drop area chip that's been dragged to
+    */
+    public onDivDropped(targetExpressionItem: ExpressionItem): void {
         if (targetExpressionItem != this.sourceExpressionItem) {
             this.onChipDropped();
         }
     }
 
-    public onChipDropped() {
+    /** When dragged chip is let go in chip's drop area */
+    public onChipDropped(): void {
         if (!this.sourceElement || !this.sourceExpressionItem || !this.targetElement) return;
         //console.log('Move: [', this.sourceElement.children[0].textContent.trim(), (this.dropUnder ? '] under: [' : '] over:'), this.targetExpressionItem)
 
@@ -159,7 +180,11 @@ export class IgxQueryBuilderDragService {
         this._queryBuilderTreeComponent.exitEditAddMode();
     }
 
-    public onGroupRootOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionGroupItem) {
+    /** When mouse drag moves in a AND/OR drop area 
+     * @param targetDragElement The HTML element of the drop area chip that's been dragged to
+     * @param targetExpressionItem The expressionItem of the drop area chip that's been dragged to
+    */
+    public onGroupRootOver(targetDragElement: HTMLElement, targetExpressionItem: ExpressionGroupItem): void {
         //console.log('Entering:', targetDragElement, targetExpressionItem);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
@@ -184,7 +209,11 @@ export class IgxQueryBuilderDragService {
         }
     }
 
-    public onAddConditionEnter(addConditionElement: HTMLElement, rootGroup: ExpressionGroupItem) {
+    /** When mouse drag moves in 'Add condition' button's drop area 
+     * @param addConditionElement The Add condition button HTML Element
+     * @param rootGroup The root group of the query tree
+    */
+    public onAddConditionEnter(addConditionElement: HTMLElement, rootGroup: ExpressionGroupItem): void {
         //console.log('onAddConditionEnter', addConditionElement);
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
@@ -195,11 +224,18 @@ export class IgxQueryBuilderDragService {
         this.onChipEnter(lastElement as HTMLElement, rootGroup.children[rootGroup.children.length - 1]);
     }
 
-    public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
+    /** When chip's drag indicator is focused
+     * 
+     * @param sourceDragElement The HTML element of the chip that's been dragged
+     * @param sourceExpressionItem The expressionItem of the chip that's been dragged
+     * 
+    */
+    public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem): void {
         this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
     }
 
-    public onChipDragIndicatorFocusOut() {
+    /** When chip's drag indicator looses focus*/
+    public onChipDragIndicatorFocusOut(): void {
         if (this.sourceElement?.style?.display !== 'none') {
             this.resetDragAndDrop(true);
             this._keyboardSubscription$?.unsubscribe();
@@ -207,7 +243,7 @@ export class IgxQueryBuilderDragService {
     }
 
     /** Upon blurring the tree, if Keyboard drag is underway and the next active item is not the drop ghost's drag indicator icon, cancel the drag&drop procedure*/
-    public onDragFocusOut() {
+    public onDragFocusOut(): void {
         if (this._isKeyboardDrag && this.dropGhostElement) {
             //have to wait a tick because upon blur, the next activeElement is always body, right before the next element gains focus
             setTimeout(() => {
@@ -220,7 +256,7 @@ export class IgxQueryBuilderDragService {
     }
 
     /** Checks if the dragged ghost is horizontally on the same line with the drop ghost*/
-    private dragGhostIsOnDropGhostRow(dragGhost: HTMLElement, dropGhost: HTMLElement) {
+    private dragGhostIsOnDropGhostRow(dragGhost: HTMLElement, dropGhost: HTMLElement): boolean {
         const dragGhostBounds = dragGhost.getBoundingClientRect();
         const dropGhostBounds = dropGhost.getBoundingClientRect();
 
@@ -232,7 +268,7 @@ export class IgxQueryBuilderDragService {
     }
 
     /** Checks if the dragged ghost is north or south of a target element's center*/
-    private ghostInLowerPart(ofElement: HTMLElement) {
+    private ghostInLowerPart(ofElement: HTMLElement): boolean {
         //if (event == null) return true;
         const ghostBounds = this.dragGhostElement.getBoundingClientRect();
         const targetBounds = ofElement.getBoundingClientRect();
@@ -241,7 +277,7 @@ export class IgxQueryBuilderDragService {
     }
 
     /** Create the drop ghost node based on the base chip that's been dragged*/
-    private createDropGhost(keyboardMode?: boolean) {
+    private createDropGhost(keyboardMode?: boolean): Node {
         const dragCopy = this.sourceElement.cloneNode(true);
         (dragCopy as HTMLElement).classList.add(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST);
         (dragCopy as HTMLElement).style.display = '';
@@ -301,14 +337,14 @@ export class IgxQueryBuilderDragService {
     }
 
     /** Set the cursor when dragging a ghost*/
-    private setDragCursor(cursor: string) {
+    private setDragCursor(cursor: string): void {
         if (this.dragGhostElement) {
             this.dragGhostElement.style.cursor = cursor;
         }
     }
 
     /** Execute the drop*/
-    private moveDraggedChipToNewLocation(sourceExpressionItem: ExpressionItem, appendToExpressionItem: ExpressionItem, dropUnder: boolean) {
+    private moveDraggedChipToNewLocation(sourceExpressionItem: ExpressionItem, appendToExpressionItem: ExpressionItem, dropUnder: boolean): void {
         //Copy dragged chip
         const dragCopy = { ...sourceExpressionItem };
         dragCopy.parent = appendToExpressionItem.parent;
@@ -322,7 +358,7 @@ export class IgxQueryBuilderDragService {
     }
 
     /** Reset Drag&Drop vars. Optionally the drag source vars too*/
-    private resetDragAndDrop(clearDragged: boolean) {
+    private resetDragAndDrop(clearDragged: boolean): void {
         this.targetExpressionItem = null;
         this.targetElement = null;
         this.dropUnder = null;
@@ -344,7 +380,7 @@ export class IgxQueryBuilderDragService {
         }
     }
 
-    private listenToKeyboard() {
+    private listenToKeyboard(): void {
         this._keyboardSubscription$?.unsubscribe();
         this._keyboardSubscription$ = fromEvent<KeyboardEvent>(this.mainExpressionTree, 'keydown')
             .pipe(filter(e => ['ArrowUp', 'ArrowDown', 'Enter', 'Space', 'Escape', 'Tab'].includes(e.key)))
@@ -372,7 +408,7 @@ export class IgxQueryBuilderDragService {
     }
 
     /** Perform up/down movement of drop ghost along the expression tree*/
-    private arrowDrag(key: string) {
+    private arrowDrag(key: string): void {
         if (!this.sourceElement || !this.sourceExpressionItem) return;
 
         if (this._keyDragFirstMove) {
@@ -468,7 +504,7 @@ export class IgxQueryBuilderDragService {
     }
 
     /** Get previous chip area taking into account a possible hidden sub-tree or collapsed base chip*/
-    private getPreviousChip(chipSubject: Element) {
+    private getPreviousChip(chipSubject: Element): Element {
         let prevElement = chipSubject;
 
         do {
@@ -480,7 +516,7 @@ export class IgxQueryBuilderDragService {
     }
 
     /** Get next chip area taking into account a possible hidden sub-tree or collapsed base chip*/
-    private getNextChip(chipSubject: Element) {
+    private getNextChip(chipSubject: Element): Element {
         let nextElement = chipSubject;
 
         do {
@@ -553,7 +589,7 @@ export class IgxQueryBuilderDragService {
     }
 
     /** Sets the z-index of the drag ghost with a little delay, since we don't have access to ghostCreated() but we know it's executed right after moveStart()*/
-    private setDragGhostZIndex() {
+    private setDragGhostZIndex(): void {
         if (this._timeoutId) {
             clearTimeout(this._timeoutId);
         }
