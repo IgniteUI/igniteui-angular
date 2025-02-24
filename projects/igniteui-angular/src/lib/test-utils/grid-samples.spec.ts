@@ -1119,14 +1119,7 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
 })
 export class IgxGridAdvancedFilteringWithToolbarComponent extends BasicGridComponent {
     public customFilter = CustomFilter.instance();
-    public resizable = false;
-    public filterable = true;
-
     public override data = SampleTestData.excelFilteringData();
-    public activateFiltering(activate: boolean) {
-        this.grid.allowFiltering = activate;
-        this.grid.cdr.markForCheck();
-    }
 }
 
 @Component({
