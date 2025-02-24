@@ -16,6 +16,11 @@
             <igx-query-builder-header></igx-query-builder-header>
         </igx-query-builder>
 
+        <p>ONLY HEADER CONTENT</p>
+        <igx-query-builder #queryBuilder1 [entities]="this.entities">
+            <igx-query-builder-header><igx-icon>face</igx-icon> &nbsp; Custom header content</igx-query-builder-header>
+        </igx-query-builder>
+
         <p>HEADER WITH TITLE</p>
         <igx-query-builder #queryBuilder2 [entities]="this.entities">
             <igx-query-builder-header [title]="'Query Builder'"></igx-query-builder-header>

@@ -15,7 +15,7 @@ import {
     IgxTimeFilteringOperand,
     IgxDateTimeFilteringOperand,
     IgxComboComponent,
-    IGX_DIALOG_DIRECTIVES
+    IGX_DIALOG_DIRECTIVES, IgxIconComponent
 } from 'igniteui-angular';
 import { IgxResourceStringsFR } from 'igniteui-angular-i18n';
 import { CommonModule } from '@angular/common';
@@ -27,7 +27,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'app-query-builder-sample',
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
-    imports: [FormsModule, IGX_DIALOG_DIRECTIVES, IgxComboComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, CommonModule, IgxQueryBuilderSearchValueTemplateDirective]
+    imports: [FormsModule, IGX_DIALOG_DIRECTIVES, IgxComboComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, CommonModule, IgxQueryBuilderSearchValueTemplateDirective, IgxIconComponent]
 })
 export class QueryBuilderComponent implements OnInit {
     @ViewChild('queryBuilder', { static: true })

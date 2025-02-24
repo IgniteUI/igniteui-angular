@@ -234,6 +234,12 @@
         padding-block: if($variant != 'bootstrap', rem(24px), rem(16px)) rem(16px);
     }
 
+    %advanced-filter__title {
+        &:empty {
+            display: none;
+        }
+    }
+
     %advanced-filter__main {
         display: grid;
         gap: rem(16px);
