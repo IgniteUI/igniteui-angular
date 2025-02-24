@@ -121,8 +121,12 @@
         box-shadow: var-get($theme, 'elevation');
         overflow: hidden;
 
-        &:has(:not(.igx-query-builder__header)) {
+        &:has(:not(igx-query-builder-header)) {
             padding-block-start: if($variant != 'bootstrap', rem(24px), rem(16px))
+        }
+
+        &:has(igx-query-builder-header) {
+            padding-block-start: 0;
         }
 
 	    .igx-chip__ghost {
