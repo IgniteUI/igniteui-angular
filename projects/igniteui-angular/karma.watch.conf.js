@@ -38,7 +38,14 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromeWithGC'],
+    customLaunchers: {
+        ChromeWithGC: {
+            base: 'Chrome',
+            flags: ['--js-flags="--expose-gc"'],
+            debug: false
+        }
+    },
     singleRun: false
   });
 };
