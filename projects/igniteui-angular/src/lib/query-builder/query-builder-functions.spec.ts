@@ -3,7 +3,7 @@ import { ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxIconComponent, IgxDateFilteringOperand, IgxChipComponent } from 'igniteui-angular';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { QueryBuilderSelectors } from './query-builder.common';
 
 export const SampleEntities = [

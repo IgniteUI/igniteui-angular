@@ -2521,8 +2521,7 @@ describe('IgxQueryBuilder', () => {
         //When dragged to the end, check results and reverse direction for next pass
         if (i === 65 || i === 0) {
           expect(ghostPositionVisits).not.toContain(false,
-            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()
-            } on pass:${pass}`);
+            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()} on pass:${pass}`);
 
           ghostPositionVisits.fill(false);
           pass++;
