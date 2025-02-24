@@ -99,6 +99,8 @@ describe(`Update to ${version}`, () => {
                 igx_query_builder_add_condition: '+ Add Condition',
                 igx_query_builder_title: 'Query Builder Title',
                 igx_query_builder_add_group: '+ Add Group',
+                igx_query_builder_create_and_group: 'My create and group',
+                igx_query_builder_create_or_group: 'My create or group'
             };
         }
         `
@@ -111,7 +113,7 @@ describe(`Update to ${version}`, () => {
         export class TestComponent {
             public resourceStrings = {
                 igx_query_builder_add_condition: '+ Add Condition',
-                igx_query_builder_add_group: '+ Add Group',
+                igx_query_builder_add_group: '+ Add Group'
             };
         }
         `
