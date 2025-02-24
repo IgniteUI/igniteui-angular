@@ -47,6 +47,9 @@ export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
 
     constructor( @Inject(IgxToolbarToken) private toolbar: IgxToolbarToken) { }
 
+    /**
+     * @hidden
+     */
     public ngOnInit(): void {
         // Initial value
         this.numberOfColumns = this.grid?.advancedFilteringExpressionsTree ? this.extractUniqueFieldNamesFromFilterTree(this.grid?.advancedFilteringExpressionsTree).length : 0;
