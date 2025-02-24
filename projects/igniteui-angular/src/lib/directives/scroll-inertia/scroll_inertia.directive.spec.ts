@@ -4,7 +4,8 @@ import {
     NgZone,
     OnInit,
     ViewChild,
-    ElementRef
+    ElementRef,
+    OnDestroy,
 } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
@@ -15,21 +16,28 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 describe('Scroll Inertia Directive - Rendering', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
-    configureTestSuite();
+    configureTestSuite({ checkLeaks: true });
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 IgxTestScrollInertiaDirective,
                 ScrollInertiaComponent
             ]
-        }).compileComponents().then(() => {
-            fix = TestBed.createComponent(ScrollInertiaComponent);
-            fix.detectChanges();
-        });
+        }).compileComponents();
     }));
 
-    it('should initialize directive on non-scrollable container.', () => {
+    beforeEach(() => {
+        fix = TestBed.createComponent(ScrollInertiaComponent);
+        fix.detectChanges();
+    });
+
+    afterEach(() => {
+        fix = null;
+    });
+
+    it('should initialize directive on non-scrollable container.', async () => {
         expect(fix.componentInstance.scrInertiaDir).toBeDefined('scroll inertia initializing through markup failed');
+        await fix.whenStable();
     });
 
     // Unit tests for inertia function.
@@ -87,6 +95,10 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         scrollInertiaDir = new IgxTestScrollInertiaDirective(null, mockZone);
         scrollInertiaDir.IgxScrollInertiaScrollContainer = scrollContainerMock;
         scrollInertiaDir.smoothingDuration = 0;
+    });
+
+    afterEach(() => {
+        scrollInertiaDir.ngOnDestroy();
     });
 
     // Unit test for wheel - wheelDelataY/wheelDeltaX supported on Chrome, Safari, Opera.
@@ -342,7 +354,7 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
     `,
     imports: [IgxTestScrollInertiaDirective]
 })
-export class ScrollInertiaComponent implements OnInit {
+export class ScrollInertiaComponent implements OnInit, OnDestroy {
     @ViewChild('container', { static: true }) public container: ElementRef;
     @ViewChild('scrBar', { static: true }) public scrollContainer: ElementRef;
     @ViewChild('scrInertiaContainer', { read: IgxTestScrollInertiaDirective, static: true })
@@ -359,9 +371,8 @@ export class ScrollInertiaComponent implements OnInit {
    public ngOnInit() {
         this.scrInertiaDir.IgxScrollInertiaScrollContainer = this.scrollContainer.nativeElement;
 
-        this.scrollContainer.nativeElement.addEventListener('scroll', (evt) => {
-            this.onScroll(evt);
-        });
+        this.onScroll = this.onScroll.bind(this);
+        this.scrollContainer.nativeElement.addEventListener('scroll', this.onScroll);
     }
 
     public onScroll(evt) {
@@ -374,5 +385,9 @@ export class ScrollInertiaComponent implements OnInit {
         const calcScrollLeftStep = evt.target.scrollLeft - prevScrLeft;
         this.scrTopStepArray.push(calcScrollStep);
         this.scrLeftStepArray.push(calcScrollLeftStep);
+    }
+
+    public ngOnDestroy(): void {
+        this.scrollContainer.nativeElement.removeEventListener('scroll', this.onScroll);
     }
 }
