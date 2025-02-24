@@ -31,7 +31,6 @@ import { IgxSelectComponent } from '../select/select.component';
 import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/overlay/utilities';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
-import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-common/picker-icons.common';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';

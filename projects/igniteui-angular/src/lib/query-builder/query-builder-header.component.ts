@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
@@ -9,6 +9,13 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 export class IgxQueryBuilderHeaderComponent {
 
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class') public get getClass() {
+        return 'igx-query-builder__header';
+    }
 
     /**
      * Sets the title of the `IgxQueryBuilderHeaderComponent`.
