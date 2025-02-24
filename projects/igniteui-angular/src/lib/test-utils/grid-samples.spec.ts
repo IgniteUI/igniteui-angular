@@ -1202,6 +1202,7 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
         <igx-column width="100px" [field]="'ReleaseTime'" dataType="time"></igx-column>
         </igx-column>
     </igx-grid>`,
+    standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent]
 })
 export class IgxGridAdvancedFilteringWithToolbarComponent extends BasicGridComponent {
