@@ -2261,7 +2261,7 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it('Should render custom header properly.', () => {
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe(' Custom Title ');
+      expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe('Custom Title');
     });
 
     it('Should render custom input template properly.', fakeAsync(() => {
