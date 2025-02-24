@@ -1028,6 +1028,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.focusEditedExpressionChip();
     }
 
+    /**
+     * @hidden @internal
+     */
     public dragService: IgxQueryBuilderDragService = new IgxQueryBuilderDragService(this, this.el, this.deleteItem, this.focusChipAfterDrag);
 
     /**
