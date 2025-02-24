@@ -3215,11 +3215,6 @@
         }
 
         igx-query-builder {
-            //--igx-query-builder-background: #{var-get($theme, 'filtering-row-background')};
-            //--igx-query-builder-background-and: #{var-get($theme, 'filtering-background-and')};
-            //--igx-query-builder-background-and--focus: #{var-get($theme, 'filtering-background-and--focus')};
-            //--igx-query-builder-background-or: #{var-get($theme, 'filtering-background-or')};
-            //--igx-query-builder-background-or--focus: #{var-get($theme, 'filtering-background-or--focus')};
             box-shadow: none;
             border: none;
             border-radius: inherit;

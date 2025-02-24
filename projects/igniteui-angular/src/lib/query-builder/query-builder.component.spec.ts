@@ -2500,31 +2500,31 @@ describe('IgxQueryBuilder', () => {
           if (!dropGhost) ghostPositionVisits[0] = true;
         }
 
-        if (i > 7 && i < 22 && !ghostPositionVisits[1]) {
+        if (i > 6 && i < 23 && !ghostPositionVisits[1]) {
           if (dropGhost && !prevElement && nextElement == "OrderName  Equals  foo") ghostPositionVisits[1] = true;
         }
 
-        if (i > 21 && i < 34 && !ghostPositionVisits[2]) {
+        if (i > 20 && i < 35 && !ghostPositionVisits[2]) {
           if (dropGhost && prevElement == "OrderName  Equals  foo" && !nextElement) ghostPositionVisits[2] = true;
         }
 
-        if (i > 33 && i < 38 && !ghostPositionVisits[3]) {
+        if (i > 31 && i < 40 && !ghostPositionVisits[3]) {
           if (dropGhost && !prevElement && nextElement == "OrderName  Ends With  a") ghostPositionVisits[3] = true;
         }
 
-        if (i > 37 && i < 46 && !ghostPositionVisits[4]) {
+        if (i > 36 && i < 47 && !ghostPositionVisits[4]) {
           if (dropGhost && prevElement == "OrderName  Ends With  a" && !nextElement) ghostPositionVisits[4] = true;
         }
 
-        if (i > 45 && i < 56 && !ghostPositionVisits[5]) {
+        if (i > 44 && i < 57 && !ghostPositionVisits[5]) {
           if (dropGhost && prevElement == "OrderDate  Today" && !nextElement) ghostPositionVisits[5] = true;
         }
 
-        if (i > 55 && i < 63 && !ghostPositionVisits[6]) {
+        if (i > 54 && i < 64 && !ghostPositionVisits[6]) {
           if (pass > 2 || (dropGhost && prevElement == "or  OrderName  Ends With  a  OrderDate  Today" && !nextElement)) ghostPositionVisits[6] = true;
         }
 
-        if (i > 63 && !ghostPositionVisits[7]) {
+        if (i > 62 && !ghostPositionVisits[7]) {
           tick(50);
           if (!dropGhost) ghostPositionVisits[7] = true;
         }
@@ -2532,8 +2532,7 @@ describe('IgxQueryBuilder', () => {
         //When dragged to the end, check results and reverse direction for next pass
         if (i === 65 || i === 0) {
           expect(ghostPositionVisits).not.toContain(false,
-            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()
-            } on pass:${pass}`);
+            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()} on pass:${pass}`);
 
           ghostPositionVisits.fill(false);
           pass++;

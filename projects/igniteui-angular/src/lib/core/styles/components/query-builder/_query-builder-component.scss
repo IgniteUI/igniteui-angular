@@ -110,6 +110,10 @@
         @include e(expression-item-ghost) {
             @extend %filter-tree__expression-item-ghost !optional;
         }
+	    
+	    @include e(expression-item-drop-ghost) {
+		    @extend %filter-tree__expression-drop-item-ghost !optional;
+	    }
 
         @include e(expression-column) {
             @extend %filter-tree__expression-column !optional;
