@@ -6,48 +6,43 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCarousel`
     - **Behavioral Changes** - the `maximumIndicatorsCount` input property now defaults to `10`.
     - **Deprecation** - `CarouselIndicatorsOrientation` enum members `top` and `bottom` have been deprecated and will be removed in a future version. Use `start` and `end` instead.
-- `IgxQueryBuilderHeader`
-    - **Behavioral Changes**
-    - Legend is no longer shown.
-    - If the `title` input property is not set, by default it would be empty string.
-    - **Deprecation**
-    - The `showLegend` and `resourceStrings` input properties have been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
 ### New Features
 - `IgxBanner`
     - Introduced a new `expanded` input property, enabling dynamic control over the banner's state. The banner can now be programmatically set to expanded (visible) or collapsed (hidden) both initially and at runtime. Animations will trigger during runtime updates — the **open animation** plays when `expanded` is set to `true`, and the **close animation** plays when set to `false`. However, no animations will trigger when the property is set initially.
     - The banner's event lifecycle (`opening`, `opened`, `closing`, `closed`) only triggers through **user interactions** (e.g., clicking to open/close). Programmatic updates using the `expanded` property will not fire any events.
     - If the `expanded` property changes during an ongoing animation, the current animation will **stop** and the opposite animation will begin from the **point where the previous animation left off**. For instance, if the open animation (10 seconds) is interrupted at 6 seconds and `expanded` is set to `false`, the close animation (5 seconds) will start from its 3rd second.
-- `IgxQueryBuilder`
-    - Introduced the ability to create nested queries by specifying IN/NOT IN operators.
-    - Introduced the ability to reposition condition chips by dragging or using `Arrow Up/Down`.
-    - Added the `entities` property that accepts an array of `EntityType` objects describing an entity with its name and an array of fields. The `fields` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
-    - Added `disableEntityChange` property that can be used to disable the entity select on root level after the initial selection. Defaults to `false`.
-    - Added `disableFieldsChange` property that can be used to disable the fields combo on root level. Defaults to `false`.
-    - Added the `canCommit`, `commit` and `discard` public methods that allows the user to save/discard the current state of the expression tree.
-    - Added option to template the search value input:
-    ```
-    <ng-template igxQueryBuilderSearchValue 
-                let-searchValue
-                let-selectedField = "selectedField" 
-                let-selectedCondition = "selectedCondition"
-                let-defaultSearchValueTemplate = "defaultSearchValueTemplate">
-        @if (selectedField?.field === 'Id' && selectedCondition === 'equals'){
-            <input type="text" required [(ngModel)]="searchValue.value"/>
-        } @else {  
-            <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
-        }
-    </ng-template> 
-    ```
-    - **Behavioral Changes** 
-    - Expression enters edit mode on single click, `Enter` or `Space`.
-    - Selecting conditions inside the `IgxQueryBuilderComponent` is no longer supported. Grouping/ungrouping expressions is now achieved via the newly exposed Drag & Drop functionality.
-    - Deleting multiple expressions through the context menu is no longer supported.
-    - `IgxQueryBuilderHeader` will no longer be visible by default. In order to add the header, you will need to add it to the `IgxQueryBuilderComponent`as follows:
-    ```
-    <igx-query-builder [entities]="this.entities">
-        <igx-query-builder-header [title]="'Query Builder'"></igx-query-builder-header>
-    </igx-query-builder>
-    ```
+- `IgxQueryBuilder` has new design that comes with updated appearance and new functionality
+    - `IgxQueryBuilderComponent`
+        - Introduced the ability to create nested queries by specifying IN/NOT IN operators.
+        - Introduced the ability to reposition condition chips by dragging or using `Arrow Up/Down`.
+        - Added the `entities` property that accepts an array of `EntityType` objects describing an entity with its name and an array of fields. The `fields` input property has been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
+        - Added `disableEntityChange` property that can be used to disable the entity select on root level after the initial selection. Defaults to `false`.
+        - Added `disableFieldsChange` property that can be used to disable the fields combo on root level. Defaults to `false`.
+        - Added the `canCommit`, `commit` and `discard` public methods that allows the user to save/discard the current state of the expression tree.
+        - Added option to template the search value input:
+            ```
+            <ng-template igxQueryBuilderSearchValue 
+                        let-searchValue
+                        let-selectedField = "selectedField" 
+                        let-selectedCondition = "selectedCondition"
+                        let-defaultSearchValueTemplate = "defaultSearchValueTemplate">
+                @if (selectedField?.field === 'Id' && selectedCondition === 'equals'){
+                    <input type="text" required [(ngModel)]="searchValue.value"/>
+                } @else {  
+                    <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></    ng-container>
+                }
+            </ng-template> 
+            ```
+        - **Behavioral Changes** 
+        - Expression enters edit mode on single click, `Enter` or `Space`.
+        - Selecting conditions inside the `IgxQueryBuilderComponent` is no longer supported. Grouping/ungrouping expressions is now achieved via the newly exposed Drag & Drop functionality.
+        - Deleting multiple expressions through the context menu is no longer supported.
+    - `IgxQueryBuilderHeaderComponent`
+        - **Behavioral Change** 
+        - Legend is no longer shown.
+        - If the `title` input property is not set, by default it would be empty string.
+        - **Deprecation**
+        - The `showLegend` and `resourceStrings` input properties have been deprecated and will be removed in a future version. Automatic migrations are available and will be applied on `ng update`.
 - `IFilteringExpression`
     - A new optional property called `conditionName` has been introduced. This would generally be equal to the existing `condition.name`.
 - `IFilteringOperation`
