@@ -32,7 +32,7 @@ export class IgxQueryBuilderDragService {
     private _keyDragOffsetIndex: number = 0;
     private _keyDragFirstMove: boolean = true;
 
-    private _dropZonesList: HTMLElement[];   //stores a flat ordered list of all chips, including +Condition button, while performing the keyboard drag&drop
+    //private _dropZonesList: HTMLElement[];   //stores a flat ordered list of all chips, including +Condition button, while performing the keyboard drag&drop
     private _expressionsList: ExpressionItem[]; //stores a flat ordered list of all expressions, including +Condition button, while performing the keyboard drag&drop
     private _timeoutId: any;
 
@@ -43,6 +43,7 @@ export class IgxQueryBuilderDragService {
     }
 
     //Get the drop ghost as a HTMLElement
+    //TODO remove
     private get dropGhostElement(): HTMLElement {
         return (document.querySelector(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST}`) as HTMLElement);
     }
@@ -63,6 +64,7 @@ export class IgxQueryBuilderDragService {
         this.listenToKeyboard();
 
         if (!this.isKeyboardDrag) {
+            //TODO display-none should be done by angular?
             this._sourceElement.style.display = 'none';
             this.setDragGhostZIndex();
         }
@@ -70,7 +72,7 @@ export class IgxQueryBuilderDragService {
 
     //When we let go a chip outside a proper drop zone
     public onMoveEnd(): void {
-        // console.log('Let go:');
+         console.log('Let go:');
         if (!this._sourceElement || !this._sourceExpressionItem) return;
 
         if (this.dropGhostExpression) {
@@ -199,11 +201,15 @@ export class IgxQueryBuilderDragService {
     }
 
     public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
+        //TODO maybe add a var stating that drag is underway
+        if(!this.getDropGhostElement)
         this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
     }
 
     public onChipDragIndicatorFocusOut() {
+        console.log('1drag indicator focus out')
         if (this._sourceElement?.style?.display !== 'none') {
+            console.log('2 focus out')
             this.resetDragAndDrop(true);
             this._keyboardSubscription$?.unsubscribe();
         }
@@ -211,10 +217,13 @@ export class IgxQueryBuilderDragService {
 
     //Upon blurring the tree, if Keyboard drag is underway and the next active item is not the drop ghost's drag indicator icon, cancel the drag&drop procedure
     public onDragFocusOut() {
-        if (this.isKeyboardDrag && this.dropGhostElement) {
+        console.log('3 tree focus out')
+        if (false && this.isKeyboardDrag && this.getDropGhostElement) {
             //have to wait a tick because upon blur, the next activeElement is always body, right before the next element gains focus
             setTimeout(() => {
+                console.log('5', document.activeElement.className.indexOf(QueryBuilderSelectors.DRAG_INDICATOR))
                 if (document.activeElement.className.indexOf(QueryBuilderSelectors.DRAG_INDICATOR) === -1) {
+                    console.log('4 unsubscribe')
                     this.resetDragAndDrop(true);
                     this._keyboardSubscription$?.unsubscribe();
                 }
@@ -307,11 +316,15 @@ export class IgxQueryBuilderDragService {
         //Put focus on the drag icon of the ghost while performing keyboard drag
         if (this.isKeyboardDrag) {
             //TODO
-            //((this.dropGhostChipNode as HTMLElement).querySelector(`.${QueryBuilderSelectors.DRAG_INDICATOR}`) as HTMLElement).focus();
+            setTimeout(()=>{ // this will make the execution after the drop ghost is rendered
+                const dropGhostDragIndicator = this.getDropGhostElement?.nativeElement?.querySelector(`.${QueryBuilderSelectors.DRAG_INDICATOR}`) as HTMLElement;
+                if(dropGhostDragIndicator) dropGhostDragIndicator.focus();
+                //(this._queryBuilderTreeComponent.dropGhostElement.nativeElement.querySelector(`.${QueryBuilderSelectors.DRAG_INDICATOR}`) as HTMLElement).focus();
+            },0);  
         }
 
         //Attach a mousemove event listener (if not already in place) to the dragged ghost (if present)
-        if (this.dropGhostExpression && (!this._ghostChipMousemoveSubscription$ || this._ghostChipMousemoveSubscription$?.closed === true)) {
+        if (!this.isKeyboardDrag && this.dragGhostElement && (!this._ghostChipMousemoveSubscription$ || this._ghostChipMousemoveSubscription$?.closed === true)) {
             const mouseMoves = fromEvent<MouseEvent>(this.dragGhostElement, 'mousemove');
 
             this._ghostChipMousemoveSubscription$ = mouseMoves.pipe(sampleTime(100)).subscribe(() => {
@@ -354,6 +367,7 @@ export class IgxQueryBuilderDragService {
 
     //Reset Drag&Drop vars. Optionally the drag source vars too
     private resetDragAndDrop(clearDragged: boolean) {
+        console.log('reset', clearDragged)
         this._targetExpressionItem = null;
         //this.targetElement = null;
         this._dropUnder = null;
@@ -376,7 +390,7 @@ export class IgxQueryBuilderDragService {
             this._queryBuilderTreeComponent._expressionTreeCopy = null;
             this._sourceExpressionItem = null;
             this._sourceElement = null;
-            this._dropZonesList = null;
+            //this._dropZonesList = null;
             this._expressionsList = null;
         }
     }
@@ -391,6 +405,7 @@ export class IgxQueryBuilderDragService {
             }))
             .pipe(filter(event => !event.repeat))
             .subscribe(e => {
+                console.log('key', e.key)
                 if (e.key == 'Escape') {
                     //TODO cancel mouse drag
                     this.resetDragAndDrop(false);
@@ -412,14 +427,18 @@ export class IgxQueryBuilderDragService {
     private arrowDrag(key: string) {
         if (!this._sourceElement || !this._sourceExpressionItem) return;
 
+        const rootGroup = this._queryBuilderTreeComponent.rootGroup;
+
         if (this._keyDragFirstMove) {
-            this._expressionsList = this.getListedExpressions(this._queryBuilderTreeComponent.rootGroup);
-            this._dropZonesList = this.getListedDropZones();
+            this._expressionsList = this.getListedExpressions(rootGroup)
+            this._expressionsList.push(rootGroup.children[rootGroup.children.length - 1]);
+            //this._dropZonesList = this.getListedDropZones();
             this._sourceElement.style.display = 'none';
+            console.log(this._expressionsList)
         }
 
         //const index = this.expressionsList.indexOf(this.sourceExpressionItem);
-        const index = this._dropZonesList.indexOf(this._sourceElement);
+        const index = this._expressionsList.indexOf(this._sourceExpressionItem);
 
         if (index === -1) console.error("Dragged expression not found");
 
@@ -429,7 +448,7 @@ export class IgxQueryBuilderDragService {
             newKeyIndexOffset = this._keyDragOffsetIndex - 1 >= index * -2 - 1 ? this._keyDragOffsetIndex - 1 : this._keyDragOffsetIndex;
         } else if (key == 'ArrowDown') {
             //increase index offset capped at bottom of tree
-            newKeyIndexOffset = this._keyDragOffsetIndex + 1 <= (this._dropZonesList.length - 2 - index) * 2 + 2 ? this._keyDragOffsetIndex + 1 : this._keyDragOffsetIndex;
+            newKeyIndexOffset = this._keyDragOffsetIndex + 1 <= (this._expressionsList.length - 2 - index) * 2 + 2 ? this._keyDragOffsetIndex + 1 : this._keyDragOffsetIndex;
         } else {
             console.error('wrong key');
             return;
@@ -443,7 +462,7 @@ export class IgxQueryBuilderDragService {
             if (index + indexOffset <= this._expressionsList.length - 1) {
                 let under = this._keyDragOffsetIndex < 0 ? this._keyDragOffsetIndex % 2 == 0 ? true : false : this._keyDragOffsetIndex % 2 == 0 ? false : true;
 
-                if (this._dropZonesList[index + indexOffset].className.indexOf(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_CONTEXT_MENU) === -1) {
+                if (!(this._expressionsList[index + indexOffset] instanceof ExpressionGroupItem)) {
                     //this.targetElement = this._dropZonesList[index + indexOffset]
                     this._targetExpressionItem = this._expressionsList[index + indexOffset];
                 } else {
@@ -451,7 +470,7 @@ export class IgxQueryBuilderDragService {
                     if (index + indexOffset === 0) {
                         //If the root group's AND/OR
                         //this.targetElement = this._dropZonesList[0]
-                        this._targetExpressionItem = this._queryBuilderTreeComponent.rootGroup.children[0];
+                        this._targetExpressionItem = rootGroup.children[0];
                         under = true;
                     } else if (under) {
                         //If under AND/OR
@@ -470,29 +489,30 @@ export class IgxQueryBuilderDragService {
                         under = false;
                     }
                 }
-                const before = this.getPreviousChip(this.dropGhostElement);
-                const after = this.getNextChip(this.dropGhostElement);
+                // const before = this.getPreviousChip(this.dropGhostElement);
+                // const after = this.getNextChip(this.dropGhostElement);
 
                 this.renderDropGhostChip(under, true);
 
-                //If it's the first arrow hit OR drop ghost is not displayed OR hasn't actually moved, move one more step in the same direction
-                if (this._keyDragFirstMove ||
-                    !this.dropGhostElement ||
-                    (this.getPreviousChip(this.dropGhostElement) === before && this.getNextChip(this.dropGhostElement) === after)) {
+                // If it's the first arrow hit OR drop ghost is not displayed OR hasn't actually moved, move one more step in the same direction
+                if (this._keyDragFirstMove
+                    //|| !this.dropGhostElement ||
+                    //|| (this.getPreviousChip(this.dropGhostElement) === before && this.getNextChip(this.dropGhostElement) === after)
+                ) {
                     this._keyDragFirstMove = false;
                     this.arrowDrag(key);
                 }
             } else {
                 //Dropping on '+ Condition button' => drop as last condition in the root group
-                let lastElement = this._dropZonesList[this._dropZonesList.length - 1].parentElement.previousElementSibling
-                if (lastElement.className.indexOf(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_SECTION) !== -1) lastElement = lastElement.lastElementChild;
-                if (lastElement.className.indexOf(QueryBuilderSelectors.FILTER_TREE_SUBQUERY) !== -1) lastElement = lastElement.previousElementSibling;
+                // let lastElement = this._dropZonesList[this._dropZonesList.length - 1].parentElement.previousElementSibling
+                // if (lastElement.className.indexOf(QueryBuilderSelectors.FILTER_TREE_EXPRESSION_SECTION) !== -1) lastElement = lastElement.lastElementChild;
+                // if (lastElement.className.indexOf(QueryBuilderSelectors.FILTER_TREE_SUBQUERY) !== -1) lastElement = lastElement.previousElementSibling;
                 //if (lastElement === this.dropGhostChipNode) lastElement = lastElement.previousElementSibling;
 
-                const getParentExpression = (expression: ExpressionItem) => {
-                    return expression.parent ? getParentExpression(expression.parent) : expression
-                };
-                const rootGroup = getParentExpression(this._expressionsList[this._expressionsList.length - 1]);
+                // const getParentExpression = (expression: ExpressionItem) => {
+                //     return expression.parent ? getParentExpression(expression.parent) : expression
+                // };
+                // const rootGroup = getParentExpression(this._expressionsList[this._expressionsList.length - 1]);
 
                 //this.targetElement = lastElement as HTMLElement;
                 this._targetExpressionItem = rootGroup.children[rootGroup.children.length - 1];

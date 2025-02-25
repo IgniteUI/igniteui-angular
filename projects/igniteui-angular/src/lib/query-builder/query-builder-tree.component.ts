@@ -339,6 +339,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChildren(IgxQueryBuilderTreeComponent)
     private innerQueries: QueryList<IgxQueryBuilderTreeComponent>;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('dropGhost')
     public dropGhostElement: ElementRef;
 

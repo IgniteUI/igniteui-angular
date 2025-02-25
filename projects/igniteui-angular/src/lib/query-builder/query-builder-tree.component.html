@@ -128,7 +128,9 @@
             @if(dragService.dropGhostExpression && expressionItem === dragService.dropGhostExpression && dragService.isKeyboardDrag === false){
                 <!-- TODO QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST -->
                 <div [ngClass]="'igx-filter-tree__expression-item'+ 'igx-filter-tree__expression-item-drop-ghost'">
-                <igx-chip #dropGhost>
+                <igx-chip 
+                    #dropGhost
+                    [data]="expressionItem">
                     <span>
                         {{this.resourceStrings.igx_query_builder_drop_ghost_text}}
                     </span>
