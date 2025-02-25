@@ -40,6 +40,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxHierarchicalGridExportComponent,
+         IgxHierarchicalGridMCHCollapsibleComponent,
          IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent,
          IgxHierarchicalGridSummariesExportComponent
@@ -1016,6 +1017,27 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(hGrid, options, actualData.exportEmptyMultiColumnHeadersDataWithExportedHeaders);
         });
+
+        it('should export collapsible MCH with visibleWhenCollapsed set on 2 columns with the same field', async () => {
+            const fix = TestBed.createComponent(IgxHierarchicalGridMCHCollapsibleComponent);
+            fix.detectChanges();
+
+            const hGrid = fix.componentInstance.hGrid;
+            GridFunctions.clickGroupExpandIndicator(fix, hGrid.columnList.get(1));
+            fix.detectChanges();
+
+            const firstRow = hGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
+            fix.detectChanges();
+
+            const rowIsland = hGrid.childLayoutList.first;
+            GridFunctions.clickGroupExpandIndicator(fix, rowIsland.columnList.get(1));
+            fix.detectChanges();
+
+
+            options = createExportOptions('HierarchicalGridCollapsibleMCHExcelExport');
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithCollapsibleMCH);
+        })
     });
 
     describe('', () => {
