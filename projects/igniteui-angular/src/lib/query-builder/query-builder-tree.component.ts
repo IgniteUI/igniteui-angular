@@ -1296,7 +1296,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public getConditionFriendlyName(name: string): string {
         // As we have an 'In' condition already used in ESF to search in a Set, we add the 'Query' suffix to the newly introduced nested query condition names.
         // So instead of in/notIn we end up with 'inQuery'/'notInQuery', hence removing the suffix from the friendly name.
-        return this.resourceStrings[`igx_query_builder_filter_${name.replace('Query', '')}`] || name;
+        return this.resourceStrings[`igx_query_builder_filter_${name?.replace('Query', '')}`] || name;
     }
 
     /**
