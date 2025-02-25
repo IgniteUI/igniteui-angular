@@ -29,7 +29,7 @@ const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: tr
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
 
 describe('IgxTabs', () => {
-    configureTestSuite();
+    configureTestSuite({ checkLeaks: true });
 
     const tabItemNormalCssClass = 'igx-tabs__header-item';
     const tabItemSelectedCssClass = 'igx-tabs__header-item--selected';

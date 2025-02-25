@@ -754,6 +754,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements IC
 
     /** @hidden */
     public ngOnDestroy() {
+        super.baseDestroy();
         this.destroy$.next(true);
         this.destroy$.complete();
         this.destroyed = true;

@@ -81,6 +81,11 @@ export abstract class IgxCarouselComponentBase {
         protected cdr: ChangeDetectorRef) {
     }
 
+    public baseDestroy(): void {
+        this.enterAnimationPlayer?.destroy();
+        this.leaveAnimationPlayer?.destroy();
+    }
+
     /** @hidden */
     protected triggerAnimations() {
         if (this.animationType !== CarouselAnimationType.none) {
@@ -177,7 +182,7 @@ export abstract class IgxCarouselComponentBase {
         this.enterAnimationPlayer.animationEnd.subscribe(() => {
             // TODO: animation may never end. Find better way to clean up the player
             if (this.enterAnimationPlayer) {
-                this.enterAnimationPlayer.reset();
+                this.enterAnimationPlayer.destroy();
                 this.enterAnimationPlayer = null;
             }
             this.animationPosition = 0;
@@ -200,7 +205,7 @@ export abstract class IgxCarouselComponentBase {
         this.leaveAnimationPlayer.animationEnd.subscribe(() => {
             // TODO: animation may never end. Find better way to clean up the player
             if (this.leaveAnimationPlayer) {
-                this.leaveAnimationPlayer.reset();
+                this.leaveAnimationPlayer.destroy();
                 this.leaveAnimationPlayer = null;
             }
             this.animationPosition = 0;

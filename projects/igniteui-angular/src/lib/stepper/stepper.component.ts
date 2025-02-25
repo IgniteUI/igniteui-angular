@@ -386,6 +386,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /** @hidden @internal */
     public ngOnDestroy(): void {
+        super.baseDestroy();
         this.destroy$.next();
         this.destroy$.complete();
     }
