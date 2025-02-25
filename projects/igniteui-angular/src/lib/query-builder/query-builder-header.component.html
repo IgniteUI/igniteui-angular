@@ -1,16 +1,2 @@
-<div class="igx-query-builder__header">
-    <div class="ig-typography__h6" style="pointer-events: none;">
-        {{ title || this.resourceStrings.igx_query_builder_title }}
-        <ng-content></ng-content>
-    </div>
-    @if (showLegend) {
-        <div class="igx-builder-legend" >
-            <div class="igx-builder-legend__item--and">
-                <span>{{this.resourceStrings.igx_query_builder_and_label}}</span>
-            </div>
-            <div class="igx-builder-legend__item--or">
-                <span>{{this.resourceStrings.igx_query_builder_or_label}}</span>
-            </div>
-        </div>
-    }
-</div>
+<div class="igx-query-builder__title">{{ title }}</div>
+<ng-content></ng-content>

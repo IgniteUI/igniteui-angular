@@ -91,7 +91,7 @@ describe('IgxGridState - input properties #grid', () => {
         expect(gridState).toBe(initialGridState, 'JSON string representation of the initial grid state is not correct');
     });
 
-    it('getState should return corect IGridState object when using default options', () => {
+    it('getState should return correct IGridState object when using default options', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
@@ -101,6 +101,7 @@ describe('IgxGridState - input properties #grid', () => {
         const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const productExpression = {
             condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: 'true',
             fieldName: 'InStock',
             ignoreCase: true
         };
@@ -172,8 +173,9 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
-        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"fieldName":"InStock","ignoreCase":true}],"operator":0,"fieldName":"InStock"}],"operator":0,"type":0}}';
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"fieldName":"InStock","ignoreCase":true,"conditionName":"true"}],"operator":0,"fieldName":"InStock"}],"operator":0,"type":0}}';
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
+
 
         let gridState = state.getState(true, 'filtering');
         expect(gridState).toBe(initialState);
@@ -196,7 +198,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
-        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"equals","isUnary":false,"iconName":"filter_equal"},"fieldName":"LastDate","ignoreCase":true,"searchVal":"2021-06-05T20:59:00.000Z"}],"operator":1,"fieldName":"LastDate"}],"operator":0,"type":0}}';
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"equals","isUnary":false,"iconName":"filter_equal"},"fieldName":"LastDate","ignoreCase":true,"conditionName":"equals","searchVal":"2021-06-05T20:59:00.000Z"}],"operator":1,"fieldName":"LastDate"}],"operator":0,"type":0}}';
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
 
         let gridState = state.getState(true, 'filtering');
@@ -217,7 +219,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
-        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"empty","isUnary":true,"iconName":"filter_empty"},"fieldName":"OrderDate","ignoreCase":true,"searchVal":null}],"operator":1,"fieldName":"OrderDate"}],"operator":0,"type":0}}';
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"empty","isUnary":true,"iconName":"filter_empty"},"fieldName":"OrderDate","ignoreCase":true,"searchVal":null,"conditionName":"empty"}],"operator":1,"fieldName":"OrderDate"}],"operator":0,"type":0}}';
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
 
         let gridState = state.getState(true, 'filtering');
@@ -235,7 +237,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
-        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"fieldName":"InStock","ignoreCase":true}],"operator":0,"fieldName":"InStock"}],"operator":0,"type":0}}';
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"fieldName":"InStock","ignoreCase":true,"conditionName":"true"}],"operator":0,"fieldName":"InStock"}],"operator":0,"type":0}}';
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
 
@@ -261,7 +263,7 @@ describe('IgxGridState - input properties #grid', () => {
         const initialState =
             '{"filtering":{"filteringOperands":[],"operator":0}}';
         const filteringState =
-            '{"filtering":{"filteringOperands":[{"filteringOperands":[{"fieldName":"ProductID","condition":{"name":"custom","isUnary":false,"iconName":"custom"},"searchVal":"custom","ignoreCase":true}],"operator":1,"fieldName":"FirstName"}],"operator":0,"type":0}}';
+            '{"filtering":{"filteringOperands":[{"filteringOperands":[{"fieldName":"ProductID","condition":{"name":"custom","isUnary":false,"iconName":"custom"},"searchVal":"custom","ignoreCase":true,"conditionName":"custom"}],"operator":1,"fieldName":"FirstName"}],"operator":0,"type":0}}';
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
 
         let gridState = state.getState(true, "filtering");
@@ -689,7 +691,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
-        const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"InStock","condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"searchVal":null,"ignoreCase":true},{"fieldName":"ProductID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
+        const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"InStock","condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"searchVal":null,"ignoreCase":true,"conditionName":"true"},{"fieldName":"ProductID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true,"conditionName":"greaterThan"}],"operator":0,"type":1}}';
         const initialState = '{"advancedFiltering":{}}';
 
         let gridState = state.getState(true, 'advancedFiltering');
@@ -707,7 +709,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
-        const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"InStock","condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"searchVal":null,"ignoreCase":true},{"fieldName":"ProductID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
+        const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"InStock","condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"searchVal":null,"ignoreCase":true,"conditionName":"true"},{"fieldName":"ProductID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true,"conditionName":"greaterThan"}],"operator":0,"type":1}}';
         const initialState = '{"advancedFiltering":{}}';
         const advFilteringStateObject = JSON.parse(advFilteringState);
 
@@ -729,7 +731,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
 
         const state = fix.componentInstance.state;
-        const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"ProductID","condition":{"name":"custom","isUnary":false,"iconName":"custom"},"ignoreCase":true,"searchVal":"custom"}],"operator":0,"type":1}}';
+        const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"ProductID","condition":{"name":"custom","isUnary":false,"iconName":"custom"},"ignoreCase":true,"searchVal":"custom","conditionName":"custom"}],"operator":0,"type":1}}';
         const initialState = '{"advancedFiltering":{}}';
 
         let gridState = state.getState(true, 'advancedFiltering');

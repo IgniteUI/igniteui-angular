@@ -569,6 +569,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     }
                     filterTree.filteringOperands.push({
                         condition,
+                        conditionName: condition.name,
                         fieldName: this.esf.column.field,
                         ignoreCase: this.esf.column.filteringIgnoreCase,
                         searchVal: element.value
@@ -583,6 +584,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 }
                 filterTree.filteringOperands.push({
                     condition: this.createCondition('in'),
+                    conditionName: 'in',
                     fieldName: this.esf.column.field,
                     ignoreCase: this.esf.column.filteringIgnoreCase,
                     searchVal: new Set(
@@ -599,6 +601,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 if (blanksItem) {
                     filterTree.filteringOperands.push({
                         condition: this.createCondition('empty'),
+                        conditionName: 'empty',
                         fieldName: this.esf.column.field,
                         ignoreCase: this.esf.column.filteringIgnoreCase,
                         searchVal: blanksItem.value

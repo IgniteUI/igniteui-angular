@@ -5,8 +5,9 @@
             'igx-advanced-filter': true,
             'igx-advanced-filter--inline': inline
         }">
-        <igx-query-builder #queryBuilder [locale]="grid.locale"
-            [fields]="this.filterableFields"
+        <igx-query-builder #queryBuilder
+            [locale]="grid.locale"
+            [entities]="generateEntity()"
             [expressionTree]="this.grid.advancedFilteringExpressionsTree">
             <igx-query-builder-header
                 [title]="grid.resourceStrings.igx_grid_advanced_filter_title"
@@ -22,7 +23,7 @@
                 </button>
             </div>
             <div class="igx-excel-filter__cancel">
-                <button igxButton="flat" type="button" (click)="cancelChanges()">
+                <button igxButton="outlined" type="button" (click)="cancelChanges()">
                     {{ grid.resourceStrings.igx_grid_excel_cancel }}
                 </button>
             </div>

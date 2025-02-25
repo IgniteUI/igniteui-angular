@@ -22,7 +22,7 @@
 @if (column.dataType === 'date') {
     <igx-date-picker #picker
         [weekStart]="column.pipeArgs.weekStart ?? weekStart"
-        [(value)]="expressionUI.expression.searchVal"
+        [(value)]="searchVal"
         [locale]="grid.locale"
         [outlet]="grid.outlet"
         (click)="picker.open()"
@@ -41,7 +41,7 @@
 
 @if (column.dataType === 'time') {
     <igx-time-picker #picker
-        [(value)]="expressionUI.expression.searchVal"
+        [(ngModel)]="searchVal"
         [locale]="grid.locale"
         [outlet]="grid.outlet"
         (click)="picker.open()"
@@ -67,7 +67,7 @@
             [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat"
             [defaultFormatType]="column.dataType"
             [displayFormat]="column.pipeArgs.format"
-            [(ngModel)]="expressionUI.expression.searchVal"
+            [(ngModel)]="searchVal"
             [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
     </igx-input-group>
 }

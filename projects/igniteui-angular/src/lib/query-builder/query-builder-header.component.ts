@@ -1,15 +1,21 @@
-import { Component, Input, booleanAttribute } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
 @Component({
     selector: 'igx-query-builder-header',
-    templateUrl: 'query-builder-header.component.html',
-    imports: []
+    templateUrl: 'query-builder-header.component.html'
 })
 export class IgxQueryBuilderHeaderComponent {
 
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class') public get getClass() {
+        return 'igx-query-builder__header';
+    }
 
     /**
      * Sets the title of the `IgxQueryBuilderHeaderComponent`.
@@ -29,13 +35,16 @@ export class IgxQueryBuilderHeaderComponent {
      * ```html
      * <igx-query-builder-header [showLegend]="false"></igx-query-builder-header>
      * ```
+     * @deprecated in version 19.1.0.
      */
-    @Input({ transform: booleanAttribute })
+    @Input()
     public showLegend = true;
 
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
+     *
+     * @deprecated in version 19.1.0.
      */
     @Input()
     public set resourceStrings(value: IQueryBuilderResourceStrings) {
