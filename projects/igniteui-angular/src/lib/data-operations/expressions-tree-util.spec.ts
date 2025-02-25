@@ -80,12 +80,12 @@ describe('Unit testing FilteringUtil', () => {
         // misc
         tree.filteringOperands.push({
             fieldName: 'Id',
-            conditionName: 'in'
+            conditionName: 'inQuery'
         });
 
         tree.filteringOperands.push({
             fieldName: 'Id',
-            conditionName: 'notIn'
+            conditionName: 'notInQuery'
         });
 
         tree.filteringOperands.push({
@@ -286,7 +286,7 @@ describe('Unit testing FilteringUtil', () => {
 
         tree.filteringOperands.push({
             fieldName: 'Id',
-            conditionName: 'in',
+            conditionName: 'inQuery',
             searchTree: innerTree
         });
 
@@ -295,8 +295,8 @@ describe('Unit testing FilteringUtil', () => {
         const firstOperand = deserializedTree.filteringOperands[0] as IFilteringExpression;
         const nestedOperand = firstOperand.searchTree.filteringOperands[0] as IFilteringExpression;
 
-        expect(firstOperand.conditionName).toBe('in');
-        expect(firstOperand.condition.name).toBe('in');
+        expect(firstOperand.conditionName).toBe('inQuery');
+        expect(firstOperand.condition.name).toBe('inQuery');
         expect(nestedOperand.condition.logic(true, nestedOperand.searchVal)).toBe(true);
         expect(nestedOperand.conditionName).toBe('true');
         expect(nestedOperand.condition.name).toBe('true');

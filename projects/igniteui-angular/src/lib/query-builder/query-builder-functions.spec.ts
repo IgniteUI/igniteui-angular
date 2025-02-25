@@ -43,8 +43,8 @@ export class QueryBuilderFunctions {
         const tree = new FilteringExpressionsTree(FilteringLogic.And, null, 'Orders', ['*']);
         tree.filteringOperands.push({
             fieldName: 'OrderId',
-            condition: IgxStringFilteringOperand.instance().condition('in'),
-            conditionName: 'in',
+            condition: IgxStringFilteringOperand.instance().condition('inQuery'),
+            conditionName: 'inQuery',
             searchTree: innerTree
         });
         tree.filteringOperands.push({
@@ -89,8 +89,8 @@ export class QueryBuilderFunctions {
 
         tree.filteringOperands.push({
             fieldName: 'OrderId',
-            condition: IgxStringFilteringOperand.instance().condition('in'),
-            conditionName: IgxStringFilteringOperand.instance().condition('in').name,
+            condition: IgxStringFilteringOperand.instance().condition('inQuery'),
+            conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
             searchTree: innerTree
         });
 
