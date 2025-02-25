@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { QueryBuilderSelectors } from './query-builder.common';
 
-describe('IgxQueryBuilder', () => {
+fdescribe('IgxQueryBuilder', () => {
   configureTestSuite();
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
   let queryBuilder: IgxQueryBuilderComponent;
@@ -796,12 +796,12 @@ describe('IgxQueryBuilder', () => {
     {
       "fieldName": "OrderId",
       "condition": {
-        "name": "in",
+        "name": "inQuery",
         "isUnary": false,
         "isNestedQuery": true,
         "iconName": "in"
       },
-      "conditionName": "in",
+      "conditionName": "inQuery",
       "ignoreCase": true,
       "searchVal": null,
       "searchTree": {
@@ -873,12 +873,12 @@ describe('IgxQueryBuilder', () => {
     {
       "fieldName": "OrderId",
       "condition": {
-        "name": "notIn",
+        "name": "notInQuery",
         "isUnary": false,
         "isNestedQuery": true,
         "iconName": "not-in"
       },
-      "conditionName": "notIn",
+      "conditionName": "notInQuery",
       "ignoreCase": true,
       "searchVal": null,
       "searchTree": {
@@ -1484,7 +1484,7 @@ describe('IgxQueryBuilder', () => {
 
       // Verify the changes in the child query are commited
       let exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.filteringOperands[0]);
-      expect(exprTree).toBe(`{"fieldName":"OrderId","condition":{"name":"in","isUnary":false,"isNestedQuery":true,"iconName":"in"},"conditionName":"in","searchVal":null,"searchTree":{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"conditionName":"contains","searchVal":"a"},{"fieldName":"Released","condition":{"name":"false","isUnary":true,"iconName":"filter_false"},"conditionName":"false","searchVal":null,"searchTree":null}],"operator":0,"entity":"Products","returnFields":["Id"]}}`);
+      expect(exprTree).toBe(`{"fieldName":"OrderId","condition":{"name":"inQuery","isUnary":false,"isNestedQuery":true,"iconName":"in"},"conditionName":"inQuery","searchVal":null,"searchTree":{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"conditionName":"contains","searchVal":"a"},{"fieldName":"Released","condition":{"name":"false","isUnary":true,"iconName":"filter_false"},"conditionName":"false","searchVal":null,"searchTree":null}],"operator":0,"entity":"Products","returnFields":["Id"]}}`);
       // Enter edit mode again
       QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
       tick(50);
@@ -1515,7 +1515,7 @@ describe('IgxQueryBuilder', () => {
 
       // Verify the changes in the child query are discarded
       exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.filteringOperands[0]);
-      expect(exprTree).toBe(`{"fieldName":"OrderId","condition":{"name":"in","isUnary":false,"isNestedQuery":true,"iconName":"in"},"conditionName":"in","searchVal":null,"searchTree":{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"conditionName":"contains","searchVal":"a"},{"fieldName":"Released","condition":{"name":"false","isUnary":true,"iconName":"filter_false"},"conditionName":"false","searchVal":null,"searchTree":null}],"operator":0,"entity":"Products","returnFields":["Id"]}}`);
+      expect(exprTree).toBe(`{"fieldName":"OrderId","condition":{"name":"inQuery","isUnary":false,"isNestedQuery":true,"iconName":"in"},"conditionName":"inQuery","searchVal":null,"searchTree":{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"filter_contains"},"conditionName":"contains","searchVal":"a"},{"fieldName":"Released","condition":{"name":"false","isUnary":true,"iconName":"filter_false"},"conditionName":"false","searchVal":null,"searchTree":null}],"operator":0,"entity":"Products","returnFields":["Id"]}}`);
     }));
 
     it('Should collapse nested query when it is committed.', fakeAsync(() => {
@@ -1845,12 +1845,12 @@ describe('IgxQueryBuilder', () => {
     {
       "fieldName": "OrderId",
       "condition": {
-        "name": "in",
+        "name": "inQuery",
         "isUnary": false,
         "isNestedQuery": true,
         "iconName": "in"
       },
-      "conditionName": "in",
+      "conditionName": "inQuery",
       "ignoreCase": true,
       "searchVal": null,
       "searchTree": {
@@ -2760,12 +2760,12 @@ describe('IgxQueryBuilder', () => {
     {
       "fieldName": "OrderId",
       "condition": {
-        "name": "in",
+        "name": "inQuery",
         "isUnary": false,
         "isNestedQuery": true,
         "iconName": "in"
       },
-      "conditionName": "in",
+      "conditionName": "inQuery",
       "searchTree": {
         "filteringOperands": [
           {

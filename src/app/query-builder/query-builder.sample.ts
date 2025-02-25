@@ -112,8 +112,8 @@ export class QueryBuilderComponent implements OnInit {
         const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Entity A', ['*']);
         tree.filteringOperands.push({
             fieldName: 'Id',
-            condition: IgxStringFilteringOperand.instance().condition('in'),
-            conditionName: IgxStringFilteringOperand.instance().condition('in').name,
+            condition: IgxStringFilteringOperand.instance().condition('inQuery'),
+            conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
             searchTree: innerTree
         });
         tree.filteringOperands.push({

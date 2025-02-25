@@ -22,12 +22,17 @@ export class IgxFilteringOperand {
         }, {
             name: 'in',
             isUnary: false,
+            iconName: 'filter_in',
+            hidden: true,
+            logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
+        }, {
+            name: 'inQuery',
+            isUnary: false,
             isNestedQuery: true,
             iconName: 'in',
             logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
-        },
-        {
-            name: 'notIn',
+        }, {
+            name: 'notInQuery',
             isUnary: false,
             isNestedQuery: true,
             iconName: 'not-in',
