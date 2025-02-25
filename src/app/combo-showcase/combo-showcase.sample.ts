@@ -126,11 +126,11 @@ export class ComboShowcaseSampleComponent {
 
         this.propertyChangeService.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.propertyChangeService.propertyChanges.subscribe(properties => {
+        const propertyChange = this.propertyChangeService.propertyChanges.subscribe(properties => {
             this.properties = properties;
         });
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     protected get groupSortingAngular() {
