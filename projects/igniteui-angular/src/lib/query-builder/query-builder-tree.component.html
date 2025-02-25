@@ -20,7 +20,7 @@
                 [placeholder]="this.resourceStrings.igx_query_builder_select_entity"
                 [disabled]="disableEntityChange"
             >
-                @for (entity of entities; track entity) {
+                @for (entity of entities; track entity.name) {
                     <igx-select-item [value]="entity">
                         {{entity.name}}
                     </igx-select-item>
@@ -78,7 +78,7 @@
                     [style.display]="isInEditMode() ? 'block' : 'none'"
                     (opening)="exitEditAddMode()"
                 >
-                    @for (field of fields; track field) {
+                    @for (field of fields; track field.field) {
                         <igx-select-item [value]="field.field">
                             {{ field.field }}
                         </igx-select-item>
