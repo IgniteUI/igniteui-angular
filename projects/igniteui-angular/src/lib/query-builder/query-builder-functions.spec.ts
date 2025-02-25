@@ -121,7 +121,7 @@ export class QueryBuilderFunctions {
     public static getQueryBuilderHeaderText(fix: ComponentFixture<any>) {
         const header = QueryBuilderFunctions.getQueryBuilderHeader(fix);
         const title = header.querySelector('.igx-query-builder__title');
-        return title.textContent;
+        return title.textContent.trim();
     }
 
     /**

@@ -42,7 +42,6 @@ export const QueryBuilderResourceStringsDA = {
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
     igx_query_builder_filter_all: 'Alle',
-    igx_query_builder_title: 'Query Builder',
     igx_query_builder_from_label: 'Fra',
     igx_query_builder_select_label: 'Vælg',
     igx_query_builder_where_label: 'Hvor',

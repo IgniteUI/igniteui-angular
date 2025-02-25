@@ -7,13 +7,11 @@
             </igx-query-builder>
         </igx-dialog>
 
-        <igx-query-builder #queryBuilder0 [entities]="this.entities"></igx-query-builder>
-
         <igx-query-builder #queryBuilder
                            (expressionTreeChange)="handleExpressionTreeChange()" [entities]="this.entities"
                            [expressionTree]="this.expressionTree">
             <!-- Custom header -->
-            <!-- <igx-query-builder-header [title]="'Builder'"><span>Custom Title</span></igx-query-builder-header> -->
+            <igx-query-builder-header [title]="'Builder'"><span> &nbsp; Custom Title</span></igx-query-builder-header>
 
             <!-- Custom SearchValue template for a given column and condition -->
             <ng-template #searchValueTemplate igxQueryBuilderSearchValue let-searchValue
@@ -30,8 +28,8 @@
                     <ng-container *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
                 }
             </ng-template>
-            <igx-query-builder-header [title]="'Builder'"><span>Custom Title</span></igx-query-builder-header>
         </igx-query-builder>
+        
         <div class="qb-sample-buttons">
             <button igxButton="contained" igxRipple (click)="canCommitExpressionTree()">can commit</button>
             <button igxButton="contained" igxRipple (click)="commitExpressionTree()">commit</button>
@@ -47,5 +45,24 @@
         <div class="qb-output-area">
             <pre>{{ printExpressionTree(queryBuilder.expressionTree) }}</pre>
         </div>
+        
+        <p>NO HEADER</p>
+        <igx-query-builder #queryBuilder0 [entities]="this.entities">
+        </igx-query-builder>
+
+        <p>EMPTY HEADER</p>
+        <igx-query-builder #queryBuilder1 [entities]="this.entities">
+            <igx-query-builder-header></igx-query-builder-header>
+        </igx-query-builder>
+
+        <p>ONLY HEADER CONTENT</p>
+        <igx-query-builder #queryBuilder1 [entities]="this.entities">
+            <igx-query-builder-header><igx-icon>face</igx-icon> &nbsp; Custom header content</igx-query-builder-header>
+        </igx-query-builder>
+
+        <p>HEADER WITH TITLE</p>
+        <igx-query-builder #queryBuilder2 [entities]="this.entities">
+            <igx-query-builder-header [title]="'Query Builder'"></igx-query-builder-header>
+        </igx-query-builder>
     </div>
 </div>

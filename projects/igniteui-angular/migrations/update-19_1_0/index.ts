@@ -16,5 +16,19 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         args.value = `[{ name: '', fields: ${args.value}}]`;
     });
 
+    // remove igx_query_builder_title, igx_query_builder_create_and_group, igx_query_builder_create_or_group from resources
+    const removedRS = ['igx_query_builder_title', 'igx_query_builder_create_and_group', 'igx_query_builder_create_or_group'];
+    for (const entryPath of update.tsFiles) {
+        let content = host.read(entryPath).toString();
+        for (const rs of removedRS) {
+            const regex = new RegExp(String.raw`,?\s*${rs}\s*:\s*'[^']*'`, 'g');
+    
+            if (regex.test(content)) {
+                content = content.replace(regex, '');
+                host.overwrite(entryPath, content);
+            }
+        }
+    }
+
     update.applyChanges();
 };

@@ -26,9 +26,10 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `entities`  | EntityType[]  | An array of entities. Contains information about name and fields. |
 | `expressionTree`  | IExpressionTree  | Gets/Sets the displayed expressions tree. |
 | `locale`  | string  | Locale settings for the component. If this locale is not set, its value to be determined based on the global Angular application LOCALE_ID. |
-| Content Cell  | Content Cell  | Content Cell |
 | `resourceStrings`  | IQueryBuilderResourceStrings  | Gets/sets the resource strings. |
 | `showEntityChangeDialog` | boolean | Gets/sets whether the confirmation dialog should be shown when changing entity. |
+| `disableEntityChange` | boolean | Gets/sets whether the entity select on root level should be disabled after the initial selection. |
+| `disableReturnFieldsChange` | boolean | Gets/sets whether the return fields combo on root level should be disabled. |
 
 #### Events
 
@@ -43,4 +44,3 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | Name | Type | Description |
 | :--- | :--- | :--- |
 | `title` | string | Sets the title displayed in the header. |
-| `resourceStrings` | IQueryBuilderResourceStrings | Gets/sets the resource strings. |

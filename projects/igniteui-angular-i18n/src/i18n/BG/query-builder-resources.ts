@@ -42,7 +42,6 @@ export const QueryBuilderResourceStringsBG = {
     igx_query_builder_filter_true: 'True',
     igx_query_builder_filter_false: 'False',
     igx_query_builder_filter_all: 'Всички',
-    igx_query_builder_title: 'Query Builder',
     igx_query_builder_from_label: 'От',
     igx_query_builder_select_label: 'Избери',
     igx_query_builder_where_label: 'Където',

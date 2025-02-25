@@ -31,7 +31,6 @@ import { IgxSelectComponent } from '../select/select.component';
 import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/overlay/utilities';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
-import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-common/picker-icons.common';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
@@ -290,12 +289,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChildren(IgxChipComponent, { read: IgxChipComponent })
     private expressionsChips: QueryList<IgxChipComponent>;
 
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxQueryBuilderHeaderComponent)
-    public headerContent: IgxQueryBuilderHeaderComponent;
-
     @ViewChild('editingInputsContainer', { read: ElementRef })
     protected set editingInputsContainer(value: ElementRef) {
         if ((value && !this._editingInputsContainer) ||
@@ -475,6 +468,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public get disableEntityChange(): boolean {
 
         return !this.parentExpression && this.selectedEntity ? this.queryBuilder.disableEntityChange : false;
+    }
+
+    /**
+     * Returns if the fields combo at the root level is disabled.
+     */
+     public get disableReturnFieldsChange(): boolean {
+
+        return !this.selectedEntity || this.queryBuilder.disableReturnFieldsChange;
     }
 
     /**

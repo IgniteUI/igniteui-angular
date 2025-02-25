@@ -120,7 +120,15 @@
         border-radius: $border-radius;
         box-shadow: var-get($theme, 'elevation');
         overflow: hidden;
-	    
+
+        &:has(:not(igx-query-builder-header)) {
+            padding-block-start: if($variant != 'bootstrap', rem(24px), rem(16px))
+        }
+
+        &:has(igx-query-builder-header) {
+            padding-block-start: 0;
+        }
+
 	    .igx-chip__ghost {
 		    position: relative;
 	    }
@@ -225,7 +233,13 @@
         padding-inline: if($variant != 'bootstrap', rem(24px), rem(16px));
         padding-block: if($variant != 'bootstrap', rem(24px), rem(16px)) rem(16px);
     }
-	
+
+    %advanced-filter__title {
+        &:empty {
+            display: none;
+        }
+    }
+
     %advanced-filter__main {
         display: grid;
         gap: rem(16px);
@@ -306,7 +320,7 @@
     %filter-tree__line--or {
         background: var-get($theme, 'color-expression-group-or');
     }
-	
+
 	%filter-tree__button--and {
 		&[igxButton='flat'] {
 			@if $variant == 'material' or $variant == 'indigo' {
@@ -317,7 +331,7 @@
 				--hover-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
 				--background: transparent;
 			}
-			
+
 			@if $variant == 'fluent' {
 				--background: transparent;
 				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
@@ -326,11 +340,11 @@
 				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
 				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
 			}
-			
+
 			--foreground: #{var-get($theme, 'color-expression-group-and')};
 			--focus-visible-foreground: #{var-get($theme, 'color-expression-group-and')};
 			--icon-color: #{var-get($theme, 'color-expression-group-and')};
-			
+
 			@if $variant != 'bootstrap' {
 				--focus-foreground: #{var-get($theme, 'color-expression-group-and')};
 				--hover-foreground: #{var-get($theme, 'color-expression-group-and')};
@@ -339,7 +353,7 @@
 				--active-foreground: #{var-get($theme, 'color-expression-group-and')};
 			} @else {
 				$bootstrap-foreground-lightness: if($theme-variant == 'light', 34%, 78% );
-				
+
 				--focus-hover-background: transparent;
 				--focus-visible-background: transparent;
 				--focus-background: transparent;
@@ -347,7 +361,7 @@
 				--hover-background: transparent;
 				--background: transparent;
 				--shadow-color: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / .5);
-				
+
 				--icon-color-hover: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
 				--focus-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
 				--hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-and')} h s #{$bootstrap-foreground-lightness} / 1);
@@ -356,7 +370,7 @@
 			}
 		}
     }
-	
+
 	%filter-tree__button--or {
 		&[igxButton='flat'] {
 			@if $variant == 'material' or $variant == 'indigo' {
@@ -367,7 +381,7 @@
 				--hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
 				--background: transparent;
 			}
-			
+
 			@if $variant == 'fluent' {
 				--background: transparent;
 				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
@@ -376,11 +390,11 @@
 				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
 				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
 			}
-			
+
 			--foreground: #{var-get($theme, 'color-expression-group-or')};
 			--focus-visible-foreground: #{var-get($theme, 'color-expression-group-or')};
 			--icon-color: #{var-get($theme, 'color-expression-group-or')};
-			
+
 			@if $variant != 'bootstrap' {
 				--focus-foreground: #{var-get($theme, 'color-expression-group-or')};
 				--hover-foreground: #{var-get($theme, 'color-expression-group-or')};
@@ -389,7 +403,7 @@
 				--active-foreground: #{var-get($theme, 'color-expression-group-or')};
 			} @else {
 				$bootstrap-foreground-lightness: if($theme-variant == 'light', 14%, 47%);
-				
+
 				--focus-hover-background: transparent;
 				--focus-visible-background: transparent;
 				--focus-background: transparent;
@@ -397,7 +411,7 @@
 				--hover-background: transparent;
 				--background: transparent;
 				--shadow-color: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / .5);
-				
+
 				--icon-color-hover: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
 				--focus-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
 				--hover-foreground: hsl(from #{var-get($theme, 'color-expression-group-or')} h s #{$bootstrap-foreground-lightness} / 1);
@@ -615,7 +629,7 @@
 	$categories: (title: 'h6')
 ) {
 	$title: map.get($categories, 'title');
-	
+
 	%advanced-filter__title {
 		@include type-style($title) {
 			margin: 0;

@@ -39,11 +39,9 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
       const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER}`))[0].nativeElement;
       expect(queryBuilderElement).toBeDefined();
-      expect(queryBuilderElement.children.length).toEqual(2);
+      expect(queryBuilderElement.children.length).toEqual(1);
 
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' Query Builder ');
-
-      const queryTreeElement = queryBuilderElement.children[1];
+      const queryTreeElement = queryBuilderElement.children[0];
       expect(queryTreeElement).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_TREE);
 
       expect(queryBuilder.expressionTree).toBeUndefined();
@@ -84,6 +82,12 @@ describe('IgxQueryBuilder', () => {
       const queryTreeExpressionContainer = bodyElement.children[1].children[1];
       expect(queryTreeExpressionContainer).toHaveClass('igx-filter-tree');
       expect(queryTreeExpressionContainer.children[1]).toHaveClass('igx-filter-tree__expressions');
+
+      const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
+      expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeFalse();
+
+      const fieldsCombo = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 0);
+      expect(fieldsCombo.children[0].classList.contains('igx-input-group--disabled')).toBeFalse();
 
       const expressionItems = queryTreeExpressionContainer.children[1].children[1].querySelectorAll(':scope > .igx-filter-tree__expression-item');
       expect(expressionItems.length).toEqual(queryBuilder.expressionTree.filteringOperands.length);
@@ -1737,7 +1741,7 @@ describe('IgxQueryBuilder', () => {
 
       //New empty inner query should be displayed
       const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER}`))[0].nativeElement;
-      const bodyElement = queryBuilderElement.children[1].children[0];
+      const bodyElement = queryBuilderElement.children[0].children[0];
       const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
       expect(actionArea).toBeNull();
       expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1]).toHaveClass(QueryBuilderSelectors.QUERY_BUILDER_TREE);
@@ -1956,6 +1960,15 @@ describe('IgxQueryBuilder', () => {
 
       expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue();
     }));
+
+    it('Should disable changing the selected fields when "disableReturnFieldsChange"=true', () => {
+      queryBuilder.disableReturnFieldsChange = true;
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+      fix.detectChanges();
+
+      const fieldsCombo = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 0);
+      expect(fieldsCombo.children[0].classList.contains('igx-input-group--disabled')).toBeTrue();
+    });
 
     it(`Should show 'Ungroup' as disabled in root group context menu.`, fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
@@ -2248,7 +2261,7 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it('Should render custom header properly.', () => {
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe(' Custom Title ');
+      expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe('Custom Title');
     });
 
     it('Should render custom input template properly.', fakeAsync(() => {
@@ -2359,7 +2372,6 @@ describe('IgxQueryBuilder', () => {
   describe('Localization', () => {
     it('Should correctly change resource strings for Query Builder.', fakeAsync(() => {
       queryBuilder.resourceStrings = Object.assign({}, queryBuilder.resourceStrings, {
-        igx_query_builder_title: 'My advanced filter',
         igx_query_builder_filter_operator_and: 'My and',
         igx_query_builder_filter_operator_or: 'My or',
         igx_query_builder_and_label: 'My and',
@@ -2382,7 +2394,6 @@ describe('IgxQueryBuilder', () => {
       tick(100);
       fix.detectChanges();
 
-      expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fix)).toBe(' My advanced filter ');
       expect((QueryBuilderFunctions.getQueryBuilderInitialAddConditionBtn(fix, 0) as HTMLElement).querySelector('span').innerText)
         .toBe('My condition');
 
@@ -2455,7 +2466,7 @@ describe('IgxQueryBuilder', () => {
       const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
 
-      let X = 100, Y = 150;
+      let X = 100, Y = 95;
 
       //pickup chip
       dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
