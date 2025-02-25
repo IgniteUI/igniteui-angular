@@ -29,7 +29,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `resourceStrings`  | IQueryBuilderResourceStrings  | Gets/sets the resource strings. |
 | `showEntityChangeDialog` | boolean | Gets/sets whether the confirmation dialog should be shown when changing entity. |
 | `disableEntityChange` | boolean | Gets/sets whether the entity select on root level should be disabled after the initial selection. |
-| `disableFieldsChange` | boolean | Gets/sets whether the fields combo on root level should be disabled. |
+| `disableReturnFieldsChange` | boolean | Gets/sets whether the return fields combo on root level should be disabled. |
 
 #### Events
 

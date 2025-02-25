@@ -1961,8 +1961,8 @@ describe('IgxQueryBuilder', () => {
       expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBeTrue();
     }));
 
-    it('Should disable changing the selected fields when "disableFieldsChange"=true', () => {
-      queryBuilder.disableFieldsChange = true;
+    it('Should disable changing the selected fields when "disableReturnFieldsChange"=true', () => {
+      queryBuilder.disableReturnFieldsChange = true;
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
 
