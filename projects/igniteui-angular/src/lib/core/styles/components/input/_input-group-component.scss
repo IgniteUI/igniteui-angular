@@ -244,6 +244,24 @@
             }
         }
 
+        @include m(warning) {
+            @include e(label) {
+                @extend %form-group-label--warning !optional;
+            }
+
+            @include e(line) {
+                @extend %form-group-line--warning !optional;
+            }
+
+            @include e(hint) {
+                @extend %form-group-helper--warning !optional;
+            }
+
+            @include e(bundle) {
+                @extend %form-group-bundle--warning !optional;
+            }
+        }
+
         @include m(invalid) {
             @include e(label) {
                 @extend %form-group-label--error !optional;
@@ -407,10 +425,6 @@
 
             @include e(bundle) {
                 @extend %form-group-bundle--border !optional;
-
-                &:hover {
-                    @extend %form-group-bundle--border--hover !optional;
-                }
             }
 
             @include e(bundle-main) {

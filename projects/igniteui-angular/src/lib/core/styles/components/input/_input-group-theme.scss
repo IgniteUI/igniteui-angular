@@ -512,6 +512,7 @@
     }
 
     %form-group-display--disabled {
+        pointer-events: none;
         user-select: none;
         color: var-get($theme, 'disabled-text-color') !important;
 
@@ -609,6 +610,13 @@
     %form-group-bundle--success {
         &::after {
             border-block-end-color: var-get($theme, 'success-secondary-color');
+        }
+        caret-color: initial;
+    }
+
+    %form-group-bundle--warning {
+        &::after {
+            border-block-end-color: var-get($theme, 'warning-secondary-color');
         }
         caret-color: initial;
     }
@@ -803,24 +811,24 @@
         &::after {
             display: none;
         }
-    }
 
-    %form-group-bundle--border--hover {
-        %form-group-bundle-start {
-            border-color: var-get($theme, 'hover-border-color');
-        }
-
-        %igx-input-group__filler {
-            border-color: var-get($theme, 'hover-border-color');
-        }
-
-        %igx-input-group__notch {
-            border-block-start-color: var-get($theme, 'hover-border-color');
-            border-block-end-color: var-get($theme, 'hover-border-color');
-        }
-
-        %form-group-bundle-end {
-            border-color: var-get($theme, 'hover-border-color');
+        &:hover {
+            %form-group-bundle-start {
+                border-color: var-get($theme, 'hover-border-color');
+            }
+    
+            %igx-input-group__filler {
+                border-color: var-get($theme, 'hover-border-color');
+            }
+    
+            %igx-input-group__notch {
+                border-block-start-color: var-get($theme, 'hover-border-color');
+                border-block-end-color: var-get($theme, 'hover-border-color');
+            }
+    
+            %form-group-bundle-end {
+                border-color: var-get($theme, 'hover-border-color');
+            }
         }
     }
 
@@ -1000,6 +1008,21 @@
         }
     }
 
+    %form-group-label--focused-border:not(:is(
+        %form-group-border--error, 
+        %form-group-border--warning, 
+        %form-group-border--success))
+    {
+        &:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'focused-border-color');
+            }
+        }
+    }
+
     %form-group-label--float-border {
         --label-position: #{sizable(18px, 22px, 26px)};
 
@@ -1081,6 +1104,10 @@
 
     %form-group-label--focus {
         color: var-get($theme, 'focused-secondary-color');
+    }
+
+    %form-group-label--warning {
+        color: var-get($theme, 'warning-secondary-color');
     }
 
     %form-group-label--success {
@@ -1324,10 +1351,19 @@
         %igx-input-group__filler {
             border-block-color: var-get($theme, 'success-secondary-color');
         }
+
+        %form-group-bundle--border:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'success-secondary-color');
+            }
+        }
     }
 
     %form-group-line--warning {
-        background: var-get($theme, 'error-secondary-color');
+        background: var-get($theme, 'warning-secondary-color');
     }
 
     %form-group-border--warning {
@@ -1346,6 +1382,15 @@
         %igx-input-group__notch,
         %igx-input-group__filler {
             border-block-color: var-get($theme, 'warning-secondary-color');
+        }
+
+        %form-group-bundle--border:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'warning-secondary-color');
+            }
         }
     }
 
@@ -1369,6 +1414,15 @@
         %igx-input-group__notch,
         %igx-input-group__filler {
             border-block-color: var-get($theme, 'error-secondary-color');
+        }
+
+        %form-group-bundle--border:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'error-secondary-color');
+            }
         }
     }
 
@@ -1430,6 +1484,10 @@
     @if $variant != 'indigo' {
         %form-group-helper--success {
             color: var-get($theme, 'success-secondary-color');
+        }
+
+        %form-group-helper--warning {
+            color: var-get($theme, 'warning-secondary-color');
         }
 
         %form-group-helper--error {
