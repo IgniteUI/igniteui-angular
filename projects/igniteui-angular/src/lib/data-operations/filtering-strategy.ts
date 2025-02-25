@@ -6,6 +6,7 @@ import { GridColumnDataType } from './data-util';
 import { SortingDirection } from './sorting-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import { IFilteringState } from './filtering-state.interface';
+import { isTree } from './expressions-tree-util';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
@@ -46,8 +47,8 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     // protected
     public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType): boolean {
         if (expressions) {
-            if (expressions instanceof FilteringExpressionsTree) {
-                const expressionsTree = expressions as IFilteringExpressionsTree;
+            if (isTree(expressions)) {
+                const expressionsTree = expressions;
                 const operator = expressionsTree.operator as FilteringLogic;
                 let matchOperand;
 
@@ -71,7 +72,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 
                 return true;
             } else {
-                const expression = expressions as IFilteringExpression;
+                const expression = expressions;
                 const column = grid && grid.getColumnByName(expression.fieldName);
                 const isDate = column ? column.dataType === DateType || column.dataType === DateTimeType : false;
                 const isTime = column ? column.dataType === TimeType : false;
