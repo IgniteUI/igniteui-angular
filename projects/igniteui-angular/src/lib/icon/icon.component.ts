@@ -41,7 +41,6 @@ import { NgIf, NgTemplateOutlet } from "@angular/common";
 @Component({
     selector: "igx-icon",
     templateUrl: "icon.component.html",
-    imports: [NgTemplateOutlet, NgIf]
 })
 export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     private _iconRef: IconReference;
