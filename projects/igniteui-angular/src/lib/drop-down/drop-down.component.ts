@@ -243,7 +243,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public open(overlaySettings?: OverlaySettings) {
-        const settings = overlaySettings || this.getDefaultOverlaySettings();
+        const settings = { ... {}, ...this.getDefaultOverlaySettings(), ...overlaySettings };
         this.toggleDirective.open(settings);
         this.updateScrollPosition();
     }

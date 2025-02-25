@@ -270,6 +270,7 @@
         display: inline-flex;
         flex-flow: row nowrap;
         align-items: center;
+        cursor: pointer;
     }
 
     %switch-input {
