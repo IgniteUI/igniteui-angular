@@ -1,10 +1,43 @@
-.density-chooser {
-    margin-bottom: 16px;
-    max-width: 900px;
+:host {
+    display: block;
+    padding-block-end: 16px;
 }
 
-.sample-buttons {
-    margin-top: 24px;
+.qb-sample-column {
     display: flex;
+    flex: initial;
+    flex-direction: column;
+    gap: 16px;
+
+    > button {
+        align-self: center;
+    }
+}
+
+.qb-sample-row {
+    display: flex;
+    gap: 16px;
     flex-wrap: wrap;
+
+    > * {
+        flex: 1;
+    }
+}
+
+.qb-sample-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.qb-output-area{
+    overflow-y: auto;
+    max-height: 600px;
+    border: 1px solid hsla(var(--ig-gray-300));
+    border-radius: 4px;
+    padding: 16px;
+
+    pre {
+        margin-block: 0;
+    }
 }

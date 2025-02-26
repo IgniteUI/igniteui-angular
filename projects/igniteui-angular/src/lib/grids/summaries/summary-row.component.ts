@@ -17,7 +17,8 @@ import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive'
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxGridNotGroupedPipe } from '../common/pipes';
-import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
+import { trackByIdentity } from '../../core/utils';
 
 
 @Component({
@@ -25,7 +26,7 @@ import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
     selector: 'igx-grid-summary-row',
     templateUrl: './summary-row.component.html',
     providers: [IgxForOfSyncService],
-    imports: [NgIf, NgTemplateOutlet, IgxGridForOfDirective, IgxSummaryCellComponent, NgFor, IgxGridNotGroupedPipe]
+    imports: [NgTemplateOutlet, IgxGridForOfDirective, IgxSummaryCellComponent, IgxGridNotGroupedPipe]
 })
 export class IgxSummaryRowComponent implements DoCheck  {
 
@@ -118,4 +119,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
             $implicit: row
         };
     }
+
+    /** state persistence switching all pinned columns resets collection */
+    protected trackPinnedColumn = trackByIdentity;
 }

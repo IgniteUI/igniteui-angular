@@ -3,7 +3,7 @@ import {
     Input,
     ViewChild
 } from '@angular/core';
-import { NgIf, NgFor, CurrencyPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import {
@@ -46,7 +46,7 @@ const GROUPING_EXPRESSIONS: IGroupingExpression[] = [{
     selector: 'app-finjs-grid',
     styleUrls: ['./grid-finjs.component.scss'],
     templateUrl: './grid-finjs.component.html',
-    imports: [NgIf, FormsModule, NgFor, CurrencyPipe, IGX_GRID_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxFocusDirective, IgxIconComponent, IgxRippleDirective, IgxIconButtonDirective]
+    imports: [FormsModule, CurrencyPipe, IGX_GRID_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxFocusDirective, IgxIconComponent, IgxRippleDirective, IgxIconButtonDirective]
 })
 export class GridFinJSComponent {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;

@@ -1,8 +1,16 @@
 
-<ng-container *ngIf="isRowContext">
-    <igx-grid-action-button *ngIf="!disabled && editRow" [asMenuItem]="asMenuItems" iconName="edit" [labelText]="grid.resourceStrings.igx_grid_actions_edit_label" (actionClick)="startEdit($event)"></igx-grid-action-button>
-    <igx-grid-action-button *ngIf="addRow && isRootRow" [asMenuItem]="asMenuItems" iconName="add_row" iconSet="default" [labelText]="grid.resourceStrings.igx_grid_actions_add_label" (actionClick)="addRowHandler($event)"></igx-grid-action-button>
-    <igx-grid-action-button *ngIf="addChild && hasChildren" [asMenuItem]="asMenuItems" iconName="add_child" iconSet="default" [labelText]="grid.resourceStrings.igx_grid_actions_add_child_label" (actionClick)="addRowHandler($event, true)"></igx-grid-action-button>
-    <igx-grid-action-button *ngIf="!disabled && deleteRow" class="igx-action-strip__delete" classNames='igx-action-strip__menu-item--danger' [asMenuItem]="asMenuItems" iconName="delete" [labelText]="grid.resourceStrings.igx_grid_actions_delete_label" (actionClick)="deleteRowHandler($event)"></igx-grid-action-button>
-</ng-container>
+@if (isRowContext) {
+    @if (!disabled && editRow) {
+        <igx-grid-action-button [asMenuItem]="asMenuItems" iconName="edit" [labelText]="grid.resourceStrings.igx_grid_actions_edit_label" (actionClick)="startEdit($event)"></igx-grid-action-button>
+    }
+    @if (addRow && isRootRow) {
+        <igx-grid-action-button [asMenuItem]="asMenuItems" iconName="add_row" iconSet="default" [labelText]="grid.resourceStrings.igx_grid_actions_add_label" (actionClick)="addRowHandler($event)"></igx-grid-action-button>
+    }
+    @if (addChild && hasChildren) {
+        <igx-grid-action-button [asMenuItem]="asMenuItems" iconName="add_child" iconSet="default" [labelText]="grid.resourceStrings.igx_grid_actions_add_child_label" (actionClick)="addRowHandler($event, true)"></igx-grid-action-button>
+    }
+    @if (!disabled && deleteRow) {
+        <igx-grid-action-button class="igx-action-strip__delete" classNames='igx-action-strip__menu-item--danger' [asMenuItem]="asMenuItems" iconName="delete" [labelText]="grid.resourceStrings.igx_grid_actions_delete_label" (actionClick)="deleteRowHandler($event)"></igx-grid-action-button>
+    }
+}
 
