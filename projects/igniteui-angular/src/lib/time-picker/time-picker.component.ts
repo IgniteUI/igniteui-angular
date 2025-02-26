@@ -91,7 +91,24 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
             display: block;
         }`
     ],
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe, IgxDividerDirective]
+    imports: [
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxDateTimeEditorDirective,
+        IgxTextSelectionDirective,
+        IgxPrefixDirective,
+        IgxIconComponent,
+        IgxSuffixDirective,
+        IgxButtonDirective,
+        IgxToggleDirective,
+        NgClass,
+        IgxItemListDirective,
+        IgxTimeItemDirective,
+        NgTemplateOutlet,
+        TimeFormatPipe,
+        TimeItemPipe,
+        IgxDividerComponent
+    ]
 })
 export class IgxTimePickerComponent extends PickerBaseDirective
     implements
