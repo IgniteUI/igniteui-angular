@@ -12,7 +12,7 @@ import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
 import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
 import { IgxQueryBuilderHeaderComponent } from '../../../query-builder/query-builder-header.component';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { getCurrentResourceStrings } from '../../../core/i18n/resources';
 import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
 
@@ -30,7 +30,7 @@ import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-
 @Component({
     selector: 'igx-advanced-filtering-dialog',
     templateUrl: './advanced-filtering-dialog.component.html',
-    imports: [NgIf, IgxDragDirective, NgClass, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxDragHandleDirective, IgxButtonDirective]
+    imports: [IgxDragDirective, NgClass, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxDragHandleDirective, IgxButtonDirective]
 })
 export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
     /**
@@ -130,9 +130,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public onKeyDown(eventArgs: KeyboardEvent) {
         eventArgs.stopPropagation();
         const key = eventArgs.key;
-        if (this.queryBuilder.isContextMenuVisible && (key === this.platform.KEYMAP.ESCAPE)) {
-            this.queryBuilder.clearSelection();
-        } else if (key === this.platform.KEYMAP.ESCAPE) {
+        if (key === this.platform.KEYMAP.ESCAPE) {
             this.closeDialog();
         }
     }
@@ -191,6 +189,20 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public onApplyButtonClick(event?: Event) {
         this.applyChanges(event);
         this.closeDialog();
+    }
+
+    
+    /**
+     * @hidden @internal
+     */
+    public generateEntity() {
+        const entities = [
+            {
+                name: null, 
+                fields: this.filterableFields
+            }
+        ];
+        return entities;
     }
 
     private assignResourceStrings() {

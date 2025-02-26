@@ -1,30 +1,37 @@
 <div class="igx-column-actions__header">
-    <h4 [attr.id]='titleID' class="igx-column-actions__header-title" *ngIf="title">{{ title }}</h4>
+    @if (title) {
+        <h4 [attr.id]='titleID' class="igx-column-actions__header-title">{{ title }}</h4>
+    }
 
-    <igx-input-group class="igx-column-actions__header-input" *ngIf="!hideFilter">
-        <input igxInput
-            type="text"
-            [attr.aria-describedby]='titleID'
-            [(ngModel)]="filterCriteria"
-            [placeholder]="filterColumnsPrompt"
-            autocomplete="off" />
-    </igx-input-group>
+    @if (!hideFilter) {
+        <igx-input-group class="igx-column-actions__header-input">
+            <input igxInput
+                type="text"
+                [attr.aria-describedby]='titleID'
+                [(ngModel)]="filterCriteria"
+                [placeholder]="filterColumnsPrompt"
+                autocomplete="off" />
+        </igx-input-group>
+    }
 </div>
 
 <div class="igx-column-actions__columns" tabindex="0"
     [style.max-height]="columnsAreaMaxHeight">
-    <igx-checkbox
-        *ngFor="let column of $any(grid)?._columns
-            | columnActionEnabled:actionsDirective.actionEnabledColumnsFilter:pipeTrigger
-            | filterActionColumns:filterCriteria:pipeTrigger
-            | sortActionColumns:columnDisplayOrder:pipeTrigger;"
-        class="igx-column-actions__columns-item"
-        [readonly]="true"
-        (click)="toggleColumn(column)"
-        [checked]="actionsDirective.columnChecked(column)"
-        [style.margin-left.px]="column.level * indentation">
-        {{ column.header || column.field }}
-    </igx-checkbox>
+    @for (
+        column of $any(grid)?._columns
+        | columnActionEnabled:actionsDirective.actionEnabledColumnsFilter:pipeTrigger
+        | filterActionColumns:filterCriteria:pipeTrigger
+        | sortActionColumns:columnDisplayOrder:pipeTrigger; track column
+    ) {
+        <igx-checkbox
+            class="igx-column-actions__columns-item"
+            [readonly]="true"
+            (click)="toggleColumn(column)"
+            [checked]="actionsDirective.columnChecked(column)"
+            [style.margin-left.px]="column.level * indentation">
+            {{ column.header || column.field }}
+        </igx-checkbox>
+    }
 </div>
 
 <div class="igx-column-actions__buttons">

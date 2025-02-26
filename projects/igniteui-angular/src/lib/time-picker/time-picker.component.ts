@@ -1,4 +1,4 @@
-import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     Component,
     ElementRef,
@@ -91,7 +91,7 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
             display: block;
         }`
     ],
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, NgIf, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, NgFor, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe, IgxDividerComponent]
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe, IgxDividerDirective]
 })
 export class IgxTimePickerComponent extends PickerBaseDirective
     implements
@@ -944,7 +944,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             }
             case 'ampmList': {
                 let hour = this._selectedDate.getHours();
-                hour = DateTimeUtil.isAm(item) ? hour - 12 : hour + 12;
+                hour = DateTimeUtil.isAm(item)
+                    ? hour % 12
+                    : (hour % 12) + 12;
+
                 date.setHours(hour);
                 date = this.validateDropdownValue(date, true);
                 this.setSelectedValue(date);
@@ -1249,7 +1252,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private subscribeToToggleDirectiveEvents(): void {
         if (this.toggleRef) {
-            if (this._inputGroup) {
+            if (this._inputGroup && this.platform.isBrowser) {
                 this.toggleRef.element.style.width = this._inputGroup.element.nativeElement.getBoundingClientRect().width + 'px';
             }
 

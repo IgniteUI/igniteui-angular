@@ -13,43 +13,25 @@
       <!-- Components -->
       <span igxDrawerItem [isHeader]="true">Components</span>
 
-      <span
-        #csmp="routerLinkActive"
-        *ngFor="let item of componentLinks"
-        igxDrawerItem
-        igxRipple
-        routerLinkActive
-        [active]="csmp.isActive"
-        routerLink="{{ item.link }}"
-      >
-        <igx-icon>{{ item.icon }}</igx-icon>
-        <span class="navdrawer-ellipsis">{{ item.name }}</span>
-      </span>
-
-      <span igxDrawerItem [disabled]="true">
-        <igx-icon>web</igx-icon>
-        <span class="navdrawer-ellipsis">Disabled Item</span>
-      </span>
+      @for (item of componentLinks; track item) {
+          <span #csmp="routerLinkActive" igxDrawerItem igxRipple routerLinkActive [active]="csmp.isActive" routerLink="{{item.link}}">
+              <igx-icon>{{item.icon}}</igx-icon>
+              <span class="navdrawer-ellipsis">{{item.name}}</span>
+          </span>
+      }
 
       <!--Directives-->
       <span igxDrawerItem [isHeader]="true">Directives</span>
 
-      <span
-        #dsmp="routerLinkActive"
-        *ngFor="let item of directiveLinks"
-        igxDrawerItem
-        igxRipple
-        routerLinkActive
-        [active]="dsmp.isActive"
-        routerLink="{{ item.link }}"
-      >
-        <igx-icon>{{ item.icon }}</igx-icon>
-        <span class="navdrawer-ellipsis">{{ item.name }}</span>
-      </span>
-
-      <!--Style guide-->
+      @for (item of directiveLinks; track item) {
+          <span #dsmp="routerLinkActive" igxDrawerItem igxRipple routerLinkActive [active]="dsmp.isActive" routerLink="{{item.link}}">
+              <igx-icon>{{item.icon}}</igx-icon>
+              <span class="navdrawer-ellipsis">{{item.name}}</span>
+          </span>
+      }
+      
       <span igxDrawerItem [isHeader]="true">Style</span>
-
+      
       <span
         #ssmp="routerLinkActive"
         *ngFor="let item of styleLinks"
@@ -64,51 +46,42 @@
       </span>
     </ng-template>
 
-    <ng-template *ngIf="drawerState.miniVariant" igxDrawerMini>
-      <span
-        *ngFor="let item of componentLinks"
-        igxRipple
-        igxDrawerItem
-        routerLinkActive
-        #rla="routerLinkActive"
-        [active]="rla.isActive"
-        routerLink="{{ item.link }}"
-      >
-        <igx-icon>{{ item.icon }}</igx-icon>
-      </span>
+            @for (item of styleLinks; track item) {
+                <span igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
+                    <igx-icon>{{item.icon}}</igx-icon>
+                    <span class="navdrawer-ellipsis">{{item.name}}</span>
+                </span>
+            }
+        </ng-template>
 
-      <span igxDrawerItem [disabled]="true">
-        <igx-icon>web</igx-icon>
-      </span>
+        @if (drawerState.miniVariant) {
+            <ng-template igxDrawerMini>
+                @for (item of componentLinks; track item) {
+                    <span igxRipple igxDrawerItem routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
+                        <igx-icon>{{item.icon}}</igx-icon>
+                    </span>
+                }
 
-      <span
-        *ngFor="let item of directiveLinks"
-        igxDrawerItem
-        igxRipple
-        routerLinkActive
-        #rla="routerLinkActive"
-        [active]="rla.isActive"
-        routerLink="{{ item.link }}"
-      >
-        <igx-icon>{{ item.icon }}</igx-icon>
-      </span>
+                <span igxDrawerItem [disabled]="true">
+                    <igx-icon>web</igx-icon>
+                </span>
 
-      <span
-        *ngFor="let item of styleLinks"
-        igxDrawerItem
-        igxRipple
-        routerLinkActive
-        #rla="routerLinkActive"
-        [active]="rla.isActive"
-        routerLink="{{ item.link }}"
-      >
-        <igx-icon>{{ item.icon }}</igx-icon>
-      </span>
-    </ng-template>
-  </igx-nav-drawer>
+                @for (item of directiveLinks; track item) {
+                    <span igxDrawerItem igxRipple routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
+                        <igx-icon>{{item.icon}}</igx-icon>
+                    </span>
+                }
 
-  @let config =
-    (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
+                @for (item of styleLinks; track item) {
+                    <span igxDrawerItem igxRipple routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
+                        <igx-icon>{{item.icon}}</igx-icon>
+                    </span>
+                }
+            </ng-template>
+        }
+    </igx-nav-drawer>
+
+    @let config = (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
 
   @if (config) {
     <igx-nav-drawer

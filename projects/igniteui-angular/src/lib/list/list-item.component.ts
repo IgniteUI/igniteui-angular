@@ -18,7 +18,7 @@ import {
 
 import { HammerGesturesManager } from '../core/touch';
 import { rem } from '../core/utils';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 /**
  * The Ignite UI List Item component is a container intended for row items in the Ignite UI for Angular List component.
@@ -39,7 +39,7 @@ import { NgIf, NgTemplateOutlet } from '@angular/common';
     selector: 'igx-list-item',
     templateUrl: 'list-item.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, NgTemplateOutlet]
+    imports: [NgTemplateOutlet]
 })
 export class IgxListItemComponent implements IListChild {
     /**

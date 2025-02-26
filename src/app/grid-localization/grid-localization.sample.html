@@ -5,9 +5,11 @@
             <igx-grid-toolbar>
                 <igx-grid-toolbar-title>Grid with Localization</igx-grid-toolbar-title>
                 <igx-select [(ngModel)]="locale" (ngModelChange)="updateLocale()">
-                    <igx-select-item *ngFor="let locale of selectLocales" [value]="locale">
-                        {{ locale }}
-                    </igx-select-item>
+                    @for (locale of selectLocales; track locale) {
+                        <igx-select-item [value]="locale">
+                            {{ locale }}
+                        </igx-select-item>
+                    }
                 </igx-select>
             </igx-grid-toolbar>
             <igx-column field="Category" header="Category" [dataType]="'string'" [groupable]="true">
