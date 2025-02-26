@@ -174,14 +174,14 @@
     // The wrapping element here is needed
     // in order to override the !important rule of .igx-icon--inactive.
     %igx-combo__case-icon {
-        .igx-icon {
+        igx-icon {
             // Important is needed since the .igx-icon--inactive has !important
             color: color($color: 'gray', $variant: 600) !important;
         }
     }
 
     %igx-combo__case-icon--active {
-        .igx-icon {
+        igx-icon {
             color: color($color: 'primary')
         }
     }
@@ -189,6 +189,7 @@
     %igx-combo__content {
         position: relative;
         overflow: hidden;
+        max-height: calc(var(--size) * 10);
 
         &:focus {
             outline: transparent;
@@ -209,7 +210,8 @@
     %igx-combo__add-item {
         height: auto !important;
         background: var-get($theme, 'empty-list-background') !important;
-        justify-content: center !important;
+        justify-content: center;
+        outline: none !important;
     }
 
     %igx-combo__empty {

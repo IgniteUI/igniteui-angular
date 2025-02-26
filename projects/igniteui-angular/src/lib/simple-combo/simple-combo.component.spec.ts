@@ -588,8 +588,6 @@ describe('IgxSimpleCombo', () => {
             expect(combo.displayKey).toEqual('field');
             expect(combo.groupKey).toEqual('region');
             expect(combo.width).toEqual('400px');
-            expect(combo.itemsMaxHeight).toEqual(320);
-            expect(combo.itemHeight).toEqual(32);
             expect(combo.placeholder).toEqual('Location');
             expect(combo.allowCustomValues).toEqual(false);
             expect(combo.cssClass).toEqual(CSS_CLASS_COMBO);
@@ -671,9 +669,7 @@ describe('IgxSimpleCombo', () => {
             const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
 
             const verifyDropdownItemHeight = () => {
-                expect(combo.itemHeight).toEqual(itemHeight);
                 expect(dropdownItems[0].nativeElement.clientHeight).toEqual(itemHeight);
-                expect(combo.itemsMaxHeight).toEqual(itemMaxHeight);
                 expect(dropdownList.nativeElement.clientHeight).toEqual(itemMaxHeight);
             };
             verifyDropdownItemHeight();
@@ -2113,35 +2109,6 @@ describe('IgxSimpleCombo', () => {
 
             expect(reactiveForm.dirty).toBe(false);
         }));
-    });
-
-    describe('Display density', () => {
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    NoopAnimationsModule,
-                    ReactiveFormsModule,
-                    FormsModule,
-                    IgxSimpleComboSampleComponent
-                ]
-            }).compileComponents();
-        }));
-        beforeEach(() => {
-            fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
-            fixture.detectChanges();
-            combo = fixture.componentInstance.combo;
-        });
-        it('should scale items container depending on component size (itemHeight * 10)', () => {
-            combo.toggle();
-            fixture.detectChanges();
-            expect(combo.itemsMaxHeight).toEqual(320);
-            fixture.componentInstance.size = 'small';
-            fixture.detectChanges();
-            expect(combo.itemsMaxHeight).toEqual(280);
-            fixture.componentInstance.size = 'large';
-            fixture.detectChanges();
-            expect(combo.itemsMaxHeight).toEqual(400);
-        });
     });
 
     describe('Form control tests: ', () => {

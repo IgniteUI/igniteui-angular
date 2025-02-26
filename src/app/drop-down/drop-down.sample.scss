@@ -1,14 +1,3 @@
-.sample-content {
-    &:nth-child(2){
-        align-items: flex-start;
-        height: 75vh;
-
-        button {
-            margin-left: 2rem;
-        }
-    }
-}
-
 .sample-button-group {
     display: flex;
     flex-direction: column;
@@ -17,6 +6,18 @@
     >* {
         margin-bottom: 16px;
     }
+}
+
+.sample-wrapper {
+    display: grid;
+    gap: 1rem;
+    justify-items: center;
+}
+
+igc-dropdown::part(base) {
+    height: 400px;
+    width: 180px;
+    overflow: auto;
 }
 
 // Import the IgniteUI themes library first

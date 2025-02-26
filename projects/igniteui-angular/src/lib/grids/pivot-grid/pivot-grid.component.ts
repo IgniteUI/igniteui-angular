@@ -479,7 +479,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    protected override get minColumnWidth() {
+    public override get minColumnWidth() {
         if (this.superCompactMode) {
             return MINIMUM_COLUMN_WIDTH_SUPER_COMPACT;
         } else {
@@ -1056,6 +1056,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             platform,
             _diTransactions);
     }
+
+    public override navigation: IgxPivotGridNavigationService;
 
     /**
      * @hidden
