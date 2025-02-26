@@ -1,7 +1,7 @@
 import { NgModuleRef } from '@angular/core';
 import { TestBed, getTestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 
-const checkLeaks = 'gc' in window;
+const checkLeaksAvailable = typeof window.gc === 'function';
 
 const debug = false;
 function debugLog(...args) {
@@ -10,11 +10,16 @@ function debugLog(...args) {
     }
 }
 
+let _skipLeakCheck = false;
+const throwOnLeak = true;
+
 interface ConfigureOptions {
     /**
      * Check for memory leaks when the tests finishes.
      * Note, this only works in Chrome configurations with expose the gc.
-     * Caveats: if there are pending (non-cancelled) timers or animation frames it may report false positives.
+     * Caveats:
+     *   * if there are pending (non-cancelled) timers or animation frames it may report false positives.
+     *   * if there's a beforeEach create it must be cleaned up in an afterEach to avoid being detected as a leak
      */
     checkLeaks?: boolean;
 }
@@ -27,11 +32,13 @@ interface ConfigureOptions {
  */
 
 export const configureTestSuite = (configureActionOrOptions?: (() => TestBed) | ConfigureOptions, options: ConfigureOptions = {}) => {
+    setupJasmineCurrentTest();
+
     const configureAction = typeof configureActionOrOptions === 'function' ? configureActionOrOptions : undefined;
     options = (configureActionOrOptions && typeof configureActionOrOptions === 'object') ? configureActionOrOptions : options;
-    options.checkLeaks = options.checkLeaks && checkLeaks;
+    options.checkLeaks = options.checkLeaks && checkLeaksAvailable;
 
-    let componentRefs: WeakRef<{}>[];
+    let componentRefs: { test: string, ref: WeakRef<{}> }[];
     const moduleRefs = new Set<NgModuleRef<any>>();
 
     const testBed = getTestBed();
@@ -57,7 +64,9 @@ export const configureTestSuite = (configureActionOrOptions?: (() => TestBed) | 
             componentRefs = [];
             testBed.createComponent = function () {
                 const fixture = originCreateComponent.apply(testBed, arguments);
-                componentRefs.push(new WeakRef(fixture.componentInstance));
+                if (!_skipLeakCheck) {
+                    componentRefs.push({ test: jasmine['currentTest'].fullName, ref: new WeakRef(fixture.componentInstance) });
+                }
                 return fixture;
             };
         }
@@ -73,13 +82,19 @@ export const configureTestSuite = (configureActionOrOptions?: (() => TestBed) | 
 
     function reportLeaks() {
         gc();
-        const leaks = componentRefs.map(ref => ref.deref()).filter(i => !!i);
+        const leaks = componentRefs.map(({test, ref}) => ({ test, instance: ref.deref()})).filter(item => !!item.instance);
         if (leaks.length > 0) {
             console.warn(`Detected ${leaks.length} leaks:`);
-            const classNames = [...new Set(leaks.map(i => i.constructor.name))];
-            for (const name of classNames) {
-                const count = leaks.filter(i => i.constructor.name === name).length;
-                console.warn(` · ${name}: ${count}`);
+            for (const test of new Set(leaks.map(l => l.test))) {
+                const testLeaks = leaks.filter(l => l.test === test).map(l => l.instance);
+                const classNames = new Set(testLeaks.map(i => i.constructor.name));
+                for (const name of classNames) {
+                    const count = testLeaks.filter(i => i.constructor.name === name).length;
+                    console.warn(` · ${name}: ${count} - ${test}`);
+                }
+            }
+            if (throwOnLeak) {
+                throw new Error(`Detected ${leaks.length} leaks`);
             }
         } else {
             debugLog('No leaks detected');
@@ -123,6 +138,37 @@ export const configureTestSuite = (configureActionOrOptions?: (() => TestBed) | 
         }
     });
 };
+
+/** Calls to Testbed.createComponent() inside this wrapper wont be tracked for leaks */
+export function skipLeakCheck(fn: () => void | Promise<unknown>) {
+    return function() {
+        _skipLeakCheck = true;
+        const res = fn();
+        if (res instanceof Promise) {
+            return res.finally(() => {
+                _skipLeakCheck = false;
+            });
+        } else {
+            _skipLeakCheck = false;
+            return res;
+        }
+    }
+}
+
+let setupJasmineCurrentTestDone = false;
+function setupJasmineCurrentTest() {
+    if (!setupJasmineCurrentTestDone) {
+        jasmine.getEnv().addReporter({
+            specStarted(result) {
+                jasmine['currentTest'] = result;
+            },
+            specDone(result) {
+                jasmine['currentTest'] = result;
+            },
+        });
+        setupJasmineCurrentTestDone = true;
+    }
+}
 
 // TODO: enable on re-run by selecting enable debug logging
 // https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/troubleshooting-workflows/enabling-debug-logging
