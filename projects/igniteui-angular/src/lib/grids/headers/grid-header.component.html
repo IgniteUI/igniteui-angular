@@ -18,19 +18,19 @@
         *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
     </ng-container>
 </span>
-<ng-container *ngIf="!column.columnGroup">
+@if (!column.columnGroup) {
     <div class="igx-grid-th__icons">
-        <ng-container *ngIf="column.sortable && !disabled">
+        @if (column.sortable && !disabled) {
             <div #sortIconContainer class="sort-icon"
                 [attr.data-sortIndex]="(grid.sortingOptions.mode === 'single' && grid.sortingExpressions.length <=1) ? null : column.field | sortingIndex:grid.sortingExpressions"
                 (pointerdown)="onPointerDownIndicator($event)" (click)="onSortingIconClick($event)">
                 <ng-container *ngTemplateOutlet="sortIconTemplate; context: { $implicit:  this }"></ng-container>
             </div>
-        </ng-container>
-        <ng-container *ngIf="grid.allowFiltering && column.filterable && grid.filterMode === 'excelStyleFilter'">
+        }
+        @if (grid.allowFiltering && column.filterable && grid.filterMode === 'excelStyleFilter') {
             <div [ngClass]="filterIconClassName" (pointerdown)="onPointerDownIndicator($event)" (click)="onFilteringIconClick($event)" >
                 <ng-container *ngTemplateOutlet="esfIconTemplate; context: { $implicit:  this }"></ng-container>
             </div>
-        </ng-container>
+        }
     </div>
-</ng-container>
+}

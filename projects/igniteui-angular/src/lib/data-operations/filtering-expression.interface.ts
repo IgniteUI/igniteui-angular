@@ -1,4 +1,5 @@
 import { IFilteringOperation } from './filtering-condition';
+import { IExpressionTree } from './filtering-expressions-tree';
 
 /* mustCoerceToInt */
 export enum FilteringLogic {
@@ -13,7 +14,9 @@ export enum FilteringLogic {
  */
 export declare interface IFilteringExpression {
     fieldName: string;
-    condition: IFilteringOperation;
-    searchVal?: any;   
+    condition?: IFilteringOperation;
+    conditionName?: string;
+    searchVal?: any;
+    searchTree?: IExpressionTree;
     ignoreCase?: boolean;
 }
