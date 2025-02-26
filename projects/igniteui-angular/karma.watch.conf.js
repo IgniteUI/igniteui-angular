@@ -42,7 +42,10 @@ module.exports = function (config) {
     customLaunchers: {
         ChromeWithGC: {
             base: 'Chrome',
-            flags: ['--js-flags="--expose-gc"'],
+            flags: [
+                '--js-flags="--expose-gc"',
+                '--disable-backgrounding-occluded-windows', // don't throttle when window is fully hidden behind others
+            ],
             debug: false
         }
     },
