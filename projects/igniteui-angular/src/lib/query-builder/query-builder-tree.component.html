@@ -20,7 +20,7 @@
                 [placeholder]="this.resourceStrings.igx_query_builder_select_entity"
                 [disabled]="disableEntityChange"
             >
-                @for (entity of entities; track entity) { 
+                @for (entity of entities; track entity.name) {
                     <igx-select-item [value]="entity">
                         {{entity.name}}
                     </igx-select-item>
@@ -30,7 +30,7 @@
 
         <div class="igx-filter-tree__inputs-field">
             <span class="igx-query-builder__label">Select</span>
-            @if(!parentExpression) {
+            @if (!parentExpression) {
                 <igx-combo
                     #returnFieldsCombo
                     [itemsMaxHeight]="250"
@@ -78,7 +78,7 @@
                     [style.display]="isInEditMode() ? 'block' : 'none'"
                     (opening)="exitEditAddMode()"
                 >
-                    @for (field of fields; track field) {     
+                    @for (field of fields; track field.field) {
                         <igx-select-item [value]="field.field">
                             {{ field.field }}
                         </igx-select-item>
@@ -111,7 +111,7 @@
             }}</span>
         </button>
 
-        @if(this.rootGroup) {
+        @if (this.rootGroup) {
             <button type="button"
                 igxButton="flat"
                 [disabled]="hasEditedExpression"
@@ -207,7 +207,7 @@
                                             }}
                                         }
                                     } @else {
-                                        @if(getFormatter(expressionItem.expression.fieldName)) {
+                                        @if (getFormatter(expressionItem.expression.fieldName)) {
                                             {{
                                                 expressionItem.expression.searchVal
                                                     | fieldFormatter
@@ -224,7 +224,7 @@
                     }
                 </igx-chip>
                 <div #tooltipRef="tooltip" igxTooltip>
-                    @if(expressionItem.expression.searchTree){
+                    @if (expressionItem.expression.searchTree){
                         {{expressionItem.expression.searchTree.returnFields.join(', ')}}
                     } @else if (expressionItem.expression.condition?.isUnary) {
                         {{getConditionFriendlyName(expressionItem.expression.condition?.name)}}
@@ -242,7 +242,7 @@
                     }
                 </div>
 
-                @if(expressionItem.focused || expressionItem.hovered) {
+                @if (expressionItem.focused || expressionItem.hovered) {
                     <div igxDragIgnore class="igx-filter-tree__expression-actions">
                         <button #addExpressionButton igxDragIgnore igxIconButton="outlined" [igxDropDownItemNavigation]="addOptionsDropDown"
                         aria-labelledby="add-expression" (keydown)="invokeClick($event)"
@@ -263,7 +263,7 @@
                 }
             </div>
         }
-        <div #editingInputsContainer class="igx-filter-tree__subquery" >            
+        <div #editingInputsContainer class="igx-filter-tree__subquery" >
             @if (expressionItem.inEditMode) {
                 <div
                     #editingInputs
@@ -283,7 +283,7 @@
                         [placeholder]="this.resourceStrings.igx_query_builder_column_placeholder"
                     >
 
-                        @for (field of fields; track field) {     
+                        @for (field of fields; track field) {
                             <igx-select-item [value]="field">
                                 {{ field.label || field.header || field.field }}
                             </igx-select-item>
@@ -351,12 +351,12 @@
                         @if(!selectedField ||
                             (selectedField.dataType !== 'date' && selectedField.dataType !== 'time' && selectedField.dataType !== 'dateTime')) {
                                 <igx-input-group type="box">
-            
+
                                         <input
                                             #searchValueInput
                                             igxInput
                                             [disabled]="isSearchValueInputDisabled()"
-                                            [placeholder]="this.selectedCondition === 'inQuery' || this.selectedCondition === 'notInQuery' ? 
+                                            [placeholder]="this.selectedCondition === 'inQuery' || this.selectedCondition === 'notInQuery' ?
                                             this.resourceStrings.igx_query_builder_query_value_placeholder :
                                             this.resourceStrings.igx_query_builder_value_placeholder"
                                             [type]="
@@ -521,7 +521,7 @@
                     </igx-drop-down>
                 </div>
                 <div class="igx-filter-tree__expression-section">
-                    @for (expr of expressionItem?.children; track expr) {
+                    @for (expr of expressionItem?.children; track trackExpressionItem(expr)) {
                         <ng-container>
                             <ng-container
                                     *ngTemplateOutlet="
@@ -535,7 +535,7 @@
                         </ng-container>
                     }
                 </div>
-                
+
                 @if (expressionItem === rootGroup && !hasEditedExpression) {
                     <div
                             #currentGroupButtonsContainer
@@ -556,7 +556,7 @@
 
     @if (rootGroup || (!rootGroup && (selectedEntity || (entities?.length === 1 && !entities[0]?.name)))) {
         <div class="igx-filter-tree__section">
-            @if(!this.isAdvancedFiltering()) {
+            @if (!this.isAdvancedFiltering()) {
                 <span class="igx-query-builder__label">Where</span>
             }
             <ng-container

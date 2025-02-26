@@ -1,4 +1,4 @@
-import { DOCUMENT, NgFor, NgIf } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Output, QueryList, booleanAttribute, forwardRef } from '@angular/core';
 import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
@@ -45,7 +45,7 @@ export declare interface ISplitterBarResizeEventArgs {
 @Component({
     selector: 'igx-splitter',
     templateUrl: './splitter.component.html',
-    imports: [NgFor, NgIf, forwardRef(() => IgxSplitBarComponent)]
+    imports: [forwardRef(() => IgxSplitBarComponent)]
 })
 export class IgxSplitterComponent implements AfterContentInit {
     /**
@@ -177,7 +177,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     /**
      * Sets the visibility of the handle and expanders in the splitter bar.
      * False by default
-     * 
+     *
      * @example
      * ```html
      * <igx-splitter [nonCollapsible]='true'>

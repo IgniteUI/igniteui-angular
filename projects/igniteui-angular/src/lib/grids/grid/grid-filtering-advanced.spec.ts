@@ -1162,12 +1162,12 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Change the grid's columns collection
             fixture.componentInstance.columns = [
-                { fieldName: 'ID', header: 'ID', width: '200px', type: 'string' },
-                { fieldName: 'CompanyName', header: 'Company Name', width: '200px', type: 'string' },
-                { fieldName: 'ContactName', header: 'Contact Name', width: '200px', type: 'string' },
-                { fieldName: 'ContactTitle', header: 'Contact Title', width: '200px', type: 'string' },
-                { fieldName: 'City', header: 'City', width: '200px', type: 'string' },
-                { fieldName: 'Country', header: 'Country', width: '200px', type: 'string' },
+                { field: 'ID', header: 'ID', width: '200px', type: 'string' },
+                { field: 'CompanyName', header: 'Company Name', width: '200px', type: 'string' },
+                { field: 'ContactName', header: 'Contact Name', width: '200px', type: 'string' },
+                { field: 'ContactTitle', header: 'Contact Title', width: '200px', type: 'string' },
+                { field: 'City', header: 'City', width: '200px', type: 'string' },
+                { field: 'Country', header: 'Country', width: '200px', type: 'string' },
             ];
             fixture.detectChanges();
             flush();

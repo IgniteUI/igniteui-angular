@@ -1,6 +1,5 @@
 import {
     AfterViewInit,
-    ContentChild,
     EventEmitter,
     LOCALE_ID,
     Output,
@@ -15,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from '../core/i18n/query-builder-resources';
-import { PlatformUtil } from '../core/utils';
+import { PlatformUtil, trackByIdentity } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -1626,7 +1625,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._timeoutId = setTimeout(() => {
             if (this._lastFocusedChipIndex != -1) {
-                //Sort the expression chip list. 
+                //Sort the expression chip list.
                 //If there was a recent drag&drop and the tree hasn't rerendered(child query), they will be unordered
                 const sortedChips = this.expressionsChips.toArray().sort(function (a, b) {
                     if (a === b) return 0;
@@ -1672,4 +1671,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.currentGroup = null;
         }
     }
+
+    /** rootGroup is recreated after clicking Apply, which sets new expressionTree and calls init()*/
+    protected trackExpressionItem = trackByIdentity;
 }

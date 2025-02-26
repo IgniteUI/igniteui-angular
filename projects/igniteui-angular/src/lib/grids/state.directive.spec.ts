@@ -17,7 +17,6 @@ import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '..
 import { GridSelectionRange } from './common/types';
 import { CustomFilter } from '../test-utils/grid-samples.spec';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
-import { NgFor } from '@angular/common';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 
@@ -880,35 +879,37 @@ class HelperFunctions {
     template: `
         <igx-grid #grid [data]="data" [autoGenerate]="false" [moving]="true" igxGridState rowSelection="multiple"
             cellSelection="multiple" primaryKey="ProductID">
-            <igx-column *ngFor="let c of columns"
-                [width]="c.width"
-                [sortable]="c.sortable"
-                [editable]="c.editable"
-                [sortingIgnoreCase]="c.sortingIgnoreCase"
-                [filteringIgnoreCase]="c.sortingIgnoreCase"
-                [maxWidth]="c.maxWidth"
-                [hasSummary]="c.hasSummary"
-                [filterable]="c.filterable"
-                [searchable]="c.searchable"
-                [selectable]="c.selectable"
-                [resizable]="c.resizable"
-                [headerClasses]="c.headerClasses"
-                [headerGroupClasses]="c.headerGroupClasses"
-                [groupable]="c.groupable"
-                [field]="c.field"
-                [header]="c.header"
-                [dataType]="c.dataType"
-                [pinned]="c.pinned"
-                [hidden]="c.hidden"
-                [disablePinning]="c.disablePinning">
-            </igx-column>
+            @for (c of columns; track c) {
+                <igx-column
+                    [width]="c.width"
+                    [sortable]="c.sortable"
+                    [editable]="c.editable"
+                    [sortingIgnoreCase]="c.sortingIgnoreCase"
+                    [filteringIgnoreCase]="c.sortingIgnoreCase"
+                    [maxWidth]="c.maxWidth"
+                    [hasSummary]="c.hasSummary"
+                    [filterable]="c.filterable"
+                    [searchable]="c.searchable"
+                    [selectable]="c.selectable"
+                    [resizable]="c.resizable"
+                    [headerClasses]="c.headerClasses"
+                    [headerGroupClasses]="c.headerGroupClasses"
+                    [groupable]="c.groupable"
+                    [field]="c.field"
+                    [header]="c.header"
+                    [dataType]="c.dataType"
+                    [pinned]="c.pinned"
+                    [hidden]="c.hidden"
+                    [disablePinning]="c.disablePinning">
+                </igx-column>
+            }
             <igx-paginator></igx-paginator>
         </igx-grid>
         <ng-template #bodyTemplate let-cell>
             <span>Custom Content: {{cell.value}}</span>
         </ng-template>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxGridStateComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -987,7 +988,7 @@ export class IgxGridStateWithDetailsComponent {
                 </igx-column-group>
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridStateDirective, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridStateDirective]
 })
 export class CollapsibleColumnGroupTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

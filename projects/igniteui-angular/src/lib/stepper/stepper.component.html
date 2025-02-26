@@ -1,16 +1,22 @@
-<div *ngIf="!contentTop || orientation !== 'horizontal'" class="igx-stepper__header">
-    <ng-template *ngTemplateOutlet="stepTemplate"></ng-template>
-</div>
+@if (!contentTop || orientation !== 'horizontal') {
+    <div class="igx-stepper__header">
+        <ng-template *ngTemplateOutlet="stepTemplate"></ng-template>
+    </div>
+}
 
-<div *ngIf="orientation === 'horizontal'" class="igx-stepper__body">
-    <ng-container *ngFor="let step of steps">
-        <ng-container *ngTemplateOutlet="step.contentTemplate"></ng-container>
-    </ng-container>
-</div>
+@if (orientation === 'horizontal') {
+    <div class="igx-stepper__body">
+        @for (step of steps; track step) {
+            <ng-container *ngTemplateOutlet="step.contentTemplate"></ng-container>
+        }
+    </div>
+}
 
-<div *ngIf="contentTop && orientation === 'horizontal'" class="igx-stepper__header">
-    <ng-template *ngTemplateOutlet="stepTemplate"></ng-template>
-</div>
+@if (contentTop && orientation === 'horizontal') {
+    <div class="igx-stepper__header">
+        <ng-template *ngTemplateOutlet="stepTemplate"></ng-template>
+    </div>
+}
 
 <ng-template #stepTemplate>
     <ng-content select="igx-step"></ng-content>

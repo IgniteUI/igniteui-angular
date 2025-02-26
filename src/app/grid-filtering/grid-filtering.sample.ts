@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FilterMode, FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, GridSelectionMode, IChangeCheckboxEventArgs, IGX_GRID_DIRECTIVES, IgxButtonGroupComponent, IgxCheckboxComponent, IgxGridComponent, IgxIconComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -10,7 +9,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-filtering-sample',
     styleUrls: ['grid-filtering.sample.scss'],
     templateUrl: 'grid-filtering.sample.html',
-    imports: [NgIf, NgFor, FormsModule, IGX_GRID_DIRECTIVES, IgxCheckboxComponent, IgxButtonGroupComponent, IgxIconComponent]
+    imports: [FormsModule, IGX_GRID_DIRECTIVES, IgxCheckboxComponent, IgxButtonGroupComponent, IgxIconComponent]
 })
 export class GridFilteringComponent implements OnInit {
 

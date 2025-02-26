@@ -43,7 +43,7 @@ export class IgxQueryBuilderHeaderComponent {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
-     * 
+     *
      * @deprecated in version 19.1.0.
      */
     @Input()

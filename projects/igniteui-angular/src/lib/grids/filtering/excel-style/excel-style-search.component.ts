@@ -32,7 +32,7 @@ import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective } from '
 import { IgxListItemComponent } from '../../../list/list-item.component';
 import { IgxListComponent } from '../../../list/list.component';
 import { IgxSuffixDirective } from '../../../directives/suffix/suffix.directive';
-import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../../../icon/icon.component';
@@ -59,7 +59,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html',
-    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, NgIf, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, NgFor, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
+    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private static readonly filterOptimizationThreshold = 2;
@@ -462,6 +462,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             selectAllBtn.indeterminate = anyFiltered && anyUnfiltered;
             if (this.isHierarchical() && this.tree) {
                 this._hierarchicalSelectedItems = this.tree.nodes.map(n => n.data as FilterListItem).filter(item => item.isFiltered);
+                this.tree.collapseAll();
             }
 
             this.esf.listData.forEach(i => i.isSelected = i.isFiltered);

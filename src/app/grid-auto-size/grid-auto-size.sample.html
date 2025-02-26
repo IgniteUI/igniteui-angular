@@ -22,35 +22,37 @@
                 <button igxButton="contained" (click)="checkCols()">Check cols</button>
             </div>
             <div #gridContainer [hidden]="gridContainerHidden" [style.height]="containerHeight">
-            <igx-grid
-                #grid1
-                [data]="data"
-                [allowFiltering]="true"
-                [moving]="true"
-                [rowSelection]="selectionMode"
-                [filterMode]="'excelStyleFilter'"
-                [width]="'100%'"
-                [height]="height">
-                <igx-grid-toolbar>
-                    <igx-grid-toolbar-actions>
-                        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-                        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-                    </igx-grid-toolbar-actions>
-                  </igx-grid-toolbar>
-                <igx-column *ngFor="let c of columns" [field]="c.field"
-                                                    [header]="c.field"
-                                                    [groupable]="c.groupable"
-                                                    [resizable]="c.resizable"
-                                                    [width]="c.width"
-                                                    [sortable]="c.sortable"
-                                                    [filterable]="c.filterable"
-                                                    [editable]="true"
-                                                    [hidden]="c.hidden"
-                                                    [hasSummary]="false"
-                                                    [dataType]="c.type">
-                </igx-column>
-            </igx-grid>
-        </div>
+                <igx-grid
+                    #grid1
+                    [data]="data"
+                    [allowFiltering]="true"
+                    [moving]="true"
+                    [rowSelection]="selectionMode"
+                    [filterMode]="'excelStyleFilter'"
+                    [width]="'100%'"
+                    [height]="height">
+                    <igx-grid-toolbar>
+                        <igx-grid-toolbar-actions>
+                            <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                        </igx-grid-toolbar-actions>
+                    </igx-grid-toolbar>
+                    @for (c of columns; track c) {
+                        <igx-column [field]="c.field"
+                            [header]="c.field"
+                            [groupable]="c.groupable"
+                            [resizable]="c.resizable"
+                            [width]="c.width"
+                            [sortable]="c.sortable"
+                            [filterable]="c.filterable"
+                            [editable]="true"
+                            [hidden]="c.hidden"
+                            [hasSummary]="false"
+                            [dataType]="c.type">
+                        </igx-column>
+                    }
+                </igx-grid>
+            </div>
         </div>
     </div>
 </div>

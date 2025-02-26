@@ -1,5 +1,4 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
     IgxGridComponent,
@@ -23,7 +22,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-cell-api-sample',
     styleUrls: ['grid-cell-api.sample.scss'],
     templateUrl: 'grid-cell-api.sample.html',
-    imports: [FormsModule, IgxGridComponent, IgxPaginatorComponent, IgxGridDetailTemplateDirective, NgFor, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxButtonDirective, IgxIconComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent]
+    imports: [FormsModule, IgxGridComponent, IgxPaginatorComponent, IgxGridDetailTemplateDirective, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxButtonDirective, IgxIconComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 
 export class GridCellAPISampleComponent implements OnInit {
