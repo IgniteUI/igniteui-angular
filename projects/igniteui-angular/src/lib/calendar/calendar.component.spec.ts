@@ -128,7 +128,7 @@ describe("IgxCalendar - ", () => {
     });
 
     describe("Basic -", () => {
-        configureTestSuite();
+        configureTestSuite({ checkLeaks: true });
 
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
@@ -154,6 +154,11 @@ describe("IgxCalendar - ", () => {
                 calendar = fixture.componentInstance.calendar;
                 dom = fixture.debugElement;
             }));
+            afterEach(() => {
+                fixture = undefined;
+                calendar = undefined;
+                dom = undefined;
+            });
 
             it("Should initialize a calendar component", () => {
                 expect(fixture.componentInstance).toBeDefined();
