@@ -154,11 +154,8 @@
                                              [width]="rowDimensionWidthToPixels(dim)">
             </igx-pivot-row-dimension-content>
         </ng-template>
-        <div *ngIf="remainingBottomSize > 0" class="igx-grid-thead__wrapper" [style.height.px]="remainingBottomSize" [style.width.px]="rowDimensionWidthToPixels(dim)">
-            <div class="igx-grid-th"></div>
-        </div>
+        <ng-container *ngTemplateOutlet="emptyRowDimensionFill; context: { $implicit: this, widthPx: rowDimensionWidthToPixels(dim) }"></ng-container>
     </div>
-
 </ng-template>
 
 <ng-template #horizontalRowDimensionsTemplate>
@@ -175,20 +172,21 @@
                 <igx-pivot-row-dimension-mrl-row [rowIndex]="rowIndex" [rowGroup]="rowGroup" [groupedData]="groupedData" [style.height.px]="renderedRowHeight * rowGroup.length"></igx-pivot-row-dimension-mrl-row>
             </ng-template>
         </ng-container>
-        <div *ngIf="remainingBottomSize > 0" class="igx-grid-thead__wrapper" [style.height.px]="remainingBottomSize" [style.width.px]="pivotRowWidths">
-            <div class="igx-grid-th"></div>
-        </div>
+        <ng-container *ngTemplateOutlet="emptyRowDimensionFill; context: { $implicit: this, widthPx: pivotRowWidths }"></ng-container>
     </div>
 </ng-template>
 
 <ng-template #emptyRowDimensionsTemplate>
-    <div tabindex="0" *ngIf="columnDimensions.length > 0 || values.length > 0" #rowDimensionContainer role="rowgroup" class="igx-grid__tbody-pivot-dimension" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
-        <igx-pivot-row-dimension-content role="row" class="igx-grid-thead" [grid]="this"
-            [dimension]="emptyRowDimension"
-            [rootDimension]="emptyRowDimension"
-            [rowIndex]="0" [rowData]="dataView[0]"
-            [width]="rowDimensionWidthToPixels(emptyRowDimension)">
-        </igx-pivot-row-dimension-content>
+    <div tabindex="0" #rowDimensionContainer role="rowgroup" class="igx-grid__tbody-pivot-dimension" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+        @if ((columnDimensions.length > 0 || values.length > 0) && data.length > 0) {
+            <igx-pivot-row-dimension-content role="row" class="igx-grid-thead" [grid]="this"
+                [dimension]="emptyRowDimension"
+                [rootDimension]="emptyRowDimension"
+                [rowIndex]="0" [rowData]="dataView[0]"
+                [width]="rowDimensionWidthToPixels(emptyRowDimension)">
+            </igx-pivot-row-dimension-content>
+        }
+        <ng-container *ngTemplateOutlet="emptyRowDimensionFill; context: { $implicit: this, widthPx: rowDimensionWidthToPixels(emptyRowDimension) }"></ng-container>
     </div>
 </ng-template>
 
@@ -196,6 +194,17 @@
     <span class="igx-grid__tbody-message" role="cell">
         <span>{{resourceStrings.igx_grid_pivot_empty_message}}</span>
     </span>
+</ng-template>
+
+<ng-template #emptyRowDimensionFill let-width="widthPx">
+    @if (emptyBottomSize > 0) {
+        <div class="igx-pivot-grid-row-filler__wrapper" [style.height.px]="emptyBottomSize" [style.width.px]="width">
+            <!-- Reuse header styles to keep visuals consistent -->
+            <div class="igx-grid-thead__wrapper">
+                <div class="igx-grid-th"></div>
+            </div>
+        </div>
+    }
 </ng-template>
 
 <div [hidden]="true">

@@ -3492,23 +3492,19 @@
         }
     }
 
-    .igx-grid__tbody-pivot-dimension {
-        > .igx-grid-thead__wrapper {
-            border-bottom: initial;
-        }
-
-        .igx-grid-th {
+    .igx-pivot-grid-row-filler__wrapper {
+        .igx-grid-thead__wrapper {
             height: 100%;
+            border-bottom: initial;
+
+            .igx-grid-th {
+                height: 100%;
+            }
         }
     }
 
     %igx-grid__tbody-pivot-mrl-dimension {
-        > .igx-grid-thead__wrapper {
-            border-bottom: initial;
-        }
-
         .igx-grid-th {
-            height: 100%;
             border-bottom: none;
         }
     }

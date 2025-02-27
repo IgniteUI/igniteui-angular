@@ -227,8 +227,9 @@
                 </div>
             </ng-container>
 
-            <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="grid.pivotRowWidths - 1">
-                <ng-container *ngIf="grid.pivotUI.showRowHeaders && grid.visibleRowDimensions.length > 0">
+            <!-- Pivot Row Headers only area. If there are defined row dimension, but data is missing so no visibleRowDimensions are calculated, will show just empty area. -->
+            <ng-container *ngIf="grid.pivotUI.showRowHeaders && grid.rowDimensions.length > 0">
+                <div class="igx-grid__tr igx-grid__tr-header-row" role="row" [style.width.px]="grid.pivotRowWidths - 1">
                     <ng-container *ngFor="let dim of grid.visibleRowDimensions; index as colIndex;last as isLast">
                         <igx-pivot-row-header-group #rowDimensionHeaders *ngIf="getRowDimensionColumn(dim) as dimCol"
                             [ngClass]="dimCol.headerGroupClasses"
@@ -241,8 +242,8 @@
                             [rowIndex]="-1" >
                         </igx-pivot-row-header-group>
                     </ng-container>
-                </ng-container>
-            </div>
+                </div>
+            </ng-container>
 
             <!-- Pinned columns collection from the start -->
             <ng-container *ngIf="pinnedColumnCollection.length && grid.isPinningToStart">

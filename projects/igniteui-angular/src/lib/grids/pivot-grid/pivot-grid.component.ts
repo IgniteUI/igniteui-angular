@@ -1151,7 +1151,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return false;
     }
 
-    protected get remainingBottomSize() {
+    protected get emptyBottomSize() {
         return this.totalHeight - (<any>this.verticalScroll).scrollComponent.size;
     }
 
