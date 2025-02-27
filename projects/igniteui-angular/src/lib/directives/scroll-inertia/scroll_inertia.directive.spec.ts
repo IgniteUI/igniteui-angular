@@ -5,7 +5,6 @@ import {
     OnInit,
     ViewChild,
     ElementRef,
-    OnDestroy,
 } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
@@ -348,13 +347,13 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
         <div #container style='width:calc(100% - 50px); height: 500px; float: left;'>
             <ng-template igxTestScrollInertia #scrInertiaContainer></ng-template>
         </div>
-        <div #scrBar [style.height]='height' style='overflow: auto; width: 50px; float:right;'>
+        <div #scrBar [style.height]='height' style='overflow: auto; width: 50px; float:right;' (scroll)="this.onScroll($event)">
             <div [style.height]='innerHeight' [style.width]='innerWidth'></div>
         </div>
     `,
     imports: [IgxTestScrollInertiaDirective]
 })
-export class ScrollInertiaComponent implements OnInit, OnDestroy {
+export class ScrollInertiaComponent implements OnInit {
     @ViewChild('container', { static: true }) public container: ElementRef;
     @ViewChild('scrBar', { static: true }) public scrollContainer: ElementRef;
     @ViewChild('scrInertiaContainer', { read: IgxTestScrollInertiaDirective, static: true })
@@ -370,9 +369,6 @@ export class ScrollInertiaComponent implements OnInit, OnDestroy {
 
    public ngOnInit() {
         this.scrInertiaDir.IgxScrollInertiaScrollContainer = this.scrollContainer.nativeElement;
-
-        this.onScroll = this.onScroll.bind(this);
-        this.scrollContainer.nativeElement.addEventListener('scroll', this.onScroll);
     }
 
     public onScroll(evt) {
@@ -385,9 +381,5 @@ export class ScrollInertiaComponent implements OnInit, OnDestroy {
         const calcScrollLeftStep = evt.target.scrollLeft - prevScrLeft;
         this.scrTopStepArray.push(calcScrollStep);
         this.scrLeftStepArray.push(calcScrollLeftStep);
-    }
-
-    public ngOnDestroy(): void {
-        this.scrollContainer.nativeElement.removeEventListener('scroll', this.onScroll);
     }
 }
