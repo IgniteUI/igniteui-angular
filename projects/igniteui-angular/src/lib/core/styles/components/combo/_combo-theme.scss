@@ -309,4 +309,12 @@
             }
         }
     }
+
+    %form-group-bundle {
+        &:hover {
+            %igx-combo__clear-button {
+                color: inherit;
+            }
+        }
+    }
 }
