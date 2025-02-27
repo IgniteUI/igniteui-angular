@@ -240,6 +240,18 @@ $_theme: $fluent;
         }
     }
 
+    @include mx('first', 'inactive', 'range-preview') {
+        @include e(inner) {
+            color: var-get($_theme, 'date-selected-range-foreground');
+        }
+    }
+
+    @include mx('last', 'inactive', 'range-preview') {
+        @include e(inner) {
+            color: var-get($_theme, 'date-selected-range-foreground');
+        }
+    }
+
     @include mx('first', 'range-preview', 'current', 'selected') {
         @include e(inner) {
             color: var-get($_theme, 'date-selected-current-range-foreground');

@@ -108,6 +108,12 @@ $date-view-row-gap: rem(4px);
         border-block-style: dashed;
     }
 
+    @include mx('inactive', 'range-preview') {
+        @include e(inner) {
+            color: var-get($_theme, 'inactive-color');
+        }
+    }
+
     @include mx('range', 'selected', 'first') {
         &::after {
             border-block: calc(#{$border-size} / 2);
@@ -328,7 +334,7 @@ $date-view-row-gap: rem(4px);
         }
     }
 
-    @include m('special') {
+    @include m(special) {
          @include e(inner) {
             font-weight: 700;
         }
