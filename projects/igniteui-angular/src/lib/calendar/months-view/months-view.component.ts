@@ -7,7 +7,7 @@ import {
     Inject, ViewEncapsulation,
 } from "@angular/core";
 import { IgxCalendarMonthDirective } from "../calendar.directives";
-import { NgFor, TitleCasePipe } from "@angular/common";
+import { TitleCasePipe } from "@angular/common";
 import {
     IgxCalendarViewDirective,
     DAY_INTERVAL_TOKEN,
@@ -35,7 +35,7 @@ let NEXT_ID = 0;
     templateUrl: "months-view.component.html",
     styleUrl: '../shared-themes/years-months/years-months.component.css',
     encapsulation: ViewEncapsulation.None,
-    imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe]
+    imports: [IgxCalendarMonthDirective, TitleCasePipe]
 })
 export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     #standalone = true;

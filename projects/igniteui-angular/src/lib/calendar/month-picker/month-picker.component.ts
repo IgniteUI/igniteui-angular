@@ -10,7 +10,7 @@ import {
     OnInit,
     ViewEncapsulation,
 } from "@angular/core";
-import { NgIf, NgTemplateOutlet, DatePipe } from "@angular/common";
+import { NgTemplateOutlet, DatePipe } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { IgxMonthsViewComponent } from "../months-view/months-view.component";
@@ -41,7 +41,6 @@ let NEXT_ID = 0;
     styleUrls: ['month-picker.component.css', '../shared-themes/calendar-picker/calendar-picker.component.css'],
     encapsulation: ViewEncapsulation.None,
     imports: [
-        NgIf,
         NgTemplateOutlet,
         DatePipe,
         IgxIconComponent,

@@ -282,6 +282,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     @Input()
     public ghostClass = '';
 
+    /** @hidden @internal */
+    @Input()
+    public ghostClasses = [];
+
     /**
      * Set styles that will be added to the `ghostElement` element.
      * ```html
@@ -1271,6 +1275,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         if (this.ghostClass) {
             this.ghostElement.classList.add(this.ghostClass);
+        }
+
+        if (this.ghostClasses) {
+            this.ghostClasses.forEach(c => {
+                this.ghostElement.classList.add(c)
+            });
         }
 
         if (this.ghostStyle) {

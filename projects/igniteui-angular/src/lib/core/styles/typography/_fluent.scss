@@ -31,6 +31,7 @@
 @use '../components/tooltip/tooltip-theme' as *;
 @use '../components/tree/tree-theme' as *;
 @use '../components/label/label-theme' as *;
+@use '../components/query-builder/query-builder-theme' as *;
 
 @mixin typography() {
     @include badge-typography();
@@ -56,9 +57,9 @@
     @include checkbox-typography($categories: (
         label: 'body-2'
     ));
-    @include chip-typography($categories: (
-        text: 'subtitle-2'
-    ));
+    // @include chip-typography($categories: (
+    //     text: 'subtitle-2'
+    // ));
     @include column-actions-typography();
     @include date-range-typography();
     @include dialog-typography($categories: (
@@ -92,10 +93,10 @@
     @include navbar-typography($categories: (
         title: 'subtitle-2'
     ));
-    @include navdrawer-typography($categories: (
-        item: 'body-2',
-        header: 'subtitle-1'
-    ));
+    // @include navdrawer-typography($categories: (
+    //     item: 'body-2',
+    //     header: 'subtitle-1'
+    // ));
     @include radio-typography($categories: (
         label: 'body-2'
     ));
@@ -119,4 +120,5 @@
     @include label-typography($categories: (
         label: 'subtitle-2'
     ));
+	@include query-builder-typography();
 }

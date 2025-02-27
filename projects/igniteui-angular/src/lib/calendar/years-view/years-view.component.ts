@@ -6,7 +6,6 @@ import {
     Inject, ViewEncapsulation,
 } from "@angular/core";
 import { IgxCalendarYearDirective } from "../calendar.directives";
-import { NgFor } from "@angular/common";
 import {
     IgxCalendarViewDirective,
     DAY_INTERVAL_TOKEN,
@@ -32,7 +31,7 @@ import { calendarRange } from "../common/helpers";
     templateUrl: "years-view.component.html",
     styleUrl: '../shared-themes/years-months/years-months.component.css',
     encapsulation: ViewEncapsulation.None,
-    imports: [NgFor, IgxCalendarYearDirective]
+    imports: [IgxCalendarYearDirective]
 })
 export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     #standalone = true;

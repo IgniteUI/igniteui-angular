@@ -15,7 +15,7 @@ import {
     ChangeDetectionStrategy, ViewEncapsulation,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgIf, NgFor, TitleCasePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { CalendarSelection, ScrollDirection } from '../../calendar/calendar';
 import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeType } from '../../core/dates';
@@ -47,7 +47,7 @@ let NEXT_ID = 0;
     styleUrl: 'days-view.component.css',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, NgFor, IgxDayItemComponent, TitleCasePipe]
+    imports: [IgxDayItemComponent, TitleCasePipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     #standalone = true;
@@ -432,8 +432,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    public rowTracker(index: number, item: CalendarDay[]): string {
-        return `${item[index].month}${item[index].date}`;
+    public rowTracker(_: number, item: CalendarDay[]): string {
+        return `${item[0].month}${item[0].date}`;
     }
 
     /**

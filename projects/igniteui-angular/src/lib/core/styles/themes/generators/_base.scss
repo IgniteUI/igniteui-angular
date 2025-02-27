@@ -328,13 +328,13 @@
     //     @include checkbox($checkbox-theme-map);
     // }
 
-    @if is-used('igx-chip', $exclude) {
-        $chip-theme-map: chip-theme(
-            $schema: $schema,
-        );
-        $chip-theme-map: meta.call($theme-handler, $chip-theme-map);
-        @include chip($chip-theme-map);
-    }
+    // @if is-used('igx-chip', $exclude) {
+    //     $chip-theme-map: chip-theme(
+    //         $schema: $schema,
+    //     );
+    //     $chip-theme-map: meta.call($theme-handler, $chip-theme-map);
+    //     @include chip($chip-theme-map);
+    // }
 
     @if is-used('igx-column-actions', $exclude) {
         $column-actions-theme-map: column-actions-theme(
@@ -512,13 +512,13 @@
     //     @include navbar($navbar-theme-map);
     // }
 
-    @if is-used('igx-nav-drawer', $exclude) {
-        $navdrawer-theme-map: navdrawer-theme(
-            $schema: $schema,
-        );
-        $navdrawer-theme-map: meta.call($theme-handler, $navdrawer-theme-map);
-        @include navdrawer($navdrawer-theme-map);
-    }
+    // @if is-used('igx-nav-drawer', $exclude) {
+    //     $navdrawer-theme-map: navdrawer-theme(
+    //         $schema: $schema,
+    //     );
+    //     $navdrawer-theme-map: meta.call($theme-handler, $navdrawer-theme-map);
+    //     @include navdrawer($navdrawer-theme-map);
+    // }
 
     @if is-used('igx-overlay', $exclude) {
         $overlay-theme-map: overlay-theme(

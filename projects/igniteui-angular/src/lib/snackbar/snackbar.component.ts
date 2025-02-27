@@ -1,5 +1,4 @@
 import { useAnimation } from '@angular/animations';
-import { NgIf } from '@angular/common';
 import {
     Component,
     EventEmitter,
@@ -40,7 +39,7 @@ let NEXT_ID = 0;
     templateUrl: 'snackbar.component.html',
     styleUrl: 'snackbar.component.css',
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, IgxButtonDirective]
+    imports: [IgxButtonDirective]
 })
 export class IgxSnackbarComponent extends IgxNotificationsDirective
     implements OnInit {

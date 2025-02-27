@@ -8,7 +8,6 @@ import {
     IgxLabelDirective,
     IgxSwitchComponent,
 } from 'igniteui-angular';
-import { CommonModule } from '@angular/common';
 import {
 	AbstractControl,
 	FormControl,
@@ -21,7 +20,6 @@ import {
 @Component({
     selector: 'app-divider',
     imports: [
-        CommonModule,
         FormsModule,
         IgxSwitchComponent,
         IgxDividerComponent,

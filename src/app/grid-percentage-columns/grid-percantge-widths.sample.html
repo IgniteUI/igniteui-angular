@@ -39,11 +39,15 @@
             </igx-input-group>
             <igx-select [(ngModel)]="currencyCode">
                 <label igxLabel>Currency</label>
-                <igx-select-item *ngFor="let cur of currencies" [value]="cur">{{cur}}</igx-select-item>
+                @for (cur of currencies; track cur) {
+                    <igx-select-item [value]="cur">{{cur}}</igx-select-item>
+                }
             </igx-select>
             <igx-select [(ngModel)]="locale">
                 <label igxLabel>Locale</label>
-                <igx-select-item *ngFor="let cur of locales" [value]="cur">{{cur}}</igx-select-item>
+                @for (cur of locales; track cur) {
+                    <igx-select-item [value]="cur">{{cur}}</igx-select-item>
+                }
             </igx-select>
             <button igxButton="contained" (click)="changePipeArgs()">Apply Changes</button>
         </igx-card-content>
@@ -66,8 +70,12 @@
             </igx-column>
             <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'">
                 <ng-template igxCell let-cell="cell" let-val>
-                    <img *ngIf="val" src="/assets/images/grid/active.png" title="Continued" alt="Continued" />
-                    <img *ngIf="!val" src="/assets/images/grid/expired.png" title="Discontinued" alt="Discontinued" />
+                    @if (val) {
+                        <img src="/assets/images/grid/active.png" title="Continued" alt="Continued" />
+                    }
+                    @if (!val) {
+                        <img src="/assets/images/grid/expired.png" title="Discontinued" alt="Discontinued" />
+                    }
                 </ng-template>
             </igx-column>
         </igx-grid>

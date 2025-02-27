@@ -1,5 +1,4 @@
 import { ViewChild, Component, DebugElement, OnInit, QueryList } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1413,10 +1412,12 @@ describe('Row Pinning #grid', () => {
             [height]='"500px"'
             [data]="data"
             [autoGenerate]="true">
-            <igx-paginator *ngIf="paging"></igx-paginator>
+            @if (paging) {
+                <igx-paginator></igx-paginator>
+            }
         </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class GridRowPinningComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1435,14 +1436,18 @@ export class GridRowPinningComponent {
     template: `
     <igx-grid [data]="data" height="500px" [pinning]='pinningConfig' [rowSelection]="'single'"
         [rowEditable]="true">
-        <igx-column-layout *ngFor='let group of colGroups'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group) {
+            <igx-column-layout>
+                @for (col of group.columns; track col) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                        [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
     public cols: Array<any> = [

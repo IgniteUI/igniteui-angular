@@ -154,7 +154,7 @@ export class InputGroupShowcaseSampleComponent {
     constructor(private destroyRef: DestroyRef) {
         this.pcs.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.pcs.propertyChanges.subscribe((updatedProperties) => {
+        const propertyChange = this.pcs.propertyChanges.subscribe((updatedProperties) => {
             const mergedProperties = this.mergeProperties(updatedProperties);
 
             this.properties.set(mergedProperties);
@@ -162,7 +162,7 @@ export class InputGroupShowcaseSampleComponent {
             this.getPlaceholder();
         });
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     // Merge incoming property updates with the default configuration

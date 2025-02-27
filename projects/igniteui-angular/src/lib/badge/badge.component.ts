@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { booleanAttribute, Component, HostBinding, Input, ViewEncapsulation } from '@angular/core';
 import { mkenum } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -43,7 +42,7 @@ export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
     styleUrl: 'badge.component.css',
     templateUrl: 'badge.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, IgxIconComponent]
+    imports: [IgxIconComponent]
 })
 export class IgxBadgeComponent {
 

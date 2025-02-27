@@ -1,4 +1,4 @@
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     Component,
     ContentChild,
@@ -151,7 +151,7 @@ export class IgxListLineSubTitleDirective {
     styleUrl: 'list.component.css',
     providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, NgTemplateOutlet]
+    imports: [NgTemplateOutlet]
 })
 export class IgxListComponent extends IgxListBaseDirective {
     /**

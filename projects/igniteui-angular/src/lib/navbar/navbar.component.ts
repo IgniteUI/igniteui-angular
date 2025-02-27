@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
     Component,
     EventEmitter,
@@ -58,7 +57,7 @@ let NEXT_ID = 0;
     ],
     styleUrl: 'navbar.component.css',
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, IgxIconComponent]
+    imports: [IgxIconComponent]
 })
 
 export class IgxNavbarComponent {

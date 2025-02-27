@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
     Component,
     ElementRef,
@@ -59,7 +58,7 @@ let DIALOG_ID = 0;
     templateUrl: 'dialog-content.component.html',
     styleUrl: 'dialog.component.css',
     encapsulation: ViewEncapsulation.None,
-    imports: [IgxToggleDirective, IgxFocusTrapDirective, NgIf, IgxFocusDirective, IgxButtonDirective, IgxRippleDirective]
+    imports: [IgxToggleDirective, IgxFocusTrapDirective, IgxFocusDirective, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, AfterContentInit {
     private static NEXT_ID = 1;

@@ -11,7 +11,7 @@ import {
     OnDestroy,
     Inject
 } from '@angular/core';
-import { NgIf, NgTemplateOutlet, DecimalPipe, DatePipe, getLocaleCurrencyCode, PercentPipe, CurrencyPipe } from '@angular/common';
+import { NgTemplateOutlet, DecimalPipe, DatePipe, getLocaleCurrencyCode, PercentPipe, CurrencyPipe } from '@angular/common';
 
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -34,7 +34,6 @@ import { IgxColumnFormatterPipe } from '../common/pipes';
     selector: 'igx-grid-groupby-row',
     templateUrl: './groupby-row.component.html',
     imports: [
-        NgIf,
         NgTemplateOutlet,
         DecimalPipe,
         DatePipe,
