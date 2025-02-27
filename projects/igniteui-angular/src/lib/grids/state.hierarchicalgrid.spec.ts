@@ -637,7 +637,7 @@ class HelperFunctions {
     template: `
     <igx-hierarchical-grid #hGrid [moving]="true" [data]="data" igxGridState [expandChildren]="true" primaryKey="ID"
         [autoGenerate]="false" [height]="'800px'" [width]="'800px'" [moving]="true" rowSelection="multiple" cellSelection="multiple">
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column
                 [width]="c.width"
                 [sortable]="c.sortable"
@@ -661,7 +661,7 @@ class HelperFunctions {
         }
         <igx-paginator [perPage]="5"></igx-paginator>
         <igx-row-island [moving]="true" [key]="'childData'" [autoGenerate]="false" #rowIsland primaryKey="ID">
-            @for (c of childColumns; track c) {
+            @for (c of childColumns; track c.field) {
                 <igx-column
                     [width]="c.width"
                     [sortable]="c.sortable"

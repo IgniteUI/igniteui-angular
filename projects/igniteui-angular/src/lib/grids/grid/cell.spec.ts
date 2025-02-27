@@ -405,7 +405,7 @@ describe('IgxGrid - Cell component #grid', () => {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" [width]="'900px'" [height]="'500px'" rowSelection = "multiple" [moving]="true">
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column [field]="c.field"
                 [header]="c.field"
                 [width]="c.width"

@@ -1185,9 +1185,9 @@ export class ColumnLayoutTestComponent {
                 <igx-column field="ContactTitle"></igx-column>
             </igx-column-group>
         </igx-column-group>
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track group.group) {
             <igx-column-layout>
-                @for (col of group.columns; track col) {
+                @for (col of group.columns; track col.field) {
                     <igx-column
                         [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
                         [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>

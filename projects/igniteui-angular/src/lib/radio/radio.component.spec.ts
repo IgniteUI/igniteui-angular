@@ -283,7 +283,7 @@ class RadioWithModelComponent {
 
 @Component({
     template: `
-    @for (item of items; track item) {
+    @for (item of items; track item.value) {
         <igx-radio #radios
             [value]="item.value"
             [(ngModel)]="selected"

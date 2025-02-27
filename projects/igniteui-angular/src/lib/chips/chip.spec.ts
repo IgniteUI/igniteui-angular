@@ -15,7 +15,7 @@ import { getComponentSize } from '../core/utils';
 @Component({
     template: `
         <igx-chips-area #chipsArea>
-            @for (chip of chipList; track chip) {
+            @for (chip of chipList; track chip.id) {
                 <igx-chip #chipElem class="custom"
                     [id]="chip.id" [draggable]="chip.draggable"
                     [removable]="chip.removable" [selectable]="chip.selectable"
@@ -69,7 +69,7 @@ class TestChipComponent {
 @Component({
     template: `
         <igx-chips-area>
-            @for (chip of chipList; track chip) {
+            @for (chip of chipList; track chip.id) {
                 <igx-chip>
                     <span igxLabel>label</span>
                     <span igxSuffix>suf</span>

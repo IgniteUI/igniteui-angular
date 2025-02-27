@@ -1232,9 +1232,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 </igx-grid-toolbar-actions>
             </igx-grid-toolbar>
         }
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track group.group) {
             <igx-column-layout [field]='group.group' [hidden]='group.hidden'>
-                @for (col of group.columns; track col) {
+                @for (col of group.columns; track col.field) {
                     <igx-column
                         [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
                         [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
@@ -1333,9 +1333,9 @@ export class ColumnLayoutPinningTestComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px" [allowFiltering]="true">
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track group.group) {
             <igx-column-layout [field]='group.group' [pinned]='group.pinned'>
-                @for (col of group.columns; track col) {
+                @for (col of group.columns; track col.field) {
                     <igx-column
                         [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
                         [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
@@ -1352,9 +1352,9 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px" [style.--ig-size]="1">
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track group.group) {
             <igx-column-layout [field]='group.group' [pinned]='group.pinned'>
-                @for (col of group.columns; track col) {
+                @for (col of group.columns; track col.field) {
                     <igx-column
                         [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
                         [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [groupable]="col.groupable"></igx-column>
@@ -1398,7 +1398,7 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
     <igx-grid #grid [data]="data" height="500px">
         @for (group of colGroups; track group.group) {
             <igx-column-layout>
-                @for (col of group.columns; track col) {
+                @for (col of group.columns; track col.field) {
                     <igx-column [field]='col.field' [width]='col.width' [resizable]='col.resizable'
                         [rowStart]="col.rowStart" [colStart]="col.colStart" [colEnd]="col.colEnd" [rowEnd]="col.rowEnd">
                     </igx-column>
