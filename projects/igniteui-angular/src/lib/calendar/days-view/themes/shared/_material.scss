@@ -76,7 +76,7 @@ $_theme: $material;
         border-block-style: dashed;
     }
 
-    @include mx('inactive', 'range-preview') {
+    @include mx('inactive', 'range-preview', ('not': ('disabled', 'selected'))) {
         @include e(inner) {
             color: var-get($_theme, 'inactive-color');
         }

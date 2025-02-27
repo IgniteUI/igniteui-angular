@@ -33,8 +33,8 @@ $_theme: $bootstrap;
 
     @include m(vertical) {
         @include e(header) {
-            min-width: rem(136px);
-            width: rem(136px);
+            min-width: rem(168px);
+            width: rem(168px);
         }
 
         @include e(header-date) {
