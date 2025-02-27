@@ -61,6 +61,7 @@ interface Employee {
     name: string;
     position: string;
     description: string;
+    selected?: boolean;
 }
 
 @Component({
