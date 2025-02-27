@@ -25,9 +25,13 @@
         </div>
     </div>
     <div class="sample-toolbar">
-        <span *ngIf="buttonSelected === 1">Feeding {{volume}} records every {{frequency / 1000}} sec.
+        @if (buttonSelected === 1) {
+            <span>Feeding {{volume}} records every {{frequency / 1000}} sec.
             {{volume}} records updated. </span>
-        <span *ngIf="buttonSelected === 0">Feeding {{volume}} records every {{frequency / 1000}} sec.
+        }
+        @if (buttonSelected === 0) {
+            <span>Feeding {{volume}} records every {{frequency / 1000}} sec.
             ~{{volume/5}} records updated.</span>
+        }
     </div>
 </div>

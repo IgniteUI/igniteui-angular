@@ -39,8 +39,10 @@
                     <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
                 </div>
             </ng-template>
-            <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [hidden]='c.hidden' [editable]='true' [hasSummary]='true'>
-            </igx-column>
+            @for (c of columns; track c) {
+                <igx-column [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [hidden]='c.hidden' [editable]='true' [hasSummary]='true'>
+                </igx-column>
+            }
             <!-- <igx-column-layout [header]="'ID'">
                 <igx-column [rowStart]="1" [colStart]="1" [rowEnd]="3" field="ID" header="ID">
                     <ng-template igxCell let-value let-cell="cell">
@@ -156,9 +158,11 @@
     </div>
     <div class="grid-wrapper">
         <igx-tree-grid #treeGridHier [width]="'700px'" [height]="'600px'" [data]="treeGridHierData" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1" [columnSelection]="'single'" [rowSelection]="'multiple'">
-            <igx-column *ngFor="let c of treeGridHierColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
-                [hasSummary]="c.summary" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
-            </igx-column>
+            @for (c of treeGridHierColumns; track c) {
+                <igx-column [field]="c.field" [header]="c.field" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
+                    [hasSummary]="c.summary" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+                </igx-column>
+            }
             <igx-grid-toolbar>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -212,9 +216,11 @@
     </div>
     <div class="grid-wrapper">
         <igx-tree-grid #treeGrid [allowFiltering]="true" [moving]="true" [data]="treeData" [columnSelection]="'single'" primaryKey="employeeID" foreignKey="PID" [rowSelection]="'multiple'" [width]="'700px'" [height]="'600px'">
-            <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
-                [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
-            </igx-column>
+            @for (c of treeColumns; track c) {
+                <igx-column [field]="c.field" [dataType]="c.dataType" [header]="c.label" [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
+                    [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+                </igx-column>
+            }
             <igx-grid-toolbar>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -268,8 +274,10 @@
     </div>
     <div class="grid-wrapper">
         <igx-hierarchical-grid #hGrid [width]="'700px'" [height]="'600px'" [columnSelection]="'single'" [primaryKey]='"ID"' [allowFiltering]='true' [showExpandAll]='true' [data]="hierarchicalData" [rowSelection]="'multiple'">
-            <igx-column *ngFor="let c of hColumns" [hasSummary]='true' [editable]="true" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'>
-            </igx-column>
+            @for (c of hColumns; track c) {
+                <igx-column [hasSummary]='true' [editable]="true" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'>
+                </igx-column>
+            }
             <igx-grid-toolbar>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>

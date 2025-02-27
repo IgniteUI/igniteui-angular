@@ -25,7 +25,6 @@ import {
     ViewContainerRef,
     booleanAttribute
 } from '@angular/core';
-import { NgIf } from '@angular/common';
 import {
     AbstractControl,
     ControlValueAccessor,
@@ -93,7 +92,6 @@ let NEXT_ID = 0;
     templateUrl: 'date-picker.component.html',
     styles: [':host { display: block; }'],
     imports: [
-        NgIf,
         IgxInputGroupComponent,
         IgxPrefixDirective,
         IgxIconComponent,
