@@ -102,8 +102,8 @@
     [attr.aria-multiselectable]="selection !== 'single'"
     aria-labelledby="calendar-desc"
     role="grid"
-    (focus)="this.onWrapperFocus($event)";
-    (blur)="this.onWrapperBlur($event)";
+    (focus)="this.onWrapperFocus($event)"
+    (blur)="this.onWrapperBlur($event)"
     >
     <caption id="calendar-desc" tabindex="-1" class="igx-calendar__aria-off-screen">
         {{ resourceStrings.igx_calendar_singular_single_selection}}
