@@ -34,7 +34,7 @@ import { configureTestSuite } from "../test-utils/configure-suite";
 import { IgxDayItemComponent } from "./days-view/day-item.component";
 import { HelperTestFunctions } from "../test-utils/calendar-helper-utils";
 
-fdescribe("IgxCalendar - ", () => {
+describe("IgxCalendar - ", () => {
     registerLocaleData(localeFr);
 
     it("Should receive correct values from utility functions", () => {
