@@ -111,7 +111,8 @@ export class IgxDayItemComponent {
     @HostBinding('class.igx-day-item--selected')
     public get isSelectedCSS(): boolean {
     const selectable =
-        !this.isInactive || (this.isWithinRange && this.selection === "range");
+        !this.isInactive || this.isWithinPreviewRange ||
+        (this.isWithinRange && this.selection === "range");
     return !this.isDisabled && selectable && this.selected;
     }
 
