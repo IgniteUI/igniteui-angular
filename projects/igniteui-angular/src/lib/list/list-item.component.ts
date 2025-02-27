@@ -19,7 +19,6 @@ import {
 import { HammerGesturesManager } from '../core/touch';
 import { rem } from '../core/utils';
 import { NgTemplateOutlet } from '@angular/common';
-import { Host } from 'igniteui-dockmanager/dist/types/stencil-public-runtime';
 
 /**
  * The Ignite UI List Item component is a container intended for row items in the Ignite UI for Angular List component.
