@@ -209,7 +209,8 @@
     %igx-combo__add-item {
         height: auto !important;
         background: var-get($theme, 'empty-list-background') !important;
-        justify-content: center !important;
+        justify-content: center;
+        outline: none !important;
     }
 
     %igx-combo__empty {
@@ -305,6 +306,14 @@
         %igx-combo__clear-button {
             @if $variant == 'bootstrap' {
                 border-inline-end: 0;
+            }
+        }
+    }
+
+    %form-group-bundle {
+        &:hover {
+            %igx-combo__clear-button {
+                color: inherit;
             }
         }
     }
