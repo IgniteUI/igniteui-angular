@@ -428,7 +428,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(8);
 
-        // toggle grouprow - collapse
+        // toggle group row - collapse
         expect(groupRows[0].expanded).toEqual(true);
         grid.toggleGroup(groupRows[0].groupRow);
         tick();
@@ -445,7 +445,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(grid.getRowByKey(rec.ID)).toBeUndefined();
         }
 
-        // toggle grouprow - expand
+        // toggle group row - expand
         grid.toggleGroup(groupRows[0].groupRow);
         tick();
         fix.detectChanges();
@@ -682,7 +682,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it(`should trigger an groupingDone event when the user pushes a new array of grouping expressions, which results in
-    both grouping and ungrouping at the same time.`, fakeAsync(() => {
+    both grouping and un-grouping at the same time.`, fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -894,7 +894,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const chips = grid.groupArea.chips;
         expect(chips.first.disabled).toBeFalse();
 
-        // should get disbaled on groupable=false
+        // should get disabled on groupable=false
         column.groupable = false;
         fix.detectChanges();
         expect(chips.first.disabled).toBeTrue();
@@ -931,7 +931,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     }));
 
-    it('should apply the specified sort order on the group rows when already grouped columnn is sorted in asc/desc order.',
+    it('should apply the specified sort order on the group rows when already grouped column is sorted in asc/desc order.',
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -966,7 +966,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         }));
 
-    it('should remove grouping when already grouped columnn is sorted with order "None" via the API.', fakeAsync(() => {
+    it('should remove grouping when already grouped column is sorted with order "None" via the API.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -1497,9 +1497,9 @@ describe('IgxGrid - GroupBy #grid', () => {
             GridFunctions.simulateGridContentKeydown(fix, 'Space');
             fix.detectChanges();
 
-            const newSelectioncount = grid.selectedRows.length;
+            const newSelectionCount = grid.selectedRows.length;
 
-            expect(selectionCount).toEqual(newSelectioncount);
+            expect(selectionCount).toEqual(newSelectionCount);
 
         }));
 
@@ -2581,7 +2581,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[groupRows.length - 1].expanded).toBe(true);
     }));
 
-    it('should update horizontal virtualization state correcly when data row views are re-used from cache.', async () => {
+    it('should update horizontal virtualization state correctly when data row views are re-used from cache.', async () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -3265,7 +3265,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
         expect(grid.calcHeight).toEqual(expectedHeight);
-        // veirify width is recalculated
+        // verify width is recalculated
         const indentation = fix.debugElement.query(By.css('.igx-grid__header-indentation'));
 
         expect(grid.pinnedWidth).toEqual(parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
@@ -3340,7 +3340,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(8);
 
-        // toggle grouprow - collapse
+        // toggle group row - collapse
         expect(groupRows[0].expanded).toEqual(true);
         grid.toggleGroup(grid.groupsRecords[0]);
         fix.detectChanges();
@@ -3355,7 +3355,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(grid.gridAPI.get_row_by_key(rec.ID)).toBeUndefined();
         }
 
-        // toggle grouprow - expand
+        // toggle group row - expand
         grid.toggleGroup(grid.groupsRecords[0]);
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(true);
@@ -3519,7 +3519,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it(`should hide the grouped columns when hideGroupedColumns option is enabled,
-    there are initially set groupingExpressions and columns are autogenareted`,
+    there are initially set groupingExpressions and columns are autogenerated`,
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             fix.detectChanges();

@@ -352,7 +352,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             GridFunctions.verifyGroupIsExpanded(fixture, secondGroup);
 
-            GridFunctions.verifyColumnIsHidden(grid.getColumnByName('PostlCode'), false, 6);
+            GridFunctions.verifyColumnIsHidden(grid.getColumnByName('PostalCode'), false, 6);
 
             // delete another column
             fixture.componentInstance.columnGroups[1].columns = fixture.componentInstance.columnGroups[1].columns.splice(2);

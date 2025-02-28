@@ -206,7 +206,7 @@ describe('Row Pinning #grid', () => {
             });
         });
 
-        it('should be able to set pin possition of row on pin/unpin events.', () => {
+        it('should be able to set pin position of row on pin/unpin events.', () => {
             const row1 = grid.getRowByIndex(0);
             row1.pin();
             expect(row1.pinned).toBe(true);
@@ -1368,7 +1368,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
         });
 
-        it('Shoud be able to conditionally style rows. Check is the class present in the row native element class list', () => {
+        it('Should be able to conditionally style rows. Check is the class present in the row native element class list', () => {
             fix.detectChanges();
             const firstRow = grid.gridAPI.get_row_by_index(0);
             const fourthRow = grid.gridAPI.get_row_by_index(3);

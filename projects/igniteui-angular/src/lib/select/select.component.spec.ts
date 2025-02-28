@@ -2056,7 +2056,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
             }
 
-            // Ciryllic characters
+            // Cyrillic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'с' });
@@ -2169,7 +2169,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
             }
 
-            // Ciryllic characters
+            // Cyrillic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'с' });
