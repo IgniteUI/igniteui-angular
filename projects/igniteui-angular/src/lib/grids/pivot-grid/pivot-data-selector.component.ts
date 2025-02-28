@@ -47,6 +47,8 @@ import { IgxIconComponent } from "../../icon/icon.component";
 import { IgxInputGroupComponent } from "../../input-group/input-group.component";
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { Size } from '../common/enums';
+import { GridColumnDataType } from '../../data-operations/data-util';
+import { IgxPivotGridStateService } from './pivot-grid-state.service';
 
 interface IDataSelectorPanel {
     name: string;
@@ -250,7 +252,7 @@ export class IgxPivotDataSelectorComponent {
         return this._grid?.pivotConfiguration.values || [];
     }
 
-    constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) { }
+    constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef, private pivotStateService: IgxPivotGridStateService) { }
 
     /**
      * @hidden @internal
@@ -517,8 +519,37 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     public onAggregationChange(event: ISelectionEventArgs) {
+        const valueMember = this.value.member;
+        const columns = this.grid.columns;
+
         if (!this.isSelected(event.newSelection.value)) {
             this.value.aggregate = event.newSelection.value;
+
+            const isCountAggregator = this.value.aggregate.key.toLowerCase() === 'count';
+            const isSingleValue = this.grid.values.length === 1;
+
+            columns.forEach(column => {
+                const isRelevantColumn = column.field?.includes(valueMember);
+                const isCurrencyColumn = column.dataType === GridColumnDataType.Currency;
+
+                if (isSingleValue) {
+                    if (isCountAggregator && isCurrencyColumn) {
+                        column.dataType = GridColumnDataType.Number;
+                        this.pivotStateService.addCurrencyColumn(valueMember);
+                    } else if (this.pivotStateService.isCurrencyColumn(valueMember)) {
+                        column.dataType = GridColumnDataType.Currency;
+                    }
+                } else if (isRelevantColumn) {
+                    if (isCountAggregator && isCurrencyColumn) {
+                        column.dataType = GridColumnDataType.Number;
+                        this.pivotStateService.addCurrencyColumn(valueMember);
+                    } else if (this.pivotStateService.isCurrencyColumn(valueMember)) {
+                        column.dataType = GridColumnDataType.Currency;
+                        this.pivotStateService.removeCurrencyColumn(valueMember);
+                    }
+                }
+            });
+
             this.grid.pipeTrigger++;
             this.grid.cdr.markForCheck();
         }
