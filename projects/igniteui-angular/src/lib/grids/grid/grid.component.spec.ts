@@ -2928,7 +2928,7 @@ describe('IgxGrid Component Tests #grid', () => {
 @Component({
     template: `<div style="width: 800px; height: 600px;">
         <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" [autoGenerateExclude]="autoGenerateExclude" (columnInit)="columnCreated($event)">
-            @for (column of columns; track column) {
+            @for (column of columns; track column.field) {
                 <igx-column [field]="column.field" [hasSummary]="column.hasSummary"
                     [header]="column.field" [width]="column.width">
                 </igx-column>
@@ -3004,7 +3004,7 @@ export class IgxGridTestComponent {
 
 @Component({
     template: `<igx-grid #grid [data]="data" (columnInit)="initColumns($event)">
-        @for (col of columns; track col) {
+        @for (col of columns; track col.key) {
             <igx-column [field]="col.key" [header]="col.key" [dataType]="col.dataType">
             </igx-column>
         }
@@ -3132,7 +3132,7 @@ export class IgxGridColumnHeaderInGroupAutoSizeComponent {
 
 @Component({
     template: `<igx-grid #grid [data]="data" [width]="'500px'" (columnInit)="initColumns($event)">
-        @for (col of columns; track col) {
+        @for (col of columns; track col.key) {
             <igx-column [field]="col.key" [header]="col.key" [dataType]="col.dataType">
             </igx-column>
         }
@@ -3149,7 +3149,7 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
 
 @Component({
     template: `<igx-grid #grid [hidden]="hidden" [data]="data" [autoGenerate]="false">
-        @for (col of columns; track col) {
+        @for (col of columns; track col.key) {
             <igx-column [width]="'10%'" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
             </igx-column>
         }
@@ -3430,7 +3430,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             </igx-tab-header>
             <igx-tab-content>
                 <igx-grid #grid2 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
-                    @for (column of columns; track column) {
+                    @for (column of columns; track column.field) {
                         <igx-column
                             [field]="column.field"
                             [header]="column.field"
@@ -3446,7 +3446,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             </igx-tab-header>
             <igx-tab-content>
                 <igx-grid #grid3 [data]="data" [primaryKey]="'id'">
-                    @for (column of columns; track column) {
+                    @for (column of columns; track column.field) {
                         <igx-column
                             [field]="column.field"
                             [header]="column.field"
@@ -3463,7 +3463,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             </igx-tab-header>
             <igx-tab-content>
                 <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
-                    @for (column of columns; track column) {
+                    @for (column of columns; track column.field) {
                         <igx-column
                             [field]="column.field"
                             [header]="column.field"
@@ -3481,7 +3481,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             </igx-tab-header>
             <igx-tab-content>
                 <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'">
-                    @for (column of columns; track column) {
+                    @for (column of columns; track column.field) {
                         <igx-column
                             [field]="column.field"
                             [header]="column.field"
@@ -3499,7 +3499,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             <igx-tab-content>
                 <div style='height:300px;'>
                     <igx-grid #grid6 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'">
-                        @for (column of columns; track column) {
+                        @for (column of columns; track column.field) {
                             <igx-column
                                 [field]="column.field"
                                 [header]="column.field"
@@ -3576,7 +3576,7 @@ export class IgxGridWithCustomPaginationTemplateComponent {
 @Component({
     template: `<igx-grid #grid [width]="'2000px'" [height]="'2000px'" [data]="data"
         [autoGenerate]="autoGenerate" [style.--ig-size]="1" [groupingExpressions]="groupingExpressions">
-        @for (column of columns; track column) {
+        @for (column of columns; track column.field) {
             <igx-column [field]="column.field" [header]="column.field" [width]="column.width"></igx-column>
         }
     </igx-grid>`,

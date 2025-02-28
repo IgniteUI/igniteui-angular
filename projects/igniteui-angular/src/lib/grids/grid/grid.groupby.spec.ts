@@ -4124,7 +4124,7 @@ export class CustomTemplateGridComponent extends DataParent {
             [width]='width'
             [height]='height'
             [data]="testData">
-            @for (c of columns; track c) {
+            @for (c of columns; track c.field) {
                 <igx-column [groupable]="true" [field]="c.field" [header]="c.header || c.field" [width]="c.width + 'px'">
                 </igx-column>
             }

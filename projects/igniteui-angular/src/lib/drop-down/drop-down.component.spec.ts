@@ -1298,7 +1298,7 @@ describe('IgxDropDown ', () => {
     <button (click)="toggleDropDown()">Toggle</button>
     <igx-drop-down id="test-id" igxDropDownItemNavigation [maxHeight]="maxHeight"
         [allowItemsFocus]="true" style="--ig-size: var(--ig-size-medium);">
-        @for (item of items; track item) {
+        @for (item of items; track item.field) {
             <igx-drop-down-item [disabled]="item.disabled" [isHeader]="item.header" [selected]="item.selected">
                 {{item.field}}
             </igx-drop-down-item>
@@ -1338,14 +1338,14 @@ class IgxDropDownTestComponent {
     template: `
     <button (click)="selectItem5()">Select 5</button>
     <igx-drop-down #dropdown1>
-        @for (item of items; track item) {
+        @for (item of items; track item.field) {
             <igx-drop-down-item>
                 {{ item.field }}
             </igx-drop-down-item>
         }
     </igx-drop-down>
     <igx-drop-down #dropdown2>
-        @for (item of items; track item) {
+        @for (item of items; track item.field) {
             <igx-drop-down-item>
                 {{ item.field }}
             </igx-drop-down-item>
@@ -1403,7 +1403,7 @@ class DoubleIgxDropDownComponent implements OnInit {
     <igx-drop-down igxDropDownItemNavigation (selectionChanging)="selectionChanging($event)"
         (opening)="onToggleOpening()" (opened)="onToggleOpened()"
         (closing)="onToggleClosing()" (closed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
-        @for (item of items; track item) {
+        @for (item of items; track item.field) {
             <igx-drop-down-item>
                 {{ item.field }}
             </igx-drop-down-item>
@@ -1441,7 +1441,7 @@ class IgxDropDownAnchorTestComponent {
 @Component({
     template: ` <input #inputElement [igxDropDownItemNavigation]="dropdownElement" class='test-input' type='text' value='Focus Me!'/>
     <igx-drop-down #dropdownElement [width]="'400px'" [height]="'400px'" [allowItemsFocus]="true">
-        @for (item of items; track item) {
+        @for (item of items; track item.field) {
             <igx-drop-down-item>
                 {{ item.field }}
             </igx-drop-down-item>
@@ -1466,9 +1466,9 @@ class InputWithDropDownDirectiveComponent {
 @Component({
     template: `
     <igx-drop-down>
-        @for (parent of data; track parent) {
+        @for (parent of data; track parent.name) {
             <igx-drop-down-item-group [label]="parent.name">
-                @for (child of parent.children; track child) {
+                @for (child of parent.children; track child.value) {
                     <igx-drop-down-item [value]="child.value">
                         {{ child.name }}
                     </igx-drop-down-item>
