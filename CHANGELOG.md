@@ -1,6 +1,11 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 19.1.1
+### New Features
+- IgxListItem
+  - Added a new `selected` input property, making it easier to indicate when a list item is selected by applying styling responsible for that state.
+
 ## 19.1.0
 ### General
 - `IgxCarousel`
