@@ -4,9 +4,6 @@ import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { NgIf } from '@angular/common';
 import { IgxIconButtonDirective } from '../../directives/button/icon-button.directive';
 
-/* blazorElement */
-/* wcElementTag: igc-grid-action-button */
-/* blazorIndirectRender */
 @Component({
     selector: 'igx-grid-action-button',
     templateUrl: 'grid-action-button.component.html',
