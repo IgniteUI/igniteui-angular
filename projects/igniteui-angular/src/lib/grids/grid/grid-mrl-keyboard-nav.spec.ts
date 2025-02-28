@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,7 +14,7 @@ import { CellType } from '../common/grid.interface';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 
-const DEBOUNCETIME = 30;
+const DEBOUNCE_TIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const CELL_BLOCK = `.${GRID_MRL_BLOCK}`;
@@ -455,7 +455,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
                     ]
                 }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
                 const firstRowCell = rows[1].queryAll(By.css(CELL_CSS_CLASS));
@@ -465,28 +465,28 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
@@ -1425,7 +1425,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
                     ]
                 }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
                 const penultRowCells = rows[rows.length - 2].queryAll(By.css(CELL_CSS_CLASS));
@@ -1436,11 +1436,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[rowIndex + 1].City);
@@ -1457,7 +1457,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'ContactTitle', rowStart: 2, colStart: 2 }
                     ]
                 }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
 
@@ -1470,7 +1470,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown', false, false, true);
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value)
@@ -1478,7 +1478,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp', false, false, true);
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
@@ -1516,7 +1516,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -1524,28 +1524,28 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'end');
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'home');
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft', false, false, true);
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
@@ -1582,7 +1582,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
@@ -1644,7 +1644,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 // last cell from first layout
@@ -1654,28 +1654,28 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'end');
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'home');
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Address);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Address');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft', false, false, true);
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Address);
@@ -1713,7 +1713,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
@@ -1774,7 +1774,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
@@ -1837,7 +1837,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
@@ -1847,21 +1847,21 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].Phone);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].Phone);
@@ -1898,7 +1898,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                             { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
                         ]
                     }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
@@ -1911,7 +1911,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow down
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 // check next cell is active and is fully in view
@@ -1929,7 +1929,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow up
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 // check next cell is active and is fully in view
@@ -1947,7 +1947,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow right
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 // check next cell is active and is fully in view
@@ -1965,7 +1965,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow left
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 // check next cell is active and is fully in view
@@ -1994,7 +1994,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const grid = fix.componentInstance.grid;
                 grid.columnWidth = '300px';
                 grid.width = '300px';
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 // focus 1st row, 2nd row cell
@@ -2004,7 +2004,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow right
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 // check next cell is active
@@ -2014,7 +2014,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow left
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 // check next cell is active
@@ -2051,7 +2051,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const grid = fix.componentInstance.grid;
                 grid.columnWidth = '300px';
                 grid.width = '400px';
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 let firstCell = grid.gridAPI.get_cell_by_index(0, 'ID');
@@ -2060,7 +2060,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // ctrl+arrow right
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 // check correct cell is active and is fully in view
@@ -2072,7 +2072,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // ctrl+arrow left
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft', false, false, true);
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 // first cell should be active and is fully in view
@@ -2103,7 +2103,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'PostalCode', rowStart: 3, colStart: 2 }
                     ]
                 }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -2111,14 +2111,14 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
@@ -2165,7 +2165,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // scroll right
                 grid.headerContainer.getScroll().scrollLeft = 800;
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCE_TIME * 2);
                 fix.detectChanges();
 
                 // focus first pinned cell
@@ -2176,7 +2176,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow right
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 // check if first unpinned cell is active and is in view
@@ -2196,7 +2196,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // // scroll right
                 // grid.headerContainer.getScroll().scrollLeft = 800;
                 // fix.detectChanges();
-                // await wait(DEBOUNCETIME);
+                // await wait(DEBOUNCE_TIME);
 
                 // GridFunctions.simulateGridContentKeydown(fix, 'Tab');
                 // fix.detectChanges();
@@ -2230,7 +2230,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     ]
                 }];
                 fix.componentInstance.grid.width = '600px';
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -2238,14 +2238,14 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
@@ -2270,7 +2270,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'PostalCode', rowStart: 3, colStart: 2 }
                     ]
                 }];
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
                 const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
@@ -2368,14 +2368,14 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const firstCell = secondBlock.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 fix.componentInstance.grid.headerContainer.getScroll().scrollLeft = 500;
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCE_TIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
@@ -2435,7 +2435,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // tab through cols and check order is correct - ContactName should be skipped.
                 for (let i = 1; i < order.length; i++) {
                     GridFunctions.simulateGridContentKeydown(fix, 'Tab');
-                    await wait(DEBOUNCETIME);
+                    await wait(DEBOUNCE_TIME);
                     fix.detectChanges();
 
                     cell = grid.getCellByColumn(0, order[i]);
@@ -2445,7 +2445,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // shift+tab through  cols and check order is correct - ContactName should be skipped.
                 for (let j = order.length - 2; j >= 0; j--) {
                     GridFunctions.simulateGridContentKeydown(fix, 'Tab', false, true);
-                    await wait(DEBOUNCETIME);
+                    await wait(DEBOUNCE_TIME);
                     fix.detectChanges();
 
                     cell = grid.getCellByColumn(0, order[j]);
@@ -2485,17 +2485,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     ]
                 }
             ];
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
             grid.width = '500px';
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // navigate down to cell in a row that is in the DOM but is not in view (half-visible row)
             let col = grid.getColumnByName('ContactTitle');
             grid.navigateTo(2, col.visibleIndex);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // cell should be at bottom of grid
@@ -2508,7 +2508,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             // navigate up to cell in a row that is in the DOM but is not in view (half-visible row)
             col = grid.getColumnByName('CompanyName');
             grid.navigateTo(0, col.visibleIndex);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // cell should be at top of grid
@@ -2546,17 +2546,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     ]
                 }
             ];
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
             grid.width = '500px';
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // navigate to cell in a row is not in the DOM
             let col = grid.getColumnByName('CompanyName');
             grid.navigateTo(10, col.visibleIndex);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // cell should be at bottom of grid
@@ -2569,10 +2569,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             // navigate right to cell in column that is in DOM but is not in view
             col = grid.getColumnByName('City');
             grid.navigateTo(10, col.visibleIndex);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // cell should be at right edge of grid
@@ -2586,10 +2586,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             // navigate left to cell in column that is in DOM but is not in view
             col = grid.getColumnByName('CompanyName');
             grid.navigateTo(10, col.visibleIndex);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // cell should be at left edge of grid
@@ -2603,10 +2603,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             col = grid.getColumnByName('ID');
             grid.navigateTo(9, col.visibleIndex);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             // cell should be at right edge of grid
