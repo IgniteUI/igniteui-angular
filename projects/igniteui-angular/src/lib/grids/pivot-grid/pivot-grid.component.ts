@@ -72,7 +72,7 @@ import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resi
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
 import { cloneArray, PlatformUtil, resizeObservable } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
-import { DataUtil } from '../../data-operations/data-util';
+import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridTransaction } from '../common/types';
 import { GridBaseAPIService } from '../api.service';
@@ -103,6 +103,7 @@ import { IgxTextHighlightService } from '../../directives/text-highlight/text-hi
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
+import { IgxPivotGridStateService } from './pivot-grid-state.service';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -1030,6 +1031,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
+        private pivotStateService: IgxPivotGridStateService,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>
     ) {
         super(
@@ -2291,11 +2293,18 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (fields.size === 0) {
             this.values.forEach((value) => {
                 const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
+                let columnDataType = value.dataType || this.resolveDataTypes(data.length ? data[0][value.member] : null);
+
+                if (value.aggregate?.key?.toLowerCase() === 'count' && columnDataType === GridColumnDataType.Currency) {
+                    this.pivotStateService.addCurrencyColumn(value.member);
+                    columnDataType = GridColumnDataType.Number;
+                }
+
                 ref.instance.header = value.displayName;
                 ref.instance.field = value.member;
                 ref.instance.parent = parent;
                 ref.instance.sortable = true;
-                ref.instance.dataType = value.dataType || this.resolveDataTypes(data.length ? data[0][value.member] : null);
+                ref.instance.dataType = columnDataType;
                 ref.instance.formatter = value.formatter;
                 columns.push(ref.instance);
             });
@@ -2309,9 +2318,35 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             }
             if (shouldGenerate && (value.children == null || value.children.length === 0 || value.children.size === 0)) {
                 const col = this.createColumnForDimension(value, data, parent, this.hasMultipleValues);
+
+                this.values.forEach((aggregatorValue) => {
+                    if (col.dataType === GridColumnDataType.Currency && aggregatorValue.aggregate?.key?.toLowerCase() === 'count') {
+                        col.dataType = GridColumnDataType.Number;
+                        this.pivotStateService.addCurrencyColumn(aggregatorValue.member);
+                    } else if (this.pivotStateService.isCurrencyColumn(aggregatorValue.member) && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
+                        col.dataType = GridColumnDataType.Currency;
+                        this.pivotStateService.removeCurrencyColumn(aggregatorValue.member);
+                    }
+                })
+
                 columns.push(col);
                 if (this.hasMultipleValues) {
                     const measureChildren = this.getMeasureChildren(data, col, false, value.dimension.width);
+
+                    measureChildren.forEach((child) => {
+                        this.values.forEach((aggregatorValue) => {
+                            if (child.field.includes(aggregatorValue.member)) {
+                                if (child.dataType === GridColumnDataType.Currency && aggregatorValue.aggregate?.key?.toLowerCase() === 'count') {
+                                    child.dataType = GridColumnDataType.Number;
+                                    this.pivotStateService.addCurrencyColumn(aggregatorValue.member);
+                                } else if (this.pivotStateService.isCurrencyColumn(aggregatorValue.member) && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
+                                    child.dataType = GridColumnDataType.Currency;
+                                    this.pivotStateService.removeCurrencyColumn(aggregatorValue.member);
+                                }
+                            }
+                        })
+                    })
+
                     col.children.reset(measureChildren);
                     columns = columns.concat(measureChildren);
                 }
