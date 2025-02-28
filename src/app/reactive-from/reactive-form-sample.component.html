@@ -4,11 +4,15 @@
             <h4 class="sample-title">Book your movie ticket</h4>
             <div class="container">
                 <igx-select #select name="movies" formControlName="movie">
-                    <igx-select-item-group *ngFor="let genre of genres" [label]="genre.type">
-                        <igx-select-item *ngFor="let movie of genre.movies" [value]="movie">
-                            {{ movie }}
-                        </igx-select-item>
-                    </igx-select-item-group>
+                    @for (genre of genres; track genre) {
+                        <igx-select-item-group [label]="genre.type">
+                            @for (movie of genre.movies; track movie) {
+                                <igx-select-item [value]="movie">
+                                    {{ movie }}
+                                </igx-select-item>
+                            }
+                        </igx-select-item-group>
+                    }
                     <label igxLabel for="movies">Movie</label>
                     <ng-template igxSelectToggleIcon><igx-icon>local_movies</igx-icon></ng-template>
                 </igx-select>

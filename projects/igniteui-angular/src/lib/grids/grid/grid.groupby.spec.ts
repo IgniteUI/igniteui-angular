@@ -20,7 +20,6 @@ import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
-import { NgFor, NgIf } from '@angular/common';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridStateDirective, IgxGrouping } from '../public_api';
@@ -2377,7 +2376,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(dataRows.length).toEqual(6);
     }));
 
-     
+
     it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -3970,13 +3969,15 @@ describe('IgxGrid - GroupBy #grid', () => {
             [dropAreaTemplate]='currentDropArea'
             [data]="data"
             [autoGenerate]="true" (columnInit)="columnsCreated($event)" (groupingDone)="groupingDoneHandler($event)">
-            <igx-paginator *ngIf="paging"></igx-paginator>
+            @if (paging) {
+                <igx-paginator></igx-paginator>
+            }
         </igx-grid>
         <ng-template #dropArea>
             <span> Custom template </span>
         </ng-template>
     `,
-    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class DefaultGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -4122,11 +4123,13 @@ export class CustomTemplateGridComponent extends DataParent {
             [width]='width'
             [height]='height'
             [data]="testData">
-                <igx-column *ngFor="let c of columns" [groupable]="true" [field]="c.field" [header]="c.header || c.field" [width]="c.width + 'px'">
+            @for (c of columns; track c.field) {
+                <igx-column [groupable]="true" [field]="c.field" [header]="c.header || c.field" [width]="c.width + 'px'">
                 </igx-column>
+            }
         </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GroupByDataMoreColumnsComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

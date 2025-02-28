@@ -1,5 +1,4 @@
 import { Component, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { NgIf } from '@angular/common';
 import {
     IGX_HIERARCHICAL_GRID_DIRECTIVES,
     IgxHierarchicalGridComponent
@@ -13,7 +12,7 @@ import { debounceTime } from 'rxjs/operators';
     templateUrl: 'hierarchical-grid-remote-virtualization.html',
     styleUrls: ['hierarchical-grid-remote-virtualization.scss'],
     providers: [RemoteService],
-    imports: [NgIf, IGX_HIERARCHICAL_GRID_DIRECTIVES]
+    imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
 export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewInit {
     @ViewChild('hGrid', { static: true })
