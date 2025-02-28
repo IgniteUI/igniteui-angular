@@ -182,7 +182,7 @@ export class ColumnDefinitions {
     `;
 
     public static resizableColsComponent = `
-    @for (c of columns; track c) {
+    @for (c of columns; track c.field) {
         <igx-column [field]="c.field"
                     [header]="c.field"
                     [resizable]="c.resizable"
@@ -318,30 +318,30 @@ export class ColumnDefinitions {
     `;
 
     public static generatedWithSummaries = `
-    @for (c of columns; track c) {
+    @for (c of columns; track c.field) {
         <igx-column [field]="c.field" [header]="c.header" [hasSummary]="true">
         </igx-column>
     }`;
 
     public static generatedWithDataType = `
-    @for (c of columns; track c) {
+    @for (c of columns; track c.field) {
         <igx-column [field]="c.field" [header]="c.field" [dataType]="c.dataType">
         </igx-column>
     }`;
 
     public static generatedGroupableWithEnabledSummariesAndDataType = `
-    @for (c of columns; track c) {
+    @for (c of columns; track c.field) {
         <igx-column [field]="c.field" [header]="c.header" [hasSummary]="true" [dataType]="c.dataType" [groupable]='c.groupable'>
         </igx-column>
     }`;
 
     public static generatedWithColumnBasedSummariesAndDataType = `
-    @for (c of columns; track c) {
+    @for (c of columns; track c.field) {
         <igx-column [field]="c.field" [header]="c.header" [hasSummary]="c.hasSummary" [dataType]="c.dataType"></igx-column>
     }`;
 
     public static generatedEditable = `
-    @for (col of columns; track c) {
+    @for (col of columns; track col.key) {
         <igx-column [field]="col.key"
                     [header]="col.key"
                     [dataType]="col.dataType"

@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -2622,9 +2622,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [height]="'500px'" (selected)="cellSelected($event)">
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track group.group) {
             <igx-column-layout [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
-                @for (col of group.columns; track col) {
+                @for (col of group.columns; track col.field) {
                     <igx-column
                         [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
                         [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
