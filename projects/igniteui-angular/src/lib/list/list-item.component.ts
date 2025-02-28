@@ -133,6 +133,7 @@ export class IgxListItemComponent implements IListChild {
     private lastPanDir = IgxListPanState.NONE;
 
     private _role: string = '';
+    private _selected = false;;
 
     /**
      * Gets the `panState` of a `list item`.
@@ -284,6 +285,30 @@ export class IgxListItemComponent implements IListChild {
     /** @hidden @internal */
     @HostBinding('class.igx-list-item')
     protected cssClass = 'igx-list-item';
+
+    /**
+     * Sets/gets whether the `list item` is selected.
+     * Selection is only applied to non-header items.
+     * When selected, the CSS class 'igx-list__item-base--selected' is added to the item.
+     * ```html
+     * <igx-list-item [selected]="true">Selected Item</igx-list-item>
+     * ```
+     * ```typescript
+     * let isSelected = this.listItem.selected;
+     * this.listItem.selected = true;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    @HostBinding('class.igx-list__item-base--selected')
+    @Input({ transform: booleanAttribute })
+    public get selected() {
+        return this._selected && !this.isHeader;
+    }
+
+    public set selected(value: boolean) {
+        this._selected = value;
+    }
 
     /**
      * Indicates whether `list item` should have header style.

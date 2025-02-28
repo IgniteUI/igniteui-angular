@@ -13,9 +13,10 @@
                         <igx-icon>call</igx-icon>Dial
                     </div>
                 </ng-template>
-                <igx-list-item [isHeader]="true">Employees List</igx-list-item>
+                <igx-list-item [isHeader]="true" selected>Employees List</igx-list-item>
+
                 @for (employee of employeeItems; track employee) {
-                    <igx-list-item>
+                    <igx-list-item [selected]="employee.selected">
                         @if(properties.addAvatarThumbnail) {
                             <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                         }
@@ -29,7 +30,10 @@
                             <p igxListLineSubTitle>{{ employee.position }}</p>
                         }
                         @if(properties.addCheckboxAction) {
-                            <igx-checkbox igxListAction></igx-checkbox>
+                            <igx-checkbox
+                                igxListAction
+                                (click)="employee.selected = !employee.selected">
+                            </igx-checkbox>
                         }
                         @if(properties.addIconAction) {
                             <igx-icon igxListAction>info</igx-icon>
