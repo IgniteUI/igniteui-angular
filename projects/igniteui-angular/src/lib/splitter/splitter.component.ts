@@ -177,7 +177,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     /**
      * Sets the visibility of the handle and expanders in the splitter bar.
      * False by default
-     * 
+     *
      * @example
      * ```html
      * <igx-splitter [nonCollapsible]='true'>
@@ -239,7 +239,15 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     public onMoveEnd(delta: number) {
-        const [ paneSize, siblingSize ] = this.calcNewSizes(delta);
+        let [ paneSize, siblingSize ] = this.calcNewSizes(delta);
+
+        if (paneSize + siblingSize > this.getTotalSize() && delta < 0) {
+            paneSize = this.getTotalSize();
+            siblingSize = 0;
+        } else if(paneSize + siblingSize > this.getTotalSize() && delta > 0) {
+            paneSize = 0;
+            siblingSize = this.getTotalSize();
+        }
 
         if (this.pane.isPercentageSize) {
             // handle % resizes
