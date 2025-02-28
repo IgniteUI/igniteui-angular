@@ -93,7 +93,7 @@
 
     @if not($button-disabled-arrow-color) and $button-disabled-background {
         @if meta.type-of($button-disabled-background) == 'color' {
-            $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
+            $button-disabled-arrow-color: color-mix(in oklch, text-contrast($button-disabled-background) 30%, transparent)
         }
     }
 
