@@ -213,7 +213,7 @@ class DeclarativeListTestComponent {
 @Component({
     template: `
     <igx-list>
-        @for (item of dataSourceItems | igxFilter: fo; track item) {
+        @for (item of dataSourceItems | igxFilter: fo; track item.key) {
             <igx-list-item> {{item.text}} </igx-list-item>
         }
     </igx-list>`,

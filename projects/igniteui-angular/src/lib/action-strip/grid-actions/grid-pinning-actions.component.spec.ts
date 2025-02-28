@@ -102,7 +102,7 @@ describe('igxGridPinningActions #grid ', () => {
     template: `
     <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
                 [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
             </igx-column>
@@ -176,7 +176,7 @@ class IgxActionStripTestingComponent implements OnInit {
     template: `
     <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
                 [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
             </igx-column>

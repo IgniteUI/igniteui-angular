@@ -7,13 +7,13 @@ import { IgxIconComponent } from '../icon/icon.component';
 @Component({
     template: `
     <igx-tree #tree1 class="medium">
-        @for (node of data; track node) {
+        @for (node of data; track node.ID) {
             <igx-tree-node [data]="node">
                 {{ node.CompanyName }}
-                @for (child of node.ChildCompanies; track child) {
+                @for (child of node.ChildCompanies; track child.ID) {
                     <igx-tree-node [data]="child">
                         {{ child.CompanyName }}
-                        @for (leafchild of child.ChildCompanies; track leafchild) {
+                        @for (leafchild of child.ChildCompanies; track leafchild.ID) {
                             <igx-tree-node [data]="leafchild">
                                 {{ leafchild.CompanyName }}
                             </igx-tree-node>
@@ -34,13 +34,13 @@ export class IgxTreeSimpleComponent {
 @Component({
     template: `
     <igx-tree #tree1 class="medium">
-        @for (node of data; track node) {
+        @for (node of data; track node.ID) {
             <igx-tree-node [data]="node" [(selected)]="node.selected">
                 {{ node.CompanyName }}
-                @for (child of node.ChildCompanies; track child) {
+                @for (child of node.ChildCompanies; track child.ID) {
                     <igx-tree-node [data]="child" [(selected)]="child.selected">
                         {{ child.CompanyName }}
-                        @for (leafchild of child.ChildCompanies; track leafchild) {
+                        @for (leafchild of child.ChildCompanies; track leafchild.ID) {
                             <igx-tree-node [data]="leafchild" [(selected)]="leafchild.selected">
                                 {{ leafchild.CompanyName }}
                             </igx-tree-node>
@@ -73,14 +73,14 @@ export class IgxTreeSelectionSampleComponent {
 @Component({
     template: `
     <igx-tree #tree1 class="medium">
-        @for (node of data; track node) {
+        @for (node of data; track node.ID) {
             <igx-tree-node [data]="node" [active]="node.ID === 'COMMI'">
                 {{ node.CompanyName }}
                 <igx-tree-node [disabled]="isDisabled">Disable Node Level 1</igx-tree-node>
-                @for (child of node.ChildCompanies; track child) {
+                @for (child of node.ChildCompanies; track child.ID) {
                     <igx-tree-node [data]="child">
                         {{ child.CompanyName }}
-                        @for (leafchild of child.ChildCompanies; track leafchild) {
+                        @for (leafchild of child.ChildCompanies; track leafchild.ID) {
                             <igx-tree-node [data]="leafchild">
                                 {{ leafchild.CompanyName }}
                             </igx-tree-node>
@@ -133,13 +133,13 @@ export class IgxTreeNavigationComponent {
 @Component({
     template: `
     <igx-tree #tree1 style="height: 300px; overflow-y: scroll; width: 400px;">
-        @for (node of data; track node) {
+        @for (node of data; track node.ID) {
             <igx-tree-node [data]="node" [active]="node.ID === 'FRANS'" [expanded]="true">
                 {{ node.CompanyName }}
-                @for (child of node.ChildCompanies; track child) {
+                @for (child of node.ChildCompanies; track child.ID) {
                     <igx-tree-node [data]="child" [expanded]="true">
                         {{ child.CompanyName }}
-                        @for (leafchild of child.ChildCompanies; track leafchild) {
+                        @for (leafchild of child.ChildCompanies; track leafchild.ID) {
                             <igx-tree-node [data]="leafchild">
                                 {{ leafchild.CompanyName }}
                             </igx-tree-node>

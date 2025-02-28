@@ -11,7 +11,7 @@ import { IgxPrefixDirective } from './public_api';
 @Component({
     template: `
         <igx-chips-area #chipsArea class="customClass">
-            @for (chip of chipList; track chip) {
+            @for (chip of chipList; track chip.id) {
                 <igx-chip #chipElem
                     [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable">
                     <igx-icon igxPrefix>drag_indicator</igx-icon>
@@ -59,7 +59,7 @@ class TestChipSelectComponent extends TestChipComponent {
 @Component({
     template: `
         <igx-chips-area #chipsArea (reorder)="chipsOrderChanged($event)">
-            @for (chip of chipList; track chip) {
+            @for (chip of chipList; track chip.id) {
                 <igx-chip #chipElem [id]="chip.id" [draggable]="true"
                     [removable]="true" [selectable]="true" (remove)="chipRemoved($event)">
                     <igx-icon igxPrefix>drag_indicator</igx-icon>
