@@ -69,7 +69,7 @@ export class CircularProgressSampleComponent {
             }
         },
         variant: {
-            label: 'Variant (WebComponents)',
+            label: 'Variant',
             control: {
                 type: 'select',
                 options: ['primary', 'info', 'success', 'warning', 'danger'],
