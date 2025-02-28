@@ -244,5 +244,39 @@ $theme: $base;
                 }
             }
         }
+
+        @include m(selected) {
+            @include e(content) {
+                color: var-get($theme, 'item-text-color-selected');
+                background: var-get($theme, 'item-background-selected');
+                z-index: 3;
+            }
+
+            @include e(thumbnail) {
+                color: var-get($theme, 'item-thumbnail-color-selected');
+
+                igx-icon,
+                igc-icon {
+                    color: var-get($theme, 'item-thumbnail-color-selected');
+                }
+            }
+
+            @include e(title) {
+                color: var-get($theme, 'item-title-color-selected');
+            }
+
+            @include e(subtitle) {
+                color: var-get($theme, 'item-subtitle-color-selected');
+            }
+
+            @include e(actions) {
+                color: var-get($theme, 'item-action-color-selected');
+
+                igx-icon,
+                igc-icon {
+                    color: var-get($theme, 'item-action-color-selected');
+                }
+            }
+        }
     }
 }

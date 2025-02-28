@@ -300,6 +300,7 @@ export class IgxListItemComponent implements IListChild {
      *
      * @memberof IgxListItemComponent
      */
+    @HostBinding('class.igx-list-item--selected')
     @HostBinding('class.igx-list__item-base--selected')
     @Input({ transform: booleanAttribute })
     public get selected() {
