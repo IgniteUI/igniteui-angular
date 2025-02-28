@@ -492,8 +492,6 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
         splitterBarComponent.movingEnd.emit(splitter.getTotalSize() -minSize);
         fixture.detectChanges();
 
-        spyOnProperty(window, 'innerWidth', 'get').and.returnValue(500);
-        window.dispatchEvent(new Event('resize'));
         splitter.elementRef.nativeElement.style.width = '500px';
         pane2.size = (splitter.getTotalSize() - minSize) + 'px';
         fixture.detectChanges();
