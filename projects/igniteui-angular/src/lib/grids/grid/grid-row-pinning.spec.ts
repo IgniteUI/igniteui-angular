@@ -1436,9 +1436,9 @@ export class GridRowPinningComponent {
     template: `
     <igx-grid [data]="data" height="500px" [pinning]='pinningConfig' [rowSelection]="'single'"
         [rowEditable]="true">
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track group.group) {
             <igx-column-layout>
-                @for (col of group.columns; track col) {
+                @for (col of group.columns; track col.field) {
                     <igx-column
                         [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
                         [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>

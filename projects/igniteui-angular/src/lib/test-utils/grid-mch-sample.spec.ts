@@ -282,9 +282,9 @@ export class NestedColGroupsGridComponent {
 @Component({
     template: `
         <igx-grid [data]="data" [allowFiltering]="true">
-            @for (colGroup of columnGroups; track colGroup) {
+            @for (colGroup of columnGroups; track colGroup.columnHeader) {
                 <igx-column-group [header]="colGroup.columnHeader">
-                    @for (column of colGroup.columns; track column) {
+                    @for (column of colGroup.columns; track column.field) {
                         <igx-column [field]="column.field" [dataType]="column.type"
                         [filterable]="true"></igx-column>
                     }

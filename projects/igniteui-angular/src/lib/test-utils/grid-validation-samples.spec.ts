@@ -36,7 +36,7 @@ export class ForbiddenValidatorDirective extends Validators {
     template: `
     <igx-grid #grid primaryKey="ProductID" [data]="data" [rowEditable]="rowEditable" [batchEditing]="batchEditing"
         [width]="'1200px'" [height]="'800px'">
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column igxAppForbiddenName="bob" minlength="4" maxlength="8" required
                 [editable]="true" [sortable]="true" [filterable]="true" [field]="c.field"
                 [header]="c.field" [resizable]="true" [dataType]="c.dataType" >
@@ -64,7 +64,7 @@ export class IgxGridValidationTestBaseComponent {
     template: `
     <igx-grid #grid primaryKey="ProductID" [data]="data" [rowEditable]="rowEditable"
         [width]="'1200px'" [height]="'800px'">
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required
                 [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
                 [header]="c.field" [resizable]="true" [dataType]="c.dataType">
@@ -90,7 +90,7 @@ export class IgxGridValidationTestCustomErrorComponent extends IgxGridValidation
     template: `
     <igx-grid #grid primaryKey="ProductID" [data]="data" [rowEditable]="rowEditable"
         [width]="'1200px'" [height]="'800px'">
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required
                 [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
                 [header]="c.field" [resizable]="true" [dataType]="c.dataType">
@@ -118,7 +118,7 @@ export class IgxGridCustomEditorsComponent extends IgxGridValidationTestCustomEr
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID"
         width="900px" height="600px" [rowEditable]="rowEditable" [batchEditing]="batchEditing">
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column igxAppForbiddenName='bob' minlength="4" required
                 [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
                 [header]="c.field" [resizable]="true" [dataType]="c.dataType" >
