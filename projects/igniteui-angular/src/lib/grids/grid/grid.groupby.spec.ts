@@ -18,6 +18,7 @@ import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-s
 import { GridSelectionFunctions, GridFunctions, GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { ymd } from '../../test-utils/helper-utils.spec';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
@@ -277,7 +278,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const groupRows = grid.groupsRowList.toArray();
         expect(groupRows.length).toEqual(4);
 
-        const targetTestVal = new Date(new Date('2003-03-17').setHours(3, 20, 0, 1));
+        const targetTestVal = new Date(ymd('2003-03-17').setHours(3, 20, 0, 1));
         const index = groupRows.findIndex(gr => new Date(gr.groupRow.value).getTime() === targetTestVal.getTime());
         expect(groupRows[index].groupRow.records.length).toEqual(2);
 
