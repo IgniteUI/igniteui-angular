@@ -680,13 +680,13 @@ describe('IgxTree #treeView', () => {
 @Component({
     template: `
         <igx-tree>
-            @for (node of data; track node) {
+            @for (node of data; track node.id) {
                 <igx-tree-node [(expanded)]="node.expanded" [data]="node">
                     {{ node.label }}
-                    @for (child of node.children; track child) {
+                    @for (child of node.children; track child.id) {
                         <igx-tree-node [(expanded)]="child.expanded" [data]="child">
                             {{ child.label }}
-                            @for (leafChild of child.children; track leafChild) {
+                            @for (leafChild of child.children; track leafChild.id) {
                                 <igx-tree-node [(expanded)]="leafChild.expanded" [data]="leafChild">
                                     {{ leafChild.label }}
                                 </igx-tree-node>
