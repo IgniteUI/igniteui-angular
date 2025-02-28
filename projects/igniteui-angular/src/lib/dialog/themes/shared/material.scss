@@ -1,0 +1,10 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-dialog, material) {
+    --min-width: #{rem(280px)};
+    --title-padding: #{rem(16px) rem(24px) rem(0px) rem(24px)};
+    --message-padding: #{rem(14px) rem(24px)};
+    --actions-padding: #{0 rem(8px) rem(8px)};
+}

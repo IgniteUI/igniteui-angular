@@ -65,10 +65,8 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin avatar($theme) {
-    @include css-vars($theme);
-
     $variant: map.get($theme, '_meta', 'variant');
- 
+
     %igx-avatar-display {
         @include sizable();
 
@@ -82,7 +80,7 @@
         color: var-get($theme, 'color');
         background: var-get($theme, 'background');
         vertical-align: middle;
-        outline-style: none;
+        // outline-style: none;
         flex-shrink: 0;
         width: var-get($theme, 'size');
         height: var-get($theme, 'size');

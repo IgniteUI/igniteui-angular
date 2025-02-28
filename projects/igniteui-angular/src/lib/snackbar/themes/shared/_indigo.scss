@@ -1,0 +1,12 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-snackbar, indigo) {
+    --_min-height: #{rem(36px)};
+    --_padding: #{rem(4px)} #{rem(16px)};
+
+    [igxButton] {
+        --ig-size: 2;
+    }
+}
