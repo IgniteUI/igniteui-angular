@@ -493,7 +493,7 @@ describe('IgxTabs', () => {
             expect(tabs.items.length).toBe(2);
             expect(tabs.selectedIndex).toBe(0);
 
-            fixture.componentInstance.addTab(3);
+            fixture.componentInstance.addTab();
             fixture.detectChanges();
             tick(100);
 
