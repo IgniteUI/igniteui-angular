@@ -19,21 +19,27 @@
 /// @param {Color} $item-background [null] - The list item background color.
 /// @param {Color} $item-background-hover [null] - The list item hover background color.
 /// @param {Color} $item-background-active [null] - The active list item background color.
+/// @param {Color} $item-background-selected [null] - The selected list item background color.
 /// @param {Color} $item-text-color [null] - The list item text color.
 /// @param {Color} $item-text-color-hover [null] - The list item hover text color.
 /// @param {Color} $item-text-color-active [null] - The active list item text color.
+/// @param {Color} $item-text-color-selected [null] - The selected list item text color.
 /// @param {Color} $item-title-color [null] - The list item title color.
 /// @param {Color} $item-title-color-hover [null] - The list item hover title color.
 /// @param {Color} $item-title-color-active [null] - The active list item title color.
+/// @param {Color} $item-title-color-selected [null] - The selected list item title color.
 /// @param {Color} $item-subtitle-color [null] - The list item subtitle color.
 /// @param {Color} $item-subtitle-color-hover [null] - The list item hover subtitle color.
 /// @param {Color} $item-subtitle-color-active [null] - The active list item subtitle color.
+/// @param {Color} $item-subtitle-color-selected [null] - The selected list item subtitle color.
 /// @param {Color} $item-action-color [null] - The list item action color.
 /// @param {Color} $item-action-color-hover [null] - The list item hover action color.
 /// @param {Color} $item-action-color-active [null] - The active list item action color.
+/// @param {Color} $item-action-color-selected [null] - The selected list item action color.
 /// @param {Color} $item-thumbnail-color [null] - The list item thumbnail color.
 /// @param {Color} $item-thumbnail-color-hover [null] - The list item hover thumbnail color.
 /// @param {Color} $item-thumbnail-color-active [null] - The active list item thumbnail color.
+/// @param {Color} $item-thumbnail-color-selected [null] - The selected list item thumbnail color.
 /// @param {List} $border-radius [null] - The border radius used for list component.
 /// @param {List} $item-border-radius [null] - The border radius used for list item.
 /// @param {Color} $border-width [null] - The list border width.
@@ -54,21 +60,27 @@
     $item-background: null,
     $item-background-hover: null,
     $item-background-active: null,
+    $item-background-selected: null,
     $item-text-color: null,
     $item-text-color-hover: null,
     $item-text-color-active: null,
+    $item-text-color-selected: null,
     $item-title-color: null,
     $item-title-color-hover: null,
     $item-title-color-active: null,
+    $item-title-color-selected: null,
     $item-subtitle-color: null,
     $item-subtitle-color-hover: null,
     $item-subtitle-color-active: null,
+    $item-subtitle-color-selected: null,
     $item-action-color: null,
     $item-action-color-hover: null,
     $item-action-color-active: null,
+    $item-action-color-selected: null,
     $item-thumbnail-color: null,
     $item-thumbnail-color-hover: null,
     $item-thumbnail-color-active: null,
+    $item-thumbnail-color-selected: null,
     $border-color: null,
     $border-width: null,
 ) {
@@ -116,6 +128,16 @@
                 $item-background-active: color.scale($item-background, $lightness: 8%);
             } @else {
                 $item-background-active: color.scale($item-background, $lightness: -8%);
+            }
+        }
+    }
+
+    @if not($item-background-selected) and $item-background {
+        @if meta.type-of($item-background) == 'color' {
+            @if luminance($item-background) < .5 {
+                $item-background-selected: color.scale($item-background, $lightness: 8%);
+            } @else {
+                $item-background-selected: color.scale($item-background, $lightness: -8%);
             }
         }
     }
@@ -180,16 +202,32 @@
         $item-text-color-active: text-contrast($item-background-active);
     }
 
+    @if not($item-text-color-selected) and $item-background-selected {
+        $item-text-color-selected: text-contrast($item-background-selected);
+    }
+
     @if not($item-title-color-active) and $item-background-active {
         $item-title-color-active: text-contrast($item-background-active);
+    }
+
+    @if not($item-title-color-selected) and $item-background-selected {
+        $item-title-color-selected: text-contrast($item-background-selected);
     }
 
     @if not($item-action-color-active) and $item-background-active {
         $item-action-color-active: text-contrast($item-background-active);
     }
 
+    @if not($item-action-color-selected) and $item-background-selected {
+        $item-action-color-selected: text-contrast($item-background-selected);
+    }
+
     @if not($item-thumbnail-color-active) and $item-background-active {
         $item-thumbnail-color-active: text-contrast($item-background-active);
+    }
+
+    @if not($item-thumbnail-color-selected) and $item-background-selected {
+        $item-thumbnail-color-selected: text-contrast($item-background-selected);
     }
 
     @if not($item-subtitle-color-active) and $item-background-active {
@@ -198,8 +236,18 @@
         }
     }
 
+    @if not($item-subtitle-color-selected) and $item-background-selected {
+        @if meta.type-of($item-background-selected) == 'color' {
+            $item-subtitle-color-selected: rgba(text-contrast($item-background-selected), .74);
+        }
+    }
+
     @if not($item-subtitle-color-active) and $item-text-color-active {
         $item-subtitle-color-active: $item-text-color-active;
+    }
+
+    @if not($item-subtitle-color-selected) and $item-text-color-selected {
+        $item-subtitle-color-selected: $item-text-color-selected;
     }
 
     @return extend($theme, (
@@ -212,21 +260,27 @@
         item-background: $item-background,
         item-background-hover: $item-background-hover,
         item-background-active: $item-background-active,
+        item-background-selected: $item-background-selected,
         item-text-color: $item-text-color,
         item-text-color-hover: $item-text-color-hover,
         item-text-color-active: $item-text-color-active,
+        item-text-color-selected: $item-text-color-selected,
         item-title-color:$item-title-color,
         item-title-color-hover:$item-title-color-hover,
         item-title-color-active:$item-title-color-active,
+        item-title-color-selected:$item-title-color-selected,
         item-subtitle-color: $item-subtitle-color,
         item-subtitle-color-hover: $item-subtitle-color-hover,
         item-subtitle-color-active: $item-subtitle-color-active,
+        item-subtitle-color-selected: $item-subtitle-color-selected,
         item-action-color: $item-action-color,
         item-action-color-hover: $item-action-color-hover,
         item-action-color-active: $item-action-color-active,
+        item-action-color-selected: $item-action-color-selected,
         item-thumbnail-color: $item-thumbnail-color,
         item-thumbnail-color-hover: $item-thumbnail-color-hover,
         item-thumbnail-color-active: $item-thumbnail-color-active,
+        item-thumbnail-color-selected: $item-thumbnail-color-selected,
         border-color: $border-color,
         border-width: $border-width,
         theme: map.get($schema, '_meta', 'theme'),
@@ -423,6 +477,12 @@
         }
     }
 
+    %igx-list-item-base--selected {
+        %igx-list-item-content {
+            @extend %igx-list-item-content--selected;
+        }
+    }
+
     %igx-list-item-pan {
         position: absolute;
         visibility: hidden;
@@ -546,6 +606,37 @@
             igx-icon,
             igc-icon {
                 color: var-get($theme, 'item-thumbnail-color-active')
+            }
+        }
+    }
+
+    %igx-list-item-content--selected {
+        color: var-get($theme, 'item-text-color-selected');
+        background: var-get($theme, 'item-background-selected');
+        z-index: 3;
+
+        %igx-list__item-line-title {
+            color: var-get($theme, 'item-title-color-selected')
+        }
+
+        %igx-list__item-line-subtitle {
+            color: var-get($theme, 'item-subtitle-color-selected')
+        }
+
+        %igx-list__item-actions {
+            color: var-get($theme, 'item-action-color-selected');
+
+            igx-icon,
+            igc-icon {
+                color: var-get($theme, 'item-action-color-selected')}
+        }
+
+        %igx-list__item-thumbnail {
+            color: var-get($theme, 'item-thumbnail-color-selected');
+
+            igx-icon,
+            igc-icon {
+                color: var-get($theme, 'item-thumbnail-color-selected')
             }
         }
     }
