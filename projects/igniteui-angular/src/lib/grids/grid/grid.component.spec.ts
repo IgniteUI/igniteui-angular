@@ -27,7 +27,7 @@ import { AsyncPipe } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
 import { IGridRowEventArgs, IgxColumnGroupComponent, IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
 import { getComponentSize } from '../../core/utils';
-import { setElementSize } from '../../test-utils/helper-utils.spec';
+import { setElementSize, ymd } from '../../test-utils/helper-utils.spec';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -1717,11 +1717,11 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.detectChanges();
 
             rows = grid.rowList.toArray();
-            expectedValue = '21. März 2005';
+            expectedValue = `${ymd('2005-03-21').getUTCDate()}. März 2005`;
             expect((rows[0].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
-            expectedValue = '15. Januar 2008';
+            expectedValue = `${ymd('2005-01-15').getUTCDate()}. Januar 2008`;
             expect((rows[1].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
-            expectedValue = '20. November 2010';
+            expectedValue =`${ymd('2005-11-20').getUTCDate()}. November 2010`;
             expect((rows[2].cells.toArray()[4] as any).element.nativeElement.textContent).toBe(expectedValue);
 
             // verify summaries formatting
@@ -1735,7 +1735,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
                 if (earliest) {
                     earliestValue = earliest.nativeElement.nextSibling.innerText;
-                    expect(earliestValue).toBe('17. Mai 1990');
+                    expect(earliestValue).toBe(`${ymd('1990-05-17').getUTCDate()}. Mai 1990`);
                 }
             });
         }));
