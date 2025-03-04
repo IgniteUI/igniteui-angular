@@ -1257,7 +1257,7 @@ describe('IgxGrid Master Detail #grid', () => {
 @Component({
     template: `
     <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]="true" [rowSelection]="rowSelectable">
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column [field]="c.field" [width]="c.width">
             </igx-column>
         }
@@ -1309,7 +1309,7 @@ export class DefaultGridMasterDetailComponent {
     template: `
     <igx-grid [data]="data" [expansionStates]="expStates"
         [width]="width" [height]="height" [primaryKey]="'ID'" [rowSelection]="rowSelectable">
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column [field]="c.field" [header]="c.field" [width]="c.width">
             </igx-column>
         }
