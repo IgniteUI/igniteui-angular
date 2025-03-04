@@ -37,7 +37,7 @@ import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { GridColumnDataType } from '../data-operations/data-util';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightService } from '../directives/text-highlight/text-highlight.service';
@@ -178,6 +178,7 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
+import { isTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 
 interface IMatchInfoCache {
     row: any;
@@ -1845,18 +1846,21 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     public set filteringExpressionsTree(value) {
-        if (value && value instanceof FilteringExpressionsTree) {
-            const val = (value as FilteringExpressionsTree);
-            for (let index = 0; index < val.filteringOperands.length; index++) {
-                if (!(val.filteringOperands[index] instanceof FilteringExpressionsTree)) {
-                    const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, val.filteringOperands[index].fieldName);
-                    newExpressionsTree.filteringOperands.push(val.filteringOperands[index] as IFilteringExpression);
-                    val.filteringOperands[index] = newExpressionsTree;
+        if (value && isTree(value)) {
+            for (let index = 0; index < value.filteringOperands.length; index++) {
+                if (!(isTree(value.filteringOperands[index]))) {
+                    const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, value.filteringOperands[index].fieldName);
+                    newExpressionsTree.filteringOperands.push(value.filteringOperands[index]);
+                    value.filteringOperands[index] = newExpressionsTree;
                 }
             }
 
             value.type = FilteringExpressionsTreeType.Regular;
-            this._filteringExpressionsTree = value;
+            if (value && this.columns) {
+                this._filteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
+            } else {
+                this._filteringExpressionsTree = value;
+            }
             this.filteringPipeTrigger++;
             this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
@@ -1900,9 +1904,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             return;
         }
 
-        if (value && value instanceof FilteringExpressionsTree) {
+        if (value && isTree(value)) {
             value.type = FilteringExpressionsTreeType.Advanced;
-            this._advancedFilteringExpressionsTree = value;
+            this._advancedFilteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
             this.filteringPipeTrigger++;
         } else {
             this._advancedFilteringExpressionsTree = null;
@@ -6602,6 +6606,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             .filter((c) => c.pinned);
         this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
         this._columns = newColumns;
+        if (this._columns && this._filteringExpressionsTree) {
+            this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
+        }
         this.resetCaches();
     }
 
@@ -6663,6 +6670,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.autogenerateColumns();
         } else {
             this._columns = this.getColumnList();
+            if (this._columns && this._filteringExpressionsTree) {
+                this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
+            }
         }
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));

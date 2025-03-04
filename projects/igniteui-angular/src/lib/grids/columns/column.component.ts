@@ -2200,8 +2200,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 grid._pinnedColumns.splice(args.insertAtIndex, 0, this);
             } else {
                 // insert based only on root collection
-                rootPinnedCols.splice(args.insertAtIndex, 0, this);
+                if (this.level === 0) {
+                    rootPinnedCols.splice(args.insertAtIndex, 0, this);
+                }
                 let allPinned = [];
+                // FIX: this is duplicated on every step in the hierarchy....
                 // re-create hierarchy
                 rootPinnedCols.forEach(group => {
                     allPinned.push(group);

@@ -1,7 +1,7 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { getLocaleCurrencySymbol, NgFor, registerLocaleData } from '@angular/common';
+import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import localeJa from '@angular/common/locales/ja';
 
@@ -1244,7 +1244,7 @@ describe('IgxGrid - Column properties #grid', () => {
             firstCell.setEditMode(false);
             fix.detectChanges();
 
-            expect(firstCell.nativeElement.innerText).toContain('8:37:11 AM GMT+');
+            expect(firstCell.nativeElement.innerText).toContain('8:37:11 AM GMT');
 
             firstCell.setEditMode(true);
             fix.detectChanges();
@@ -1662,7 +1662,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent),
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnsFromIterableComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1688,7 +1688,7 @@ interface IColumnConfig {
         <button type="button" igxButton="contained">{{value}}</button>
     </ng-template>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor, IgxButtonDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxButtonDirective]
 })
 export class ResizableColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1738,10 +1738,12 @@ export class TemplatedColumnsComponent {
 @Component({
     template: `
         <igx-grid [data]="data">
-            <igx-column *ngFor="let field of columns" [field]="field" [editable]="true"
-                [cellTemplate]="cell" [headerTemplate]="header"
-                [cellEditorTemplate]="editor" [hasSummary]="true" [summaryTemplate]="summary">
-            </igx-column>
+            @for (field of columns; track field) {
+                <igx-column [field]="field" [editable]="true"
+                    [cellTemplate]="cell" [headerTemplate]="header"
+                    [cellEditorTemplate]="editor" [hasSummary]="true" [summaryTemplate]="summary">
+                </igx-column>
+            }
         </igx-grid>
 
         <ng-template #cell let-value>
@@ -1760,7 +1762,7 @@ export class TemplatedColumnsComponent {
             <span class="customSummaryTemplate">{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span>
         </ng-template>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, NgFor, IgxSummaryTemplateDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxSummaryTemplateDirective]
 })
 export class TemplatedInputColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

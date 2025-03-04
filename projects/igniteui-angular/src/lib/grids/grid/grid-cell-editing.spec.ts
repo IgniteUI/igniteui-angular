@@ -274,7 +274,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(firstCell.editMode).toBeTruthy();
         }));
 
-        it('should end cell editing when clearing or applying advanced filter', () => {
+        it('should end cell editing when clearing or applying advanced filter', fakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
             // Enter cell edit mode
@@ -310,7 +310,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(false);
-        });
+        }));
 
         it('should focus the first cell when editing mode is cell', fakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');

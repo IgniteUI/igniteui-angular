@@ -107,14 +107,13 @@ describe('IgxCircularProgressBarComponent', () => {
         expect(gradientId).toContain('igx-circular-gradient-');
 
         fixture.detectChanges();
-
         await fixture.whenStable();
 
         const outerCircle = circularBar.querySelector('.igx-circular-bar__outer') as SVGElement;
         expect(outerCircle).not.toBeNull();
 
-        // Check the `stroke` style instead of the attribute
-        const strokeStyle = outerCircle?.style.stroke;
+        // Use getComputedStyle to get the applied stroke
+        const strokeStyle = getComputedStyle(outerCircle).stroke;
 
         // Removing quotes from the stroke style
         const normalizedStrokeStyle = strokeStyle?.replace(/"/g, '');

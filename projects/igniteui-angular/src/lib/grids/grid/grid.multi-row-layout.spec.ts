@@ -1,4 +1,4 @@
-﻿import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,7 +10,6 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ICellPosition } from '../common/events';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
-import { NgFor } from '@angular/common';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 
@@ -98,7 +97,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         // verify block style
         let sizes = grid.columnList.first.getGridTemplate(false).split(' ').map(width => parseFloat(width).toFixed(2) + "px").join(' ');
-        
+
 
         expect(sizes).toBe('200.33px 200.33px 200.33px');
         expect(grid.columnList.first.getGridTemplate(true)).toBe('repeat(3,1fr)');
@@ -649,7 +648,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups);
 
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
+            group: 'group3',
             columns: [
                 { field: 'ID', rowStart: 1, colStart: 1 },
                 { field: 'CompanyName', rowStart: 1, colStart: 2 },
@@ -845,10 +844,13 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 ]
             }
         ];
-        fixture.componentInstance.colGroups = [];
+        let colGroups = [];
         for (let i = 0; i < 3; i++) {
-            fixture.componentInstance.colGroups = fixture.componentInstance.colGroups.concat(uniqueGroups);
+            const groups = structuredClone(uniqueGroups)
+                .map(({ group, columns }) => ({ group: group + i, columns }));
+            colGroups = colGroups.concat(groups);
         }
+        fixture.componentInstance.colGroups = colGroups;
         grid.columnWidth = '200px';
         fixture.componentInstance.grid.width = '600px';
         fixture.detectChanges();
@@ -894,8 +896,6 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
     it('should apply horizontal virtualization correctly for widths in px, % and no-width columns.', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
-        fixture.detectChanges();
-        const grid = fixture.componentInstance.grid;
         // test with px
         fixture.componentInstance.colGroups = [{
             group: 'group1',
@@ -909,6 +909,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         }];
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
+        tick(); // Required to render scrollbars
+        const grid = fixture.componentInstance.grid;
 
         const horizontalVirtualization = grid.rowList.first.virtDirRow;
         expect(grid.hasHorizontalScroll()).toBeTruthy();
@@ -1142,14 +1144,18 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px" [rowEditable]='true' [primaryKey]="'ID'">
-        <igx-column-layout *ngFor='let group of colGroups'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group.group) {
+            <igx-column-layout>
+                @for (col of group.columns; track col.field) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                    [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1173,20 +1179,24 @@ export class ColumnLayoutTestComponent {
     template: `
     <igx-grid #grid [data]="data" height="500px" [moving]="true">
         <igx-column-group header="General Information">
-        <igx-column field="CompanyName"></igx-column>
+            <igx-column field="CompanyName"></igx-column>
             <igx-column-group header="Person Details">
                 <igx-column field="ContactName"></igx-column>
                 <igx-column field="ContactTitle"></igx-column>
             </igx-column-group>
         </igx-column-group>
-        <igx-column-layout *ngFor='let group of colGroups'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group.group) {
+            <igx-column-layout>
+                @for (col of group.columns; track col.field) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                        [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class ColumnLayoutAndGroupsTestComponent extends ColumnLayoutTestComponent {
 
