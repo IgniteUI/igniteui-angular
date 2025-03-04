@@ -5416,14 +5416,14 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         const columnsWithSetWidths = this.hasColumnLayouts ?
             visibleCols.filter(c => c.widthSetByUser) :
-            visibleChildColumns.filter(c => c.widthSetByUser && c.width !== 'fit-content');
+            visibleChildColumns.filter(c => (c.widthSetByUser || c.widthConstrained) && c.width !== 'fit-content');
 
         const columnsToSize = this.hasColumnLayouts ?
             combinedBlocksSize - columnsWithSetWidths.length :
             visibleChildColumns.length - columnsWithSetWidths.length;
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
-                const colWidth = curr.width;
+                const colWidth = !curr.widthConstrained ? curr.width : curr.calcPixelWidth;
                 let widthValue = parseFloat(colWidth);
                 if (isNaN(widthValue)) {
                     widthValue = MINIMUM_COLUMN_WIDTH;
@@ -5431,7 +5431,9 @@ export abstract class IgxGridBaseDirective implements GridType,
                 const currWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1 ?
                     widthValue / 100 * computedWidth :
                     widthValue;
-                return prev + currWidth;
+                // apply constraints, since constraint may change width
+                const constrainedWidth = curr.getConstrainedSizePx(currWidth);
+                return prev + constrainedWidth;
             }, 0);
 
         // When all columns are hidden, return 0px width

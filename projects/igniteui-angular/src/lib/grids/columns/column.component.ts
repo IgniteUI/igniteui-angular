@@ -523,8 +523,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @WatchColumnChanges()
     @Input()
-    public maxWidth: string;
+    public set maxWidth(value: string) {
+        this._maxWidth = value;
 
+        this.grid.notifyChanges(true);
+        this.grid.cdr.detectChanges();
+    }
+    public get maxWidth(): string {
+        return this._maxWidth;
+    }
     /**
      * Sets/gets the class selector of the column header.
      * ```typescript
@@ -968,7 +975,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return;
         }
         this._defaultMinWidth = value;
-
+        this.grid.notifyChanges(true);
+        this.grid.cdr.detectChanges();
     }
     public get minWidth(): string {
         return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
@@ -1735,6 +1743,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
+    public widthConstrained = false;
+
+    /**
+     * @hidden
+     */
     protected _applySelectableClass = false;
 
     protected _vIndex = NaN;
@@ -1806,6 +1819,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _defaultMinWidth = '';
+    /**
+     * @hidden
+     */
+    protected _maxWidth = '';
     /**
      * @hidden
      */
@@ -2091,7 +2108,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             if (size && !!size.width) {
                 result.push(size.width + 'px');
             } else {
-                result.push(parseFloat(this.grid.getPossibleColumnWidth()) + 'px');
+                const currentWidth = parseFloat(this.grid.getPossibleColumnWidth());
+                result.push((this.getConstrainedSizePx(currentWidth)) + 'px');
             }
         }
         return result;
@@ -2554,19 +2572,39 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      * @internal
      */
+    public getConstrainedSizePx(newSize){
+        if (this.maxWidth && newSize > this.maxWidthPx) {
+            this.widthConstrained = true;
+            return this.maxWidthPx;
+        } else if (this.minWidth && newSize < this.minWidthPx) {
+            this.widthConstrained = true;
+            return this.minWidthPx;
+        } else {
+            this.widthConstrained = false;
+            return newSize;
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     protected cacheCalcWidth(): any {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         const isAutoWidth = colWidth && typeof colWidth === 'string' && colWidth === 'fit-content';
         if (isPercentageWidth && this.grid.isColumnWidthSum) {
-            this._calcWidth = this.grid.minColumnWidth;
+            this._calcWidth = this.minWidthPx ?? this.grid.minColumnWidth;
         } else if (isPercentageWidth) {
-            this._calcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
+            const currentCalcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
+            this._calcWidth = this.grid.calcWidth ? this.getConstrainedSizePx(currentCalcWidth) : 0;
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
-            this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
+            const currentCalcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
+            this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         } else {
-            this._calcWidth = this.width;
+            const currentCalcWidth =  parseFloat(this.width);
+            this._calcWidth =this.getConstrainedSizePx(currentCalcWidth);
         }
         this.calcPixelWidth = parseFloat(this._calcWidth);
     }

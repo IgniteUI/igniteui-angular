@@ -2007,6 +2007,254 @@ describe('IgxGrid Component Tests #grid', () => {
         }));
     });
 
+    describe('IgxGrid - min/max width constraints rules', () => {
+        beforeAll(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridDefaultRenderingComponent
+                ]
+            })
+                .compileComponents();
+        }));
+
+        describe('min/max in px', () => {
+
+            it('in column with no width should not go outside bounds.', async() => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const col1 = grid.columns[0];
+                const col2 = grid.columns[1];
+                const col3 = grid.columns[2];
+                const col4 = grid.columns[3];
+
+                // without constraint, they split width equally
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth / 4);
+                expect(col2.calcPixelWidth).toBe(grid.calcWidth / 4);
+                expect(col3.calcPixelWidth).toBe(grid.calcWidth / 4);
+                expect(col4.calcPixelWidth).toBe(grid.calcWidth / 4);
+
+                // set smaller max in px
+                col1.maxWidth = '100px';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(100);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+
+                col1.minWidth = '600px';
+                fix.detectChanges();
+                await wait(16);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(600);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+            });
+
+            it('in column with pixel width should not go outside bounds.', async() => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.detectChanges();
+                const grid = fix.componentInstance.grid;
+                const col1 = grid.columns[0];
+                col1.width = "150px";
+                fix.detectChanges();
+
+                expect(col1.calcPixelWidth).toBe(150);
+
+                // set smaller max in px
+                col1.maxWidth = '100px';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(100);
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+                col1.minWidth = '500px';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(500);
+            });
+
+            it('in column with auto width should not go outside bounds.', async() => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.componentInstance.columns[0].header = "Some longer text to auto-size";
+                fix.componentInstance.columns[0].width = 'auto';
+                fix.detectChanges();
+                // wait for auto-sizing
+                await wait(100);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const col1 = grid.columns[0];
+
+                // some autosize should be calculated
+                expect(col1.autoSize).not.toBeUndefined();
+
+                // set smaller max in px
+                col1.maxWidth = '100px';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(100);
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+                col1.minWidth = '500px';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(500);
+            });
+        });
+
+
+        describe('min/max in %', () => {
+            it('in column with no width should not go outside bounds.', async () => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const col1 = grid.columns[0];
+                const col2 = grid.columns[1];
+                const col3 = grid.columns[2];
+                const col4 = grid.columns[3];
+
+                // set smaller max in %
+                col1.maxWidth = '10%';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.1);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+                col1.minWidth = '50%';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.5);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+            });
+
+            it('in column with pixel width should not go outside bounds.', async() => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.componentInstance.columns[0].width = '400px';
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const col1 = grid.columns[0];
+                const col2 = grid.columns[1];
+                const col3 = grid.columns[2];
+                const col4 = grid.columns[3];
+
+                // set smaller max in %
+                col1.maxWidth = '10%';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.1);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+                col1.minWidth = '50%';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.5);
+                // the rest split the remaining width
+                expect(col2.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col3.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+                expect(col4.calcPixelWidth).toBe((grid.calcWidth - col1.calcPixelWidth) / 3);
+            });
+
+            it('in column with auto width should not go outside bounds.', async() => {
+                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+                // 4 cols
+                fix.componentInstance.initColumnsRows(5, 4);
+                fix.componentInstance.columns[0].header = "Some longer text to auto-size";
+                fix.componentInstance.columns[0].width = 'auto';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+
+                const grid = fix.componentInstance.grid;
+                const col1 = grid.columns[0];
+
+                // some autosize should be calculated
+                expect(col1.autoSize).not.toBeUndefined();
+
+                // set smaller max in px
+                col1.maxWidth = '10%';
+                fix.detectChanges();
+
+                // first column takes new max
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.1);
+
+                // set larger min in px
+                col1.maxWidth = null;
+                fix.detectChanges();
+                col1.minWidth = '50%';
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+
+                // first column takes new min
+                expect(col1.calcPixelWidth).toBe(grid.calcWidth * 0.5);
+            });
+        })
+
+    });
+
     describe('IgxGrid - API methods', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
@@ -3001,7 +3249,7 @@ export class IgxGridTestComponent {
 
 @Component({
     template: `<igx-grid #grid [data]="data" (columnInit)="initColumns($event)">
-        <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
+        <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.header || col.key" [dataType]="col.dataType" [width]="col.width">
         </igx-column>
         <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-grid>`,
