@@ -444,6 +444,32 @@ describe('IgxQueryBuilder', () => {
       expect((dropdownItems[4] as HTMLElement).innerText).toBe('Released');
     }));
 
+    it('ReturnFields should be properly calculated.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      queryBuilder.showEntityChangeDialog = false;
+      fix.detectChanges();
+
+      // Verify the returnFields
+      let exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
+      expect(exprTreeReturnFields).toBe(`["*"]`);
+      
+      // Change the selected return fields
+      QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [1]);
+      tick(100);
+      fix.detectChanges();
+       
+      // Verify the returnFields
+      exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
+      expect(exprTreeReturnFields).toBe(`["OrderId"]`);
+      
+      // Change the entity
+      QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+
+      // Verify the returnFields
+      exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
+      expect(exprTreeReturnFields).toBe(`["*"]`);
+    }));
+
     it('Column dropdown should contain proper fields based on the entity.', fakeAsync(() => {
       const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
 

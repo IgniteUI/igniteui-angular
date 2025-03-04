@@ -610,7 +610,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         if (this._expressionTree) {
             this._expressionTree.entity = this._entityNewValue.name;
-            this._expressionTree.returnFields = [];
+
+            if (this.fields.length === this._selectedReturnFields.length) {
+                this._expressionTree.returnFields = ['*'];
+            } else {
+                this._expressionTree.returnFields =  this._selectedReturnFields;
+            }
+
             this._expressionTree.filteringOperands = [];
 
             this._editedExpression = null;
