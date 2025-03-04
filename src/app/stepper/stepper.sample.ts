@@ -212,13 +212,13 @@ export class IgxStepperSampleComponent {
     constructor(private destroyRef: DestroyRef) {
         this.pcs.setPanelConfig(this.panelConfig);
 
-        const { unsubscribe } = this.pcs.propertyChanges.subscribe(
+        const propertyChange = this.pcs.propertyChanges.subscribe(
             (properties) => {
                 this.properties = properties;
             }
         );
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     // Reactive forms initialization
