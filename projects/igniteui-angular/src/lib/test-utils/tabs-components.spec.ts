@@ -98,7 +98,7 @@ export class TabsTestComponent {
     template: `
     <div #wrapperDiv style="display: flex;">
         <igx-tabs>
-            @for (tab of collection; track tab.name) {
+            @for (tab of collection; track trackByItemRef(tab)) {
                 <igx-tab-item>
                     <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
                     <igx-tab-content></igx-tab-content>
@@ -151,6 +151,9 @@ export class TabsTest2Component {
     public resetToEmptyCollection() {
         this.collection = [];
     }
+
+    /** Explicitly track object so collection changes entirely for index logic test */
+    protected trackByItemRef = (x: any) => x;
 }
 
 @Component({
