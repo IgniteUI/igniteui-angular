@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/card' as *;
+
+$base: digest-schema($light-card);
+$material: digest-schema($material-card);
+$bootstrap: digest-schema($bootstrap-card);
+$fluent: digest-schema($fluent-card);
+$indigo: digest-schema($indigo-card);
