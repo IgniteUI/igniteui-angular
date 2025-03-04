@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { ymd } from '../test-utils/helper-utils.spec';
 import { IgxCalendarComponent } from './public_api';
 import { IgxDatePickerComponent } from '../date-picker/public_api';
 import { DateRangeType } from '../core/dates';
@@ -72,7 +73,7 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('should change months views when viewDate is changed', () => {
-            const dates = [new Date('2019-06-19'), new Date('2019-07-19'), new Date('2019-08-19')];
+            const dates = [ymd('2019-06-19'), ymd('2019-07-19'), ymd('2019-08-19')];
             const today = new Date(Date.now());
             expect(calendar.monthsViewNumber).toBe(3);
             HelperTestFunctions.verifyMonthsViewNumber(fixture, 3, true);
@@ -87,7 +88,7 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('should be able to change hideOutsideDays property runtime', () => {
-            calendar.viewDate = new Date('2019-07-19');
+            calendar.viewDate = ymd('2019-07-19');
             fixture.detectChanges();
 
             expect(calendar.hideOutsideDays).toBe(false);
@@ -147,7 +148,7 @@ describe('Multi-View Calendar - ', () => {
 
         it('selected event should be fired when selecting a date', () => {
             spyOn(calendar.selected, 'emit');
-            const viewDate = new Date('2019-09-06');
+            const viewDate = ymd('2019-09-06');
             calendar.viewDate = viewDate;
             fixture.detectChanges();
 
@@ -181,17 +182,17 @@ describe('Multi-View Calendar - ', () => {
     });
 
     describe('KB Navigation test - ', () => {
-        const aug2019 = new Date('2019-08-19');
-        const sept2019 = new Date('2019-09-19');
-        const oct2019 = new Date('2019-10-19');
-        const nov2019 = new Date('2019-11-19');
-        const dec2019 = new Date('2019-12-19');
-        const jan2020 = new Date('2020-1-19');
-        const feb2020 = new Date('2020-2-19');
-        const march2020 = new Date('2020-3-19');
-        const oct2021 = new Date('2021-10-19');
-        const nov2021 = new Date('2021-11-19');
-        const dec2021 = new Date('2021-12-19');
+        const aug2019 = ymd('2019-08-19');
+        const sept2019 = ymd('2019-09-19');
+        const oct2019 = ymd('2019-10-19');
+        const nov2019 = ymd('2019-11-19');
+        const dec2019 = ymd('2019-12-19');
+        const jan2020 = ymd('2020-01-19');
+        const feb2020 = ymd('2020-02-19');
+        const march2020 = ymd('2020-03-19');
+        const oct2021 = ymd('2021-10-19');
+        const nov2021 = ymd('2021-11-19');
+        const dec2021 = ymd('2021-12-19');
 
         const dateRangeDescriptors = [
             { type: DateRangeType.Between, dateRange: [new Date(2019, 10, 15), new Date(2019, 11, 8)] },
@@ -505,14 +506,14 @@ describe('Multi-View Calendar - ', () => {
 
             expect(calendar.activeDate.getDate()).toEqual(17);
             expect(calendar.activeDate.getFullYear()).toEqual(2018);
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2018-10-19'), new Date('2018-11-19'), new Date('2018-12-19')]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [ymd('2018-10-19'), ymd('2018-11-19'), ymd('2018-12-19')]);
 
             UIInteractions.triggerKeyDownEvtUponElem('PageUp', document.activeElement, true, false, true);
             fixture.detectChanges();
 
             expect(calendar.activeDate.getDate()).toEqual(17);
             expect(calendar.activeDate.getFullYear()).toEqual(2017);
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2017-10-19'), new Date('2017-11-19'), new Date('2017-12-19')]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [ymd('2017-10-19'), ymd('2017-11-19'), ymd('2017-12-19')]);
         });
 
         it('Verify navigation with Shift plus pageDown', fakeAsync(() => {
@@ -526,7 +527,7 @@ describe('Multi-View Calendar - ', () => {
 
             expect(calendar.activeDate.getDate()).toEqual(17);
             expect(calendar.activeDate.getFullYear()).toEqual(2020);
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2020-10-19'), new Date('2020-11-19'), new Date('2020-12-19')]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [ymd('2020-10-19'), ymd('2020-11-19'), ymd('2020-12-19')]);
 
             UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement, true, false, true);
             fixture.detectChanges();
@@ -710,10 +711,10 @@ describe('Multi-View Calendar - ', () => {
     });
 
     describe('Selection tests - ', () => {
-        const septemberDate = new Date('2019-09-16');
-        const octoberDate = new Date('2019-10-16');
-        const novemberDate = new Date('2019-11-16');
-        const decemberDate = new Date('2019-12-16');
+        const septemberDate = ymd('2019-09-16');
+        const octoberDate = ymd('2019-10-16');
+        const novemberDate = ymd('2019-11-16');
+        const decemberDate = ymd('2019-12-16');
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(MultiViewCalendarSampleComponent);
             fixture.detectChanges();
@@ -763,8 +764,8 @@ describe('Multi-View Calendar - ', () => {
             calendar.selection = 'multi';
             fixture.detectChanges();
 
-            const octoberFourth = new Date('2019-10-4');
-            const octoberThird = new Date('2019-10-3');
+            const octoberFourth = ymd('2019-10-04');
+            const octoberThird = ymd('2019-10-03');
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateClickAndSelectEvent(secondMonthDates[2].firstChild);
             fixture.detectChanges();
@@ -820,11 +821,11 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             calendar.selectDate([
-                new Date("2019-10-29"),
-                new Date("2019-11-2"),
-                new Date("2019-10-31"),
-                new Date("2019-11-1"),
-                new Date("2019-10-30"),
+                ymd('2019-10-29'),
+                ymd('2019-11-02'),
+                ymd('2019-10-31'),
+                ymd('2019-11-01'),
+                ymd('2019-10-30'),
             ]);
             fixture.detectChanges();
 
@@ -837,10 +838,10 @@ describe('Multi-View Calendar - ', () => {
             calendar.selection = 'single';
             fixture.detectChanges();
 
-            calendar.selectDate(new Date('2019-10-29'));
+            calendar.selectDate(ymd('2019-10-29'));
             fixture.detectChanges();
 
-            calendar.selectDate(new Date('2019-10-30'));
+            calendar.selectDate(ymd('2019-10-30'));
             fixture.detectChanges();
 
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(1);
@@ -922,17 +923,17 @@ describe('Multi-View Calendar - ', () => {
 
             calendar.selectDate([septemberDate]);
             fixture.detectChanges();
-            calendar.selectDate([new Date('2019-09-21')]);
+            calendar.selectDate([ymd('2019-09-21')]);
             fixture.detectChanges();
 
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(2);
 
 
-            calendar.deselectDate([septemberDate, new Date('2019-09-21')]);
+            calendar.deselectDate([septemberDate, ymd('2019-09-21')]);
             fixture.detectChanges();
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
 
-            calendar.selectDate([septemberDate, new Date('2019-10-24'), octoberDate, novemberDate]);
+            calendar.selectDate([septemberDate, ymd('2019-10-24'), octoberDate, novemberDate]);
             fixture.detectChanges();
 
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(2); // october
@@ -1047,7 +1048,7 @@ describe('Multi-View Calendar - ', () => {
 
             let overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
             HelperTestFunctions.verifyMonthsViewNumber(overlay, 3);
-            HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16'), new Date('2019-11-16')]);
+            HelperTestFunctions.verifyCalendarSubHeaders(overlay, [ymd('2019-09-16'), ymd('2019-10-16'), ymd('2019-11-16')]);
 
             // close the datePicker
             datePicker.close();
@@ -1066,7 +1067,7 @@ describe('Multi-View Calendar - ', () => {
 
             overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
             HelperTestFunctions.verifyMonthsViewNumber(overlay, 2);
-            HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16')]);
+            HelperTestFunctions.verifyCalendarSubHeaders(overlay, [ymd('2019-09-16'), ymd('2019-10-16')]);
 
             // clean up test
             tick(350);
@@ -1128,7 +1129,7 @@ export class MultiViewCalendarSampleComponent {
 })
 export class MultiViewDatePickerSampleComponent {
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
-    public date = new Date('2019-09-15');
+    public date = ymd('2019-09-15');
     public monthViews = 3;
 }
 
