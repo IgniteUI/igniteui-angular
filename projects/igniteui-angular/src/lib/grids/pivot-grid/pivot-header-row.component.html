@@ -278,7 +278,7 @@
                 }
             }
             <div class="igx-grid-thead--virtualizationWrapper" [style.max-height.px]="maxContainerHeight" (click)="grid.navigation.focusOutRowHeader($event)">
-                @for (dimLevelColumns of columnDimensionsByLevel; track trackColumnDimensionByLevel(dimLevelColumns); let i = $index) {
+                @for (dimLevelColumns of columnDimensionsByLevel; track $index; let i = $index) {
                     <div class="igx-grid-thead__group igx-grid-thead--virtualizationContainer" [style.height.px]="totalDepth > 1 ? grid.rowHeight : undefined" [style.width.px]="grid.unpinnedWidth">
                         <ng-template igxGridFor #headerVirtualContainer let-column
                             [igxGridForOf]="dimLevelColumns" [igxGridForOfUniqueSizeCache]="true" [igxForScrollContainer]="grid.parentVirtDir"

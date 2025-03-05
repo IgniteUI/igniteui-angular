@@ -206,15 +206,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     /**
     * @hidden
     * @internal
-    * Use tracking function to fix ngFor not clearing old records from the DOM while updating it, causing incorrect header height during _calculateGridBodyHeight.
-    */
-    public trackColumnDimensionByLevel(item: IgxColumnComponent[]) {
-        return item.map(col => col.field).join('-');
-    }
-
-    /**
-    * @hidden
-    * @internal
     */
     public calcHeight(col: ColumnType, index: number) {
         return !col.columnGroup && col.level < this.totalDepth && col.level === index ? (this.totalDepth - col.level) * this.grid.rowHeight : this.grid.rowHeight;
