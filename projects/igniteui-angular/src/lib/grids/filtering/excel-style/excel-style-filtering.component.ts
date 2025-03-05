@@ -549,7 +549,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const lowerCaseFilterValues = new Set(Array.from(expr.expression.searchVal).map((value: string) => value.toLowerCase()));
 
         this.grid.data.forEach(item => {
-            if (lowerCaseFilterValues.has(item[this.column.field]?.toLowerCase())) {
+            if (typeof item[this.column.field] === "string" && lowerCaseFilterValues.has(item[this.column.field]?.toLowerCase())) {
                 expr.expression.searchVal.add(item[this.column.field]);
             }
         });
