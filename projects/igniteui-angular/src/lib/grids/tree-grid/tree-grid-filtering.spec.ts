@@ -13,7 +13,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
-import { GridColumnDataType } from 'igniteui-angular';
+import { GridColumnDataType } from '../../data-operations/data-util';
 
 const IGX_CHECKBOX_LABEL = '.igx-checkbox__label';
 
