@@ -37,7 +37,7 @@
     @include badge-typography($categories: (
         text: 'button',
     ));
-    @include banner-typography();
+    // @include banner-typography();
     @include bottom-nav-typography();
     @include button-typography();
     @include button-group-typography($categories: (
