@@ -316,6 +316,8 @@ $_theme: $fluent;
 
 @include themed-block(igx-day-label, fluent) {
     @include m('week-number') {
+        $date-view-row-gap: rem(4px);
+
         span {
             color: var-get($_theme, 'week-number-foreground');
             background: var-get($_theme, 'week-number-background');
@@ -325,9 +327,8 @@ $_theme: $fluent;
                 position: absolute;
                 background: var-get($_theme, 'week-number-background');
                 border-inline: rem(1px) solid var-get($_theme, 'week-number-background');
-                inset-inline-start: rem(-1px);
                 inset-block-start: 100%;
-                height: 100%;
+                height: calc($date-view-row-gap + rem(2px));
                 width: var-get($_theme, 'size');
             }
         }

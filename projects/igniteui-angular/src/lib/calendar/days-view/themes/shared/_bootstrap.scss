@@ -50,7 +50,7 @@ $_theme: $bootstrap;
     padding-inline: pad-inline(rem(12px));
 
     &:nth-child(2) {
-        @include e(inner, $m: border-radius) {
+        @include e(day-inner, $m: week-number) {
             border-start-start-radius: var-get($_theme, 'week-number-border-radius');
             border-start-end-radius: var-get($_theme, 'week-number-border-radius');
         }

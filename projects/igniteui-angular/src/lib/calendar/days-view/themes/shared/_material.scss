@@ -325,6 +325,7 @@ $_theme: $material;
 @include themed-block(igx-day-label, material) {
     $date-size: var-get($_theme, 'size');
     $date-inner-size: var-get($_theme, 'inner-size');
+    $date-view-row-gap: rem(4px);
     $date-height: $date-size;
     $border-size: rem(1px);
 
@@ -338,9 +339,8 @@ $_theme: $material;
                 position: absolute;
                 background: var-get($_theme, 'week-number-background');
                 border-inline: rem(1px) solid var-get($_theme, 'week-number-background');
-                inset-inline-start: rem(-1px);
                 inset-block-start: 100%;
-                height: 100%;
+                height: calc($date-view-row-gap + rem(2px));
                 width: $date-size;
             }
         }

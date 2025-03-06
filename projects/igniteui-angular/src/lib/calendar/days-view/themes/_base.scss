@@ -172,6 +172,7 @@ $theme: $material;
             width: $date-size;
             color: var-get($theme, 'week-number-foreground');
             background: var-get($theme, 'week-number-background');
+            border-color: var-get($theme, 'week-number-background');
 
             &::after {
                 display: none !important;
@@ -181,9 +182,8 @@ $theme: $material;
                 content: '';
                 position: absolute;
                 background: var-get($theme, 'week-number-background');
-                inset-inline-start: rem(-1px);
                 inset-block-start: 100%;
-                height: calc($date-size / 2);
+                height: calc($date-view-row-gap + rem(2px));
                 width: $date-size;
             }
         }
