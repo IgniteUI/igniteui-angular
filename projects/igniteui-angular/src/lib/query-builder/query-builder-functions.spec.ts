@@ -910,4 +910,13 @@ export class QueryBuilderFunctions {
             dragDirective.onPointerUp({ pointerId: 1, pageX: X, pageY: Y });
         }
     }
+
+    public static getDropGhostAndItsSiblings(fixture: ComponentFixture<any>): [Element, string, string, string[]]{
+        const dropGhost = this.getDropGhost(fixture);
+        const prevElement = dropGhost && dropGhost.previousElementSibling?.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling.previousElementSibling) : null;
+        const nextElement = dropGhost && dropGhost.nextElementSibling?.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling.nextElementSibling) : null;
+        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fixture);
+
+        return [dropGhost, prevElement, nextElement, newChipContents];
+    }
 }

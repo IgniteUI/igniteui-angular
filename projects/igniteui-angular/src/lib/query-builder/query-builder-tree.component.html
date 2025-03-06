@@ -127,7 +127,7 @@
         @if (!expressionItem.inEditMode) {
             @if(dragService.dropGhostExpression && expressionItem === dragService.dropGhostExpression && dragService.isKeyboardDrag === false){
                 <!-- TODO style properly -->
-                <div [ngClass]="'igx-filter-tree__expression-item '+ 'igx-filter-tree__expression-item-drop-ghost'">
+                <div [ngClass]="'igx-filter-tree__expression-item igx-filter-tree__expression-item-drop-ghost'">
                 <igx-chip [data]="expressionItem">
                     {{this.resourceStrings.igx_query_builder_drop_ghost_text}}
                 </igx-chip>
@@ -141,7 +141,10 @@
                 (over)="dragService.onDivOver(dragRef, expressionItem)"
                 (leave)="dragService.onChipLeave()"
                 (dropped)="dragService.onDivDropped(expressionItem)"
-                class="igx-filter-tree__expression-item"
+                [ngClass]="{
+                    'igx-filter-tree__expression-item': true,
+                    'igx-filter-tree__expression-item-drop-ghost': expressionItem === dragService.dropGhostExpression
+                  }"
                 (mouseenter)="expressionItem.hovered = true"
                 (mouseleave)="expressionItem.hovered = false"
                 (focusin)="onExpressionFocus(expressionItem)"
