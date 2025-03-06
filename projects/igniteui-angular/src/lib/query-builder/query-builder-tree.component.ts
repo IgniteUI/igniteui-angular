@@ -56,7 +56,7 @@ import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component'
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { isTree } from '../data-operations/expressions-tree-util';
-import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe, QueryBuilderSelectors } from './query-builder.common';
+import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe } from './query-builder.common';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -286,7 +286,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('groupContextMenuDropDown', { read: IgxDropDownComponent })
     private groupContextMenuDropDown: IgxDropDownComponent;
-    
+
     /**
      * @hidden @internal
      */
@@ -1630,7 +1630,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this._timeoutId = setTimeout(() => {
             if (this._lastFocusedChipIndex != -1) {
-                //TODO see if we need sort after refactor
                 //Sort the expression chip list. 
                 //If there was a recent drag&drop and the tree hasn't rerendered(child query), they will be unordered
                 const sortedChips = this.expressionsChips.toArray().sort(function (a, b) {
