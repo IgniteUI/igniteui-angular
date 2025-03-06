@@ -286,7 +286,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('groupContextMenuDropDown', { read: IgxDropDownComponent })
     private groupContextMenuDropDown: IgxDropDownComponent;
-
+    
+    /**
+     * @hidden @internal
+     */
     @ViewChildren(IgxChipComponent, { read: IgxChipComponent })
     public expressionsChips: QueryList<IgxChipComponent>;
 
@@ -338,12 +341,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     @ViewChildren(IgxQueryBuilderTreeComponent)
     private innerQueries: QueryList<IgxQueryBuilderTreeComponent>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('dropGhost')
-    public dropGhostElement: ElementRef;
 
     /**
      * @hidden @internal
