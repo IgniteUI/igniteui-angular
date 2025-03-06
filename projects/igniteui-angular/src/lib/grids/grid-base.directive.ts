@@ -6554,7 +6554,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (width && typeof width !== 'string') {
             width = String(width);
         }
-        const minWidth = width.indexOf('%') === -1 ? column.minWidthPx : column.minWidthPercent;
+        const minWidth = width.indexOf('%') === -1 ? column.userSetMinWidthPx : column.minWidthPercent;
         const maxWidth = width.indexOf('%') === -1 ? column.maxWidthPx : column.maxWidthPercent;
         if (column.hidden) {
             return width;
@@ -7336,8 +7336,8 @@ export abstract class IgxGridBaseDirective implements GridType,
                 let maxSize = Math.ceil(Math.max(...cellsContentWidths)) + 1;
                 if (col.maxWidth && maxSize > col.maxWidthPx) {
                     maxSize = col.maxWidthPx;
-                } else if (maxSize < col.minWidthPx) {
-                    maxSize = col.minWidthPx;
+                } else if (maxSize < col.userSetMinWidthPx) {
+                    maxSize = col.userSetMinWidthPx;
                 }
                 col.autoSize = maxSize;
                 col.resetCaches();

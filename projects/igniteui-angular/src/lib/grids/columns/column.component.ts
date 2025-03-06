@@ -947,6 +947,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
+    public get userSetMinWidthPx() {
+        const gridAvailableSize = this.grid.calcWidth;
+        const isPercentageWidth = this._defaultMinWidth && typeof this._defaultMinWidth === 'string' && this._defaultMinWidth.indexOf('%') !== -1;
+        return isPercentageWidth ? parseFloat(this._defaultMinWidth) / 100 * gridAvailableSize : parseFloat(this._defaultMinWidth);
+    }
+
+    /**
+     * @hidden
+     */
     public get minWidthPercent() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
@@ -1822,7 +1831,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _maxWidth = '';
+    protected _maxWidth;
     /**
      * @hidden
      */
@@ -2579,9 +2588,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (this.maxWidth && newSize > this.maxWidthPx) {
             this.widthConstrained = true;
             return this.maxWidthPx;
-        } else if (this.minWidth && newSize < this.minWidthPx) {
+        } else if (this.minWidth && newSize < this.userSetMinWidthPx) {
             this.widthConstrained = true;
-            return this.minWidthPx;
+            return this.userSetMinWidthPx;
         } else {
             this.widthConstrained = false;
             return newSize;
@@ -2597,7 +2606,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         const isAutoWidth = colWidth && typeof colWidth === 'string' && colWidth === 'fit-content';
         if (isPercentageWidth && this.grid.isColumnWidthSum) {
-            this._calcWidth = this.minWidthPx ?? this.grid.minColumnWidth;
+            this._calcWidth = this.userSetMinWidthPx ? this.userSetMinWidthPx : this.grid.minColumnWidth;
         } else if (isPercentageWidth) {
             const currentCalcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
             this._calcWidth = this.grid.calcWidth ? this.getConstrainedSizePx(currentCalcWidth) : 0;
