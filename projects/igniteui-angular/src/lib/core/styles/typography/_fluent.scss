@@ -48,12 +48,12 @@
         picker-date: 'subtitle-2',
         content: 'body-1',
     ));
-    @include card-typography($categories: (
-        title: 'subtitle-1',
-        title-small: 'subtitle-2',
-        subtitle: 'body-2',
-        content: 'body-2'
-    ));
+    // @include card-typography($categories: (
+    //     title: 'subtitle-1',
+    //     title-small: 'subtitle-2',
+    //     subtitle: 'body-2',
+    //     content: 'body-2'
+    // ));
     @include checkbox-typography($categories: (
         label: 'body-2'
     ));

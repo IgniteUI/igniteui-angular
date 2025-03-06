@@ -1,0 +1,37 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-card, material) {
+    @include m(elevated) {
+        border: none;
+    }
+}
+
+@include themed-block(igx-card-header, material) {
+    @include e(title) {
+        @include type-style(h6) {
+            margin: 0;
+        }
+    }
+
+    @include e(title, $m: small) {
+        @include type-style(subtitle-2) {
+            margin: 0;
+        }
+    }
+
+    @include e(subtitle) {
+        @include type-style(subtitle-2) {
+            margin: 0;
+        }
+    }
+}
+
+@include themed-block(igx-card-content, material) {
+    > *:not(igx-icon) {
+        @include type-style(body-2) {
+            margin: 0;
+        }
+    }
+}

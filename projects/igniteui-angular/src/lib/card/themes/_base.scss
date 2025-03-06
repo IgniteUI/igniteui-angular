@@ -1,0 +1,261 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    %actions {
+        flex-direction: column;
+
+        [igxButton] ~ [igxButton] {
+            margin-inline-start: 0;
+            margin-top: rem(8px);
+        }
+    }
+
+    %actions--justified {
+        justify-content: space-around;
+        flex-grow: 1;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    @include b(igx-card) {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border-radius: var-get($theme, 'border-radius');
+        background: var-get($theme, 'background');
+        transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        backface-visibility: hidden;
+        border: rem(1px) solid var-get($theme, 'outline-color');
+
+        &:hover {
+            box-shadow: none;
+        }
+
+        igx-avatar {
+            --ig-size: 1;
+        }
+
+        @include e(media) {
+            display: block;
+            overflow: hidden;
+            line-height: 0;
+
+            > * {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        @include e(media, $m: right) {
+            width: auto;
+            margin-inline-start: auto;
+            order: 9999;
+        }
+
+        @include m(elevated) {
+            box-shadow: var-get($theme, 'resting-elevation');
+            border: rem(1px) solid var-get($theme, 'outline-color');
+
+            &:hover {
+                box-shadow: var-get($theme, 'hover-elevation');
+            }
+        }
+
+        @include m(horizontal) {
+            flex-direction: row;
+        }
+    }
+
+    @include b(igx-card-header) {
+        display: flex;
+        flex-flow: row wrap;
+        align-content: flex-start;
+        width: 100%;
+        padding: rem(16px, 16px);
+        color: var-get($theme, 'header-text-color');
+
+        &:empty {
+            display: block;
+            padding: 0;
+        }
+
+        @include e(thumbnail) {
+            align-self: flex-start;
+            margin-inline-end: rem(16px);
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(titles) {
+            display: flex;
+            flex-flow: column nowrap;
+            overflow: hidden;
+            flex: 1 1 auto;
+            justify-content: center;
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(subtitle) {
+            color: var-get($theme, 'subtitle-text-color');
+        }
+
+        @include m(vertical) {
+            flex-flow: column nowrap;
+
+            @include e(titles) {
+                text-align: center;
+            }
+
+            @include e(thumbnail) {
+                display: flex;
+                justify-content: center;
+                align-self: unset;
+                margin-inline-end: 0;
+                margin-bottom: rem(16px);
+            }
+        }
+    }
+
+    @include b(igx-card-content) {
+        display: block;
+        width: 100%;
+        padding: rem(16px);
+        color: var-get($theme, 'content-text-color');
+        overflow: auto;
+    }
+
+    @include b(igx-card-actions) {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: rem(8px);
+
+        &:first-child {
+            margin-block-end: auto;
+        }
+
+        &:last-child {
+            margin-block-start: auto;
+        }
+
+        @include e(start) {
+            display: flex;
+            align-items: center;
+            order: 0;
+            gap: rem(8px);
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(end) {
+            display: flex;
+            align-items: center;
+            order: 1;
+            color: var-get($theme, 'actions-text-color');
+            margin-inline-start: auto;
+            gap: rem(8px);
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(igroup) {
+            display: flex;
+            flex-flow: row nowrap;
+
+            .igx-icon-button {
+                color: var-get($theme, 'actions-text-color');
+            }
+        }
+
+        @include e(igroup, $m: start) {
+            margin-inline-end: auto;
+        }
+
+        @include e(igroup, $m: end) {
+            margin-inline-start: auto;
+        }
+
+        @include e(bgroup) {
+            display: flex;
+            flex-flow: row nowrap;
+            gap: rem(8px);
+        }
+
+        @include m(vertical) {
+            flex-direction: column;
+
+            &:is(:first-child, :last-child) {
+                margin-block: initial;
+            }
+
+            [dir='rtl'] & {
+                order: -1;
+            }
+
+            @include e(start) {
+                @extend %actions;
+            }
+
+            @include e(end) {
+                @extend %actions;
+
+                margin-top: auto;
+                margin-inline-start: 0;
+            }
+        }
+
+        @include m(reverse) {
+            @include e(start) {
+                order: 1;
+                margin-inline-start: auto;
+            }
+
+            @include e(end) {
+                order: 0;
+                margin-inline-start: 0;
+            }
+        }
+
+        @include mx(vertical, reverse) {
+            @include e(start) {
+                margin: 0;
+                margin-top: auto;
+            }
+
+            @include e(end) {
+                margin: 0;
+                margin-bottom: auto;
+            }
+        }
+
+        @include m(justify) {
+            @include e(start) {
+                @extend %actions--justified !optional;
+            }
+
+            @include e(end) {
+                @extend %actions--justified !optional;
+            }
+        }
+    }
+}

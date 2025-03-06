@@ -4,7 +4,7 @@
 
         <!--New York City Card Begins-->
         <article class="card">
-            <igx-card class="my-cool-card">
+            <igx-card class="my-cool-card" [elevated]="properties.elevated">
                 @for(section of sectionOrder; track section) {
                 <ng-container>
                     @if(section === 'media' && !properties.hideMedia) {
@@ -51,7 +51,7 @@
         <!--New York City Card End-->
 
         <article class="card">
-            <igx-card [horizontal]="true">
+            <igx-card [horizontal]="true" [elevated]="properties.elevated">
                 @if(!properties.hideActions) {
                 <igx-card-actions layout="justify">
                     @for(icon of cards[1].icons; track icon) {
@@ -98,7 +98,7 @@
         </article>
 
         <article class="card">
-            <igx-card>
+            <igx-card [elevated]="properties.elevated">
                 <igx-card-header>
                     @if(!properties.hideHeader && !hideTitle) {
                     <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
@@ -133,7 +133,7 @@
 
         <!--Melo Di Card Begins-->
         <article class="card">
-            <igx-card [horizontal]="true">
+            <igx-card [horizontal]="true" [elevated]="properties.elevated">
                 <div
                     style="
                         display: flex;
@@ -167,7 +167,7 @@
 
         <!--New York City Card Begins-->
         <article class="card">
-            <igc-card>
+            <igc-card [elevated]="properties.elevated">
                 @for(section of sectionOrder; track section) {
                 <ng-container>
                     @if(section === 'media' && !properties.hideMedia) {
@@ -221,7 +221,7 @@
         <!--New York City Card End-->
 
         <article class="card">
-            <igc-card style="flex-direction: row">
+            <igc-card style="flex-direction: row" [elevated]="properties.elevated">
                 @if(!properties.hideActions) {
                 <igc-card-actions orientation="vertical">
                     @for(icon of cards[1].icons; track icon) {
@@ -259,7 +259,7 @@
         </article>
 
         <article class="card">
-            <igc-card>
+            <igc-card [elevated]="properties.elevated">
                 <igc-card-header style="flex-direction: row">
                     @if(!properties.hideMedia) {
                     <igc-card-media
@@ -296,7 +296,7 @@
 
         <!--Melo Di Card Begins-->
         <article class="card">
-            <igc-card style="flex-direction: row">
+            <igc-card style="flex-direction: row" [elevated]="properties.elevated">
                 <div
                     style="
                         display: flex;
