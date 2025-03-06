@@ -47,12 +47,12 @@
     //    picker-date: 'subtitle-1',
     //    content: 'body-1',
     //));
-    @include card-typography($categories: (
-        title: 'h5',
-        title-small: 'subtitle-2',
-        subtitle: 'body-1',
-        content: 'body-1',
-    ));
+    // @include card-typography($categories: (
+    //     title: 'h5',
+    //     title-small: 'subtitle-2',
+    //     subtitle: 'body-1',
+    //     content: 'body-1',
+    // ));
     @include checkbox-typography($categories: (
         label: 'body-1',
     ));

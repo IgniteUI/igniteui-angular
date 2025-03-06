@@ -879,7 +879,7 @@ class HelperFunctions {
     template: `
         <igx-grid #grid [data]="data" [autoGenerate]="false" [moving]="true" igxGridState rowSelection="multiple"
             cellSelection="multiple" primaryKey="ProductID">
-            @for (c of columns; track c) {
+            @for (c of columns; track c.field) {
                 <igx-column
                     [width]="c.width"
                     [sortable]="c.sortable"

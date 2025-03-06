@@ -2770,7 +2770,7 @@ class IgxSelectSimpleComponent {
 @Component({
     template: `
     <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [width]="'300px'" [height]="'500px'" [placeholder]="'Choose location'" [(ngModel)]="value">
-        @for (location of locations; track location) {
+        @for (location of locations; track location.continent) {
             <igx-select-item-group [label]="location.continent"> {{location.continent}}
                 @for (capital of location.capitals; track capital) {
                     <igx-select-item [value]="capital" [text]="capital">
@@ -3100,7 +3100,7 @@ class IgxSelectHeaderFooterComponent implements OnInit {
             <div>
                 <igx-select #selectCDR value="ID">
                     <label igxLabel>Column</label>
-                    @for (column of columns; track column) {
+                    @for (column of columns; track column.field) {
                         <igx-select-item [value]="column.field">
                             {{column.field}}
                         </igx-select-item>

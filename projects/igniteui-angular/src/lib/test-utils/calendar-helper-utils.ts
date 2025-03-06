@@ -66,9 +66,9 @@ export class HelperTestFunctions {
         const date = fixture.nativeElement.querySelector(HelperTestFunctions.CALENDAR_HEADER_DATE_CSSCLASS);
         expect(date).not.toBeNull();
 
-        const dateParts = selectedDate.toUTCString().split(' '); // (weekday, date month year)
-        expect(date.children[0].innerText.trim()).toEqual(dateParts[0]);
-        expect(date.children[1].innerText.trim()).toEqual(dateParts[2] + ' ' + Number(dateParts[1]));
+        const [weekday, month, day] = selectedDate.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).split(' '); // (weekday, month day)
+        expect(date.children[0].innerText.trim()).toEqual(weekday);
+        expect(date.children[1].innerText.trim()).toEqual(month + ' ' + day);
     }
 
     public static verifyNoRangeSelectionCreated(fixture, monthNumber: number) {

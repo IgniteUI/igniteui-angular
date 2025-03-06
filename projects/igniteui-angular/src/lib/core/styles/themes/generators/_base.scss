@@ -200,13 +200,13 @@
     //    @include calendar($calendar-theme-map);
     //}
 
-    @if is-used('igx-card', $exclude) {
-        $card-theme-map: card-theme(
-            $schema: $schema,
-        );
-        $card-theme-map: meta.call($theme-handler, $card-theme-map);
-        @include card($card-theme-map);
-    }
+    // @if is-used('igx-card', $exclude) {
+    //     $card-theme-map: card-theme(
+    //         $schema: $schema,
+    //     );
+    //     $card-theme-map: meta.call($theme-handler, $card-theme-map);
+    //     @include card($card-theme-map);
+    // }
 
     @if is-used('igx-carousel', $exclude) {
         $carousel-theme-map: carousel-theme(

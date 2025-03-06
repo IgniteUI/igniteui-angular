@@ -49,12 +49,12 @@
     //    weekday-label: 'body-2',
     //    picker-date: 'subtitle-2',
     //));
-    @include card-typography($categories: (
-        title: 'h6',
-        title-small: 'body-2',
-        subtitle: 'body-2',
-        content: 'body-2'
-    ));
+    // @include card-typography($categories: (
+    //     title: 'h6',
+    //     title-small: 'body-2',
+    //     subtitle: 'body-2',
+    //     content: 'body-2'
+    // ));
     @include checkbox-typography($categories: (
         label: 'body-2',
     ));

@@ -345,7 +345,7 @@ class HelperFunctions {
     <igx-tree-grid [moving]="true" #treeGrid [data]="data" childDataKey="Employees" [expansionDepth]="2" width="900px" height="800px" igxGridState
         primaryKey="ID" rowSelection="multiple" cellSelection="multiple">
 
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column
                 [width]="c.width"
                 [sortable]="c.sortable"
