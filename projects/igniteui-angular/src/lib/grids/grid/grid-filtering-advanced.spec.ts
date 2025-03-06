@@ -41,7 +41,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             ]
         });
     }));
-    
+
     describe('General tests - ', () => {
         let fix: ComponentFixture<IgxGridAdvancedFilteringComponent>;
         let grid: IgxGridComponent;
@@ -434,13 +434,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Verfiy there is a root group with 'And' operator line and 2 children.
+            // Verify there is a root group with 'And' operator line and 2 children.
             const rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
             expect(rootGroup).not.toBeNull();
             QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
             expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup as HTMLElement).length).toBe(2);
 
-            // Verify the contnet of the first child (expression) of the root group.
+            // Verify the content of the first child (expression) of the root group.
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Downloads', 'Greater Than', '100');
 
             // Verify the content of the second child (group) of the root group.
@@ -1225,11 +1225,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(100);
             fix.detectChanges();
 
-            
+
             // Populate edit inputs.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
-            
+
             let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
             // Commit the populated expression.
@@ -1278,7 +1278,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
-        
+
         it('Should allow hosting Advanced Filtering dialog outside of the grid.', fakeAsync(() => {
             // Add a root 'and' group.
             QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);

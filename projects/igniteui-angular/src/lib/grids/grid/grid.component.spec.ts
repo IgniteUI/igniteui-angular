@@ -218,7 +218,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             // no horizontal scr, since columns have no width hence they should
-            // distrubute the available width between them
+            // distribute the available width between them
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             const verticalScrollHeight = fix.componentInstance.getVerticalScrollHeight();
 
@@ -585,7 +585,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it('should allow applying custom loading indicator', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
-            fixture.componentInstance.instance.loadingGridTemplate = fixture.componentInstance.customTemaplate;
+            fixture.componentInstance.instance.loadingGridTemplate = fixture.componentInstance.customTemplate;
             fixture.detectChanges();
             tick(16);
 
@@ -898,7 +898,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columnList.get(0).width).not.toBeLessThan(136);
             expect(grid.columnList.get(4).width).not.toBeLessThan(136);
             expect(grid.columnList.get(14).width).not.toBeLessThan(136);
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
         });
 
         it(`should init columns with width >= 136px and a horizontal scrollbar
@@ -914,7 +914,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columnList.get(0).width).not.toBeLessThan(136);
             expect(grid.columnList.get(4).width).not.toBeLessThan(136);
             expect(grid.columnList.get(100).width).not.toBeLessThan(136);
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -950,7 +950,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -987,7 +987,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1025,7 +1025,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1063,7 +1063,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1097,7 +1097,7 @@ describe('IgxGrid Component Tests #grid', () => {
                     expect(width).toEqual(minWidth);
                 }
             });
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1127,7 +1127,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1158,7 +1158,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1511,14 +1511,14 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.detectChanges();
                 await wait(16);
                 fix.detectChanges();
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+                expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
                 const scrollbar = grid.headerContainer.getScroll();
                 scrollbar.scrollLeft = 10000;
                 grid.width = '1500px';
 
                 fix.detectChanges();
                 await wait(100);
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+                expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
                 const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
                 expect(headers.length).toEqual(5);
                 for (let i = 0; i < headers.length; i++) {
@@ -1614,7 +1614,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        it('Should properly handle dates respresented as number of milliseconds', () => {
+        it('Should properly handle dates represented as number of milliseconds', () => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
             grid.data = fixture.componentInstance.data.map(rec => {
@@ -1944,7 +1944,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const fix = TestBed.createComponent(IgxGridColumnHeaderAutoSizeComponent);
             const grid = fix.componentInstance.grid;
 
-            //waiting for reqeustAnimationFrame to finish
+            //waiting for requestAnimationFrame to finish
             await wait(17);
             fix.detectChanges();
 
@@ -1962,7 +1962,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
             grid.data = [{field1: "Test"}];
 
-            //waiting for reqeustAnimationFrame to finish
+            //waiting for requestAnimationFrame to finish
             fix.detectChanges();
             await wait(17);
             fix.detectChanges();
@@ -2282,7 +2282,7 @@ describe('IgxGrid Component Tests #grid', () => {
         }));
 
         it(`When edit a cell onto filtered data through grid method, the row should
-            disapear and the new value should not persist onto the next row`, fakeAsync(() => {
+            disappear and the new value should not persist onto the next row`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(5, 5);
             fix.detectChanges();
@@ -2365,7 +2365,7 @@ describe('IgxGrid Component Tests #grid', () => {
             // when there is no previous cell
             prevCellCoords = grid.getPreviousCell(0, 2, (col) => col.editable);
             expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 2 });
-            // when the filter function has no matching colums
+            // when the filter function has no matching columns
             prevCellCoords = grid.getPreviousCell(0, 3, (col) => col.pinned);
             expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 3 });
             // when grid has no data
@@ -3304,7 +3304,7 @@ export class IgxGridDefaultRenderingComponent {
         }
     }
 
-    public isHorizonatScrollbarVisible() {
+    public isHorizontalScrollbarVisible() {
         const scrollbar = this.grid.headerContainer.getScroll();
         return scrollbar.offsetWidth < (scrollbar.children.item(0) as HTMLElement).offsetWidth;
     }
@@ -3521,7 +3521,7 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
     public override data = [
-        { ID: 1, Name: 'Johny' },
+        { ID: 1, Name: 'Johnny' },
         { ID: 2, Name: 'Sally' },
         { ID: 3, Name: 'Tim' }
     ];
@@ -3631,7 +3631,7 @@ export class IgxGridRemoteOnDemandComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
     @ViewChild('customTemplate', { read: TemplateRef, static: true })
-    public customTemaplate: TemplateRef<any>;
+    public customTemplate: TemplateRef<any>;
     public data;
     constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
 
