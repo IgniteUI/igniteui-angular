@@ -30,7 +30,7 @@ import { CarouselResourceStringsEN, ICarouselResourceStrings } from '../core/i18
 import { first, IBaseEventArgs, last, PlatformUtil } from '../core/utils';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
-import { Direction, ICarouselComponentBase, IGX_CAROUSEL_COMPONENT, IgxCarouselComponentBase } from './carousel-base';
+import { Direction, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -75,8 +75,7 @@ export class CarouselHammerConfig extends HammerGestureConfig {
         {
             provide: HAMMER_GESTURE_CONFIG,
             useClass: CarouselHammerConfig
-        },
-        { provide: IGX_CAROUSEL_COMPONENT, useExisting: IgxCarouselComponent }
+        }
     ],
     selector: 'igx-carousel',
     templateUrl: 'carousel.component.html',
@@ -88,7 +87,7 @@ export class CarouselHammerConfig extends HammerGestureConfig {
     imports: [IgxButtonDirective, IgxIconComponent, NgClass, NgTemplateOutlet]
 })
 
-export class IgxCarouselComponent extends IgxCarouselComponentBase implements ICarouselComponentBase, OnDestroy, AfterContentInit {
+export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
 
     /**
      * Sets the `id` of the carousel.
@@ -205,18 +204,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements IC
      * @memberOf IgxCarouselComponent
      */
     @Input({ transform: booleanAttribute }) public override vertical = false;
-
-    /**
-     * Controls whether the carousel should support keyboard navigation.
-     * Default value is `false`.
-     * ```html
-     * <igx-carousel [keyboardSupport]="true"></igx-carousel>
-     * ```
-     *
-     * @memberOf IgxCarouselComponent
-     * @deprecated in version 18.2.0.
-     */
-    @Input({ transform: booleanAttribute }) public keyboardSupport = false;
 
     /**
      * Controls whether the carousel should support gestures.
@@ -591,27 +578,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements IC
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 
-
-    /** @hidden */
-    @HostListener('keydown.arrowright', ['$event'])
-    public onKeydownArrowRight(event) {
-        if (this.keyboardSupport) {
-            event.preventDefault();
-            this.next();
-            this.focusElement();
-        }
-    }
-
-    /** @hidden */
-    @HostListener('keydown.arrowleft', ['$event'])
-    public onKeydownArrowLeft(event) {
-        if (this.keyboardSupport) {
-            event.preventDefault();
-            this.prev();
-            this.focusElement();
-        }
-    }
-
     /** @hidden */
     @HostListener('tap', ['$event'])
     public onTap(event) {
@@ -625,26 +591,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements IC
             } else if (this.stoppedByInteraction) {
                 this.play();
             }
-        }
-    }
-
-    /** @hidden */
-    @HostListener('keydown.home', ['$event'])
-    public onKeydownHome(event) {
-        if (this.keyboardSupport && this.slides.length > 0) {
-            event.preventDefault();
-            this.slides.first.active = true;
-            this.focusElement();
-        }
-    }
-
-    /** @hidden */
-    @HostListener('keydown.end', ['$event'])
-    public onKeydownEnd(event) {
-        if (this.keyboardSupport && this.slides.length > 0) {
-            event.preventDefault();
-            this.slides.last.active = true;
-            this.focusElement();
         }
     }
 
@@ -801,9 +747,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements IC
 
     /** @hidden */
     public handleKeydown(event: KeyboardEvent): void {
-        if (this.keyboardSupport) {
-            return;
-        }
         const { key } = event;
         const slides = this.slides.toArray();
 
@@ -1003,16 +946,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements IC
         return this._indicators.toArray();
     }
 
-    private focusElement() {
-        const focusedElement = this.document.activeElement;
-
-        if (focusedElement.classList.contains('igx-carousel-indicators__indicator')) {
-            this.indicatorsElements[this.current].nativeElement.focus();
-        } else {
-            this.focusSlideElement();
-        }
-    }
-
     private getIndicatorsClass(): string {
         switch (this.indicatorsOrientation) {
             case CarouselIndicatorsOrientation.top:
@@ -1170,18 +1103,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements IC
             });
         }
     }
-    private focusSlideElement() {
-        if (this.leaveAnimationPlayer) {
-            this.leaveAnimationPlayer.animationEnd
-                .pipe(takeUntil(this.destroy$))
-                .subscribe(() => {
-                    this.slides.find(s => s.active).nativeElement.focus();
-                });
-        } else {
-            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
-        }
-    }
-
 }
 
 export interface ISlideEventArgs extends IBaseEventArgs {
