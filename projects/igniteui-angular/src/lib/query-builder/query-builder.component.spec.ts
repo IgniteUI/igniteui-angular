@@ -2977,24 +2977,24 @@ describe('IgxQueryBuilder', () => {
           case i === 0:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Ends With  a");
+            expect(nextElement).toEqual('OrderName  Ends With  a');
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 1:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderName  Ends With  a");
-            expect(nextElement).toEqual("OrderDate  Today");
+            expect(prevElement).toEqual('OrderName  Ends With  a');
+            expect(nextElement).toEqual('OrderDate  Today');
             expect(newChipContents[5]).toBe(dropGhostContent);
             break;
           case i === 2:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderDate  Today");
+            expect(prevElement).toEqual('OrderDate  Today');
             expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
           case i >= 3:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toBeUndefined();
+            expect(prevElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
             expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
@@ -3013,32 +3013,32 @@ describe('IgxQueryBuilder', () => {
         switch (true) {
           case i === 0:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderDate  Today");
+            expect(prevElement).toEqual('OrderDate  Today');
             expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
           case i === 1:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderName  Ends With  a");
-            expect(nextElement).toEqual("OrderDate  Today");
+            expect(prevElement).toEqual('OrderName  Ends With  a');
+            expect(nextElement).toEqual('OrderDate  Today');
             expect(newChipContents[5]).toBe(dropGhostContent);
             break;
           case i === 2:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Ends With  a");
+            expect(nextElement).toEqual('OrderName  Ends With  a');
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 3:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderName  Equals  foo");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderName  Equals  foo');
+            expect(nextElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
             expect(newChipContents[1]).toBe(dropGhostContent);
             break;
           case i >= 4:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Equals  foo");
+            expect(nextElement).toEqual('OrderName  Equals  foo');
             expect(newChipContents[0]).toBe(dropGhostContent);
             break;
         }
@@ -3056,31 +3056,31 @@ describe('IgxQueryBuilder', () => {
         switch (true) {
           case i === 0:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderName  Equals  foo");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderName  Equals  foo');
+            expect(nextElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
             expect(newChipContents[1]).toBe(dropGhostContent);
             break;
           case i === 1:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Ends With  a");
+            expect(nextElement).toEqual('OrderName  Ends With  a');
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 2:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderName  Ends With  a");
-            expect(nextElement).toEqual("OrderDate  Today");
+            expect(prevElement).toEqual('OrderName  Ends With  a');
+            expect(nextElement).toEqual('OrderDate  Today');
             expect(newChipContents[5]).toBe(dropGhostContent);
             break;
           case i === 3:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderDate  Today");
+            expect(prevElement).toEqual('OrderDate  Today');
             expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
           case i >= 4:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toBeUndefined();
+            expect(prevElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
             expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;

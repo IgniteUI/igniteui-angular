@@ -278,9 +278,9 @@ export class IgxQueryBuilderDragService {
             return false;
         }
 
-        const ghostHeight = dragGhostBounds.bottom - dragGhostBounds.top;
+        const tolerance = dragGhostBounds.bottom - dragGhostBounds.top;
 
-        return !(dragGhostBounds.bottom < dropGhostBounds.top - ghostHeight || dragGhostBounds.top > dropGhostBounds.bottom + ghostHeight);
+        return !(dragGhostBounds.bottom < dropGhostBounds.top - tolerance || dragGhostBounds.top > dropGhostBounds.bottom + tolerance);
     }
 
     /** Checks if the dragged ghost is north or south of a target element's center*/

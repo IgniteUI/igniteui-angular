@@ -865,7 +865,7 @@ export class QueryBuilderFunctions {
     }
 
     public static getChipContent(chip: Element): string {
-        if (chip.checkVisibility()) {
+        if (chip && chip.checkVisibility()) {
             let text: string = '';
 
             Array.from(chip.querySelectorAll('span')).forEach(element => {
@@ -911,11 +911,25 @@ export class QueryBuilderFunctions {
         }
     }
 
-    public static getDropGhostAndItsSiblings(fixture: ComponentFixture<any>): [Element, string, string, string[]]{
+    public static getDropGhostAndItsSiblings(fixture: ComponentFixture<any>): [Element, string, string, string[]] {
         const dropGhost = this.getDropGhost(fixture);
-        const prevElement = dropGhost && dropGhost.previousElementSibling?.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling.previousElementSibling) : null;
-        const nextElement = dropGhost && dropGhost.nextElementSibling?.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling.nextElementSibling) : null;
         const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fixture);
+        let prevElement: string, nextElement: string;
+
+        if (dropGhost) {
+            if (dropGhost.previousElementSibling?.className &&
+                dropGhost.previousElementSibling?.className?.indexOf(QueryBuilderSelectors.FILTER_TREE_SUBQUERY) !== -1) {
+                prevElement = QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling.previousElementSibling);
+            } else if (dropGhost.previousElementSibling?.previousElementSibling) {
+                prevElement = QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling);
+            }
+
+            nextElement = QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling?.nextElementSibling);
+            nextElement ??= QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling?.nextElementSibling?.nextElementSibling?.nextElementSibling);
+        }
+
+        prevElement ??= null;
+        nextElement ??= null;
 
         return [dropGhost, prevElement, nextElement, newChipContents];
     }
