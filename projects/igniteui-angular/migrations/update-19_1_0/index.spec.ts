@@ -59,12 +59,10 @@ describe(`Update to ${version}`, () => {
             );
     });
 
-    it('should remove igx-caroursel property `keyboardSupport` in template', async () => {
+    it('should replace Query Builder deprecated property `fields` with `entities`', async () => {
         appTree.create(`/testSrc/appPrefix/component/test.component.html`,
         `
-        <igx-carousel [keyboardSupport]="true"></igx-carousel>
-        <igx-carousel [keyboardSupport]="false"></igx-carousel>
-        <igx-carousel [keyboardSupport]="myProp"></igx-carousel>
+        <igx-query-builder [fields]="[{ field: 'ID', dataType: 'number' }, { field: 'Name', dataType: 'string' }]"></igx-query-builder>
         `
         );
 
@@ -72,9 +70,52 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
         `
-        <igx-carousel></igx-carousel>
-        <igx-carousel></igx-carousel>
-        <igx-carousel></igx-carousel>
+        <igx-query-builder [entities]="[{ name: '', fields: [{ field: 'ID', dataType: 'number' }, { field: 'Name', dataType: 'string' }]}]"></igx-query-builder>
+        `
+        );
+    });
+
+    it('should remove Query Builder Header deprecated `showLegend` and `resourceStrings` properties', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-query-builder-header [showLegend]="false" [resourceStrings]="resourceStrings"></igx-query-builder-header>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-query-builder-header></igx-query-builder-header>
+        `
+        );
+    });
+
+    it('should remove igx_query_builder_title from resources ', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.ts`,
+        `
+        export class TestComponent {
+            public resourceStrings = {
+                igx_query_builder_add_condition: '+ Add Condition',
+                igx_query_builder_title: 'Query Builder Title',
+                igx_query_builder_add_group: '+ Add Group',
+                igx_query_builder_create_and_group: 'My create and group',
+                igx_query_builder_create_or_group: 'My create or group'
+            };
+        }
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(
+        `
+        export class TestComponent {
+            public resourceStrings = {
+                igx_query_builder_add_condition: '+ Add Condition',
+                igx_query_builder_add_group: '+ Add Group'
+            };
+        }
         `
         );
     });
