@@ -444,7 +444,7 @@ describe('IgxQueryBuilder', () => {
       expect((dropdownItems[4] as HTMLElement).innerText).toBe('Released');
     }));
 
-    it('ReturnFields should be properly calculated.', fakeAsync(() => {
+    it('ReturnFields should be properly calculated on entity change.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       queryBuilder.showEntityChangeDialog = false;
       fix.detectChanges();
@@ -464,6 +464,30 @@ describe('IgxQueryBuilder', () => {
       
       // Change the entity
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+
+      // Verify the returnFields
+      exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
+      expect(exprTreeReturnFields).toBe(`["*"]`);
+    }));
+
+    it('ReturnFields should be properly calculated on selectAll click.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      queryBuilder.showEntityChangeDialog = false;
+      fix.detectChanges();
+      
+      // Click selectAll button in order to deselect all fields
+      QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
+      tick(100);
+      fix.detectChanges();
+       
+      // Verify the returnFields
+      let exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
+      expect(exprTreeReturnFields).toBe(`[]`);
+      
+      // Click selectAll button in order to select all fields
+      QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
+      tick(100);
+      fix.detectChanges();
 
       // Verify the returnFields
       exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);

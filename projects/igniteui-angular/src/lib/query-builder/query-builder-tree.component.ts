@@ -611,11 +611,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this._expressionTree) {
             this._expressionTree.entity = this._entityNewValue.name;
 
-            if (this.fields.length === this._selectedReturnFields.length) {
-                this._expressionTree.returnFields = ['*'];
-            } else {
-                this._expressionTree.returnFields =  this._selectedReturnFields;
-            }
+            this._expressionTree.returnFields = this.fields.length === this._selectedReturnFields.length ? ['*'] : this._selectedReturnFields;
 
             this._expressionTree.filteringOperands = [];
 
@@ -649,7 +645,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this._selectedReturnFields = value;
 
             if (this._expressionTree && !this.parentExpression) {
-                this._expressionTree.returnFields = value;
+                this._expressionTree.returnFields = value.length === this.fields.length ? ['*'] : value;
                 this.expressionTreeChange.emit(this._expressionTree);
             }
         }
