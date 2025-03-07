@@ -2,7 +2,7 @@ import { filter, fromEvent, sampleTime, Subscription } from 'rxjs';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { ElementRef, Inject, Injectable } from '@angular/core';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, QueryBuilderSelectors } from './query-builder.common';
-import { IgxChipComponent } from 'igniteui-angular';
+import { IgxChipComponent } from '../chips/chip.component';
 
 const DEFAULT_SET_Z_INDEX_DELAY = 10;
 const Z_INDEX_TO_SET = 10010; //overlay z-index is 10005
