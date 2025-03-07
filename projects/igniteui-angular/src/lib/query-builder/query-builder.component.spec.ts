@@ -2430,7 +2430,7 @@ describe('IgxQueryBuilder', () => {
       expect(dropGhost).toBeDefined();
       expect(dropGhost.innerText).toBe('My Drop here to insert');
     }));
-  }); 
+  });
 
   describe('Drag and drop', () => {
     const ROW_HEIGHT = 40;
@@ -2657,8 +2657,12 @@ describe('IgxQueryBuilder', () => {
       dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
       fix.detectChanges();
 
+      //trigger ghost
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 50, draggedChipCenter.Y - 50);
+      fix.detectChanges();
+
       //drag
-      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 2 * ROW_HEIGHT, true);
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 50, draggedChipCenter.Y - 50, true);
       fix.detectChanges();
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
@@ -2742,6 +2746,7 @@ describe('IgxQueryBuilder', () => {
 
       //move over +Condition
       QueryBuilderFunctions.dragMove(dragDir, addConditionButtonCenter.X, addConditionButtonCenter.Y);
+      fix.detectChanges();
 
       const dropGhost = QueryBuilderFunctions.getDropGhost(fix) as HTMLElement;
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);

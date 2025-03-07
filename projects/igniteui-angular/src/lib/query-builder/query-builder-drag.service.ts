@@ -101,7 +101,7 @@ export class IgxQueryBuilderDragService {
         }
 
         //If entering the one that's been picked up don't do any thing
-        if (targetExpressionItem == this.dropGhostExpression) {
+        if (targetExpressionItem === this.dropGhostExpression) {
             return;
         }
 
@@ -164,7 +164,7 @@ export class IgxQueryBuilderDragService {
      * @param targetExpressionItem The expressionItem of the drop area chip that's been dragged to
     */
     public onDivDropped(targetExpressionItem: ExpressionItem) {
-        if (targetExpressionItem != this._sourceExpressionItem) {
+        if (targetExpressionItem !== this._sourceExpressionItem) {
             this.onChipDropped();
         }
     }
@@ -293,7 +293,7 @@ export class IgxQueryBuilderDragService {
 
     /** Make a copy of the _sourceExpressionItem's chip and paste it in the tree north or south of the _targetExpressionItem's chip */
     private renderDropGhostChip(appendUnder: boolean): void {
-        if (appendUnder != this._dropUnder || this.isKeyboardDrag) {
+        if (appendUnder !== this._dropUnder || this.isKeyboardDrag) {
             this.clearDropGhost();
 
             //Copy dragged chip
@@ -321,8 +321,12 @@ export class IgxQueryBuilderDragService {
         if (!this.isKeyboardDrag && this.getDragGhostElement && (!this._ghostChipMousemoveSubscription$ || this._ghostChipMousemoveSubscription$?.closed === true)) {
             const mouseMoves = fromEvent<MouseEvent>(this.getDragGhostElement, 'mousemove');
 
+            //When mouse moves and there is a drop ghost => trigger onChipLeave to check if the drop ghost has to be removed 
+            //effectively solving the case when mouse leaves the QB and a drop ghost is still in place
             this._ghostChipMousemoveSubscription$ = mouseMoves.pipe(sampleTime(100)).subscribe(() => {
-                this.onChipLeave();
+                if (this.getDropGhostElement) {
+                    this.onChipLeave();
+                }
             });
         }
 
@@ -385,16 +389,16 @@ export class IgxQueryBuilderDragService {
             // }))
             .pipe(filter(event => !event.repeat))
             .subscribe(e => {
-                if (e.key == 'Escape') {
+                if (e.key === 'Escape') {
                     //TODO cancel mouse drag once it's implemented in igx-chip draggable
                     this.resetDragAndDrop(false);
                     //Regain focus on the drag icon after keyboard drag cancel
                     if (this.isKeyboardDrag) {
                         (this._sourceElement.firstElementChild.firstElementChild.firstElementChild.firstElementChild as HTMLElement).focus();
                     }
-                } else if (e.key == 'ArrowUp' || e.key == 'ArrowDown') {
+                } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                     this.arrowDrag(e.key);
-                } else if (e.key == 'Enter' || e.key == 'Space') {
+                } else if (e.key === 'Enter' || e.key === 'Space') {
                     //this.platform.isActivationKey(eventArgs) Maybe use this rather that Enter/Space?
                     this.onChipDropped();
                     this._keyboardSubscription$.unsubscribe();
@@ -421,10 +425,10 @@ export class IgxQueryBuilderDragService {
         }
 
         let newKeyIndexOffset = this._keyDragCurrentIndex;
-        if (key == 'ArrowUp') {
+        if (key === 'ArrowUp') {
             //decrease index capped at top of tree
             newKeyIndexOffset && newKeyIndexOffset--;
-        } else if (key == 'ArrowDown') {
+        } else if (key === 'ArrowDown') {
             //increase index capped at bottom of tree
             newKeyIndexOffset < this._possibleDropLocations.length - 1 && newKeyIndexOffset++;
         } else {
@@ -433,7 +437,7 @@ export class IgxQueryBuilderDragService {
         }
 
         //if drop location has no change
-        if (newKeyIndexOffset != this._keyDragCurrentIndex || this._isKeyDragsFirstMove) {
+        if (newKeyIndexOffset !== this._keyDragCurrentIndex || this._isKeyDragsFirstMove) {
             this._keyDragCurrentIndex = newKeyIndexOffset;
 
             const newDropTarget = this._possibleDropLocations[this._keyDragCurrentIndex];
