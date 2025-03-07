@@ -160,9 +160,6 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 const column = grid.getColumnByName('UnitsInStock');
 
-                column.disabledSummaries = [];
-                fixture.detectChanges();
-                tick();
                 GridSummaryFunctions.verifyColumnSummaries(
                     GridSummaryFunctions.getRootSummaryRow(fixture), 3,
                     ['Count', 'Min', 'Max', 'Sum', 'Avg'],
