@@ -68,40 +68,50 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
     templateUrl: './query-builder-tree.component.html',
     host: { 'class': 'igx-query-builder-tree' },
     imports: [
-    DatePipe,
-    FormsModule,
-    IgxButtonDirective,
-    IgxCheckboxComponent,
-    IgxChipComponent,
-    IgxComboComponent,
-    IgxComboHeaderDirective,
-    IgxDatePickerComponent,
-    IgxDateTimeEditorDirective,
-    IgxDialogComponent,
-    IgxDragIgnoreDirective,
-    IgxDropDirective,
-    IgxDropDownComponent,
-    IgxDropDownItemComponent,
-    IgxDropDownItemNavigationDirective,
-    IgxFieldFormatterPipe,
-    IgxIconButtonDirective,
-    IgxIconComponent,
-    IgxInputDirective,
-    IgxInputGroupComponent,
-    IgxOverlayOutletDirective,
-    IgxPickerClearComponent,
-    IgxPickerToggleComponent,
-    IgxPrefixDirective,
-    IgxSelectComponent,
-    IgxSelectItemComponent,
-    IgxTimePickerComponent,
-    IgxTooltipDirective,
-    IgxTooltipTargetDirective,
-    NgClass,
-    NgTemplateOutlet
-]
+        DatePipe,
+        FormsModule,
+        IgxButtonDirective,
+        IgxCheckboxComponent,
+        IgxChipComponent,
+        IgxComboComponent,
+        IgxComboHeaderDirective,
+        IgxDatePickerComponent,
+        IgxDateTimeEditorDirective,
+        IgxDialogComponent,
+        IgxDragIgnoreDirective,
+        IgxDropDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxDropDownItemNavigationDirective,
+        IgxFieldFormatterPipe,
+        IgxIconButtonDirective,
+        IgxIconComponent,
+        IgxInputDirective,
+        IgxInputGroupComponent,
+        IgxOverlayOutletDirective,
+        IgxPickerClearComponent,
+        IgxPickerToggleComponent,
+        IgxPrefixDirective,
+        IgxSelectComponent,
+        IgxSelectItemComponent,
+        IgxTimePickerComponent,
+        IgxTooltipDirective,
+        IgxTooltipTargetDirective,
+        NgClass,
+        NgTemplateOutlet
+    ]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
+    /**
+     * @hidden @internal
+     */
+    public _expressionTree: IExpressionTree;
+
+    /**
+     * @hidden @internal
+     */
+    public _expressionTreeCopy: IExpressionTree;
+
     /**
      * @hidden @internal
      */
@@ -285,8 +295,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChild('groupContextMenuDropDown', { read: IgxDropDownComponent })
     private groupContextMenuDropDown: IgxDropDownComponent;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChildren(IgxChipComponent, { read: IgxChipComponent })
-    private expressionsChips: QueryList<IgxChipComponent>;
+    public expressionsChips: QueryList<IgxChipComponent>;
 
     @ViewChild('editingInputsContainer', { read: ElementRef })
     protected set editingInputsContainer(value: ElementRef) {
@@ -456,7 +469,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _prevFocusedContainer: ElementRef;
     private _expandedExpressions: IFilteringExpression[] = [];
     private _fields: FieldType[];
-    private _expressionTree: IExpressionTree;
     private _locale;
     private _entityNewValue: EntityType;
     private _resourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
@@ -472,7 +484,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * Returns if the fields combo at the root level is disabled.
      */
-     public get disableReturnFieldsChange(): boolean {
+    public get disableReturnFieldsChange(): boolean {
 
         return !this.selectedEntity || this.queryBuilder.disableReturnFieldsChange;
     }
@@ -1031,7 +1043,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public dragService: IgxQueryBuilderDragService = new IgxQueryBuilderDragService(this, this.el, this.deleteItem, this.focusChipAfterDrag);
+    public dragService: IgxQueryBuilderDragService = new IgxQueryBuilderDragService(
+        this,
+        this.el,
+        this.deleteItem,
+        this.focusChipAfterDrag);
 
     /**
      * @hidden @internal
@@ -1134,8 +1150,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 expressionItem.expression.condition.name :
                 null;
         this.searchValue.value = expressionItem.expression.searchVal instanceof Set ?
-                                    Array.from(expressionItem.expression.searchVal) :
-                                    expressionItem.expression.searchVal;
+            Array.from(expressionItem.expression.searchVal) :
+            expressionItem.expression.searchVal;
 
         expressionItem.inEditMode = true;
         this._editedExpression = expressionItem;
@@ -1170,7 +1186,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             input?.focus();
         }
 
-        (this.editingInputs?.nativeElement.parentElement as HTMLElement)?.scrollIntoView({block: "nearest", inline: "nearest"});
+        (this.editingInputs?.nativeElement.parentElement as HTMLElement)?.scrollIntoView({ block: "nearest", inline: "nearest" });
     }
 
     /**
@@ -1310,7 +1326,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public invokeClick(eventArgs: KeyboardEvent) {
-        if (!this.dragService.dropGhostChipNode && this.platform.isActivationKey(eventArgs)) {
+        if (!this.dragService.dropGhostExpression && this.platform.isActivationKey(eventArgs)) {
             eventArgs.preventDefault();
             (eventArgs.currentTarget as HTMLElement).click();
         }
@@ -1542,7 +1558,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 return groupItem;
             }
 
-            for (let i = 0 ; i < expressionTree.filteringOperands.length; i++) {
+            for (let i = 0; i < expressionTree.filteringOperands.length; i++) {
                 const expr = expressionTree.filteringOperands[i];
 
                 if (isTree(expr)) {
