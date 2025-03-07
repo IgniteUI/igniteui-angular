@@ -150,6 +150,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     /** @hidden */
     public ngOnDestroy(): void {
+        super.baseDestroy();
         if (this._itemChanges$) {
             this._itemChanges$.unsubscribe();
         }

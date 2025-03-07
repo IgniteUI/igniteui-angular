@@ -215,7 +215,7 @@ describe('igxOverlay', () => {
     };
 
     describe('Pure Unit Test', () => {
-        configureTestSuite();
+        configureTestSuite({ checkLeaks: true });
         let mockElement: any;
         let mockElementRef: any;
         let mockApplicationRef: any;
@@ -297,6 +297,9 @@ describe('igxOverlay', () => {
             overlay = new IgxOverlayService(
                 mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
         });
+        afterEach(() => {
+            overlay.ngOnDestroy();
+        });
 
         it('Should set cursor to pointer on iOS', () => {
             mockPlatformUtil.isIOS = true;
@@ -365,7 +368,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Unit Tests: ', () => {
-        configureTestSuite();
+        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -1412,14 +1415,12 @@ describe('igxOverlay', () => {
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
+        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
             });
         }));
-        afterAll(() => {
-            TestBed.resetTestingModule();
-        });
         it('Should properly initialize Scroll Strategy - Block.', fakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
@@ -1589,7 +1590,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests: ', () => {
-        configureTestSuite();
+        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -3577,6 +3578,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests - Scroll Strategies: ', () => {
+        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -4441,6 +4443,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests p3 (IgniteUI components): ', () => {
+        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
