@@ -1158,7 +1158,7 @@
         display: flex;
         justify-content: space-between;
 
-        @if $variant != 'indigo' {
+        @if $variant == 'bootstrap' {
             &:nth-child(2) {
                 %date-inner-week-number {
                     border-start-start-radius: var-get($theme, 'week-number-border-radius');
@@ -1222,28 +1222,6 @@
         }
     }
 
-    %date-inner-week-number {
-        min-width: auto;
-        width: $date-size;
-        color: var-get($theme, 'week-number-foreground');
-        background: var-get($theme, 'week-number-background');
-
-        &::after {
-            display: none !important;
-        }
-
-        &::before {
-            content: '';
-            position: absolute;
-            background: var-get($theme, 'week-number-background');
-            //border-inline: rem(1px) solid var-get($theme, 'week-number-background');
-            inset-inline-start: rem(-1px);
-            inset-block-start: 100%;
-            height: calc($date-size / 2);
-            width: $date-size;
-        }
-    }
-
     %label-week-number {
         text-align: center;
 
@@ -1272,9 +1250,8 @@
                     position: absolute;
                     background: var-get($theme, 'week-number-background');
                     border-inline: rem(1px) solid var-get($theme, 'week-number-background');
-                    inset-inline-start: rem(-1px);
                     inset-block-start: 100%;
-                    height: 100%;
+                    height: calc(#{$date-view-row-gap} + #{rem(if($variant == 'indigo', 0px, 2px))});
                     width: $date-size;
                 }
             }
@@ -1505,6 +1482,29 @@
                 // By default initial size of the inner element is the same as the date size
                 width: $date-size;
                 height: $date-size;
+            }
+        }
+
+        &%date-inner-week-number {
+            min-width: auto;
+            width: $date-size;
+            color: var-get($theme, 'week-number-foreground');
+            background: var-get($theme, 'week-number-background');
+
+            // This is not an actual date and should not change it's border when changing the date border
+            border-color: var-get($theme, 'week-number-background');
+
+            &::after {
+                display: none !important;
+            }
+
+            &::before {
+                content: '';
+                position: absolute;
+                background: var-get($theme, 'week-number-background');
+                inset-block-start: 100%;
+                height: calc(#{$date-view-row-gap} + #{rem(if($variant == 'indigo', 0, 2px))});
+                width: $date-size;
             }
         }
     }
