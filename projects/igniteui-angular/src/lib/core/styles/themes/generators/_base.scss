@@ -77,6 +77,8 @@
     $theme: map.get($schema, '_meta', 'theme');
     $variant: map.get($schema, '_meta', 'variant');
 
+    @layer ig.base, ig.#{$theme};
+
     #{$scope} {
         --ig-size-small: 1;
         --ig-size-medium: 2;
@@ -134,13 +136,13 @@
         @include ripple($ripple-theme-map);
     }
 
-    @if is-used('igx-avatar', $exclude) {
-        $avatar-theme-map: avatar-theme(
-            $schema: $schema,
-        );
-        $avatar-theme-map: meta.call($theme-handler, $avatar-theme-map);
-        @include avatar($avatar-theme-map);
-    }
+    // @if is-used('igx-avatar', $exclude) {
+    //     $avatar-theme-map: avatar-theme(
+    //         $schema: $schema,
+    //     );
+    //     $avatar-theme-map: meta.call($theme-handler, $avatar-theme-map);
+    //     @include avatar($avatar-theme-map);
+    // }
 
     @if is-used('igx-action-strip', $exclude) {
         $action-strip-theme-map: action-strip-theme(
@@ -150,13 +152,13 @@
         @include action-strip($action-strip-theme-map);
     }
 
-    @if is-used('igx-badge', $exclude) {
-        $badge-theme-map: badge-theme(
-            $schema: $schema,
-        );
-        $badge-theme-map: meta.call($theme-handler, $badge-theme-map);
-        @include badge($badge-theme-map);
-    }
+    // @if is-used('igx-badge', $exclude) {
+    //     $badge-theme-map: badge-theme(
+    //         $schema: $schema,
+    //     );
+    //     $badge-theme-map: meta.call($theme-handler, $badge-theme-map);
+    //     @include badge($badge-theme-map);
+    // }
 
     @if is-used('igx-bottom-nav', $exclude) {
         $bottom-nav-theme-map: bottom-nav-theme(
@@ -198,13 +200,13 @@
         @include calendar($calendar-theme-map);
     }
 
-    @if is-used('igx-card', $exclude) {
-        $card-theme-map: card-theme(
-            $schema: $schema,
-        );
-        $card-theme-map: meta.call($theme-handler, $card-theme-map);
-        @include card($card-theme-map);
-    }
+    // @if is-used('igx-card', $exclude) {
+    //     $card-theme-map: card-theme(
+    //         $schema: $schema,
+    //     );
+    //     $card-theme-map: meta.call($theme-handler, $card-theme-map);
+    //     @include card($card-theme-map);
+    // }
 
     @if is-used('igx-carousel', $exclude) {
         $carousel-theme-map: carousel-theme(
@@ -318,21 +320,21 @@
         @include  css-vars($shape-chart-theme-map);
     }
 
-    @if is-used('igx-checkbox', $exclude) {
-        $checkbox-theme-map: checkbox-theme(
-            $schema: $schema,
-        );
-        $checkbox-theme-map: meta.call($theme-handler, $checkbox-theme-map);
-        @include checkbox($checkbox-theme-map);
-    }
+    // @if is-used('igx-checkbox', $exclude) {
+    //     $checkbox-theme-map: checkbox-theme(
+    //         $schema: $schema,
+    //     );
+    //     $checkbox-theme-map: meta.call($theme-handler, $checkbox-theme-map);
+    //     @include checkbox($checkbox-theme-map);
+    // }
 
-    @if is-used('igx-chip', $exclude) {
-        $chip-theme-map: chip-theme(
-            $schema: $schema,
-        );
-        $chip-theme-map: meta.call($theme-handler, $chip-theme-map);
-        @include chip($chip-theme-map);
-    }
+    // @if is-used('igx-chip', $exclude) {
+    //     $chip-theme-map: chip-theme(
+    //         $schema: $schema,
+    //     );
+    //     $chip-theme-map: meta.call($theme-handler, $chip-theme-map);
+    //     @include chip($chip-theme-map);
+    // }
 
     @if is-used('igx-column-actions', $exclude) {
         $column-actions-theme-map: column-actions-theme(
@@ -374,21 +376,21 @@
         @include date-range-picker($date-range-picker-theme-map);
     }
 
-    @if is-used('igx-dialog', $exclude) {
-        $dialog-theme-map: dialog-theme(
-            $schema: $schema,
-        );
-        $dialog-theme-map: meta.call($theme-handler, $dialog-theme-map);
-        @include dialog($dialog-theme-map);
-    }
+    // @if is-used('igx-dialog', $exclude) {
+    //     $dialog-theme-map: dialog-theme(
+    //         $schema: $schema,
+    //     );
+    //     $dialog-theme-map: meta.call($theme-handler, $dialog-theme-map);
+    //     @include dialog($dialog-theme-map);
+    // }
 
-    @if is-used('igx-divider', $exclude) {
-        $divider-theme-map: divider-theme(
-            $schema: $schema,
-        );
-        $divider-theme-map: meta.call($theme-handler, $divider-theme-map);
-        @include divider($divider-theme-map);
-    }
+    // @if is-used('igx-divider', $exclude) {
+    //     $divider-theme-map: divider-theme(
+    //         $schema: $schema,
+    //     );
+    //     $divider-theme-map: meta.call($theme-handler, $divider-theme-map);
+    //     @include divider($divider-theme-map);
+    // }
 
     @if is-used('igc-dockmanager', $exclude) {
         $dock-manager-theme-map: dock-manager-theme(
@@ -462,13 +464,13 @@
         @include highlight($highlight-theme-map);
     }
 
-    @if is-used('igx-icon', $exclude) {
-        $icon-theme-map: icon-theme(
-            $schema: $schema,
-        );
-        $icon-theme-map: meta.call($theme-handler, $icon-theme-map);
-        @include icon($icon-theme-map);
-    }
+    // @if is-used('igx-icon', $exclude) {
+    //     $icon-theme-map: icon-theme(
+    //         $schema: $schema,
+    //     );
+    //     $icon-theme-map: meta.call($theme-handler, $icon-theme-map);
+    //     @include icon($icon-theme-map);
+    // }
 
     @if is-used('igx-icon-button', $exclude) {
         $icon-button-theme-map: icon-button-theme(
@@ -486,13 +488,13 @@
         @include input-group($input-group-theme-map);
     }
 
-    @if is-used('igx-list', $exclude) {
-        $list-theme-map: list-theme(
-            $schema: $schema,
-        );
-        $list-theme-map: meta.call($theme-handler, $list-theme-map);
-        @include list($list-theme-map);
-    }
+    // @if is-used('igx-list', $exclude) {
+    //     $list-theme-map: list-theme(
+    //         $schema: $schema,
+    //     );
+    //     $list-theme-map: meta.call($theme-handler, $list-theme-map);
+    //     @include list($list-theme-map);
+    // }
 
     @if is-used('igx-label', $exclude) {
         $label-theme-map: label-theme(
@@ -502,21 +504,21 @@
         @include label($label-theme-map);
     }
 
-    @if is-used('igx-navbar', $exclude) {
-        $navbar-theme-map: navbar-theme(
-            $schema: $schema,
-        );
-        $navbar-theme-map: meta.call($theme-handler, $navbar-theme-map);
-        @include navbar($navbar-theme-map);
-    }
+    // @if is-used('igx-navbar', $exclude) {
+    //     $navbar-theme-map: navbar-theme(
+    //         $schema: $schema,
+    //     );
+    //     $navbar-theme-map: meta.call($theme-handler, $navbar-theme-map);
+    //     @include navbar($navbar-theme-map);
+    // }
 
-    @if is-used('igx-nav-drawer', $exclude) {
-        $navdrawer-theme-map: navdrawer-theme(
-            $schema: $schema,
-        );
-        $navdrawer-theme-map: meta.call($theme-handler, $navdrawer-theme-map);
-        @include navdrawer($navdrawer-theme-map);
-    }
+    // @if is-used('igx-nav-drawer', $exclude) {
+    //     $navdrawer-theme-map: navdrawer-theme(
+    //         $schema: $schema,
+    //     );
+    //     $navdrawer-theme-map: meta.call($theme-handler, $navdrawer-theme-map);
+    //     @include navdrawer($navdrawer-theme-map);
+    // }
 
     @if is-used('igx-overlay', $exclude) {
         $overlay-theme-map: overlay-theme(
@@ -550,13 +552,13 @@
         @include progress-linear($progress-linear-theme-map);
     }
 
-    @if is-used('igx-radio', $exclude) {
-        $radio-theme-map: radio-theme(
-            $schema: $schema,
-        );
-        $radio-theme-map: meta.call($theme-handler, $radio-theme-map);
-        @include radio($radio-theme-map);
-    }
+    // @if is-used('igx-radio', $exclude) {
+    //     $radio-theme-map: radio-theme(
+    //         $schema: $schema,
+    //     );
+    //     $radio-theme-map: meta.call($theme-handler, $radio-theme-map);
+    //     @include radio($radio-theme-map);
+    // }
 
     @if is-used('igx-query-builder', $exclude) {
         $query-builder-theme-map: query-builder-theme(
@@ -582,21 +584,21 @@
         @include slider($slider-theme-map);
     }
 
-    @if is-used('igx-snackbar', $exclude) {
-        $snackbar-theme-map: snackbar-theme(
-            $schema: $schema,
-        );
-        $snackbar-theme-map: meta.call($theme-handler, $snackbar-theme-map);
-        @include snackbar($snackbar-theme-map);
-    }
+    // @if is-used('igx-snackbar', $exclude) {
+    //     $snackbar-theme-map: snackbar-theme(
+    //         $schema: $schema,
+    //     );
+    //     $snackbar-theme-map: meta.call($theme-handler, $snackbar-theme-map);
+    //     @include snackbar($snackbar-theme-map);
+    // }
 
-    @if is-used('igx-switch', $exclude) {
-        $switch-theme-map: switch-theme(
-            $schema: $schema,
-        );
-        $switch-theme-map: meta.call($theme-handler, $switch-theme-map);
-        @include switch($switch-theme-map);
-    }
+    // @if is-used('igx-switch', $exclude) {
+    //     $switch-theme-map: switch-theme(
+    //         $schema: $schema,
+    //     );
+    //     $switch-theme-map: meta.call($theme-handler, $switch-theme-map);
+    //     @include switch($switch-theme-map);
+    // }
 
     @if is-used('igx-tabs', $exclude) {
         $tabs-theme-map: tabs-theme(
@@ -614,13 +616,13 @@
         @include stepper($stepper-theme-map);
     }
 
-    @if is-used('igx-toast', $exclude) {
-        $toast-theme-map: toast-theme(
-            $schema: $schema,
-        );
-        $toast-theme-map: meta.call($theme-handler, $toast-theme-map);
-        @include toast($toast-theme-map);
-    }
+    // @if is-used('igx-toast', $exclude) {
+    //     $toast-theme-map: toast-theme(
+    //         $schema: $schema,
+    //     );
+    //     $toast-theme-map: meta.call($theme-handler, $toast-theme-map);
+    //     @include toast($toast-theme-map);
+    // }
 
     @if is-used('igx-tooltip', $exclude) {
         $tooltip-theme-map: tooltip-theme(

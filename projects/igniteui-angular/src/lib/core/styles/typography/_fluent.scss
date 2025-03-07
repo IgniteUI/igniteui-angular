@@ -48,18 +48,18 @@
         picker-date: 'subtitle-2',
         content: 'body-1',
     ));
-    @include card-typography($categories: (
-        title: 'subtitle-1',
-        title-small: 'subtitle-2',
-        subtitle: 'body-2',
-        content: 'body-2'
-    ));
+    // @include card-typography($categories: (
+    //     title: 'subtitle-1',
+    //     title-small: 'subtitle-2',
+    //     subtitle: 'body-2',
+    //     content: 'body-2'
+    // ));
     @include checkbox-typography($categories: (
         label: 'body-2'
     ));
-    @include chip-typography($categories: (
-        text: 'subtitle-2'
-    ));
+    // @include chip-typography($categories: (
+    //     text: 'subtitle-2'
+    // ));
     @include column-actions-typography();
     @include date-range-typography();
     @include dialog-typography($categories: (
@@ -84,26 +84,26 @@
         input-text: 'body-2'
     ));
     @include linear-bar-typography();
-    @include list-typography($categories: (
-        header: 'overline',
-        item: 'caption',
-        title: 'caption',
-        subtitle: 'caption'
-    ));
+    // @include list-typography($categories: (
+    //     header: 'overline',
+    //     item: 'caption',
+    //     title: 'caption',
+    //     subtitle: 'caption'
+    // ));
     @include navbar-typography($categories: (
         title: 'subtitle-2'
     ));
-    @include navdrawer-typography($categories: (
-        item: 'body-2',
-        header: 'subtitle-1'
-    ));
+    // @include navdrawer-typography($categories: (
+    //     item: 'body-2',
+    //     header: 'subtitle-1'
+    // ));
     @include radio-typography($categories: (
         label: 'body-2'
     ));
     @include slider-typography();
-    @include snackbar-typography($categories: (
-        text: 'caption'
-    ));
+    // @include snackbar-typography($categories: (
+    //     text: 'caption'
+    // ));
     @include switch-typography($categories: (
         label: 'body-2'
     ));
@@ -112,9 +112,9 @@
     ));
     @include time-picker-typography();
     @include stepper-typography();
-    @include toast-typography($categories: (
-        text: 'caption'
-    ));
+    // @include toast-typography($categories: (
+    //     text: 'caption'
+    // ));
     @include tooltip-typography();
     @include tree-typography();
     @include label-typography($categories: (
