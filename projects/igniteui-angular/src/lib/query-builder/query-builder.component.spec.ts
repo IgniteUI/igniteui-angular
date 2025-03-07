@@ -2466,7 +2466,7 @@ describe('IgxQueryBuilder', () => {
       const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
 
-      let X = 100, Y = 95;
+      let X = 100, Y = 75;
 
       //pickup chip
       dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
@@ -2485,52 +2485,50 @@ describe('IgxQueryBuilder', () => {
       //Drag ghost up and down four times and check if drop ghost is rendered in the expected positions
       while (pass <= 4) {
         i += inc;
-        Y += 5 * inc;
+        Y += inc;
 
         QueryBuilderFunctions.dragMove(dragDir, X, Y);
-        tick(10);
+        tick();
         fix.detectChanges();
 
-        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
-        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
-        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
+        const [dropGhost, prevElement, nextElement] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
 
-        if (i < 8 && !ghostPositionVisits[0]) {
-          tick(50);
+        if (i < 40 && !ghostPositionVisits[0]) {
+          if (i <= 42) tick(50);
           if (!dropGhost) ghostPositionVisits[0] = true;
         }
 
-        if (i > 6 && i < 23 && !ghostPositionVisits[1]) {
-          if (dropGhost && !prevElement && nextElement == "OrderName  Equals  foo") ghostPositionVisits[1] = true;
+        if (i > 35 && i < 122 && !ghostPositionVisits[1]) {
+          if (dropGhost && !prevElement && nextElement == 'OrderName  Equals  foo') ghostPositionVisits[1] = true;
         }
 
-        if (i > 20 && i < 35 && !ghostPositionVisits[2]) {
-          if (dropGhost && prevElement == "OrderName  Equals  foo" && !nextElement) ghostPositionVisits[2] = true;
+        if (i > 120 && i < 165 && !ghostPositionVisits[2]) {
+          if (dropGhost && prevElement == 'OrderName  Equals  foo' && nextElement === 'or  OrderName  Ends With  a  OrderDate  Today') ghostPositionVisits[2] = true;
         }
 
-        if (i > 31 && i < 40 && !ghostPositionVisits[3]) {
-          if (dropGhost && !prevElement && nextElement == "OrderName  Ends With  a") ghostPositionVisits[3] = true;
+        if (i > 166 && i < 201 && !ghostPositionVisits[3]) {
+          if (dropGhost && !prevElement && nextElement == 'OrderName  Ends With  a') ghostPositionVisits[3] = true;
         }
 
-        if (i > 36 && i < 47 && !ghostPositionVisits[4]) {
-          if (dropGhost && prevElement == "OrderName  Ends With  a" && !nextElement) ghostPositionVisits[4] = true;
+        if (i > 202 && i < 241 && !ghostPositionVisits[4]) {
+          if (dropGhost && prevElement == 'OrderName  Ends With  a' && nextElement === 'OrderDate  Today') ghostPositionVisits[4] = true;
         }
 
-        if (i > 44 && i < 57 && !ghostPositionVisits[5]) {
-          if (dropGhost && prevElement == "OrderDate  Today" && !nextElement) ghostPositionVisits[5] = true;
+        if (i > 240 && i < 273 && !ghostPositionVisits[5]) {
+          if (dropGhost && prevElement == 'OrderDate  Today' && !nextElement) ghostPositionVisits[5] = true;
         }
 
-        if (i > 54 && i < 64 && !ghostPositionVisits[6]) {
-          if (pass > 2 || (dropGhost && prevElement == "or  OrderName  Ends With  a  OrderDate  Today" && !nextElement)) ghostPositionVisits[6] = true;
+        if (i > 256 && i < 316 && !ghostPositionVisits[6]) {
+          if (pass > 2 || (dropGhost && prevElement == 'or  OrderName  Ends With  a  OrderDate  Today' && !nextElement)) ghostPositionVisits[6] = true;
         }
 
-        if (i > 62 && !ghostPositionVisits[7]) {
-          tick(50);
+        if (i > 300 && !ghostPositionVisits[7]) {
+          if (i >= 318) tick(50);
           if (!dropGhost) ghostPositionVisits[7] = true;
         }
 
         //When dragged to the end, check results and reverse direction for next pass
-        if (i === 65 || i === 0) {
+        if (i === 320 || i === 0) {
           expect(ghostPositionVisits).not.toContain(false,
             `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()} on pass:${pass}`);
 
