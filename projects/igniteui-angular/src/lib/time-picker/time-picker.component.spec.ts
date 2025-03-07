@@ -36,7 +36,6 @@ const CSS_CLASS_SECONDSLIST = '.igx-time-picker__secondsList';
 const CSS_CLASS_AMPMLIST = 'igx-time-picker__ampmList';
 const CSS_CLASS_SELECTED_ITEM = '.igx-time-picker__item--selected';
 const CSS_CLASS_HEADER_HOUR = '.igx-time-picker__header-hour';
-const CSS_CLASS_OVERLAY = 'igx-overlay';
 const CSS_CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const TIME_PICKER_TOGGLE_ICON = 'access_time';
 const TIME_PICKER_CLEAR_ICON = 'clear';
@@ -937,7 +936,6 @@ describe('IgxTimePicker', () => {
                 expect(document.activeElement.children[3].innerHTML.trim()).toBe('10');
             });
 
-
             it('should navigate through items with arrow keys', () => {
                 timePicker.itemsDelta = { hours: 4, minutes: 7, seconds: 1 };
                 fixture.detectChanges();
@@ -1087,6 +1085,51 @@ describe('IgxTimePicker', () => {
                 expect(selectedMinutes).toEqual('00');
                 expect(selectedAMPM).toEqual('AM');
             });
+
+            it('should not reset the time when clicking on AM/PM - GH#15158', fakeAsync(() => {
+                timePicker.itemsDelta = { hours: 1, minutes: 15, seconds: 1 };
+                timePicker.mode = "dialog";
+
+                timePicker.open();
+                fixture.detectChanges();
+
+                const amElement = ampmColumn.query(e => e.nativeElement.textContent === 'AM');
+                const pmElement = ampmColumn.query(e => e.nativeElement.textContent === 'PM');
+
+                UIInteractions.simulateClickEvent(amElement.nativeElement);
+                fixture.detectChanges();
+
+                let selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
+                let selectedHour = selectedItems[0].nativeElement.innerText;
+                let selectedMinutes = selectedItems[1].nativeElement.innerText;
+                let selectedAMPM = selectedItems[2].nativeElement.innerText;
+
+                expect(selectedHour).toBe('11');
+                expect(selectedMinutes).toEqual('45');
+                expect(selectedAMPM).toEqual('AM');
+
+                UIInteractions.simulateClickEvent(pmElement.nativeElement); // move to the PM element
+                fixture.detectChanges();
+                UIInteractions.simulateClickEvent(pmElement.nativeElement); // click again to reproduce the issue
+                fixture.detectChanges();
+
+                selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
+                selectedHour = selectedItems[0].nativeElement.innerText;
+                selectedMinutes = selectedItems[1].nativeElement.innerText;
+
+                expect(selectedItems[2]).toBeDefined(); // if the minutes column has no elements, this will be undefined
+                selectedAMPM = selectedItems[2].nativeElement.innerText;
+                expect(selectedHour).toBe('11');
+                expect(selectedMinutes).toEqual('45');
+                expect(selectedAMPM).toEqual('PM');
+
+                // ensure there is content in each element of the spinners
+                // '08', '09', '10', '11', '12', '01', '02'
+                expect(hourColumn.queryAll(By.css('span')).every(e => !!e.nativeElement.innerText)).toBeTrue();
+
+                // '00', '15', '30', '45', '', '', '' - three empty elements to align the minutes spinner length with the hours spinner length
+                expect(minutesColumn.queryAll(By.css('span')).filter(e => !!e.nativeElement.innerText).length).toEqual(4);
+            }));
         });
 
         describe('Rendering tests', () => {
