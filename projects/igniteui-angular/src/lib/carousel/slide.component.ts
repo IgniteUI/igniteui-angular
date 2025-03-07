@@ -54,7 +54,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * ```
      *
      * @memberof IgxSlideComponent
-     * @deprecated in version 19.1.0.
+     * @deprecated in version 19.2.0.
      */
     @HostBinding('attr.tabindex')
     public get tabIndex() {
