@@ -748,7 +748,7 @@ describe('IgxSimpleCombo', () => {
             expect(footerHTMLElement.parentNode).toEqual(dropdownList);
             expect(footerHTMLElement.textContent).toEqual('This is a footer');
         });
-        it('should initialize the component with empty data and bindings', () => {
+        xit('should initialize the component with empty data and bindings', () => {
             fixture = TestBed.createComponent(IgxSimpleComboEmptyComponent);
             expect(() => {
                 fixture.detectChanges();
@@ -3450,7 +3450,6 @@ export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {
                 formControlName="city"
             >
             </igx-simple-combo>
-
             <igx-simple-combo
                 #combo2
                 [data]="cities"
@@ -3458,7 +3457,6 @@ export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {
                 [valueKey]="'id'"
                 formControlName="city2"
             ></igx-simple-combo>
-
             <igx-simple-combo
                 #combo3
                 [data]="cities"

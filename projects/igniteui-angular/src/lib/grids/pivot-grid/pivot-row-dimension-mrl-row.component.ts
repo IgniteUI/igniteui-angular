@@ -14,10 +14,10 @@ import {
 } from '@angular/core';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
-import { IPivotDimension, IPivotDimensionData, IPivotGridRecord } from './pivot-grid.interface';
-import { NgFor } from '@angular/common';
+import { IPivotDimension, IPivotDimensionData, IPivotGridHorizontalGroup, IPivotGridRecord } from './pivot-grid.interface';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridHorizontalRowCellMerging } from './pivot-grid.pipes';
+import { PivotUtil } from './pivot-util';
 
 /**
  *
@@ -31,7 +31,7 @@ import { IgxPivotGridHorizontalRowCellMerging } from './pivot-grid.pipes';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-mrl-row',
     templateUrl: './pivot-row-dimension-mrl-row.component.html',
-    imports: [NgFor, IgxPivotRowDimensionContentComponent, IgxPivotGridHorizontalRowCellMerging]
+    imports: [IgxPivotRowDimensionContentComponent, IgxPivotGridHorizontalRowCellMerging]
 })
 export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowComponent {
 
@@ -114,5 +114,11 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
             }
         }
         return resWidth;
+    }
+
+    protected getGroupKey(group: IPivotGridHorizontalGroup) {
+        const rec = group.records[0];
+        const key = PivotUtil.getRecordKey(rec, group.rootDimension);
+        return key;
     }
 }

@@ -2,13 +2,16 @@
     <button igxButton="outlined" (click)="saveState()">SAVE STATE</button>
     <button igxButton="contained" (click)="restoreState()">RESTORE STATE</button>
     <igx-grid igxGridState #grid1 [data]="data" [width]="'820px'" [height]="'700px'" [autoGenerate]='false' [moving]="true">
-        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
-            [hidden]='c.hidden' [sortable]="true" [groupable]="true" [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
-        </igx-column>
+        @for (c of columns; track c) {
+            <igx-column [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
+                [hidden]='c.hidden' [sortable]="true" [groupable]="true" [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
+            </igx-column>
+        }
         <igx-column field='Salary' [sortable]="true" [groupable]="true" [editable]="true" [hasSummary]="true" >
             <ng-template igxCell let-cell="cell">
-                <div *ngIf='cell.value > 1000'>{{ cell.value}}</div>
-                
+                @if (cell.value > 1000) {
+                    <div>{{ cell.value}}</div>
+                }
             </ng-template>
         </igx-column>
         <!-- <igx-column-layout field='group2'>
@@ -29,8 +32,12 @@
     <br />
     <ng-template igxGridDetail let-dataItem #detailTemplate>
         <div>
-            <div *ngIf='true'>Test</div>
-            <div *ngIf="dataItem.Country"><span class='categoryStyle'>Country:</span> {{dataItem.Country}}</div>
+            @if (true) {
+                <div>Test</div>
+            }
+            @if (dataItem.Country) {
+                <div><span class='categoryStyle'>Country:</span> {{dataItem.Country}}</div>
+            }
             <div><span class='categoryStyle'>City:</span> {{dataItem.City}}</div>
             <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
         </div>

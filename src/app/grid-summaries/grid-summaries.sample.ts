@@ -1,5 +1,4 @@
 import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
-import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
     IgxGridComponent,
@@ -30,7 +29,7 @@ class MySummary extends IgxNumberSummaryOperand {
         super();
     }
 
-    public override operate(data: any[], allData = [], fieldName?): IgxSummaryResult[] {
+    public override operate(_data: any[], allData = [], fieldName?): IgxSummaryResult[] {
         fieldName = fieldName === 'Sum' ? 'ReorderLevel' : fieldName;
         const result = super.operate(allData.map(r => r[fieldName]));
             result.push({
@@ -46,7 +45,7 @@ class MySummary extends IgxNumberSummaryOperand {
     selector: 'app-grid-summaries-sample',
     styleUrls: ['./grid-summaries.component.scss'],
     templateUrl: 'grid-summaries.sample.html',
-    imports: [IgxButtonGroupComponent, IgxGridComponent, NgIf, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxSummaryTemplateDirective, IgxPaginatorComponent, FormsModule, IgxSwitchComponent]
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxSummaryTemplateDirective, IgxPaginatorComponent, FormsModule, IgxSwitchComponent]
 })
 export class GridSummaryComponent implements OnInit {
     @HostBinding('style.--ig-size')

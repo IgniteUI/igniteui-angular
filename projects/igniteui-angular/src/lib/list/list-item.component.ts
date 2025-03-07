@@ -18,7 +18,7 @@ import {
 
 import { HammerGesturesManager } from '../core/touch';
 import { rem } from '../core/utils';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 /**
  * The Ignite UI List Item component is a container intended for row items in the Ignite UI for Angular List component.
@@ -39,7 +39,7 @@ import { NgIf, NgTemplateOutlet } from '@angular/common';
     selector: 'igx-list-item',
     templateUrl: 'list-item.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, NgTemplateOutlet]
+    imports: [NgTemplateOutlet]
 })
 export class IgxListItemComponent implements IListChild {
     /**
@@ -133,6 +133,7 @@ export class IgxListItemComponent implements IListChild {
     private lastPanDir = IgxListPanState.NONE;
 
     private _role: string = '';
+    private _selected = false;;
 
     /**
      * Gets the `panState` of a `list item`.
@@ -279,6 +280,30 @@ export class IgxListItemComponent implements IListChild {
 
     public set role(val: string) {
         this._role = val;
+    }
+
+    /**
+     * Sets/gets whether the `list item` is selected.
+     * Selection is only applied to non-header items.
+     * When selected, the CSS class 'igx-list__item-base--selected' is added to the item.
+     * ```html
+     * <igx-list-item [selected]="true">Selected Item</igx-list-item>
+     * ```
+     * ```typescript
+     * let isSelected = this.listItem.selected;
+     * this.listItem.selected = true;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    @HostBinding('class.igx-list__item-base--selected')
+    @Input({ transform: booleanAttribute })
+    public get selected() {
+        return this._selected && !this.isHeader;
+    }
+
+    public set selected(value: boolean) {
+        this._selected = value;
     }
 
     /**

@@ -26,6 +26,7 @@ import { CellType, ColumnType, GridType, IGX_GRID_BASE } from './common/grid.int
 import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { trackByIdentity } from '../core/utils';
 
 @Directive({
     selector: '[igxRowBaseComponent]',
@@ -599,4 +600,10 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         const dragIndicatorOff = this.grid.rowDragging && !this.dragging ? 'igx-grid__drag-indicator--off' : '';
         return `${defaultDragIndicatorCssClass} ${dragIndicatorOff}`;
     }
+
+    /**
+     * - state persistence switching all pinned columns resets collection
+     * - MRL unpinnedColumns igxFor modes entire child loop on unpin
+     */
+    protected trackPinnedColumn = trackByIdentity;
 }

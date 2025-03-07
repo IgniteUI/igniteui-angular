@@ -93,13 +93,13 @@ export class TabsShowcaseSampleComponent implements OnInit {
             },
         });
 
-        const { unsubscribe } = this.pcs.propertyChanges.subscribe(
+        const propertyChange = this.pcs.propertyChanges.subscribe(
             (properties) => {
                 this.properties = properties;
             }
         );
 
-        this.destroyRef.onDestroy(() => unsubscribe);
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
     public ngOnInit() {

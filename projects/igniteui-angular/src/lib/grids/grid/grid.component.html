@@ -2,7 +2,7 @@
 <ng-content select="igx-grid-toolbar,igc-grid-toolbar"></ng-content>
 
 <!-- Group-by area -->
-<ng-container *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)">
+@if (showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)) {
     <igx-grid-group-by-area #groupArea [style.flex-basis.px]="outerWidth"
         [grid]="this"
         [expressions]="groupingExpressions"
@@ -11,7 +11,7 @@
         [dropAreaMessage]="dropAreaMessage"
     >
     </igx-grid-group-by-area>
-</ng-container>
+}
 
 <!-- Grid table head row area -->
 <igx-grid-header-row class="igx-grid-thead" tabindex="0"
@@ -35,35 +35,41 @@
         (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]="totalHeight" [style.width.px]="calcWidth || null" #tbody [attr.aria-activedescendant]="activeDescendant">
-        <span *ngIf="moving && columnInDrag && pinnedColumns.length <= 0"
-            [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-            class="igx-grid__scroll-on-drag-left"></span>
-        <span *ngIf="moving && columnInDrag && pinnedColumns.length > 0"
-            [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-            class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-    <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null">
-    </ng-container>
-    <ng-template #pinnedRecordsTemplate>
-        <ng-container *ngIf="data
-        | gridTransaction:id:pipeTrigger
-        | visibleColumns:hasVisibleColumns
-        | gridAddRow:true:pipeTrigger
-        | gridRowPinning:id:true:pipeTrigger
-        | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-        | gridSort:sortingExpressions:groupingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData">
-            <div #pinContainer *ngIf="pinnedData.length > 0"
-                [ngClass]="{
-                    'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
-                    'igx-grid__tr--pinned-top': isRowPinningToTop
-                }"
-                class="igx-grid__tr--pinned" [style.width.px]="calcWidth">
-                <ng-container *ngFor="let rowData of pinnedData; let rowIndex = index">
-                    <ng-container *ngTemplateOutlet="pinned_record_template; context: getContext(rowData, rowIndex, true)">
-                    </ng-container>
-                </ng-container>
-            </div>
+        @if (moving && columnInDrag && pinnedColumns.length <= 0) {
+            <span
+                [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
+                class="igx-grid__scroll-on-drag-left"></span>
+        }
+        @if (moving && columnInDrag && pinnedColumns.length > 0) {
+            <span
+                [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
+                class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+        }
+        <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
-    </ng-template>
+        <ng-template #pinnedRecordsTemplate>
+            @if (data
+                | gridTransaction:id:pipeTrigger
+                | visibleColumns:hasVisibleColumns
+                | gridAddRow:true:pipeTrigger
+                | gridRowPinning:id:true:pipeTrigger
+                | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
+                | gridSort:sortingExpressions:groupingExpressions:sortStrategy:id:pipeTrigger:true; as pinnedData) {
+                @if (pinnedData.length > 0) {
+                    <div #pinContainer
+                        [ngClass]="{
+                            'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
+                            'igx-grid__tr--pinned-top': isRowPinningToTop
+                        }"
+                        class="igx-grid__tr--pinned" [style.width.px]="calcWidth">
+                        @for (rowData of pinnedData; track rowData; let rowIndex = $index) {
+                            <ng-container *ngTemplateOutlet="pinned_record_template; context: getContext(rowData, rowIndex, true)">
+                            </ng-container>
+                        }
+                    </div>
+                }
+            }
+        </ng-template>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
@@ -118,12 +124,12 @@
                 'igx-grid__tr-container--active': isDetailActive(rowIndex)
             }">
                 <div class="igx-grid__hierarchical-indent">
-                        <ng-container *ngIf="this.groupingExpressions.length > 0">
-                                <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
-                        </ng-container>
-                        <ng-template
-                    [ngTemplateOutlet]="detailTemplate"
-                    [ngTemplateOutletContext]="getDetailsContext(rowData, rowIndex)">
+                    @if (this.groupingExpressions.length > 0) {
+                        <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
+                    }
+                    <ng-template
+                        [ngTemplateOutlet]="detailTemplate"
+                        [ngTemplateOutletContext]="getDetailsContext(rowData, rowIndex)">
                     </ng-template>
                 </div>
             </div>
@@ -134,11 +140,15 @@
         <igc-trial-watermark></igc-trial-watermark>
     </div>
     <div igxToggle #loadingOverlay>
-        <igx-circular-bar [indeterminate]="true" *ngIf="shouldOverlayLoading">
-        </igx-circular-bar>
+        @if (shouldOverlayLoading) {
+            <igx-circular-bar [indeterminate]="true">
+            </igx-circular-bar>
+        }
     </div>
-    <span *ngIf="moving && columnInDrag" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
-        id="right" class="igx-grid__scroll-on-drag-right"></span>
+    @if (moving && columnInDrag) {
+        <span [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
+            id="right" class="igx-grid__scroll-on-drag-right"></span>
+    }
     <div [hidden]="!hasVerticalScroll()" class="igx-grid__tbody-scrollbar" [style.width.px]="scrollSize" (pointerdown)="$event.preventDefault()">
         <div class="igx-grid__tbody-scrollbar-start" [style.height.px]="isRowPinningToTop ? pinnedRowHeight : 0"></div>
         <div class="igx-grid__tbody-scrollbar-main" [style.height.px]="calcHeight">
@@ -158,11 +168,13 @@
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.height.px]="summaryRowHeight" #tfoot>
     <div tabindex="0" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" [attr.aria-activedescendant]="activeDescendant">
-        <igx-grid-summary-row [style.width.px]="calcWidth"  [style.height.px]="summaryRowHeight"
-            *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
-            [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
-            class="igx-grid__summaries" #summaryRow>
-        </igx-grid-summary-row>
+        @if (hasSummarizedColumns && rootSummariesEnabled) {
+            <igx-grid-summary-row [style.width.px]="calcWidth"  [style.height.px]="summaryRowHeight"
+                [gridID]="id" role="row"
+                [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
+                class="igx-grid__summaries" #summaryRow>
+            </igx-grid-summary-row>
+        }
         <div class="igx-grid__tfoot-thumb" [hidden]="!hasVerticalScroll()" [style.height.px]="summaryRowHeight"
             [style.width.px]="scrollSize"></div>
     </div>
@@ -185,18 +197,22 @@
 <ng-template #emptyFilteredGrid>
     <span class="igx-grid__tbody-message" role="cell">
         <span>{{emptyFilteredGridMessage}}</span>
-        <span *ngIf="showAddButton">
-            <ng-container *ngTemplateOutlet="addRowEmptyTemplate || defaultAddRowEmptyTemplate"></ng-container>
-        </span>
+        @if (showAddButton) {
+            <span>
+                <ng-container *ngTemplateOutlet="addRowEmptyTemplate || defaultAddRowEmptyTemplate"></ng-container>
+            </span>
+        }
     </span>
 </ng-template>
 
 <ng-template #defaultEmptyGrid>
     <span class="igx-grid__tbody-message" role="cell">
         <span>{{emptyGridMessage}}</span>
-        <span *ngIf="showAddButton">
-            <ng-container *ngTemplateOutlet="addRowEmptyTemplate || defaultAddRowEmptyTemplate"></ng-container>
-        </span>
+        @if (showAddButton) {
+            <span>
+                <ng-container *ngTemplateOutlet="addRowEmptyTemplate || defaultAddRowEmptyTemplate"></ng-container>
+            </span>
+        }
     </span>
 </ng-template>
 
@@ -226,7 +242,7 @@
     </igx-icon>
 </ng-template>
 
- <ng-template #defaultCollapsedTemplate>
+<ng-template #defaultCollapsedTemplate>
     <igx-icon
         family="default"
         name="unfold_more"
@@ -238,13 +254,15 @@
     ></igx-icon>
 </ng-template>
 
-<div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
-    <div [className]="bannerClass">
-        <ng-container
-            *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.endEdit.bind(this) }">
-        </ng-container>
+@if (rowEditable) {
+    <div igxToggle #rowEditingOverlay>
+        <div [className]="bannerClass">
+            <ng-container
+                *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.endEdit.bind(this) }">
+            </ng-container>
+        </div>
     </div>
-</div>
+}
 
 <ng-template #defaultRowEditText>
     {{ this.resourceStrings.igx_grid_row_edit_text | igxStringReplace:'{0}':rowChangesCount.toString() | igxStringReplace:'{1}':hiddenColumnsCount.toString() }}
@@ -277,7 +295,9 @@
     <igx-icon family="default" name="drag_indicator"></igx-icon>
 </ng-template>
 
-<igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
+@if (colResizingService.showResizer) {
+    <igx-grid-column-resizer></igx-grid-column-resizer>
+}
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 @if (platform.isElements) {
     <div #sink style="display: none;">

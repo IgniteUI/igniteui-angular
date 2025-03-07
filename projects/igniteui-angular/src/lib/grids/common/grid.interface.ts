@@ -302,13 +302,13 @@ export interface FieldType {
     header?: string;
     /* alternateType: GridColumnDataType */
     dataType: DataType;
-    editorOptions: IFieldEditorOptions;
-    filters: IgxFilteringOperand;
-    pipeArgs: IFieldPipeArgs;
-    defaultTimeFormat: string;
-    defaultDateTimeFormat: string;
+    editorOptions?: IFieldEditorOptions;
+    filters?: IgxFilteringOperand;
+    pipeArgs?: IFieldPipeArgs;
+    defaultTimeFormat?: string;
+    defaultDateTimeFormat?: string;
 
-    formatter(value: any, rowData?: any): any;
+    formatter?(value: any, rowData?: any): any;
 }
 
 /**
@@ -1489,4 +1489,12 @@ export interface IClipboardOptions {
      * The separator used for formatting the copy output. Defaults to `\t`.
      */
     separator: string;
+}
+
+/**
+ * An interface describing entity
+ */
+export interface EntityType {
+    name: string;
+    fields: FieldType[];
 }
