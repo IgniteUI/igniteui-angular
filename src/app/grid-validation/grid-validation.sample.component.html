@@ -17,9 +17,11 @@
                 <ng-template igxCellValidationError let-cell="cell" let-defaultErr="defaultErrorTemplate">
                     <ng-container *ngTemplateOutlet="defaultErr">
                     </ng-container>
-                    <div *ngIf="cell.validation.errors?.['forbiddenName']">
-                        This name is forbidden.
-                    </div>
+                    @if (cell.validation.errors?.['forbiddenName']) {
+                        <div>
+                            This name is forbidden.
+                        </div>
+                    }
                 </ng-template>
             </igx-column>
             <igx-column field="UnitPrice" required min="0" max="100" [editable]="true"></igx-column>
@@ -43,9 +45,11 @@
                 <ng-template igxCellValidationError let-cell="cell" let-defaultErr="defaultErrorTemplate">
                     <ng-container *ngTemplateOutlet="defaultErr">
                     </ng-container>
-                    <div *ngIf="cell.validation.errors?.['forbiddenName']">
-                        This name is forbidden.
-                    </div>
+                    @if (cell.validation.errors?.['forbiddenName']) {
+                        <div>
+                            This name is forbidden.
+                        </div>
+                    }
                 </ng-template>
             </igx-column>
             <igx-column field="UnitPrice" required min="0" max="100" [editable]="true"></igx-column>
@@ -66,21 +70,23 @@
     <article class="grid-row-edit-wrapper">
         <h4 class="sample-title">TreeGrid</h4>
         <igx-tree-grid #treegrid [data]="treeData" primaryKey="employeeID" [rowStyles]="rowStyles"
-        foreignKey="PID" [width]="'900px'" [height]="'800px'" [rowEditable]="true" [moving]="true">
-        <igx-column [field]="" [editable]="false">
-            <ng-template igxCell let-cell="cell">
-                {{cell.row.validation.status}}
-            </ng-template>
-        </igx-column>
-        <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
-            [groupable]="false" [resizable]="c.resizable" [width]="c.width.toString()"
-            [sortable]="true" [filterable]="true" [editable]="true" required>
-        </igx-column>
-        <igx-action-strip #actionstrip>
-            <igx-grid-editing-actions [addRow]="true" [addChild]="actionstrip.context?.treeRow.level < 1">
-            </igx-grid-editing-actions>
-        </igx-action-strip>
-    </igx-tree-grid>
+            foreignKey="PID" [width]="'900px'" [height]="'800px'" [rowEditable]="true" [moving]="true">
+            <igx-column [field]="" [editable]="false">
+                <ng-template igxCell let-cell="cell">
+                    {{cell.row.validation.status}}
+                </ng-template>
+            </igx-column>
+            @for (c of treeColumns; track c) {
+                <igx-column [field]="c.field" [dataType]="c.dataType" [header]="c.label"
+                    [groupable]="false" [resizable]="c.resizable" [width]="c.width.toString()"
+                    [sortable]="true" [filterable]="true" [editable]="true" required>
+                </igx-column>
+            }
+            <igx-action-strip #actionstrip>
+                <igx-grid-editing-actions [addRow]="true" [addChild]="actionstrip.context?.treeRow.level < 1">
+                </igx-grid-editing-actions>
+            </igx-action-strip>
+        </igx-tree-grid>
     </article>
 
 
@@ -88,18 +94,24 @@
         <h4 class="sample-title">Hierarchical Grid</h4>
         <igx-hierarchical-grid #hgrid [data]="hGridData" primaryKey="EmployeeID"
             [width]="'900px'" [height]="'550px'" [rowEditable]="true" [moving]="true">
-            <igx-column *ngFor="let c of hColumns" [field]="c.field" required [editable]="true">
-            </igx-column>
-            <igx-row-island [key]="'Orders'" [autoGenerate]="false">
-                <igx-column *ngFor="let c of hColumns2" [field]="c.field" required appForbiddenName="bob" [editable]="true">
-                    <ng-template igxCellValidationError let-cell="cell" let-defaultErr="defaultErrorTemplate">
-                        <ng-container *ngTemplateOutlet="defaultErr" >
-                        </ng-container>
-                        <div *ngIf="cell.validation.errors?.['forbiddenName']">
-                            This name is forbidden.
-                        </div>
-                    </ng-template>
+            @for (c of hColumns; track c) {
+                <igx-column [field]="c.field" required [editable]="true">
                 </igx-column>
+            }
+            <igx-row-island [key]="'Orders'" [autoGenerate]="false">
+                @for (c of hColumns2; track c) {
+                    <igx-column [field]="c.field" required appForbiddenName="bob" [editable]="true">
+                        <ng-template igxCellValidationError let-cell="cell" let-defaultErr="defaultErrorTemplate">
+                            <ng-container *ngTemplateOutlet="defaultErr" >
+                            </ng-container>
+                            @if (cell.validation.errors?.['forbiddenName']) {
+                                <div>
+                                    This name is forbidden.
+                                </div>
+                            }
+                        </ng-template>
+                    </igx-column>
+                }
             </igx-row-island>
         </igx-hierarchical-grid>
     </article>

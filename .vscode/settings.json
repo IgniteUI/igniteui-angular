@@ -1,5 +1,15 @@
 {
     "git.ignoreLimitWarning": true,
     "javascript.preferences.quoteStyle": "single",
-    "typescript.preferences.quoteStyle": "single"
+    "typescript.preferences.quoteStyle": "single",
+    "cSpell.words": [
+        "aria-describedby",
+        "aria-haspopup",
+        "aria-labelledby",
+        "ghostclass",
+        "groupable",
+        "groupby",
+        "maxlength",
+        "ungroup"
+    ]
 }
