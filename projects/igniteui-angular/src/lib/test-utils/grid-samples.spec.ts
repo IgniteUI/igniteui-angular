@@ -1967,8 +1967,8 @@ export class CollapsibleGroupsDynamicColComponent {
                 columnHeader: 'Second', collapsible: true, columns: [
                     { field: 'ContactTitle', type: 'string', visibleWhenCollapsed: true },
                     { field: 'Address', type: 'string', visibleWhenCollapsed: true },
-                    { field: 'PostlCode', type: 'string', visibleWhenCollapsed: false },
-                    { field: 'Contry', type: 'string', visibleWhenCollapsed: false }
+                    { field: 'PostalCode', type: 'string', visibleWhenCollapsed: false },
+                    { field: 'Country', type: 'string', visibleWhenCollapsed: false }
                 ]
             }
         ];
