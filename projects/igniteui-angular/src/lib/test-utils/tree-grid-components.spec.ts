@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { NgIf } from '@angular/common';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult, IPinningConfig, IgxColumnComponent } from '../grids/public_api';
@@ -96,10 +95,12 @@ export class IgxTreeGridFilteringESFTemplatesComponent {
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-tree-grid>
     `,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridSimpleComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -151,10 +152,12 @@ export class IgxTreeGridWithNoScrollsComponent {
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-tree-grid>
     `,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridPrimaryForeignKeyComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -402,10 +405,12 @@ export class IgxTreeGridWithNoForeignKeyComponent {
         <igx-column [field]="'HireDate'" dataType="date" [hasSummary]="true"></igx-column>
         <igx-column [field]="'Age'" dataType="number" [hasSummary]="true"></igx-column>
         <igx-column [field]="'OnPTO'" dataType="boolean" [hasSummary]="true"></igx-column>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-tree-grid>
     `,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridSummariesKeyComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -578,9 +583,11 @@ export class IgxTreeGridRowEditingHierarchicalDSTransactionComponent {
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
         <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-tree-grid>`,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridRowPinningComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -650,10 +657,12 @@ export class IgxTreeGridWrappedInContComponent {
         <igx-column [field]="'firstName'"></igx-column>
         <igx-column [field]="'lastName'"></igx-column>
         <igx-column [field]="'Salary'" dataType="number" [hasSummary]="true" ></igx-column>
-        <igx-paginator *ngIf="paging"></igx-paginator>
+        @if (paging) {
+            <igx-paginator></igx-paginator>
+        }
     </igx-tree-grid>
     `,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxTreeGridSummariesScrollingComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;

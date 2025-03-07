@@ -1,6 +1,7 @@
 import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, ChangeDetectorRef, Renderer2 } from '@angular/core';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { Subscription, fromEvent, takeUntil } from 'rxjs';
+import { Subscription, fromEvent } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnMovingService } from './moving.service';
 import { ColumnType } from '../common/grid.interface';

@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
@@ -12,7 +11,7 @@ import { IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent,
     selector: 'app-tree-grid-sample',
     styleUrls: ['tree-grid.sample.scss'],
     templateUrl: 'tree-grid.sample.html',
-    imports: [IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, NgIf, IgxPaginatorComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent]
+    imports: [IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxPaginatorComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 
 export class TreeGridSampleComponent implements OnInit {

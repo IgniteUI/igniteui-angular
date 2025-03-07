@@ -29,14 +29,14 @@ import {
     OnChanges,
     SimpleChanges
 } from '@angular/core';
-import { DOCUMENT, NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { first, take, takeUntil} from 'rxjs/operators';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { ColumnType, GridType, IGX_GRID_BASE, IgxColumnTemplateContext, RowType } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings, PivotRowLayoutType, PivotSummaryPosition } from './pivot-grid.interface';
@@ -151,6 +151,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         IgxGridSelectionService,
         IgxColumnResizingService,
         GridBaseAPIService,
+        { provide: IGX_GRID_SERVICE_BASE, useClass: GridBaseAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxPivotGridComponent },
         { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
         IgxPivotGridNavigationService,
@@ -159,8 +160,6 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         IgxForOfScrollSyncService
     ],
     imports: [
-        NgIf,
-        NgFor,
         NgClass,
         NgStyle,
         NgTemplateOutlet,
