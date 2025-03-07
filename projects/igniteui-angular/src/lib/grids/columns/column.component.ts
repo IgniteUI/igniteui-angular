@@ -527,7 +527,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this._maxWidth = value;
 
         this.grid.notifyChanges(true);
-        this.grid.cdr.detectChanges();
     }
     public get maxWidth(): string {
         return this._maxWidth;
@@ -985,7 +984,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         this._defaultMinWidth = value;
         this.grid.notifyChanges(true);
-        this.grid.cdr.detectChanges();
     }
     public get minWidth(): string {
         return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
