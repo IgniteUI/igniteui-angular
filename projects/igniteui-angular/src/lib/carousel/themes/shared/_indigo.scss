@@ -1,0 +1,144 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-carousel, indigo) {
+    %indigo-arrow {
+        width: rem(28px);
+        height: rem(28px);
+        border-width: rem(2px);
+        padding: initial;
+
+        igx-icon {
+            --component-size: 2;
+        }
+
+        &[igxButton].igx-button--focused {
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'indicator-focus-color');
+
+            igx-icon {
+                color: var-get($_theme, 'button-arrow-color');
+            }
+        }
+    }
+
+    @include e(arrow, $m: prev) {
+        @extend %indigo-arrow;
+    }
+    
+    @include e(arrow, $m: next) {
+        @extend %indigo-arrow;
+    }
+}
+
+@include themed-block(igx-carousel-indicators, indigo) {
+    @include m(start) {
+        gap: rem(4px);
+        padding: rem(6px);
+    }
+
+    @include m(end) {
+        gap: rem(4px);
+        padding: rem(6px);
+    }
+
+    @include m(focused) {
+        border: none;
+        box-shadow: 0 0 0 rem(3px) var-get($_theme, 'indicator-focus-color');
+
+        .igx-nav-dot--active {
+            border-color: var-get($_theme, 'indicator-active-dot-color');
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'indicator-focus-color');
+
+            &::after {
+                background: var-get($_theme, 'indicator-active-dot-color');
+            }
+
+            &:hover {
+                &::after {
+                    background: var-get($_theme, 'indicator-active-hover-dot-color');
+                }
+            }
+        }
+    }
+
+    @include m(vertical) {
+        margin-inline-end: rem(16px);
+        padding: rem(6px);
+    }
+
+    @include mx(vertical, start) {
+        margin-inline-start: rem(16px);
+    }
+}
+
+@include themed-block(igx-carousel-label-indicator, indigo) {
+    border-radius: rem(2px);
+    padding: rem(4px) rem(6px);
+    min-width: rem(28px);
+
+    @include m(vertical) {
+        padding: rem(4px) rem(6px);
+        margin-inline-end: rem(16px);
+    }
+}
+
+@include themed-block(igx-nav-dot, indigo) {
+    width: rem(16px);
+    height: rem(16px);
+    border: unset;
+
+    &::after {
+        width: rem(8px);
+        height: rem(8px);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        right: unset;
+        bottom: unset;
+        animation: none;
+    }
+
+    &:hover {
+        &::after {
+            background: var-get($_theme, 'indicator-hover-dot-color');
+        }
+
+        &::before {
+            position: absolute;
+            content: '';
+            width: inherit;
+            height: inherit;
+            border: rem(2px) solid var-get($_theme, 'indicator-hover-dot-color');
+            inset-inline-start: 0;
+            top: 0;
+            border-radius: border-radius(50%);
+        }
+    }
+
+    @include m(active) {
+        &::before {
+            position: absolute;
+            content: '';
+            width: inherit;
+            height: inherit;
+            border: rem(2px) solid var-get($_theme, 'indicator-active-dot-color');
+            inset-inline-start: 0;
+            top: 0;
+            border-radius: border-radius(50%);
+        }
+
+        &:hover {
+            &::after {
+                background: var-get($_theme, 'indicator-active-hover-dot-color');
+            }
+
+            &::before {
+                border-color: var-get($_theme, 'indicator-active-hover-dot-color');
+            }
+        }
+    }
+}

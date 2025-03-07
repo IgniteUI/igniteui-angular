@@ -59,7 +59,7 @@
 }
 
 @if (showIndicatorsLabel) {
-    <div [ngClass]="indicatorsClass" class="igx-carousel-label-indicator">
+    <div [ngClass]="indicatorsClass" class="igx-carousel-label-indicator" [class.igx-carousel-label-indicator--vertical]="isVertical">
         <span [id]="labelId" class="igx-carousel__label">{{getCarouselLabel}}</span>
     </div>
 }
