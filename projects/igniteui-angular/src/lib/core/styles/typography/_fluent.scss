@@ -35,9 +35,9 @@
 
 @mixin typography() {
     @include badge-typography();
-    @include banner-typography($categories: (
-        message: 'caption'
-    ));
+    // @include banner-typography($categories: (
+    //     message: 'caption'
+    // ));
     @include bottom-nav-typography();
     @include button-typography();
     @include button-group-typography();
