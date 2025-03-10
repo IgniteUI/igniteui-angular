@@ -1564,7 +1564,8 @@ describe('IgxGrid - Column properties #grid', () => {
             tick();
 
             let widths = grid.columns.map(x => x.width);
-            expect(widths).toEqual(['80px', '130px', '121px', '114px', '92px', '80px', '86px', '108px', '82px', '80px']);
+            // default min of 80px is disregarded for user-set widths, including auto.
+            expect(widths).toEqual(['68px', '130px', '121px', '114px', '92px', '72px', '86px', '108px', '82px', '69px']);
             fix.componentInstance.data = SampleTestData.contactInfoData();
             fix.detectChanges();
             tick();
