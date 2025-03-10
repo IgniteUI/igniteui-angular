@@ -3,9 +3,6 @@ import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 import { IgxIconButtonDirective } from '../../directives/button/icon-button.directive';
 
-/* blazorElement */
-/* wcElementTag: igc-grid-action-button */
-/* blazorIndirectRender */
 @Component({
     selector: 'igx-grid-action-button',
     templateUrl: 'grid-action-button.component.html',
