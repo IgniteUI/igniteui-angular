@@ -53,6 +53,7 @@ export class IgxFilteringOperand {
 
     /**
      * Returns an array of names of the conditions which are visible in the UI, including "In" and "Not In", allowing the creation of sub-queries.
+     * @hidden @internal
      */
     public extendedConditionList(): string[] {
         return this.operations.filter(f => !f.hidden).map((element) => element.name);
