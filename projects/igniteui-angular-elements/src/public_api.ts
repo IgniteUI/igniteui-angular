@@ -11,13 +11,14 @@ import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, Igx
 import { IgxPivotDateDimension } from 'projects/igniteui-angular/src/lib/grids/pivot-grid/pivot-grid-dimensions';
 import { PivotDimensionType } from 'projects/igniteui-angular/src/lib/grids/pivot-grid/pivot-grid.interface';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxTimeSummaryOperand } from 'projects/igniteui-angular/src/lib/grids/summaries/grid-summary';
+import { HorizontalAlignment, VerticalAlignment } from 'projects/igniteui-angular/src/lib/services/overlay/utilities';
 
 
 /** Export Public API, TODO: reorganize, Generate all w/ renames? */
 export {
     //Grids API
     FilteringExpressionsTree as IgcFilteringExpressionsTree,
-    FilteringLogic, // TODO: already exported by analyzer?
+    FilteringLogic,
     FilteringExpressionsTreeType,
     IgxFilteringOperand as IgcFilteringOperand,
     IgxBooleanFilteringOperand as IgcBooleanFilteringOperand,
@@ -48,5 +49,9 @@ export {
     RowPinningPosition,
     GridPagingMode,
     DropPosition,
-    PivotDimensionType
+    PivotDimensionType,
+
+    // overlay position settings (used in grids, paginator, toolbar)
+    HorizontalAlignment,
+    VerticalAlignment,
 }

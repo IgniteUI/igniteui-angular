@@ -1022,7 +1022,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         viewRef: ViewContainerRef,
         injector: Injector,
         envInjector: EnvironmentInjector,
-        navigation: IgxPivotGridNavigationService,
+        public override navigation: IgxPivotGridNavigationService,
         filteringService: IgxFilteringService,
         textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
@@ -1054,8 +1054,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             platform,
             _diTransactions);
     }
-
-    public override navigation: IgxPivotGridNavigationService;
 
     /**
      * @hidden
