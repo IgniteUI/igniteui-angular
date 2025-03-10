@@ -581,6 +581,33 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
 
 @Component({
     template: `
+    <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'" #hierarchicalGrid [moving]="true">
+        <igx-column field="ID" [sortable]="true" [resizable]="true"></igx-column>
+        <igx-column-group header="Location" [collapsible]="true">
+            <igx-column field="Address" [sortable]="true" [resizable]="true" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="City" [sortable]="true" [resizable]="true" [visibleWhenCollapsed]="false"></igx-column>
+            <igx-column field="City" [sortable]="true" [resizable]="true" [visibleWhenCollapsed]="true"></igx-column>
+        </igx-column-group>
+        <igx-row-island [key]="'ChildCompanies'" [autoGenerate]="false">
+            <igx-column field="CompanyName" [sortable]="true" [resizable]="true"></igx-column>
+            <igx-column-group header="Personal Details" [collapsible]="true">
+                <igx-column field="ContactName" [sortable]="true" [resizable]="true" [visibleWhenCollapsed]="true"></igx-column>
+                <igx-column field="ContactName" [sortable]="true" [resizable]="true" [visibleWhenCollapsed]="false"></igx-column>
+                <igx-column field="ContactTitle" [sortable]="true" [resizable]="true" [visibleWhenCollapsed]="false"></igx-column>
+            </igx-column-group>
+        </igx-row-island>
+    </igx-hierarchical-grid>
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridMCHCollapsibleComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    public data = HIERARCHICAL_SAMPLE_DATA;
+}
+
+@Component({
+    template: `
     <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'" #hierarchicalGrid>
         <igx-column field="CompanyName" [sortable]="true" [resizable]="true"></igx-column>
 
