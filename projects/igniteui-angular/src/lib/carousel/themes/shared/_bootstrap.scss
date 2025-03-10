@@ -6,7 +6,7 @@
 $_theme: $bootstrap;
 
 @include themed-block(igx-carousel, bootstrap) {
-    %bootstrap-arrow {
+    @include e(arrow) {
         &[igxButton].igx-button--focused {
             box-shadow: 0 0 0 rem(4px) var-get($_theme, 'button-focus-border-color');
             border-color: var-get($_theme, 'button-border-color');
@@ -15,14 +15,6 @@ $_theme: $bootstrap;
                 color: var-get($_theme, 'button-arrow-color');
             }
         }
-    }
-
-    @include e(arrow, $m: prev) {
-        @extend %bootstrap-arrow;
-    }
-
-    @include e(arrow, $m: next) {
-        @extend %bootstrap-arrow;
     }
 }
 

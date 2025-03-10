@@ -11,100 +11,6 @@ $_theme: $material;
     @include scale-in-center();
     @include scale-out-center();
 
-    %carousel-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 3;
-        outline: none;
-        user-select: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-width: unset;
-        width: rem(46px);
-        height: rem(46px);
-        cursor: pointer;
-        outline-style: none;
-        transition: all .15s ease-in-out;
-        background: var-get($_theme, 'button-background');
-        box-shadow: var-get($_theme, 'button-elevation');
-        border: rem(1px) solid var-get($_theme, 'button-border-color');
-        border-radius: var(--nav-btn-border-radius);
-
-        [dir='rtl'] & {
-            transform: scaleX(-1);
-        }
-
-        igx-icon {
-            --component-size: 1;
-            color: var-get($_theme, 'button-arrow-color');
-        }
-
-        &:hover {
-            background: var-get($_theme, 'button-hover-background');
-            border-color: var-get($_theme, 'button-hover-border-color');
-
-            igx-icon {
-                color: var-get($_theme, 'button-hover-arrow-color');
-            }
-        }
-
-        &[igxButton].igx-button--focused {
-            background: var-get($_theme, 'button-background');
-            border: rem(2px) solid var-get($_theme, 'button-focus-border-color');
-
-            igx-icon {
-                color: var-get($_theme, 'button-focus-border-color');
-            }
-        }
-
-        &[igxButton].igx-button--disabled {
-            background: var-get($_theme, 'button-disabled-background');
-            color: var-get($_theme, 'button-disabled-arrow-color');
-            border-color: var-get($_theme, 'button-disabled-border-color');
-            pointer-events: none;
-            box-shadow: none;
-
-            igx-icon {
-                color: currentColor;
-            }
-        }
-    }
-
-    %carousel-arrow--vertical {
-        inset-inline-start: unset;
-        inset-block-start: unset;
-        inset-inline-end: 0;
-        margin-inline-end: rem(16px);
-        transform: none;
-
-        igx-icon {
-            transform: rotate(90deg);
-        }
-    }
-
-    %indicators {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: rem(16px) 0;
-        padding: rem(4px) rem(6px);
-        gap: rem(8px);
-        list-style: none;
-        z-index: 10;
-        inset-inline-start: 50%;
-        transform: translateX(-50%);
-        background: var-get($_theme, 'indicator-background');
-        box-shadow: var-get($_theme, 'button-elevation');
-        border-radius: var-get($_theme, 'border-radius');
-
-        [dir='rtl'] & {
-            transform: translateX(50%);
-        }
-    }
-
     @include b(igx-carousel) {
         --nav-btn-border-radius: #{var-get($_theme, 'border-radius')};
 
@@ -130,31 +36,96 @@ $_theme: $material;
             align-items: center;
         }
 
-        @include e(arrow, $m: prev) {
-            @extend %carousel-arrow;
+        @include e(arrow) {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+            outline: none;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: unset;
+            width: rem(46px);
+            height: rem(46px);
+            cursor: pointer;
+            outline-style: none;
+            transition: all .15s ease-in-out;
+            background: var-get($_theme, 'button-background');
+            box-shadow: var-get($_theme, 'button-elevation');
+            border: rem(1px) solid var-get($_theme, 'button-border-color');
+            border-radius: var(--nav-btn-border-radius);
 
+            [dir='rtl'] & {
+                transform: scaleX(-1);
+            }
+
+            igx-icon {
+                --component-size: 1;
+                color: var-get($_theme, 'button-arrow-color');
+            }
+
+            &:hover {
+                background: var-get($_theme, 'button-hover-background');
+                border-color: var-get($_theme, 'button-hover-border-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'button-hover-arrow-color');
+                }
+            }
+
+            &[igxButton].igx-button--focused {
+                background: var-get($_theme, 'button-background');
+                border: rem(2px) solid var-get($_theme, 'button-focus-border-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'button-focus-border-color');
+                }
+            }
+
+            &[igxButton].igx-button--disabled {
+                background: var-get($_theme, 'button-disabled-background');
+                color: var-get($_theme, 'button-disabled-arrow-color');
+                border-color: var-get($_theme, 'button-disabled-border-color');
+                pointer-events: none;
+                box-shadow: none;
+
+                igx-icon {
+                    color: currentColor;
+                }
+            }
+        }
+
+        @include e(arrow, $m: prev) {
             inset-inline-start: 0;
             margin-inline-start: rem(16px);
         }
 
         @include e(arrow, $m: next) {
-            @extend %carousel-arrow;
-
             inset-inline-end: 0;
             margin-inline-end: rem(16px);
         }
 
         @include m(vertical) {
-            @include e(arrow, $m: prev) {
-                @extend %carousel-arrow--vertical;
+            @include e(arrow) {
+                inset-inline-start: unset;
+                inset-block-start: unset;
+                inset-inline-end: 0;
+                margin-inline-end: rem(16px);
+                transform: none;
 
+                igx-icon {
+                    transform: rotate(90deg);
+                }
+            }
+
+            @include e(arrow, $m: prev) {
                 inset-block-start: 0;
                 margin-block-start: rem(16px);
             }
     
             @include e(arrow, $m: next) {
-                @extend %carousel-arrow--vertical;
-
                 inset-block-end: 0;
                 margin-block-end: rem(16px);
             }
@@ -162,6 +133,25 @@ $_theme: $material;
     }
 
     @include b(igx-carousel-indicators) {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: rem(16px) 0;
+        padding: rem(4px) rem(6px);
+        gap: rem(8px);
+        list-style: none;
+        z-index: 10;
+        inset-inline-start: 50%;
+        transform: translateX(-50%);
+        background: var-get($_theme, 'indicator-background');
+        box-shadow: var-get($_theme, 'button-elevation');
+        border-radius: var-get($_theme, 'border-radius');
+
+        [dir='rtl'] & {
+            transform: translateX(50%);
+        }
+
         @include e(indicator) {
             display: flex;
             align-items: center;
@@ -174,12 +164,10 @@ $_theme: $material;
         }
 
         @include m(start) {
-            @extend %indicators;
             top: 0;
         }
 
         @include m(end) {
-            @extend %indicators;
             bottom: 0;
         }
 

@@ -6,7 +6,7 @@
 $_theme: $indigo;
 
 @include themed-block(igx-carousel, indigo) {
-    %indigo-arrow {
+    @include e(arrow) {
         width: rem(28px);
         height: rem(28px);
         border-width: rem(2px);
@@ -24,26 +24,11 @@ $_theme: $indigo;
             }
         }
     }
-
-    @include e(arrow, $m: prev) {
-        @extend %indigo-arrow;
-    }
-    
-    @include e(arrow, $m: next) {
-        @extend %indigo-arrow;
-    }
 }
 
 @include themed-block(igx-carousel-indicators, indigo) {
-    @include m(start) {
-        gap: rem(4px);
-        padding: rem(6px);
-    }
-
-    @include m(end) {
-        gap: rem(4px);
-        padding: rem(6px);
-    }
+    gap: rem(4px);
+    padding: rem(6px);
 
     @include m(focused) {
         border: none;

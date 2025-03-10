@@ -19,7 +19,7 @@
 @if (navigation && slides.length) {
     <button
         igxButton
-        class="igx-carousel__arrow--prev"
+        class="igx-carousel__arrow igx-carousel__arrow--prev"
         [attr.aria-label]="resourceStrings.igx_carousel_previous_slide"
         [disabled]="prevButtonDisabled"
         (click)="prev()"
@@ -31,7 +31,7 @@
 @if (navigation && slides.length) {
     <button
         igxButton
-        class="igx-carousel__arrow--next"
+        class="igx-carousel__arrow igx-carousel__arrow--next"
         [attr.aria-label]="resourceStrings.igx_carousel_next_slide"
         [disabled]="nextButtonDisabled"
         (click)="next()"

@@ -7,7 +7,7 @@ $_theme: $fluent;
 $btn-indent: rem(3px);
 
 @include themed-block(igx-carousel, fluent) {
-    %fluent-arrow {
+    @include e(arrow) {
         &[igxButton].igx-button--focused {
             border: none;
     
@@ -26,14 +26,6 @@ $btn-indent: rem(3px);
                 box-shadow: 0 0 0 rem(1px) var-get($_theme, 'button-focus-border-color');
             }
         }
-    }
-
-    @include e(arrow, $m: prev) {
-        @extend %fluent-arrow;
-    }
-
-    @include e(arrow, $m: next) {
-        @extend %fluent-arrow;
     }
 }
 

@@ -475,6 +475,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements IC
     /** @hidden */
     public get indicatorsClass() {
         return {
+            'igx-carousel-indicators': true,
             ['igx-carousel-indicators--focused']: this._hasKeyboardFocusOnIndicators,
             [`igx-carousel-indicators--${this.getIndicatorsClass()}`]: true,
             'igx-carousel-indicators--vertical': this.isVertical
