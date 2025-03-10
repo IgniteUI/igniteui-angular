@@ -2522,13 +2522,13 @@ describe('IgxQueryBuilder', () => {
           if (pass > 2 || (dropGhost && prevElement == 'or  OrderName  Ends With  a  OrderDate  Today' && !nextElement)) ghostPositionVisits[6] = true;
         }
 
-        if (i > 300 && !ghostPositionVisits[7]) {
-          if (i >= 318) tick(50);
+        if (i > 320 && !ghostPositionVisits[7]) {
+          if (i >= 340) tick(50);
           if (!dropGhost) ghostPositionVisits[7] = true;
         }
 
         //When dragged to the end, check results and reverse direction for next pass
-        if (i === 320 || i === 0) {
+        if (i === 350 || i === 0) {
           expect(ghostPositionVisits).not.toContain(false,
             `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()} on pass:${pass}`);
 
