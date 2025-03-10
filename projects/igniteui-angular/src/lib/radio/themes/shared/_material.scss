@@ -1,0 +1,45 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $material;
+
+@include themed-block(igx-radio, material) {
+    --size: #{rem(40px)};
+    --label-margin: #{rem(2px)};
+    --scale: scale(0.5);
+    --border-width: #{rem(2px)};
+    --horizontal-group-margin: #{rem(16px)};
+    --vertical-group-margin: 0;
+
+    @include e(composite) {
+        &::before,
+        &::after {
+            width: calc(var(--size) / 2);
+            height: calc(var(--size) / 2);
+            top: 25%;
+            inset-inline-start: 25%;
+        }
+    }
+
+    @include e(ripple) {
+        display: block;
+    }
+
+    @include e(label) {
+        @include type-style(subtitle-1) {
+            margin-block: 0;
+        }
+    }
+
+    @include m(invalid) {
+        &:hover,
+        &:active {
+            @include e(composite) {
+                border-color: var-get($_theme, 'error-color');
+            }
+        }
+    }
+}
