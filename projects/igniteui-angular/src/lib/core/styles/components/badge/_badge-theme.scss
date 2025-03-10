@@ -48,14 +48,13 @@
     }
 
     $theme: digest-schema($badge-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($icon-color) and $background-color {
-        $icon-color: text-contrast($background-color);
+        $icon-color: adaptive-contrast($background-color);
     }
 
     @if not($text-color) and $background-color {
-        $text-color: text-contrast($background-color);
+        $text-color: adaptive-contrast($background-color);
     }
 
     @if not($shadow) {
@@ -71,10 +70,6 @@
         border-radius: $border-radius,
         background-color: $background-color,
         shadow: $shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-        )),
     ));
 }
 
@@ -84,7 +79,7 @@
 @mixin badge($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     %igx-badge-display {
         --size: #{rem(22px)};
