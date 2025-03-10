@@ -61,7 +61,7 @@
 
     @if not($header-description-color) and $header-background {
         @if meta.type-of($header-background) == 'color' {
-            $header-description-color: rgba(text-contrast($header-background), .8);
+            $header-description-color: text-contrast($header-background, .8);
         }
     }
 
