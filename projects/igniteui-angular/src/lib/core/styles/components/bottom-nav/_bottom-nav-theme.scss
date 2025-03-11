@@ -51,42 +51,32 @@
 
     $theme: digest-schema($bottom-nav-schema);
 
-    $meta: map.get($theme, '_meta');
-
-    @if not($label-color) and $background {
-        @if meta.type-of($background) == 'color' {
-            $label-color: text-contrast($background);
-        }
+    @if not($label-color) and not($icon-color) and $background {
+        $label-color: adaptive-contrast($background);
     }
 
     @if not($icon-color) and $label-color {
-        @if meta.type-of($label-color) == 'color' {
-            $icon-color: $label-color;
-        }
+        $icon-color: $label-color;
+    }
+
+    @if not($label-color) and $icon-color {
+        $label-color: $icon-color;
     }
 
     @if not($icon-disabled-color) and $label-disabled-color {
-        @if meta.type-of($label-disabled-color) == 'color' {
-            $icon-disabled-color: $label-disabled-color;
-        }
+        $icon-disabled-color: $label-disabled-color;
     }
 
     @if not($label-disabled-color) and $icon-disabled-color {
-        @if meta.type-of($icon-disabled-color) == 'color' {
-            $label-disabled-color: $icon-disabled-color;
-        }
+        $label-disabled-color: $icon-disabled-color;
     }
 
     @if not($icon-selected-color) and $label-selected-color {
-        @if meta.type-of($background) == 'color' {
-            $icon-selected-color: $label-selected-color;
-        }
+        $icon-selected-color: $label-selected-color;
     }
 
-    @if not($icon-color) and $background {
-        @if meta.type-of($background) == 'color' {
-            $icon-color: text-contrast($background);
-        }
+    @if not($label-selected-color) and $icon-selected-color {
+        $label-selected-color: $icon-selected-color;
     }
 
     @if not($shadow) {
@@ -105,11 +95,6 @@
         label-disabled-color: $label-disabled-color,
         border-color: $border-color,
         shadow: $shadow,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
     ));
 }
 
@@ -119,7 +104,7 @@
 @mixin bottom-nav($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $menu-height: rem(56px);
     $item-min-width: rem(80px);
     $item-max-width: rem(168px);
