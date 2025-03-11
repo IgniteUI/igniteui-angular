@@ -21,19 +21,19 @@
 // import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
 // import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../test-utils/routing-view-components.spec';
 
-const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
-const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
-const KEY_HOME_EVENT = new KeyboardEvent('keydown', { key: 'Home', bubbles: true });
-const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true });
-const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
-const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
+// const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
+// const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
+// const KEY_HOME_EVENT = new KeyboardEvent('keydown', { key: 'Home', bubbles: true });
+// const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true });
+// const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
+// const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
 
 describe('IgxTabs', () => {
     //configureTestSuite();
 
-    const tabItemNormalCssClass = 'igx-tabs__header-item';
-    const tabItemSelectedCssClass = 'igx-tabs__header-item--selected';
-    const headerScrollCssClass = 'igx-tabs__header-scroll';
+    // const tabItemNormalCssClass = 'igx-tabs__header-item';
+    // const tabItemSelectedCssClass = 'igx-tabs__header-item--selected';
+    // const headerScrollCssClass = 'igx-tabs__header-scroll';
 
     beforeAll(waitForAsync(() => {
         // const testRoutes = [
