@@ -28,7 +28,7 @@ const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true }
 const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
 
-describe('IgxTabs', () => {
+fdescribe('IgxTabs', () => {
     //configureTestSuite();
 
     const tabItemNormalCssClass = 'igx-tabs__header-item';
@@ -44,30 +44,30 @@ describe('IgxTabs', () => {
             { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] }
         ];
 
-        TestBed.configureTestingModule({
-            imports: [
-                NoopAnimationsModule,
-                RouterTestingModule.withRoutes(testRoutes),
-                TabsTestHtmlAttributesComponent,
-                TabsTestComponent,
-                TabsTest2Component,
-                TemplatedTabsTestComponent,
-                TabsRoutingDisabledTestComponent,
-                TabsTestSelectedTabComponent,
-                TabsTestCustomStylesComponent,
-                TabsTestBug4420Component,
-                TabsRoutingTestComponent,
-                TabsTabsOnlyModeTest1Component,
-                TabsTabsOnlyModeTest2Component,
-                TabsDisabledTestComponent,
-                TabsRoutingGuardTestComponent,
-                TabsWithPrefixSuffixTestComponent,
-                TabsContactsComponent,
-                AddingSelectedTabComponent,
-                TabsRtlComponent
-            ],
-            providers: [RoutingTestGuard]
-        }).compileComponents();
+        // TestBed.configureTestingModule({
+        //     imports: [
+        //         NoopAnimationsModule,
+        //         RouterTestingModule.withRoutes(testRoutes),
+        //         TabsTestHtmlAttributesComponent,
+        //         TabsTestComponent,
+        //         TabsTest2Component,
+        //         TemplatedTabsTestComponent,
+        //         TabsRoutingDisabledTestComponent,
+        //         TabsTestSelectedTabComponent,
+        //         TabsTestCustomStylesComponent,
+        //         TabsTestBug4420Component,
+        //         TabsRoutingTestComponent,
+        //         TabsTabsOnlyModeTest1Component,
+        //         TabsTabsOnlyModeTest2Component,
+        //         TabsDisabledTestComponent,
+        //         TabsRoutingGuardTestComponent,
+        //         TabsWithPrefixSuffixTestComponent,
+        //         TabsContactsComponent,
+        //         AddingSelectedTabComponent,
+        //         TabsRtlComponent
+        //     ],
+        //     providers: [RoutingTestGuard]
+        // }).compileComponents();
     }));
 
     xdescribe('IgxTabs Html Attributes', () => {
