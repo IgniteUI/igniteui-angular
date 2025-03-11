@@ -28,7 +28,7 @@ const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true }
 const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
 
-xdescribe('IgxTabs', () => {
+describe('IgxTabs', () => {
     configureTestSuite();
 
     const tabItemNormalCssClass = 'igx-tabs__header-item';
@@ -70,7 +70,7 @@ xdescribe('IgxTabs', () => {
         }).compileComponents();
     }));
 
-    describe('IgxTabs Html Attributes', () => {
+    xdescribe('IgxTabs Html Attributes', () => {
         let fixture;
 
         beforeEach(waitForAsync(() => {
@@ -103,7 +103,7 @@ xdescribe('IgxTabs', () => {
         }));
     });
 
-    describe('IgxTabs Component with static Panels Definitions', () => {
+    xdescribe('IgxTabs Component with static Panels Definitions', () => {
         let fixture;
         let tabs;
 
@@ -352,7 +352,7 @@ xdescribe('IgxTabs', () => {
         }));
     });
 
-    describe('IgxTabs Component with custom content in headers', () => {
+    xdescribe('IgxTabs Component with custom content in headers', () => {
         let fixture;
         let tabs;
 
@@ -392,7 +392,7 @@ xdescribe('IgxTabs', () => {
 
     });
 
-    describe('IgxTabs Miscellaneous Tests', () => {
+    xdescribe('IgxTabs Miscellaneous Tests', () => {
 
         it('check selection when tabs collection is modified', fakeAsync(() => {
             const fixture = TestBed.createComponent(TabsTest2Component);
@@ -502,7 +502,7 @@ xdescribe('IgxTabs', () => {
         }));
     });
 
-    describe('Routing Navigation Tests', () => {
+    xdescribe('Routing Navigation Tests', () => {
         let router;
         let location;
         let fixture;
@@ -837,7 +837,7 @@ xdescribe('IgxTabs', () => {
         }));
     });
 
-    describe('Tabs-only Mode With Initial Selection Set on TabItems Tests', () => {
+    xdescribe('Tabs-only Mode With Initial Selection Set on TabItems Tests', () => {
         let fixture;
         let tabsComp;
         let tabItems;
@@ -870,7 +870,7 @@ xdescribe('IgxTabs', () => {
         });
     });
 
-    describe('Tabs-only Mode With Initial Selection Set on Tabs Component Tests', () => {
+    xdescribe('Tabs-only Mode With Initial Selection Set on Tabs Component Tests', () => {
         let fixture;
         let tabsComp;
         let tabItems;
@@ -899,7 +899,7 @@ xdescribe('IgxTabs', () => {
 
     });
 
-    describe('Events', () => {
+    xdescribe('Events', () => {
         let fixture;
         let tabs;
         let tabItems;
@@ -908,7 +908,7 @@ xdescribe('IgxTabs', () => {
         let indexChangeSpy;
         let indexChangingSpy;
 
-        describe('', () => {
+        xdescribe('', () => {
             beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(TabsTestComponent);
                 fixture.detectChanges();
@@ -1045,7 +1045,7 @@ xdescribe('IgxTabs', () => {
             }));
         });
 
-        describe('& Routing', () => {
+        xdescribe('& Routing', () => {
             let router;
             let location;
             beforeEach(waitForAsync(() => {
@@ -1233,7 +1233,7 @@ xdescribe('IgxTabs', () => {
 
         });
     });
-    describe('', () => {
+    xdescribe('', () => {
         let fixture;
         let tabs;
         let tabItems;
@@ -1414,7 +1414,7 @@ xdescribe('IgxTabs', () => {
         expect(rightScrollButton.clientWidth).toBeFalsy();
     });
 
-    describe('IgxTabs RTL', () => {
+    xdescribe('IgxTabs RTL', () => {
         let fix;
         let tabs;
         let tabItems;
