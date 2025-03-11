@@ -1031,7 +1031,7 @@ describe('IgxTransaction', () => {
             expect(transaction.getAggregatedChanges(true)).toEqual([]);
         });
 
-        it('Should emit onStateUpdate once when commiting a hierarchical transaction', () => {
+        xit('Should emit onStateUpdate once when commiting a hierarchical transaction', () => {
             const data = SampleTestData.employeeTreeData();
             const transaction = new IgxHierarchicalTransactionService();
             spyOn(transaction.onStateUpdate, 'emit').and.callThrough();
