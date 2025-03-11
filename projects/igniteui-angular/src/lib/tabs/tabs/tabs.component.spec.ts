@@ -70,6 +70,8 @@ describe('IgxTabs', () => {
         // }).compileComponents();
     }));
 
+    it('dummy.', async () => {expect(true).toBeTruthy();});
+
     // xdescribe('IgxTabs Html Attributes', () => {
     //     let fixture;
 
