@@ -1,16 +1,16 @@
 
- import {waitForAsync } from '@angular/core/testing';
+//  import {waitForAsync } from '@angular/core/testing';
 
-xdescribe('IgxTabs', () => {
+// xdescribe('IgxTabs', () => {
    
-    beforeAll(waitForAsync(() => {
+//     beforeAll(waitForAsync(() => {
         
-    }));
+//     }));
 
-    it('dummy.', async () => {
-        expect(true).toBeTruthy();
-    });
+//     it('dummy.', async () => {
+//         expect(true).toBeTruthy();
+//     });
 
-});
+// });
 
 
