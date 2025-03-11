@@ -10,7 +10,7 @@ import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxComboItemComponent } from './combo-item.component';
-import { DOCUMENT, NgIf } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 
 /** @hidden */
@@ -18,7 +18,7 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
     selector: 'igx-combo-drop-down',
     templateUrl: '../drop-down/drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }],
-    imports: [IgxToggleDirective, NgIf]
+    imports: [IgxToggleDirective]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
     /** @hidden @internal */

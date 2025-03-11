@@ -24,7 +24,8 @@ import {
     ListWithIgxForAndScrollingComponent,
     TwoHeadersListComponent,
     TwoHeadersListNoPanningComponent,
-    ListDirectivesComponent
+    ListDirectivesComponent,
+    ListWithSelectedItemComponent
 } from '../test-utils/list-components.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { wait } from '../test-utils/ui-interactions.spec';
@@ -44,7 +45,8 @@ describe('List', () => {
                 TwoHeadersListNoPanningComponent,
                 ListWithPanningTemplatesComponent,
                 ListWithIgxForAndScrollingComponent,
-                ListDirectivesComponent
+                ListDirectivesComponent,
+                ListWithSelectedItemComponent
             ]
         });
     });
@@ -660,6 +662,40 @@ describe('List', () => {
             expect(dItems[i].nativeElement).toEqual(pItems[i].element);
         }
     }));
+
+    it('should properly set and get the selected property of list items', () => {
+        const fixture = TestBed.createComponent(ListWithSelectedItemComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        // Get all list items
+        const items = list.children.toArray();
+        const headerItem = items[0];
+        const firstItem = items[1];
+        const secondItem = items[2];
+
+        // Verify initial selected state
+        expect(headerItem.selected).toBe(false); // Headers should never be selected even if selected=true
+        expect(firstItem.selected).toBe(true);
+        expect(secondItem.selected).toBe(false);
+
+        // Check if the selected class is applied correctly
+        expect(headerItem.element.classList.contains('igx-list__item-base--selected')).toBe(false);
+        expect(firstItem.element.classList.contains('igx-list__item-base--selected')).toBe(true);
+        expect(secondItem.element.classList.contains('igx-list__item-base--selected')).toBe(false);
+
+        // Change selected state programmatically
+        secondItem.selected = true;
+        fixture.detectChanges();
+        expect(secondItem.selected).toBe(true);
+        expect(secondItem.element.classList.contains('igx-list__item-base--selected')).toBe(true);
+
+        // Try to select a header item (should not apply)
+        headerItem.selected = true;
+        fixture.detectChanges();
+        expect(headerItem.selected).toBe(false);
+        expect(headerItem.element.classList.contains('igx-list__item-base--selected')).toBe(false);
+    });
 
     it('Initializes igxListThumbnail directive', () => {
         const fixture = TestBed.createComponent(ListDirectivesComponent);

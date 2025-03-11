@@ -35,7 +35,7 @@ import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxPrefixDirective } from '../../directives/prefix/prefix.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { NgIf, NgFor, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
+import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 
@@ -51,7 +51,7 @@ import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-header-row',
     templateUrl: './pivot-header-row.component.html',
-    imports: [NgIf, IgxDropDirective, IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent,
+    imports: [IgxDropDirective, IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent,
         IgxPrefixDirective, IgxBadgeComponent, IgxSuffixDirective, IgxDropDownItemNavigationDirective,
         NgTemplateOutlet, IgxGridHeaderGroupComponent, NgClass, NgStyle, IgxGridForOfDirective,
         IgxDropDownComponent, IgxDropDownItemComponent, IgxGridExcelStyleFilteringComponent,
@@ -66,7 +66,6 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     public filterDropdownDimensions: Set<any> = new Set<any>();
     public filterAreaDimensions: Set<any> = new Set<any>();
     private _dropPos = DropPosition.AfterDropTarget;
-    private valueData: Map<string, IPivotAggregator[]>;
     private _subMenuPositionSettings: PositionSettings = {
         verticalStartPoint: VerticalAlignment.Bottom,
         closeAnimation: undefined
@@ -188,7 +187,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
         if (columnDimensions.length === 0) {
             return 1;
         }
-        let totalDepth = columnDimensions.map(x => PivotUtil.getDimensionDepth(x) + 1).reduce((acc, val) => acc + val);
+        let totalDepth = columnDimensions.map(x => this.grid.data.length > 0 ? PivotUtil.getDimensionDepth(x) + 1 : 0).reduce((acc, val) => acc + val);
         if (this.grid.hasMultipleValues) {
             totalDepth += 1;
         }

@@ -1,5 +1,5 @@
 import { Component, Directive, ViewChild, Input } from '@angular/core';
-import { NgTemplateOutlet, NgIf, NgFor } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators, FormsModule } from '@angular/forms';
 
 import { data } from '../shared/data';
@@ -35,8 +35,6 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     styleUrls: [`grid-validation.sample.component.scss`],
     templateUrl: 'grid-validation.sample.component.html',
     imports: [
-        NgFor,
-        NgIf,
         NgTemplateOutlet,
         FormsModule,
         ForbiddenValidatorDirective,

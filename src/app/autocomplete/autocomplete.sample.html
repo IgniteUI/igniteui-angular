@@ -5,11 +5,15 @@
             [igxAutocomplete]='countryPanel'/>
     </igx-input-group>
     <igx-drop-down #countryPanel maxHeight="400px">
-        <igx-drop-down-item-group *ngFor="let continent of worldInfo | groupContains: travel.value.country" [label]="continent.name">
-            <igx-drop-down-item *ngFor="let country of continent.countries | contains: travel.value.country" [value]="country">
-                {{ country }}
-            </igx-drop-down-item>
-        </igx-drop-down-item-group>
+        @for (continent of worldInfo | groupContains: travel.value.country; track continent) {
+            <igx-drop-down-item-group [label]="continent.name">
+                @for (country of continent.countries | contains: travel.value.country; track country) {
+                    <igx-drop-down-item [value]="country">
+                        {{ country }}
+                    </igx-drop-down-item>
+                }
+            </igx-drop-down-item-group>
+        }
     </igx-drop-down>
     <igx-input-group type="box">
         <igx-prefix><igx-icon>insert_emoticon</igx-icon></igx-prefix>
@@ -17,12 +21,14 @@
             [igxAutocomplete]='attractionsPanel'/>
     </igx-input-group>
     <igx-drop-down #attractionsPanel [width]="attractionsWidth" maxHeight="300px">
-        <igx-drop-down-item *ngFor="let attraction of attractions | contains: travel.value.attraction" [value]="attraction.name">
-            <div class="dd-item">
-                <igx-icon class="dd-icon">{{attraction.image}}</igx-icon>
-                <span>{{attraction.name}}</span>
-            </div>
-        </igx-drop-down-item>
+        @for (attraction of attractions | contains: travel.value.attraction; track attraction) {
+            <igx-drop-down-item [value]="attraction.name">
+                <div class="dd-item">
+                    <igx-icon class="dd-icon">{{attraction.image}}</igx-icon>
+                    <span>{{attraction.name}}</span>
+                </div>
+            </igx-drop-down-item>
+        }
     </igx-drop-down>
     <igx-dialog #alert leftButtonLabel="OK" (leftButtonSelect)="alert.close()"></igx-dialog>
 

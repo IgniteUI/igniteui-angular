@@ -1,8 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
-import { getLocaleFirstDayOfWeek, NgIf, NgFor } from "@angular/common";
+import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { IgxButtonDirective } from '../../../directives/button/button.directive';
@@ -23,7 +23,7 @@ import { IgxIconButtonDirective } from '../../../directives/button/icon-button.d
 @Component({
     selector: 'igx-excel-style-date-expression',
     templateUrl: './excel-style-date-expression.component.html',
-    imports: [IgxSelectComponent, IgxPrefixDirective, NgIf, IgxIconComponent, NgFor, IgxSelectItemComponent, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxDateTimeEditorDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
+    imports: [IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxDateTimeEditorDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
 })
 export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultExpressionComponent {
     @ViewChild('input', { read: IgxInputDirective, static: false })
@@ -31,6 +31,15 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
 
     @ViewChild('picker')
     private picker: IgxDatePickerComponent | IgxTimePickerComponent;
+
+    @Input()
+    public get searchVal(): any {
+        return this.expressionUI.expression.searchVal;
+    }
+
+    public set searchVal(value: any) {
+        this.expressionUI.expression.searchVal = value ? new Date(Date.parse(value.toString())) : null;
+    }
 
     protected override get inputValuesElement() {
         return this.picker?.getEditElement() || this.input?.nativeElement;
