@@ -1393,25 +1393,25 @@ describe('IgxTabs', () => {
             expect(leftScrollButton.clientWidth).toBeFalsy();
             expect(rightScrollButton.clientWidth).toBeFalsy();
         });
-    });
 
-    it('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
-        const fixture = TestBed.createComponent(TabsContactsComponent);
-        const tabs = fixture.componentInstance.tabs;
-        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
-        fixture.detectChanges();
-
-        const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
-        const leftScrollButton = tabs.headerContainer.nativeElement.children[0];
-        expect(leftScrollButton.clientWidth).toBeTruthy();
-        expect(rightScrollButton.clientWidth).toBeTruthy();
-
-        fixture.componentInstance.contacts.splice(0, 1);
-        fixture.detectChanges();
-        await wait();
-
-        expect(leftScrollButton.clientWidth).toBeFalsy();
-        expect(rightScrollButton.clientWidth).toBeFalsy();
+        it('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
+            const fixture = TestBed.createComponent(TabsContactsComponent);
+            const tabs = fixture.componentInstance.tabs;
+            fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
+            fixture.detectChanges();
+    
+            const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
+            const leftScrollButton = tabs.headerContainer.nativeElement.children[0];
+            expect(leftScrollButton.clientWidth).toBeTruthy();
+            expect(rightScrollButton.clientWidth).toBeTruthy();
+    
+            fixture.componentInstance.contacts.splice(0, 1);
+            fixture.detectChanges();
+            await wait();
+    
+            expect(leftScrollButton.clientWidth).toBeFalsy();
+            expect(rightScrollButton.clientWidth).toBeFalsy();
+        });
     });
 
     describe('IgxTabs RTL', () => {
