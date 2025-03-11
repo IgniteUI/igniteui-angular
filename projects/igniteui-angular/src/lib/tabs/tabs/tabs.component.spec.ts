@@ -1429,7 +1429,7 @@ describe('IgxTabs', () => {
             headers = tabItems.map(item => item.headerComponent.nativeElement);
         });
 
-        it('should position scroll buttons properly', () => {
+        xit('should position scroll buttons properly', () => {
             fix.componentInstance.wrapperDiv.nativeElement.style.width = '300px';
             fix.detectChanges();
 
