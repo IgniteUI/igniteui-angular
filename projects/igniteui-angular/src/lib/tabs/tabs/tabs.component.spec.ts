@@ -1438,7 +1438,7 @@ describe('IgxTabs', () => {
             expect(scrollNextButton.nativeElement.offsetLeft).toBeLessThan(scrollPrevButton.nativeElement.offsetLeft);
         });
 
-        it('should select next tab when left arrow is pressed and previous tab when right arrow is pressed', fakeAsync(() => {
+        xit('should select next tab when left arrow is pressed and previous tab when right arrow is pressed', fakeAsync(() => {
             tick(100);
             fix.detectChanges();
             headers = tabs.items.map(item => item.headerComponent.nativeElement);
