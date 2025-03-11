@@ -1148,6 +1148,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return false;
     }
 
+    protected get emptyBottomSize() {
+        return this.totalHeight - (<any>this.verticalScroll).scrollComponent.size;
+    }
+
     /** @hidden @internal */
     public createFilterESF(dropdown: any, column: ColumnType, options: OverlaySettings, shouldReatach: boolean) {
         options.outlet = this.outlet;
@@ -1286,8 +1290,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /** @hidden @internal */
     public get pivotContentCalcWidth() {
-        const totalDimWidth = this.rowDimensions.length > 0 ?
-            this.rowDimensions.map((dim) => this.rowDimensionWidthToPixels(dim)).reduce((prev, cur) => prev + cur) :
+        if (!this.visibleRowDimensions.length) {
+            return Math.max(0, this.calcWidth - this.pivotRowWidths);
+        }
+
+        const totalDimWidth = this.visibleRowDimensions.length > 0 ?
+            this.visibleRowDimensions.map((dim) => this.rowDimensionWidthToPixels(dim)).reduce((prev, cur) => prev + cur) :
             0;
         return this.calcWidth - totalDimWidth;
     }
