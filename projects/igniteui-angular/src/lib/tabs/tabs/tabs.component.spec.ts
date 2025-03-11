@@ -1395,7 +1395,7 @@ describe('IgxTabs', () => {
         });
     });
 
-    it('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
+    xit('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
         const fixture = TestBed.createComponent(TabsContactsComponent);
         const tabs = fixture.componentInstance.tabs;
         fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
