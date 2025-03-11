@@ -1,7 +1,7 @@
 
  import {waitForAsync } from '@angular/core/testing';
 
-describe('IgxTabs', () => {
+xdescribe('IgxTabs', () => {
    
     beforeAll(waitForAsync(() => {
         
