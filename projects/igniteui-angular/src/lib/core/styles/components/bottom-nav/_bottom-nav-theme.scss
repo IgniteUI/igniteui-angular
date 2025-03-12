@@ -52,7 +52,7 @@
     $theme: digest-schema($bottom-nav-schema);
 
     @if not($label-color) and not($icon-color) and $background {
-        $label-color: adaptive-contrast($background);
+        $label-color: adaptive-contrast(var(--background));
     }
 
     @if not($icon-color) and $label-color {
@@ -61,6 +61,10 @@
 
     @if not($label-color) and $icon-color {
         $label-color: $icon-color;
+    }
+
+    @if not($icon-disabled-color) and not($label-disabled-color) and $label-color {
+        $label-disabled-color: adaptive-contrast(var(--background));
     }
 
     @if not($icon-disabled-color) and $label-disabled-color {
