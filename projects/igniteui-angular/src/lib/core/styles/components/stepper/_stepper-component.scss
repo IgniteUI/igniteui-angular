@@ -18,18 +18,6 @@
             @extend %igx-stepper__body !optional;
         }
 
-        @include m(horizontal) {
-            @extend %igx-stepper--horizontal !optional;
-
-            @include e(body-content) {
-                @extend %igx-stepper__body-content !optional;
-            }
-
-            @include e(body-content, $m: active) {
-                @extend %igx-stepper__body-content--active !optional;
-            }
-        }
-
         @include e(step) {
             @extend %igx-stepper__step !optional;
         }
@@ -96,6 +84,18 @@
 
         @include e(step, $m: end) {
             @extend %igx-stepper__step--end !optional;
+        }
+
+        @include m(horizontal) {
+            @extend %igx-stepper--horizontal !optional;
+
+            @include e(body-content) {
+                @extend %igx-stepper__body-content !optional;
+            }
+
+            @include e(body-content, $m: active) {
+                @extend %igx-stepper__body-content--active !optional;
+            }
         }
     }
 }

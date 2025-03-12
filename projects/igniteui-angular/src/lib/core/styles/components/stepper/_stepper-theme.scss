@@ -372,24 +372,24 @@
     $separator-title-top: calc(100% - ((#{$indicator-size} / 2) + #{$step-header-padding} + (#{$separator-size} / 2)));
     $separator-title-bottom: calc((#{$indicator-size} / 2) + #{$step-header-padding} - (#{$separator-size} / 2));
 
-    //%stepper-display,
-    //%igx-stepper__header,
-    //%igx-stepper__body,
+    %stepper-display,
+    %igx-stepper__header,
+    %igx-stepper__body,
     %igx-stepper__step {
         display: flex;
     }
 
-    //%stepper-display {
-    //    flex-direction: column;
-    //    width: 100%;
-    //}
+    %stepper-display {
+        flex-direction: column;
+        width: 100%;
+    }
 
-    //%igx-stepper__header {
-    //    white-space: nowrap;
-    //    flex-direction: column;
-    //    width: 100%;
-    //    flex: none;
-    //}
+    %igx-stepper__header {
+        white-space: nowrap;
+        flex-direction: column;
+        width: 100%;
+        flex: none;
+    }
 
     %igx-stepper__body {
         color: var-get($theme, 'content-foreground');
@@ -398,8 +398,8 @@
         flex: 1 1 auto;
     }
 
-    //%stepper-display,
-    //%igx-stepper__body,
+    %stepper-display,
+    %igx-stepper__body,
     %igx-stepper__step-header,
     %igx-stepper__step-title-wrapper {
         overflow: hidden;
@@ -643,26 +643,26 @@
         }
     }
 
-    //%igx-stepper__body-content {
-    //    display: block;
-    //    position: absolute;
-    //    inset: 0;
-    //    width: 100%;
-    //    height: 100%;
-    //    overflow-y: auto;
-    //    overflow-x: hidden;
-    //    z-index: -1;
-    //}
+    %igx-stepper__body-content {
+        display: block;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: -1;
+    }
 
-    //%igx-stepper__body-content,
-    %igx-stepper__step-content-wrapper, {
+    %igx-stepper__step-content-wrapper,
+    %igx-stepper__body-content {
         padding: rem(16px);
     }
 
-    //%igx-stepper__body-content--active {
-    //    z-index: 1;
-    //    position: relative;
-    //}
+    %igx-stepper__body-content--active {
+        z-index: 1;
+        position: relative;
+    }
 
     %igx-stepper__step-content-wrapper {
         margin-inline-start: $v-line-indent;
@@ -824,9 +824,9 @@
 
     // HORIZONTAL MODE START
     %igx-stepper--horizontal {
-        //%igx-stepper__header {
-        //    flex-direction: row;
-        //}
+        %igx-stepper__header {
+            flex-direction: row;
+        }
 
         %igx-stepper__step {
             overflow: hidden;
@@ -988,9 +988,9 @@
             text-align: center;
         }
 
-        //%igx-stepper__body-content {
-        //    display: flex;
-        //}
+        %igx-stepper__body-content {
+            display: flex;
+        }
     }
     // HORIZONTAL MODE END
 }
@@ -1039,8 +1039,8 @@
         }
     }
 
-    //%igx-stepper__body-content,
-    %igx-stepper__step-content-wrapper {
+    %igx-stepper__step-content-wrapper,
+    %igx-stepper__body-content {
         @include type-style($body-content) {
             margin-top: 0;
             margin-bottom: 0;
