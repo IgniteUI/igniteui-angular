@@ -6671,6 +6671,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this._columns && this._filteringExpressionsTree) {
                 this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
             }
+            if (this._columns && this._advancedFilteringExpressionsTree) {
+                this._advancedFilteringExpressionsTree = recreateTreeFromFields(this._advancedFilteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
+            }
         }
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
