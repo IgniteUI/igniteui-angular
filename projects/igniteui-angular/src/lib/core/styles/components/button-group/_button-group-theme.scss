@@ -125,11 +125,7 @@
 
     //background colors
     @if not($item-hover-background) and $item-background {
-        $item-hover-background: hsl(from var(--item-background) h s calc(l * 0.85));
-    }
-
-    @if not($item-focused-hover-background) and $item-hover-background {
-        $item-focused-hover-background: var(--item-hover-background);
+        $item-hover-background: hsl(from var(--item-background) h s calc(l * 0.9));
     }
 
     @if not($item-selected-background) and $item-background {
@@ -144,6 +140,14 @@
         $item-selected-focus-hover-background: var(--item-selected-hover-background);
     }
 
+    @if not($item-focused-background) and $item-background {
+        $item-focused-background: var(--item-hover-background);
+    }
+
+    @if not($item-focused-hover-background) and $item-hover-background {
+        $item-focused-hover-background: hsl(from var(--item-focused-background) h s calc(l * 0.9));
+    }
+
     @if not($disabled-background-color) and $item-background {
         $disabled-background-color: var(--item-background);
     }
@@ -154,7 +158,7 @@
 
     //border colors
     @if not($item-border-color) and $item-background {
-        $item-border-color: hsl(from var(--item-background) h s calc(l * 0.9));
+        $item-border-color: hsl(from var(--item-background) h s calc(l * 0.8));
     }
 
     @if not($item-hover-border-color) and $item-border-color {
