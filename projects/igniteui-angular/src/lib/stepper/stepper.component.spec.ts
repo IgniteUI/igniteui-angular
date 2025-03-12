@@ -338,14 +338,14 @@ describe('Rendering Tests', () => {
         });
 
         it('should indicate the currently active step', () => {
-            const step0Header = stepper.steps[0].nativeElement.querySelector(`.${STEP_HEADER}`);
-            const step1Header = stepper.steps[1].nativeElement.querySelector(`.${STEP_HEADER}`);
+            const step0 = stepper.steps[0].nativeElement;
+            const step1 = stepper.steps[1].nativeElement;
             const serviceExpandSpy = spyOn((stepper as any).stepperService, 'expand').and.callThrough();
 
             stepper.steps[0].active = true;
             fix.detectChanges();
 
-            expect(step0Header).toHaveClass(CURRENT_CLASS);
+            expect(step0).toHaveClass(CURRENT_CLASS);
 
             stepper.steps[1].active = true;
             stepper.steps[1].nativeElement.focus();
@@ -354,8 +354,8 @@ describe('Rendering Tests', () => {
             UIInteractions.triggerKeyDownEvtUponElem(' ', stepper.steps[1].nativeElement);
             fix.detectChanges();
 
-            expect(step0Header).not.toHaveClass(CURRENT_CLASS);
-            expect(step1Header).toHaveClass(CURRENT_CLASS);
+            expect(step0).not.toHaveClass(CURRENT_CLASS);
+            expect(step1).toHaveClass(CURRENT_CLASS);
             expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[1]);
         });
 
@@ -378,7 +378,7 @@ describe('Rendering Tests', () => {
         });
 
         it('should indicate that a step is invalid', () => {
-            const step0Header = stepper.steps[0].nativeElement.querySelector(`.${STEP_HEADER}`);
+            const step0Header = stepper.steps[0].nativeElement;
             stepper.steps[0].isValid = true;
             fix.detectChanges();
 
@@ -517,11 +517,11 @@ describe('Rendering Tests', () => {
         });
 
         it('should allow overriding the default invalid, completed and active indicators', () => {
-            const step0Header = stepper.steps[0].nativeElement.querySelector(`.${STEP_HEADER}`);
-            let indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
+            const step0 = stepper.steps[0].nativeElement;
+            let indicatorElement = step0.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
-            expect(step0Header).toHaveClass(CURRENT_CLASS);
+            expect(step0).not.toHaveClass(INVALID_CLASS);
+            expect(step0).toHaveClass(CURRENT_CLASS);
             expect(stepper.steps[0].nativeElement).not.toHaveClass(COMPLETED_CLASS);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('edit');
@@ -531,10 +531,10 @@ describe('Rendering Tests', () => {
             stepper.steps[1].active = true;
             fix.detectChanges();
 
-            indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
+            indicatorElement = step0.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header).toHaveClass(INVALID_CLASS);
-            expect(step0Header).not.toHaveClass(CURRENT_CLASS);
+            expect(step0).toHaveClass(INVALID_CLASS);
+            expect(step0).not.toHaveClass(CURRENT_CLASS);
             expect(stepper.steps[0].nativeElement).not.toHaveClass(COMPLETED_CLASS);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('error');
@@ -543,10 +543,10 @@ describe('Rendering Tests', () => {
             stepper.steps[0].completed = true;
             fix.detectChanges();
 
-            indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
+            indicatorElement = step0.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header).not.toHaveClass(INVALID_CLASS);
-            expect(step0Header).not.toHaveClass(CURRENT_CLASS);
+            expect(step0).not.toHaveClass(INVALID_CLASS);
+            expect(step0).not.toHaveClass(CURRENT_CLASS);
             expect(stepper.steps[0].nativeElement).toHaveClass(COMPLETED_CLASS);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('check');
