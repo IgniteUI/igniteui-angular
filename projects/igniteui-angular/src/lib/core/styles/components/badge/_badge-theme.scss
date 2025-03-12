@@ -50,11 +50,11 @@
     $theme: digest-schema($badge-schema);
 
     @if not($icon-color) and $background-color {
-        $icon-color: adaptive-contrast($background-color);
+        $icon-color: adaptive-contrast(var(--background-color));
     }
 
     @if not($text-color) and $background-color {
-        $text-color: adaptive-contrast($background-color);
+        $text-color: adaptive-contrast(var(--background-color));
     }
 
     @if not($shadow) {
