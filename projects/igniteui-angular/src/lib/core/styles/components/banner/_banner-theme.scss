@@ -45,11 +45,11 @@
     $theme: digest-schema($banner-schema);
 
     @if not($banner-message-color) and $banner-background {
-        $banner-message-color: adaptive-contrast($banner-background);
+        $banner-message-color: adaptive-contrast(var(--banner-background));
     }
 
     @if not($banner-illustration-color) and $banner-background {
-        $banner-illustration-color: adaptive-contrast($banner-background);
+        $banner-illustration-color: adaptive-contrast(var(--banner-background));
     }
 
     @return extend($theme, (
