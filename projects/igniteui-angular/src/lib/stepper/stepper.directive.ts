@@ -7,7 +7,7 @@ import { IgxStepperService } from './stepper.service';
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -28,7 +28,7 @@ export class IgxStepActiveIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -49,7 +49,7 @@ export class IgxStepCompletedIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -70,7 +70,7 @@ export class IgxStepInvalidIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -91,7 +91,7 @@ export class IgxStepIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -106,7 +106,7 @@ export class IgxStepIndicatorDirective { }
     standalone: true
 })
 export class IgxStepTitleDirective {
-    @HostBinding('class.igx-stepper__step-title')
+    @HostBinding('class.igx-step__title')
     public defaultClass = true;
 }
 
@@ -115,7 +115,7 @@ export class IgxStepTitleDirective {
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -130,7 +130,7 @@ export class IgxStepTitleDirective {
     standalone: true
 })
 export class IgxStepSubtitleDirective {
-    @HostBinding('class.igx-stepper__step-subtitle')
+    @HostBinding('class.igx-step__subtitle')
     public defaultClass = true;
 }
 
@@ -139,7 +139,7 @@ export class IgxStepSubtitleDirective {
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example

@@ -608,13 +608,13 @@
         @include tabs($tabs-theme-map);
     }
 
-    @if is-used('igx-stepper', $exclude) {
-        $stepper-theme-map: stepper-theme(
-            $schema: $schema,
-        );
-        $stepper-theme-map: meta.call($theme-handler, $stepper-theme-map);
-        @include stepper($stepper-theme-map);
-    }
+    //@if is-used('igx-stepper', $exclude) {
+    //    $stepper-theme-map: stepper-theme(
+    //        $schema: $schema,
+    //    );
+    //    $stepper-theme-map: meta.call($theme-handler, $stepper-theme-map);
+    //    @include stepper($stepper-theme-map);
+    //}
 
     // @if is-used('igx-toast', $exclude) {
     //     $toast-theme-map: toast-theme(
