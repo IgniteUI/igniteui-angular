@@ -1,7 +1,6 @@
 import { IFilteringOperation } from './filtering-condition';
 import { IExpressionTree } from './filtering-expressions-tree';
 
-/* mustCoerceToInt */
 export enum FilteringLogic {
     And,
     Or
