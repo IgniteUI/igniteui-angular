@@ -107,6 +107,13 @@
     $alpha-hover: .08;
     $alpha-focus: .16;
     $alpha-focus-hover: .24;
+	
+	$keyboard-ghost-elevation: map.get((
+		'material': 8,
+		'fluent': 2,
+		'bootstrap': 0,
+		'indigo': 1,
+	), $variant);
 
     $border-radius: var-get($theme, 'border-radius');
     $icon-size: rem(18px);
@@ -495,7 +502,7 @@
 	
 	%filter-tree__expression-item-keyboard-ghost {
 		.igx-chip__item {
-			box-shadow: elevation(8);
+			box-shadow: elevation(#{$keyboard-ghost-elevation});
 		}
 	}
 
