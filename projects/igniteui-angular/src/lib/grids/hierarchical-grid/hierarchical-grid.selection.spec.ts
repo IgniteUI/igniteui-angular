@@ -19,7 +19,7 @@ import { CellType } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
-xdescribe('IgxHierarchicalGrid selection #hGrid', () => {
+describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let rowIsland1;
