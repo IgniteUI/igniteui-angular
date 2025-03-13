@@ -493,7 +493,11 @@ export class IgxQueryBuilderDragService {
             }
 
             if (child instanceof ExpressionGroupItem) {
-                if (child === this._targetExpressionItem && !this._dropUnder) {
+                if (child === this._targetExpressionItem) {
+                    if (this._dropUnder) {
+                        [count] = this.countChipsBeforeDropLocation(child as ExpressionGroupItem);
+                        totalCount += count;
+                    }
                     targetReached = true;
                 } else {
                     [count, targetReached] = this.countChipsBeforeDropLocation(child as ExpressionGroupItem);
