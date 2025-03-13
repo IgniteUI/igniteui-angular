@@ -1,0 +1,13 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "keyboardSupport",
+            "remove": true,
+            "owner": {
+                "selector": "igx-carousel",
+                "type": "component"
+            }
+        }
+    ]
+}
