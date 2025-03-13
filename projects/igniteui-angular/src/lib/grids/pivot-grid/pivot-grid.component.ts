@@ -36,7 +36,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { ColumnType, GridType, IGX_GRID_BASE, IgxColumnTemplateContext, RowType } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings, PivotRowLayoutType, PivotSummaryPosition } from './pivot-grid.interface';
@@ -151,6 +151,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         IgxGridSelectionService,
         IgxColumnResizingService,
         GridBaseAPIService,
+        { provide: IGX_GRID_SERVICE_BASE, useClass: GridBaseAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxPivotGridComponent },
         { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
         IgxPivotGridNavigationService,
@@ -1021,7 +1022,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         viewRef: ViewContainerRef,
         injector: Injector,
         envInjector: EnvironmentInjector,
-        navigation: IgxPivotGridNavigationService,
+        public override navigation: IgxPivotGridNavigationService,
         filteringService: IgxFilteringService,
         textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
@@ -1053,8 +1054,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             platform,
             _diTransactions);
     }
-
-    public override navigation: IgxPivotGridNavigationService;
 
     /**
      * @hidden
@@ -1147,6 +1146,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             return true;
         }
         return false;
+    }
+
+    protected get emptyBottomSize() {
+        return this.totalHeight - (<any>this.verticalScroll).scrollComponent.size;
     }
 
     /** @hidden @internal */
@@ -1287,8 +1290,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /** @hidden @internal */
     public get pivotContentCalcWidth() {
-        const totalDimWidth = this.rowDimensions.length > 0 ?
-            this.rowDimensions.map((dim) => this.rowDimensionWidthToPixels(dim)).reduce((prev, cur) => prev + cur) :
+        if (!this.visibleRowDimensions.length) {
+            return Math.max(0, this.calcWidth - this.pivotRowWidths);
+        }
+
+        const totalDimWidth = this.visibleRowDimensions.length > 0 ?
+            this.visibleRowDimensions.map((dim) => this.rowDimensionWidthToPixels(dim)).reduce((prev, cur) => prev + cur) :
             0;
         return this.calcWidth - totalDimWidth;
     }
