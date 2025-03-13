@@ -1,6 +1,5 @@
 import { IFilteringOperation } from './filtering-condition';
 
-/* mustCoerceToInt */
 export enum FilteringLogic {
     And,
     Or
