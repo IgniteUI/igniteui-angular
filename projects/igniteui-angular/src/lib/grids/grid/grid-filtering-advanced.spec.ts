@@ -42,7 +42,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             ]
         });
     }));
-    
+
     describe('General tests - ', () => {
         let fix: ComponentFixture<IgxGridAdvancedFilteringComponent>;
         let grid: IgxGridComponent;
@@ -1226,11 +1226,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(100);
             fix.detectChanges();
 
-            
+
             // Populate edit inputs.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
-            
+
             let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
             // Commit the populated expression.
@@ -1279,7 +1279,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
-        
+
         it('Should allow hosting Advanced Filtering dialog outside of the grid.', fakeAsync(() => {
             // Add a root 'and' group.
             QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
@@ -1394,14 +1394,14 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 
     describe('Expression tree serialization - ', () => {
-        fit('should correctly filter with a deserialized expression tree.', fakeAsync(() => {
-            const errorSpy = spyOn(console, 'error'); 
+        it('should correctly filter with a deserialized expression tree.', fakeAsync(() => {
+            const errorSpy = spyOn(console, 'error');
             let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
-            fix.detectChanges();       
+            fix.detectChanges();
             let grid = fix.componentInstance.grid;
-            
+
             expect(errorSpy).not.toHaveBeenCalled();
-            
+
             // Verify filtered data
             expect(grid.filteredData.length).toEqual(3);
             expect(grid.rowList.length).toBe(3);
