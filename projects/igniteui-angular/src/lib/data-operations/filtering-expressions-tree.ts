@@ -11,7 +11,6 @@ export enum FilteringExpressionsTreeType {
 /* marshalByValue */
 export declare interface IExpressionTree {
     filteringOperands: (IExpressionTree | IFilteringExpression)[];
-    /* mustCoerceToInt */
     operator: FilteringLogic;
     fieldName?: string | null;
     entity?: string | null;
