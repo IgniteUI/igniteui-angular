@@ -2268,24 +2268,28 @@
         display: flex;
         overflow: hidden;
         outline-style: none;
+        background-color: var-get($theme, 'summaries-patch-background');
     }
 
     %grid-summaries--body {
+        --summaries-patch-background: var(--ig-gray-100);
+
         border-bottom: rem(1px) dashed var-get($theme, 'row-border-color');
+        background-color: var-get($theme, 'summaries-patch-background');
 
         &:last-of-type {
             border-bottom: none;
         }
 
         .igx-grid-summary {
-          --background-color: var(--ig-gray-100);
+          --background-color: inherit;
           --result-color: #{adaptive-contrast(var(--background-color))};
         }
     }
 
     %grid-summaries-patch {
         position: relative;
-        background: var-get($theme, 'summaries-patch-background');
+        background: inherit;
         border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
         z-index: 1;
 
