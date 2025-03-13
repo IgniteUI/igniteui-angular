@@ -1,6 +1,6 @@
 import { filter, fromEvent, sampleTime, Subscription } from 'rxjs';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
-import { ElementRef, Inject, Injectable } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, QueryBuilderSelectors } from './query-builder.common';
 import { IgxChipComponent } from '../chips/chip.component';
 
@@ -10,19 +10,12 @@ const Z_INDEX_TO_SET = 10010; //overlay z-index is 10005
 /** @hidden @internal */
 @Injectable()
 export class IgxQueryBuilderDragService {
-    constructor(
-        @Inject(IgxQueryBuilderTreeComponent)
-        private _queryBuilderTreeComponent: IgxQueryBuilderTreeComponent,
-        private _queryBuilderTreeComponentElRef: ElementRef,
-        @Inject(IgxQueryBuilderTreeComponent)
-        private _deleteExpression: (expressionItem: ExpressionItem) => void,
-        @Inject(IgxQueryBuilderTreeComponent)
-        private _focusChipAfterDrag: (index: number) => void,
-    ) { }
-
+    
     /** The ExpressionItem that's actually the drop ghost's content */
     public dropGhostExpression: ExpressionItem;
     public isKeyboardDrag: boolean;
+    private _queryBuilderTreeComponent: IgxQueryBuilderTreeComponent;
+    private _queryBuilderTreeComponentElRef: ElementRef;
     private _sourceExpressionItem: ExpressionItem;
     private _sourceElement: HTMLElement;
     private _targetExpressionItem: ExpressionItem;
@@ -49,6 +42,12 @@ export class IgxQueryBuilderDragService {
 
     private get getMainExpressionTree(): HTMLElement {
         return this._queryBuilderTreeComponentElRef.nativeElement.querySelector(`.${QueryBuilderSelectors.FILTER_TREE}`);
+    }
+
+       
+    public register(tree: IgxQueryBuilderTreeComponent, el: ElementRef) {
+        this._queryBuilderTreeComponent = tree;
+        this._queryBuilderTreeComponentElRef = el;
     }
 
     /** When chip is picked up for dragging
@@ -179,10 +178,10 @@ export class IgxQueryBuilderDragService {
         const [dropLocationIndex, _] = this.countChipsBeforeDropLocation(this._queryBuilderTreeComponent.rootGroup);
 
         //Delete from old place
-        this._deleteExpression(this._sourceExpressionItem);
+        this._queryBuilderTreeComponent.deleteItem(this._sourceExpressionItem);
         this.dropGhostExpression = null;
 
-        this._focusChipAfterDrag(dropLocationIndex);
+        this._queryBuilderTreeComponent.focusChipAfterDrag(dropLocationIndex);
 
         this.resetDragAndDrop(true);
 
