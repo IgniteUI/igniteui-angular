@@ -6,6 +6,8 @@ import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 import { mergeWith } from 'lodash-es';
 import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
+import { IgxPivotGridComponent } from 'igniteui-angular';
+import { PivotUtil } from './pivot-grid/pivot-util';
 
 abstract class BaseRow implements RowType {
     public index: number;
@@ -800,10 +802,10 @@ export class IgxPivotGridRow implements RowType {
     /**
      * The grid that contains the row.
      */
-    public grid: GridType;
+    public grid: IgxPivotGridComponent;
     private _data?: any;
 
-    constructor(grid: GridType, index: number, data?: any) {
+    constructor(grid: IgxPivotGridComponent, index: number, data?: any) {
         this.grid = grid;
         this.index = index;
         this._data = data && data.addRow && data.recordRef ? data.recordRef : data;
@@ -834,9 +836,9 @@ export class IgxPivotGridRow implements RowType {
      * ```
      */
     public get key(): any {
-        const data = this._data ?? this.grid.dataView[this.index];
-        const primaryKey = this.grid.primaryKey;
-        return primaryKey ? data[primaryKey] : data;
+        const dimension = this.grid.visibleRowDimensions[this.grid.visibleRowDimensions.length - 1];
+        const recordKey =  PivotUtil.getRecordKey(this.data, dimension);
+        return recordKey ? recordKey : null;
     }
 
     /**
