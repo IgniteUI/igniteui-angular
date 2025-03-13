@@ -1389,6 +1389,22 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Verify no filtered data
             expect(grid.filteredData).toBe(null);
         }));
+
+    });
+
+    describe('Expression tree serialization - ', () => {
+        it('should correctly filter with a deserialized expression tree.', fakeAsync(() => {
+            const errorSpy = spyOn(console, 'error');
+            let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
+            fix.detectChanges();
+            let grid = fix.componentInstance.grid;
+
+            expect(errorSpy).not.toHaveBeenCalled();
+
+            // Verify filtered data
+            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.rowList.length).toBe(3);
+        }));
     });
 });
 
