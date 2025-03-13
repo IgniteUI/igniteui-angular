@@ -480,18 +480,24 @@
 
 
     %filter-tree__expression-item-ghost {
-        &.igx-chip__item {
+        .igx-chip__item {
             @include type-style('body-2');
 
             --ig-body-2-text-transform: unset;
 
             padding-inline: rem(32px);
+	        
+	        color: color($color: 'gray', $variant: if($theme-variant == 'light', 600, 900));
+	        border: rem(1px) dashed color($color: 'gray', $variant: if($theme-variant == 'light', 600, 300));
+	        background:  transparent;
         }
-
-        color: color($color: 'gray', $variant: if($theme-variant == 'light', 600, 900));
-        border: rem(1px) dashed color($color: 'gray', $variant: if($theme-variant == 'light', 600, 300));
-        background:  transparent;
     }
+	
+	%filter-tree__expression-item-keyboard-ghost {
+		.igx-chip__item {
+			box-shadow: elevation(8);
+		}
+	}
 
     %filter-tree__expression-column {
         padding: 0 rem(8px);
