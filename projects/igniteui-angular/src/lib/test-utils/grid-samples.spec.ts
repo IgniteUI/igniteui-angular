@@ -2079,6 +2079,53 @@ export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent
 
 @Component({
     template: `
+    <igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [(advancedFilteringExpressionsTree)]="filterTree">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
+        </igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+    </igx-grid>`,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class IgxGridAdvancedFilteringSerializedTreeComponent extends BasicGridComponent implements OnInit {
+    public resizable = false;
+    public filterable = true;
+    public filterTree: IFilteringExpressionsTree;
+
+    public override data = SampleTestData.excelFilteringData();
+
+    public ngOnInit(): void {
+        this.filterTree = JSON.parse(`{ 
+            "filteringOperands":  [
+                {
+                    "conditionName": "greaterThan",
+                    "fieldName": "Downloads",
+                    "searchVal": 200
+                }
+            ],
+            "operator": 0
+        }`);
+        // this.filterTree = JSON.parse(`{ 
+        //     "filteringOperands":  [
+        //         {
+        //             "conditionName": "greaterThan",
+        //             "condition":{
+        //                  "name":"greaterThan",
+        //                  "isUnary":false,
+        //                  "iconName":"filter_greater_than"
+        //              },
+        //             "fieldName": "Downloads",
+        //             "searchVal": 200
+        //         }
+        //     ],
+        //     "operator": 0
+        // }`);
+    }
+}
+
+@Component({
+    template: `
         <igx-grid [data]="data" width="300px" height="250px">
             <igx-column field="firstName"></igx-column>
             <igx-column field="lastName"></igx-column>
