@@ -1422,7 +1422,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.rowList.length).toBe(2);
         }));
 
-        xit('should correctly filter when binding to a declared IFilteringExpressionsTree object.', fakeAsync(() => {
+        it('should correctly filter when binding to a declared IFilteringExpressionsTree object.', fakeAsync(() => {
             const errorSpy = spyOn(console, 'error');
             let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
             fix.detectChanges();
