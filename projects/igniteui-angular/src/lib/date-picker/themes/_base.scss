@@ -28,7 +28,7 @@ $theme: $material;
         }
 
         igx-divider {
-            --color: #{var-get($theme, 'actions-divider-color')};
+            --igx-divider-color: #{var-get($theme, 'actions-divider-color')};
         }
 
         @include e(actions) {
