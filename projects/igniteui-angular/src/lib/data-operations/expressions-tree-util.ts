@@ -149,7 +149,7 @@ function recreateExpression(expression: IFilteringExpression, fields: FieldType[
         }
     }
 
-    if (!expression.condition && expression.conditionName) {
+    if (!expression.condition && !expression.conditionName) {
         throw Error('Wrong `conditionName`, `condition` or `field` provided!');
     }
 
