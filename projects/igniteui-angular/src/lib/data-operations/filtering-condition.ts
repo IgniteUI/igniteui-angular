@@ -908,7 +908,7 @@ export interface IFilteringOperation {
     hidden?: boolean;
     /* blazorCSSuppress */
     /* blazorAlternateType: FilteringOperationLogicHandler */
-    logic: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
+    logic?: null | ((value: any, searchVal?: any, ignoreCase?: boolean) => boolean);
 }
 
 /**

@@ -15,7 +15,8 @@ import {
     IgxGridAdvancedFilteringComponent,
     IgxGridExternalAdvancedFilteringComponent,
     IgxGridAdvancedFilteringBindingComponent,
-    IgxGridAdvancedFilteringDynamicColumnsComponent
+    IgxGridAdvancedFilteringDynamicColumnsComponent,
+    IgxGridAdvancedFilteringSerializedTreeComponent
 } from '../../test-utils/grid-samples.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
@@ -1388,6 +1389,52 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify no filtered data
             expect(grid.filteredData).toBe(null);
+        }));
+
+    });
+
+    describe('Expression tree rehydration - ', () => {
+        it('should correctly filter with a deserialized expression tree.', fakeAsync(() => {
+            const errorSpy = spyOn(console, 'error');
+            let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
+            fix.detectChanges();
+            let grid = fix.componentInstance.grid;
+
+            expect(errorSpy).not.toHaveBeenCalled();
+
+            // Verify filtered data
+            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.rowList.length).toBe(3);
+        }));
+
+        it('should correctly filter with a declared IFilteringExpressionsTree object.', fakeAsync(() => {
+            const errorSpy = spyOn(console, 'error');
+            let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
+            fix.detectChanges();
+            fix.componentInstance.grid.advancedFilteringExpressionsTree = fix.componentInstance.filterTreeObject;
+            fix.detectChanges();
+            let grid = fix.componentInstance.grid;
+
+            expect(errorSpy).not.toHaveBeenCalled();
+
+            // Verify filtered data
+            expect(grid.filteredData.length).toEqual(2);
+            expect(grid.rowList.length).toBe(2);
+        }));
+
+        it('should correctly filter when binding to a declared IFilteringExpressionsTree object.', fakeAsync(() => {
+            const errorSpy = spyOn(console, 'error');
+            let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
+            fix.detectChanges();
+            fix.componentInstance.filterTree = fix.componentInstance.filterTreeObject;
+            fix.detectChanges();
+            let grid = fix.componentInstance.grid;
+
+            expect(errorSpy).not.toHaveBeenCalled();
+
+            // Verify filtered data
+            expect(grid.filteredData.length).toEqual(2);
+            expect(grid.rowList.length).toBe(2);
         }));
     });
 });

@@ -14,9 +14,9 @@ export enum FilteringLogic {
  */
 export declare interface IFilteringExpression {
     fieldName: string;
-    condition?: IFilteringOperation;
-    conditionName?: string;
-    searchVal?: any;
-    searchTree?: IExpressionTree;
+    condition?: IFilteringOperation | null;
+    conditionName?: string | null;
+    searchVal?: any | null;
+    searchTree?: IExpressionTree | null;
     ignoreCase?: boolean;
 }
