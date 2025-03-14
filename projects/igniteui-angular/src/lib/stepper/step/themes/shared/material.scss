@@ -75,24 +75,6 @@ $_theme: $material;
         }
     }
 
-    @include m(completed) {
-        @include e(indicator) {
-            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'complete-indicator-outline');
-        }
-    }
-
-    @include m(current) {
-        @include e(indicator) {
-            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'current-indicator-outline') !important;
-        }
-    }
-
-    @include m(invalid) {
-        @include e(indicator) {
-            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'invalid-indicator-outline');
-        }
-    }
-
     @include e(content-wrapper) {
         margin-inline-start: $v-line-indent;
         min-height: $indicator-size;
@@ -103,6 +85,15 @@ $_theme: $material;
             bottom: calc(-#{$indicator-size} + #{$indicator-size});
             width: $separator-size;
             border-inline-start: $separator-size var-get($_theme, 'step-separator-style') var-get($_theme, 'step-separator-color');
+        }
+    }
+
+    @include m(completed) {
+        @include e(content-wrapper)  {
+            &::before {
+                border-inline-start-style: var-get($_theme, 'complete-step-separator-style');
+                border-inline-start-color: var-get($_theme, 'complete-step-separator-color');
+            }
         }
     }
 
@@ -134,6 +125,26 @@ $_theme: $material;
         > igx-circular-bar {
             max-height: $indicator-size;
             max-width: $indicator-size;
+        }
+    }
+}
+
+@include themed-block(igx-step-header, material) {
+    @include m(completed) {
+        @include e(indicator) {
+            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'complete-indicator-outline');
+        }
+    }
+
+    @include m(current) {
+        @include e(indicator) {
+            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'current-indicator-outline') !important;
+        }
+    }
+
+    @include m(invalid) {
+        @include e(indicator) {
+            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'invalid-indicator-outline');
         }
     }
 

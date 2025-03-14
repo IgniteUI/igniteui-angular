@@ -108,6 +108,9 @@ export class IgxStepIndicatorDirective { }
 export class IgxStepTitleDirective {
     @HostBinding('class.igx-step__title')
     public defaultClass = true;
+
+    @HostBinding('class.igx-step-header__title')
+    public headerElementClass = true;
 }
 
 /**
@@ -131,7 +134,10 @@ export class IgxStepTitleDirective {
 })
 export class IgxStepSubtitleDirective {
     @HostBinding('class.igx-step__subtitle')
-    public defaultClass = true;
+    public elementClass = true;
+
+    @HostBinding('class.igx-step-header__subtitle')
+    public headerElementClass = true;
 }
 
 /**

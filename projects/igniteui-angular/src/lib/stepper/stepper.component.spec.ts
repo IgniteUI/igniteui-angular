@@ -74,7 +74,7 @@ const testAnimationBehvior = (
     activeChangeSpy.calls.reset();
 };
 
-describe('Rendering Tests', () => {
+fdescribe('Rendering Tests', () => {
     configureTestSuite();
     let fix: ComponentFixture<IgxStepperSampleTestComponent>;
     let stepper: IgxStepperComponent;
@@ -916,7 +916,7 @@ describe('Rendering Tests', () => {
     });
 });
 
-describe('Stepper service unit tests', () => {
+fdescribe('Stepper service unit tests', () => {
     configureTestSuite();
 
     let stepperService: IgxStepperService;

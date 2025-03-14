@@ -257,6 +257,15 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
             && this.isAccessible;
     }
 
+    /** @hidden @internal */
+    public get stepHeaderClasses(): { [key: string]: boolean } {
+        return {
+            'igx-step-header--invalid': this.isInvalid,
+            'igx-step-header--disabled': this.disabled,
+            'igx-step-header--current': this.active,
+            'igx-step-header--completed': this.completed,
+        };
+    }
 
     /**
      * Emitted when the step's `active` property changes. Can be used for two-way binding.

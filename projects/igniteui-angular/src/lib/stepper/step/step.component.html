@@ -23,11 +23,12 @@
     <ng-content select="[igxStepIndicator]"></ng-content>
 </ng-template>
 
-<div class="igx-step__header" igxRipple (keydown)="handleKeydown($event)"
-    (click)="onPointerDown($event)">
+<div class="igx-step__header igx-step-header" igxRipple (keydown)="handleKeydown($event)"
+     [ngClass]="stepHeaderClasses"
+     (click)="onPointerDown($event)">
 
     @if (isIndicatorVisible) {
-        <div class="igx-step__indicator">
+        <div class="igx-step__indicator igx-step-header__indicator">
             <ng-container *ngTemplateOutlet="indicatorTemplate ? indicatorTemplate : defaultIndicator"></ng-container>
         </div>
     }

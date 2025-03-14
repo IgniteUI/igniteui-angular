@@ -33,22 +33,6 @@ $theme: $material;
                 background: var-get($theme, 'step-focus-background');
                 color: var-get($theme, 'title-focus-color');
             }
-
-            @include e(header, $m: current) {
-                background: var-get($theme, 'current-step-focus-background') !important;
-            }
-
-            @include e(title, $m: current) {
-                color: var-get($theme, 'current-title-focus-color');
-            }
-
-            @include e(subtitle, $m: current) {
-                color: var-get($theme, 'current-subtitle-focus-color');
-            }
-
-            @include e(header, $m: invalid) {
-                background: var-get($theme, 'invalid-step-focus-background');
-            }
         }
 
         &:first-of-type {
@@ -73,57 +57,18 @@ $theme: $material;
             }
         }
 
-        @include e(header) {
-            display: flex;
-            padding: rem(8px);
-            position: relative;
-            line-height: normal;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: rem(8px);
-            cursor: pointer;
-            background: var-get($theme, 'step-background');
-            border-radius: var-get($theme, 'border-radius-step-header');
-            overflow: hidden;
-
-            &:hover {
-                background: var-get($theme, 'step-hover-background');
-                color: var-get($theme, 'title-hover-color');
+        @include m(current, ('not', 'horizontal')) {
+            @include e(content-wrapper) {
+                padding: rem(16px);
             }
-        }
-
-        @include e(indicator) {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            font-size: rem(12px);
-            white-space: nowrap;
-            border-radius: var-get($theme, 'border-radius-indicator');
-            color: var-get($theme, 'indicator-color');
-            background: var-get($theme, 'indicator-background');
-        }
-
-        @include e(title) {
-            @include type-style(body-2) {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
-
-            color: var-get($theme, 'title-color');
-        }
-
-        @include e(subtitle) {
-            @include type-style(caption) {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
-
-            color: var-get($theme, 'subtitle-color');
         }
 
         @include m(invalid) {
             &:focus {
+                @include e(header) {
+                    background: var-get($theme, 'invalid-step-focus-background');
+                }
+
                 @include e(title) {
                     color: var-get($theme, 'invalid-title-focus-color');
                 }
@@ -135,78 +80,17 @@ $theme: $material;
         }
 
         @include m(current) {
-            background: var-get($theme, 'current-step-background') !important;
-            color: var-get($theme, 'current-title-color');
-
-            @include e(indicator) {
-                color: var-get($theme, 'current-indicator-color') !important;
-                background: var-get($theme, 'current-indicator-background') !important;
-            }
-
-            @include e(title) {
-                color: var-get($theme, 'current-title-color');
-
-                // TODO See if we need this in all themes
-                font-weight: 600;
-            }
-
-            @include e(indicator) {
-                color: var-get($theme, 'current-subtitle-color');
-            }
-
-            @include e(header) {
-                &:hover {
-                    background: var-get($theme, 'current-step-hover-background') !important;
+            &:focus {
+                @include e(header) {
+                    background: var-get($theme, 'current-step-focus-background') !important;
                 }
-            }
 
-            &:hover {
                 @include e(title) {
-                    color: var-get($theme, 'current-title-hover-color');
+                    color: var-get($theme, 'current-title-focus-color');
                 }
 
                 @include e(subtitle) {
-                    color: var-get($theme, 'current-subtitle-hover-color');
-                }
-            }
-        }
-
-        @include m(current, ('not', 'horizontal')) {
-            @include e(content-wrapper) {
-                padding: rem(16px);
-            }
-        }
-
-        @include m(invalid) {
-            background: var-get($theme, 'invalid-step-background');
-            color: var-get($theme, 'invalid-title-color');
-
-            @include e(indicator) {
-                color: var-get($theme, 'invalid-indicator-color');
-                background: var-get($theme, 'invalid-indicator-background');
-            }
-
-            @include e(title) {
-                color: var-get($theme, 'invalid-title-color');
-            }
-
-            @include e(subtitle) {
-                color: var-get($theme, 'invalid-subtitle-color');
-            }
-
-            @include e(header) {
-                &:hover {
-                    background: var-get($theme, 'invalid-step-hover-background');
-                }
-            }
-
-            &:hover {
-                @include e(title) {
-                    color: var-get($theme, 'invalid-title-hover-color');
-                }
-
-                @include e(subtitle) {
-                    color: var-get($theme, 'invalid-subtitle-hover-color');
+                    color: var-get($theme, 'current-subtitle-focus-color');
                 }
             }
         }
@@ -249,11 +133,6 @@ $theme: $material;
                     border-top-style: var-get($theme, 'complete-step-separator-style') !important;
                 }
 
-                // the header will resolve to
-                //.igx-step--completed + .igx-step .igx-step__header::before {
-                //    border-top-color: var(--complete-step-separator-color) !important;
-                //    border-top-style: var(--complete-step-separator-style) !important
-                //}
                 #{elem($this, header)} {
                     /* stylelint-disable max-nesting-depth */
                     &::before {
@@ -261,44 +140,6 @@ $theme: $material;
                         border-top-style: var-get($theme, 'complete-step-separator-style') !important;
                     }
                     /* stylelint-enable max-nesting-depth */
-                }
-            }
-
-            @include e(header) {
-                background: var-get($theme, 'complete-step-background');
-
-                &::after {
-                    border-top-color: var-get($theme, 'complete-step-separator-color') !important;
-                    border-top-style: var-get($theme, 'complete-step-separator-style') !important;
-                }
-            }
-
-            @include e(indicator) {
-                color: var-get($theme, 'complete-indicator-color');
-                background: var-get($theme, 'complete-indicator-background');
-            }
-
-            @include e(title) {
-                color: var-get($theme, 'complete-title-color');
-            }
-
-            @include e(subtitle) {
-                color: var-get($theme, 'complete-subtitle-color');
-            }
-
-            @include e(header) {
-                &:hover {
-                    background: var-get($theme, 'complete-step-hover-background');
-                }
-            }
-
-            &:hover {
-                @include e(title) {
-                    color: var-get($theme, 'complete-title-hover-color');
-                }
-
-                @include e(subtitle) {
-                    color: var-get($theme, 'complete-subtitle-hover-color');
                 }
             }
 
@@ -314,33 +155,6 @@ $theme: $material;
                 @include e(subtitle) {
                     color: var-get($theme, 'complete-subtitle-focus-color');
                 }
-            }
-
-            @include e(content-wrapper)  {
-                &::before {
-                    border-inline-start-style: var-get($theme, 'complete-step-separator-style');
-                    border-inline-start-color: var-get($theme, 'complete-step-separator-color');
-                }
-            }
-
-        }
-
-        @include m(disabled) {
-            color: var-get($theme, 'disabled-title-color');
-            pointer-events: none;
-            cursor: default;
-
-            @include e(indicator) {
-                color: var-get($theme, 'disabled-indicator-color');
-                background: var-get($theme, 'disabled-indicator-background');
-            }
-
-            @include e(title) {
-                color: var-get($theme, 'disabled-title-color');
-            }
-
-            @include e(subtitle) {
-                color: var-get($theme, 'disabled-subtitle-color');
             }
         }
 
@@ -527,6 +341,177 @@ $theme: $material;
                 &::after {
                     display: none;
                 }
+            }
+        }
+    }
+
+    @include b(igx-step-header) {
+        display: flex;
+        padding: rem(8px);
+        position: relative;
+        line-height: normal;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: rem(8px);
+        cursor: pointer;
+        color: var-get($theme, 'title-color');
+        background: var-get($theme, 'step-background');
+        border-radius: var-get($theme, 'border-radius-step-header');
+        overflow: hidden;
+
+        @include e(indicator) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-size: rem(12px);
+            white-space: nowrap;
+            border-radius: var-get($theme, 'border-radius-indicator');
+            color: var-get($theme, 'indicator-color');
+            background: var-get($theme, 'indicator-background');
+        }
+
+        @include e(title) {
+            @include type-style(body-2) {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+
+            color: var-get($theme, 'title-color');
+        }
+
+        @include e(subtitle) {
+            @include type-style(caption) {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+
+            color: var-get($theme, 'subtitle-color');
+        }
+
+        &:hover {
+            background: var-get($theme, 'step-hover-background');
+
+            @include e(title) {
+                color: var-get($theme, 'title-hover-color');
+            }
+
+            @include e(subtitle) {
+                color: var-get($theme, 'subtitle-hover-color');
+            }
+        }
+
+        @include m(invalid) {
+            background: var-get($theme, 'invalid-step-background');
+            color: var-get($theme, 'invalid-title-color');
+
+            @include e(indicator) {
+                color: var-get($theme, 'invalid-indicator-color');
+                background: var-get($theme, 'invalid-indicator-background');
+            }
+
+            @include e(title) {
+                color: var-get($theme, 'invalid-title-color');
+            }
+
+            @include e(subtitle) {
+                color: var-get($theme, 'invalid-subtitle-color');
+            }
+
+            &:hover {
+                @include e(title) {
+                    color: var-get($theme, 'invalid-title-hover-color');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'invalid-subtitle-hover-color');
+                }
+            }
+        }
+
+        @include m(completed) {
+            background: var-get($theme, 'complete-step-background');
+
+            &::after {
+                border-top-color: var-get($theme, 'complete-step-separator-color') !important;
+                border-top-style: var-get($theme, 'complete-step-separator-style') !important;
+            }
+
+            @include e(indicator) {
+                color: var-get($theme, 'complete-indicator-color');
+                background: var-get($theme, 'complete-indicator-background');
+            }
+
+            @include e(title) {
+                color: var-get($theme, 'complete-title-color');
+            }
+
+            @include e(subtitle) {
+                color: var-get($theme, 'complete-subtitle-color');
+            }
+
+            &:hover {
+                background: var-get($theme, 'complete-step-hover-background');
+
+                @include e(title) {
+                    color: var-get($theme, 'complete-title-hover-color');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'complete-subtitle-hover-color');
+                }
+            }
+        }
+
+        @include m(current) {
+            background: var-get($theme, 'current-step-background') !important;
+            color: var-get($theme, 'current-title-color');
+
+            @include e(indicator) {
+                color: var-get($theme, 'current-indicator-color') !important;
+                background: var-get($theme, 'current-indicator-background') !important;
+            }
+
+            @include e(title) {
+                color: var-get($theme, 'current-title-color');
+
+                // TODO See if we need this in all themes
+                font-weight: 600;
+            }
+
+            @include e(indicator) {
+                color: var-get($theme, 'current-subtitle-color');
+            }
+
+            &:hover {
+                background: var-get($theme, 'current-step-hover-background') !important;
+
+                @include e(title) {
+                    color: var-get($theme, 'current-title-hover-color');
+                }
+
+                @include e(subtitle) {
+                    color: var-get($theme, 'current-subtitle-hover-color');
+                }
+            }
+        }
+
+        @include m(disabled) {
+            color: var-get($theme, 'disabled-title-color');
+            pointer-events: none;
+            cursor: default;
+
+            @include e(indicator) {
+                color: var-get($theme, 'disabled-indicator-color');
+                background: var-get($theme, 'disabled-indicator-background');
+            }
+
+            @include e(title) {
+                color: var-get($theme, 'disabled-title-color');
+            }
+
+            @include e(subtitle) {
+                color: var-get($theme, 'disabled-subtitle-color');
             }
         }
     }
