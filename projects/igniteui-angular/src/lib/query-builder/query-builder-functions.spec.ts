@@ -883,7 +883,8 @@ export class QueryBuilderFunctions {
 
     public static getDropGhost(fixture: ComponentFixture<any>): Element {
         var expressionsContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fixture);
-        return expressionsContainer.querySelector(`div.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST}`);
+        return expressionsContainer.querySelector(`div.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST}`) ??
+            expressionsContainer.querySelector(`div.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_KEYBOARD_GHOST}`);
     }
 
     public static getDropGhostBounds(fixture: ComponentFixture<any>): DOMRect {

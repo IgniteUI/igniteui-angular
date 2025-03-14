@@ -69,6 +69,7 @@ export const QueryBuilderSelectors = {
     FILTER_TREE_EXPRESSION_CONTEXT_MENU: IGX_FILTER_TREE + '__expression-context-menu',
     FILTER_TREE_EXPRESSION_ITEM: IGX_FILTER_TREE + '__expression-item',
     FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST: IGX_FILTER_TREE + '__expression-item-drop-ghost',
+    FILTER_TREE_EXPRESSION_ITEM_KEYBOARD_GHOST: IGX_FILTER_TREE + '__expression-item-keyboard-ghost',
     FILTER_TREE_EXPRESSION_ITEM_GHOST: IGX_FILTER_TREE + '__expression-item-ghost',
     FILTER_TREE_EXPRESSION_SECTION: IGX_FILTER_TREE + '__expression-section',
 
