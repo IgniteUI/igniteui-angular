@@ -1225,7 +1225,7 @@ class CarouselTemplateSetInTypescriptTestComponent {
 @Component({
     template: `
         <igx-carousel #carousel [loop]="loop" [animationType]="'none'">
-            @for (slide of slides; track slide) {
+            @for (slide of slides; track slide.text) {
                 <igx-slide [active]="slide.active">
                     <igx-slide><h3>{{slide.text}}</h3></igx-slide>
                 </igx-slide>
@@ -1241,10 +1241,6 @@ class CarouselDynamicSlidesComponent {
     public slides = [];
 
     constructor() {
-        this.addNewSlide();
-    }
-
-    public addNewSlide() {
         this.slides.push(
             { text: 'Slide 1', active: false },
             { text: 'Slide 2', active: false },
