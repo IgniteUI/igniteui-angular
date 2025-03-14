@@ -16,6 +16,7 @@ export declare interface IExpressionTree {
     returnFields?: string[];
 }
 
+/* alternateBaseType: ExpressionTree */
 /* marshalByValue */
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpressionTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
