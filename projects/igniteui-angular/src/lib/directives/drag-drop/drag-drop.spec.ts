@@ -22,7 +22,7 @@ describe('General igxDrag/igxDrop', () => {
     let dropAreaRects = { top: 0, left: 0, right: 0, bottom: 0};
     let dragDirsRects = [{ top: 0, left: 0, right: 0, bottom: 0}];
 
-    configureTestSuite();
+    configureTestSuite({ checkLeaks: true });
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [TestDragDropComponent]
@@ -37,6 +37,13 @@ describe('General igxDrag/igxDrop', () => {
         dragDirsRects = getDragDirsRects(fix.componentInstance.dragElems);
         dropArea = fix.componentInstance.dropArea;
         dropAreaRects = getElemRects(dropArea.element.nativeElement);
+    });
+
+    afterEach(() => {
+        fix = null;
+        dragDirsRects = null;
+        dropArea = null;
+        dropAreaRects = null;
     });
 
     it('should correctly initialize drag and drop directives.', () => {

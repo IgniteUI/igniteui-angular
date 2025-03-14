@@ -416,9 +416,19 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
         if (settings) {
+            const newScrollStrategy = settings.scrollStrategy && info.settings.scrollStrategy !== settings.scrollStrategy;
+            if (newScrollStrategy && info.settings.scrollStrategy) {
+                info.settings.scrollStrategy.detach();
+            }
+
             settings.positionStrategy ??= info.settings.positionStrategy;
             settings.scrollStrategy ??= info.settings.scrollStrategy;
             info.settings = { ...info.settings, ...settings };
+
+            if (newScrollStrategy) {
+                info.settings.scrollStrategy.initialize(this._document, this, info.id);
+                info.settings.scrollStrategy.attach();
+            }
         }
         this.updateSize(info);
         info.settings.positionStrategy.position(
@@ -538,6 +548,8 @@ export class IgxOverlayService implements OnDestroy {
 
     /** @hidden */
     public ngOnDestroy(): void {
+        this.detachAll();
+        this.removeCloseOnEscapeListener();
         this.destroy$.next(true);
         this.destroy$.complete();
     }
