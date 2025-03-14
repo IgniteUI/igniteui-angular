@@ -416,13 +416,13 @@
         @include drop-down($drop-down-theme-map);
     }
 
-    @if is-used('igx-expansion-panel', $exclude) {
-        $expansion-panel-theme-map: expansion-panel-theme(
-            $schema: $schema,
-        );
-        $expansion-panel-theme-map: meta.call($theme-handler, $expansion-panel-theme-map);
-        @include expansion-panel($expansion-panel-theme-map);
-    }
+    // @if is-used('igx-expansion-panel', $exclude) {
+    //     $expansion-panel-theme-map: expansion-panel-theme(
+    //         $schema: $schema,
+    //     );
+    //     $expansion-panel-theme-map: meta.call($theme-handler, $expansion-panel-theme-map);
+    //     @include expansion-panel($expansion-panel-theme-map);
+    // }
 
     @if is-used('igx-grid', $exclude) {
         $grid-theme-map: grid-theme(
