@@ -10,7 +10,7 @@ const Z_INDEX_TO_SET = 10010; //overlay z-index is 10005
 /** @hidden @internal */
 @Injectable()
 export class IgxQueryBuilderDragService {
-    
+
     /** The ExpressionItem that's actually the drop ghost's content */
     public dropGhostExpression: ExpressionItem;
     public isKeyboardDrag: boolean;
@@ -32,7 +32,7 @@ export class IgxQueryBuilderDragService {
 
     /** Get the dragged ghost as a HTMLElement*/
     private get getDragGhostElement(): HTMLElement {
-        return (document.querySelector('.igx-chip__ghost[ghostclass="igx-chip__ghost"]') as HTMLElement);
+        return (document.querySelector(`.${QueryBuilderSelectors.CHIP_GHOST}[ghostclass="${QueryBuilderSelectors.CHIP_GHOST}"]`) as HTMLElement);
     }
 
     /** Get the drop ghost chip component */
@@ -44,7 +44,7 @@ export class IgxQueryBuilderDragService {
         return this._queryBuilderTreeComponentElRef.nativeElement.querySelector(`.${QueryBuilderSelectors.FILTER_TREE}`);
     }
 
-       
+
     public register(tree: IgxQueryBuilderTreeComponent, el: ElementRef) {
         this._queryBuilderTreeComponent = tree;
         this._queryBuilderTreeComponentElRef = el;
