@@ -48,7 +48,6 @@ import { IgxInputGroupComponent } from "../../input-group/input-group.component"
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { Size } from '../common/enums';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { IgxPivotGridStateService } from './pivot-grid-state.service';
 
 interface IDataSelectorPanel {
     name: string;
@@ -252,7 +251,7 @@ export class IgxPivotDataSelectorComponent {
         return this._grid?.pivotConfiguration.values || [];
     }
 
-    constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef, private pivotStateService: IgxPivotGridStateService) { }
+    constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden @internal
@@ -527,6 +526,7 @@ export class IgxPivotDataSelectorComponent {
 
             const isCountAggregator = this.value.aggregate.key.toLowerCase() === 'count';
             const isSingleValue = this.grid.values.length === 1;
+            let shouldRemoveFromSet: boolean = false;
 
             columns.forEach(column => {
                 const isRelevantColumn = column.field?.includes(valueMember);
@@ -535,20 +535,24 @@ export class IgxPivotDataSelectorComponent {
                 if (isSingleValue) {
                     if (isCountAggregator && isCurrencyColumn) {
                         column.dataType = GridColumnDataType.Number;
-                        this.pivotStateService.addCurrencyColumn(valueMember);
-                    } else if (this.pivotStateService.isCurrencyColumn(valueMember)) {
+                        this.grid.currencyColumnSet.add(valueMember);
+                    } else if (this.grid.currencyColumnSet.has(valueMember)) {
                         column.dataType = GridColumnDataType.Currency;
                     }
                 } else if (isRelevantColumn) {
                     if (isCountAggregator && isCurrencyColumn) {
                         column.dataType = GridColumnDataType.Number;
-                        this.pivotStateService.addCurrencyColumn(valueMember);
-                    } else if (this.pivotStateService.isCurrencyColumn(valueMember)) {
+                        this.grid.currencyColumnSet.add(valueMember);
+                    } else if (this.grid.currencyColumnSet.has(valueMember)) {
                         column.dataType = GridColumnDataType.Currency;
-                        this.pivotStateService.removeCurrencyColumn(valueMember);
+                        shouldRemoveFromSet = true;
                     }
                 }
             });
+
+            if (shouldRemoveFromSet) {
+                this.grid.currencyColumnSet.delete(valueMember);
+            }
 
             this.grid.pipeTrigger++;
             this.grid.cdr.markForCheck();
