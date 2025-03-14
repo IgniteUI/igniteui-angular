@@ -329,7 +329,7 @@
     $inner-size: null,
 ) {
     $name: 'igx-calendar';
-    $selector: 'igx-calendar, .igx-days-view--standalone, .igx-calendar-view--standalone, .igx-date-picker, .igx-month-picker';
+    $selector: 'igx-calendar, .igx-days-view--standalone, .igx-calendar-view--standalone, .igx-calendar-picker--standalone, .igx-date-picker, .igx-month-picker';
     $calendar-schema: ();
 
     @if map.has-key($schema, 'calendar') {

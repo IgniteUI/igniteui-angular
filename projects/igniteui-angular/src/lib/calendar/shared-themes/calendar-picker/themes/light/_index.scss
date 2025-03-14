@@ -3,4 +3,4 @@
 @use 'styles/themes/standalone' as *;
 
 $tokens: meta.module-variables(tokens);
-@include themes(igx-calendar-picker, $tokens, light);
+@include themes(igx-calendar-picker--standalone, $tokens, light);

@@ -3,4 +3,4 @@
 @use 'styles/themes/standalone' as *;
 
 $tokens: meta.module-variables(tokens);
-@include themes(igx-days-view, $tokens, dark);
+@include themes(igx-days-view--standalone, $tokens, dark);

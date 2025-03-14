@@ -10,12 +10,11 @@ $theme: $material;
         display: flex;
         overflow: hidden;
         min-width: sizable(rem(290px), rem(314px), rem(360px));
-
         color: var-get($theme, 'content-foreground');
         background: var-get($theme, 'content-background');
-
         box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
+
         outline: none;
 
         .igx-calendar-view {

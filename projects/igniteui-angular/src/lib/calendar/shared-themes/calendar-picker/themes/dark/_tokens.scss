@@ -1,7 +1,7 @@
 @use 'igniteui-theming/sass/themes/index' as *;
-@use 'igniteui-theming/sass/themes/schemas/components/dark/calendar' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/calendar/picker' as *;
 
-$material: digest-schema($dark-material-calendar);
-$bootstrap: digest-schema($dark-bootstrap-calendar);
-$fluent: digest-schema($dark-fluent-calendar);
-$indigo: digest-schema($dark-indigo-calendar);
+$material: digest-schema($dark-material-picker);
+$bootstrap: digest-schema($dark-bootstrap-picker);
+$fluent: digest-schema($dark-fluent-picker);
+$indigo: digest-schema($dark-indigo-picker);

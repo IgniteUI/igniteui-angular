@@ -10,6 +10,7 @@ $_theme: $bootstrap;
 
 @include themed-block(igx-month-picker, bootstrap) {
     .igx-calendar-picker {
-        border-block-end: rem(1px) solid var-get($_theme, 'border-color');
+        // TODO, EXPOUSE NEW VARIABLE ON VIEW LEVEL
+        //border-block-end: rem(1px) solid var-get($_theme, 'border-color');
     }
 }
