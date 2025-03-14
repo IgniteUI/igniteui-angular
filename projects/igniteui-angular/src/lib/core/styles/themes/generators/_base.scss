@@ -160,13 +160,13 @@
     //     @include badge($badge-theme-map);
     // }
 
-    @if is-used('igx-bottom-nav', $exclude) {
-        $bottom-nav-theme-map: bottom-nav-theme(
-            $schema: $schema,
-        );
-        $bottom-nav-theme-map: meta.call($theme-handler, $bottom-nav-theme-map);
-        @include bottom-nav($bottom-nav-theme-map);
-    }
+    // @if is-used('igx-bottom-nav', $exclude) {
+    //     $bottom-nav-theme-map: bottom-nav-theme(
+    //         $schema: $schema,
+    //     );
+    //     $bottom-nav-theme-map: meta.call($theme-handler, $bottom-nav-theme-map);
+    //     @include bottom-nav($bottom-nav-theme-map);
+    // }
 
     @if is-used('igx-button', $exclude) {
         $button-theme-map: button-theme(
