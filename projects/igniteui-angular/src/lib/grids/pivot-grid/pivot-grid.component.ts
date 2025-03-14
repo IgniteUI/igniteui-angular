@@ -37,7 +37,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { ColumnType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, RowType } from '../common/grid.interface';
+import { ColumnType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType, IPivotUISettings, PivotRowLayoutType, PivotSummaryPosition } from './pivot-grid.interface';
@@ -103,7 +103,6 @@ import { IgxTextHighlightService } from '../../directives/text-highlight/text-hi
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
-import { IgxPivotGridStateService } from './pivot-grid-state.service';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -199,7 +198,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit, AfterContentInit,
-    GridType, AfterViewInit, OnChanges {
+    PivotGridType, AfterViewInit, OnChanges {
 
     /**
      * Emitted when the dimension collection is changed via the grid chip area.
@@ -1031,7 +1030,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         summaryService: IgxGridSummaryService,
         @Inject(LOCALE_ID) localeId: string,
         platform: PlatformUtil,
-        private pivotStateService: IgxPivotGridStateService,
         @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>
     ) {
         super(
@@ -2288,6 +2286,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return hierarchy;
     }
 
+    /** @hidden @internal */
+    public currencyColumnSet: Set<string> = new Set();
     protected generateColumnHierarchy(fields: Map<string, any>, data, parent = null): IgxColumnComponent[] {
         let columns = [];
         if (fields.size === 0) {
@@ -2296,7 +2296,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 let columnDataType = value.dataType || this.resolveDataTypes(data.length ? data[0][value.member] : null);
 
                 if (value.aggregate?.key?.toLowerCase() === 'count' && columnDataType === GridColumnDataType.Currency) {
-                    this.pivotStateService.addCurrencyColumn(value.member);
+                    this.currencyColumnSet.add(value.member);
                     columnDataType = GridColumnDataType.Number;
                 }
 
@@ -2322,10 +2322,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 this.values.forEach((aggregatorValue) => {
                     if (col.dataType === GridColumnDataType.Currency && aggregatorValue.aggregate?.key?.toLowerCase() === 'count') {
                         col.dataType = GridColumnDataType.Number;
-                        this.pivotStateService.addCurrencyColumn(aggregatorValue.member);
-                    } else if (this.pivotStateService.isCurrencyColumn(aggregatorValue.member) && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
+                        this.currencyColumnSet.add(aggregatorValue.member);
+                    } else if (this.currencyColumnSet.has(aggregatorValue.member) && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
                         col.dataType = GridColumnDataType.Currency;
-                        this.pivotStateService.removeCurrencyColumn(aggregatorValue.member);
+                        this.currencyColumnSet.delete(aggregatorValue.member);
                     }
                 })
 
@@ -2338,10 +2338,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                             if (child.field.includes(aggregatorValue.member)) {
                                 if (child.dataType === GridColumnDataType.Currency && aggregatorValue.aggregate?.key?.toLowerCase() === 'count') {
                                     child.dataType = GridColumnDataType.Number;
-                                    this.pivotStateService.addCurrencyColumn(aggregatorValue.member);
-                                } else if (this.pivotStateService.isCurrencyColumn(aggregatorValue.member) && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
+                                    this.currencyColumnSet.add(aggregatorValue.member);
+                                } else if (this.currencyColumnSet.has(aggregatorValue.member) && aggregatorValue.aggregate?.key?.toLowerCase() !== 'count') {
                                     child.dataType = GridColumnDataType.Currency;
-                                    this.pivotStateService.removeCurrencyColumn(aggregatorValue.member);
+                                    this.currencyColumnSet.delete(aggregatorValue.member);
                                 }
                             }
                         })
