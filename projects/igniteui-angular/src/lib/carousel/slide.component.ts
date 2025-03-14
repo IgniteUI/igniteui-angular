@@ -1,6 +1,6 @@
 import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, Inject } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Direction, ICarouselComponentBase, IGX_CAROUSEL_COMPONENT, IgxSlideComponentBase } from './carousel-base';
+import { Direction, IgxSlideComponentBase } from './carousel-base';
 
 /**
  * A slide component that usually holds an image and/or a caption text.
@@ -54,10 +54,11 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * ```
      *
      * @memberof IgxSlideComponent
+     * @deprecated in version 19.2.0.
      */
     @HostBinding('attr.tabindex')
     public get tabIndex() {
-        return this.active && this.carousel.keyboardSupport ? 0 : null;
+        return this.active ? 0 : null;
     }
 
     /**
@@ -129,10 +130,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
     private _active = false;
     private _destroy$ = new Subject<boolean>();
 
-    constructor(
-        private elementRef: ElementRef,
-        @Inject(IGX_CAROUSEL_COMPONENT) private carousel: ICarouselComponentBase
-    ) { }
+    constructor(private elementRef: ElementRef) { }
 
     /**
      * Returns a reference to the carousel element in the DOM.
