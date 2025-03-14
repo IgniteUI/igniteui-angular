@@ -503,6 +503,7 @@
 	%filter-tree__expression-item-keyboard-ghost {
 		.igx-chip__item {
 			box-shadow: elevation(#{$keyboard-ghost-elevation});
+            background: var(--ghost-background);
 		}
 	}
 
