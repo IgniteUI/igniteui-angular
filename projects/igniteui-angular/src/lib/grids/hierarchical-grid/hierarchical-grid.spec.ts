@@ -1085,6 +1085,40 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGrid1.columns[0].editable).toBeTrue();
             expect(childGrid1.columns[1].editable).toBeTrue();
         });
+
+        it('should update the row island summary UI when disabledSummaries is changed at runtime', fakeAsync(() => {
+            const masterRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(masterRow.expander);
+            fixture.detectChanges();
+
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+            fixture.detectChanges();
+
+            childGrid.columns.forEach(c => c.hasSummary = true);
+            fixture.detectChanges();
+            tick();
+
+            const column = childGrid.columns.find(c => c.field === 'ProductName');
+            expect(column).toBeDefined();
+            fixture.detectChanges();
+            tick();
+
+            const summaryCells = childGrid.nativeElement.querySelectorAll('igx-grid-summary-cell');
+            const summaryCell = summaryCells[1];
+
+            expect(summaryCell).toBeDefined();
+            expect(summaryCell.textContent.trim().length).toBeGreaterThan(0);
+
+            const getterSpy = spyOnProperty(column, 'disabledSummaries', 'get').and.callThrough();
+
+            column.disabledSummaries = ['count'];
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(getterSpy).toHaveBeenCalledTimes(7);
+            expect(summaryCell.textContent.trim()).toEqual('');
+        }));
     });
 
     describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {

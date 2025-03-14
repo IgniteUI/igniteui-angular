@@ -1,4 +1,5 @@
 import { Subject } from 'rxjs';
+import { isEqual } from 'lodash-es';
 import {
     AfterContentInit,
     ChangeDetectorRef,
@@ -1090,12 +1091,16 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public get disabledSummaries(): string[] {
         return this._disabledSummaries;
     }
 
     public set disabledSummaries(value: string[]) {
+        if (isEqual(this._disabledSummaries, value)) {
+            return;
+        }
         this._disabledSummaries = value;
         if (this.grid) {
             this.grid.summaryService.removeSummariesCachePerColumn(this.field);
