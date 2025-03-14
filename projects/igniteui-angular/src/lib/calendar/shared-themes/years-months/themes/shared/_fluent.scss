@@ -9,8 +9,8 @@
 $_theme: $fluent;
 
 @include themed-block(igx-calendar-view, fluent) {
-    @include e(item, 'current') {
-        .igx-calendar-view__item-inner {
+    @include m('current') {
+        @include e(inner) {
             box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-current-outline-color');
 
             &:hover {
@@ -19,28 +19,28 @@ $_theme: $fluent;
         }
     }
 
-    @include e(item, $mods: ('current', 'active')) {
-        .igx-calendar-view__item-inner {
+    @include mx('current', 'active') {
+        @include e(inner) {
             box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-current-outline-focus-color');
         }
     }
 
-    @include e(item, 'selected') {
-        .igx-calendar-view__item-inner {
+    @include m('selected') {
+        @include e(inner) {
             &:hover {
                 box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-selected-hover-outline-color');
             }
         }
     }
 
-    @include e(item, $mods: ('selected', 'active')) {
-        .igx-calendar-view__item-inner {
+    @include mx('selected', 'active') {
+        @include e(inner) {
             box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-selected-focus-outline-color');
         }
     }
 
-    @include e(item, $mods: ('selected', 'current')) {
-        .igx-calendar-view__item-inner {
+    @include mx('selected', 'current') {
+        @include e(inner) {
             box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-selected-current-outline-color');
 
             &:hover {
@@ -49,7 +49,7 @@ $_theme: $fluent;
         }
     }
 
-    @include e(item, $mods: ('selected', 'current', 'active')) {
+    @include mx('selected', 'current', 'active') {
         .igx-calendar-view__item-inner {
             box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-selected-current-outline-focus-color');
         }

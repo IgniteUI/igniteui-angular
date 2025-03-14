@@ -48,15 +48,15 @@ $theme: $material;
             column-gap: rem(8px);
             width: 100%;
         }
+    }
 
-        @include e(item) {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    @include b(igx-calendar-view-item) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-        @include e(item, 'current') {
-            .igx-calendar-view__item-inner {
+        @include m('current') {
+            @include e(inner) {
                 color: var-get($theme, 'ym-current-foreground');
                 background: var-get($theme, 'ym-current-background');
 
@@ -67,8 +67,8 @@ $theme: $material;
             }
         }
 
-        @include e(item, 'selected') {
-            .igx-calendar-view__item-inner {
+        @include m('selected') {
+            @include e(inner) {
                 color: var-get($theme, 'ym-selected-foreground');
                 background: var-get($theme, 'ym-selected-background');
 
@@ -79,15 +79,15 @@ $theme: $material;
             }
         }
 
-        @include e(item, $mods: ('selected', 'active')) {
-            .igx-calendar-view__item-inner {
+        @include mx('selected', 'active') {
+            @include e(inner) {
                 color: var-get($theme, 'ym-selected-hover-foreground');
                 background: var-get($theme, 'ym-selected-hover-background');
             }
         }
 
-        @include e(item, $mods: ('selected', 'current')) {
-            .igx-calendar-view__item-inner {
+        @include mx('selected', 'current') {
+            @include e(inner) {
                 color: var-get($theme, 'ym-selected-current-foreground');
                 background: var-get($theme, 'ym-selected-current-background');
 
@@ -98,14 +98,14 @@ $theme: $material;
             }
         }
 
-        @include e(item, $mods: ('selected', 'current', 'active')) {
-            .igx-calendar-view__item-inner {
+        @include mx('selected', 'current', 'active') {
+            @include e(inner) {
                 color: var-get($theme, 'ym-selected-current-hover-foreground');
                 background: var-get($theme, 'ym-selected-current-hover-background');
             }
         }
 
-        @include e(item-inner) {
+        @include e(inner) {
             display: flex;
             justify-content: center;
             align-items: center;
