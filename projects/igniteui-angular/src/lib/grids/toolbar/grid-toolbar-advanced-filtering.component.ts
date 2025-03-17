@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, Input } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { IgxToolbarToken } from './token';
 import { OverlaySettings } from '../../services/overlay/utilities';
 import { IgxIconComponent } from '../../icon/icon.component';
@@ -33,7 +33,7 @@ import { IFilteringExpression } from '../../data-operations/filtering-expression
     standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, NgIf]
 })
-export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
+export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
     protected numberOfColumns: number;
     /**
      * Returns the grid containing this component.
@@ -46,17 +46,18 @@ export class IgxGridToolbarAdvancedFilteringComponent implements AfterViewInit {
     @Input()
     public overlaySettings: OverlaySettings;
 
-    constructor( @Inject(IgxToolbarToken) private toolbar: IgxToolbarToken) {
-        this.grid?.advancedFilteringExpressionsTreeChange.subscribe(filteringTree => {
-            this.numberOfColumns = this.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
-        });
-    }
+    constructor( @Inject(IgxToolbarToken) private toolbar: IgxToolbarToken) { }
 
     /**
      * @hidden
      */
-    public ngAfterViewInit(): void {
+    public ngOnInit(): void {
+        // Initial value
         this.numberOfColumns = this.grid?.advancedFilteringExpressionsTree ? this.extractUniqueFieldNamesFromFilterTree(this.grid?.advancedFilteringExpressionsTree).length : 0;
+        // Subscribing for future updates
+        this.grid?.advancedFilteringExpressionsTreeChange.subscribe(filteringTree => {
+            this.numberOfColumns = this.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
+        });
     }
 
     protected extractUniqueFieldNamesFromFilterTree(filteringTree?: IFilteringExpressionsTree) : string[] {
