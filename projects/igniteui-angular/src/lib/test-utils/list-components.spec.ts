@@ -66,6 +66,21 @@ export class ListWithHeaderComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
+        <igx-list>
+            <igx-list-item selected [isHeader]="true">Header</igx-list-item>
+            <igx-list-item selected>Item 1</igx-list-item>
+            <igx-list-item>Item 2</igx-list-item>
+            <igx-list-item>Item 3</igx-list-item>
+        </igx-list>
+    </div>`,
+    imports: [IgxListComponent, IgxListItemComponent]
+})
+export class ListWithSelectedItemComponent extends BasicListComponent {
+}
+
+@Component({
+    template: `
+    <div #wrapper>
         <igx-list [allowRightPanning]="allowRightPanning" [allowLeftPanning]="allowLeftPanning">
             <igx-list-item>Item 1</igx-list-item>
             <igx-list-item>Item 2</igx-list-item>

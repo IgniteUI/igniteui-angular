@@ -218,7 +218,7 @@ describe('IgxTree #treeView', () => {
                     expect((n as any).spyProp).toHaveBeenCalledTimes(2);
                 });
             });
-            it('Should deselectAll nodes w/ proper methond', () => {
+            it('Should deselectAll nodes w/ proper method', () => {
                 tree.nodes = mockNodes;
                 tree.deselectAll();
                 expect(mockSelectionService.deselectNodesWithNoEvent).toHaveBeenCalledWith(undefined);
@@ -258,7 +258,7 @@ describe('IgxTree #treeView', () => {
                 node.expanded = false;
                 expect(mockTreeService.collapse).toHaveBeenCalledTimes(1);
                 expect(mockTreeService.collapse).toHaveBeenCalledWith(node);
-                // events are not emitted when chainging state through input
+                // events are not emitted when chaining state through input
                 expect(mockTree.nodeExpanded.emit).not.toHaveBeenCalled();
                 expect(mockTree.nodeCollapsed.emit).not.toHaveBeenCalled();
                 expect(mockTree.nodeExpanding.emit).not.toHaveBeenCalled();
@@ -517,7 +517,7 @@ describe('IgxTree #treeView', () => {
                 });
             });
 
-            it('Should apply proper node classes depending on tree displayDenisty', () => {
+            it('Should apply proper node classes depending on tree displayDensity', () => {
                 pending('Test not implemented');
             });
 
@@ -680,13 +680,13 @@ describe('IgxTree #treeView', () => {
 @Component({
     template: `
         <igx-tree>
-            @for (node of data; track node) {
+            @for (node of data; track node.id) {
                 <igx-tree-node [(expanded)]="node.expanded" [data]="node">
                     {{ node.label }}
-                    @for (child of node.children; track child) {
+                    @for (child of node.children; track child.id) {
                         <igx-tree-node [(expanded)]="child.expanded" [data]="child">
                             {{ child.label }}
-                            @for (leafChild of child.children; track leafChild) {
+                            @for (leafChild of child.children; track leafChild.id) {
                                 <igx-tree-node [(expanded)]="leafChild.expanded" [data]="leafChild">
                                     {{ leafChild.label }}
                                 </igx-tree-node>

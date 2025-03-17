@@ -1791,8 +1791,8 @@
     %grid-cell--active {
         box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'cell-active-border-color');
 
-        %igx-grid__filtering-cell,
-        %grid-cell-header {
+        > %igx-grid__filtering-cell,
+        > %grid-cell-header {
             border-inline-end-color: var-get($theme, 'cell-active-border-color');
             border-bottom-color: var-get($theme, 'cell-active-border-color');
         }
@@ -3496,6 +3496,17 @@
                 igx-pivot-row-dimension-header {
                     border-inline-end: 0;
                 }
+            }
+        }
+    }
+
+    .igx-pivot-grid-row-filler__wrapper {
+        .igx-grid-thead__wrapper {
+            height: 100%;
+            border-bottom: initial;
+
+            .igx-grid-th {
+                height: 100%;
             }
         }
     }

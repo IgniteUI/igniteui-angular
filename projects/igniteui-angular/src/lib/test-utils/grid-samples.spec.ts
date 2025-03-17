@@ -54,7 +54,7 @@ export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
 @Component({
     template: `
         <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'600px'" [moving]="true">
-            @for (c of columns; track c) {
+            @for (c of columns; track c.field) {
                 <igx-column [field]="c.field"
                     [header]="c.field"
                     [width]="c.width"
@@ -232,9 +232,9 @@ export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
             [height]='"500px"'
             [data]="data"
             [autoGenerate]="false">
-            @for (group of colGroups; track group) {
+            @for (group of colGroups; track group.field) {
                 <igx-column-layout [pinned]='group.pinned'>
-                    @for (col of group.columns; track col) {
+                    @for (col of group.columns; track col.field) {
                         <igx-column
                             [rowStart]="col.rowStart" [colStart]="col.colStart"
                         [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
@@ -1935,9 +1935,9 @@ export class CollapsibleGroupsTemplatesTestComponent {
 @Component({
     template: `
         <igx-grid [data]="data" height="500px" width="800px" columnWidth="100px">
-            @for (colGroup of columnGroups; track colGroup) {
+            @for (colGroup of columnGroups; track colGroup.columnHeader) {
                 <igx-column-group [header]="colGroup.columnHeader" [collapsible]="colGroup.collapsible">
-                    @for (column of colGroup.columns; track column) {
+                    @for (column of colGroup.columns; track column.field) {
                         <igx-column [field]="column.field" [dataType]="column.type"
                         [visibleWhenCollapsed]="column.visibleWhenCollapsed"></igx-column>
                     }
@@ -1967,8 +1967,8 @@ export class CollapsibleGroupsDynamicColComponent {
                 columnHeader: 'Second', collapsible: true, columns: [
                     { field: 'ContactTitle', type: 'string', visibleWhenCollapsed: true },
                     { field: 'Address', type: 'string', visibleWhenCollapsed: true },
-                    { field: 'PostlCode', type: 'string', visibleWhenCollapsed: false },
-                    { field: 'Contry', type: 'string', visibleWhenCollapsed: false }
+                    { field: 'PostalCode', type: 'string', visibleWhenCollapsed: false },
+                    { field: 'Country', type: 'string', visibleWhenCollapsed: false }
                 ]
             }
         ];
@@ -2208,9 +2208,9 @@ export class IgxGridFormattedValuesSortingComponent extends BasicGridComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [height]="'500px'" [width]="'500px'">
-        @for (group of colGroups; track group) {
+        @for (group of colGroups; track group.group) {
             <igx-column-layout [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
-                @for (col of group.columns; track col) {
+                @for (col of group.columns; track col.field) {
                     <igx-column
                         [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
                     [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
@@ -2258,7 +2258,7 @@ export class MRLTestComponent {
     template: `
 <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
     [rowEditable]="true" [primaryKey]="'ID'" [allowFiltering]="true" [moving]="true">
-    @for (c of columns; track c) {
+    @for (c of columns; track c.field) {
         <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
             [width]="c.width" [resizable]="true">
         </igx-column>

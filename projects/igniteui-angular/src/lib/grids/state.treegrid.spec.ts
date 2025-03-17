@@ -59,7 +59,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         expect(state.options).toEqual(jasmine.objectContaining(defaultOptions));
     });
 
-    it('getState should return corect IGridState object when options are not default', () => {
+    it('getState should return correct IGridState object when options are not default', () => {
         const options = {
             sorting: false,
             paging: false,
@@ -81,7 +81,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         expect(gridState['moving']).toBeFalsy();
     });
 
-    it('getState should return corect JSON string', () => {
+    it('getState should return correct JSON string', () => {
         const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true,"key":"ID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"Name","width":"150px","header":"Name","resizable":true,"searchable":true,"selectable":true,"key":"Name","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"date","hasSummary":true,"field":"Hire Date","width":"140px","header":"Hire Date","resizable":true,"searchable":true,"selectable":true,"key":"Hire Date","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"Age","width":"110px","header":"Age","resizable":false,"searchable":true,"selectable":true,"key":"Age","columnGroup":false,"disableHiding":false,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":18,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"moving":true,"rowIslands":[]}';
         fix.detectChanges();
 
@@ -91,7 +91,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         expect(gridState).toBe(initialGridState, 'JSON string representation of the initial grid state is not correct');
     });
 
-    it('getState should return corect IGridState object when using default options', () => {
+    it('getState should return correct IGridState object when using default options', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
@@ -119,7 +119,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         HelperFunctions.verifyFilteringExpressions(filtering, gridState);
     });
 
-    it('getState should return corect filtering state', () => {
+    it('getState should return correct filtering state', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
         const filtering = grid.filteringExpressionsTree;
@@ -147,7 +147,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         expect(gridState).toBe(filteringState);
     });
 
-    it('getState should return corect moving state', () => {
+    it('getState should return correct moving state', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
         const moving = grid.moving;
@@ -345,7 +345,7 @@ class HelperFunctions {
     <igx-tree-grid [moving]="true" #treeGrid [data]="data" childDataKey="Employees" [expansionDepth]="2" width="900px" height="800px" igxGridState
         primaryKey="ID" rowSelection="multiple" cellSelection="multiple">
 
-        @for (c of columns; track c) {
+        @for (c of columns; track c.field) {
             <igx-column
                 [width]="c.width"
                 [sortable]="c.sortable"

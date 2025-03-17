@@ -282,9 +282,9 @@ export class NestedColGroupsGridComponent {
 @Component({
     template: `
         <igx-grid [data]="data" [allowFiltering]="true">
-            @for (colGroup of columnGroups; track colGroup) {
+            @for (colGroup of columnGroups; track colGroup.columnHeader) {
                 <igx-column-group [header]="colGroup.columnHeader">
-                    @for (column of colGroup.columns; track column) {
+                    @for (column of colGroup.columns; track column.field) {
                         <igx-column [field]="column.field" [dataType]="column.type"
                         [filterable]="true"></igx-column>
                     }
@@ -319,8 +319,8 @@ export class DynamicColGroupsGridComponent {
             },
             {
                 columnHeader: 'Third', columns: [
-                    { field: 'PostlCode', type: 'string' },
-                    { field: 'Contry', type: 'string' },
+                    { field: 'PostalCode', type: 'string' },
+                    { field: 'Country', type: 'string' },
                 ]
             },
         ];
@@ -444,7 +444,7 @@ export class StegosaurusGridComponent implements OnInit {
     template: `
         <igx-grid #grid [data]="data" [height]="gridHeight" [columnWidth]="columnWidth">
             <igx-column-group headerGroupClasses="firstGroup" [header]="firstGroupTitle">
-                @for (item of hunderdItems; track $index) {
+                @for (item of hundredItems; track $index) {
                     <igx-column headerClasses="firstGroupColumn" field="ID"></igx-column>
                 }
                 @if (extraMissingColumn) {
@@ -499,7 +499,7 @@ export class BlueWhaleGridComponent {
     public firstGroupRepeats = 100;
     public secondGroupRepeats = 50;
 
-    public get hunderdItems() {
+    public get hundredItems() {
         return new Array(this.firstGroupRepeats);
     }
     public get fiftyItems() {

@@ -584,7 +584,7 @@ class ButtonGroupWithSelectedButtonComponent {
 @Component({
     template: `
     <igx-buttongroup>
-        @for (item of items; track item) {
+        @for (item of items; track item.key) {
             <button igxButton [selected]="item.key === selectedValue">{{item.value}}</button>
         }
     </igx-buttongroup>
