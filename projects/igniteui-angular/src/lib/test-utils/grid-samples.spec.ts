@@ -1187,6 +1187,30 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="false">
+        <igx-grid-toolbar >
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-advanced-filtering>Really advanced filtering</igx-grid-toolbar-advanced-filtering>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
+        <igx-column width="100px" [field]="'ID'" [header]="'HeaderID'" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
+        <igx-column width="100px" [field]="'ReleaseTime'" dataType="time"></igx-column>
+        </igx-column>
+    </igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent]
+})
+export class IgxGridAdvancedFilteringWithToolbarComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public override data = SampleTestData.excelFilteringData();
+}
+
+@Component({
     template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
         <igx-grid-toolbar></igx-grid-toolbar>
         <igx-column *ngFor="let c of columns"
