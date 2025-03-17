@@ -1856,7 +1856,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
 
             value.type = FilteringExpressionsTreeType.Regular;
-            if (value && this._columns && this._columns.length > 0) {
+            if (value && this._columns?.length > 0) {
                 this._filteringExpressionsTree = recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
             } else {
                 this._filteringExpressionsTree = value;
