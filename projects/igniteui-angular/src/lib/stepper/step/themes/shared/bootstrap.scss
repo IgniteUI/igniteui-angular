@@ -144,6 +144,12 @@ $_theme: $bootstrap;
             max-width: $indicator-size;
         }
     }
+
+    @include m(disabled) {
+        @include e(header) {
+            box-shadow: none;
+        }
+    }
 }
 
 @include themed-block(igx-step-header, bootstrap) {
