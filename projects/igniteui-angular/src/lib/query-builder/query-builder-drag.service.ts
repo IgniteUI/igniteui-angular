@@ -1,6 +1,6 @@
 import { filter, fromEvent, sampleTime, Subscription, tap } from 'rxjs';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
-import { ElementRef, Inject, Injectable } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { ExpressionGroupItem, ExpressionItem, QueryBuilderSelectors } from './query-builder.common';
 
 const DEFAULT_SET_Z_INDEX_DELAY = 10;
