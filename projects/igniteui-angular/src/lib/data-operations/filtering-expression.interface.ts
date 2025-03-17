@@ -16,7 +16,7 @@ export declare interface IFilteringExpression {
     fieldName: string;
     condition?: IFilteringOperation | null;
     conditionName?: string | null;
-    searchVal?: any | null;
+    searchVal?: any;
     searchTree?: IExpressionTree | null;
     ignoreCase?: boolean;
 }
