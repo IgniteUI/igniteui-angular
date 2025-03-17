@@ -166,7 +166,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         viewRef: ViewContainerRef,
         injector: Injector,
         envInjector: EnvironmentInjector,
-        navigation: IgxHierarchicalGridNavigationService,
+        public override navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
         textHighlightService: IgxTextHighlightService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
@@ -199,8 +199,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             _diTransactions,
         );
     }
-
-    public override navigation: IgxHierarchicalGridNavigationService;
 
     /**
      * @hidden
