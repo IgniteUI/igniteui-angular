@@ -21,9 +21,13 @@
 /// @param {Color} $button-disabled-arrow-color [null] - The previous/next buttons disabled arrow color.
 /// @param {Color} $button-border-color [null] - The previous/next buttons idle border color.
 /// @param {Color} $button-hover-border-color [null] - The previous/next buttons hover border color.
+/// @param {Color} $button-focus-border-color [null] - The navigation buttons border color on focus.
 /// @param {Color} $button-disabled-border-color [null] - The previous/next buttons disabled border color.
+/// @param {Color} $indicator-background [null] - The indicators container background color.
+/// @param {Color} $label-indicator-background [null] - The label indicator container background color.
 /// @param {Color} $indicator-dot-color [null] - The idle indicator dot color.
 /// @param {Color} $indicator-hover-dot-color [null] - The hover indicator dot color.
+/// @param {Color} $indicator-focus-color [null] - The indicators border and dot color on focus.
 /// @param {Color} $indicator-border-color [null] - The idle indicator border color.
 /// @param {Color} $indicator-active-dot-color [null] - The active indicator dot color.
 /// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
@@ -57,10 +61,14 @@
     $button-disabled-arrow-color: null,
     $button-border-color: null,
     $button-hover-border-color: null,
+    $button-focus-border-color: null,
     $button-disabled-border-color: null,
 
+    $indicator-background: null,
+    $label-indicator-background: null,
     $indicator-dot-color: null,
     $indicator-hover-dot-color: null,
+    $indicator-focus-color: null,
     $indicator-border-color: null,
     $indicator-active-dot-color: null,
     $indicator-active-border-color: null,
@@ -84,17 +92,47 @@
     }
 
     @if not($button-arrow-color) and $button-background {
-        $button-arrow-color: text-contrast($button-background);
+        $button-arrow-color: adaptive-contrast(var(--button-background));
+    }
+
+    @if not($button-hover-background) and $button-background {
+        $button-hover-background: hsl(from var(--button-background) h s calc(l * 0.9));
     }
 
     @if not($button-hover-arrow-color) and $button-hover-background {
-        $button-hover-arrow-color: text-contrast($button-hover-background);
+        $button-hover-arrow-color: adaptive-contrast(var(--button-hover-background));
+    }
+
+    @if not($button-disabled-background) and $button-background {
+        $button-disabled-background: var(--button-background);
     }
 
     @if not($button-disabled-arrow-color) and $button-disabled-background {
-        @if meta.type-of($button-disabled-background) == 'color' {
-            $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
-        }
+        $button-disabled-arrow-color: hsla(from adaptive-contrast(var(--button-disabled-background))  h s l / .4);
+    }
+
+    @if not($indicator-dot-color) and $indicator-background {
+        $indicator-dot-color: hsl(from adaptive-contrast(var(--indicator-background)) h s calc(l * 0.8));
+    }
+
+    @if not($indicator-hover-dot-color) and $indicator-dot-color {
+        $indicator-hover-dot-color: hsl(from var(--indicator-dot-color) h s calc(l * 1.1));
+    }
+
+    @if not($indicator-border-color) and $indicator-dot-color {
+        $indicator-border-color: var(--indicator-dot-color);
+    }
+
+    @if not($indicator-active-dot-color) and $indicator-background {
+        $indicator-active-dot-color: hsl(from adaptive-contrast(var(--indicator-background)) h s calc(l * 0.9));
+    }
+
+    @if not($indicator-active-hover-dot-color) and $indicator-active-dot-color {
+        $indicator-active-hover-dot-color: hsl(from var(--indicator-active-dot-color) h s calc(l * 1.1));
+    }
+
+    @if not($indicator-active-border-color) and $indicator-active-dot-color {
+        $indicator-active-border-color: var(--indicator-active-dot-color)
     }
 
     @return extend($theme, (
@@ -113,10 +151,14 @@
         button-disabled-arrow-color: $button-disabled-arrow-color,
         button-border-color: $button-border-color,
         button-hover-border-color: $button-hover-border-color,
+        button-focus-border-color: $button-focus-border-color,
         button-disabled-border-color: $button-disabled-border-color,
 
+        indicator-background: $indicator-background,
+        label-indicator-background: $label-indicator-background,
         indicator-dot-color: $indicator-dot-color,
         indicator-hover-dot-color: $indicator-hover-dot-color,
+        indicator-focus-color: $indicator-focus-color,
         indicator-border-color: $indicator-border-color,
         indicator-active-dot-color: $indicator-active-dot-color,
         indicator-active-border-color: $indicator-active-border-color,
@@ -139,7 +181,7 @@
     $indicator-border-style: rem(2px) solid;
     $btn-indent: rem(3px);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     %igx-carousel-display {
