@@ -309,15 +309,15 @@ export class GridFunctions {
         expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
     }
 
-    public static verifyUnpinnedAreaWidth(grid: GridType, expectedWidth: number, includeScrolllWidth = true) {
-        const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollSize)) :
+    public static verifyUnpinnedAreaWidth(grid: GridType, expectedWidth: number, includeScrollWidth = true) {
+        const tolerance = includeScrollWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollSize)) :
             Math.abs(expectedWidth - grid.unpinnedWidth);
-        expect(tolerans).toBeLessThanOrEqual(1);
+        expect(tolerance).toBeLessThanOrEqual(1);
     }
 
     public static verifyPinnedAreaWidth(grid: GridType, expectedWidth: number) {
-        const tolerans = Math.abs(expectedWidth - grid.pinnedWidth);
-        expect(tolerans).toBeLessThanOrEqual(1);
+        const tolerance = Math.abs(expectedWidth - grid.pinnedWidth);
+        expect(tolerance).toBeLessThanOrEqual(1);
     }
 
     /* Filtering-related methods */

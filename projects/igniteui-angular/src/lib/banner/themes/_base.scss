@@ -1,0 +1,92 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    %actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-self: flex-end;
+        gap: rem(8px);
+
+        > a {
+            display: inline-flex;
+            align-items: center;
+        }
+    }
+
+    %flex-center-block {
+        display: flex;
+        align-items: center;
+    }
+
+    @include b(igx-banner-host) {
+        igx-expansion-panel-body {
+            padding: 0 !important;
+        }
+    }
+
+    @include b(igx-banner) {
+        @include sizable();
+        --component-size: var(--ig-size, var(--ig-size-large));
+
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: rem(8px);
+        padding: rem(16px) rem(8px);
+        min-width: rem(320px);
+        background: var-get($theme, 'banner-background');
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'banner-border-color');
+        border-radius: var-get($theme, 'border-radius');
+
+        igc-icon,
+        igx-icon,
+        igc-button,
+        [igxButton] {
+            --component-size: var(--ig-size, var(--ig-size-large));
+        }
+
+        @include e(message) {
+            @extend %flex-center-block;
+
+            min-width: rem(150px);
+            flex: 1 0 0%;
+            gap: rem(16px);
+            padding: 0 rem(8px);
+        }
+
+        @include e(illustration) {
+            @extend %flex-center-block;
+
+            justify-content: center;
+            color: var-get($theme, 'banner-illustration-color');
+        }
+
+        @include e(text) {
+            @include type-style(body-2) {
+                margin-block: 0;
+            }
+
+            color: var-get($theme, 'banner-message-color');
+            flex: 1 0 0%;
+
+            > *:not(hr) {
+                margin-block-start: 0 !important;
+            }
+        }
+
+        @include e(actions) {
+            @extend %actions;
+
+            > igx-banner-actions {
+                @extend %actions;
+            }
+        }
+    }
+}

@@ -15,12 +15,13 @@ import {
     IgxGridAdvancedFilteringComponent,
     IgxGridExternalAdvancedFilteringComponent,
     IgxGridAdvancedFilteringBindingComponent,
-    IgxGridAdvancedFilteringDynamicColumnsComponent
+    IgxGridAdvancedFilteringDynamicColumnsComponent,
+    IgxGridAdvancedFilteringWithToolbarComponent
 } from '../../test-utils/grid-samples.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
-import { IFilteringEventArgs } from '../public_api';
+import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { QueryBuilderFunctions } from '../../query-builder/query-builder-functions.spec';
 import { By } from '@angular/platform-browser';
@@ -37,11 +38,12 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxGridExternalAdvancedFilteringComponent,
                 IgxGridAdvancedFilteringBindingComponent,
                 IgxHierGridExternalAdvancedFilteringComponent,
-                IgxGridAdvancedFilteringDynamicColumnsComponent
+                IgxGridAdvancedFilteringDynamicColumnsComponent,
+                IgxGridAdvancedFilteringWithToolbarComponent
             ]
         });
     }));
-    
+
     describe('General tests - ', () => {
         let fix: ComponentFixture<IgxGridAdvancedFilteringComponent>;
         let grid: IgxGridComponent;
@@ -434,13 +436,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
-            // Verfiy there is a root group with 'And' operator line and 2 children.
+            // Verify there is a root group with 'And' operator line and 2 children.
             const rootGroup = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix);
             expect(rootGroup).not.toBeNull();
             QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(fix) as HTMLElement, 'and');
             expect(QueryBuilderFunctions.getQueryBuilderTreeChildItems(rootGroup as HTMLElement).length).toBe(2);
 
-            // Verify the contnet of the first child (expression) of the root group.
+            // Verify the content of the first child (expression) of the root group.
             QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Downloads', 'Greater Than', '100');
 
             // Verify the content of the second child (group) of the root group.
@@ -1194,6 +1196,65 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
     });
 
+    describe('Advanced filtering with toolbar', () => {
+        let fix: ComponentFixture<IgxGridAdvancedFilteringWithToolbarComponent>;
+        let grid: IgxGridComponent;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridAdvancedFilteringWithToolbarComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('Should update toolbar when advancedFilteringExpressionsTreeChange emits a new value', fakeAsync(() => {
+            // Set initial filtering expressions tree
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'ProductName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'angular',
+                ignoreCase: true
+            });
+
+            // Apply the initial filtering tree
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Create a new filtering tree with more filters
+            const updatedTree = new FilteringExpressionsTree(FilteringLogic.And);
+            updatedTree.filteringOperands.push({
+                fieldName: 'Downloads',
+                condition: IgxStringFilteringOperand.instance().condition('equals'),
+                searchVal: 10,
+                ignoreCase: true
+            });
+            updatedTree.filteringOperands.push({
+                fieldName: 'ProductName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'angular',
+                ignoreCase: true
+            });
+            updatedTree.filteringOperands.push({
+                fieldName: 'Category',
+                condition: IgxStringFilteringOperand.instance().condition('equals'),
+                searchVal: 'electronics',
+                ignoreCase: false
+            });
+
+            // Update the filtering expressions tree
+            grid.advancedFilteringExpressionsTree = updatedTree;
+            fix.detectChanges();
+
+            // Verify the correct number of filters
+            const toolbarDebugElement = fix.debugElement.query(By.directive(IgxGridToolbarAdvancedFilteringComponent));
+            const toolbarComponent = toolbarDebugElement.componentInstance as IgxGridToolbarAdvancedFilteringComponent;
+            const numberOfFilters = (toolbarComponent as any).numberOfColumns;
+
+            expect(grid.advancedFilteringExpressionsTree.filteringOperands.length).toEqual(3);
+            expect(numberOfFilters).toEqual(3);
+        }));
+    })
+
     describe('Localization - ', () => {
         it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
@@ -1225,11 +1286,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(100);
             fix.detectChanges();
 
-            
+
             // Populate edit inputs.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
-            
+
             let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
             // Commit the populated expression.
@@ -1278,7 +1339,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
-        
+
         it('Should allow hosting Advanced Filtering dialog outside of the grid.', fakeAsync(() => {
             // Add a root 'and' group.
             QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);

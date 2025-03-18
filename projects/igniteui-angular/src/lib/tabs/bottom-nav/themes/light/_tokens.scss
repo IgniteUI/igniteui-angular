@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/bottom-nav' as *;
+
+$base: digest-schema($light-bottom-nav);
+$material: digest-schema($material-bottom-nav);
+$bootstrap: digest-schema($bootstrap-bottom-nav);
+$fluent: digest-schema($fluent-bottom-nav);
+$indigo: digest-schema($indigo-bottom-nav);

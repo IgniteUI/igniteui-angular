@@ -35,8 +35,8 @@
 
 @mixin typography() {
     @include badge-typography();
-    @include banner-typography();
-    @include bottom-nav-typography();
+    // @include banner-typography();
+    // @include bottom-nav-typography();
     @include button-typography();
     @include button-group-typography();
     //@include calendar-typography();
@@ -48,7 +48,7 @@
     @include dialog-typography();
     @include dock-manager-typography();
     @include drop-down-typography();
-    @include expansion-panel-typography();
+    // @include expansion-panel-typography();
     @include excel-filtering-typography();
     @include icon-button-typography();
     @include input-group-typography();

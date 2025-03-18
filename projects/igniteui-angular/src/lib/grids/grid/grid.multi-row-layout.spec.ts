@@ -17,7 +17,7 @@ const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
 
 describe('IgxGrid - multi-row-layout #grid', () => {
-    const DEBOUNCETIME = 60;
+    const DEBOUNCE_TIME = 60;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -41,7 +41,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
 
         const firstRowCellsArr = gridFirstRow.cells.toArray();
-        // the last cell is spaned as much as the first 3 cells
+        // the last cell is spanned as much as the first 3 cells
         const firstThreeCellsWidth = firstRowCellsArr[0].nativeElement.getBoundingClientRect().width +
             firstRowCellsArr[1].nativeElement.getBoundingClientRect().width +
             firstRowCellsArr[2].nativeElement.getBoundingClientRect().width;
@@ -126,7 +126,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
-        // col span is 3 => columns should have grid width - scrollbarWitdh/3 width
+        // col span is 3 => columns should have grid width - scrollbarWidth/3 width
         // check columns
         expect(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.offsetWidth).toBe(200);
         expect(grid.gridAPI.get_cell_by_index(0, 'CompanyName').nativeElement.offsetWidth).toBe(200);
@@ -158,7 +158,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.componentInstance.grid.width = '917px';
         fixture.detectChanges();
 
-        // col span is 6 => columns should have grid width - scrollbarWitdh/6 width
+        // col span is 6 => columns should have grid width - scrollbarWidth/6 width
         expect(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.offsetWidth).toBe(150);
         expect(grid.gridAPI.get_cell_by_index(0, 'CompanyName').nativeElement.offsetWidth).toBe(150);
         expect(grid.gridAPI.get_cell_by_index(0, 'ContactName').nativeElement.offsetWidth).toBe(150);
@@ -870,10 +870,10 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(horizontalVirtualization.getSizeAt(2)).toBe(200);
         expect(horizontalVirtualization.getSizeAt(3)).toBe(4 * 200);
 
-        // check total widths sum - unique col groups col span 10 in total * 200px default witdth * 3 times repeated
-        const horizonatalScrElem = horizontalVirtualization.getScroll();
+        // check total widths sum - unique col groups col span 10 in total * 200px default width * 3 times repeated
+        const horizontalScrElem = horizontalVirtualization.getScroll();
         const totalExpected = 10 * 200 * 3;
-        expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
+        expect(parseInt((horizontalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
         // check groups are rendered correctly
 
         const gridFirstRow = grid.rowList.first;
@@ -1126,12 +1126,12 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const NAVIGATE = 20;
 
         fix.detectChanges();
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCE_TIME);
         fix.detectChanges();
 
         grid.navigateTo(NAVIGATE);
 
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCE_TIME);
         fix.detectChanges();
 
         expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);

@@ -926,7 +926,7 @@ describe('IgxDropDown ', () => {
             });
         });
     });
-    describe('Virtualisation tests', () => {
+    describe('Virtualization tests', () => {
         let scroll: IgxForOfDirective<any>;
         let items;
         configureTestSuite();
