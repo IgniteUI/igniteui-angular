@@ -72,11 +72,11 @@
         item: 'body-2',
         select-item: 'body-2'
     ));
-    @include expansion-panel-typography($categories: (
-        title: 'subtitle-1',
-        description: 'body-2',
-        body: 'caption'
-    ));
+    // @include expansion-panel-typography($categories: (
+    //     title: 'subtitle-1',
+    //     description: 'body-2',
+    //     body: 'caption'
+    // ));
     @include excel-filtering-typography();
     @include icon-button-typography();
     @include input-group-typography($categories: (
