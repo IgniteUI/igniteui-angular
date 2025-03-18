@@ -3165,6 +3165,15 @@ describe('IgxQueryBuilder', () => {
     {
       "filteringOperands": [
         {
+          "fieldName": "OrderDate",
+          "condition": {
+            "name": "today",
+            "isUnary": true,
+            "iconName": "filter_today"
+          },
+          "conditionName": "today"
+        },
+        {
           "fieldName": "OrderName",
           "condition": {
             "name": "endsWith",
@@ -3173,15 +3182,6 @@ describe('IgxQueryBuilder', () => {
           },
           "conditionName": "endsWith",
           "searchVal": "a"
-        },
-        {
-          "fieldName": "OrderDate",
-          "condition": {
-            "name": "today",
-            "isUnary": true,
-            "iconName": "filter_today"
-          },
-          "conditionName": "today"
         }
       ],
       "operator": 1,
@@ -3195,8 +3195,7 @@ describe('IgxQueryBuilder', () => {
   "entity": "Orders",
   "returnFields": [
     "*"
-  ],
-  "fieldName": null
+  ]
 }`);
     }));
 
