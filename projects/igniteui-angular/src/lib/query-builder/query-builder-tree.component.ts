@@ -68,38 +68,41 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
     templateUrl: './query-builder-tree.component.html',
     host: { 'class': 'igx-query-builder-tree' },
     imports: [
-    DatePipe,
-    FormsModule,
-    IgxButtonDirective,
-    IgxCheckboxComponent,
-    IgxChipComponent,
-    IgxComboComponent,
-    IgxComboHeaderDirective,
-    IgxDatePickerComponent,
-    IgxDateTimeEditorDirective,
-    IgxDialogComponent,
-    IgxDragIgnoreDirective,
-    IgxDropDirective,
-    IgxDropDownComponent,
-    IgxDropDownItemComponent,
-    IgxDropDownItemNavigationDirective,
-    IgxFieldFormatterPipe,
-    IgxIconButtonDirective,
-    IgxIconComponent,
-    IgxInputDirective,
-    IgxInputGroupComponent,
-    IgxOverlayOutletDirective,
-    IgxPickerClearComponent,
-    IgxPickerToggleComponent,
-    IgxPrefixDirective,
-    IgxSelectComponent,
-    IgxSelectItemComponent,
-    IgxTimePickerComponent,
-    IgxTooltipDirective,
-    IgxTooltipTargetDirective,
-    NgClass,
-    NgTemplateOutlet
-]
+        DatePipe,
+        FormsModule,
+        IgxButtonDirective,
+        IgxCheckboxComponent,
+        IgxChipComponent,
+        IgxComboComponent,
+        IgxComboHeaderDirective,
+        IgxDatePickerComponent,
+        IgxDateTimeEditorDirective,
+        IgxDialogComponent,
+        IgxDragIgnoreDirective,
+        IgxDropDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxDropDownItemNavigationDirective,
+        IgxFieldFormatterPipe,
+        IgxIconButtonDirective,
+        IgxIconComponent,
+        IgxInputDirective,
+        IgxInputGroupComponent,
+        IgxOverlayOutletDirective,
+        IgxPickerClearComponent,
+        IgxPickerToggleComponent,
+        IgxPrefixDirective,
+        IgxSelectComponent,
+        IgxSelectItemComponent,
+        IgxTimePickerComponent,
+        IgxTooltipDirective,
+        IgxTooltipTargetDirective,
+        NgClass,
+        NgTemplateOutlet
+    ],
+    providers: [
+        IgxQueryBuilderDragService
+    ]
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
@@ -519,11 +522,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     constructor(public cdr: ChangeDetectorRef,
+        public dragService: IgxQueryBuilderDragService,
         protected platform: PlatformUtil,
-        protected el: ElementRef,
         private elRef: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string) {
         this.locale = this.locale || this._localeId;
+        this.dragService.register(this, elRef);
     }
 
     /**
@@ -842,7 +846,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    private deleteItem = (expressionItem: ExpressionItem, skipEmit: boolean = false) => {
+    /**
+     * @hidden @internal
+     */
+    public deleteItem = (expressionItem: ExpressionItem, skipEmit: boolean = false) => {
         if (!expressionItem.parent) {
             this.rootGroup = null;
             this.currentGroup = null;
@@ -1025,15 +1032,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.deleteItem(expressionItem);
     }
 
-    private focusChipAfterDrag = (index: number) => {
-        this._lastFocusedChipIndex = index;
-        this.focusEditedExpressionChip();
-    }
-
     /**
      * @hidden @internal
      */
-    public dragService: IgxQueryBuilderDragService = new IgxQueryBuilderDragService(this, this.el, this.deleteItem, this.focusChipAfterDrag);
+    public focusChipAfterDrag = (index: number) => {
+        this._lastFocusedChipIndex = index;
+        this.focusEditedExpressionChip();
+    }
 
     /**
      * @hidden @internal
