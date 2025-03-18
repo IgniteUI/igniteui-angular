@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { QueryBuilderSelectors } from './query-builder.common';
 
-fdescribe('IgxQueryBuilder', () => {
+describe('IgxQueryBuilder', () => {
   configureTestSuite();
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
   let queryBuilder: IgxQueryBuilderComponent;
@@ -3250,7 +3250,7 @@ fdescribe('IgxQueryBuilder', () => {
 }`);
     }));
 
-    fit('Should cancel drop upon hitting \'Escape\' when keyboard dragged.', fakeAsync(() => {
+    it('Should cancel drop upon hitting \'Escape\' when keyboard dragged.', fakeAsync(() => {
       const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
       const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
 
