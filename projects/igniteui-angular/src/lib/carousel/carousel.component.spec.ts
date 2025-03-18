@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -1143,7 +1143,8 @@ class CarouselTestComponent {
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
     `,
-    imports: [IgxCarouselComponent, IgxSlideComponent]
+    imports: [IgxCarouselComponent, IgxSlideComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class CarouselAnimationsComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -1224,7 +1225,7 @@ class CarouselTemplateSetInTypescriptTestComponent {
 @Component({
     template: `
         <igx-carousel #carousel [loop]="loop" [animationType]="'none'">
-            @for (slide of slides; track slide) {
+            @for (slide of slides; track slide.text) {
                 <igx-slide [active]="slide.active">
                     <igx-slide><h3>{{slide.text}}</h3></igx-slide>
                 </igx-slide>
@@ -1240,10 +1241,6 @@ class CarouselDynamicSlidesComponent {
     public slides = [];
 
     constructor() {
-        this.addNewSlide();
-    }
-
-    public addNewSlide() {
         this.slides.push(
             { text: 'Slide 1', active: false },
             { text: 'Slide 2', active: false },
