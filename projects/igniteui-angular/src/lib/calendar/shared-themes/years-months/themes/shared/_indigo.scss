@@ -7,7 +7,7 @@
 
 $_theme: $indigo;
 
-@include themed-block(igx-calendar-view, indigo) {
+@include themed-block(igx-calendar-view-item, indigo) {
     @include m('current') {
         @include e(inner) {
             box-shadow: inset 0 0 0 rem(2px) var-get($_theme, 'ym-current-outline-color');

@@ -1,7 +1,6 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/themes/schemas/components/light/calendar/days-view' as *;
 
-$base: digest-schema($light-days-view);
 $material: digest-schema($material-days-view);
 $bootstrap: digest-schema($bootstrap-days-view);
 $fluent: digest-schema($fluent-days-view);

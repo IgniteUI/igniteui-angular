@@ -2,6 +2,6 @@
 @use 'igniteui-theming/sass/themes/schemas/components/dark/calendar/days-view' as *;
 
 $material: digest-schema($dark-material-days-view);
-$bootstrap: digest-schema($dark-fluent-days-view);
+$bootstrap: digest-schema($dark-bootstrap-days-view);
 $fluent: digest-schema($dark-fluent-days-view);
-$indigo: digest-schema($dark-fluent-days-view);
+$indigo: digest-schema($dark-indigo-days-view);

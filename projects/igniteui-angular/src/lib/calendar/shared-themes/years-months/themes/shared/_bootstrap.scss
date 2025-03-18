@@ -8,7 +8,7 @@
 
 $_theme: $bootstrap;
 
-@include themed-block(igx-calendar-view, bootstrap) {
+@include themed-block(igx-calendar-view-item, bootstrap) {
     @include m('current') {
         @include e(inner) {
             box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-current-outline-color');
