@@ -1,9 +1,12 @@
 import { Component, QueryList, ViewChildren } from '@angular/core';
 import {
-	IgxDividerDirective, IgxHintDirective,
+	IgxDividerComponent,
+    IgxHintDirective,
 	IgxIconComponent,
 	IgxInputDirective,
-	IgxInputGroupComponent, IgxLabelDirective, IgxSwitchComponent,
+	IgxInputGroupComponent,
+    IgxLabelDirective,
+    IgxSwitchComponent,
 } from 'igniteui-angular';
 import {
 	AbstractControl,
@@ -19,7 +22,7 @@ import {
     imports: [
         FormsModule,
         IgxSwitchComponent,
-        IgxDividerDirective,
+        IgxDividerComponent,
         IgxInputGroupComponent,
         IgxInputDirective,
         IgxIconComponent,
@@ -32,7 +35,7 @@ import {
     styleUrls: ['./divider.component.scss']
 })
 export class DividerComponent {
-	@ViewChildren(IgxDividerDirective) private dividers: QueryList<IgxDividerDirective>;
+	@ViewChildren(IgxDividerComponent) private dividers: QueryList<IgxDividerComponent>;
 
 	public direction = false;
 	public dashed = false;

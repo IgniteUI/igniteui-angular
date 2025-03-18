@@ -5,6 +5,7 @@ import {
     HostBinding,
     HostListener,
     Input,
+    ViewEncapsulation,
     booleanAttribute
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
@@ -33,11 +34,15 @@ import { CheckboxBaseDirective } from '../checkbox/checkbox-base.directive';
             multi: true
         }],
     templateUrl: 'radio.component.html',
+    styleUrl: 'radio.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxRippleDirective]
 })
+
 export class IgxRadioComponent
     extends CheckboxBaseDirective
     implements AfterViewInit, ControlValueAccessor, EditorProvider {
+
     /** @hidden @internal */
     public blurRadio = new EventEmitter();
 

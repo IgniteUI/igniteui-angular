@@ -112,7 +112,7 @@
             }
         }
 
-        %igx-expansion-panel__body {
+        .igx-expansion-panel__body {
             position: relative;
             height: rem(128px);
             font-size: rem(14px);
@@ -124,11 +124,11 @@
             }
         }
 
-        %igx-expansion-panel__header-icon--start {
+        .igx-expansion-panel__header-icon--start {
             margin-inline-end: rem(8px);
         }
 
-        %igx-expansion-panel__header-title {
+        .igx-expansion-panel__header-title {
             display: flex;
 
             > h6 {
@@ -137,7 +137,7 @@
             }
         }
 
-        %igx-expansion-panel__header-inner {
+        .igx-expansion-panel__header-inner {
             background: var-get($theme, 'header-color');
             padding: $panel-padding;
 
@@ -235,9 +235,7 @@
     %selector-base,
     %selector-item-ghost {
         igx-icon {
-            width: var(--igx-icon-size, #{rem(18px)});
-            height: var(--igx-icon-size, #{rem(18px)});
-            font-size: var(--igx-icon-size, #{rem(18px)});
+            --size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 
