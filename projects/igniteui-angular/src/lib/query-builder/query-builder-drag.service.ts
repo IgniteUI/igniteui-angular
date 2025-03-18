@@ -67,7 +67,6 @@ export class IgxQueryBuilderDragService {
         this.listenToKeyboard();
 
         if (!this.isKeyboardDrag) {
-            //TODO display-none should be done by angular?
             this._sourceElement.style.display = 'none';
             this.setDragGhostZIndex();
         }
