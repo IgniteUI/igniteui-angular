@@ -13,6 +13,7 @@ $slim-splitter: calc(1 / var(--splitter-size));
             box-shadow: none;
 
             .igx-splitter-bar {
+                opacity: 1;
                 background: var-get($theme, 'focus-color');
                 border-color: var-get($theme, 'focus-color');
             }
@@ -25,12 +26,12 @@ $slim-splitter: calc(1 / var(--splitter-size));
                 [aria-orientation='vertical'] & {
                     transform: scaleY(1);
                 }
-            }
 
-            .igx-splitter-bar__handle,
-            .igx-splitter-bar__expander {
-                opacity: 1;
-                pointer-events: auto;
+                .igx-splitter-bar__handle,
+                .igx-splitter-bar__expander {
+                    opacity: 1;
+                    pointer-events: auto;
+                }
             }
         }
     }
