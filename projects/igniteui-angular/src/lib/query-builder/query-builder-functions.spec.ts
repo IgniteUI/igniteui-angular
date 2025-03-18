@@ -865,7 +865,7 @@ export class QueryBuilderFunctions {
     }
 
     public static getChipContent(chip: Element): string {
-        if (chip.checkVisibility()) {
+        if (chip && chip.checkVisibility()) {
             let text: string = '';
 
             Array.from(chip.querySelectorAll('span')).forEach(element => {
@@ -883,7 +883,8 @@ export class QueryBuilderFunctions {
 
     public static getDropGhost(fixture: ComponentFixture<any>): Element {
         var expressionsContainer = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fixture);
-        return expressionsContainer.querySelector(`div.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST}`);
+        return expressionsContainer.querySelector(`div.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST}`) ??
+            expressionsContainer.querySelector(`div.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_KEYBOARD_GHOST}`);
     }
 
     public static getDropGhostBounds(fixture: ComponentFixture<any>): DOMRect {
@@ -909,5 +910,28 @@ export class QueryBuilderFunctions {
             tick();
             dragDirective.onPointerUp({ pointerId: 1, pageX: X, pageY: Y });
         }
+    }
+
+    public static getDropGhostAndItsSiblings(fixture: ComponentFixture<any>): [Element, string, string, string[]] {
+        const dropGhost = this.getDropGhost(fixture);
+        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fixture);
+        let prevElement: string, nextElement: string;
+
+        if (dropGhost) {
+            if (dropGhost.previousElementSibling?.className &&
+                dropGhost.previousElementSibling?.className?.indexOf(QueryBuilderSelectors.FILTER_TREE_SUBQUERY) !== -1) {
+                prevElement = QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling.previousElementSibling);
+            } else if (dropGhost.previousElementSibling?.previousElementSibling) {
+                prevElement = QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling);
+            }
+
+            nextElement = QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling?.nextElementSibling);
+            nextElement ??= QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling?.nextElementSibling?.nextElementSibling?.nextElementSibling);
+        }
+
+        prevElement ??= null;
+        nextElement ??= null;
+
+        return [dropGhost, prevElement, nextElement, newChipContents];
     }
 }
