@@ -380,14 +380,17 @@
         } @else {
             min-height: 100% !important;
         }
+
         transition: color $transition-timing, background $transition-timing;
 
-        @if $material-theme {
-            padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
-        } @else if $indigo-theme {
-            padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
-        } @else {
-            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        &:not(:empty) {
+            @if $material-theme {
+                padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
+            } @else if $indigo-theme {
+                padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
+            } @else {
+                padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+            }
         }
     }
 
@@ -816,16 +819,16 @@
             %form-group-bundle-start {
                 border-color: var-get($theme, 'hover-border-color');
             }
-    
+
             %igx-input-group__filler {
                 border-color: var-get($theme, 'hover-border-color');
             }
-    
+
             %igx-input-group__notch {
                 border-block-start-color: var-get($theme, 'hover-border-color');
                 border-block-end-color: var-get($theme, 'hover-border-color');
             }
-    
+
             %form-group-bundle-end {
                 border-color: var-get($theme, 'hover-border-color');
             }
@@ -1009,8 +1012,8 @@
     }
 
     %form-group-label--focused-border:not(:is(
-        %form-group-border--error, 
-        %form-group-border--warning, 
+        %form-group-border--error,
+        %form-group-border--warning,
         %form-group-border--success))
     {
         &:hover {
@@ -1887,7 +1890,9 @@
     %form-group-suffix-fluent,
     %form-group-prefix-fluent-search,
     %form-group-suffix-fluent-search {
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        &:not(:empty) {
+            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        }
     }
 
     %fluent-upload-button {
