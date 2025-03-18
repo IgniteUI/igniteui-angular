@@ -13,7 +13,7 @@ export declare interface IExpressionTree {
     operator: FilteringLogic;
     fieldName?: string | null;
     entity?: string | null;
-    returnFields?: (string | null)[] | null;
+    returnFields?: string[] | null;
 }
 
 /* marshalByValue */
