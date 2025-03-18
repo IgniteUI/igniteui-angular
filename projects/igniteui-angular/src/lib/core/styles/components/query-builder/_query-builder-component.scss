@@ -107,12 +107,12 @@
             @extend %filter-tree__expression-item !optional;
         }
 
-        @include e(expression-item-ghost) {
+        @include e(expression-item-drop-ghost) {
             @extend %filter-tree__expression-item-ghost !optional;
         }
 	    
-	    @include e(expression-item-drop-ghost) {
-		    @extend %filter-tree__expression-drop-item-ghost !optional;
+	    @include e(expression-item-keyboard-ghost) {
+		    @extend %filter-tree__expression-item-keyboard-ghost !optional;
 	    }
 
         @include e(expression-column) {

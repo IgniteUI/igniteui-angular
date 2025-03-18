@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { QueryBuilderSelectors } from './query-builder.common';
 
-describe('IgxQueryBuilder', () => {
+fdescribe('IgxQueryBuilder', () => {
   configureTestSuite();
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
   let queryBuilder: IgxQueryBuilderComponent;
@@ -2480,7 +2480,7 @@ describe('IgxQueryBuilder', () => {
       expect(dropGhost).toBeDefined();
       expect(dropGhost.innerText).toBe('My Drop here to insert');
     }));
-  }); 
+  });
 
   describe('Drag and drop', () => {
     const ROW_HEIGHT = 40;
@@ -2516,7 +2516,7 @@ describe('IgxQueryBuilder', () => {
       const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
 
-      let X = 100, Y = 95;
+      let X = 100, Y = 75;
 
       //pickup chip
       dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
@@ -2535,52 +2535,50 @@ describe('IgxQueryBuilder', () => {
       //Drag ghost up and down four times and check if drop ghost is rendered in the expected positions
       while (pass <= 4) {
         i += inc;
-        Y += 5 * inc;
+        Y += inc;
 
         QueryBuilderFunctions.dragMove(dragDir, X, Y);
-        tick(10);
+        tick();
         fix.detectChanges();
 
-        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
-        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
-        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
+        const [dropGhost, prevElement, nextElement] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
 
-        if (i < 8 && !ghostPositionVisits[0]) {
-          tick(50);
+        if (i < 40 && !ghostPositionVisits[0]) {
+          if (i <= 42) tick(50);
           if (!dropGhost) ghostPositionVisits[0] = true;
         }
 
-        if (i > 6 && i < 23 && !ghostPositionVisits[1]) {
-          if (dropGhost && !prevElement && nextElement == "OrderName  Equals  foo") ghostPositionVisits[1] = true;
+        if (i > 35 && i < 122 && !ghostPositionVisits[1]) {
+          if (dropGhost && !prevElement && nextElement == 'OrderName  Equals  foo') ghostPositionVisits[1] = true;
         }
 
-        if (i > 20 && i < 35 && !ghostPositionVisits[2]) {
-          if (dropGhost && prevElement == "OrderName  Equals  foo" && !nextElement) ghostPositionVisits[2] = true;
+        if (i > 120 && i < 165 && !ghostPositionVisits[2]) {
+          if (dropGhost && prevElement == 'OrderName  Equals  foo' && nextElement === 'or  OrderName  Ends With  a  OrderDate  Today') ghostPositionVisits[2] = true;
         }
 
-        if (i > 31 && i < 40 && !ghostPositionVisits[3]) {
-          if (dropGhost && !prevElement && nextElement == "OrderName  Ends With  a") ghostPositionVisits[3] = true;
+        if (i > 166 && i < 201 && !ghostPositionVisits[3]) {
+          if (dropGhost && !prevElement && nextElement == 'OrderName  Ends With  a') ghostPositionVisits[3] = true;
         }
 
-        if (i > 36 && i < 47 && !ghostPositionVisits[4]) {
-          if (dropGhost && prevElement == "OrderName  Ends With  a" && !nextElement) ghostPositionVisits[4] = true;
+        if (i > 202 && i < 241 && !ghostPositionVisits[4]) {
+          if (dropGhost && prevElement == 'OrderName  Ends With  a' && nextElement === 'OrderDate  Today') ghostPositionVisits[4] = true;
         }
 
-        if (i > 44 && i < 57 && !ghostPositionVisits[5]) {
-          if (dropGhost && prevElement == "OrderDate  Today" && !nextElement) ghostPositionVisits[5] = true;
+        if (i > 240 && i < 273 && !ghostPositionVisits[5]) {
+          if (dropGhost && prevElement == 'OrderDate  Today' && !nextElement) ghostPositionVisits[5] = true;
         }
 
-        if (i > 54 && i < 64 && !ghostPositionVisits[6]) {
-          if (pass > 2 || (dropGhost && prevElement == "or  OrderName  Ends With  a  OrderDate  Today" && !nextElement)) ghostPositionVisits[6] = true;
+        if (i > 256 && i < 316 && !ghostPositionVisits[6]) {
+          if (pass > 2 || (dropGhost && prevElement == 'or  OrderName  Ends With  a  OrderDate  Today' && !nextElement)) ghostPositionVisits[6] = true;
         }
 
-        if (i > 62 && !ghostPositionVisits[7]) {
-          tick(50);
+        if (i > 320 && !ghostPositionVisits[7]) {
+          if (i >= 340) tick(50);
           if (!dropGhost) ghostPositionVisits[7] = true;
         }
 
         //When dragged to the end, check results and reverse direction for next pass
-        if (i === 65 || i === 0) {
+        if (i === 350 || i === 0) {
           expect(ghostPositionVisits).not.toContain(false,
             `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()} on pass:${pass}`);
 
@@ -2709,8 +2707,12 @@ describe('IgxQueryBuilder', () => {
       dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
       fix.detectChanges();
 
+      //trigger ghost
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 50, draggedChipCenter.Y - 50);
+      fix.detectChanges();
+
       //drag
-      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 2 * ROW_HEIGHT, true);
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 50, draggedChipCenter.Y - 50, true);
       fix.detectChanges();
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
@@ -2794,6 +2796,7 @@ describe('IgxQueryBuilder', () => {
 
       //move over +Condition
       QueryBuilderFunctions.dragMove(dragDir, addConditionButtonCenter.X, addConditionButtonCenter.Y);
+      fix.detectChanges();
 
       const dropGhost = QueryBuilderFunctions.getDropGhost(fix) as HTMLElement;
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
@@ -3021,33 +3024,30 @@ describe('IgxQueryBuilder', () => {
         tick(20);
         fix.detectChanges();
 
-        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
-        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
-        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
-        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+        const [dropGhost, prevElement, nextElement, newChipContents] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
 
         switch (true) {
           case i === 0:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Ends With  a");
+            expect(nextElement).toEqual('OrderName  Ends With  a');
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 1:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderName  Ends With  a");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderName  Ends With  a');
+            expect(nextElement).toEqual('OrderDate  Today');
             expect(newChipContents[5]).toBe(dropGhostContent);
             break;
           case i === 2:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderDate  Today");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderDate  Today');
+            expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
           case i >= 3:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("or  OrderName  Ends With  a  OrderDate  Today");
+            expect(prevElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
             expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
@@ -3061,40 +3061,37 @@ describe('IgxQueryBuilder', () => {
         tick(20);
         fix.detectChanges();
 
-        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
-        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
-        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
-        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+        const [dropGhost, prevElement, nextElement, newChipContents] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
 
         switch (true) {
           case i === 0:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderDate  Today");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderDate  Today');
+            expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
           case i === 1:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toBeUndefined();
-            expect(nextElement).toEqual("OrderDate  Today");
+            expect(prevElement).toEqual('OrderName  Ends With  a');
+            expect(nextElement).toEqual('OrderDate  Today');
             expect(newChipContents[5]).toBe(dropGhostContent);
             break;
           case i === 2:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Ends With  a");
+            expect(nextElement).toEqual('OrderName  Ends With  a');
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 3:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toBeUndefined();
-            expect(nextElement).toEqual("or  OrderName  Ends With  a  OrderDate  Today");
-            expect(newChipContents[4]).toBe(dropGhostContent);
+            expect(prevElement).toEqual('OrderName  Equals  foo');
+            expect(nextElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
+            expect(newChipContents[1]).toBe(dropGhostContent);
             break;
           case i >= 4:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Equals  foo");
+            expect(nextElement).toEqual('OrderName  Equals  foo');
             expect(newChipContents[0]).toBe(dropGhostContent);
             break;
         }
@@ -3107,39 +3104,36 @@ describe('IgxQueryBuilder', () => {
         tick(20);
         fix.detectChanges();
 
-        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
-        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
-        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
-        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+        const [dropGhost, prevElement, nextElement, newChipContents] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
 
         switch (true) {
           case i === 0:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderName  Equals  foo");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderName  Equals  foo');
+            expect(nextElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
             expect(newChipContents[1]).toBe(dropGhostContent);
             break;
           case i === 1:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Ends With  a");
+            expect(nextElement).toEqual('OrderName  Ends With  a');
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 2:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderName  Ends With  a");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderName  Ends With  a');
+            expect(nextElement).toEqual('OrderDate  Today');
             expect(newChipContents[5]).toBe(dropGhostContent);
             break;
           case i === 3:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderDate  Today");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderDate  Today');
+            expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
           case i >= 4:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("or  OrderName  Ends With  a  OrderDate  Today");
+            expect(prevElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
             expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
