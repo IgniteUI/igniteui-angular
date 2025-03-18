@@ -3090,6 +3090,139 @@ describe('IgxQueryBuilder', () => {
         }
       }
     }));
+
+    it('Should commit drop upon hitting \'Enter\' when keyboard dragged.', fakeAsync(() => {
+      const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+
+      draggedIndicator.triggerEventHandler('focus', {});
+      draggedIndicator.nativeElement.focus();
+
+      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+      const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      tick(20);
+      fix.detectChanges();
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      tick(20);
+      fix.detectChanges();
+
+      //Verify that expressionTree is correct
+      const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+      expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "fieldName": "OrderName",
+      "condition": {
+        "name": "equals",
+        "isUnary": false,
+        "iconName": "filter_equal"
+      },
+      "conditionName": "equals",
+      "searchVal": "foo"
+    },
+    {
+      "fieldName": "OrderId",
+      "condition": {
+        "name": "inQuery",
+        "isUnary": false,
+        "isNestedQuery": true,
+        "iconName": "in"
+      },
+      "conditionName": "inQuery",
+      "searchTree": {
+        "filteringOperands": [
+          {
+            "fieldName": "Id",
+            "condition": {
+              "name": "equals",
+              "isUnary": false,
+              "iconName": "filter_equal"
+            },
+            "conditionName": "equals",
+            "searchVal": 123
+          },
+          {
+            "fieldName": "ProductName",
+            "condition": {
+              "name": "equals",
+              "isUnary": false,
+              "iconName": "filter_equal"
+            },
+            "conditionName": "equals",
+            "searchVal": "abc"
+          }
+        ],
+        "operator": 0,
+        "entity": "Products",
+        "returnFields": [
+          "OrderId"
+        ]
+      }
+    },
+    {
+      "filteringOperands": [
+        {
+          "fieldName": "OrderName",
+          "condition": {
+            "name": "endsWith",
+            "isUnary": false,
+            "iconName": "filter_ends_with"
+          },
+          "conditionName": "endsWith",
+          "searchVal": "a"
+        },
+        {
+          "fieldName": "OrderDate",
+          "condition": {
+            "name": "today",
+            "isUnary": true,
+            "iconName": "filter_today"
+          },
+          "conditionName": "today"
+        }
+      ],
+      "operator": 1,
+      "entity": "Orders",
+      "returnFields": [
+        "*"
+      ]
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "*"
+  ],
+  "fieldName": null
+}`);
+    }));
+
+    it('Should cancel drop upon hitting \'Escape\' when keyboard dragged.', fakeAsync(() => {
+      const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+
+      draggedIndicator.triggerEventHandler('focus', {});
+      draggedIndicator.nativeElement.focus();
+
+      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+      const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      tick(20);
+      fix.detectChanges();
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      tick(20);
+      fix.detectChanges();
+
+      chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderName  Ends With  a");
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
+    }));
+
   });
 });
 
