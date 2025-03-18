@@ -139,6 +139,7 @@
         $flat-theme: map.get(map.get($theme, 'themes'), 'flat');
         $outlined-theme: map.get(map.get($theme, 'themes'), 'outlined');
         $contained-theme: map.get(map.get($theme, 'themes'), 'contained');
+        $btn-indent: rem(2px);
 
         @include css-vars($flat-theme);
         @include css-vars($outlined-theme);
@@ -149,8 +150,6 @@
             cosy: rem(6px),
             compact: rem(3px)
         );
-
-        $btn-indent: rem(2px);
 
         %igx-icon-button-display {
             @include sizable();
@@ -178,6 +177,10 @@
             );
 
             igx-icon {
+                // TODO: Why do we have to comment these out?
+                // --component-size: var(--ig-size, var(--ig-size-large));
+                // --size: var(--igx-icon-size, #{$icon-in-button-size});
+
                 --ig-size: #{if($variant == 'indigo', 2, 1)};
 
                 display: flex;

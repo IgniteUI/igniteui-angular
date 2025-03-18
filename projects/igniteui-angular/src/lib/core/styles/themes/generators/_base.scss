@@ -160,13 +160,13 @@
     //     @include badge($badge-theme-map);
     // }
 
-    @if is-used('igx-bottom-nav', $exclude) {
-        $bottom-nav-theme-map: bottom-nav-theme(
-            $schema: $schema,
-        );
-        $bottom-nav-theme-map: meta.call($theme-handler, $bottom-nav-theme-map);
-        @include bottom-nav($bottom-nav-theme-map);
-    }
+    // @if is-used('igx-bottom-nav', $exclude) {
+    //     $bottom-nav-theme-map: bottom-nav-theme(
+    //         $schema: $schema,
+    //     );
+    //     $bottom-nav-theme-map: meta.call($theme-handler, $bottom-nav-theme-map);
+    //     @include bottom-nav($bottom-nav-theme-map);
+    // }
 
     @if is-used('igx-button', $exclude) {
         $button-theme-map: button-theme(
@@ -184,13 +184,13 @@
         @include button-group($button-group-theme-map);
     }
 
-    @if is-used('igx-banner', $exclude) {
-        $banner-theme-map: banner-theme(
-            $schema: $schema,
-        );
-        $banner-theme-map: meta.call($theme-handler, $banner-theme-map);
-        @include banner($banner-theme-map);
-    }
+    // @if is-used('igx-banner', $exclude) {
+    //     $banner-theme-map: banner-theme(
+    //         $schema: $schema,
+    //     );
+    //     $banner-theme-map: meta.call($theme-handler, $banner-theme-map);
+    //     @include banner($banner-theme-map);
+    // }
 
     @if is-used('igx-calendar', $exclude) {
         $calendar-theme-map: calendar-theme(
@@ -216,13 +216,13 @@
     //     @include carousel($carousel-theme-map);
     // }
 
-    @if is-used('igx-splitter', $exclude) {
-        $splitter-theme-map: splitter-theme(
-            $schema: $schema,
-        );
-        $splitter-theme-map: meta.call($theme-handler, $splitter-theme-map);
-        @include splitter($splitter-theme-map);
-    }
+    // @if is-used('igx-splitter', $exclude) {
+    //     $splitter-theme-map: splitter-theme(
+    //         $schema: $schema,
+    //     );
+    //     $splitter-theme-map: meta.call($theme-handler, $splitter-theme-map);
+    //     @include splitter($splitter-theme-map);
+    // }
 
     @if is-used('data-chart', $exclude) {
         $data-chart-theme-map: data-chart-theme(
@@ -416,13 +416,13 @@
         @include drop-down($drop-down-theme-map);
     }
 
-    @if is-used('igx-expansion-panel', $exclude) {
-        $expansion-panel-theme-map: expansion-panel-theme(
-            $schema: $schema,
-        );
-        $expansion-panel-theme-map: meta.call($theme-handler, $expansion-panel-theme-map);
-        @include expansion-panel($expansion-panel-theme-map);
-    }
+    // @if is-used('igx-expansion-panel', $exclude) {
+    //     $expansion-panel-theme-map: expansion-panel-theme(
+    //         $schema: $schema,
+    //     );
+    //     $expansion-panel-theme-map: meta.call($theme-handler, $expansion-panel-theme-map);
+    //     @include expansion-panel($expansion-panel-theme-map);
+    // }
 
     @if is-used('igx-grid', $exclude) {
         $grid-theme-map: grid-theme(

@@ -319,8 +319,8 @@ export class DynamicColGroupsGridComponent {
             },
             {
                 columnHeader: 'Third', columns: [
-                    { field: 'PostlCode', type: 'string' },
-                    { field: 'Contry', type: 'string' },
+                    { field: 'PostalCode', type: 'string' },
+                    { field: 'Country', type: 'string' },
                 ]
             },
         ];
@@ -444,7 +444,7 @@ export class StegosaurusGridComponent implements OnInit {
     template: `
         <igx-grid #grid [data]="data" [height]="gridHeight" [columnWidth]="columnWidth">
             <igx-column-group headerGroupClasses="firstGroup" [header]="firstGroupTitle">
-                @for (item of hunderdItems; track $index) {
+                @for (item of hundredItems; track $index) {
                     <igx-column headerClasses="firstGroupColumn" field="ID"></igx-column>
                 }
                 @if (extraMissingColumn) {
@@ -499,7 +499,7 @@ export class BlueWhaleGridComponent {
     public firstGroupRepeats = 100;
     public secondGroupRepeats = 50;
 
-    public get hunderdItems() {
+    public get hundredItems() {
         return new Array(this.firstGroupRepeats);
     }
     public get fiftyItems() {

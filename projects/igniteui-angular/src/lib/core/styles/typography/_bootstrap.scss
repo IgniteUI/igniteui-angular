@@ -36,8 +36,8 @@
 
 @mixin typography($type-scale) {
     @include badge-typography();
-    @include banner-typography();
-    @include bottom-nav-typography();
+    // @include banner-typography();
+    // @include bottom-nav-typography();
     @include button-typography();
     @include button-group-typography();
     @include calendar-typography($categories: (
@@ -69,11 +69,11 @@
         item: 'body-2',
         select-item: 'body-2'
     ));
-    @include expansion-panel-typography($categories: (
-        title: 'h5',
-        description: 'subtitle-2',
-        body: 'body-2'
-    ));
+    // @include expansion-panel-typography($categories: (
+    //     title: 'h5',
+    //     description: 'subtitle-2',
+    //     body: 'body-2'
+    // ));
     @include excel-filtering-typography();
     @include icon-button-typography();
     @include input-group-typography($categories: (

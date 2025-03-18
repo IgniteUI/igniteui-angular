@@ -1,0 +1,94 @@
+/* stylelint-disable max-nesting-depth */
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$theme: $indigo;
+$slim-splitter: calc(1 / var(--splitter-size));
+
+@include themed-block(igx-splitter, indigo) {
+    @include b(igx-splitter-bar-host) {
+        &:focus {
+            box-shadow: none;
+
+            .igx-splitter-bar {
+                opacity: 1;
+                background: var-get($theme, 'focus-color');
+                border-color: var-get($theme, 'focus-color');
+            }
+
+            .igx-splitter-bar--collapsible {
+                [aria-orientation='horizontal'] & {
+                    transform: scaleX(1);
+                }
+
+                [aria-orientation='vertical'] & {
+                    transform: scaleY(1);
+                }
+
+                .igx-splitter-bar__handle,
+                .igx-splitter-bar__expander {
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+            }
+        }
+    }
+
+    @include b(igx-splitter-bar) {
+        [aria-orientation='horizontal'] & {
+            transform: scaleX($slim-splitter);
+        }
+
+        [aria-orientation='vertical'] & {
+            transform: scaleY($slim-splitter);
+        }
+
+        @include m(collapsible) {
+            @include e(handle) {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            @include e(expander) {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            &:hover {
+                [aria-orientation='horizontal'] & {
+                    transform: scaleX(1);
+                }
+
+                [aria-orientation='vertical'] & {
+                    transform: scaleY(1);
+                }
+
+                @include e(handle) {
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+
+                @include e(expander) {
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+            }
+        }
+
+        @include m(horizontal) {
+            &::before,
+            &::after {
+                height: calc(var(--splitter-size) * 4px);
+            }
+        }
+
+        @include m(vertical) {
+            &::before,
+            &::after {
+                width: calc(var(--splitter-size) * 4px);
+            }
+        }
+    }
+}

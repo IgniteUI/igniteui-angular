@@ -35,10 +35,10 @@
 
 @mixin typography() {
     @include badge-typography();
-    @include banner-typography($categories: (
-        message: 'caption'
-    ));
-    @include bottom-nav-typography();
+    // @include banner-typography($categories: (
+    //     message: 'caption'
+    // ));
+    // @include bottom-nav-typography();
     @include button-typography();
     @include button-group-typography();
     @include calendar-typography($categories: (
@@ -72,11 +72,11 @@
         item: 'body-2',
         select-item: 'body-2'
     ));
-    @include expansion-panel-typography($categories: (
-        title: 'subtitle-1',
-        description: 'body-2',
-        body: 'caption'
-    ));
+    // @include expansion-panel-typography($categories: (
+    //     title: 'subtitle-1',
+    //     description: 'body-2',
+    //     body: 'caption'
+    // ));
     @include excel-filtering-typography();
     @include icon-button-typography();
     @include input-group-typography($categories: (

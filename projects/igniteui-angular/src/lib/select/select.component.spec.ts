@@ -2056,7 +2056,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
             }
 
-            // Ciryllic characters
+            // Cyrillic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'с' });
@@ -2169,7 +2169,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
             }
 
-            // Ciryllic characters
+            // Cyrillic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'с' });
@@ -3053,7 +3053,7 @@ class IgxSelectTemplateFormComponent {
                 <igx-icon>alarm</igx-icon>
             </igx-prefix>
             <igx-select-item>None</igx-select-item>
-            @for (item of items; track item) {
+            @for (item of items; track item.field) {
                 <igx-select-item [value]="item.field">
                     {{ item.field }}
                 </igx-select-item>
