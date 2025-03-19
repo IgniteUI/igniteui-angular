@@ -289,6 +289,36 @@ describe('Column Pinning UI #grid', () => {
                 ).toBe(true);
             });
         });
+
+        it('Checks order of columns after unpinning if there are hidden columns', () => {
+            // Columns are ordered like this: ID, ProductName, Downloads, Released, ReleaseDate
+            expect(grid.getColumnByName('Downloads').index).toBe(2);
+            expect(grid.getColumnByName('Released').index).toBe(3);
+
+            grid.getColumnByName('ID').hidden = true;
+            grid.getColumnByName('Downloads').pin();
+            grid.getColumnByName('Released').pin();
+            fix.detectChanges();
+
+            // unpinnedColumns contains only visible cols
+            expect(grid.unpinnedColumns.length).toBe(2);
+            // _unpinnedColumns contains all unpinned cols (including hidden)
+            expect((grid as any)._unpinnedColumns.length).toBe(3);
+
+            grid.getColumnByName('Released').unpin();
+            fix.detectChanges();
+
+            expect(grid.unpinnedColumns.length).toBe(3);
+            expect((grid as any)._unpinnedColumns.length).toBe(4);
+            // Downloads is still pinned; ID is not part of unpinnedColumns
+            expect(grid.getColumnByName('Released').field).toEqual((grid as any).unpinnedColumns[1].field);
+            expect(grid.getColumnByName('Released').field).toEqual((grid as any)._unpinnedColumns[2].field);
+
+            grid.getColumnByName('Downloads').unpin();
+            fix.detectChanges();
+            expect(grid.getColumnByName('Downloads').field).toEqual((grid as any).unpinnedColumns[1].field);
+            expect(grid.getColumnByName('Downloads').field).toEqual((grid as any)._unpinnedColumns[2].field);
+        });
     });
 
     describe('Pinning with Column Groups', () => {
