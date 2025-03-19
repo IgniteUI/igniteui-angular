@@ -230,6 +230,10 @@
         $disabled-selected-text-color: var(--disabled-text-color);
     }
 
+    @if not($idle-shadow-color) and $item-background {
+        $idle-shadow-color: hsla(from var(--item-background) h s l / .5);
+    }
+
     @if not($idle-shadow-color) and $selected-shadow-color {
         $idle-shadow-color: var(--selected-shadow-color);
     }
@@ -519,6 +523,7 @@
             @if $variant == 'bootstrap' {
                 background: var-get($theme, 'item-background');
                 z-index: 1;
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'idle-shadow-color');
 
                 &:active {
                     background: var-get($theme, 'item-hover-background');
@@ -765,6 +770,7 @@
                 color: var-get($theme, 'item-selected-text-color');
                 border-color: var-get($theme, 'item-selected-border-color');
                 background: var-get($theme, 'item-selected-background');
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'selected-shadow-color');
 
                 igx-icon {
                     color: var-get($theme, 'item-selected-icon-color');
