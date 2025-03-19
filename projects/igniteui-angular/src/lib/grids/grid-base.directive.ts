@@ -260,7 +260,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Input()
-    public emptyGridTemplate: TemplateRef<void>;
+    public emptyGridTemplate: TemplateRef<IgxGridTemplateContext>;
 
     /**
      * Gets/Sets a custom template for adding row UI when grid is empty.
@@ -282,7 +282,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     @Input()
-    public loadingGridTemplate: TemplateRef<void>;
+    public loadingGridTemplate: TemplateRef<IgxGridTemplateContext>;
 
     /**
      * Get/Set IgxSummaryRow height
@@ -3765,7 +3765,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._setupListeners();
         this.rowListDiffer = this.differs.find([]).create(null);
         // compare based on field, not on object ref.
-        this.columnListDiffer = this.differs.find([]).create((index, col: ColumnType) => col.field);
+        this.columnListDiffer = this.differs.find([]).create((_index, col: ColumnType) => col.field);
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.gridComputedStyles = this.document.defaultView.getComputedStyle(this.nativeElement);
     }
@@ -6091,7 +6091,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public trackColumnChanges(index, col) {
+    public trackColumnChanges(_index, col) {
         return col.field + col._calcWidth;
     }
 
@@ -7615,7 +7615,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
         // find next/prev record that is editable.
         const nextRowIndex = previous ? this.findPrevEditableDataRowIndex(currentRowIndex) :
-            this.dataView.findIndex((rec, index) =>
+            this.dataView.findIndex((_rec, index) =>
                 index > resolvedIndex && this.isEditableDataRecordAtIndex(index));
         const nextDataIndex = this.getDataIndex(nextRowIndex);
         return nextDataIndex !== -1 ? nextDataIndex : currentRowIndex;
