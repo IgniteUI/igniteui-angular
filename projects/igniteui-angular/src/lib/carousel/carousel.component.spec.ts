@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -1143,7 +1143,8 @@ class CarouselTestComponent {
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
     `,
-    imports: [IgxCarouselComponent, IgxSlideComponent]
+    imports: [IgxCarouselComponent, IgxSlideComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 class CarouselAnimationsComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;

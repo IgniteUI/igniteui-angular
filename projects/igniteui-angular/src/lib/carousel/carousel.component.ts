@@ -1048,6 +1048,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             }
             this.slideChanged.emit({ carousel: this, slide });
             this.restartInterval();
+            this.cdr.markForCheck();
         }
     }
 
