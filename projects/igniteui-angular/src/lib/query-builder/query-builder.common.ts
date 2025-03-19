@@ -69,6 +69,7 @@ export const QueryBuilderSelectors = {
     FILTER_TREE_EXPRESSION_CONTEXT_MENU: IGX_FILTER_TREE + '__expression-context-menu',
     FILTER_TREE_EXPRESSION_ITEM: IGX_FILTER_TREE + '__expression-item',
     FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST: IGX_FILTER_TREE + '__expression-item-drop-ghost',
+    FILTER_TREE_EXPRESSION_ITEM_KEYBOARD_GHOST: IGX_FILTER_TREE + '__expression-item-keyboard-ghost',
     FILTER_TREE_EXPRESSION_ITEM_GHOST: IGX_FILTER_TREE + '__expression-item-ghost',
     FILTER_TREE_EXPRESSION_SECTION: IGX_FILTER_TREE + '__expression-section',
 
@@ -80,10 +81,4 @@ export const QueryBuilderSelectors = {
     QUERY_BUILDER_BODY: IGX_QUERY_BUILDER + '__main',
     QUERY_BUILDER_HEADER: IGX_QUERY_BUILDER + '__header',
     QUERY_BUILDER_TREE: IGX_QUERY_BUILDER + '-tree',
-
-    VIABLE_DROP_AREA:
-        `.${IGX_FILTER_TREE}__expression-item[igxDrop]:not(.${IGX_FILTER_TREE + '__expression-item-drop-ghost'}),` + /*Condition chip*/
-        `.${IGX_FILTER_TREE}__subquery:has([igxDrop]),` + /*Chip in edit*/
-        `.${IGX_FILTER_TREE}__buttons > .igx-button[igxDrop]:first-of-type,` + /*Add Condition Button*/
-        `.${IGX_FILTER_TREE}__expression-context-menu[igxDrop]` /*AND/OR group root*/
 }

@@ -13,7 +13,7 @@ describe(`Update to ${version}`, () => {
         appTree = setupTestTree();
     });
 
-    const migrationName = 'migration-44';
+    const migrationName = 'migration-45';
 
     it('should remove igx-caroursel property `keyboardSupport` in template', async () => {
         appTree.create(`/testSrc/appPrefix/component/test.component.html`,

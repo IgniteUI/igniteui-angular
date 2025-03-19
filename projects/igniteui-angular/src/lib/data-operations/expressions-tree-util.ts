@@ -150,7 +150,7 @@ function recreateExpression(expression: IFilteringExpression, fields: FieldType[
     }
 
     if (!expression.condition && !expression.conditionName) {
-        throw Error('Wrong `conditionName`, `condition` or `field` provided!');
+        throw Error('Wrong `conditionName`, `condition` or `field` provided! It is possible that there is a type mismatch between the condition type and field type.');
     }
 
     if (!expression.conditionName) {
