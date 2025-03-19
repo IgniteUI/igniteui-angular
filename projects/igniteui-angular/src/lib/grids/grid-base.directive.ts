@@ -1857,8 +1857,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
 
             value.type = FilteringExpressionsTreeType.Regular;
-            if (value && this.columns) {
-                this._filteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
+            if (value && this._columns?.length > 0) {
+                this._filteringExpressionsTree = recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
             } else {
                 this._filteringExpressionsTree = value;
             }
@@ -1907,7 +1907,11 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         if (value && isTree(value)) {
             value.type = FilteringExpressionsTreeType.Advanced;
-            this._advancedFilteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
+            if (this._columns && this._columns.length > 0) {
+                this._advancedFilteringExpressionsTree = recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
+            } else {
+                this._advancedFilteringExpressionsTree = value;
+            }
             this.filteringPipeTrigger++;
         } else {
             this._advancedFilteringExpressionsTree = null;
@@ -6617,6 +6621,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._columns && this._filteringExpressionsTree) {
             this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
         }
+        if (this._columns && this._advancedFilteringExpressionsTree) {
+            this._advancedFilteringExpressionsTree = recreateTreeFromFields(this._advancedFilteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
+        }
         this.resetCaches();
     }
 
@@ -6678,9 +6685,12 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.autogenerateColumns();
         } else {
             this._columns = this.getColumnList();
-            if (this._columns && this._filteringExpressionsTree) {
-                this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
-            }
+        }
+        if (this._columns && this._filteringExpressionsTree) {
+            this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
+        }
+        if (this._columns && this._advancedFilteringExpressionsTree) {
+            this._advancedFilteringExpressionsTree = recreateTreeFromFields(this._advancedFilteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
         }
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
