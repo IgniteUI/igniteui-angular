@@ -58,6 +58,7 @@
     $button-disabled-background: null,
     $button-arrow-color: null,
     $button-hover-arrow-color: null,
+    $button-focus-arrow-color: null,
     $button-disabled-arrow-color: null,
     $button-border-color: null,
     $button-hover-border-color: null,
@@ -84,7 +85,25 @@
     }
 
     $theme: digest-schema($carousel-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
+
+    @if $variant == 'indigo' {
+        @if not($button-hover-background) and $button-background {
+            $button-hover-background: hsl(from var(--button-background) h s calc(l * 0.9));
+        }
+
+        @if not($button-border-color) and $button-background {
+            $button-border-color: hsl(from var(--button-background) h s calc(l * 0.9));
+        }
+
+        @if not($button-hover-border-color) and $button-border-color {
+            $button-hover-border-color: hsl(from var(--button-border-color) h s calc(l * 0.9));
+        }
+
+        @if not($indicator-active-dot-color) and not($indicator-background) and $button-background {
+            $indicator-active-dot-color: var(--button-background);
+        }
+    }
 
     @if not($button-shadow) {
         $button-elevation: map.get($carousel-schema, 'button-elevation');
@@ -92,15 +111,19 @@
     }
 
     @if not($button-arrow-color) and $button-background {
-        $button-arrow-color: adaptive-contrast(var(--button-background));
+        $button-arrow-color: hsla(from (adaptive-contrast(var(--button-background)) h s l / 0.85));
     }
 
     @if not($button-hover-background) and $button-background {
-        $button-hover-background: hsl(from var(--button-background) h s calc(l * 0.9));
+        $button-hover-background: var(--button-background);
     }
 
     @if not($button-hover-arrow-color) and $button-hover-background {
         $button-hover-arrow-color: adaptive-contrast(var(--button-hover-background));
+    }
+
+    @if not($button-focus-arrow-color) and $button-hover-arrow-color {
+        $button-focus-arrow-color: var(--button-hover-arrow-color);
     }
 
     @if not($button-disabled-background) and $button-background {
@@ -108,15 +131,15 @@
     }
 
     @if not($button-disabled-arrow-color) and $button-disabled-background {
-        $button-disabled-arrow-color: hsla(from adaptive-contrast(var(--button-disabled-background))  h s l / .4);
+        $button-disabled-arrow-color: hsla(from adaptive-contrast(var(--button-disabled-background)) h s l / .4);
     }
 
     @if not($indicator-dot-color) and $indicator-background {
-        $indicator-dot-color: hsl(from adaptive-contrast(var(--indicator-background)) h s calc(l * 0.8));
+        $indicator-dot-color: hsla(from adaptive-contrast(var(--indicator-background)) h s l / .8);
     }
 
     @if not($indicator-hover-dot-color) and $indicator-dot-color {
-        $indicator-hover-dot-color: hsl(from var(--indicator-dot-color) h s calc(l * 1.1));
+        $indicator-hover-dot-color: hsla(from var(--indicator-dot-color) h s l / 1);
     }
 
     @if not($indicator-border-color) and $indicator-dot-color {
@@ -132,7 +155,39 @@
     }
 
     @if not($indicator-active-border-color) and $indicator-active-dot-color {
-        $indicator-active-border-color: var(--indicator-active-dot-color)
+        $indicator-active-border-color: var(--indicator-active-dot-color);
+    }
+
+    @if $variant == 'material' {
+        @if not($button-focus-border-color) and $button-focus-arrow-color {
+            $button-focus-border-color: var(--button-focus-arrow-color);
+        }
+    }
+
+    @if $variant == 'fluent' or $variant == 'bootstrap' {
+        @if not($button-focus-border-color) and $button-background {
+            $button-focus-border-color: hsla(from adaptive-contrast(var(--button-background)) h s l / 0.5);
+        }
+    }
+
+    @if $variant == 'indigo' {
+        @if not($button-focus-border-color) and $indicator-active-dot-color {
+            $button-focus-border-color: var(--indicator-active-dot-color);
+        }
+    }
+
+    @if $variant == 'indigo' {
+        @if not($indicator-focus-color) and $indicator-active-hover-dot-color {
+            $indicator-focus-color: hsla(from var(--indicator-active-hover-dot-color) h s l / .5);
+        }
+    } @else {
+        @if not($indicator-focus-color) and not($indicator-background) and $button-background {
+            $indicator-focus-color: var(--button-background);
+        }
+
+        @if not($indicator-focus-color) and $indicator-background {
+            $indicator-focus-color: adaptive-contrast(var(--indicator-background));
+        }
     }
 
     @return extend($theme, (
@@ -148,6 +203,7 @@
         button-hover-background: $button-hover-background,
         button-arrow-color: $button-arrow-color,
         button-hover-arrow-color: $button-hover-arrow-color,
+        button-focus-arrow-color: $button-focus-arrow-color,
         button-disabled-arrow-color: $button-disabled-arrow-color,
         button-border-color: $button-border-color,
         button-hover-border-color: $button-hover-border-color,
@@ -163,10 +219,6 @@
         indicator-active-dot-color: $indicator-active-dot-color,
         indicator-active-border-color: $indicator-active-border-color,
         indicator-active-hover-dot-color: $indicator-active-hover-dot-color,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -248,24 +300,16 @@
             border: rem(2px) solid var-get($theme, 'button-focus-border-color');
 
             igx-icon {
-                color: var-get($theme, 'button-focus-border-color');
+                color: var-get($theme, 'button-focus-arrow-color');
             }
 
             @if $variant == 'bootstrap' {
                 box-shadow: 0 0 0 rem(4px) var-get($theme, 'button-focus-border-color');
                 border-color: var-get($theme, 'button-border-color');
-
-                igx-icon {
-                    color: var-get($theme, 'button-arrow-color');
-                }
             }
 
             @if $variant == 'fluent' {
                 border: none;
-
-                igx-icon {
-                    color: var-get($theme, 'indicator-focus-color');
-                }
 
                 &::after {
                     position: absolute;
@@ -281,10 +325,6 @@
 
             @if $variant == 'indigo' {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'indicator-focus-color');
-
-                igx-icon {
-                    color: var-get($theme, 'button-arrow-color');
-                }
             }
         }
 
