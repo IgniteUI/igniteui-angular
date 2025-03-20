@@ -6608,10 +6608,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             .filter((c) => c.pinned);
         this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
         this._columns = newColumns;
-        if (this._columns && this._filteringExpressionsTree) {
+        if (this._columns && this._columns.length && this._filteringExpressionsTree) {
             this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
         }
-        if (this._columns && this._advancedFilteringExpressionsTree) {
+        if (this._columns && this._columns.length && this._advancedFilteringExpressionsTree) {
             this._advancedFilteringExpressionsTree = recreateTreeFromFields(this._advancedFilteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
         }
         this.resetCaches();
@@ -6676,10 +6676,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         } else {
             this._columns = this.getColumnList();
         }
-        if (this._columns && this._filteringExpressionsTree) {
+        if (this._columns && this._columns.length && this._filteringExpressionsTree) {
             this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
         }
-        if (this._columns && this._advancedFilteringExpressionsTree) {
+        if (this._columns && this._columns.length && this._advancedFilteringExpressionsTree) {
             this._advancedFilteringExpressionsTree = recreateTreeFromFields(this._advancedFilteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
         }
 
