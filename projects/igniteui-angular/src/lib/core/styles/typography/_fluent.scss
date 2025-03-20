@@ -100,7 +100,7 @@
     @include radio-typography($categories: (
         label: 'body-2'
     ));
-    @include slider-typography();
+    // @include slider-typography();
     // @include snackbar-typography($categories: (
     //     text: 'caption'
     // ));

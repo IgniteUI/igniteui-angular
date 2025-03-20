@@ -97,7 +97,7 @@
     @include radio-typography($categories: (
         label: 'body-1'
     ));
-    @include slider-typography();
+    // @include slider-typography();
     @include snackbar-typography();
     @include switch-typography($categories: (
         label: 'body-1'
