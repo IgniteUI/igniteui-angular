@@ -486,18 +486,27 @@
             --ig-body-2-text-transform: unset;
 
             padding-inline: rem(32px);
-	        
+
 	        color: color($color: 'gray', $variant: if($theme-variant == 'light', 600, 900));
 	        border: rem(1px) dashed color($color: 'gray', $variant: if($theme-variant == 'light', 600, 300));
 	        background:  transparent;
         }
     }
-	
+
 	%filter-tree__expression-item-keyboard-ghost {
 		.igx-chip__item {
 			box-shadow: var(--ghost-shadow);
             background: var(--ghost-background);
+            color: var(--focus-selected-text-color);
 		}
+
+        .igx-chip:hover {
+            .igx-chip__item {
+                box-shadow: var(--ghost-shadow);
+                background: var(--ghost-background);
+                color: var(--focus-selected-text-color);
+            }
+        }
 	}
 
     %filter-tree__expression-column {
