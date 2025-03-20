@@ -6,7 +6,7 @@ import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 import { mergeWith } from 'lodash-es';
 import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
-import { IgxPivotGridComponent }  from '../pivot-grid/public_api';
+import { IgxPivotGridComponent }  from './pivot-grid/public_api';
 import { PivotUtil } from './pivot-grid/pivot-util';
 
 abstract class BaseRow implements RowType {
