@@ -1122,6 +1122,29 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="false">
+        <igx-grid-toolbar >
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-advanced-filtering>Really advanced filtering</igx-grid-toolbar-advanced-filtering>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
+        <igx-column width="100px" [field]="'ID'" [header]="'HeaderID'" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
+        <igx-column width="100px" [field]="'ReleaseTime'" dataType="time"></igx-column>
+        </igx-column>
+    </igx-grid>`,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent]
+})
+export class IgxGridAdvancedFilteringWithToolbarComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public override data = SampleTestData.excelFilteringData();
+}
+
+@Component({
     template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
         <igx-grid-toolbar></igx-grid-toolbar>
         @for (c of columns; track c.field) {
@@ -2074,6 +2097,61 @@ export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent
                 searchVal: 200
             }
         ];
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [(advancedFilteringExpressionsTree)]="filterTree">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
+        </igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+    </igx-grid>`,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class IgxGridAdvancedFilteringSerializedTreeComponent extends BasicGridComponent implements OnInit {
+    public resizable = false;
+    public filterable = true;
+    public filterTree: IFilteringExpressionsTree;
+    public filterTreeObject: IFilteringExpressionsTree;
+
+    public override data = SampleTestData.excelFilteringData();
+
+    public ngOnInit(): void {
+        this.filterTree = JSON.parse(`{ 
+            "filteringOperands":  [
+                {
+                    "conditionName": "greaterThan",
+                    "fieldName": "Downloads",
+                    "searchVal": 200
+                }
+            ],
+            "operator": 0
+        }`);
+
+        this.filterTreeObject =	{
+            "filteringOperands": [
+              {
+                "fieldName": "ProductName",
+                "condition": {
+                  "name": "contains",
+                  "isUnary": false,
+                  "iconName": "filter_contains"
+                },
+                "conditionName": "contains",
+                "ignoreCase": true,
+                "searchVal": "Ig",
+                "searchTree": null
+              }
+            ],
+            "operator": 1,
+            "returnFields": [
+              "ID",
+              "ProductName"
+            ]
+        };
     }
 }
 
