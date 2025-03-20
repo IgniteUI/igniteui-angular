@@ -497,14 +497,18 @@
 		.igx-chip__item {
 			box-shadow: var(--ghost-shadow);
             background: var(--ghost-background);
-            color: var(--focus-selected-text-color);
+            color: var(--focus-text-color);
 		}
 
         .igx-chip:hover {
             .igx-chip__item {
                 box-shadow: var(--ghost-shadow);
                 background: var(--ghost-background);
-                color: var(--focus-selected-text-color);
+                color: var(--focus-text-color);
+
+                @if $variant == 'indigo' {
+                    border-color: var(--border-color);
+                }
             }
         }
 	}
