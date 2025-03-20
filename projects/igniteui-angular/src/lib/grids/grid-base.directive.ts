@@ -3361,12 +3361,25 @@ export abstract class IgxGridBaseDirective implements GridType,
     private get hasZeroResultFilter(): boolean {
         return this.filteredData && this.filteredData.length === 0;
     }
+    protected get totalCalcWidth() {
+        return this.platform.isBrowser ? this.calcWidth : undefined;
+    }
+
+    protected get renderData(){
+        return this.platform.isBrowser ? this.data : undefined;
+    }
+
+    @HostBinding('style.display')
+    protected displayStyle = 'grid';
+
+    @HostBinding('style.grid-template-rows')
+    protected templateRows = 'auto auto auto 1fr auto auto';
 
     /**
      * @hidden @internal
      */
     private get hasNoData(): boolean {
-        return !this.data || this.dataLength === 0;
+        return !this.data || this.dataLength === 0 || !this.platform.isBrowser;
     }
 
     /**
@@ -5158,7 +5171,8 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /** @hidden @internal */
     public get totalHeight() {
-        return this.calcHeight ? this.calcHeight + this.pinnedRowHeight : this.calcHeight;
+        const height = this.calcHeight ? this.calcHeight + this.pinnedRowHeight : this.calcHeight;
+        return this.platform.isBrowser ? height : undefined;
     }
 
     /**
