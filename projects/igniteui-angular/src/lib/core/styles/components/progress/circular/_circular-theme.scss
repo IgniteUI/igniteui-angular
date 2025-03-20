@@ -64,6 +64,7 @@
     @return extend($theme, (
         name: $name,
         base-circle-color: $base-circle-color,
+	    fill-color-default: $fill-color-default,
         fill-color-default-start: $fill-color-default-start,
         fill-color-default-end: $fill-color-default-end,
         fill-color-danger: $fill-color-danger,
@@ -134,6 +135,8 @@
             transform-origin: center;
 
             %outer {
+	            stroke: var-get($theme, 'fill-color-default');
+	            
                 @if $variant != 'bootstrap' {
                     animation: igx-initial-dashoffset var(--_transition-duration) linear;
                 } @else {
@@ -310,14 +313,14 @@
     %text--hidden {
         visibility: hidden;
     }
+	
+	%gradient-start {
+		stop-color: var-get($theme, 'fill-color-default-end');
+	}
 
-    %gradient-start {
-        stop-color: var-get($theme, 'fill-color-default-start');
-    }
-
-    %gradient-end {
-        stop-color: var-get($theme, 'fill-color-default-end');
-    }
+	%gradient-end {
+		stop-color: var-get($theme, 'fill-color-default-start');
+	}
 
     @keyframes igx-indeterminate-accordion {
         0% {
