@@ -49,7 +49,7 @@ describe('Unit testing FilteringStrategy', () => {
         const res = fs.matchRecord(rec, expressionTree);
         expect(res).toBeTruthy();
     });
-    it ('tests `matchRecordByExpressions` for working with filtering operands with missing condition', () => {
+    it ('tests `findMatchByExpression` for working with filtering operands with missing condition', () => {
         const rec = data[0];
         const expressionTree = new FilteringExpressionsTree(FilteringLogic.Or);
         expressionTree.filteringOperands = [
