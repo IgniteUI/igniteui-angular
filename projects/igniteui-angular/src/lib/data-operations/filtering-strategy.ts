@@ -39,13 +39,25 @@ export interface IgxFilterItem {
 export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
+        if (expr.searchTree) {
+            const records = rec[expr.searchTree.entity];
+            for (let index = 0; index < records.length; index++) {
+                const record = records[index];
+                if (this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         const cond = expr.condition;
         const val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
     // protected
-    public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType): boolean {
+    public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType, entity?: string): boolean {
         if (expressions) {
             if (isTree(expressions)) {
                 const expressionsTree = expressions;
@@ -54,7 +66,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 
                 if (expressionsTree.filteringOperands && expressionsTree.filteringOperands.length) {
                     for (const operand of expressionsTree.filteringOperands) {
-                        matchOperand = this.matchRecord(rec, operand, grid);
+                        matchOperand = this.matchRecord(rec, operand, grid, entity);
 
                         // Return false if at least one operand does not match and the filtering logic is And
                         if (!matchOperand && operator === FilteringLogic.And) {
@@ -73,9 +85,16 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
                 return true;
             } else {
                 const expression = expressions;
-                const column = grid && grid.getColumnByName(expression.fieldName);
-                const isDate = column ? column.dataType === DateType || column.dataType === DateTimeType : false;
-                const isTime = column ? column.dataType === TimeType : false;
+                let isDate = false;
+                let isTime = false;
+                if (!entity) {
+                    const column = grid && grid.getColumnByName(expression.fieldName);
+                    isDate = column ? column.dataType === DateType || column.dataType === DateTimeType : false;
+                    isTime = column ? column.dataType === TimeType : false;
+                } else {
+                    // TODO: check for date and time
+                }
+
                 return this.findMatchByExpression(rec, expression, isDate, isTime, grid);
             }
         }
