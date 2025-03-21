@@ -122,7 +122,7 @@
     @include tooltip-typography($categories: (
         tooltip-text: 'subtitle-2'
     ));
-    @include tree-typography();
+    //@include tree-typography();
     @include label-typography($categories: (
         label: 'caption'
     ));
