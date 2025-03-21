@@ -6,7 +6,7 @@ import { IDragStartEventArgs, IgxDragDirective, IgxDragHandleDirective } from '.
 import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
 import { PlatformUtil } from '../../../core/utils';
-import { FieldType, GridType } from '../../common/grid.interface';
+import { EntityType, FieldType, GridType } from '../../common/grid.interface';
 import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
 import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
 import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
@@ -15,6 +15,8 @@ import { IgxQueryBuilderHeaderComponent } from '../../../query-builder/query-bui
 import { NgClass } from '@angular/common';
 import { getCurrentResourceStrings } from '../../../core/i18n/resources';
 import { QueryBuilderResourceStringsEN } from '../../../core/i18n/query-builder-resources';
+import { IgxHierarchicalGridComponent } from '../../hierarchical-grid/hierarchical-grid.component';
+import { IgxRowIslandComponent } from '../../hierarchical-grid/row-island.component';
 
 /**
  * A component used for presenting advanced filtering UI for a Grid.
@@ -191,18 +193,67 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.closeDialog();
     }
 
-    
+
     /**
      * @hidden @internal
      */
     public generateEntity() {
-        const entities = [
+        if (this.queryBuilder?.entities) {
+            return this.queryBuilder?.entities;
+        }
+
+        const isHierarchicalGrid = this.grid instanceof IgxHierarchicalGridComponent;
+        const entities: EntityType[] = [
             {
-                name: null, 
-                fields: this.filterableFields
+                name: null,
+                fields: this.filterableFields.map(f => ({ field: f.field, dataType: f.dataType })) as FieldType[]
             }
         ];
+    
+        if (isHierarchicalGrid) {
+            const hierarchicalGrid = this.grid as IgxHierarchicalGridComponent;
+            entities[0].childEntities = hierarchicalGrid.childLayoutList.reduce((acc, rowIsland) => {
+                return acc.concat(this.generateChildEntity(rowIsland, hierarchicalGrid.data[0][rowIsland.key][0]));
+            }
+            , []);
+        }
+
         return entities;
+    }
+
+    private generateChildEntity(rowIsland: IgxRowIslandComponent, firstRowData: any[]): EntityType {
+        const entityName = rowIsland.key;
+        let fields = [];
+        let childEntities;
+        if (!rowIsland.autoGenerate) {
+            fields = rowIsland.columnList.map(f => ({ field: f.field, dataType: f.dataType })) as FieldType[];
+        } else {
+            const rowIslandFields = Object.keys(firstRowData).map(key => {
+                if (firstRowData[key] instanceof Array) {
+                    return null;
+                }
+
+                return {
+                    field: key,
+                    dataType: (this.grid as IgxHierarchicalGridComponent).resolveDataTypes(firstRowData[key])
+                }
+            });
+            fields = rowIslandFields.filter(f => f !== null) as FieldType[];
+        }
+
+        const rowIslandChildEntities = rowIsland.childLayoutList.reduce((acc, childRowIsland) => {
+            return acc.concat(this.generateChildEntity(childRowIsland, firstRowData[childRowIsland.key][0]));
+        }, []);
+
+        if (rowIslandChildEntities.length > 0) {
+            childEntities = rowIslandChildEntities;
+        } 
+
+        return {
+            name: entityName,
+            fields: fields,
+            childEntities: childEntities
+        }
     }
 
     private assignResourceStrings() {
