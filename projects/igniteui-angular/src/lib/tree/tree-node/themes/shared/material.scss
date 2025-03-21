@@ -1,0 +1,46 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $material;
+
+@include themed-block(igx-tree-node, material) {
+    $icon-size: rem(24px);
+
+    $drop-indicator-width: (
+        comfortable: calc(100% - ((#{rem(24px)} * 2) + (#{$icon-size} + #{rem(4px)}))),
+        cosy: calc(100% - ((#{rem(16px)} * 2) + (#{$icon-size} + #{rem(4px)}))),
+        compact: calc(100% - ((#{rem(12px)} * 2) + (#{$icon-size} + #{rem(4px)})))
+    );
+
+    @include e(wrapper) {
+        padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+
+        igx-icon {
+            --component-size: 3;
+        }
+
+        igx-checkbox {
+            --composite-padding: 0;
+        }
+    }
+
+    @include e(drop-indicator) {
+        width: pad(
+            map.get($drop-indicator-width, 'compact'),
+            map.get($drop-indicator-width, 'cosy'),
+            map.get($drop-indicator-width, 'comfortable')
+        );
+    }
+
+    @include e(select) {
+        margin-inline: rem(10px) rem(14px);
+    }
+
+    @include e(toggle-button) {
+        margin-inline-end: rem(4px);
+    }
+}

@@ -640,13 +640,13 @@
         @include time-picker($time-picker-theme-map);
     }
 
-    @if is-used('igx-tree', $exclude) {
-        $tree-theme-map: tree-theme(
-            $schema: $schema,
-        );
-        $tree-theme-map: meta.call($theme-handler, $tree-theme-map);
-        @include tree($tree-theme-map);
-    }
+    //@if is-used('igx-tree', $exclude) {
+    //    $tree-theme-map: tree-theme(
+    //        $schema: $schema,
+    //    );
+    //    $tree-theme-map: meta.call($theme-handler, $tree-theme-map);
+    //    @include tree($tree-theme-map);
+    //}
 
     @if is-used('igx-watermark', $exclude) {
         $watermark-theme-map: watermark-theme(
