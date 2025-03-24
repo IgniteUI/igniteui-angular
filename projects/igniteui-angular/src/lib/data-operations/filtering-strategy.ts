@@ -40,7 +40,9 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
         const val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
-        return expr.condition?.logic(val, expr.searchVal, expr.ignoreCase);
+        if (expr.condition.logic) {
+            return expr.condition.logic(val, expr.searchVal, expr.ignoreCase);
+        }
     }
 
     // protected
