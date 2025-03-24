@@ -15,6 +15,7 @@ $_theme: $fluent;
     --steps-top-position: #{rem(1px)};
 
     &:hover {
+        .igx-slider-thumb-from__dot::before,
         .igx-slider-thumb-to__dot::before {
             border: var(--thumb-border-width) solid var-get($_theme, 'thumb-focus-color');
         }
