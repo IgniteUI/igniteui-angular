@@ -1,0 +1,219 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/tokens' as *;
+
+$_theme: $material;
+
+@include layer(base) {
+    @include b(igx-button-group) {
+        --item-min-width: rem(42px);
+
+        display: flex;
+        box-shadow: var-get($_theme, 'elevation');
+        border-radius: var-get($_theme, 'border-radius');
+
+        button {
+            // The margin here is required to fix a bug in Safari #7858
+            margin-top: 0;
+            margin-inline-end: 0;
+            margin-bottom: 0;
+        }
+
+        @include e(item) {
+            @include type-style(button) {
+                text-align: center;
+            }
+
+            border: rem(1px) solid var-get($_theme, 'item-border-color');
+            color: var-get($_theme, 'item-text-color');
+            background: var-get($_theme, 'item-background');
+            min-width: var(--item-min-width);
+            display: flex;
+            flex: 1 0 0%;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            z-index: 0;
+
+            igx-icon {
+                color: var-get($_theme, 'item-icon-color');
+            }
+
+            &:hover {
+                color: var-get($_theme, 'item-hover-text-color');
+                background: var-get($_theme, 'item-hover-background');
+                border-color: var-get($_theme, 'item-hover-border-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'item-hover-icon-color');
+                }
+            }
+
+            &:active {
+                color: var-get($_theme, 'item-hover-text-color');
+                background: var-get($_theme, 'item-hover-background');
+                border-color: var-get($_theme, 'item-hover-border-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'item-hover-icon-color');
+                }
+            }
+
+            &[igxButton] {
+                border-radius: 0;
+                border-color: var-get($_theme, 'item-border-color');
+            }
+
+            &[igxButton][disabled='true'] {
+                color: var-get($_theme, 'disabled-text-color');
+                background: var-get($_theme, 'disabled-background-color');
+                border-color: var-get($_theme, 'item-disabled-border');
+
+                igx-icon {
+                    color: var-get($_theme, 'disabled-text-color');
+                }
+            }
+
+            &[igxButton].igx-button--focused {
+                color: var-get($_theme, 'item-hover-text-color');
+                background: var-get($_theme, 'item-hover-background');
+                border-color: var-get($_theme, 'item-hover-border-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'item-hover-icon-color');
+                }
+
+                &:hover {
+                    color: var-get($_theme, 'item-hover-text-color');
+                    background: var-get($_theme, 'item-hover-background');
+
+                    igx-icon {
+                        color: var-get($_theme, 'item-hover-icon-color');
+                    }
+                }
+            }
+
+            &:not(:nth-child(1)) {
+                margin-inline-start: rem(-1px);
+            }
+
+            &:first-of-type {
+                border-start-start-radius: inherit;
+                border-end-start-radius: inherit;
+            }
+
+            &:last-of-type {
+                border-start-end-radius: inherit;
+                border-end-end-radius: inherit;
+            }
+        }
+
+        @include e(item, $m: selected) {
+            color: var-get($_theme, 'item-selected-text-color');
+            background: var-get($_theme, 'item-selected-background');
+            border-color: var-get($_theme, 'item-selected-border-color');
+            position: relative;
+            z-index: 1;
+
+            &[igxButton] {
+                border-color: var-get($_theme, 'item-selected-border-color');
+            }
+
+            igx-icon {
+                color: var-get($_theme, 'item-selected-icon-color');
+            }
+
+            &:hover {
+                border-color: var-get($_theme, 'item-selected-hover-border-color');
+                color: var-get($_theme, 'item-selected-hover-text-color');
+                background: var-get($_theme, 'item-selected-hover-background');
+
+                igx-icon {
+                    color: var-get($_theme, 'item-selected-hover-icon-color');
+                }
+            }
+
+            &[igxButton].igx-button--focused {
+                &:hover {
+                    color: var-get($_theme, 'item-selected-hover-text-color');
+                    background: var-get($_theme, 'item-selected-hover-background');
+                    border-color: var-get($_theme, 'item-selected-hover-border-color');
+                }
+
+                &:active {
+                    background: var-get($_theme, 'item-selected-hover-background');
+                    color: var-get($_theme, 'item-selected-hover-text-color');
+
+                    &::before {
+                        background: var-get($_theme, 'item-selected-focus-background');
+                    }
+
+                    igx-icon {
+                        color: var-get($_theme, 'item-selected-hover-icon-color');
+                    }
+                }
+            }
+
+            &[igxButton][disabled='true'] {
+                position: relative;
+
+                &::before {
+                    position: absolute;
+                    content: '';
+                    top: 0;
+                    bottom: 0;
+                    inset-inline-end: 0;
+                    inset-inline-start: 0;
+                    background: var-get($_theme, 'disabled-selected-background');
+                }
+            }
+        }
+
+        @include e(item-content) {
+            display: flex;
+            align-items: center;
+            flex-flow: row nowrap;
+            min-width: 0;
+
+            * ~ * {
+                margin-inline-start: rem(10px, 16px);
+            }
+        }
+
+        @include e(button-text) {
+            @include ellipsis();
+
+            width: 100%;
+        }
+
+        @include m(vertical) {
+            flex-flow: column;
+
+            @include e(item) {
+                &:not(:nth-child(1)) {
+                    margin-top: rem(-1px) !important;
+                    margin-inline-start: 0;
+                }
+        
+                &:first-of-type {
+                    border-start-start-radius: inherit;
+                    border-start-end-radius: inherit;
+                    border-end-start-radius: 0;
+                    border-end-end-radius: 0;
+                }
+        
+                &:last-of-type {
+                    border-start-start-radius: 0;
+                    border-start-end-radius: 0;
+                    border-end-start-radius: inherit;
+                    border-end-end-radius: inherit;
+                }
+            }
+        }
+    }
+}

@@ -12,7 +12,8 @@ import {
     ViewChildren,
     OnDestroy,
     ElementRef,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -57,6 +58,8 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-buttongroup',
     templateUrl: 'buttongroup-content.component.html',
+    styleUrl: 'buttongroup-content.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
