@@ -3,6 +3,7 @@ import { FilteringStrategy } from './filtering-strategy';
 import { FilteringExpressionsTree } from './filtering-expressions-tree';
 import { FilteringLogic } from './filtering-expression.interface';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxBooleanFilteringOperand } from './filtering-condition';
+import { JsonPipe } from '@angular/common';
 
 
 describe('Unit testing FilteringStrategy', () => {
@@ -51,15 +52,9 @@ describe('Unit testing FilteringStrategy', () => {
     });
     it ('tests `findMatchByExpression` for working with filtering operands with missing condition', () => {
         const rec = data[0];
-        const expressionTree = new FilteringExpressionsTree(FilteringLogic.Or);
-        expressionTree.filteringOperands = [
-            {
-                conditionName: 'contains',
-                fieldName: 'string',
-                ignoreCase: false,
-                searchVal: 'ROW'
-            }
-        ];
+        const expressionTree = JSON.parse('{"filteringOperands":[{"fieldName":"Missing","condition":{"name":"notEmpty","isUnary":true,"iconName":"filter_not_empty"},"conditionName":"notEmpty","ignoreCase":true,"searchVal":null,"searchTree":null}],"operator":0,"returnFields":[],"type":1}');
+
+
         const res = fs.matchRecord(rec, expressionTree);
         expect(res).toBeFalsy();
     });
