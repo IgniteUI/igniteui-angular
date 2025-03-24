@@ -1,6 +1,12 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 19.2.0
+### New Features
+- IgxGrid, IgxHierarchicalGrid, IgxTreeGrid
+    - Column's `minWidth` and `maxWidth` constrain the user-specified `width` so that columns cannot go outside their bounds.
+
 ## 19.1.1
 ### New Features
 - IgxListItem
