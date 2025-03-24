@@ -57,6 +57,21 @@ describe('Unit testing FilteringStrategy', () => {
         expect(res).toBeFalsy();
     });
 
+    it ('no error when condition is missing in the filtering expressions tree', () => {
+        const rec = data[0];
+        const expressionTree = new FilteringExpressionsTree(FilteringLogic.Or);
+        expressionTree.filteringOperands = [
+            {
+                conditionName: 'contains',
+                fieldName: 'string',
+                ignoreCase: false,
+                searchVal: 'ROW'
+            }
+        ];
+        const res = fs.matchRecord(rec, expressionTree);
+        expect(res).toBeFalsy();
+    });
+
     it ('tests `findMatch`', () => {
         const rec = data[0];
         const res = fs.findMatchByExpression(rec, {
