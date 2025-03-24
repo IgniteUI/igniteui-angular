@@ -10,7 +10,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSlide`
     - **Deprecation** - `tabIndex` has been deprecated and will be removed in a future version.
 - `IgxGrid`, `IgxHierarchicalGrid`, `IgxTreeGrid`
-    - Column's `minWidth` and `maxWidth` constrain the user-specified `width` so that columns cannot go outside their bounds.
+    - A column's `minWidth` and `maxWidth` constrain the user-specified `width` so that it cannot go outside their bounds.
 
 ## 19.1.1
 ### New Features
