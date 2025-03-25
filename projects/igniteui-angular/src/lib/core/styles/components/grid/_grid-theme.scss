@@ -2085,10 +2085,6 @@
         .sort-icon {
             color: var-get($theme, 'header-selected-text-color');
 	        
-	        //> igx-icon {
-		    //    color: inherit;
-	        //}
-
             ::after {
                 background: var-get($theme, 'header-selected-background');
             }
