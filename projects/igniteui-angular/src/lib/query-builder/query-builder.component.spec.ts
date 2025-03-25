@@ -452,16 +452,16 @@ describe('IgxQueryBuilder', () => {
       // Verify the returnFields
       let exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
       expect(exprTreeReturnFields).toBe(`["*"]`);
-      
+
       // Change the selected return fields
       QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [1]);
       tick(100);
       fix.detectChanges();
-       
+
       // Verify the returnFields
       exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
       expect(exprTreeReturnFields).toBe(`["OrderId"]`);
-      
+
       // Change the entity
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
@@ -474,16 +474,16 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       queryBuilder.showEntityChangeDialog = false;
       fix.detectChanges();
-      
+
       // Click selectAll button in order to deselect all fields
       QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
       tick(100);
       fix.detectChanges();
-       
+
       // Verify the returnFields
       let exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
       expect(exprTreeReturnFields).toBe(`[]`);
-      
+
       // Click selectAll button in order to select all fields
       QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
       tick(100);
@@ -2166,7 +2166,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Id', 'Equals', '1', 1);
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'True', undefined, 1);
 
-      // close chip 
+      // close chip
       queryBuilder.discard();
       tick(100);
       fix.detectChanges();
@@ -3149,7 +3149,6 @@ describe('IgxQueryBuilder', () => {
       draggedIndicator.nativeElement.focus();
 
       spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
-      const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
 
       tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       tick(20);
@@ -3257,7 +3256,6 @@ describe('IgxQueryBuilder', () => {
       draggedIndicator.nativeElement.focus();
 
       spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
-      const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
 
       tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       tick(20);
