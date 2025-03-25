@@ -99,19 +99,21 @@
 
         <article class="card">
             <igx-card>
-                <igx-card-header>
-                    @if(!properties.hideHeader && !hideTitle) {
-                    <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
-                    }
-                    @if(!properties.hideHeader && !hideSubtitle) {
-                    <h5 igxCardHeaderSubtitle>{{cards[1].subtitle}}</h5>
-                    }
-                    @if(!properties.hideMedia) {
-                    <igx-card-media width="62px" height="62px">
-                        <img [src]="cards[1].imageUrl" />
-                    </igx-card-media>
-                    }
-                </igx-card-header>
+                @if(!properties.hideHeader) {
+                    <igx-card-header>
+                        @if(!hideTitle) {
+                        <h5 igxCardHeaderTitle>{{cards[1].title}}</h5>
+                        }
+                        @if(!hideSubtitle) {
+                        <h5 igxCardHeaderSubtitle>{{cards[1].subtitle}}</h5>
+                        }
+                        @if(!properties.hideMedia) {
+                        <igx-card-media width="62px" height="62px">
+                            <img [src]="cards[1].imageUrl" />
+                        </igx-card-media>
+                        }
+                    </igx-card-header>
+                }
 
                 <igx-divider type="dashed" [middle]="true"></igx-divider>
 
@@ -141,22 +143,37 @@
                         flex: 1 1 auto;
                     "
                 >
-                    <igx-card-header>
-                        <igx-avatar [src]="cards[2].avatarUrl"></igx-avatar>
-                        <h3 igxCardHeaderTitle>{{ cards[2].title }}</h3>
-                        <h5 igxCardHeaderSubtitle>{{ cards[2].subtitle }}</h5>
-                    </igx-card-header>
 
-                    <igx-card-actions [vertical]="false">
-                        @for(button of cards[2].buttons; track button){
-                        <button igxButton igxRipple>{{ button }}</button>
-                        }
-                    </igx-card-actions>
+                    @if(!properties.hideHeader) {
+                        <igx-card-header>
+                            @if(!hideThumbnail) {
+                                <igx-avatar [src]="cards[2].avatarUrl"></igx-avatar>
+                            }
+
+                            @if(!hideTitle) {
+                                <h3 igxCardHeaderTitle>{{ cards[2].title }}</h3>
+                            }
+
+                            @if(!hideSubtitle) {
+                                <h5 igxCardHeaderSubtitle>{{ cards[2].subtitle }}</h5>
+                            }
+                        </igx-card-header>
+                    }
+
+                    @if(!properties.hideActions) {
+                        <igx-card-actions [vertical]="false">
+                            @for(button of cards[2].buttons; track button){
+                                <button igxButton igxRipple>{{ button }}</button>
+                            }
+                        </igx-card-actions>
+                    }
                 </div>
 
-                <igx-card-media width="86px" height="auto">
+                @if(!properties.hideMedia) {
+                <igx-card-media width="86px">
                     <img [src]="cards[2].imageUrl" />
                 </igx-card-media>
+                }
             </igx-card>
         </article>
         <!--Melo Di Card Ends-->
@@ -260,26 +277,36 @@
 
         <article class="card">
             <igc-card>
-                <igc-card-header style="flex-direction: row">
-                    @if(!properties.hideMedia) {
-                    <igc-card-media
-                        slot="thumbnail"
-                        style="width: 62px; height: 62px"
-                    >
-                        <img [src]="cards[1].imageUrl" />
-                    </igc-card-media>
+                <div style="
+                display: flex;
+                ">
+                    @if(!properties.hideHeader) {
+                        <igc-card-header>
+                            @if(!properties.hideMedia) {
+                                <div slot="thumbnail">
+                                    <igc-card-media
+                                            slot="thumbnail"
+                                            style="width: 62px; height: 62px"
+                                    >
+                                        <img [src]="cards[1].imageUrl" />
+                                    </igc-card-media>
+                                </div>
+                            }
+
+                            @if(!properties.hideHeader) { @if(!hideTitle) {
+                                <span slot="title">{{cards[1].title}}</span>
+                            }
+                                @if(!hideSubtitle) {
+                                    <span slot="subtitle">{{cards[1].subtitle}}</span>
+                                }
+                            }
+                        </igc-card-header>
                     }
-                    @if(!properties.hideHeader) { @if(!hideTitle) {
-                    <span slot="title">{{cards[1].title}}</span>
-                    }
-                    @if(!hideSubtitle) {
-                    <span slot="subtitle">{{cards[1].subtitle}}</span>
-                    }
-                }
-                </igc-card-header>
+                </div>
+
 
                 @if(!properties.hideActions) {
-                <igc-card-actions>
+                    <igc-card-actions>
                     @for(icon of cards[1].icons; track icon) {
                     <button
                         igxIconButton="flat"
@@ -304,25 +331,38 @@
                         flex: 1 1 auto;
                     "
                 >
-                    <igc-card-header>
-                        <igc-avatar
-                            slot="thumbnail"
-                            [src]="cards[2].avatarUrl"
-                        ></igc-avatar>
-                        <span slot="title">{{ cards[2].title }}</span>
-                        <span slot="subtitle">{{ cards[2].subtitle }}</span>
-                    </igc-card-header>
+                    @if(!properties.hideHeader) {
+                        <igc-card-header>
+                            @if(!hideThumbnail) {
+                                <igc-avatar
+                                    slot="thumbnail"
+                                    [src]="cards[2].avatarUrl"
+                                ></igc-avatar>
+                            }
+                            @if(!hideTitle) {
+                            <span slot="title">{{ cards[2].title }}</span>
+                            }
 
-                    <igc-card-actions>
+                            @if(!hideSubtitle) {
+                            <span slot="subtitle">{{ cards[2].subtitle }}</span>
+                            }
+                        </igc-card-header>
+                    }
+
+                    @if(!properties.hideActions) {
+                        <igc-card-actions>
                         @for(button of cards[2].buttons; track button){
                         <igc-button variant="flat">{{ button }}</igc-button>
                         }
                     </igc-card-actions>
+                    }
                 </div>
 
-                <igc-card-media style="width: 86px; height: 132px">
-                    <img [src]="cards[2].imageUrl" />
-                </igc-card-media>
+                @if(!properties.hideMedia) {
+                    <igc-card-media style="width: 86px">
+                        <img [src]="cards[2].imageUrl" />
+                    </igc-card-media>
+                }
             </igc-card>
         </article>
         <!--Melo Di Card Ends-->

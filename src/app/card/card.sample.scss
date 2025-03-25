@@ -1,8 +1,9 @@
 .cards-wrapper {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(340px, 1fr));
     justify-items: center;
     padding-block-start: 2rem;
+    gap: 1rem;
 }
 
 .angular-cards, .wc-cards {
@@ -11,19 +12,21 @@
     grid-auto-flow: row;
     grid-template-rows: subgrid;
     grid-row: span 5;
-    gap: 1rem;
-}
-
-.card {
-    min-width: 320px;
-    max-width: 320px;
-
-    h4 {
-        margin-bottom: 1rem;
-    }
 }
 
 .custom-controls {
     display: grid;
     gap: 1rem;
+}
+
+#igniteui-demo-app .sample-title {
+    margin-bottom: 0;
+}
+
+#igniteui-demo-app .sample-wrapper {
+    height: auto;
+}
+
+#igniteui-demo-app .content {
+    padding-bottom: 1rem;
 }
