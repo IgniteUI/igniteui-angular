@@ -6,13 +6,22 @@
     gap: 1rem;
 }
 
-.angular-cards, .wc-cards {
-    justify-items: center;
+.angular-cards,
+.wc-cards {
     display: grid;
-    grid-auto-flow: row;
-    grid-template-rows: subgrid;
-    grid-row: span 5;
+    gap: 1rem;
+    grid-row: 1;
 }
+
+
+.angular-cards:dir(rtl) {
+    grid-column: 2;
+}
+
+.wc-cards:dir(rtl) {
+    grid-column: 1;
+}
+
 
 .custom-controls {
     display: grid;
@@ -21,6 +30,7 @@
 
 #igniteui-demo-app .sample-title {
     margin-bottom: 0;
+    justify-self: center;
 }
 
 #igniteui-demo-app .sample-wrapper {
