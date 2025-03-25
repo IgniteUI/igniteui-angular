@@ -1273,13 +1273,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    protected override getGroupAreaHeight(): number {
-        return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
-    }
-
-    /**
-     * @hidden @internal
-     */
     protected override onColumnsAddedOrRemoved() {
         // update grouping states
         this.groupablePipeTrigger++;

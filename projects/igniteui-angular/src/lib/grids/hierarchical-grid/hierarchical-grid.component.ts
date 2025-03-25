@@ -1159,11 +1159,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         });
     }
 
-    protected override _shouldAutoSize(renderedHeight) {
+    protected override _shouldAutoSize() {
         if (this.isPercentHeight && this.parent) {
             return true;
         }
-        return super._shouldAutoSize(renderedHeight);
+        return super._shouldAutoSize();
     }
 
     private updateColumnList(recalcColSizes = true) {
