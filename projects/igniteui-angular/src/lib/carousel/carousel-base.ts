@@ -1,5 +1,5 @@
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { ChangeDetectorRef, EventEmitter, Inject } from '@angular/core';
+import { ChangeDetectorRef, Directive, EventEmitter, Inject, OnDestroy } from '@angular/core';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationPlayer, AnimationService } from '../services/animation/animation';
 import { fadeIn, slideInLeft } from 'igniteui-angular/animations';
@@ -19,7 +19,8 @@ export interface IgxSlideComponentBase {
 }
 
 /** @hidden */
-export abstract class IgxCarouselComponentBase {
+@Directive()
+export abstract class IgxCarouselComponentBase implements OnDestroy {
     /** @hidden */
     public animationType: CarouselAnimationType = CarouselAnimationType.slide;
 
@@ -50,7 +51,7 @@ export abstract class IgxCarouselComponentBase {
         protected cdr: ChangeDetectorRef) {
     }
 
-    public baseDestroy(): void {
+    public ngOnDestroy(): void {
         this.enterAnimationPlayer?.destroy();
         this.leaveAnimationPlayer?.destroy();
     }
