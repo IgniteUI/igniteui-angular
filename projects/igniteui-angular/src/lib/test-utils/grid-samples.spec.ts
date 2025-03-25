@@ -2120,7 +2120,7 @@ export class IgxGridAdvancedFilteringSerializedTreeComponent extends BasicGridCo
     public override data = SampleTestData.excelFilteringData();
 
     public ngOnInit(): void {
-        this.filterTree = JSON.parse(`{ 
+        this.filterTree = JSON.parse(`{
             "filteringOperands":  [
                 {
                     "conditionName": "greaterThan",
@@ -2626,6 +2626,7 @@ class CustomSummaryWithDate {
 }
 
 @Component({
+    selector: 'test-grid-custom-summary',
     template: `
         <igx-grid #grid1 [data]="data">
             <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
@@ -2645,6 +2646,7 @@ export class GridCustomSummaryComponent extends BasicGridComponent implements On
 }
 
 @Component({
+    selector: 'test-grid-custom-summary-with-null-and-zero',
     template: `
         <igx-grid #grid1 [data]="data">
             <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
@@ -2664,6 +2666,7 @@ export class GridCustomSummaryWithNullAndZeroComponent extends BasicGridComponen
 }
 
 @Component({
+    selector: 'test-grid-custom-summary-with-undefined-zero-and-valid-number',
     template: `
         <igx-grid #grid1 [data]="data">
             <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
@@ -2683,6 +2686,7 @@ export class GridCustomSummaryWithUndefinedZeroAndValidNumberComponent extends B
 }
 
 @Component({
+    selector: 'test-grid-custom-summary-with-undefined-and-null',
     template: `
         <igx-grid #grid1 [data]="data">
             <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
@@ -2702,6 +2706,7 @@ export class GridCustomSummaryWithUndefinedAndNullComponent extends BasicGridCom
 }
 
 @Component({
+    selector: 'test-grid-custom-summary-with-date',
     template: `
         <igx-grid #grid1 [data]="data">
             <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
