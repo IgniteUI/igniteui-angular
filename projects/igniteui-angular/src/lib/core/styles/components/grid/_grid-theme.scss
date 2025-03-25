@@ -2105,6 +2105,10 @@
 
         .sort-icon {
             color: var-get($theme, 'header-selected-text-color');
+	        
+	        //> igx-icon {
+		    //    color: inherit;
+	        //}
 
             ::after {
                 background: var-get($theme, 'header-selected-background');
@@ -2133,10 +2137,18 @@
         &%igx-grid-th--sorted {
             .sort-icon {
                 color: var-get($theme, 'header-selected-text-color');
+	            
+	            > igx-icon {
+		            color: inherit;
+	            }
 
                 &:focus,
                 &:hover {
                     color: var-get($theme, 'header-selected-text-color');
+	                
+	                > igx-icon {
+		                color: inherit;
+	                }
                 }
             }
         }
@@ -2190,9 +2202,17 @@
         .sort-icon {
             opacity: 1;
             color: var-get($theme, 'sorted-header-icon-color');
+	        
+	        > igx-icon {
+		        color: inherit;
+	        }
 
             &:hover {
                 color: var-get($theme, 'sortable-header-icon-hover-color');
+	            
+	            > igx-icon {
+		            color: inherit;
+	            }
             }
         }
     }
