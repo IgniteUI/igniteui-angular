@@ -307,15 +307,14 @@ export class DefaultToolbarComponent {
     </igx-grid>
     `,
     imports: [
-        IgxGridComponent,
-        IgxGridToolbarComponent,
-        IgxGridToolbarActionsComponent,
-        IgxGridToolbarTitleComponent,
-        IgxGridToolbarPinningComponent,
-        IgxGridToolbarHidingComponent,
-        IgxGridToolbarAdvancedFilteringComponent,
-        IgxGridToolbarExporterComponent
-    ]
+    IgxGridComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarPinningComponent,
+    IgxGridToolbarHidingComponent,
+    IgxGridToolbarAdvancedFilteringComponent,
+    IgxGridToolbarExporterComponent
+]
 })
 export class ToolbarActionsComponent {
     @ViewChild(IgxGridComponent, { static: true })

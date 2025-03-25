@@ -690,7 +690,7 @@ class TestComponent {
     providers: [IgxNavigationService],
     selector: 'igx-test-cmp-di',
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
+    imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentDIComponent {
     @ViewChild(IgxNavigationDrawerComponent, { static: true }) public navDrawer: IgxNavigationDrawerComponent;
@@ -702,7 +702,7 @@ class TestComponentDIComponent {
     selector: 'igx-test-cmp-pin',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
+    imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentPinComponent extends TestComponentDIComponent {
     public pin = true;
@@ -714,7 +714,7 @@ class TestComponentPinComponent extends TestComponentDIComponent {
     selector: 'igx-test-cmp-mini',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
-    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
+    imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentMiniComponent extends TestComponentDIComponent {
     public miniView = true;

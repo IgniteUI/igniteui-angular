@@ -1192,7 +1192,7 @@ export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridCo
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarAdvancedFilteringComponent]
 })
 export class IgxGridAdvancedFilteringOverlaySettingsComponent extends BasicGridComponent {
     public customFilter = CustomFilter.instance();
@@ -1748,7 +1748,7 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
             <input name="fullName" [value]="cell.editValue" (change)="onChange($event,cell)"  [igxFocus]="true"/>
         </ng-template>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxFocusDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellEditorTemplateDirective, IgxFocusDirective]
 })
 export class CellEditingCustomEditorTestComponent extends BasicGridComponent {
     @ViewChild('cellEdit', { read: TemplateRef }) public templateCell;

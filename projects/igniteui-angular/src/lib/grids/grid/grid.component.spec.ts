@@ -3569,7 +3569,7 @@ export class IgxGridInsideIgxTabsComponent {
             </igx-paginator>
         </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, AsyncPipe]
+    imports: [IgxGridComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, AsyncPipe]
 })
 export class IgxGridWithCustomPaginationTemplateComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
