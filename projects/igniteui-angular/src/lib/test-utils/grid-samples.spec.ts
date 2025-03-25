@@ -2070,6 +2070,7 @@ export class IgxGridFilteringBindingComponent extends BasicGridComponent impleme
 }
 
 @Component({
+    selector: 'test-grid-advanced-filtering-binding',
     template: `
     <igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [(advancedFilteringExpressionsTree)]="filterTree">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
@@ -2101,6 +2102,7 @@ export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent
 }
 
 @Component({
+    selector: 'test-grid-advanced-filtering-serialized-tree',
     template: `
     <igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [(advancedFilteringExpressionsTree)]="filterTree">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
