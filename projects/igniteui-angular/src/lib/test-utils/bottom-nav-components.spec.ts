@@ -284,7 +284,7 @@ export class BottomNavRoutingGuardTestComponent {
             </div>
         </div>
     `,
-    imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
+    imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class BottomNavTestHtmlAttributesComponent {
     @ViewChild(IgxBottomNavComponent, { static: true }) public bottomNav: IgxBottomNavComponent;

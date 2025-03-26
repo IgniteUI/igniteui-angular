@@ -100,7 +100,7 @@ export class DragDropSampleComponent {
     public toggleStartPageY;
 
     // Multi selection row drag
-    public sourceRows: any[] = Array.from(Array(10)).map((e, i) => {
+    public sourceRows: any[] = Array.from(Array(10)).map((_e, i) => {
         return {name: "Item " + i, selected: false}
     });
     public targetRows: any[] = [];
@@ -330,7 +330,7 @@ export class DragDropSampleComponent {
         item.dragged = false;
     }
 
-    public listItemEnter(event, itemIndex) {
+    public listItemEnter(_event, itemIndex) {
         const moveDown = this.draggedIndex < itemIndex;
         const listNotesDirsArray = this.listNotesDirs.toArray();
 
@@ -391,7 +391,7 @@ export class DragDropSampleComponent {
         }
     }
 
-    public listItemOver(event, itemIndex) {
+    public listItemOver(_event, itemIndex) {
         const moveDown = itemIndex > this.draggedIndex;
         const itemDragDir = this.listNotesDirs.toArray()[itemIndex];
 
