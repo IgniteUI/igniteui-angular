@@ -55,7 +55,9 @@
     $_scope: if(is-root() or is-host(), '.ig-typography', '&');
 
     #{$_scope} {
-        @include _component-typography($type-scale, $exclude);
+        @layer ig.typography {
+          @include _component-typography($type-scale, $exclude);
+        }
     }
 
     @if not(list.index($exclude, 'global')) {
