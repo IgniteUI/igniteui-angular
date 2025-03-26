@@ -28,7 +28,6 @@ $theme: $material;
         display: flex;
         flex-direction: column;
 
-
         @include e(wrapper) {
             display: flex;
             align-items: center;
