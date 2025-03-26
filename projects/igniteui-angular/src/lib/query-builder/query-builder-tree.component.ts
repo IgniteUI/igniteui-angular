@@ -172,12 +172,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Input()
     public set fields(fields: FieldType[]) {
         this._fields = fields;
-
+        
+        this._fields = this._fields?.map(f => ({...f, filters: this.getFilters(f), pipeArgs: this.getPipeArgs(f) }));
+        
         if (!this._fields && this.isAdvancedFiltering()) {
             this._fields = this.entities[0].fields;
         }
-        
-        this._fields = this._fields.map(f => ({...f, filters: this.getFilters(f), pipeArgs: this.getPipeArgs(f) }));
     }
 
     /**
