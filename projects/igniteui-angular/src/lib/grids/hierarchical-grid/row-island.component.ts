@@ -566,7 +566,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     private cleanGridState(grid) {
         grid.childGridTemplates.forEach((tmpl) => {
-            tmpl.owner.cleanView(tmpl.context.templateID);
+            if (!tmpl.view.destroyed) {
+                tmpl.view.destroy();
+            }
         });
         grid.childGridTemplates.clear();
         grid.onRowIslandChange();
