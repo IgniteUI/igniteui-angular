@@ -43,10 +43,13 @@
     }
 
     $theme: digest-schema($banner-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($banner-message-color) and $banner-background {
-        $banner-message-color: text-contrast($banner-background);
+        $banner-message-color: adaptive-contrast(var(--banner-background));
+    }
+
+    @if not($banner-illustration-color) and $banner-background {
+        $banner-illustration-color: adaptive-contrast(var(--banner-background));
     }
 
     @return extend($theme, (
@@ -57,10 +60,6 @@
         banner-border-color: $banner-border-color,
         banner-illustration-color: $banner-illustration-color,
         border-radius: $border-radius,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -69,7 +68,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin banner($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     %igx-banner-host {
         igx-expansion-panel-body {
