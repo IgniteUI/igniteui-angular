@@ -2504,7 +2504,7 @@ describe('IgxQueryBuilder', () => {
       expect(dropGhost.innerText).toBe(DROP_CONDITION_HERE);
     });
 
-    xit('Should collapse the condition when mouse drag operation starts.', () => {
+    it('Should collapse the condition when mouse drag operation starts.', () => {
       const secondChip = chipComponents[1].componentInstance;
 
       UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 100, 10, false);
