@@ -1856,8 +1856,8 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
 
             value.type = FilteringExpressionsTreeType.Regular;
-            if (value && this.columns) {
-                this._filteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
+            if (value && this._columns?.length > 0) {
+                this._filteringExpressionsTree = recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
             } else {
                 this._filteringExpressionsTree = value;
             }
@@ -1906,7 +1906,11 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         if (value && isTree(value)) {
             value.type = FilteringExpressionsTreeType.Advanced;
-            this._advancedFilteringExpressionsTree = recreateTreeFromFields(value, this.columns) as IFilteringExpressionsTree;
+            if (this._columns && this._columns.length > 0) {
+                this._advancedFilteringExpressionsTree = recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
+            } else {
+                this._advancedFilteringExpressionsTree = value;
+            }
             this.filteringPipeTrigger++;
         } else {
             this._advancedFilteringExpressionsTree = null;
@@ -5420,14 +5424,15 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         const columnsWithSetWidths = this.hasColumnLayouts ?
             visibleCols.filter(c => c.widthSetByUser) :
-            visibleChildColumns.filter(c => c.widthSetByUser && c.width !== 'fit-content');
+            visibleChildColumns.filter(c => (c.widthSetByUser || c.widthConstrained) && c.width !== 'fit-content');
 
         const columnsToSize = this.hasColumnLayouts ?
             combinedBlocksSize - columnsWithSetWidths.length :
             visibleChildColumns.length - columnsWithSetWidths.length;
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
-                const colWidth = curr.width;
+                const colInstance =  this.hasColumnLayouts ? curr.ref : curr;
+                const colWidth = !colInstance.widthConstrained ? curr.width : colInstance.calcPixelWidth;
                 let widthValue = parseFloat(colWidth);
                 if (isNaN(widthValue)) {
                     widthValue = MINIMUM_COLUMN_WIDTH;
@@ -5435,7 +5440,9 @@ export abstract class IgxGridBaseDirective implements GridType,
                 const currWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1 ?
                     widthValue / 100 * computedWidth :
                     widthValue;
-                return prev + currWidth;
+                // apply constraints, since constraint may change width
+                const constrainedWidth = this.hasColumnLayouts ? currWidth : colInstance.getConstrainedSizePx(currWidth);
+                return prev + constrainedWidth;
             }, 0);
 
         // When all columns are hidden, return 0px width
@@ -6551,7 +6558,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (width && typeof width !== 'string') {
             width = String(width);
         }
-        const minWidth = width.indexOf('%') === -1 ? column.minWidthPx : column.minWidthPercent;
+        const minWidth = width.indexOf('%') === -1 ? column.userSetMinWidthPx : column.minWidthPercent;
         const maxWidth = width.indexOf('%') === -1 ? column.maxWidthPx : column.maxWidthPercent;
         if (column.hidden) {
             return width;
@@ -6604,8 +6611,11 @@ export abstract class IgxGridBaseDirective implements GridType,
             .filter((c) => c.pinned);
         this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
         this._columns = newColumns;
-        if (this._columns && this._filteringExpressionsTree) {
+        if (this._columns && this._columns.length && this._filteringExpressionsTree) {
             this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
+        }
+        if (this._columns && this._columns.length && this._advancedFilteringExpressionsTree) {
+            this._advancedFilteringExpressionsTree = recreateTreeFromFields(this._advancedFilteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
         }
         this.resetCaches();
     }
@@ -6668,9 +6678,12 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.autogenerateColumns();
         } else {
             this._columns = this.getColumnList();
-            if (this._columns && this._filteringExpressionsTree) {
-                this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
-            }
+        }
+        if (this._columns && this._columns.length && this._filteringExpressionsTree) {
+            this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
+        }
+        if (this._columns && this._columns.length && this._advancedFilteringExpressionsTree) {
+            this._advancedFilteringExpressionsTree = recreateTreeFromFields(this._advancedFilteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
         }
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
@@ -7333,8 +7346,8 @@ export abstract class IgxGridBaseDirective implements GridType,
                 let maxSize = Math.ceil(Math.max(...cellsContentWidths)) + 1;
                 if (col.maxWidth && maxSize > col.maxWidthPx) {
                     maxSize = col.maxWidthPx;
-                } else if (maxSize < col.minWidthPx) {
-                    maxSize = col.minWidthPx;
+                } else if (maxSize < col.userSetMinWidthPx) {
+                    maxSize = col.userSetMinWidthPx;
                 }
                 col.autoSize = maxSize;
                 col.resetCaches();
