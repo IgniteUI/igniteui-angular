@@ -39,11 +39,6 @@
 /// @param {Color} $focus-outline-color-focused [null] - The focus outlined color for focused state.
 /// @param {Color} $focus-fill-color [null] - The focus fill color.
 /// @param {Color} $focus-fill-hover-color [null] - The focus fill color on hover.
-/// @param {Color} $label-invalid-color [null] - The color of the switch label in invalid state.
-/// @param {Color} $track-error-color [null] - The color of the track in invalid state when the switch is off.
-/// @param {Color} $thumb-on-error-color [null] - The color of the thumb when the switch is on and invalid.
-/// @param {Color} $error-color [null] - The border and fill colors in invalid state.
-/// @param {Color} $error-color-hover [null] - The border and fill colors in invalid state on hover.
 /// @requires $light-material-schema
 ///
 /// @example scss Set custom track and thumb on colors
@@ -68,7 +63,6 @@
     $label-color: null,
     $label-hover-color: null,
     $label-disabled-color: null,
-    $label-invalid-color: null,
 
     $resting-shadow: null,
     $hover-shadow: null,
@@ -86,10 +80,6 @@
     $focus-outline-color-focused: null,
     $focus-fill-color: null,
     $focus-fill-hover-color: null,
-    $track-error-color: null,
-    $thumb-on-error-color: null,
-    $error-color: null,
-    $error-color-hover: null,
 ) {
     $name: 'igx-switch';
     $switch-schema: ();
@@ -148,7 +138,6 @@
         label-color: $label-color,
         label-hover-color: $label-hover-color,
         label-disabled-color: $label-disabled-color,
-        label-invalid-color: $label-invalid-color,
 
         resting-shadow: $resting-shadow,
         hover-shadow: $hover-shadow,
@@ -166,10 +155,6 @@
         focus-outline-color-focused: $focus-outline-color-focused,
         focus-fill-color: $focus-fill-color,
         focus-fill-hover-color: $focus-fill-hover-color,
-        track-error-color: $track-error-color,
-        thumb-on-error-color: $thumb-on-error-color,
-        error-color: $error-color,
-        error-color-hover: $error-color-hover,
         theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
@@ -316,25 +301,6 @@
         }
     }
 
-    %switch-composite--invalid {
-        border-color: var-get($theme, 'error-color');
-
-        @if $variant == 'material' {
-            border-color: var-get($theme, 'track-error-color');
-            background: var-get($theme, 'track-error-color');
-        }
-    }
-
-    %switch-composite--invalid--hover {
-        @if $variant == 'fluent' {
-            border-color: var-get($theme, 'error-color-hover');
-
-            %switch-thumb {
-                background: var-get($theme, 'error-color-hover');
-            }
-        }
-    }
-
     %switch-composite--x {
         background: var-get($theme, 'track-on-color');
         border-color: var-get($theme, 'border-on-color');
@@ -403,14 +369,6 @@
         background: var-get($theme, 'thumb-on-color');
     }
 
-    %switch-thumb--invalid {
-        background: var-get($theme, 'error-color');
-    }
-
-    %switch-thumb--x--invalid {
-        background: var-get($theme, 'thumb-on-error-color');
-    }
-
     %switch-thumb--disabled {
         background: var-get($theme, 'thumb-disabled-color');
         box-shadow: $thumb-disabled-shadow;
@@ -477,25 +435,6 @@
         }
     }
 
-    %igx-switch--focused--invalid {
-        @if $variant == 'bootstrap' {
-            %switch-composite {
-                border-color: var-get($theme, 'error-color');
-                box-shadow: 0 0 0 rem(4px) var-get($theme, 'error-color-hover');
-            }
-
-            %switch-thumb {
-                background: var-get($theme, 'error-color');
-            }
-        }
-
-        @if $variant == 'indigo' {
-            %switch-composite {
-                box-shadow: 0 0 0 rem(3px) var-get($theme, 'error-color-hover');
-            }
-        }
-    }
-
     %igx-switch--focused-checked {
         @if $variant == 'bootstrap' {
             %switch-composite {
@@ -550,10 +489,6 @@
         background: var-get($theme, 'thumb-on-color');
     }
 
-    %switch-ripple--focused-invalid {
-        background: var-get($theme, 'error-color-hover');
-    }
-
     %switch-label {
         display: inline-block;
         color: var-get($theme, 'label-color');
@@ -585,10 +520,6 @@
         color: var-get($theme, 'label-hover-color');
     }
 
-    %switch-label--invalid {
-        color: var-get($theme, 'label-invalid-color');
-    }
-
     %switch-label--disabled {
         color: var-get($theme, 'label-disabled-color');
     }
@@ -613,18 +544,6 @@
     }
 
     %switch-ripple--hover-checked {
-        &::after {
-            background: var-get($theme, 'thumb-on-color');
-        }
-    }
-
-    %switch-ripple--hover-invalid {
-        &::after {
-            background: var-get($theme, 'error-color-hover');
-        }
-    }
-
-    %switch-ripple--hover-checked-invalid {
         &::after {
             background: var-get($theme, 'thumb-on-color');
         }
