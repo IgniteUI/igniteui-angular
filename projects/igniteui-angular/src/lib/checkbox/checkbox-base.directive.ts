@@ -259,14 +259,14 @@ export class CheckboxBaseDirective implements AfterViewInit {
 
         this.theme = this.themeToken.theme;
 
-        const { unsubscribe } = this.themeToken.onChange((theme) => {
+        const themeChange = this.themeToken.onChange((theme) => {
             if (this.theme !== theme) {
                 this.theme = theme;
                 this.cdr.detectChanges();
             }
         });
 
-        this.destroyRef.onDestroy(() => unsubscribe());
+        this.destroyRef.onDestroy(() => themeChange.unsubscribe());
     }
 
     /**
