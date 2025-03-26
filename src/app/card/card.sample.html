@@ -51,7 +51,8 @@
 
         <igx-card [horizontal]="true">
                 @if(!properties.hideActions) {
-                <igx-card-actions [layout]="properties.justifyActions? 'justify': null">
+
+                <igx-card-actions [layout]="properties.justifyActions ? 'justify' : 'cantHandleNull'">
                     @for(icon of cards[1].icons; track icon) {
                     <button
                         igxIconButton="flat"
@@ -114,7 +115,7 @@
                 <igx-divider type="dashed" [middle]="true"></igx-divider>
 
                 @if(!properties.hideActions) {
-                <igx-card-actions [layout]="properties.justifyActions? 'justify': null">
+                <igx-card-actions [layout]="properties.justifyActions? 'justify': 'cantHandleNull'">
                     @for(icon of cards[1].icons; track icon) {
                     <button
                         igxIconButton="flat"
