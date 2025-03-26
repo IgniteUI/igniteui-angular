@@ -2482,16 +2482,16 @@ describe('IgxQueryBuilder', () => {
     }));
   });
 
-  xdescribe('Drag and drop', () => {
+  describe('Drag and drop', () => {
     const ROW_HEIGHT = 40;
     const DROP_CONDITION_HERE = "Drop here to insert";
     let chipComponents = [];
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
 
       chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-    });
+    }));
 
     it('Should render ghost when mouse drag operation starts.', () => {
       const draggedChip = chipComponents[1].componentInstance;
@@ -2504,14 +2504,14 @@ describe('IgxQueryBuilder', () => {
       expect(dropGhost.innerText).toBe(DROP_CONDITION_HERE);
     });
 
-    it('Should collapse the condition when mouse drag operation starts.', () => {
+    xit('Should collapse the condition when mouse drag operation starts.', () => {
       const secondChip = chipComponents[1].componentInstance;
 
       UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 100, 10, false);
       expect(chipComponents[1].nativeElement.getBoundingClientRect().height).toBe(0);
     });
 
-    it('Should render drop ghost properly when mouse dragged.', fakeAsync(() => {
+    xit('Should render drop ghost properly when mouse dragged.', fakeAsync(() => {
       const draggedChip = chipComponents[1].componentInstance;
       const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
