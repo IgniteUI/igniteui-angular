@@ -12,6 +12,7 @@
 @use 'igniteui-theming/sass/utils' as *;
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/themes/charts' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/button' as *;
 
 ////
 /// @group themes
@@ -167,11 +168,19 @@
     }
 
     @if is-used('igx-button', $exclude) {
-        $button-theme-map: button-theme(
-            $schema: $schema,
-        );
-        $button-theme-map: meta.call($theme-handler, $button-theme-map);
-        @include button($button-theme-map);
+
+        $theme: digest-schema(map.get($schema, 'button'));
+        $flat-button-theme: digest-schema(map.get($schema, 'button', 'flat'));
+        $outlined-button-theme: digest-schema(map.get($schema, 'button', 'outlined'));
+        $contained-button-theme: digest-schema(map.get($schema, 'button', 'contained'));
+        $fab-button-theme: digest-schema(map.get($schema, 'button', 'fab'));
+
+        @include button($theme);
+
+        @include css-vars-from-theme($flat-button-theme, '.igx-button--flat');
+        @include css-vars-from-theme($outlined-button-theme, '.igx-button--outlined');
+        @include css-vars-from-theme($contained-button-theme, '.igx-button--contained');
+        @include css-vars-from-theme($fab-button-theme, '.igx-button--fab');
     }
 
     @if is-used('igx-button-group', $exclude) {
