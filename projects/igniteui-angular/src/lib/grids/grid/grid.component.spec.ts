@@ -15,7 +15,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { configureTestSuite } from '../../test-utils/configure-suite';
+import { configureTestSuite, skipLeakCheck } from '../../test-utils/configure-suite';
 import { GridSelectionMode, Size } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -37,7 +37,7 @@ describe('IgxGrid Component Tests #grid', () => {
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid-thead';
 
-    configureTestSuite();
+    configureTestSuite({ checkLeaks: true });
 
     describe('IgxGrid - input properties', () => {
         beforeAll(waitForAsync(() => {
@@ -1502,7 +1502,7 @@ describe('IgxGrid Component Tests #grid', () => {
         }));
 
         it('should render correct columns if after scrolling right container size changes so that all columns become visible.',
-            async () => {
+            skipLeakCheck(async () => {
                 const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
                 fix.detectChanges();
                 const grid = fix.componentInstance.grid;
@@ -1523,8 +1523,9 @@ describe('IgxGrid Component Tests #grid', () => {
                 expect(headers.length).toEqual(5);
                 for (let i = 0; i < headers.length; i++) {
                     expect(headers[i].context.column.field).toEqual(grid.columnList.get(i).field);
+                    // Note: We use skipLeakCheck because using `headers[i].context` messes up memory leak detection
                 }
-            });
+            }));
 
         it('Should render date and number values based on default formatting', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
@@ -2531,7 +2532,9 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowData(7)).toEqual({});
         });
 
-        it(`Verify that getRowByIndex and RowType API returns correct data`, () => {
+        // note: it leaks when grid.groupBy() is executed because template-outlet doesn't destroy the viewrefs
+        // to be addressed in a separate PR
+        it(`Verify that getRowByIndex and RowType API returns correct data`, skipLeakCheck(() => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(35, 5);
             fix.detectChanges();
@@ -2690,7 +2693,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(thirdRow instanceof IgxGroupByRow).toBe(true);
             expect(thirdRow.index).toBe(2);
             expect(thirdRow.viewIndex).toBe(7);
-        });
+        }));
 
         it('Verify that getRowByIndex returns correct data when paging is enabled', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
@@ -2976,6 +2979,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
         afterEach(() => {
             observer?.disconnect();
+            observer = null;
         });
 
         it('should render the grid in a certain amount of time', async () => {
@@ -3826,7 +3830,7 @@ export class IgxGridInsideIgxTabsComponent {
             </igx-paginator>
         </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, AsyncPipe]
+    imports: [IgxGridComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, AsyncPipe]
 })
 export class IgxGridWithCustomPaginationTemplateComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
