@@ -338,14 +338,14 @@
     );
 
     $hint-spacing-block: map.get((
-        'material': rem(5px),
+        'material': rem(4px),
         'fluent': rem(5px),
         'bootstrap': rem(4px),
         'indigo': rem(4px),
     ), $variant);
 
     $hint-spacing-inline: map.get((
-        'material': rem(16px),
+        'material': sizable(rem(14px), rem(16px), rem(18px)),
         'fluent': 0,
         'bootstrap': 0,
         'indigo': 0,
@@ -380,14 +380,17 @@
         } @else {
             min-height: 100% !important;
         }
+
         transition: color $transition-timing, background $transition-timing;
 
-        @if $material-theme {
-            padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
-        } @else if $indigo-theme {
-            padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
-        } @else {
-            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        &:not(:empty) {
+            @if $material-theme {
+                padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
+            } @else if $indigo-theme {
+                padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
+            } @else {
+                padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+            }
         }
     }
 
@@ -512,6 +515,7 @@
     }
 
     %form-group-display--disabled {
+        pointer-events: none;
         user-select: none;
         color: var-get($theme, 'disabled-text-color') !important;
 
@@ -609,6 +613,13 @@
     %form-group-bundle--success {
         &::after {
             border-block-end-color: var-get($theme, 'success-secondary-color');
+        }
+        caret-color: initial;
+    }
+
+    %form-group-bundle--warning {
+        &::after {
+            border-block-end-color: var-get($theme, 'warning-secondary-color');
         }
         caret-color: initial;
     }
@@ -803,6 +814,25 @@
         &::after {
             display: none;
         }
+
+        &:hover {
+            %form-group-bundle-start {
+                border-color: var-get($theme, 'hover-border-color');
+            }
+
+            %igx-input-group__filler {
+                border-color: var-get($theme, 'hover-border-color');
+            }
+
+            %igx-input-group__notch {
+                border-block-start-color: var-get($theme, 'hover-border-color');
+                border-block-end-color: var-get($theme, 'hover-border-color');
+            }
+
+            %form-group-bundle-end {
+                border-color: var-get($theme, 'hover-border-color');
+            }
+        }
     }
 
     %form-group-bundle-border--disabled {
@@ -981,6 +1011,21 @@
         }
     }
 
+    %form-group-label--focused-border:not(:is(
+        %form-group-border--error,
+        %form-group-border--warning,
+        %form-group-border--success))
+    {
+        &:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'focused-border-color');
+            }
+        }
+    }
+
     %form-group-label--float-border {
         --label-position: #{sizable(18px, 22px, 26px)};
 
@@ -1062,6 +1107,10 @@
 
     %form-group-label--focus {
         color: var-get($theme, 'focused-secondary-color');
+    }
+
+    %form-group-label--warning {
+        color: var-get($theme, 'warning-secondary-color');
     }
 
     %form-group-label--success {
@@ -1305,10 +1354,19 @@
         %igx-input-group__filler {
             border-block-color: var-get($theme, 'success-secondary-color');
         }
+
+        %form-group-bundle--border:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'success-secondary-color');
+            }
+        }
     }
 
     %form-group-line--warning {
-        background: var-get($theme, 'error-secondary-color');
+        background: var-get($theme, 'warning-secondary-color');
     }
 
     %form-group-border--warning {
@@ -1327,6 +1385,15 @@
         %igx-input-group__notch,
         %igx-input-group__filler {
             border-block-color: var-get($theme, 'warning-secondary-color');
+        }
+
+        %form-group-bundle--border:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'warning-secondary-color');
+            }
         }
     }
 
@@ -1350,6 +1417,15 @@
         %igx-input-group__notch,
         %igx-input-group__filler {
             border-block-color: var-get($theme, 'error-secondary-color');
+        }
+
+        %form-group-bundle--border:hover {
+            %form-group-bundle-start,
+            %form-group-bundle-end,
+            %igx-input-group__filler,
+            %igx-input-group__notch {
+                border-color: var-get($theme, 'error-secondary-color');
+            }
         }
     }
 
@@ -1387,7 +1463,7 @@
         position: relative;
         display: flex;
         padding-block-start: $hint-spacing-block;
-        padding-inline-start: $hint-spacing-inline;
+        padding-inline: $hint-spacing-inline;
 
         justify-content: space-between;
 
@@ -1411,6 +1487,10 @@
     @if $variant != 'indigo' {
         %form-group-helper--success {
             color: var-get($theme, 'success-secondary-color');
+        }
+
+        %form-group-helper--warning {
+            color: var-get($theme, 'warning-secondary-color');
         }
 
         %form-group-helper--error {
@@ -1810,7 +1890,9 @@
     %form-group-suffix-fluent,
     %form-group-prefix-fluent-search,
     %form-group-suffix-fluent-search {
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        &:not(:empty) {
+            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        }
     }
 
     %fluent-upload-button {

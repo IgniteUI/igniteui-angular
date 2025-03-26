@@ -1,4 +1,5 @@
 import { Subject } from 'rxjs';
+import { isEqual } from 'lodash-es';
 import {
     AfterContentInit,
     ChangeDetectorRef,
@@ -523,8 +524,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     @WatchColumnChanges()
     @Input()
-    public maxWidth: string;
+    public set maxWidth(value: string) {
+        this._maxWidth = value;
 
+        this.grid.notifyChanges(true);
+    }
+    public get maxWidth(): string {
+        return this._maxWidth;
+    }
     /**
      * Sets/gets the class selector of the column header.
      * ```typescript
@@ -940,6 +947,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
+    public get userSetMinWidthPx() {
+        const gridAvailableSize = this.grid.calcWidth;
+        const isPercentageWidth = this._defaultMinWidth && typeof this._defaultMinWidth === 'string' && this._defaultMinWidth.indexOf('%') !== -1;
+        return isPercentageWidth ? parseFloat(this._defaultMinWidth) / 100 * gridAvailableSize : parseFloat(this._defaultMinWidth);
+    }
+
+    /**
+     * @hidden
+     */
     public get minWidthPercent() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
@@ -968,7 +984,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return;
         }
         this._defaultMinWidth = value;
-
+        this.grid.notifyChanges(true);
     }
     public get minWidth(): string {
         return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
@@ -1090,12 +1106,16 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public get disabledSummaries(): string[] {
         return this._disabledSummaries;
     }
 
     public set disabledSummaries(value: string[]) {
+        if (isEqual(this._disabledSummaries, value)) {
+            return;
+        }
         this._disabledSummaries = value;
         if (this.grid) {
             this.grid.summaryService.removeSummariesCachePerColumn(this.field);
@@ -1735,6 +1755,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
+    public widthConstrained = false;
+
+    /**
+     * @hidden
+     */
     protected _applySelectableClass = false;
 
     protected _vIndex = NaN;
@@ -1806,6 +1831,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     protected _defaultMinWidth = '';
+    /**
+     * @hidden
+     */
+    protected _maxWidth;
     /**
      * @hidden
      */
@@ -1984,7 +2013,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -2013,7 +2042,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -2027,7 +2056,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                         columnSizes[i] = {
                             ref: col,
                             width: col.width === 'fit-content' ? col.autoSize :
-                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
                             colSpan: col.gridColumnSpan,
                             colEnd: col.colStart + col.gridColumnSpan,
                             widthSetByUser: col.widthSetByUser
@@ -2091,7 +2120,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             if (size && !!size.width) {
                 result.push(size.width + 'px');
             } else {
-                result.push(parseInt(this.grid.getPossibleColumnWidth(), 10) + 'px');
+                const currentWidth = parseFloat(this.grid.getPossibleColumnWidth());
+                result.push((this.getConstrainedSizePx(currentWidth)) + 'px');
             }
         }
         return result;
@@ -2182,8 +2212,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 grid._pinnedColumns.splice(args.insertAtIndex, 0, this);
             } else {
                 // insert based only on root collection
-                rootPinnedCols.splice(args.insertAtIndex, 0, this);
+                if (this.level === 0) {
+                    rootPinnedCols.splice(args.insertAtIndex, 0, this);
+                }
                 let allPinned = [];
+                // FIX: this is duplicated on every step in the hierarchy....
                 // re-create hierarchy
                 rootPinnedCols.forEach(group => {
                     allPinned.push(group);
@@ -2554,19 +2587,41 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      * @internal
      */
+    public getConstrainedSizePx(newSize){
+        if (this.maxWidth && newSize > this.maxWidthPx) {
+            this.widthConstrained = true;
+            return this.maxWidthPx;
+        } else if (this.minWidth && newSize < this.userSetMinWidthPx) {
+            this.widthConstrained = true;
+            return this.userSetMinWidthPx;
+        } else {
+            this.widthConstrained = false;
+            return newSize;
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     protected cacheCalcWidth(): any {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         const isAutoWidth = colWidth && typeof colWidth === 'string' && colWidth === 'fit-content';
-        if (isPercentageWidth) {
-            this._calcWidth = Math.floor(parseFloat(colWidth) / 100 * this.grid.calcWidth);
+        if (isPercentageWidth && this.grid.isColumnWidthSum) {
+            this._calcWidth = this.userSetMinWidthPx ? this.userSetMinWidthPx : this.grid.minColumnWidth;
+        } else if (isPercentageWidth) {
+            const currentCalcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
+            this._calcWidth = this.grid.calcWidth ? this.getConstrainedSizePx(currentCalcWidth) : 0;
         } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
-            this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
+            const currentCalcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
+            this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         } else {
-            this._calcWidth = this.width;
+            const currentCalcWidth =  parseFloat(this.width);
+            this._calcWidth =this.getConstrainedSizePx(currentCalcWidth);
         }
-        this.calcPixelWidth = parseInt(this._calcWidth, 10);
+        this.calcPixelWidth = parseFloat(this._calcWidth);
     }
 
     /**

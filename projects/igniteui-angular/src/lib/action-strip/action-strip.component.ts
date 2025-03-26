@@ -24,11 +24,11 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { IgxToggleActionDirective } from '../directives/toggle/toggle.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { IgxIconButtonDirective } from '../directives/button/icon-button.directive';
 import { IgxActionStripToken } from './token';
+import { trackByIdentity } from '../core/utils';
 
 @Directive({
     selector: '[igxActionStripMenuItem]',
@@ -74,10 +74,7 @@ export class IgxActionStripMenuItemDirective {
     selector: 'igx-action-strip',
     templateUrl: 'action-strip.component.html',
     imports: [
-        NgIf,
-        NgFor,
         NgTemplateOutlet,
-        IgxButtonDirective,
         IgxIconButtonDirective,
         IgxRippleDirective,
         IgxToggleActionDirective,
@@ -315,6 +312,9 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterConten
             this.renderer.removeChild(this.context.element.nativeElement, this._viewContainer.element.nativeElement);
         }
     }
+
+    /** pin swapping w/ unpin resets the menuItems collection */
+    protected trackMenuItem = trackByIdentity;
 
     /**
      * Close the menu if opened

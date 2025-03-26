@@ -1,4 +1,4 @@
-﻿import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,7 +10,6 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ICellPosition } from '../common/events';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
-import { NgFor } from '@angular/common';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 
@@ -18,7 +17,7 @@ const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
 
 describe('IgxGrid - multi-row-layout #grid', () => {
-    const DEBOUNCETIME = 60;
+    const DEBOUNCE_TIME = 60;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             imports: [
@@ -42,11 +41,11 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
 
         const firstRowCellsArr = gridFirstRow.cells.toArray();
-        // the last cell is spaned as much as the first 3 cells
-        const firstThreeCellsWidth = firstRowCellsArr[0].nativeElement.offsetWidth +
-            firstRowCellsArr[1].nativeElement.offsetWidth +
-            firstRowCellsArr[2].nativeElement.offsetWidth;
-        const lastCellWidth = firstRowCellsArr[3].nativeElement.offsetWidth;
+        // the last cell is spanned as much as the first 3 cells
+        const firstThreeCellsWidth = firstRowCellsArr[0].nativeElement.getBoundingClientRect().width +
+            firstRowCellsArr[1].nativeElement.getBoundingClientRect().width +
+            firstRowCellsArr[2].nativeElement.getBoundingClientRect().width;
+        const lastCellWidth = firstRowCellsArr[3].nativeElement.getBoundingClientRect().width;
         expect(2 * firstRowCellsArr[0].nativeElement.offsetHeight).toEqual(firstRowCellsArr[3].nativeElement.offsetHeight);
         expect(firstThreeCellsWidth).toEqual(lastCellWidth);
     }));
@@ -97,7 +96,10 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
 
         // verify block style
-        expect(grid.columnList.first.getGridTemplate(false)).toBe('200px 200px 200px');
+        let sizes = grid.columnList.first.getGridTemplate(false).split(' ').map(width => parseFloat(width).toFixed(2) + "px").join(' ');
+
+
+        expect(sizes).toBe('200.33px 200.33px 200.33px');
         expect(grid.columnList.first.getGridTemplate(true)).toBe('repeat(3,1fr)');
 
         // creating an incomplete layout 2
@@ -112,8 +114,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         }];
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
-
-        expect(grid.columnList.first.getGridTemplate(false)).toBe('200px 200px 200px');
+        sizes = grid.columnList.first.getGridTemplate(false).split(' ').map(width => parseFloat(width).toFixed(2) + "px").join(' ');
+        expect(sizes).toBe('200.33px 200.33px 200.33px');
         expect(grid.columnList.first.getGridTemplate(true)).toBe('repeat(3,1fr)');
 
     }));
@@ -124,16 +126,18 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
-        // col span is 3 => columns should have grid width - scrollbarWitdh/3 width
+        // col span is 3 => columns should have grid width - scrollbarWidth/3 width
         // check columns
         expect(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.offsetWidth).toBe(200);
         expect(grid.gridAPI.get_cell_by_index(0, 'CompanyName').nativeElement.offsetWidth).toBe(200);
         expect(grid.gridAPI.get_cell_by_index(0, 'ContactName').nativeElement.offsetWidth).toBe(200);
-        expect(grid.gridAPI.get_cell_by_index(0, 'ContactTitle').nativeElement.offsetWidth).toBe(200 * 3);
+        expect(+grid.gridAPI.get_cell_by_index(0, 'ContactTitle').nativeElement.getBoundingClientRect().width.toFixed(3))
+            .toBe(+(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.getBoundingClientRect().width * 3).toFixed(3));
 
         // check group blocks
         let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid-thead')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
-        expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(200 * 3);
+        expect(+groupHeaderBlocks[0].nativeElement.getBoundingClientRect().width.toFixed(3))
+            .toBe(+(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.getBoundingClientRect().width * 3).toFixed(3));
         expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(51 * 3);
 
         let gridFirstRow = grid.rowList.first;
@@ -154,7 +158,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.componentInstance.grid.width = '917px';
         fixture.detectChanges();
 
-        // col span is 6 => columns should have grid width - scrollbarWitdh/6 width
+        // col span is 6 => columns should have grid width - scrollbarWidth/6 width
         expect(grid.gridAPI.get_cell_by_index(0, 'ID').nativeElement.offsetWidth).toBe(150);
         expect(grid.gridAPI.get_cell_by_index(0, 'CompanyName').nativeElement.offsetWidth).toBe(150);
         expect(grid.gridAPI.get_cell_by_index(0, 'ContactName').nativeElement.offsetWidth).toBe(150);
@@ -644,7 +648,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups);
 
         fixture.componentInstance.colGroups = [{
-            group: 'group1',
+            group: 'group3',
             columns: [
                 { field: 'ID', rowStart: 1, colStart: 1 },
                 { field: 'CompanyName', rowStart: 1, colStart: 2 },
@@ -840,10 +844,13 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 ]
             }
         ];
-        fixture.componentInstance.colGroups = [];
+        let colGroups = [];
         for (let i = 0; i < 3; i++) {
-            fixture.componentInstance.colGroups = fixture.componentInstance.colGroups.concat(uniqueGroups);
+            const groups = structuredClone(uniqueGroups)
+                .map(({ group, columns }) => ({ group: group + i, columns }));
+            colGroups = colGroups.concat(groups);
         }
+        fixture.componentInstance.colGroups = colGroups;
         grid.columnWidth = '200px';
         fixture.componentInstance.grid.width = '600px';
         fixture.detectChanges();
@@ -863,10 +870,10 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(horizontalVirtualization.getSizeAt(2)).toBe(200);
         expect(horizontalVirtualization.getSizeAt(3)).toBe(4 * 200);
 
-        // check total widths sum - unique col groups col span 10 in total * 200px default witdth * 3 times repeated
-        const horizonatalScrElem = horizontalVirtualization.getScroll();
+        // check total widths sum - unique col groups col span 10 in total * 200px default width * 3 times repeated
+        const horizontalScrElem = horizontalVirtualization.getScroll();
         const totalExpected = 10 * 200 * 3;
-        expect(parseInt((horizonatalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
+        expect(parseInt((horizontalScrElem.children[0] as HTMLElement).style.width, 10)).toBe(totalExpected);
         // check groups are rendered correctly
 
         const gridFirstRow = grid.rowList.first;
@@ -889,8 +896,6 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
     it('should apply horizontal virtualization correctly for widths in px, % and no-width columns.', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
-        fixture.detectChanges();
-        const grid = fixture.componentInstance.grid;
         // test with px
         fixture.componentInstance.colGroups = [{
             group: 'group1',
@@ -904,6 +909,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         }];
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
+        tick(); // Required to render scrollbars
+        const grid = fixture.componentInstance.grid;
 
         const horizontalVirtualization = grid.rowList.first.virtDirRow;
         expect(grid.hasHorizontalScroll()).toBeTruthy();
@@ -1051,7 +1058,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(GRID_MRL_BLOCK_CLASS));
-        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('118px 118px 118px 118px 118px 118px');
+        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('118.4px 118.4px 118.4px 118.4px 118.4px 118.4px');
     }));
 
     it('should disregard hideGroupedColumns option and not hide columns when grouping when having column layouts.', fakeAsync(() => {
@@ -1119,12 +1126,12 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const NAVIGATE = 20;
 
         fix.detectChanges();
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCE_TIME);
         fix.detectChanges();
 
         grid.navigateTo(NAVIGATE);
 
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCE_TIME);
         fix.detectChanges();
 
         expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);
@@ -1137,14 +1144,18 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px" [rowEditable]='true' [primaryKey]="'ID'">
-        <igx-column-layout *ngFor='let group of colGroups'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group.group) {
+            <igx-column-layout>
+                @for (col of group.columns; track col.field) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                    [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1168,20 +1179,24 @@ export class ColumnLayoutTestComponent {
     template: `
     <igx-grid #grid [data]="data" height="500px" [moving]="true">
         <igx-column-group header="General Information">
-        <igx-column field="CompanyName"></igx-column>
+            <igx-column field="CompanyName"></igx-column>
             <igx-column-group header="Person Details">
                 <igx-column field="ContactName"></igx-column>
                 <igx-column field="ContactTitle"></igx-column>
             </igx-column-group>
         </igx-column-group>
-        <igx-column-layout *ngFor='let group of colGroups'>
-            <igx-column *ngFor='let col of group.columns'
-            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
-        </igx-column-layout>
+        @for (group of colGroups; track group.group) {
+            <igx-column-layout>
+                @for (col of group.columns; track col.field) {
+                    <igx-column
+                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                        [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+                }
+            </igx-column-layout>
+        }
     </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class ColumnLayoutAndGroupsTestComponent extends ColumnLayoutTestComponent {
 

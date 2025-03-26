@@ -302,13 +302,13 @@ export interface FieldType {
     header?: string;
     /* alternateType: GridColumnDataType */
     dataType: DataType;
-    editorOptions: IFieldEditorOptions;
-    filters: IgxFilteringOperand;
-    pipeArgs: IFieldPipeArgs;
-    defaultTimeFormat: string;
-    defaultDateTimeFormat: string;
+    editorOptions?: IFieldEditorOptions;
+    filters?: IgxFilteringOperand;
+    pipeArgs?: IFieldPipeArgs;
+    defaultTimeFormat?: string;
+    defaultDateTimeFormat?: string;
 
-    formatter(value: any, rowData?: any): any;
+    formatter?(value: any, rowData?: any): any;
 }
 
 /**
@@ -719,7 +719,10 @@ export interface GridType extends IGridDataBindable {
     isLoading: boolean;
     /** @hidden @internal */
     gridSize: Size;
-
+    /** @hidden @internal */
+    isColumnWidthSum: boolean;
+    /** @hidden @internal */
+    minColumnWidth: number;
     /** Strategy, used for cloning the provided data. The type has one method, that takes any type of data */
     dataCloneStrategy: IDataCloneStrategy;
 
@@ -1486,4 +1489,12 @@ export interface IClipboardOptions {
      * The separator used for formatting the copy output. Defaults to `\t`.
      */
     separator: string;
+}
+
+/**
+ * An interface describing entity
+ */
+export interface EntityType {
+    name: string;
+    fields: FieldType[];
 }

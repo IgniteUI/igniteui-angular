@@ -42,7 +42,6 @@ import {
     PositionSettings,
     VerticalAlignment
 } from './utilities';
-import { NgIf } from '@angular/common';
 import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
@@ -216,7 +215,7 @@ describe('igxOverlay', () => {
     };
 
     describe('Pure Unit Test', () => {
-        configureTestSuite();
+        configureTestSuite({ checkLeaks: true });
         let mockElement: any;
         let mockElementRef: any;
         let mockApplicationRef: any;
@@ -298,6 +297,9 @@ describe('igxOverlay', () => {
             overlay = new IgxOverlayService(
                 mockApplicationRef, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
         });
+        afterEach(() => {
+            overlay.ngOnDestroy();
+        });
 
         it('Should set cursor to pointer on iOS', () => {
             mockPlatformUtil.isIOS = true;
@@ -366,7 +368,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Unit Tests: ', () => {
-        configureTestSuite();
+        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -1378,17 +1380,47 @@ describe('igxOverlay', () => {
             expect(overlayContent.style.getPropertyValue('--ig-size')).toEqual('1');
             overlayInstance.detach(firstCallId);
         }));
+
+        it('#15228 - Should use provided in show overlay settings ', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleRefComponent);
+            fixture.detectChanges();
+            const overlayInstance = fixture.componentInstance.overlay;
+            const id = overlayInstance.attach(SimpleDynamicComponent);
+            const info = overlayInstance.getOverlayById(id);
+            const initialPositionSpy = spyOn(info.settings.positionStrategy, 'position').and.callThrough();
+
+            overlayInstance.show(id);
+            tick();
+
+            expect(initialPositionSpy).toHaveBeenCalledTimes(1);
+            overlayInstance.hide(id);
+            tick();
+
+            const os: OverlaySettings = {
+                excludeFromOutsideClick: [],
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: new CloseScrollStrategy(),
+                modal: false,
+                closeOnOutsideClick: false,
+                closeOnEscape: true
+            };
+            const lastPositionSpy = spyOn(os.positionStrategy, 'position').and.callThrough();
+            overlayInstance.show(id, os);
+            tick();
+
+            expect(lastPositionSpy).toHaveBeenCalledTimes(1);
+            expect(info.settings.scrollStrategy).toBe(os.scrollStrategy);
+            expect(info.settings.positionStrategy).toBe(os.positionStrategy);
+        }));
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
+        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
             });
         }));
-        afterAll(() => {
-            TestBed.resetTestingModule();
-        });
         it('Should properly initialize Scroll Strategy - Block.', fakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
@@ -1558,7 +1590,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests: ', () => {
-        configureTestSuite();
+        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -3546,6 +3578,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests - Scroll Strategies: ', () => {
+        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -4410,6 +4443,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests p3 (IgniteUI components): ', () => {
+        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -4513,9 +4547,10 @@ export class SimpleBigSizeComponent {
 
 @Component({
     template: `
-            <div igxToggle>
-                <div class='scrollableDiv' *ngIf='visible' style ='position: absolute; width: 200px; height: 200px;
-        overflow-y: scroll; background-color: red;'>
+        <div igxToggle>
+            @if (visible) {
+                <div class='scrollableDiv' style ='position: absolute; width: 200px; height: 200px;
+    overflow-y: scroll; background-color: red;'>
                     <p> AAAAA </p>
                     <p> AAAAA </p>
                     <p> AAAAA </p>
@@ -4526,8 +4561,9 @@ export class SimpleBigSizeComponent {
                     <p> AAAAA </p>
                     <p> AAAAA </p>
                 </div>
-            </div>`,
-    imports: [NgIf, IgxToggleDirective]
+            }
+        </div>`,
+    imports: [IgxToggleDirective]
 })
 export class SimpleDynamicWithDirectiveComponent {
     @ViewChild(IgxToggleDirective, { static: true })
@@ -4732,19 +4768,21 @@ export class WidthTestOverlayComponent {
 @Component({
     template: `
     <div igxToggle>
-        <div class='scrollableDiv' *ngIf='visible' style='width:200px; height:200px; overflow-y:scroll;'>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-            <p>AAAAA</p>
-        </div>
+        @if (visible) {
+            <div class='scrollableDiv' style='width:200px; height:200px; overflow-y:scroll;'>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+                <p>AAAAA</p>
+            </div>
+        }
     </div>`,
-    imports: [NgIf]
+    imports: []
 })
 export class ScrollableComponent {
     @ViewChild(IgxToggleDirective, { static: true })

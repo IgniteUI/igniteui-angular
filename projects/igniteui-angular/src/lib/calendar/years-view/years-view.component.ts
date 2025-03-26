@@ -6,7 +6,6 @@ import {
     Inject,
 } from "@angular/core";
 import { IgxCalendarYearDirective } from "../calendar.directives";
-import { NgFor } from "@angular/common";
 import {
     IgxCalendarViewDirective,
     DAY_INTERVAL_TOKEN,
@@ -30,7 +29,7 @@ import { calendarRange } from "../common/helpers";
     ],
     selector: "igx-years-view",
     templateUrl: "years-view.component.html",
-    imports: [NgFor, IgxCalendarYearDirective]
+    imports: [IgxCalendarYearDirective]
 })
 export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {
     #standalone = true;
@@ -153,5 +152,14 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
         this._formatter = new Intl.DateTimeFormat(this._locale, {
             year: this.yearFormat,
         });
+    }
+
+    /**
+     * @hidden
+     */
+    protected onMouseDown() {
+        if (this.tabIndex !== -1) {
+            this.el.nativeElement.focus();
+        }
     }
 }

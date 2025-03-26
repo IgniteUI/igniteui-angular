@@ -1,260 +1,199 @@
-import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
-import { NgFor } from '@angular/common';
+import {
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    DestroyRef,
+    ViewEncapsulation,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-    IGX_INPUT_GROUP_DIRECTIVES,
     IGX_LIST_DIRECTIVES,
     IgxAvatarComponent,
-    IgxBadgeComponent,
     IgxButtonDirective,
     IgxCheckboxComponent,
-    IgxDialogComponent,
-    IgxFilterDirective,
-    IgxFilterOptions,
-    IgxFilterPipe,
     IgxIconComponent,
-    IgxListComponent,
-    IgxSwitchComponent
+    IgxButtonModule,
+    IgSizeDirective,
 } from 'igniteui-angular';
-import { SizeSelectorComponent } from '../size-selector/size-selector.component';
+import {
+    defineComponents,
+    IgcListComponent,
+    IgcAvatarComponent,
+    IgcListHeaderComponent,
+    IgcListItemComponent,
+    IgcIconComponent,
+    IgcCheckboxComponent,
+    IgcButtonComponent,
+    registerIconFromText,
+} from 'igniteui-webcomponents';
+import {
+    Properties,
+    PropertyChangeService,
+    PropertyPanelConfig,
+} from '../properties-panel/property-change.service';
+
+defineComponents(
+    IgcListComponent,
+    IgcListHeaderComponent,
+    IgcListItemComponent,
+    IgcAvatarComponent,
+    IgcIconComponent,
+    IgcCheckboxComponent,
+    IgcButtonComponent
+);
+
+const icons = [
+    {
+        name: 'face',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/></svg>'
+    },
+    {
+        name: 'info',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>'
+    }
+];
+
+icons.forEach((icon) => {
+    registerIconFromText(icon.name, icon.url);
+});
 
 interface Employee {
     imageURL: string;
     name: string;
     position: string;
     description: string;
+    selected?: boolean;
 }
 
 @Component({
     selector: 'app-list-sample',
     styleUrls: ['list.sample.scss'],
     templateUrl: 'list.sample.html',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
+    standalone: true,
     imports: [
-        NgFor,
+        IGX_LIST_DIRECTIVES,
         FormsModule,
-        IgxBadgeComponent,
         IgxIconComponent,
         IgxCheckboxComponent,
         IgxAvatarComponent,
-        IgxSwitchComponent,
-        IgxFilterDirective,
+        IgxButtonModule,
         IgxButtonDirective,
-        IgxDialogComponent,
-        IgxFilterPipe,
-        SizeSelectorComponent,
-        IGX_LIST_DIRECTIVES,
-        IGX_INPUT_GROUP_DIRECTIVES
+        IgSizeDirective
     ]
 })
 export class ListSampleComponent {
-    @ViewChild('fruitList', { static: true })
-    private fruitList: IgxListComponent;
-
-    @ViewChild('checkbox', { static: true })
-    private checkbox: any;
-
-    @ViewChild('declarativeList', { static: true })
-    private declarativeList: any;
-
-    @ViewChild('addFruitDialog', { static: true })
-    private addFruitDialog: IgxDialogComponent;
-
-    public fruitsSearch: string;
-    public search1: string;
-    public search2: string;
-    public options = {};
-    public fruitsFilteredItemsCount = undefined;
-
-    public employeeItems: Employee[] = [{
-        imageURL: 'assets/images/avatar/18.jpg',
-        name: 'Marin Popov',
-        position: 'Web designer',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
-    }, {
-        imageURL: 'assets/images/avatar/2.jpg',
-        name: 'Simeon Simeonov',
-        position: 'Front-end Developer',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
-    }, {
-        imageURL: 'assets/images/avatar/7.jpg',
-        name: 'Stefan ivanov',
-        position: 'UX Architect',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
-    }, {
-        imageURL: 'assets/images/avatar/6.jpg',
-        name: 'Svilen Dimchevski',
-        position: 'Graphic designer',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel, consectetur adipisicing elit. Aperiam, vel??'
-    }];
-    public navItems = [{
-        avatar: 'assets/images/avatar/1.jpg',
-        favorite: true,
-        key: '1',
-        link: '#',
-        phone: '770-504-2217',
-        text: 'Terrance Orta'
-    }, {
-        avatar: 'assets/images/avatar/2.jpg',
-        favorite: false,
-        key: '2',
-        link: '#',
-        phone: '423-676-2869',
-        text: 'Richard Mahoney'
-    }, {
-        avatar: 'assets/images/avatar/3.jpg',
-        favorite: false,
-        key: '3',
-        link: '#',
-        phone: '859-496-2817',
-        text: 'Donna Price'
-    }, {
-        avatar: 'assets/images/avatar/4.jpg',
-        favorite: false,
-        key: '4',
-        link: '#',
-        phone: '901-747-3428',
-        text: 'Lisa Landers'
-    }, {
-        avatar: 'assets/images/avatar/12.jpg',
-        favorite: true,
-        key: '5',
-        link: '#',
-        phone: '573-394-9254',
-        text: 'Dorothy H. Spencer'
-    }, {
-        avatar: 'assets/images/avatar/13.jpg',
-        favorite: false,
-        key: '6',
-        link: '#',
-        phone: '323-668-1482',
-        text: 'Stephanie May'
-    }, {
-        avatar: 'assets/images/avatar/14.jpg',
-        favorite: false,
-        key: '7',
-        link: '#',
-        phone: '401-661-3742',
-        text: 'Marianne Taylor'
-    }, {
-        avatar: 'assets/images/avatar/15.jpg',
-        favorite: true,
-        key: '8',
-        link: '#',
-        phone: '662-374-2920',
-        text: 'Tammie Alvarez'
-    }, {
-        avatar: 'assets/images/avatar/16.jpg',
-        favorite: true,
-        key: '9',
-        link: '#',
-        phone: '240-455-2267',
-        text: 'Charlotte Flores'
-    }, {
-        avatar: 'assets/images/avatar/17.jpg',
-        favorite: false,
-        key: '10',
-        link: '#',
-        phone: '724-742-0979',
-        text: 'Ward Riley'
-    }];
-
-    public fruits: Fruit[] = [];
-
-
-    public get fo1() {
-        const _fo = new IgxFilterOptions();
-        _fo.key = ['text', 'key'];
-        _fo.inputValue = this.search1;
-        return _fo;
-    }
-
-    public get fo2() {
-        const _fo = new IgxFilterOptions();
-
-        _fo.items = this.declarativeList.items;
-        _fo.inputValue = this.search2;
-
-        _fo.get_value = (item: any) => item.element.textContent.trim();
-
-        _fo.metConditionFn = (item: any) => {
-            item.hidden = false;
-        };
-
-        _fo.overdueConditionFn = (item: any) => {
-            item.hidden = true;
-        };
-
-        return _fo;
-    }
-
-    public get fruitsFilterOptions() {
-        const fruitsFilterOpts = new IgxFilterOptions();
-        fruitsFilterOpts.items = this.fruits;
-        fruitsFilterOpts.key = 'name';
-        fruitsFilterOpts.inputValue = this.fruitsSearch;
-        return fruitsFilterOpts;
-    }
-
-    public filteringHandler = (args) => {
-        args.cancel = !this.checkbox.checked;
-    };
-
-    public filteredHandler = () => { };
-
-    public onAddFruitButtonClicked(fruitName) {
-        this.addFruit(fruitName);
-        this.addFruitDialog.close();
-    }
-
-    public addFruit(fruitName) {
-        this.fruits.push({ id: this.fruits.length, name: fruitName });
-    }
-
-    public addFruits(fruits: string[]) {
-        fruits.forEach((fruit) => {
-            this.addFruit(fruit);
-        });
-    }
-
-    public deleteFruit(fruitId) {
-        let fruitIndex = -1;
-        for (let i = 0; i < this.fruits.length; i++) {
-            if (fruitId === this.fruits[i].id) {
-                fruitIndex = i;
-                break;
+    public panelConfig: PropertyPanelConfig = {
+        size: {
+            control: {
+                type: 'button-group',
+                options: ['small', 'medium', 'large']
+            }
+        },
+        hideTitle: {
+            label: 'Hide Title',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        hideSubtitle: {
+            label: 'Hide Subtitle',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        addAvatarThumbnail: {
+            label: 'Add Avatar Thumbnail',
+            control: {
+                type: 'boolean',
+                defaultValue: true
+            }
+        },
+        addIconThumbnail: {
+            label: 'Add Icon Thumbnail',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        addCheckboxAction: {
+            label: 'Add Checkbox Action',
+            control: {
+                type: 'boolean',
+                defaultValue: true
+            }
+        },
+        addIconAction: {
+            label: 'Add Icon Action',
+            control: {
+                type: 'boolean',
+                defaultValue: true
+            }
+        },
+        addOutlinedButton: {
+            label: 'Add Outlined Button',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        addContainedButton: {
+            label: 'Add Contained Button',
+            control: {
+                type: 'boolean',
+                defaultValue: false
             }
         }
-
-        this.fruits.splice(fruitIndex, 1);
     }
 
-    public fruitsFiltered(args) {
-        this.fruitsFilteredItemsCount = args.filteredItems.length;
+    public properties: Properties;
+
+    constructor(
+        private propertyChangeService: PropertyChangeService,
+        private destroyRef: DestroyRef
+    ) {
+        this.propertyChangeService.setPanelConfig(this.panelConfig);
+
+        const propertyChange =
+            this.propertyChangeService.propertyChanges.subscribe(
+                (properties) => {
+                    this.properties = properties;
+                }
+            );
+
+        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
-    public loadFruits() {
-        this.fruitList.isLoading = true;
-        setTimeout(() => {
-            this.addFruits([
-                'banana',
-                'orange',
-                'apple',
-                'kiwi',
-                'mango',
-                'strawberry',
-                'pear'
-            ]);
-            this.fruitList.isLoading = false;
-        }, 1000);
-    }
-
-    public toggleFavorite(contact: any) {
-        contact.favorite = !contact.favorite;
-    }
-}
-
-export interface Fruit {
-    id: number;
-    name: string;
+    public employeeItems: Employee[] = [
+        {
+            imageURL: 'assets/images/avatar/18.jpg',
+            name: 'Marin Popov',
+            position: 'Web designer',
+            description:
+                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?',
+        },
+        {
+            imageURL: 'assets/images/avatar/2.jpg',
+            name: 'Simeon Simeonov',
+            position: 'Front-end Developer',
+            description:
+                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?',
+        },
+        {
+            imageURL: 'assets/images/avatar/7.jpg',
+            name: 'Stefan ivanov',
+            position: 'UX Architect',
+            description:
+                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?',
+        },
+        {
+            imageURL: 'assets/images/avatar/6.jpg',
+            name: 'Svilen Dimchevski',
+            position: 'Graphic designer',
+            description:
+                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel, consectetur adipisicing elit. Aperiam, vel??',
+        },
+    ];
 }

@@ -90,11 +90,8 @@
 /// @param {Color} $excel-filtering-actions-foreground [null] - The text color of the excel style filtering options.
 /// @param {Color} $excel-filtering-actions-hover-foreground [null] - The text color of the excel style filtering options in hover/focus state.
 /// @param {Color} $excel-filtering-actions-disabled-foreground [null] - The text color of the excel style filtering options in disabled state.
-/// @param {Color} $tree-filtered-text-color [null] - grouping row background color on focus.
-/// @param {Color} $body-summaries-background [null] - The background color of the summary groups located the body.
-/// @param {Color} $body-summaries-text-color [null] - The text color of the summary results located the body.
-/// @param {Color} $root-summaries-background [null] - The background color of the summary groups located the footer.
-/// @param {Color} $root-summaries-text-color [null] - The text color of the summary results located the footer.
+/// @param {Color} $tree-filtered-text-color [null] - Grouping row background color on focus.
+/// @param {Color} $summaries-patch-background [null] - The leading summaries patch backround. Used in hierarchical grids.
 /// @param {Color} $row-highlight [null] - The grid row highlight indication color.
 /// @param {box-shadow} $grid-shadow [null] - The shadow of the grid.
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
@@ -204,11 +201,6 @@
     $excel-filtering-actions-hover-foreground: null,
     $excel-filtering-actions-disabled-foreground: null,
 
-    $body-summaries-background: null,
-    $body-summaries-text-color: null,
-    $root-summaries-background: null,
-    $root-summaries-text-color: null,
-
     $row-highlight: null,
     $grid-shadow: null,
     $drag-shadow: null,
@@ -217,6 +209,7 @@
     $drop-area-border-radius: null,
     $grid-border-color: null,
     $sortable-header-icon-hover-color: null,
+    $summaries-patch-background: null,
 
     $cell-selected-within-background: null,
     $cell-selected-within-text-color: null,
@@ -434,14 +427,6 @@
         $filtering-row-text-color: text-contrast(to-opaque($filtering-row-background));
     }
 
-    @if not($body-summaries-text-color) and $body-summaries-background {
-        $body-summaries-text-color: text-contrast($body-summaries-background);
-    }
-
-    @if not($root-summaries-text-color) and $root-summaries-background {
-        $root-summaries-text-color: text-contrast($root-summaries-background);
-    }
-
     @if not($grid-shadow) {
         $grid-elevation: map.get($grid-schema, 'grid-elevation');
         $grid-shadow: elevation($grid-elevation);
@@ -556,11 +541,6 @@
         tree-selected-filtered-row-text-color: $tree-selected-filtered-row-text-color,
         tree-selected-filtered-cell-text-color: $tree-selected-filtered-cell-text-color,
 
-        body-summaries-background: $body-summaries-background,
-        body-summaries-text-color: $body-summaries-text-color,
-        root-summaries-background: $root-summaries-background,
-        root-summaries-text-color: $root-summaries-text-color,
-
         row-highlight: $row-highlight,
         grid-shadow: $grid-shadow,
         drag-shadow: $drag-shadow,
@@ -569,6 +549,7 @@
         drop-area-border-radius: $drop-area-border-radius,
         sortable-header-icon-hover-color: $sortable-header-icon-hover-color,
         grid-border-color: $grid-border-color,
+        summaries-patch-background: $summaries-patch-background,
 
         cell-selected-within-background: $cell-selected-within-background,
         cell-selected-within-text-color: $cell-selected-within-text-color,
@@ -1791,8 +1772,8 @@
     %grid-cell--active {
         box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'cell-active-border-color');
 
-        %igx-grid__filtering-cell,
-        %grid-cell-header {
+        > %igx-grid__filtering-cell,
+        > %grid-cell-header {
             border-inline-end-color: var-get($theme, 'cell-active-border-color');
             border-bottom-color: var-get($theme, 'cell-active-border-color');
         }
@@ -2286,37 +2267,31 @@
     %grid-summaries {
         display: flex;
         overflow: hidden;
-        background: var-get($theme, 'root-summaries-background');
         outline-style: none;
-
-        %igx-grid-summary__result {
-            color: var-get($theme, 'root-summaries-text-color');
-        }
-
+        background-color: var-get($theme, 'summaries-patch-background');
     }
 
     %grid-summaries--body {
-        background: var-get($theme, 'body-summaries-background');
+        --summaries-patch-background: var(--ig-gray-100);
+
         border-bottom: rem(1px) dashed var-get($theme, 'row-border-color');
+        background-color: var-get($theme, 'summaries-patch-background');
 
         &:last-of-type {
             border-bottom: none;
         }
 
-        %igx-grid-summary__result {
-            color: var-get($theme, 'body-summaries-text-color');
+        .igx-grid-summary {
+          --background-color: inherit;
+          --result-color: #{adaptive-contrast(var(--background-color))};
         }
     }
 
     %grid-summaries-patch {
-        @if $bootstrap-theme {
-            background: color($color: 'gray', $variant: 100);
-        } @else {
-            background: inherit;
-        }
         position: relative;
-        z-index: 1;
+        background: inherit;
         border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
+        z-index: 1;
 
         @if $variant == 'indigo' {
             border-top: rem(1px) solid var-get($theme, 'header-border-color');
@@ -3192,24 +3167,32 @@
     @include excel-filtering($theme);
 
     %advanced-filtering-dialog {
-        background: var-get($theme, 'filtering-row-background');
-        box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 12));
+	    @if $variant == 'indigo' {
+		    $light-variant: contrast-color($color: 'gray', $variant: 900);
+		    $dark-variant: color($color: 'gray', $variant: 50);
+		    background: if($theme-variant == 'light', $light-variant,  $dark-variant);
+	    } @else {
+		    background: color($color: 'surface', $variant: 500);
+	    }
+
+        box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 24));
+
+        @if $variant == 'material' or $variant == 'bootstrap' {
+            border-radius: rem(4px);
+        }
+
+        @if $variant == 'fluent' {
+            border-radius: rem(2px);
+        }
 
         @if $variant == 'indigo' {
             border-radius: rem(10px);
         }
 
         igx-query-builder {
-            --igx-query-builder-background: #{var-get($theme, 'filtering-row-background')};
-            --igx-query-builder-background-and: #{var-get($theme, 'filtering-background-and')};
-            --igx-query-builder-background-and--focus: #{var-get($theme, 'filtering-background-and--focus')};
-            --igx-query-builder-background-or: #{var-get($theme, 'filtering-background-or')};
-            --igx-query-builder-background-or--focus: #{var-get($theme, 'filtering-background-or--focus')};
             box-shadow: none;
-
-            @if $variant == 'indigo' {
-                border-radius: rem(10px);
-            }
+            border: none;
+            border-radius: inherit;
         }
 
         igx-query-builder-header {
@@ -3488,6 +3471,17 @@
                 igx-pivot-row-dimension-header {
                     border-inline-end: 0;
                 }
+            }
+        }
+    }
+
+    .igx-pivot-grid-row-filler__wrapper {
+        .igx-grid-thead__wrapper {
+            height: 100%;
+            border-bottom: initial;
+
+            .igx-grid-th {
+                height: 100%;
             }
         }
     }

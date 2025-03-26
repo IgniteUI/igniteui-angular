@@ -1,43 +1,56 @@
-.sample-actions {
-    margin: 20px 0;
+:host {
     display: flex;
-    gap: 25px;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
 
-    p {
-        margin-top: 0;
-        margin-bottom: 4px;
-        font-size: 14px;
-    }
+    ::ng-deep {
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
 
-    button {
-        align-self: center;
-    }
+            > * {
+                width: 100%;
+            }
+        }
 
-    &__btg {
-        width: 250px;
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
     }
 }
 
-igx-badge {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    width: 16px;
-    height: 16px;
-    min-width: 0;
-    min-height: 0;
+:host(.vertical-stepper) {
+    flex-direction: row;
+    align-items: flex-start;
 }
 
-.nav-buttons {
-    margin: 40px 0;
+::ng-deep {
+    [dir='rtl'] {
+        .showcase--web-components {
+            order: 1;
+        }
 
-    > * {
-        margin-right: 16px;
+        .showcase--angular {
+            order: 2;
+        }
     }
 }
 
 .sample-stepper-wrapper {
-    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
     padding: 16px;
-    border: 1px solid rgba(54, 54, 54, .43);
+    border: 1px solid var(--ig-gray-400);
+}
+
+strong {
+    display: block;
+    text-align: center;
 }

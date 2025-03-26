@@ -2,12 +2,10 @@
 
 # Current Milestone
 
-## Milestone 35, (Due by Jan, 2025)
+## Milestone 37,  version 19.2 (Due by Mar, 2025)
 
-1. Tile Manager - new component [#239](https://github.com/IgniteUI/igniteui-angular/issues/239)
-2. Query Builder component update [#14979](https://github.com/IgniteUI/igniteui-angular/issues/14979)
-3. IgxBannerComponent - Support collapsed input [#14890](https://github.com/IgniteUI/igniteui-angular/issues/14890)
-4. Update of the carousel component [#15025](https://github.com/IgniteUI/igniteui-angular/issues/15025)
+1. Tile Manager - layout component [#239](https://github.com/IgniteUI/igniteui-angular/issues/239)
+2. SSR Grid Improvements - [15202](https://github.com/IgniteUI/igniteui-angular/issues/15202)
 
 ## Going down the road
 
@@ -16,6 +14,12 @@
 3. Extend the 18.2 editorOptions property to allow modifying numeric editors to not change the value on up/down arrow press [#14660](https://github.com/IgniteUI/igniteui-angular/issues/14660)
 
 # Previous Milestone
+
+## Milestone 36,  version 19.1 (Released Feb 27th, 2025)
+
+1. **[DONE]** Query Builder multi-table query support [#14979](https://github.com/IgniteUI/igniteui-angular/issues/14979)
+2. **[DONE]** IgxBannerComponent - Support collapsed input [#14890](https://github.com/IgniteUI/igniteui-angular/issues/14890)
+3. **[DONE]** Carousel component vertical orientation support [#15025](https://github.com/IgniteUI/igniteui-angular/issues/15025)
 
 ## Milestone 35, version 19.0 (Released Nov 25th, 2024)
 
