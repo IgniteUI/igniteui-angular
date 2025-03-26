@@ -21,7 +21,7 @@ describe('IgxSplitter', () => {
 }).compileComponents()));
     let fixture: ComponentFixture<SplitterTestComponent>;
     let splitter: IgxSplitterComponent;
-    
+
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SplitterTestComponent);
         fixture.detectChanges();
