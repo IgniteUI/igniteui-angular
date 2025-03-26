@@ -119,6 +119,16 @@ describe('IgxQueryBuilder', () => {
       expect(mainEntityContainer.children[1].children[1].tagName).toBe('IGX-COMBO');
       expect(nestedEntityContainer.children[1].children[1].tagName).toBe('IGX-SELECT');
     }));
+
+    it('Should return proper fields collection without additional props.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+
+      queryBuilder.entities[0].fields.forEach(field => {
+        expect(field.filters).toBeUndefined();
+        expect(field.pipeArgs).toBeUndefined();
+      });
+    }));
   });
 
   describe('Interactions', () => {
