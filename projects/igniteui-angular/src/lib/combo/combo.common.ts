@@ -991,7 +991,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public ngOnInit() {
-
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
         this._iconService?.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
@@ -1096,8 +1095,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public get selection(): any[] {
-        const items = Array.from(this.selectionService.get(this.id));
-        return this.convertKeysToItems(items);
+        const serviceRef = this.selectionService.get(this.id);
+        return serviceRef ? this.convertKeysToItems(Array.from(serviceRef)) : [];
     }
 
     /**
