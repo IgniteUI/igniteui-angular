@@ -89,13 +89,8 @@ export class IgxGridSummaryService {
         }
     }
 
-    public calcMaxSummaryHeight() {
-        if (this.summaryHeight) {
-            return this.summaryHeight;
-        }
-        if (!this.grid.data) {
-            return this.summaryHeight = 0;
-        }
+
+    protected getMaxSummaryLength() {
         let maxSummaryLength = 0;
         this.grid.columns.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
             const getCurrentSummary = column.summaries.operate([], [], column.field);
@@ -108,12 +103,12 @@ export class IgxGridSummaryService {
             }
         });
         this.maxSummariesLength = maxSummaryLength;
-        this.summaryHeight = maxSummaryLength * this.grid.defaultSummaryHeight;
-        return this.summaryHeight;
+        return maxSummaryLength;
     }
 
     public calculateSummaries(rowID, data, groupRecord) {
         let rowSummaries = this.summaryCacheMap.get(rowID);
+        const maxSummaryLength = this.getMaxSummaryLength();
         if (!rowSummaries) {
             rowSummaries = new Map<string, IgxSummaryResult[]>();
             this.summaryCacheMap.set(rowID, rowSummaries);
@@ -123,7 +118,7 @@ export class IgxGridSummaryService {
             return rowSummaries;
         }
 
-        this.grid.columns.filter(col => col.hasSummary).forEach((column) => {
+        this.grid.columns.forEach((column) => {
             if (!rowSummaries.get(column.field)) {
                 let summaryResult = column.summaries.operate(
                     data.map(r => resolveNestedPath(r, column.field)),
@@ -140,8 +135,14 @@ export class IgxGridSummaryService {
 
                 rowSummaries.set(column.field, summaryResult);
             }
+            const summaries = rowSummaries.get(column.field);
+            // fill in empty summaries till DOM is filled to the max summary length
+            if (summaries.length < maxSummaryLength){
+                for (let index = summaries.length; index < maxSummaryLength; index++) {
+                    summaries.push({});
+                }
+            }
         });
-
         return rowSummaries;
     }
 

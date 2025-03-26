@@ -36,6 +36,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid-thead';
+    const DEFAULT_SUMMARY_HEIGHT = 36;
 
     configureTestSuite();
 
@@ -290,8 +291,8 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(51);
-            expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
-            expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
+            expect(summaryItemHeight.offsetHeight).toBe(DEFAULT_SUMMARY_HEIGHT - 1);
+            expect(summaryRowHeight.offsetHeight).toBe(DEFAULT_SUMMARY_HEIGHT);
             setElementSize(grid.nativeElement, Size.Medium)
             grid.summaryRowHeight = null;
             fixture.detectChanges();
@@ -302,8 +303,8 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.defaultRowHeight).toBe(40);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(41);
-            expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
-            expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
+            expect(summaryItemHeight.offsetHeight).toBe(DEFAULT_SUMMARY_HEIGHT - 1);
+            expect(summaryRowHeight.offsetHeight).toBe(DEFAULT_SUMMARY_HEIGHT);
             setElementSize(grid.nativeElement, Size.Small)
             grid.summaryRowHeight = undefined;
             fixture.detectChanges();
@@ -314,8 +315,8 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.defaultRowHeight).toBe(32);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(33);
-            expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
-            expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
+            expect(summaryItemHeight.offsetHeight).toBe(DEFAULT_SUMMARY_HEIGHT - 1);
+            expect(summaryRowHeight.offsetHeight).toBe(DEFAULT_SUMMARY_HEIGHT);
         });
 
         it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {

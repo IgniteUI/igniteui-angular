@@ -180,6 +180,8 @@
             min-height: sizable(rem(24px), rem(30px), rem(36px));
         }
 
+        flex-basis: sizable(rem(24px), rem(30px), rem(36px));
+
         position: relative;
     }
 

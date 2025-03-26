@@ -298,9 +298,9 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     public get summaryRowHeight(): number {
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
-            return this._summaryRowHeight || this.summaryService.calcMaxSummaryHeight();
+            return this._summaryRowHeight || undefined;
         }
-        return 0;
+        return undefined;
     }
 
     /** @hidden @internal */
@@ -4303,20 +4303,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public get defaultRowHeight(): number {
         return this._defaultRowHeight;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get defaultSummaryHeight(): number {
-        switch (this.gridSize) {
-            case Size.Medium:
-                return 30;
-            case Size.Small:
-                return 24;
-            default:
-                return 36;
-        }
     }
 
     /**
