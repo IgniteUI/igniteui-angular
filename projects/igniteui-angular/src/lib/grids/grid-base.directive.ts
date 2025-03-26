@@ -6498,14 +6498,10 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         if (this.isPercentWidth) {
             /* width in %*/
-            const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width');
-            width = computed.indexOf('%') === -1 ? parseFloat(computed) : null;
+            const computed = this.document.defaultView.getComputedStyle(this.tbody.nativeElement).getPropertyValue('width');
+            width = parseFloat(computed);
         } else {
             width = parseInt(this.width, 10);
-        }
-
-        if (!width && this.nativeElement) {
-            width = this.nativeElement.offsetWidth;
         }
 
 
@@ -6516,9 +6512,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.isColumnWidthSum = false;
         }
 
-        if (this.hasVerticalScroll() && this.width !== null) {
-            width -= this.scrollSize;
-        }
         if ((Number.isFinite(width) || width === null) && width !== this.calcWidth) {
             this.calcWidth = width;
         }
