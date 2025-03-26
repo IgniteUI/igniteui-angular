@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, ViewChild, PLATFORM_ID } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
@@ -192,7 +192,8 @@ describe('Navigation Drawer', () => {
                             </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
-                template
+                template,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
             }
         });
 
@@ -219,7 +220,8 @@ describe('Navigation Drawer', () => {
                             </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentMiniComponent, {
             set: {
-                template
+                template,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
             }
         });
         let fixture;
@@ -251,7 +253,8 @@ describe('Navigation Drawer', () => {
                             </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentPinComponent, {
             set: {
-                template
+                template,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
             }
         });
 
@@ -444,7 +447,8 @@ describe('Navigation Drawer', () => {
         let fixture: ComponentFixture<TestComponentDIComponent>;
         TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
-                template
+                template,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
             }
         });
 
@@ -473,7 +477,8 @@ describe('Navigation Drawer', () => {
                         </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
-                template
+                template,
+                imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective]
             }
         });
 
