@@ -8,7 +8,6 @@ import {
     ViewChild,
     ElementRef,
     ChangeDetectorRef,
-    Renderer2,
     Optional,
     Self,
     booleanAttribute,
@@ -250,7 +249,6 @@ export class CheckboxBaseDirective implements AfterViewInit {
 
     constructor(
         protected cdr: ChangeDetectorRef,
-        protected renderer: Renderer2,
         @Inject(THEME_TOKEN)
         protected themeToken: ThemeToken,
         @Optional() @Self() public ngControl: NgControl
@@ -261,14 +259,14 @@ export class CheckboxBaseDirective implements AfterViewInit {
 
         this.theme = this.themeToken.theme;
 
-        const themeChange = this.themeToken.onChange((theme) => {
+        const { unsubscribe } = this.themeToken.onChange((theme) => {
             if (this.theme !== theme) {
                 this.theme = theme;
                 this.cdr.detectChanges();
             }
         });
 
-        this.destroyRef.onDestroy(() => themeChange.unsubscribe());
+        this.destroyRef.onDestroy(() => unsubscribe());
     }
 
     /**
