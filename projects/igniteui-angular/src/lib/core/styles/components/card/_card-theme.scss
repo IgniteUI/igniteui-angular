@@ -167,10 +167,6 @@
             display: block;
             padding: 0;
         }
-
-        @if $variant == 'fluent' {
-            padding: rem(16px) rem(8px);
-        }
     }
 
     %igx-card-header--vertical {
