@@ -226,11 +226,6 @@
             "version": "19.2.0",
             "description": "Updates Ignite UI for Angular from v19.1.0 to v19.2.0",
             "factory": "./update-19_2_0"
-        },
-        "migration-46": {
-            "version": "19.2.4",
-            "description": "Updates Ignite UI for Angular from v19.2.0 to v19.2.4",
-            "factory": "./update-19_2_4"
         }
     }
 }
