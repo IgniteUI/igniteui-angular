@@ -262,6 +262,7 @@ export var registerConfig = [
       { name: "pinnedColumnsCount" },
       { name: "transactions" },
       { name: "lastSearchInfo" },
+      { name: "type" },
       { name: "filteredData" },
       { name: "filteredSortedData" },
       { name: "validation" },
@@ -549,6 +550,7 @@ export var registerConfig = [
     additionalProperties: [
       { name: "foreignKey" },
       { name: "selectedCells" },
+      { name: "type" },
       { name: "gridAPI", writable: true },
       { name: "navigation", writable: true },
       { name: "shouldGenerate", writable: true },
@@ -733,8 +735,10 @@ export var registerConfig = [
     ],
     additionalProperties: [
       { name: "dimensionsSortingExpressions" },
+      { name: "type" },
       { name: "navigation", writable: true },
       { name: "allDimensions" },
+      { name: "visibleRowDimensions", writable: true },
       { name: "rowList" },
       { name: "dataRowList" },
       { name: "lastSearchInfo" },
@@ -860,6 +864,7 @@ export var registerConfig = [
     ],
     additionalProperties: [
       { name: "rowIslandAPI", writable: true },
+      { name: "type" },
       { name: "gridAPI", writable: true },
       { name: "navigation", writable: true },
       { name: "shouldGenerate", writable: true },

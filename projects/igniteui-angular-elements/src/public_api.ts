@@ -12,6 +12,10 @@ import { IgxPivotDateDimension } from 'projects/igniteui-angular/src/lib/grids/p
 import { PivotDimensionType } from 'projects/igniteui-angular/src/lib/grids/pivot-grid/pivot-grid.interface';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxTimeSummaryOperand } from 'projects/igniteui-angular/src/lib/grids/summaries/grid-summary';
 import { HorizontalAlignment, VerticalAlignment } from 'projects/igniteui-angular/src/lib/services/overlay/utilities';
+import { IgxExcelExporterOptions } from 'igniteui-angular/src/lib/services/excel/excel-exporter-options';
+import { CsvFileTypes, IgxCsvExporterOptions } from 'igniteui-angular/src/lib/services/csv/csv-exporter-options';
+import { IgcExcelExporterService } from './lib/excel-exporter';
+import { IgcCsvExporterService } from './lib/csv-exporter';
 
 
 /** Export Public API, TODO: reorganize, Generate all w/ renames? */
@@ -54,4 +58,10 @@ export {
     // overlay position settings (used in grids, paginator, toolbar)
     HorizontalAlignment,
     VerticalAlignment,
+
+    IgxExcelExporterOptions as IgcExcelExporterOptions,
+    IgxCsvExporterOptions as IgcCsvExporterOptions,
+    IgcExcelExporterService,
+    IgcCsvExporterService,
+    CsvFileTypes
 }
