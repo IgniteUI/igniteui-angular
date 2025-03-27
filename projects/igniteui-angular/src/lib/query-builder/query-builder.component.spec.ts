@@ -2486,12 +2486,12 @@ describe('IgxQueryBuilder', () => {
     const ROW_HEIGHT = 40;
     const DROP_CONDITION_HERE = "Drop here to insert";
     let chipComponents = [];
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
       fix.detectChanges();
 
       chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-    });
+    }));
 
     it('Should render ghost when mouse drag operation starts.', () => {
       const draggedChip = chipComponents[1].componentInstance;
