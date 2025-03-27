@@ -1,0 +1,45 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-slider, fluent) {
+    --thumb-size: #{rem(16px)};
+    --thumb-border-width: #{rem(2px)};
+    --thumb-label-width: #{rem(40px)};
+    --thumb-label-height: #{rem(33px)};
+    --track-height: #{rem(4px)};
+    --outline-width: 0;
+    --steps-top-position: #{rem(1px)};
+
+    &:hover {
+        .igx-slider-thumb-from__dot::before,
+        .igx-slider-thumb-to__dot::before {
+            border: var(--thumb-border-width) solid var-get($_theme, 'thumb-focus-color');
+        }
+    }
+}
+
+$_igx-slider-thumbs: 'from' 'to';
+
+@each $t in $_igx-slider-thumbs {
+    @include themed-block(igx-slider-thumb-#{$t}, fluent) {
+        @include m(focused) {
+            div::after {
+                $focus-outline-offset: rem(2px);
+
+                position: absolute;
+                content: '';
+                pointer-events: none;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 0 0 rem(1px) var-get($_theme, 'thumb-border-focus-color');
+                width: calc(var(--thumb-size) + (#{$focus-outline-offset} * 2));
+                height: calc(var(--thumb-size) + (#{$focus-outline-offset} * 2));
+            }
+        }
+    }
+}
