@@ -2513,22 +2513,22 @@ describe('IgxQueryBuilder', () => {
 
     it('Should render drop ghost properly when mouse dragged down on the left.', fakeAsync(() => {
       const draggedChip = chipComponents[1].componentInstance;
-      QueryBuilderFunctions.dragGhostWithMouse(fix, draggedChip, 100, 75, true);
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 100, 75, true);
     }));
 
     it('Should render drop ghost properly when mouse dragged up on the left.', fakeAsync(() => {
       const draggedChip = chipComponents[1].componentInstance;
-      QueryBuilderFunctions.dragGhostWithMouse(fix, draggedChip, 100, 75 + 350, false);
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 100, 75 + 350, false);
     }));
 
     it('Should render drop ghost properly when mouse dragged down on the right.', fakeAsync(() => {
       const draggedChip = chipComponents[1].componentInstance;
-      QueryBuilderFunctions.dragGhostWithMouse(fix, draggedChip, 500, 75, true);
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 500, 75, true);
     }));
 
     it('Should render drop ghost properly when mouse dragged up on the right.', fakeAsync(() => {
       const draggedChip = chipComponents[1].componentInstance;
-      QueryBuilderFunctions.dragGhostWithMouse(fix, draggedChip, 500, 75 + 350, false);
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 500, 75 + 350, false);
     }));
 
     it('Should position drop ghost below the target condition on dragging down.', () => {

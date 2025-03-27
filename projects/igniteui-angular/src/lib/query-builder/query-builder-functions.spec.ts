@@ -935,7 +935,7 @@ export class QueryBuilderFunctions {
         return [dropGhost, prevElement, nextElement, newChipContents];
     }
 
-    public static dragGhostWithMouse(fix: ComponentFixture<any>, draggedChip: any, X: number, Y: number, moveDown: boolean) {
+    public static verifyGhostPositionOnMouseDrag(fix: ComponentFixture<any>, draggedChip: any, X: number, Y: number, moveDown: boolean) {
         const ghostPositionVisits: boolean[] = [false, false, false, false, false, false, false, false];
         const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
         const dragDir = draggedChip.dragDirective;
