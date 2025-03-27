@@ -6959,7 +6959,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _shouldAutoSize() {
 
         const parentElement = this.nativeElement.parentElement || (this.nativeElement.getRootNode() as any).host;
-        const parentHeight = parentElement.clientHeight;
+        const parentHeight = parentElement?.clientHeight;
         this.tbody.nativeElement.style.display = 'none';
         let res = !parentElement ||
             parentElement.clientHeight === 0 ||
