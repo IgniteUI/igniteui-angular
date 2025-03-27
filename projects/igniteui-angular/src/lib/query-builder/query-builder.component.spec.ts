@@ -2471,7 +2471,7 @@ describe('IgxQueryBuilder', () => {
       expect(chipComponents[1].nativeElement.getBoundingClientRect().height).toBe(0);
     });
 
-    xit('Should render drop ghost properly when mouse dragged.', fakeAsync(() => {
+    it('Should render drop ghost properly when mouse dragged.', fakeAsync(() => {
       const draggedChip = chipComponents[1].componentInstance;
       const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
