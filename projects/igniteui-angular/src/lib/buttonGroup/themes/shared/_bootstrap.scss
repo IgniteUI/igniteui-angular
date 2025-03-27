@@ -32,6 +32,7 @@ $_theme: $bootstrap;
             background: var-get($_theme, 'item-background');
             z-index: 1;
 
+            &:hover,
             &:active {
                 background: var-get($_theme, 'item-hover-background');
                 color: var-get($_theme, 'item-hover-text-color');
@@ -63,6 +64,17 @@ $_theme: $bootstrap;
 
             igx-icon {
                 color: var-get($_theme, 'item-selected-icon-color');
+            }
+
+            &:hover,
+            &:active {
+                background: var-get($_theme, 'item-selected-hover-background');
+                color: var-get($_theme, 'item-selected-hover-text-color');
+                border-color: var-get($_theme, 'item-selected-hover-border-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'item-selected-hover-icon-color');
+                }
             }
         }
     }
