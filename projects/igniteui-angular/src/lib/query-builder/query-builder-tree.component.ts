@@ -525,6 +525,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     /** @hidden */
+    protected isHierarchicalGridNestedQuery(): boolean {
+        return this.queryBuilder.entities !== this.entities
+    }
+
+    /** @hidden */
     protected isSearchValueInputDisabled(): boolean {
         return !this.selectedField ||
             !this.selectedCondition ||

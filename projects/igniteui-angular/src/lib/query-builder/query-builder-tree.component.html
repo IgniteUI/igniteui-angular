@@ -29,7 +29,9 @@
         </div>
 
         <div class="igx-filter-tree__inputs-field">
-            <span class="igx-query-builder__label">Select</span>
+            @if (!this.isHierarchicalGridNestedQuery()) {
+                <span class="igx-query-builder__label">Select</span>
+            }
             @if (!parentExpression) {
                 <igx-combo
                     #returnFieldsCombo
@@ -67,7 +69,7 @@
                     </ng-template>
                 </igx-combo>
             }
-            @else {
+            @else if (!this.isAdvancedFiltering() && !this.isHierarchicalGridNestedQuery()) {
                 <igx-select #returnFieldSelect
                     type="box"
                     (selectionChanging)="onReturnFieldSelectChanging($event)"
