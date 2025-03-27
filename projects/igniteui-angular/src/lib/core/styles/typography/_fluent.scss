@@ -116,7 +116,7 @@
     //     text: 'caption'
     // ));
     @include tooltip-typography();
-    @include tree-typography();
+    //@include tree-typography();
     @include label-typography($categories: (
         label: 'subtitle-2'
     ));
