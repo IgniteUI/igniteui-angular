@@ -66,7 +66,6 @@ $_theme: $material;
 
             &[igxButton] {
                 border-radius: 0;
-                border-color: var-get($_theme, 'item-border-color');
             }
 
             &[igxButton][disabled='true'] {
