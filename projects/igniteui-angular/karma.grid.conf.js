@@ -61,7 +61,7 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-gpu', '--window-size=820,800'],
+        flags: ['--no-sandbox', '--disable-gpu', '--window-size=820,800', '--js-flags="--expose-gc"'],
         debug: false
       }
     },

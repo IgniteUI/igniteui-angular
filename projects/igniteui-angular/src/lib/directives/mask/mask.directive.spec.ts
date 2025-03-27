@@ -866,7 +866,7 @@ class PlaceholderMaskComponent {
             [(ngModel)]="value"
             [igxMask]="mask"/>
     </igx-input-group>`,
-    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective, InputFormatPipe, DisplayFormatPipe]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class PipesMaskComponent {
 
