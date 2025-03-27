@@ -27,7 +27,6 @@ const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';
 const STEPPER_BODY = 'igx-stepper__body';
 const STEP_TAG = 'IGX-STEP';
-const STEP_HEADER = 'igx-step__header';
 const STEP_INDICATOR_CLASS = 'igx-step__indicator';
 const STEP_TITLE_CLASS = 'igx-step__title';
 const STEP_SUBTITLE_CLASS = 'igx-step__subtitle';
@@ -74,7 +73,7 @@ const testAnimationBehvior = (
     activeChangeSpy.calls.reset();
 };
 
-fdescribe('Rendering Tests', () => {
+describe('Rendering Tests', () => {
     configureTestSuite();
     let fix: ComponentFixture<IgxStepperSampleTestComponent>;
     let stepper: IgxStepperComponent;
@@ -916,7 +915,7 @@ fdescribe('Rendering Tests', () => {
     });
 });
 
-fdescribe('Stepper service unit tests', () => {
+describe('Stepper service unit tests', () => {
     configureTestSuite();
 
     let stepperService: IgxStepperService;
