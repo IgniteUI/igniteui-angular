@@ -3133,7 +3133,7 @@ class IgxSelectCDRComponent {
             }
         </igx-select>
     `,
-    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective]
+    imports: [IgxSelectComponent, IgxSelectItemComponent]
 })
 class IgxSelectWithIdComponent {
     @ViewChild(IgxSelectComponent, { read: IgxSelectComponent, static: true })

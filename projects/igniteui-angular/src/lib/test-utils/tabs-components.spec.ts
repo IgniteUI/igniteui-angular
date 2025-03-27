@@ -380,29 +380,6 @@ export class TabsTabsOnlyModeTest1Component {
 @Component({
     template: `
     <div #wrapperDiv>
-        <igx-tabs [selectedIndex]="2">
-            <igx-tab-item>
-                <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
-            </igx-tab-item>
-            <igx-tab-item>
-                <igx-tab-header><span igxTabHeaderLabel>Tab 2</span></igx-tab-header>
-            </igx-tab-item>
-            <igx-tab-item>
-                <igx-tab-header><span igxTabHeaderLabel>Tab 3</span></igx-tab-header>
-            </igx-tab-item>
-        </igx-tabs>
-    </div>
-    `,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective]
-})
-export class TabsTabsOnlyModeTest2Component {
-    @ViewChild(IgxTabsComponent, { static: true })
-    public tabs: IgxTabsComponent;
-}
-
-@Component({
-    template: `
-    <div #wrapperDiv>
         <igx-tabs>
             <igx-tab-item [disabled]="true">
                 <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>

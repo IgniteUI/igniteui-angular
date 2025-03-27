@@ -33,6 +33,10 @@
         <igx-input-group>
             <label igxLabel for="phone">Phone</label>
             <input igxInput formControlName="phone" id="phone" type="tel" name="phone" required/>
+            <igx-suffix>
+                <igx-icon>phone</igx-icon>
+            </igx-suffix>
+            <igx-hint position="start">Ex.: +359 888 123 456</igx-hint>
         </igx-input-group>
         <div class="nav-buttons">
             <button igxButton="outlined" (click)="steppersPrev()">PREV</button>
@@ -73,13 +77,9 @@
 <ng-template #finishOrderForm>
     <form [formGroup]="finish">
         <igx-input-group>
-            <igx-prefix>+359</igx-prefix>
+            <igx-prefix><igx-icon>email</igx-icon></igx-prefix>
             <label igxLabel for="email">Email</label>
             <input igxInput id="email" name="email" type="email" formControlName="email"/>
-            <igx-suffix>
-                <igx-icon>phone</igx-icon>
-            </igx-suffix>
-            <igx-hint position="start">Ex.: +359 888 123 456</igx-hint>
         </igx-input-group>
 
         <div class="nav-buttons">
