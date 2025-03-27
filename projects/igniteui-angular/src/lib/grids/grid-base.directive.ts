@@ -6525,6 +6525,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.isColumnWidthSum = false;
         }
 
+        if (this.hasVerticalScroll() && this.width !== null) {
+            width -= this.scrollSize;
+        }
         if ((Number.isFinite(width) || width === null) && width !== this.calcWidth) {
             this.calcWidth = width;
         }
