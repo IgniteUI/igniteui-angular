@@ -3,11 +3,14 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 19.2.0
+
 ### General
 - `IgxCarousel`
     - Removed deprecated property `keyboardSupport`.
 - `IgxSlide`
     - **Deprecation** - `tabIndex` has been deprecated and will be removed in a future version.
+- `IgxGrid`, `IgxHierarchicalGrid`, `IgxTreeGrid`
+    - A column's `minWidth` and `maxWidth` constrain the user-specified `width` so that it cannot go outside their bounds.
 
 ## 19.1.1
 ### New Features

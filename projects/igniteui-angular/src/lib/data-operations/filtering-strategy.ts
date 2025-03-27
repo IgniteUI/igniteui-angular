@@ -51,9 +51,10 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
             return false;
         }
 
-        const cond = expr.condition;
         const val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
-        return cond.logic(val, expr.searchVal, expr.ignoreCase);
+        if (expr.condition?.logic) {
+            return expr.condition.logic(val, expr.searchVal, expr.ignoreCase);
+        }
     }
 
     // protected

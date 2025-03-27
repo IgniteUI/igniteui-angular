@@ -2135,7 +2135,7 @@ export class IgxHierarchicalGridSizingComponent {
             </igx-row-island>
         }
     </igx-hierarchical-grid>`,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridToggleRIComponent  extends IgxHierarchicalGridTestBaseComponent {
 public toggleRI = true;
