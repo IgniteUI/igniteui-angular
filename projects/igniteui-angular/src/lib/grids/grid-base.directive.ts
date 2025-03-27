@@ -6941,7 +6941,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         } else {
             gridHeight = parseInt(this._height, 10);
         }
-        const height = this.getComputedHeight(this.tbodyContainer.nativeElement) || 0;
+        const height = this.getComputedHeight(this.tbodyContainer.nativeElement) || gridHeight || 0;
 
         if (Math.round(height) === 0 || isNaN(gridHeight)) {
             const bodyHeight = this.defaultTargetBodyHeight;
