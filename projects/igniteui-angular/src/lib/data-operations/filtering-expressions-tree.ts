@@ -11,11 +11,12 @@ export enum FilteringExpressionsTreeType {
 export declare interface IExpressionTree {
     filteringOperands: (IExpressionTree | IFilteringExpression)[];
     operator: FilteringLogic;
-    fieldName?: string;
-    entity?: string;
-    returnFields?: string[];
+    fieldName?: string | null;
+    entity?: string | null;
+    returnFields?: string[] | null;
 }
 
+/* alternateBaseType: ExpressionTree */
 /* marshalByValue */
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpressionTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
