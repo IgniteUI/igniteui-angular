@@ -115,7 +115,7 @@ $_theme: $bootstrap;
         }
     }
 
-    @include mx('selected', 'special', 'active', 'range') {
+    @include mx('selected', 'special', 'active', 'range', ('not': ('first', 'last'))) {
         @include e(inner) {
             &::after {
                 border-color: var-get($_theme, 'date-special-border-color');
