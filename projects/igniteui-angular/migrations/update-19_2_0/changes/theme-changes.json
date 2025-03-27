@@ -1,0 +1,35 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+      {
+        "name": "$label-invalid-color",
+        "remove": true,
+        "owner": "switch-theme",
+        "type": "property"
+      },
+      {
+        "name": "$track-error-color",
+        "remove": true,
+        "owner": "switch-theme",
+        "type": "property"
+      },
+      {
+        "name": "$thumb-on-error-color",
+        "remove": true,
+        "owner": "switch-theme",
+        "type": "property"
+      },
+      {
+        "name": "$error-color",
+        "remove": true,
+        "owner": "switch-theme",
+        "type": "property"
+      },
+      {
+        "name": "$error-color-hover",
+        "remove": true,
+        "owner": "switch-theme",
+        "type": "property"
+      }
+    ]
+  }
