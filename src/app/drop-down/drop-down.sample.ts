@@ -94,7 +94,7 @@ export class DropDownSampleComponent implements OnInit {
     @ViewChild(IgxOverlayOutletDirective, { static: true })
     private igxOverlayOutlet: IgxOverlayOutletDirective;
 
-    public items: any[] = [];
+    public items: { field: string, header?: string, disabled?: boolean, selected?: boolean }[] = [];
     public foods = foods;
 
     public panelConfig: PropertyPanelConfig = {
@@ -261,7 +261,7 @@ export class DropDownSampleComponent implements OnInit {
             this.items.push(item);
         }
 
-        this.items[3]['selected'] = true;
+        this.items[3].selected = true;
     }
 
     public clearSelection() {

@@ -34,4 +34,28 @@ describe(`Update to ${version}`, () => {
         `
         );
     });
+
+    it('should remove the properties related to invalid state from the switch theme', async () => {
+        const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
+
+        appTree.create(
+            testFilePath,
+            `$invalid-switch-theme: switch-theme(
+                $label-color: orange,
+                $label-invalid-color: red,
+                $track-error-color: red,
+                $thumb-on-error-color: darkred,
+                $error-color: red,
+                $error-color-hover: darkred,
+            );`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent(testFilePath)).toEqual(
+            `$invalid-switch-theme: switch-theme(
+                $label-color: orange,
+            );`
+        );
+    });
 });
