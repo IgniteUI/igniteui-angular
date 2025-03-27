@@ -107,7 +107,7 @@
         header-hour: 'h4',
         selected-time: 'h4'
     ));
-    @include stepper-typography();
+    //@include stepper-typography();
     // @include toast-typography();
     @include tooltip-typography();
     @include tree-typography();

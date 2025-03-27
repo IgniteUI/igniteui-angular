@@ -1,0 +1,79 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    @include b(igx-stepper) {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        overflow: hidden;
+
+        @include e(header) {
+            display: flex;
+            white-space: nowrap;
+            flex-direction: column;
+            width: 100%;
+            flex: none;
+        }
+
+        @include e(body) {
+            display: flex;
+            color: var-get($theme, 'content-foreground');
+            position: relative;
+            flex-direction: column;
+            flex: 1 1 auto;
+            overflow: hidden;
+        }
+
+        @include m(horizontal) {
+            @include e(header) {
+                flex-direction: row;
+            }
+
+            @include e(body-content) {
+                display: flex;
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                overflow-y: auto;
+                overflow-x: hidden;
+                z-index: -1;
+                padding: rem(16px);
+
+                @include type-style(body-2) {
+                    margin-top: 0;
+                    margin-bottom: 0;
+                }
+            }
+
+            @include e(body-content, $m: active) {
+                z-index: 1;
+                position: relative;
+            }
+
+            @include e(step-content) {
+                flex-grow: 1;
+
+                &:focus {
+                    outline: none;
+                }
+
+                &::before {
+                    display: none;
+                }
+            }
+
+            @include e(step-content-wrapper) {
+                text-align: center;
+            }
+        }
+    }
+}

@@ -111,7 +111,7 @@
         label: 'body-2'
     ));
     @include time-picker-typography();
-    @include stepper-typography();
+    //@include stepper-typography();
     // @include toast-typography($categories: (
     //     text: 'caption'
     // ));

@@ -3,7 +3,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit, ChangeDetectorRef, Component, ContentChild, ContentChildren,
     ElementRef, EventEmitter, HostBinding, Inject, Input, OnChanges, OnDestroy,
-    OnInit, Output, QueryList, SimpleChanges, TemplateRef, booleanAttribute
+    OnInit, Output, QueryList, SimpleChanges, TemplateRef, booleanAttribute, ViewEncapsulation
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -69,6 +69,8 @@ import { fadeIn, growVerIn, growVerOut } from 'igniteui-angular/animations';
 @Component({
     selector: 'igx-stepper',
     templateUrl: 'stepper.component.html',
+    styleUrl: 'stepper.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         IgxStepperService,
         { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
