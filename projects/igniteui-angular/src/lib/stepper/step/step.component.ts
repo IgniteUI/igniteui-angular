@@ -15,7 +15,8 @@ import {
     Output,
     Renderer2,
     TemplateRef,
-    ViewChild, ViewEncapsulation
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Direction, IgxSlideComponentBase } from '../../carousel/carousel-base';
