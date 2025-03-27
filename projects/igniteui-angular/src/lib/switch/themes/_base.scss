@@ -212,14 +212,6 @@ $_theme: $material;
             }
         }
 
-        @include mx(focused, invalid) {
-            @include e(ripple) {
-                @extend %switch-ripple--focused;
-
-                background: var-get($_theme, 'error-color-hover');
-            }
-        }
-
         @include m(checked) {
             @include e(composite) {
                 background: var-get($_theme, 'track-on-color');
@@ -267,67 +259,6 @@ $_theme: $material;
             }
         }
 
-        @include m(invalid) {
-            @include e(composite) {
-                border-color: var-get($_theme, 'error-color');
-            }
-
-            &:hover {
-                @include e(ripple) {
-                    @extend %switch-ripple--hover;
-
-                    background: var-get($_theme, 'error-color-hover');
-                }
-            }
-
-            &:active {
-                @include e(ripple) {
-                    @extend %switch-ripple--hover;
-                    @extend %switch-ripple--pressed;
-
-                    background: var-get($_theme, 'error-color-hover');
-                }
-            }
-
-            @include e(label) {
-                color: var-get($_theme, 'label-invalid-color');
-            }
-
-            @include e(label, $m: before) {
-                color: var-get($_theme, 'label-invalid-color');
-            }
-
-            @include e(thumb) {
-                background: var-get($_theme, 'error-color');
-            }
-        }
-
-        @include mx(invalid, checked) {
-            @include e(composite) {
-                border-color: var-get($_theme, 'border-on-color');
-            }
-
-            @include e(thumb) {
-                background: var-get($_theme, 'thumb-on-error-color');
-            }
-
-            &:hover {
-                @include e(ripple) {
-                    @extend %switch-ripple--hover;
-
-                    background: var-get($_theme, 'thumb-on-color');
-                }
-            }
-        }
-
-        @include mx(focused, invalid, checked) {
-            @include e(ripple) {
-                @extend %switch-ripple--focused;
-
-                background: var-get($_theme, 'thumb-on-color');
-            }
-        }
-
         @include m(disabled) {
             user-select: none;
             pointer-events: none;
@@ -356,18 +287,6 @@ $_theme: $material;
                 background: var-get($_theme, 'track-on-disabled-color');
             }
 
-            @include e(thumb) {
-                background: var-get($_theme, 'thumb-on-disabled-color');
-            }
-        }
-
-        @include mx(disabled, invalid) {
-            @include e(thumb) {
-                background: var-get($_theme, 'thumb-disabled-color');
-            }
-        }
-
-        @include mx(disabled, invalid, checked) {
             @include e(thumb) {
                 background: var-get($_theme, 'thumb-on-disabled-color');
             }

@@ -34,30 +34,6 @@ $_theme: $fluent;
         }
     }
 
-    @include m(invalid) {
-        &:hover {
-            @include e(composite) {
-                border-color: var-get($_theme, 'error-color-hover');
-            }
-
-            @include e(thumb) {
-                background: var-get($_theme, 'error-color-hover');
-            }
-        }
-    }
-
-    @include mx(invalid, checked) {
-        &:hover {
-            @include e(composite) {
-                border-color: var-get($_theme, 'border-on-hover-color');
-            }
-
-            @include e(thumb) {
-                background: var-get($_theme, 'thumb-on-color');
-            }
-        }
-    }
-
     @include mx(disabled, checked) {
         @include e(composite) {
             border-color: var-get($_theme, 'track-on-disabled-color');
