@@ -15,10 +15,8 @@ import { IgxBottomNavComponent, IgxBottomNavItemComponent } from './public_api';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
 import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../test-utils/routing-view-components.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxBottomNav', () => {
-    configureTestSuite();
 
     const tabItemNormalCssClass = 'igx-bottom-nav__menu-item';
     const tabItemSelectedCssClass = 'igx-bottom-nav__menu-item--selected';
@@ -30,7 +28,7 @@ describe('IgxBottomNav', () => {
         { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] },
     ];
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

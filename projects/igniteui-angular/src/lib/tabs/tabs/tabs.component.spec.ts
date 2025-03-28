@@ -19,7 +19,6 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './tab-content.component';
 import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
 import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../test-utils/routing-view-components.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
@@ -29,7 +28,6 @@ const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: tr
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
 
 describe('IgxTabs', () => {
-    configureTestSuite();
 
     const tabItemNormalCssClass = 'igx-tabs__header-item';
     const tabItemSelectedCssClass = 'igx-tabs__header-item--selected';
@@ -42,7 +40,8 @@ describe('IgxTabs', () => {
         { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] }
     ];
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
+
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
