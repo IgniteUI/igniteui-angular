@@ -8,7 +8,6 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { TransactionType, Transaction } from '../../services/public_api';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
@@ -37,8 +36,8 @@ const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Editing #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridRowEditingComponent,
@@ -50,7 +49,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 IgxGridCustomRowEditTemplateComponent,
                 VirtualGridComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('General tests', () => {

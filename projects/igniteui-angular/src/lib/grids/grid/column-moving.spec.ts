@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,7 +12,6 @@ import {
     MultiColumnHeadersComponent
  } from '../../test-utils/grid-samples.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
@@ -25,8 +24,9 @@ describe('IgxGrid - Column Moving #grid', () => {
     const COLUMN_RESIZE_CLASS = '.igx-grid-th__resize-line';
 
     let fixture; let grid: IgxGridComponent;
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 FormsModule,
                 NoopAnimationsModule,
@@ -35,7 +35,7 @@ describe('IgxGrid - Column Moving #grid', () => {
                 MovableColumnsLargeComponent,
                 MultiColumnHeadersComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('', () => {
@@ -1349,7 +1349,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('ID').pinned).toBeFalsy();
         }));
 
-         
+
         it('Pinning - Should not be able to programmatically move unpinned column if disablePinning is enabled for all unpinned columns', (async () => {
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;

@@ -26,7 +26,6 @@ import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 
-const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
 const DATE_PICKER_TOGGLE_ICON = 'calendar_today';
@@ -37,8 +36,7 @@ const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 
 describe('IgxDatePicker', () => {
     describe('Integration tests', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
