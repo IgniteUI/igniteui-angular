@@ -88,10 +88,6 @@ export class IgxSummaryCellComponent {
         return this.column.dataType;
     }
 
-    public get itemHeight() {
-        return this.column.grid.defaultSummaryHeight;
-    }
-
     /**
      * @hidden
      */
