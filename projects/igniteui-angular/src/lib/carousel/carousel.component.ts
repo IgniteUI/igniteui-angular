@@ -86,7 +86,6 @@ export class CarouselHammerConfig extends HammerGestureConfig {
     }`],
     imports: [IgxButtonDirective, IgxIconComponent, NgClass, NgTemplateOutlet]
 })
-
 export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
 
     /**
@@ -699,7 +698,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /** @hidden */
-    public ngOnDestroy() {
+    public override ngOnDestroy() {
+        super.ngOnDestroy();
         this.destroy$.next(true);
         this.destroy$.complete();
         this.destroyed = true;
