@@ -865,6 +865,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /** @hidden @internal **/
     public override ngOnDestroy() {
+        for (const childTemplate of this.childGridTemplates.values()) {
+            if (!childTemplate.view.destroyed) {
+                childTemplate.view.destroy();
+            }
+        }
+
         if (!this.parent) {
             this.gridAPI.getChildGrids(true).forEach((grid) => {
                 if (!grid.childRow.cdr.destroyed) {
@@ -926,6 +932,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                 const tmlpOutlet = cachedData.owner;
                 return {
                     $implicit: rowData,
+                    templateID: {
+                        type: 'childRow',
+                        id: rowData.rowID
+                    },
                     moveView: view,
                     owner: tmlpOutlet,
                     index: this.dataView.indexOf(rowData)
