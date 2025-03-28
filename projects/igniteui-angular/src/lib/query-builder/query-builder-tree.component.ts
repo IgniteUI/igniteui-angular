@@ -525,6 +525,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     /** @hidden */
+    protected isHierarchicalGridNestedQuery(): boolean {
+        return this.queryBuilder.entities !== this.entities
+    }
+
+    /** @hidden */
     protected isSearchValueInputDisabled(): boolean {
         return !this.selectedField ||
             !this.selectedCondition ||
@@ -1358,7 +1363,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public getConditionList(): string[] {
         if (!this.selectedField) return [];
 
-        if (this.entities?.length === 1 && !this.entities[0].name) {
+        if ((this.entities?.length === 1 && !this.entities[0].name && !this.entities[0].childEntities) ||
+            (this.selectedEntity && this.selectedEntity.name && !this.selectedEntity.childEntities)) {
             return this.selectedField.filters.conditionList();
         }
 

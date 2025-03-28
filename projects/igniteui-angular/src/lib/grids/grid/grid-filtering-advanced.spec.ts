@@ -1292,7 +1292,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
 
-            let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
             // Commit the populated expression.
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
@@ -1455,11 +1455,16 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 
     describe('Expression tree rehydration - ', () => {
+        let fix: ComponentFixture<IgxGridAdvancedFilteringSerializedTreeComponent>;
+        let grid: IgxGridComponent;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
         it('should correctly filter with a deserialized expression tree.', fakeAsync(() => {
             const errorSpy = spyOn(console, 'error');
-            let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
-            fix.detectChanges();
-            let grid = fix.componentInstance.grid;
 
             expect(errorSpy).not.toHaveBeenCalled();
 
@@ -1470,12 +1475,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('should correctly filter with a declared IFilteringExpressionsTree object.', fakeAsync(() => {
             const errorSpy = spyOn(console, 'error');
-            let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
-            fix.detectChanges();
             fix.componentInstance.grid.advancedFilteringExpressionsTree = fix.componentInstance.filterTreeObject;
             fix.detectChanges();
-            let grid = fix.componentInstance.grid;
-
             expect(errorSpy).not.toHaveBeenCalled();
 
             // Verify filtered data
@@ -1485,11 +1486,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('should correctly filter when binding to a declared IFilteringExpressionsTree object.', fakeAsync(() => {
             const errorSpy = spyOn(console, 'error');
-            let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
-            fix.detectChanges();
             fix.componentInstance.filterTree = fix.componentInstance.filterTreeObject;
             fix.detectChanges();
-            let grid = fix.componentInstance.grid;
 
             expect(errorSpy).not.toHaveBeenCalled();
 
