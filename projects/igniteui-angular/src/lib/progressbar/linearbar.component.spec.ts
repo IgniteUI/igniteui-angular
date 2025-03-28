@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxLinearProgressBarComponent } from './progressbar.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { hasClass } from "../test-utils/helper-utils.spec";
 
 describe('IgxLinearProgressBarComponent', () => {
@@ -8,19 +7,13 @@ describe('IgxLinearProgressBarComponent', () => {
     let progress: IgxLinearProgressBarComponent;
     let linearBar: HTMLElement;
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [IgxLinearProgressBarComponent]
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [IgxLinearProgressBarComponent]
-        }).compileComponents();
-
         fixture = TestBed.createComponent(IgxLinearProgressBarComponent);
         progress = fixture.componentInstance;
         fixture.detectChanges();
