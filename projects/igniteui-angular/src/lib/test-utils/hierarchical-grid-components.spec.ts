@@ -19,6 +19,7 @@ import { IgxCellHeaderTemplateDirective } from '../grids/columns/templates.direc
 import { IgxPaginatorDirective } from '../paginator/paginator-interfaces';
 
 @Component({
+    selector: 'igx-hierarchical-grid-test-base',
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true" [pinning]='pinningConfig'
      [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'" [moving]="true">
@@ -93,6 +94,7 @@ export class IgxHierarchicalGridTestBaseComponent {
 }
 
 @Component({
+    selector: 'igx-hierarchical-grid-with-transaction-provider',
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true" [pinning]='pinningConfig'
      [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'" [moving]="true">
