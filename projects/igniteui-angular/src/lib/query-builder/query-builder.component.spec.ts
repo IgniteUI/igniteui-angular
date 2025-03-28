@@ -1,6 +1,5 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxChipComponent, IgxComboComponent, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxQueryBuilderSearchValueTemplateDirective } from 'igniteui-angular';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -12,10 +11,9 @@ import { NgTemplateOutlet } from '@angular/common';
 import { QueryBuilderSelectors } from './query-builder.common';
 
 describe('IgxQueryBuilder', () => {
-  configureTestSuite();
   let fix: ComponentFixture<IgxQueryBuilderSampleTestComponent>;
   let queryBuilder: IgxQueryBuilderComponent;
-  beforeAll(waitForAsync(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
