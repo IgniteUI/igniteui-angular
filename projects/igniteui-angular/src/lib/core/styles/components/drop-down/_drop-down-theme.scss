@@ -101,7 +101,7 @@
         $hover-item-text-color: text-contrast($background-color);
 
         @if meta.type-of($background-color) == 'color' {
-            $hover-item-background: rgba(text-contrast($background-color), .12);
+            $hover-item-background: color-mix(in oklch, text-contrast($background-color) 12%, transparent);
         }
     }
 
@@ -113,7 +113,7 @@
         $focused-item-text-color: text-contrast($background-color);
 
         @if meta.type-of($background-color) == 'color' {
-            $focused-item-background: rgba(text-contrast($background-color), .12);
+            $focused-item-background: color-mix(in oklch, text-contrast($background-color) 12%, transparent);
         }
     }
 
@@ -139,19 +139,19 @@
 
     @if not($disabled-item-text-color) and $background-color {
         @if meta.type-of($background-color) == 'color' {
-            $disabled-item-text-color: rgba(text-contrast($background-color), .36);
+            $disabled-item-text-color: color-mix(in oklch, text-contrast($background-color) 36%, transparent);
         }
     }
 
     @if not($disabled-item-text-color) and $disabled-item-background {
         @if meta.type-of($disabled-item-background) == 'color' {
-            $disabled-item-text-color: rgba(text-contrast($disabled-item-background), .36);
+            $disabled-item-text-color: color-mix(in oklch, text-contrast($disabled-item-background) 36%, transparent);
         }
     }
 
     @if not($header-text-color) and $background-color {
         @if meta.type-of($background-color) == 'color' {
-            $header-text-color: rgba(text-contrast($background-color), .7);
+            $header-text-color: color-mix(in oklch, text-contrast($background-color) 70%, transparent);
         }
     }
 
