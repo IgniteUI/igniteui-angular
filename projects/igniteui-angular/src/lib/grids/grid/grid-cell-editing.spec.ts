@@ -1,9 +1,8 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import {
@@ -25,8 +24,9 @@ const CELL_CLASS_IN_EDIT_MODE = 'igx-grid__td--editing';
 const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
 describe('IgxGrid - Cell Editing #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CellEditingTestComponent,
@@ -34,7 +34,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 ColumnEditablePropertyTestComponent,
                 SelectionWithTransactionsComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Base Tests', () => {

@@ -1,9 +1,8 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxChipComponent } from '../../chips/public_api';
 import {
     IgxStringFilteringOperand,
@@ -21,12 +20,12 @@ import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy'
 import { ExpressionUI } from '../filtering/excel-style/common';
 
 describe('IgxGrid - Filtering actions #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 IgxGridFilteringComponent, NoopAnimationsModule
             ]
-        });
+        }).compileComponents();
     }));
 
     let fix; let grid;
@@ -1159,13 +1158,13 @@ describe('IgxGrid - Filtering actions #grid', () => {
 });
 
 describe('IgxGrid - Filtering expression tree bindings #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringBindingComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     let fix; let grid: IgxGridComponent;

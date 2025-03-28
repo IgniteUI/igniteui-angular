@@ -1,4 +1,4 @@
-import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -6,7 +6,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators'
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxTooltipTargetDirective } from '../../directives/tooltip/tooltip-target.directive';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxGridCustomEditorsComponent,
@@ -21,8 +20,8 @@ import { IgxGridComponent } from './grid.component';
 
 describe('IgxGrid - Validation #grid', () => {
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridValidationTestBaseComponent,
@@ -30,7 +29,7 @@ describe('IgxGrid - Validation #grid', () => {
                 IgxGridCustomEditorsComponent,
                 IgxTreeGridValidationTestComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Basic Validation - ', () => {

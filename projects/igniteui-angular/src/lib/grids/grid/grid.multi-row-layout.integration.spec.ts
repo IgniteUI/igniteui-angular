@@ -1,5 +1,4 @@
-﻿import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
+﻿import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -30,8 +29,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let fixture: ComponentFixture<FixtureType>;
     let grid: IgxGridComponent;
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ColumnLayoutPinningTestComponent,
@@ -40,7 +40,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 ColumnLayoutGroupingTestComponent,
                 ColumnLayoutResizingTestComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Hiding ', () => {

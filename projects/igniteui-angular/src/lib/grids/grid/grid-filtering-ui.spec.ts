@@ -1,11 +1,10 @@
 import { DebugElement } from '@angular/core';
-import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
@@ -66,9 +65,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
     registerLocaleData(localeDe);
     registerLocaleData(localeFr);
-
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringComponent,
@@ -78,7 +76,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridDatesFilteringComponent,
                 IgxGridFilteringNumericComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe(null, () => {
@@ -3191,8 +3189,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridFilteringComponent,
@@ -3203,7 +3201,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridExternalESFComponent,
                 IgxGridExternalESFTemplateComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe(null, () => {
@@ -7035,13 +7033,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CustomFilteringStrategyComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     beforeEach(fakeAsync(() => {
