@@ -1,6 +1,7 @@
 import { isTree } from '../../../data-operations/expressions-tree-util';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
+import { getUUID } from '../../common/random';
 
 /**
  * @hidden @internal
@@ -30,7 +31,7 @@ export class ExpressionUI {
 
     constructor() {
         // Use IDs to identify expressions clearly and use to track them in template @for cycles.
-        this.expressionId = crypto.randomUUID();
+        this.expressionId = getUUID();
     }
 }
 
