@@ -1800,7 +1800,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         changes.forEachItem((item) => {
             if (item.previousIndex !== null &&
                 (numRemovedItems < 2 || !identityChanges.length || identityChanges[item.currentIndex])
-                && this.igxForScrollOrientation !== "horizontal") {
+                && this.igxForScrollOrientation !== "horizontal" && this.individualSizeCache.length > 0) {
                 // Reuse cache on those who have previousIndex.
                 // When there are more than one removed items currently the changes are not readable so ones with identity change
                 // should be racalculated.
