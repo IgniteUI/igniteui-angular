@@ -111,6 +111,7 @@
     }
 
     $theme: digest-schema($button-schema);
+    $variant: map.get($schema, '_meta', 'theme');
 
     @if $variant == 'material' or $variant == 'fluent' {
         @if not($hover-background) and $foreground {
@@ -282,8 +283,6 @@
         disabled-icon-color: $disabled-icon-color,
         disabled-border-color: $disabled-border-color,
         size: $size,
-        theme: map.get($schema, '_meta', 'theme'),
-        type: map.get($schema, '_meta', 'type')
     ));
 }
 
@@ -354,12 +353,24 @@
         $icon-color: adaptive-contrast(var(--background));
     }
 
-    @if not($hover-background) and $background {
-        $hover-background: hsl(from var(--background) h s calc(l * 1.05));
+    @if $variant == 'indigo' {
+        @if not($hover-background) and $background {
+            $hover-background: hsl(from var(--background) h s calc(l * 1.08));
+        }
+    } @else {
+        @if not($hover-background) and $background {
+            $hover-background: hsl(from var(--background) h s calc(l * 1.05));
+        }
     }
 
-    @if not($focus-background) and $background {
-        $focus-background: hsl(from var(--background) h s calc(l * 1.1));
+    @if $variant == 'indigo' {
+        @if not($focus-background) and $background {
+            $focus-background: var(--background);
+        }
+    } @else {
+        @if not($focus-background) and $background {
+            $focus-background: hsl(from var(--background) h s calc(l * 1.1));
+        }
     }
 
     @if not($hover-foreground) and $hover-background {
@@ -396,18 +407,28 @@
         }
     }
 
-    @if $variant == 'bootstrap' or $variant == 'indigo' {
-        @if not($shadow-color) and $focus-visible-background {
-            $shadow-color: hsla(from var(--focus-visible-background) h s l / .5);
+    @if $variant == 'fluent' or $variant == 'bootstrap' {
+        @if not($active-background) and $background {
+            $active-background: hsl(from var(--background) h s calc(l * 0.9));
         }
-    }
-
-    @if not($active-background) and $focus-background {
-        $active-background: var(--focus-background);
+    } @else if $variant == 'material' {
+        @if not($active-background) and $focus-background {
+            $active-background: var(--focus-background);
+        }
+    } @else {
+        @if not($active-background) and $hover-background {
+            $active-background: var(--hover-background);
+        }
     }
 
     @if not($active-foreground) and $active-background {
         $active-foreground: adaptive-contrast(var(--active-background));
+    }
+
+    @if $variant == 'bootstrap' or $variant == 'indigo' {
+        @if not($shadow-color) and $focus-visible-background {
+            $shadow-color: hsla(from var(--focus-visible-background) h s l / .5);
+        }
     }
 
     @if not($resting-shadow) {
@@ -462,8 +483,6 @@
         disabled-icon-color: $disabled-icon-color,
         disabled-border-color: $disabled-border-color,
         size: $size,
-        theme: map.get($schema, '_meta', 'theme'),
-        type: map.get($schema, '_meta', 'type')
     ));
 }
 
@@ -524,6 +543,7 @@
     }
 
     $theme: digest-schema($button-schema);
+    $variant: map.get($schema, '_meta', 'theme');
 
     @if $variant == 'material' or $variant == 'fluent' {
         @if not($hover-background) and $foreground {
@@ -773,8 +793,6 @@
         disabled-icon-color: $disabled-icon-color,
         disabled-border-color: $disabled-border-color,
         size: $size,
-        theme: map.get($schema, '_meta', 'theme'),
-        type: map.get($schema, '_meta', 'type')
     ));
 }
 
@@ -835,6 +853,7 @@
     }
 
     $theme: digest-schema($button-schema);
+    $variant: map.get($schema, '_meta', 'theme');
 
     @if not($foreground) and $background {
         $foreground: adaptive-contrast(var(--background));
@@ -844,12 +863,24 @@
         $icon-color: adaptive-contrast(var(--background));
     }
 
-    @if not($hover-background) and $background {
-        $hover-background: hsl(from var(--background) h s calc(l * 1.05));
+    @if $variant == 'indigo' {
+        @if not($hover-background) and $background {
+            $hover-background: hsl(from var(--background) h s calc(l * 1.08));
+        }
+    } @else {
+        @if not($hover-background) and $background {
+            $hover-background: hsl(from var(--background) h s calc(l * 1.05));
+        }
     }
 
-    @if not($focus-background) and $background {
-        $focus-background: hsl(from var(--background) h s calc(l * 1.1));
+    @if $variant == 'indigo' {
+        @if not($focus-background) and $background {
+            $focus-background: var(--background);
+        }
+    } @else {
+        @if not($focus-background) and $background {
+            $focus-background: hsl(from var(--background) h s calc(l * 1.1));
+        }
     }
 
     @if not($hover-foreground) and $hover-background {
@@ -886,18 +917,28 @@
         }
     }
 
-    @if $variant == 'bootstrap' or $variant == 'indigo' {
-        @if not($shadow-color) and $focus-visible-background {
-            $shadow-color: hsla(from var(--focus-visible-background) h s l / .5);
+    @if $variant == 'fluent' or $variant == 'bootstrap' {
+        @if not($active-background) and $background {
+            $active-background: hsl(from var(--background) h s calc(l * 0.9));
         }
-    }
-
-    @if not($active-background) and $focus-background {
-        $active-background: var(--focus-background);
+    } @else if $variant == 'material' {
+        @if not($active-background) and $focus-background {
+            $active-background: var(--focus-background);
+        }
+    } @else {
+        @if not($active-background) and $hover-background {
+            $active-background: var(--hover-background);
+        }
     }
 
     @if not($active-foreground) and $active-background {
         $active-foreground: adaptive-contrast(var(--active-background));
+    }
+
+    @if $variant == 'bootstrap' or $variant == 'indigo' {
+        @if not($shadow-color) and $focus-visible-background {
+            $shadow-color: hsla(from var(--focus-visible-background) h s l / .5);
+        }
     }
 
     @if not($resting-shadow) {
@@ -952,28 +993,26 @@
         disabled-icon-color: $disabled-icon-color,
         disabled-border-color: $disabled-border-color,
         size: $size,
-        theme: map.get($schema, '_meta', 'theme'),
-        type: map.get($schema, '_meta', 'type')
     ));
 }
 
 /// @deprecated Use the `css-vars` mixin instead.
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
-@mixin button($theme) {
+@mixin button($flat-button-theme, $contained-button-theme, $outlined-button-theme, $fab-button-theme) {
     $button-width: rem(88px);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($flat-button-theme, '_meta', 'theme');
 
-    $flat-theme: flat-button-theme();
-    $outlined-theme: outlined-button-theme();
-    $contained-theme: contained-button-theme();
-    $fab-theme: fab-button-theme();
+    $flat-theme: $flat-button-theme;
+    $contained-theme: $contained-button-theme;
+    $outlined-theme: $outlined-button-theme;
+    $fab-theme: $fab-button-theme;
 
-    // @include css-vars($flat-theme);
-    // @include css-vars($outlined-theme);
-    // @include css-vars($contained-theme);
-    // @include css-vars($fab-theme);
+    @include css-vars($flat-theme);
+    @include css-vars($contained-theme);
+    @include css-vars($outlined-theme);
+    @include css-vars($fab-theme);
 
     $time: map.get((
         'material': .1s,

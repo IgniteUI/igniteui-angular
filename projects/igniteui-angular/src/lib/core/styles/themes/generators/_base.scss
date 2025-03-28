@@ -168,19 +168,28 @@
     }
 
     @if is-used('igx-button', $exclude) {
+        $flat-button-theme-map: flat-button-theme(
+            $schema: $schema,
+        );
 
-        $theme: digest-schema(map.get($schema, 'button'));
-        $flat-button-theme: digest-schema(map.get($schema, 'button', 'flat'));
-        $outlined-button-theme: digest-schema(map.get($schema, 'button', 'outlined'));
-        $contained-button-theme: digest-schema(map.get($schema, 'button', 'contained'));
-        $fab-button-theme: digest-schema(map.get($schema, 'button', 'fab'));
+        $contained-button-theme-map: contained-button-theme(
+            $schema: $schema,
+        );
 
-        @include button($theme);
+        $outlined-button-theme-map: outlined-button-theme(
+            $schema: $schema,
+        );
 
-        @include css-vars-from-theme($flat-button-theme, '.igx-button--flat');
-        @include css-vars-from-theme($outlined-button-theme, '.igx-button--outlined');
-        @include css-vars-from-theme($contained-button-theme, '.igx-button--contained');
-        @include css-vars-from-theme($fab-button-theme, '.igx-button--fab');
+        $fab-button-theme-map: fab-button-theme(
+            $schema: $schema
+        );
+
+        $flat-button-theme-map: meta.call($theme-handler, $flat-button-theme-map);
+        $contained-button-theme-map: meta.call($theme-handler, $contained-button-theme-map);
+        $outlined-button-theme-map: meta.call($theme-handler, $outlined-button-theme-map);
+        $fab-button-theme-map: meta.call($theme-handler, $fab-button-theme-map);
+
+        @include button($flat-button-theme-map, $contained-button-theme-map, $outlined-button-theme-map, $fab-button-theme-map);
     }
 
     @if is-used('igx-button-group', $exclude) {
