@@ -1307,9 +1307,10 @@
 
     %grid-tbody-container {
         position: relative;
-        display: flex;
+        display: grid;
         grid-row: 4;
         overflow: hidden;
+        grid-template-rows: 1fr;
     }
 
     %grid-tbody-message {
@@ -1361,6 +1362,7 @@
         background: var-get($theme, 'content-background');
         border-inline-start: rem(1px) solid var-get($theme, 'row-border-color');
         position: relative;
+        grid-column: 2
     }
 
     %grid-tbody-scrollbar-start {
