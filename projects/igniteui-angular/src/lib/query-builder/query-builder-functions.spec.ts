@@ -934,4 +934,71 @@ export class QueryBuilderFunctions {
 
         return [dropGhost, prevElement, nextElement, newChipContents];
     }
+
+    public static verifyGhostPositionOnMouseDrag(fix: ComponentFixture<any>, draggedChip: any, X: number, Y: number, moveDown: boolean) {
+        const ghostPositionVisits: boolean[] = [false, false, false, false, false, false, false, false];
+        const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
+        const dragDir = draggedChip.dragDirective;
+
+        //pickup chip
+        dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
+        fix.detectChanges();
+
+        //trigger ghost
+        QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
+        fix.detectChanges();
+
+        spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
+
+        let target = moveDown ? 350 : 0;
+        let shift = moveDown ? 1 : -1
+        //Drag ghost up or down and check if drop ghost is rendered in the expected positions
+        for (let i = moveDown ? 0 : 350; moveDown ? i <= target : i >= target; i += shift) {
+            Y += moveDown ? 1 : -1;
+
+            QueryBuilderFunctions.dragMove(dragDir, X, Y);
+            tick();
+            fix.detectChanges();
+
+            const [dropGhost, prevElement, nextElement] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
+
+            if (i < 40 && !ghostPositionVisits[0]) {
+                if (i <= 42) tick(50);
+                if (!dropGhost) ghostPositionVisits[0] = true;
+            }
+
+            if (i > 35 && i < 122 && !ghostPositionVisits[1]) {
+                if (dropGhost && !prevElement && nextElement == 'OrderName  Equals  foo') ghostPositionVisits[1] = true;
+            }
+
+            if (i > 120 && i < 165 && !ghostPositionVisits[2]) {
+                if (dropGhost && prevElement == 'OrderName  Equals  foo' && nextElement === 'or  OrderName  Ends With  a  OrderDate  Today') ghostPositionVisits[2] = true;
+            }
+
+            if (i > 166 && i < 201 && !ghostPositionVisits[3]) {
+                if (dropGhost && !prevElement && nextElement == 'OrderName  Ends With  a') ghostPositionVisits[3] = true;
+            }
+
+            if (i > 202 && i < 241 && !ghostPositionVisits[4]) {
+                if (dropGhost && prevElement == 'OrderName  Ends With  a' && nextElement === 'OrderDate  Today') ghostPositionVisits[4] = true;
+            }
+
+            if (i > 240 && i < 273 && !ghostPositionVisits[5]) {
+                if (dropGhost && prevElement == 'OrderDate  Today' && !nextElement) ghostPositionVisits[5] = true;
+            }
+
+            if (i > 256 && i < 316 && !ghostPositionVisits[6]) {
+                if (X > 400 || (dropGhost && prevElement == 'or  OrderName  Ends With  a  OrderDate  Today' && !nextElement)) ghostPositionVisits[6] = true;
+            }
+
+            if (i > 320 && !ghostPositionVisits[7]) {
+                if (i >= 340) tick(50);
+                if (!dropGhost) ghostPositionVisits[7] = true;
+            }
+        }
+
+        //When dragged to the end, check results
+        expect(ghostPositionVisits).not.toContain(false,
+            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()}`);
+    }
 }
