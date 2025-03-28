@@ -202,7 +202,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             return this.queryBuilder?.entities;
         }
 
-        const isHierarchicalGrid = this.grid instanceof IgxHierarchicalGridComponent;
+        const isHierarchicalGrid = this.grid.type === 'hierarchical';
         const entities: EntityType[] = [
             {
                 name: null,
@@ -230,7 +230,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         } else {
             const rowIslandFields = Object.keys(firstRowData).map(key => {
                 if (firstRowData[key] instanceof Array) {
-                    return null;
+        return null;
                 }
 
                 return {
