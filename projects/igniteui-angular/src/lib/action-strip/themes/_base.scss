@@ -1,0 +1,132 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$_theme: $material;
+
+@include layer(base) {
+    $icon-size: sizable(rem(14px), rem(14px), rem(18px));
+
+    %actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    %menu-item {
+        [igxLabel] {
+            cursor: pointer;
+        }
+
+        &.igx-drop-down__item {
+            igx-icon + [igxLabel] {
+                margin-inline-start: pad-inline(rem(8px), rem(10px), rem(12px));
+            }
+        }
+    }
+
+    @include b(igx-action-strip) {
+        @include sizable();
+        --action-strip-size: var(--component-size);
+        --button-size: #{sizable(rem(28px), rem(28px), rem(36px))};
+
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        top: 0;
+        inset-inline-start: 0;
+        background: var-get($_theme, 'background');
+        color: inherit;
+        padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+        padding-block: 0;
+        z-index: 9999;
+
+        [igxIconButton] {
+            --component-size: var(--action-strip-size) !important;
+
+            width: var(--button-size);
+            height: var(--button-size);
+
+            igx-icon {
+                --component-size: var(--action-strip-size);
+
+                --ig-icon-size: #{$icon-size};
+                --igx-icon-size: #{$icon-size};
+            }
+        }
+
+        @include e(actions) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: all;
+            position: relative;
+            color: var-get($_theme, 'icon-color');
+            border-radius: var-get($_theme, 'actions-border-radius');
+            background: var-get($_theme, 'actions-background');
+            max-height: rem(36px);
+
+            &:last-child {
+                margin-inline-end: 0;
+            }
+
+            igx-icon {
+                color: var-get($_theme, 'icon-color');
+            }
+
+            [igxIconButton] {
+                igx-icon {
+                    color: var-get($_theme, 'icon-color');
+                }
+            }
+        }
+
+        @include e(delete) {
+            igx-icon {
+                color: var-get($_theme, 'delete-action');
+            }
+        }
+
+        @include e(editing-actions) {
+            @extend %actions;
+
+            > [igxButton] {
+                margin-inline-start: rem(4px);
+    
+                &:first-of-type {
+                    margin-inline-start: 0;
+                }
+            }
+        }
+
+        @include e(pinning-actions) {
+            @extend %actions;
+        }
+
+        @include e(menu-item) {
+            @extend %menu-item;
+        }
+
+        @include e(menu-item, $m: 'danger') {
+            @extend %menu-item;
+
+            color: color($color: 'error');
+
+            &:hover {
+                color: color($color: 'error');
+            }
+        }
+
+        @include e(menu-button) {
+            display: flex;
+            align-items: center;
+        }
+    }
+}

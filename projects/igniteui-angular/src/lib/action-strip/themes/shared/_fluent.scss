@@ -1,0 +1,20 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $fluent;
+
+@include themed-block(igx-action-strip, fluent) {
+    [igxIconButton] {
+        --button-size: #{sizable(rem(28px), rem(28px), rem(32px))};
+    }
+
+    @include e(actions) {
+        [igxIconButton] {
+            border-radius: var-get($_theme, 'actions-border-radius');
+        }
+    }
+}
+ 

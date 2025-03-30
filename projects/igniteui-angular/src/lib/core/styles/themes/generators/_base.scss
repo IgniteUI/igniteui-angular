@@ -144,13 +144,13 @@
     //     @include avatar($avatar-theme-map);
     // }
 
-    @if is-used('igx-action-strip', $exclude) {
-        $action-strip-theme-map: action-strip-theme(
-            $schema: $schema,
-        );
-        $action-strip-theme-map: meta.call($theme-handler, $action-strip-theme-map);
-        @include action-strip($action-strip-theme-map);
-    }
+    // @if is-used('igx-action-strip', $exclude) {
+    //     $action-strip-theme-map: action-strip-theme(
+    //         $schema: $schema,
+    //     );
+    //     $action-strip-theme-map: meta.call($theme-handler, $action-strip-theme-map);
+    //     @include action-strip($action-strip-theme-map);
+    // }
 
     // @if is-used('igx-badge', $exclude) {
     //     $badge-theme-map: badge-theme(
