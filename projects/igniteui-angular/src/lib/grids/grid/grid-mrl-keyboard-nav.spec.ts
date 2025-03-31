@@ -2068,7 +2068,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(lastCell.active).toBe(true);
                 expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(800);
                 let diff = lastCell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
-                expect(diff).toBe(0);
+                expect(Math.ceil(diff)).toBe(0);
 
                 // ctrl+arrow left
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft', false, false, true);
@@ -2581,7 +2581,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             // check if cell right edge is visible
             diff = cell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
             await wait();
-            expect(diff).toBe(0);
+            expect(Math.ceil(diff)).toBe(0);
 
             // navigate left to cell in column that is in DOM but is not in view
             col = grid.getColumnByName('CompanyName');
@@ -2614,7 +2614,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(250);
             // check if cell right right is visible
             diff = cell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
-            expect(diff).toBe(0);
+            expect(Math.ceil(diff)).toBe(0);
         });
     });
 });

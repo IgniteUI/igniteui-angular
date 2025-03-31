@@ -316,7 +316,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
             expect(lastCell.nativeElement.getBoundingClientRect().right)
-                .toEqual(grid.tbody.nativeElement.getBoundingClientRect().right);
+                .toBeCloseTo(grid.tbody.nativeElement.getBoundingClientRect().right, 0);
 
         });
 

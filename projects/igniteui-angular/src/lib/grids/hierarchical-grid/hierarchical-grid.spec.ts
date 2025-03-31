@@ -555,7 +555,9 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
             const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-            expect(childGrid.calcWidth - 370 - childGrid.scrollSize).toBeLessThanOrEqual(5);
+            // child should be parent width - the child grid indentations
+            var indents = window.getComputedStyle(fixture.debugElement.queryAll(By.css('.igx-grid__hierarchical-indent'))[0].nativeElement);
+            expect(childGrid.calcWidth).toBe(parseFloat(hierarchicalGrid.width) - parseFloat(indents.marginLeft) - parseFloat(indents.marginRight));
 
             hierarchicalGrid.clearFilter();
             // Required to recalculate and reflect child grid size

@@ -6512,7 +6512,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.isPercentWidth) {
             /* width in %*/
             const computed = this.document.defaultView.getComputedStyle(this.tbody.nativeElement).getPropertyValue('width');
-            width = parseFloat(computed);
+            width = computed.indexOf('%') === -1 ? parseFloat(computed) : null;
         } else {
             width = parseInt(this.width, 10);
         }
