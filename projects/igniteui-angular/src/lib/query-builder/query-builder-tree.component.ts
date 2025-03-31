@@ -172,16 +172,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @Input()
     public set fields(fields: FieldType[]) {
         this._fields = fields;
-
+        
+        this._fields = this._fields?.map(f => ({...f, filters: this.getFilters(f), pipeArgs: this.getPipeArgs(f) }));
+        
         if (!this._fields && this.isAdvancedFiltering()) {
             this._fields = this.entities[0].fields;
-        }
-
-        if (this._fields) {
-            this._fields.forEach(field => {
-                this.setFilters(field);
-                this.setFormat(field);
-            });
         }
     }
 
@@ -1188,7 +1183,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
         } else if (this.selectedField.filters.condition(this.selectedCondition)?.isUnary) {
-            this.conditionSelect.input.nativeElement.focus();
+            this.conditionSelect?.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
             input?.focus();
@@ -1492,16 +1487,19 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         return ctx;
     }
 
-    private setFormat(field: FieldType) {
-        if (!field.pipeArgs) {
-            field.pipeArgs = { digitsInfo: DEFAULT_PIPE_DIGITS_INFO };
+    private getPipeArgs(field: FieldType) {
+        let pipeArgs = {...field.pipeArgs};
+        if (!pipeArgs) {
+            pipeArgs = { digitsInfo: DEFAULT_PIPE_DIGITS_INFO };
         }
 
-        if (!field.pipeArgs.format) {
-            field.pipeArgs.format = field.dataType === DataType.Time ?
+        if (!pipeArgs.format) {
+            pipeArgs.format = field.dataType === DataType.Time ?
                 DEFAULT_PIPE_TIME_FORMAT : field.dataType === DataType.DateTime ?
                     DEFAULT_PIPE_DATE_TIME_FORMAT : DEFAULT_PIPE_DATE_FORMAT;
         }
+        
+        return pipeArgs;
     }
 
     private selectDefaultCondition() {
@@ -1510,30 +1508,24 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    private setFilters(field: FieldType) {
+    private getFilters(field: FieldType) {
         if (!field.filters) {
             switch (field.dataType) {
                 case DataType.Boolean:
-                    field.filters = IgxBooleanFilteringOperand.instance();
-                    break;
+                    return IgxBooleanFilteringOperand.instance();
                 case DataType.Number:
                 case DataType.Currency:
                 case DataType.Percent:
-                    field.filters = IgxNumberFilteringOperand.instance();
-                    break;
+                    return IgxNumberFilteringOperand.instance();
                 case DataType.Date:
-                    field.filters = IgxDateFilteringOperand.instance();
-                    break;
+                    return IgxDateFilteringOperand.instance();
                 case DataType.Time:
-                    field.filters = IgxTimeFilteringOperand.instance();
-                    break;
+                    return IgxTimeFilteringOperand.instance();
                 case DataType.DateTime:
-                    field.filters = IgxDateTimeFilteringOperand.instance();
-                    break;
+                    return IgxDateTimeFilteringOperand.instance();
                 case DataType.String:
                 default:
-                    field.filters = IgxStringFilteringOperand.instance();
-                    break;
+                    return IgxStringFilteringOperand.instance();
             }
         }
     }
