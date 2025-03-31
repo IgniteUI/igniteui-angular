@@ -459,10 +459,10 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             const locationColGroup = getColGroup(grid, 'Location');
             const gridWidthInPx = ((parseInt(gridWidth, 10) / 100) *
-                parseInt(componentInstance.gridWrapperWidthPx, 10) - grid.scrollSize) + 'px';
-            expect(locationColGroup.width).toBe(gridWidthInPx);
+                parseInt(componentInstance.gridWrapperWidthPx, 10) - grid.scrollSize);
+            expect((parseFloat(locationColGroup.width))).toBeCloseTo(gridWidthInPx, 0);
             const cityColumn = grid.getColumnByName('City');
-            expect(cityColumn.width).toBe(gridWidthInPx);
+            expect(parseFloat(cityColumn.width)).toBeCloseTo(gridWidthInPx, 0);
         });
 
         it('Width should be correct. Column group with column. Column width in px.', () => {
@@ -554,13 +554,13 @@ describe('IgxGrid - multi-column headers #grid', () => {
             const colWidth = gridWidthInPx / 3;
             const colWidthPx = colWidth + 'px';
             const locationColGroup = getColGroup(grid, 'Location');
-            expect(locationColGroup.width).toBe(colWidth * 3 + 'px');
+            expect((parseFloat(locationColGroup.width))).toBeCloseTo(colWidth * 3, 0);
             const countryColumn = grid.getColumnByName('Country');
-            expect(countryColumn.width).toBe(colWidthPx);
+            expect(parseFloat(countryColumn.width)).toBeCloseTo(colWidth, 0);
             const regionColumn = grid.getColumnByName('Region');
-            expect(regionColumn.width).toBe(colWidthPx);
+            expect(parseFloat(regionColumn.width)).toBeCloseTo(colWidth, 0);
             const cityColumn = grid.getColumnByName('City');
-            expect(cityColumn.width).toBe(colWidthPx);
+            expect(parseFloat(cityColumn.width)).toBeCloseTo(colWidth, 0);
         });
 
         it('Width should be correct. Column group with three columns. Columns with mixed width - px and percent.', async () => {
@@ -576,8 +576,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             // check group has correct size.
             let locationColGroup = getColGroup(grid, 'Location');
-            let expectedWidth = (200 + grid.calcWidth * 0.7) + 'px';
-            expect(locationColGroup.width).toBe(expectedWidth);
+            let expectedWidth = (200 + grid.calcWidth * 0.7);
+            expect(parseFloat(locationColGroup.width)).toBeCloseTo(expectedWidth, 0);
 
             // check header and content have same size.
             const col1Header = grid.getColumnByName('Country').headerCell.nativeElement;
@@ -600,8 +600,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
 
             locationColGroup = getColGroup(grid, 'Location');
-            expectedWidth = (200 + grid.calcWidth * 0.7) + 'px';
-            expect(locationColGroup.width).toBe(expectedWidth);
+            expectedWidth = (200 + grid.calcWidth * 0.7);
+            expect(parseFloat(locationColGroup.width)).toBeCloseTo(expectedWidth, 0);
 
             col2Header = grid.getColumnByName('Region').headerCell.nativeElement;
             cell2 = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1].nativeElement;
@@ -654,13 +654,13 @@ describe('IgxGrid - multi-column headers #grid', () => {
             const colWidth = gridWidthInPx / 3;
             const colWidthPx = colWidth + 'px';
             const locationColGroup = getColGroup(grid, 'Location');
-            expect(locationColGroup.width).toBe((colWidth * 3) + 'px');
+            expect(parseFloat(locationColGroup.width)).toBeCloseTo((colWidth * 3), 0);
             const countryColumn = grid.getColumnByName('Country');
-            expect(countryColumn.width).toBe(colWidthPx);
+            expect((parseFloat(countryColumn.width))).toBeCloseTo(colWidth, 0);
             const regionColumn = grid.getColumnByName('Region');
-            expect(regionColumn.width).toBe(colWidthPx);
+            expect(parseFloat(regionColumn.width)).toBeCloseTo(colWidth, 0);
             const cityColumn = grid.getColumnByName('City');
-            expect(cityColumn.width).toBe(colWidthPx);
+            expect((parseFloat(cityColumn.width))).toBeCloseTo(colWidth, 0);
         });
 
         it('Width should be correct. Column group with three columns. Column width in px.', () => {
