@@ -44,7 +44,7 @@
     $meta: map.get($theme, '_meta');
 
     @if not($icon-color) and $actions-background {
-        $icon-color: text-contrast($actions-background);
+        $icon-color: adaptive-contrast(var(--actions-background));
     }
 
     @if not($actions-border-radius) {
