@@ -1,0 +1,52 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-drop-down, indigo) {
+    %item {
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(12px));
+
+        igx-icon {
+            $icon-size: sizable(rem(14px), rem(16px), rem(16px));
+
+            --component-size: inherit;
+            --ig-icon-size: #{$icon-size};
+            --igx-icon-size: #{$icon-size};
+        }
+    }
+
+    @include e(list) {
+        padding: rem(3px);
+
+        igx-drop-down-item {
+            margin-block: rem(2px);
+
+            &:first-of-type,
+            &:last-of-type {
+                margin-block: initial;
+            }
+
+            &.igx-drop-down__header {
+                margin-block-end: rem(2px);
+            }
+        }
+    }
+
+    @include e(item) {
+        @extend %item;
+    }
+
+    @include e(item, $m: focused) {
+        outline: rem(2px) solid var-get($_theme, 'focused-item-border-color');
+        outline-offset: rem(-2px);
+    }
+
+    @include e(header) {
+        @extend %item;
+
+        padding-block: pad-inline(rem(4px), rem(6px), rem(8px));
+    }
+}
