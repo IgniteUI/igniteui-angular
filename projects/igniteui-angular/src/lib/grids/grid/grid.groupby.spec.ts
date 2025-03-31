@@ -4298,7 +4298,7 @@ export class GridGroupByTestDateTimeDataComponent {
             <igx-column [field]="'DateTimeField'" [width]="'200px'" [groupable]="true" dataType="dateTime"></igx-column>
         </igx-grid>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridStateDirective]
 })
 export class GridGroupByStateComponent extends GridGroupByTestDateTimeDataComponent {
     @ViewChild(IgxGridStateDirective, { static: true })

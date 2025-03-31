@@ -452,16 +452,16 @@ describe('IgxQueryBuilder', () => {
       // Verify the returnFields
       let exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
       expect(exprTreeReturnFields).toBe(`["*"]`);
-      
+
       // Change the selected return fields
       QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [1]);
       tick(100);
       fix.detectChanges();
-       
+
       // Verify the returnFields
       exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
       expect(exprTreeReturnFields).toBe(`["OrderId"]`);
-      
+
       // Change the entity
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
@@ -474,16 +474,16 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       queryBuilder.showEntityChangeDialog = false;
       fix.detectChanges();
-      
+
       // Click selectAll button in order to deselect all fields
       QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
       tick(100);
       fix.detectChanges();
-       
+
       // Verify the returnFields
       let exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
       expect(exprTreeReturnFields).toBe(`[]`);
-      
+
       // Click selectAll button in order to select all fields
       QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
       tick(100);
@@ -2166,7 +2166,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Id', 'Equals', '1', 1);
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'True', undefined, 1);
 
-      // close chip 
+      // close chip
       queryBuilder.discard();
       tick(100);
       fix.detectChanges();
@@ -2511,88 +2511,24 @@ describe('IgxQueryBuilder', () => {
       expect(chipComponents[1].nativeElement.getBoundingClientRect().height).toBe(0);
     });
 
-    it('Should render drop ghost properly when mouse dragged.', fakeAsync(() => {
+    it('Should render drop ghost properly when mouse dragged down on the left.', fakeAsync(() => {
       const draggedChip = chipComponents[1].componentInstance;
-      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
-      const dragDir = draggedChip.dragDirective;
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 100, 75, true);
+    }));
 
-      let X = 100, Y = 75;
+    it('Should render drop ghost properly when mouse dragged up on the left.', fakeAsync(() => {
+      const draggedChip = chipComponents[1].componentInstance;
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 100, 75 + 350, false);
+    }));
 
-      //pickup chip
-      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
-      fix.detectChanges();
+    it('Should render drop ghost properly when mouse dragged down on the right.', fakeAsync(() => {
+      const draggedChip = chipComponents[1].componentInstance;
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 500, 75, true);
+    }));
 
-      //trigger ghost
-      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
-      fix.detectChanges();
-
-      spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
-
-      const ghostPositionVisits: boolean[] = [false, false, false, false, false, false, false, false]
-
-      let i = 0, pass = 1, inc = 1;
-
-      //Drag ghost up and down four times and check if drop ghost is rendered in the expected positions
-      while (pass <= 4) {
-        i += inc;
-        Y += inc;
-
-        QueryBuilderFunctions.dragMove(dragDir, X, Y);
-        tick();
-        fix.detectChanges();
-
-        const [dropGhost, prevElement, nextElement] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
-
-        if (i < 40 && !ghostPositionVisits[0]) {
-          if (i <= 42) tick(50);
-          if (!dropGhost) ghostPositionVisits[0] = true;
-        }
-
-        if (i > 35 && i < 122 && !ghostPositionVisits[1]) {
-          if (dropGhost && !prevElement && nextElement == 'OrderName  Equals  foo') ghostPositionVisits[1] = true;
-        }
-
-        if (i > 120 && i < 165 && !ghostPositionVisits[2]) {
-          if (dropGhost && prevElement == 'OrderName  Equals  foo' && nextElement === 'or  OrderName  Ends With  a  OrderDate  Today') ghostPositionVisits[2] = true;
-        }
-
-        if (i > 166 && i < 201 && !ghostPositionVisits[3]) {
-          if (dropGhost && !prevElement && nextElement == 'OrderName  Ends With  a') ghostPositionVisits[3] = true;
-        }
-
-        if (i > 202 && i < 241 && !ghostPositionVisits[4]) {
-          if (dropGhost && prevElement == 'OrderName  Ends With  a' && nextElement === 'OrderDate  Today') ghostPositionVisits[4] = true;
-        }
-
-        if (i > 240 && i < 273 && !ghostPositionVisits[5]) {
-          if (dropGhost && prevElement == 'OrderDate  Today' && !nextElement) ghostPositionVisits[5] = true;
-        }
-
-        if (i > 256 && i < 316 && !ghostPositionVisits[6]) {
-          if (pass > 2 || (dropGhost && prevElement == 'or  OrderName  Ends With  a  OrderDate  Today' && !nextElement)) ghostPositionVisits[6] = true;
-        }
-
-        if (i > 320 && !ghostPositionVisits[7]) {
-          if (i >= 340) tick(50);
-          if (!dropGhost) ghostPositionVisits[7] = true;
-        }
-
-        //When dragged to the end, check results and reverse direction for next pass
-        if (i === 350 || i === 0) {
-          expect(ghostPositionVisits).not.toContain(false,
-            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()} on pass:${pass}`);
-
-          ghostPositionVisits.fill(false);
-          pass++;
-          inc *= -1;
-          if (pass % 2 === 0) Y -= ROW_HEIGHT;
-          if (pass % 2 !== 0) Y += ROW_HEIGHT;
-
-          //go to the left and test the whole chip div as well(blank space to the right)
-          if (pass == 3) X += 400;
-        }
-      }
-
+    it('Should render drop ghost properly when mouse dragged up on the right.', fakeAsync(() => {
+      const draggedChip = chipComponents[1].componentInstance;
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 500, 75 + 350, false);
     }));
 
     it('Should position drop ghost below the target condition on dragging down.', () => {
@@ -3149,7 +3085,6 @@ describe('IgxQueryBuilder', () => {
       draggedIndicator.nativeElement.focus();
 
       spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
-      const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
 
       tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       tick(20);
@@ -3257,7 +3192,6 @@ describe('IgxQueryBuilder', () => {
       draggedIndicator.nativeElement.focus();
 
       spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
-      const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
 
       tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       tick(20);
