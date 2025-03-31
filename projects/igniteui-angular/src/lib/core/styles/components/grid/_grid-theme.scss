@@ -1303,14 +1303,14 @@
         overflow: hidden;
         z-index: 1;
         outline-style: none;
+        flex-grow: 1;
     }
 
     %grid-tbody-container {
         position: relative;
-        display: grid;
+        display: flex;
         grid-row: 4;
         overflow: hidden;
-        grid-template-rows: 1fr;
     }
 
     %grid-tbody-message {
@@ -2086,7 +2086,7 @@
 
         .sort-icon {
             color: var-get($theme, 'header-selected-text-color');
-	        
+
             ::after {
                 background: var-get($theme, 'header-selected-background');
             }
@@ -2114,7 +2114,7 @@
         &%igx-grid-th--sorted {
             .sort-icon {
                 color: var-get($theme, 'header-selected-text-color');
-	            
+
 	            > igx-icon {
 		            color: inherit;
 	            }
@@ -2122,7 +2122,7 @@
                 &:focus,
                 &:hover {
                     color: var-get($theme, 'header-selected-text-color');
-	                
+
 	                > igx-icon {
 		                color: inherit;
 	                }
@@ -2179,14 +2179,14 @@
         .sort-icon {
             opacity: 1;
             color: var-get($theme, 'sorted-header-icon-color');
-	        
+
 	        > igx-icon {
 		        color: inherit;
 	        }
 
             &:hover {
                 color: var-get($theme, 'sortable-header-icon-hover-color');
-	            
+
 	            > igx-icon {
 		            color: inherit;
 	            }

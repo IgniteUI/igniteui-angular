@@ -1,6 +1,6 @@
-<div>
-    <div class="igx-grid-thead__wrapper igx-grid-thead__wrapper--pivot" role="row" [style.width.px]="width">
-        <div class="igx-grid__tr" role="row" [style.width.px]="width">
+<div [style.width]="'100%'">
+    <div class="igx-grid-thead__wrapper igx-grid-thead__wrapper--pivot" role="row" [style.width]="'100%'">
+        <div class="igx-grid__tr" role="row" [style.width]="'100%'">
             <div class='igx-grid__tr-pivot--filter-container'>
                 @if (grid.pivotUI.showConfiguration) {
                     <div #pivotFilterContainer
@@ -193,14 +193,14 @@
             </div>
         </div>
     </div>
-    <div role="rowgroup" class="igx-grid-thead__wrapper" [style.width.px]="width"
+    <div role="rowgroup" class="igx-grid-thead__wrapper" [style.width]="'100%'"
          [attr.aria-activedescendant]="activeDescendant" [class.igx-grid__tr--mrl]="hasMRL">
 
         <!-- Column headers area -->
-        <div class="igx-grid__tr" role="row" [style.width.px]="width">
+        <div class="igx-grid__tr" role="row" [style.width]="'100%'">
             @if (!grid.pivotUI.showRowHeaders || grid.rowDimensions.length === 0) {
                 <div #pivotContainer class="igx-grid__tr-pivot igx-grid__tr-pivot--row-area"
-                    [style.width.px]="grid.pivotRowWidths - 1" (igxDragLeave)="onAreaDragLeave($event, rowArea)" igxDrop
+                    [style.min-width.px]="grid.pivotRowWidths - 1" (igxDragLeave)="onAreaDragLeave($event, rowArea)" igxDrop
                     (dropped)="onDimDrop($event, rowArea, 0)" (pointerdown)="$event.preventDefault()">
                     <!-- Row area -->
                     <igx-chips-area #rowArea droppable='true'>
