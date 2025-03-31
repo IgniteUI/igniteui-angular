@@ -20,7 +20,7 @@ import {
     IgxGridAdvancedFilteringWithToolbarComponent
 } from '../../test-utils/grid-samples.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
+import { IgxHierarchicalGridTestBaseComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -40,7 +40,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxGridAdvancedFilteringBindingComponent,
                 IgxHierGridExternalAdvancedFilteringComponent,
                 IgxGridAdvancedFilteringDynamicColumnsComponent,
-                IgxGridAdvancedFilteringWithToolbarComponent
+                IgxGridAdvancedFilteringWithToolbarComponent,
+                IgxHierarchicalGridTestBaseComponent
             ]
         });
     }));
@@ -637,9 +638,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
             const dropdownItems = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement);
             expect(dropdownItems.length).toBe(4);
-            expect((dropdownItems[0] as HTMLElement).innerText).toBe('HeaderID');
+            expect((dropdownItems[0] as HTMLElement).innerText).toBe('ID');
             expect((dropdownItems[1] as HTMLElement).innerText).toBe('ProductName');
-            expect((dropdownItems[2] as HTMLElement).innerText).toBe('Another Field');
+            expect((dropdownItems[2] as HTMLElement).innerText).toBe('AnotherField');
             expect((dropdownItems[3] as HTMLElement).innerText).toBe('ReleaseTime');
         }));
 
@@ -1328,7 +1329,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
             fix.detectChanges();
             const dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
-            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field', 'DateTimeCreated'];
+            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'AnotherField', 'DateTimeCreated'];
             expect(expectedValues).toEqual(dropdownValues);
         }));
     });
@@ -1463,6 +1464,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
+
         it('should correctly filter with a deserialized expression tree.', fakeAsync(() => {
             const errorSpy = spyOn(console, 'error');
 
@@ -1494,6 +1496,120 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Verify filtered data
             expect(grid.filteredData.length).toEqual(2);
             expect(grid.rowList.length).toBe(2);
+        }));
+    });
+
+    describe('Hierarchical grid advanced filtering - ', () => {
+        let fix: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
+        let hgrid: IgxHierarchicalGridComponent;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
+            hgrid = fix.componentInstance.hgrid;
+            hgrid.allowAdvancedFiltering = true;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            hgrid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Click the initial 'Add Condition' button of the query builder.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
+            tick(100);
+            fix.detectChanges();
+        }));
+
+        it(`Should have 'In'/'Not-In' operators for fields with chilld entities.`, fakeAsync(() => {
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
+
+            // Open the operator dropdown and verify they are 'string' specific + 'In'/'Not In'.
+            QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
+            fix.detectChanges();
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
+            const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
+            const expectedValues = ['Contains', 'Does Not Contain', 'Starts With', 'Ends With', 'Equals',
+                'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null', 'In', 'Not In'];;
+            expect(dropdownValues).toEqual(expectedValues);
+
+            // Close Advanced Filtering dialog.
+            hgrid.closeAdvancedFilteringDialog(false);
+            tick(200);
+            fix.detectChanges();
+        }));
+
+        it(`Should NOT have 'In'/'Not-In' operators for fields without chilld entities.`, fakeAsync(() => {
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+
+            // Select entity in nested level
+            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 1);
+            // Populate edit inputs on level 1.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1); // Select 'ID' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11, 1); // Select 'Not In' operator. 
+
+            // Select entity in nested level
+            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 2);
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 2); // Select 'ID' column.
+            // Open the operator dropdown and verify they are 'string' specific + 'In'/'Not In'.
+            QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix, 2);
+            fix.detectChanges();
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[2].nativeElement;
+            const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
+            const expectedValues = ['Contains', 'Does Not Contain', 'Starts With', 'Ends With', 'Equals',
+                'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null'];;
+            expect(dropdownValues).toEqual(expectedValues);
+
+            // Close Advanced Filtering dialog.
+            hgrid.closeAdvancedFilteringDialog(false);
+            tick(200);
+            fix.detectChanges();                                  
+        }));
+
+        it('Should have correct entities depending on the hierarchy level.', fakeAsync(() => {
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+
+            QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix, 1);
+            fix.detectChanges();
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[1].nativeElement;
+            const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
+            const expectedValues = ['childData'];
+            expect(dropdownValues).toEqual(expectedValues);  
+            
+            // Close Advanced Filtering dialog.
+            hgrid.closeAdvancedFilteringDialog(false);
+            tick(200);
+            fix.detectChanges(); 
+        }));
+
+        it(`Should apply 'In'/'Not-In' operators for each level properly.`, fakeAsync(() => {
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+
+            // Select entity in nested level
+            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 1);
+            // Populate edit inputs on level 1.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1); // Select 'ID' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1); // Select 'Contains' operator. 
+
+            const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
+            // Type Value
+            UIInteractions.clickAndSendInputElementValue(input, '39');
+            tick(100);
+            fix.detectChanges();
+
+            // Close Advanced Filtering dialog.
+            hgrid.closeAdvancedFilteringDialog(true);
+            tick(200);
+            fix.detectChanges(); 
+
+            // Veify grid data
+            expect(hgrid.filteredData.length).toEqual(2);
+            expect(hgrid.rowList.length).toBe(2);
         }));
     });
 });

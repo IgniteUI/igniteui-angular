@@ -841,13 +841,13 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static selectEntityAndClickInitialAddCondition(fix: ComponentFixture<any>, entityIndex: number, groupIndex = 0) {
-        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex);
+    public static selectEntityAndClickInitialAddCondition(fix: ComponentFixture<any>, entityIndex: number, level = 0) {
+        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex, level);
         tick(100);
         fix.detectChanges();
 
         // Click the initial 'Add Condition' button.
-        QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, groupIndex);
+        QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, level);
         tick(100);
         fix.detectChanges();
     }
