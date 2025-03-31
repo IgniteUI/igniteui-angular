@@ -938,7 +938,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
                 ) ||
                 (
-                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery.selectedReturnFields?.length > 0
+                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && 
+                    (innerQuery.selectedReturnFields?.length > 0 || (innerQuery.selectedReturnFields?.length === 0 && this.isAdvancedFiltering()))
                 ) ||
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );

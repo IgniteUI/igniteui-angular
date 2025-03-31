@@ -1608,8 +1608,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges(); 
 
             // Veify grid data
-            expect(hgrid.filteredData.length).toEqual(2);
-            expect(hgrid.rowList.length).toBe(2);
+            expect(hgrid.filteredData.length).toEqual(5);
+            expect(hgrid.rowList.length).toBe(5);
         }));
     });
 });
