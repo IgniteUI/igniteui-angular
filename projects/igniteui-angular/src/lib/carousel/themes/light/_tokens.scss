@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/carousel' as *;
+
+$base: digest-schema($light-carousel);
+$material: digest-schema($material-carousel);
+$bootstrap: digest-schema($bootstrap-carousel);
+$fluent: digest-schema($fluent-carousel);
+$indigo: digest-schema($indigo-carousel);

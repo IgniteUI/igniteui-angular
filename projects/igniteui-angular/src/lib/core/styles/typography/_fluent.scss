@@ -40,7 +40,7 @@
     // ));
     // @include bottom-nav-typography();
     @include button-typography();
-    @include button-group-typography();
+    // @include button-group-typography();
     //@include calendar-typography($categories: (
     //    header-year: 'overline',
     //    header-date: 'h4',
@@ -100,7 +100,7 @@
     @include radio-typography($categories: (
         label: 'body-2'
     ));
-    @include slider-typography();
+    // @include slider-typography();
     // @include snackbar-typography($categories: (
     //     text: 'caption'
     // ));
@@ -111,12 +111,12 @@
         label: 'body-2'
     ));
     @include time-picker-typography();
-    @include stepper-typography();
+    //@include stepper-typography();
     // @include toast-typography($categories: (
     //     text: 'caption'
     // ));
     @include tooltip-typography();
-    @include tree-typography();
+    //@include tree-typography();
     @include label-typography($categories: (
         label: 'subtitle-2'
     ));

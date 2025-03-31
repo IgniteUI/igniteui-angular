@@ -38,7 +38,7 @@
     // @include banner-typography();
     // @include bottom-nav-typography();
     @include button-typography();
-    @include button-group-typography();
+    // @include button-group-typography();
     //@include calendar-typography();
     // @include card-typography();
     @include checkbox-typography();
@@ -57,15 +57,15 @@
     @include navbar-typography();
     // @include navdrawer-typography();
     @include radio-typography();
-    @include slider-typography();
+    // @include slider-typography();
     // @include snackbar-typography();
     @include switch-typography();
     @include tabs-typography();
     @include time-picker-typography();
-    @include stepper-typography();
+    //@include stepper-typography();
     // @include toast-typography();
     @include tooltip-typography();
-    @include tree-typography();
+    //@include tree-typography();
     @include label-typography();
 	@include query-builder-typography();
 }

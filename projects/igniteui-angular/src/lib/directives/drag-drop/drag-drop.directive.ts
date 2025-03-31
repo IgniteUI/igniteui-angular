@@ -699,6 +699,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         public renderer: Renderer2,
         protected platformUtil: PlatformUtil
     ) {
+        this.onTransitionEnd = this.onTransitionEnd.bind(this);
+        this.onPointerMove = this.onPointerMove.bind(this);
+        this.onPointerUp = this.onPointerUp.bind(this);
+        this.onPointerLost = this.onPointerLost.bind(this);
     }
 
     /**
@@ -769,7 +773,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 fromEvent(this.document.defaultView, 'mouseup').pipe(takeUntil(this._destroy))
                     .subscribe((res) => this.onPointerUp(res));
             }
-            this.element.nativeElement.addEventListener('transitionend', this.onTransitionEnd.bind(this));
+            this.element.nativeElement.addEventListener('transitionend', this.onTransitionEnd);
         });
 
         // Set transition duration to 0s. This also helps with setting `visibility: hidden` to the base to not lag.
@@ -783,13 +787,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this._destroy.next(true);
         this._destroy.complete();
 
-        if (this.ghost && this.ghostElement && this._removeOnDestroy) {
-            this.ghostElement.parentNode.removeChild(this.ghostElement);
-            this.ghostElement = null;
-
-            if (this._dynamicGhostRef) {
-                this._dynamicGhostRef.destroy();
-                this._dynamicGhostRef = null;
+        if (this.ghostElement) {
+            if (this._removeOnDestroy) {
+                this.clearGhost();
+            } else {
+                this.detachGhost();
             }
         }
 
@@ -1223,11 +1225,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         });
     }
 
-    protected clearGhost() {
+    protected detachGhost() {
         this.ghostElement.removeEventListener('pointermove', this.onPointerMove);
         this.ghostElement.removeEventListener('pointerup', this.onPointerUp);
         this.ghostElement.removeEventListener('lostpointercapture', this.onPointerLost);
         this.ghostElement.removeEventListener('transitionend', this.onTransitionEnd);
+    }
+
+    protected clearGhost() {
+        this.detachGhost();
         this.ghostElement.remove();
         this.ghostElement = null;
 
@@ -1319,13 +1325,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             if (this._pointerDownId !== null) {
                 this.ghostElement.setPointerCapture(this._pointerDownId);
             }
-            this.ghostElement.addEventListener('pointermove', this.onPointerMove.bind(this));
-            this.ghostElement.addEventListener('pointerup', this.onPointerUp.bind(this));
-            this.ghostElement.addEventListener('lostpointercapture', this.onPointerLost.bind(this));
+            this.ghostElement.addEventListener('pointermove', this.onPointerMove);
+            this.ghostElement.addEventListener('pointerup', this.onPointerUp);
+            this.ghostElement.addEventListener('lostpointercapture', this.onPointerLost);
         }
 
         // Transition animation when the ghostElement is released and it returns to it's original position.
-        this.ghostElement.addEventListener('transitionend', this.onTransitionEnd.bind(this));
+        this.ghostElement.addEventListener('transitionend', this.onTransitionEnd);
 
         this.cdr.detectChanges();
     }

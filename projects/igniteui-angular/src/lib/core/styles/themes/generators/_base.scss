@@ -176,13 +176,13 @@
         @include button($button-theme-map);
     }
 
-    @if is-used('igx-button-group', $exclude) {
-        $button-group-theme-map: button-group-theme(
-            $schema: $schema,
-        );
-        $button-group-theme-map: meta.call($theme-handler, $button-group-theme-map);
-        @include button-group($button-group-theme-map);
-    }
+    // @if is-used('igx-button-group', $exclude) {
+    //     $button-group-theme-map: button-group-theme(
+    //         $schema: $schema,
+    //     );
+    //     $button-group-theme-map: meta.call($theme-handler, $button-group-theme-map);
+    //     @include button-group($button-group-theme-map);
+    // }
 
     // @if is-used('igx-banner', $exclude) {
     //     $banner-theme-map: banner-theme(
@@ -208,13 +208,13 @@
     //     @include card($card-theme-map);
     // }
 
-    @if is-used('igx-carousel', $exclude) {
-        $carousel-theme-map: carousel-theme(
-            $schema: $schema,
-        );
-        $carousel-theme-map: meta.call($theme-handler, $carousel-theme-map);
-        @include carousel($carousel-theme-map);
-    }
+    // @if is-used('igx-carousel', $exclude) {
+    //     $carousel-theme-map: carousel-theme(
+    //         $schema: $schema,
+    //     );
+    //     $carousel-theme-map: meta.call($theme-handler, $carousel-theme-map);
+    //     @include carousel($carousel-theme-map);
+    // }
 
     // @if is-used('igx-splitter', $exclude) {
     //     $splitter-theme-map: splitter-theme(
@@ -576,13 +576,13 @@
         @include scrollbar($scrollbar-theme-map);
     }
 
-    @if is-used('igx-slider', $exclude) {
-        $slider-theme-map: slider-theme(
-            $schema: $schema,
-        );
-        $slider-theme-map: meta.call($theme-handler, $slider-theme-map);
-        @include slider($slider-theme-map);
-    }
+    // @if is-used('igx-slider', $exclude) {
+    //     $slider-theme-map: slider-theme(
+    //         $schema: $schema,
+    //     );
+    //     $slider-theme-map: meta.call($theme-handler, $slider-theme-map);
+    //     @include slider($slider-theme-map);
+    // }
 
     // @if is-used('igx-snackbar', $exclude) {
     //     $snackbar-theme-map: snackbar-theme(
@@ -608,13 +608,13 @@
         @include tabs($tabs-theme-map);
     }
 
-    @if is-used('igx-stepper', $exclude) {
-        $stepper-theme-map: stepper-theme(
-            $schema: $schema,
-        );
-        $stepper-theme-map: meta.call($theme-handler, $stepper-theme-map);
-        @include stepper($stepper-theme-map);
-    }
+    //@if is-used('igx-stepper', $exclude) {
+    //    $stepper-theme-map: stepper-theme(
+    //        $schema: $schema,
+    //    );
+    //    $stepper-theme-map: meta.call($theme-handler, $stepper-theme-map);
+    //    @include stepper($stepper-theme-map);
+    //}
 
     // @if is-used('igx-toast', $exclude) {
     //     $toast-theme-map: toast-theme(
@@ -640,13 +640,13 @@
         @include time-picker($time-picker-theme-map);
     }
 
-    @if is-used('igx-tree', $exclude) {
-        $tree-theme-map: tree-theme(
-            $schema: $schema,
-        );
-        $tree-theme-map: meta.call($theme-handler, $tree-theme-map);
-        @include tree($tree-theme-map);
-    }
+    //@if is-used('igx-tree', $exclude) {
+    //    $tree-theme-map: tree-theme(
+    //        $schema: $schema,
+    //    );
+    //    $tree-theme-map: meta.call($theme-handler, $tree-theme-map);
+    //    @include tree($tree-theme-map);
+    //}
 
     @if is-used('igx-watermark', $exclude) {
         $watermark-theme-map: watermark-theme(

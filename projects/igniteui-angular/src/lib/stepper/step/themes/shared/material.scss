@@ -1,0 +1,156 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../../../themes/light/tokens' as *;
+
+$_theme: $material;
+
+@include themed-block(igx-step, material) {
+    $indicator-size: rem(24px);
+    $separator-size: rem(1px);
+    $header-padding: rem(8px);
+    $title-separator-position-bottom: calc((#{$indicator-size} / 2) + #{$header-padding} - (#{$separator-size} / 2));
+    $title-separator-position-top: calc(100% - ((#{$indicator-size} / 2) + #{$header-padding} + (#{$separator-size} / 2)));
+    $v-line-indent: calc(#{$header-padding} + (#{$indicator-size} / 2));
+
+    @include m(simple) {
+        @include e(indicator) {
+            min-width: $indicator-size;
+            min-height: $indicator-size;
+        }
+    }
+
+    @include m(horizontal) {
+        &::before {
+            min-width: rem(36px);
+            height: $separator-size;
+            top: $title-separator-position-bottom;
+            border-top: $separator-size var-get($_theme, 'step-separator-style') var-get($_theme, 'step-separator-color');
+        }
+
+        @include e(header) {
+            &::before,
+            &::after {
+                height: $separator-size;
+                width: calc(50% - (#{$indicator-size} / 2) - #{$header-padding});
+                top: $title-separator-position-bottom;
+                border-top: $separator-size var-get($_theme, 'step-separator-style') var-get($_theme, 'step-separator-color');
+            }
+        }
+    }
+
+    @include mx(horizontal, simple) {
+        &::before {
+            top: calc(50% - (#{$separator-size} / 2));
+        }
+
+        @include e(header) {
+            padding: $header-padding;
+        }
+    }
+
+    @include mx(horizontal, top) {
+        &::before {
+            border-top: $separator-size var-get($_theme, 'step-separator-style') var-get($_theme, 'step-separator-color');
+            top: $title-separator-position-top;
+        }
+
+        @include e(header) {
+            &::before,
+            &::after {
+                top: $title-separator-position-top;
+            }
+        }
+    }
+
+    @include mx(horizontal, start) {
+        &::before {
+            top: calc(50% - (#{$separator-size} / 2));
+        }
+    }
+
+    @include mx(horizontal, end) {
+        &::before {
+            top: calc(50% - (#{$separator-size} / 2));
+        }
+    }
+
+    @include e(content-wrapper) {
+        margin-inline-start: $v-line-indent;
+        min-height: $indicator-size;
+
+        &::before {
+            inset-inline-start: calc(-#{$separator-size} / 2);
+            top: calc(-#{$indicator-size} + #{$indicator-size});
+            bottom: calc(-#{$indicator-size} + #{$indicator-size});
+            width: $separator-size;
+            border-inline-start: $separator-size var-get($_theme, 'step-separator-style') var-get($_theme, 'step-separator-color');
+        }
+    }
+
+    @include m(completed) {
+        @include e(content-wrapper)  {
+            &::before {
+                border-inline-start-style: var-get($_theme, 'complete-step-separator-style');
+                border-inline-start-color: var-get($_theme, 'complete-step-separator-color');
+            }
+        }
+    }
+
+    &:last-of-type {
+        @include e(content-wrapper) {
+            min-height: 0;
+        }
+    }
+
+    [aria-selected='true'] {
+        @include e(content-wrapper) {
+            padding-inline-start: $v-line-indent;
+        }
+    }
+
+    @include e(indicator) {
+        height: $indicator-size;
+        width: $indicator-size;
+        min-width: $indicator-size;
+        box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'indicator-outline');
+
+        > igx-icon {
+            --size: var(--igx-icon-size, #{rem(18px)});
+            color: inherit;
+        }
+
+        > igx-icon,
+        > igx-avatar,
+        > igx-circular-bar {
+            max-height: $indicator-size;
+            max-width: $indicator-size;
+        }
+    }
+}
+
+@include themed-block(igx-step-header, material) {
+    @include m(completed) {
+        @include e(indicator) {
+            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'complete-indicator-outline');
+        }
+    }
+
+    @include m(current) {
+        @include e(indicator) {
+            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'current-indicator-outline') !important;
+        }
+    }
+
+    @include m(invalid) {
+        @include e(indicator) {
+            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'invalid-indicator-outline');
+        }
+    }
+
+    @include m(disabled) {
+        @include e(indicator) {
+            box-shadow: 0 0 0 clamp(1px, rem(1px), rem(1px)) var-get($_theme, 'disabled-indicator-outline');
+        }
+    }
+}

@@ -382,7 +382,7 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
         </igx-row-island>
 
     </igx-hierarchical-grid>`,
-    imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxRowIslandComponent, IgxButtonDirective]
+    imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestInputToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
 

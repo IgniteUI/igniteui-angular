@@ -452,16 +452,16 @@ describe('IgxQueryBuilder', () => {
       // Verify the returnFields
       let exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
       expect(exprTreeReturnFields).toBe(`["*"]`);
-      
+
       // Change the selected return fields
       QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [1]);
       tick(100);
       fix.detectChanges();
-       
+
       // Verify the returnFields
       exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
       expect(exprTreeReturnFields).toBe(`["OrderId"]`);
-      
+
       // Change the entity
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
@@ -474,16 +474,16 @@ describe('IgxQueryBuilder', () => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       queryBuilder.showEntityChangeDialog = false;
       fix.detectChanges();
-      
+
       // Click selectAll button in order to deselect all fields
       QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
       tick(100);
       fix.detectChanges();
-       
+
       // Verify the returnFields
       let exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
       expect(exprTreeReturnFields).toBe(`[]`);
-      
+
       // Click selectAll button in order to select all fields
       QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
       tick(100);
@@ -2166,7 +2166,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'Id', 'Equals', '1', 1);
       QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'Released', 'True', undefined, 1);
 
-      // close chip 
+      // close chip
       queryBuilder.discard();
       tick(100);
       fix.detectChanges();
@@ -2480,7 +2480,7 @@ describe('IgxQueryBuilder', () => {
       expect(dropGhost).toBeDefined();
       expect(dropGhost.innerText).toBe('My Drop here to insert');
     }));
-  }); 
+  });
 
   describe('Drag and drop', () => {
     const ROW_HEIGHT = 40;
@@ -2511,90 +2511,24 @@ describe('IgxQueryBuilder', () => {
       expect(chipComponents[1].nativeElement.getBoundingClientRect().height).toBe(0);
     });
 
-    it('Should render drop ghost properly when mouse dragged.', fakeAsync(() => {
+    it('Should render drop ghost properly when mouse dragged down on the left.', fakeAsync(() => {
       const draggedChip = chipComponents[1].componentInstance;
-      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
-      const dragDir = draggedChip.dragDirective;
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 100, 75, true);
+    }));
 
-      let X = 100, Y = 95;
+    it('Should render drop ghost properly when mouse dragged up on the left.', fakeAsync(() => {
+      const draggedChip = chipComponents[1].componentInstance;
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 100, 75 + 350, false);
+    }));
 
-      //pickup chip
-      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
-      fix.detectChanges();
+    it('Should render drop ghost properly when mouse dragged down on the right.', fakeAsync(() => {
+      const draggedChip = chipComponents[1].componentInstance;
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 500, 75, true);
+    }));
 
-      //trigger ghost
-      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
-      fix.detectChanges();
-
-      spyOn(dragDir.ghostElement, 'dispatchEvent').and.callThrough();
-
-      const ghostPositionVisits: boolean[] = [false, false, false, false, false, false, false, false]
-
-      let i = 0, pass = 1, inc = 1;
-
-      //Drag ghost up and down four times and check if drop ghost is rendered in the expected positions
-      while (pass <= 4) {
-        i += inc;
-        Y += 5 * inc;
-
-        QueryBuilderFunctions.dragMove(dragDir, X, Y);
-        tick(10);
-        fix.detectChanges();
-
-        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
-        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
-        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
-
-        if (i < 8 && !ghostPositionVisits[0]) {
-          tick(50);
-          if (!dropGhost) ghostPositionVisits[0] = true;
-        }
-
-        if (i > 6 && i < 23 && !ghostPositionVisits[1]) {
-          if (dropGhost && !prevElement && nextElement == "OrderName  Equals  foo") ghostPositionVisits[1] = true;
-        }
-
-        if (i > 20 && i < 35 && !ghostPositionVisits[2]) {
-          if (dropGhost && prevElement == "OrderName  Equals  foo" && !nextElement) ghostPositionVisits[2] = true;
-        }
-
-        if (i > 31 && i < 40 && !ghostPositionVisits[3]) {
-          if (dropGhost && !prevElement && nextElement == "OrderName  Ends With  a") ghostPositionVisits[3] = true;
-        }
-
-        if (i > 36 && i < 47 && !ghostPositionVisits[4]) {
-          if (dropGhost && prevElement == "OrderName  Ends With  a" && !nextElement) ghostPositionVisits[4] = true;
-        }
-
-        if (i > 44 && i < 57 && !ghostPositionVisits[5]) {
-          if (dropGhost && prevElement == "OrderDate  Today" && !nextElement) ghostPositionVisits[5] = true;
-        }
-
-        if (i > 54 && i < 64 && !ghostPositionVisits[6]) {
-          if (pass > 2 || (dropGhost && prevElement == "or  OrderName  Ends With  a  OrderDate  Today" && !nextElement)) ghostPositionVisits[6] = true;
-        }
-
-        if (i > 62 && !ghostPositionVisits[7]) {
-          tick(50);
-          if (!dropGhost) ghostPositionVisits[7] = true;
-        }
-
-        //When dragged to the end, check results and reverse direction for next pass
-        if (i === 65 || i === 0) {
-          expect(ghostPositionVisits).not.toContain(false,
-            `Ghost was not rendered on position(s) ${ghostPositionVisits.reduce((arr, e, ix) => ((e == false) && arr.push(ix), arr), []).toString()} on pass:${pass}`);
-
-          ghostPositionVisits.fill(false);
-          pass++;
-          inc *= -1;
-          if (pass % 2 === 0) Y -= ROW_HEIGHT;
-          if (pass % 2 !== 0) Y += ROW_HEIGHT;
-
-          //go to the left and test the whole chip div as well(blank space to the right)
-          if (pass == 3) X += 400;
-        }
-      }
-
+    it('Should render drop ghost properly when mouse dragged up on the right.', fakeAsync(() => {
+      const draggedChip = chipComponents[1].componentInstance;
+      QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 500, 75 + 350, false);
     }));
 
     it('Should position drop ghost below the target condition on dragging down.', () => {
@@ -2709,8 +2643,12 @@ describe('IgxQueryBuilder', () => {
       dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
       fix.detectChanges();
 
+      //trigger ghost
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 50, draggedChipCenter.Y - 50);
+      fix.detectChanges();
+
       //drag
-      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 2 * ROW_HEIGHT, true);
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 50, draggedChipCenter.Y - 50, true);
       fix.detectChanges();
 
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
@@ -2794,6 +2732,7 @@ describe('IgxQueryBuilder', () => {
 
       //move over +Condition
       QueryBuilderFunctions.dragMove(dragDir, addConditionButtonCenter.X, addConditionButtonCenter.Y);
+      fix.detectChanges();
 
       const dropGhost = QueryBuilderFunctions.getDropGhost(fix) as HTMLElement;
       chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
@@ -3021,33 +2960,30 @@ describe('IgxQueryBuilder', () => {
         tick(20);
         fix.detectChanges();
 
-        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
-        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
-        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
-        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+        const [dropGhost, prevElement, nextElement, newChipContents] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
 
         switch (true) {
           case i === 0:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Ends With  a");
+            expect(nextElement).toEqual('OrderName  Ends With  a');
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 1:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderName  Ends With  a");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderName  Ends With  a');
+            expect(nextElement).toEqual('OrderDate  Today');
             expect(newChipContents[5]).toBe(dropGhostContent);
             break;
           case i === 2:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderDate  Today");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderDate  Today');
+            expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
           case i >= 3:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("or  OrderName  Ends With  a  OrderDate  Today");
+            expect(prevElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
             expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
@@ -3061,40 +2997,37 @@ describe('IgxQueryBuilder', () => {
         tick(20);
         fix.detectChanges();
 
-        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
-        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
-        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
-        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+        const [dropGhost, prevElement, nextElement, newChipContents] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
 
         switch (true) {
           case i === 0:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderDate  Today");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderDate  Today');
+            expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
           case i === 1:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toBeUndefined();
-            expect(nextElement).toEqual("OrderDate  Today");
+            expect(prevElement).toEqual('OrderName  Ends With  a');
+            expect(nextElement).toEqual('OrderDate  Today');
             expect(newChipContents[5]).toBe(dropGhostContent);
             break;
           case i === 2:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Ends With  a");
+            expect(nextElement).toEqual('OrderName  Ends With  a');
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 3:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toBeUndefined();
-            expect(nextElement).toEqual("or  OrderName  Ends With  a  OrderDate  Today");
-            expect(newChipContents[4]).toBe(dropGhostContent);
+            expect(prevElement).toEqual('OrderName  Equals  foo');
+            expect(nextElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
+            expect(newChipContents[1]).toBe(dropGhostContent);
             break;
           case i >= 4:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Equals  foo");
+            expect(nextElement).toEqual('OrderName  Equals  foo');
             expect(newChipContents[0]).toBe(dropGhostContent);
             break;
         }
@@ -3107,45 +3040,172 @@ describe('IgxQueryBuilder', () => {
         tick(20);
         fix.detectChanges();
 
-        const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
-        const prevElement = dropGhost && dropGhost.previousElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.previousElementSibling) : null;
-        const nextElement = dropGhost && dropGhost.nextElementSibling ? QueryBuilderFunctions.getChipContent(dropGhost.nextElementSibling) : null;
-        const newChipContents = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+        const [dropGhost, prevElement, nextElement, newChipContents] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
 
         switch (true) {
           case i === 0:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderName  Equals  foo");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderName  Equals  foo');
+            expect(nextElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
             expect(newChipContents[1]).toBe(dropGhostContent);
             break;
           case i === 1:
             expect(dropGhost).toBeDefined();
             expect(prevElement).toBeNull();
-            expect(nextElement).toEqual("OrderName  Ends With  a");
+            expect(nextElement).toEqual('OrderName  Ends With  a');
             expect(newChipContents[4]).toBe(dropGhostContent);
             break;
           case i === 2:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderName  Ends With  a");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderName  Ends With  a');
+            expect(nextElement).toEqual('OrderDate  Today');
             expect(newChipContents[5]).toBe(dropGhostContent);
             break;
           case i === 3:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("OrderDate  Today");
-            expect(nextElement).toBeUndefined();
+            expect(prevElement).toEqual('OrderDate  Today');
+            expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
           case i >= 4:
             expect(dropGhost).toBeDefined();
-            expect(prevElement).toEqual("or  OrderName  Ends With  a  OrderDate  Today");
+            expect(prevElement).toEqual('or  OrderName  Ends With  a  OrderDate  Today');
             expect(nextElement).toBeNull();
             expect(newChipContents[6]).toBe(dropGhostContent);
             break;
         }
       }
     }));
+
+    it('Should commit drop upon hitting \'Enter\' when keyboard dragged.', fakeAsync(() => {
+      const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+
+      draggedIndicator.triggerEventHandler('focus', {});
+      draggedIndicator.nativeElement.focus();
+
+      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      tick(20);
+      fix.detectChanges();
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      tick(20);
+      fix.detectChanges();
+
+      //Verify that expressionTree is correct
+      const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
+      expect(exprTree).toBe(`{
+  "filteringOperands": [
+    {
+      "fieldName": "OrderName",
+      "condition": {
+        "name": "equals",
+        "isUnary": false,
+        "iconName": "filter_equal"
+      },
+      "conditionName": "equals",
+      "searchVal": "foo"
+    },
+    {
+      "fieldName": "OrderId",
+      "condition": {
+        "name": "inQuery",
+        "isUnary": false,
+        "isNestedQuery": true,
+        "iconName": "in"
+      },
+      "conditionName": "inQuery",
+      "searchTree": {
+        "filteringOperands": [
+          {
+            "fieldName": "Id",
+            "condition": {
+              "name": "equals",
+              "isUnary": false,
+              "iconName": "filter_equal"
+            },
+            "conditionName": "equals",
+            "searchVal": 123
+          },
+          {
+            "fieldName": "ProductName",
+            "condition": {
+              "name": "equals",
+              "isUnary": false,
+              "iconName": "filter_equal"
+            },
+            "conditionName": "equals",
+            "searchVal": "abc"
+          }
+        ],
+        "operator": 0,
+        "entity": "Products",
+        "returnFields": [
+          "OrderId"
+        ]
+      }
+    },
+    {
+      "filteringOperands": [
+        {
+          "fieldName": "OrderDate",
+          "condition": {
+            "name": "today",
+            "isUnary": true,
+            "iconName": "filter_today"
+          },
+          "conditionName": "today"
+        },
+        {
+          "fieldName": "OrderName",
+          "condition": {
+            "name": "endsWith",
+            "isUnary": false,
+            "iconName": "filter_ends_with"
+          },
+          "conditionName": "endsWith",
+          "searchVal": "a"
+        }
+      ],
+      "operator": 1,
+      "entity": "Orders",
+      "returnFields": [
+        "*"
+      ]
+    }
+  ],
+  "operator": 0,
+  "entity": "Orders",
+  "returnFields": [
+    "*"
+  ]
+}`);
+    }));
+
+    it('Should cancel drop upon hitting \'Escape\' when keyboard dragged.', fakeAsync(() => {
+      const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+
+      draggedIndicator.triggerEventHandler('focus', {});
+      draggedIndicator.nativeElement.focus();
+
+      spyOn(tree.nativeElement, 'dispatchEvent').and.callThrough();
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      tick(20);
+      fix.detectChanges();
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      tick(20);
+      fix.detectChanges();
+
+      chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderName  Ends With  a");
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
+    }));
+
   });
 });
 

@@ -485,9 +485,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
             .set("PageUp", this.handlePageUp)
             .set("PageDown", this.handlePageDown);
 
-        this.wrapper.nativeElement.addEventListener('focus', (event: FocusEvent) => this.onWrapperFocus(event));
-        this.wrapper.nativeElement.addEventListener('blur', (event: FocusEvent) => this.onWrapperBlur(event));
-
         this.startPageScroll$.pipe(
             takeUntil(this.stopPageScroll$),
             switchMap(() => this.scrollPage$.pipe(
@@ -518,12 +515,12 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
         });
     }
 
-    private onWrapperFocus(_event: FocusEvent) {
+    protected onWrapperFocus(_event: FocusEvent) {
         this.showActiveDay = true;
         this.monthViews.forEach(view => view.changePreviewRange(this.activeDate));
     }
 
-    private onWrapperBlur(_event: FocusEvent) {
+    protected onWrapperBlur(_event: FocusEvent) {
         this.showActiveDay = false;
         this.monthViews.forEach(view => view.clearPreviewRange());
         this._onTouchedCallback();
@@ -1061,8 +1058,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 */
 	public ngOnDestroy(): void {
         this.keyboardNavigation.detachKeyboardHandlers();
-        this.wrapper?.nativeElement.removeEventListener('focus', this.onWrapperFocus);
-        this.wrapper?.nativeElement.removeEventListener('blur', this.onWrapperBlur);
 	}
 
 	/**

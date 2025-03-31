@@ -1,0 +1,90 @@
+@use 'sass:math';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+$idle-size: 12px;
+
+@include themed-block(igx-slider, indigo) {
+    --thumb-size: #{rem($idle-size)};
+    --thumb-border-width: #{rem(2px)};
+    --thumb-label-width: #{rem(36px)};
+    --thumb-label-height: #{rem(22px)};
+    --track-height: #{rem(2px)};
+    --outline-width: #{rem(3px)};
+    --steps-top-position: 0;
+
+    @include e(track) {
+        border-radius: border-radius(rem(4px));
+    }
+
+    @include m(disabled) {
+        @include e(track-steps) {
+            color: transparent;
+        }
+    }
+}
+
+@include themed-block(igx-ticks, indigo) {
+    bottom: rem(3px);
+
+    @include e(label) {
+        @include type-style(body-2);
+    }
+
+    @include m(top) {
+        top: rem(3px);
+        bottom: auto;
+    }
+
+    @include m(tall) {
+        @include e(label) {
+            top: calc(var(--tick-height--tall) + (var(--tick-height) / 2));
+        }
+    }
+
+    @include mx(top, tall) {
+        @include e(label) {
+            bottom: calc(var(--tick-height--tall) + var(--tick-height) / 2);
+            top: auto;
+        }
+    }
+}
+
+$_igx-slider-thumbs: 'from' 'to';
+
+@each $t in $_igx-slider-thumbs {
+    @include themed-block(igx-slider-thumb-#{$t}, indigo) {
+        $thumb-indigo-idle: math.div($idle-size , $idle-size * 0 + 1);
+        $thumb-indigo-hover: calc(16 / $thumb-indigo-idle);
+
+        transition: transform .2s $out-quad;
+
+        &:hover,
+        &:active {
+            transform: scale($thumb-indigo-hover);
+
+            div::before {
+                border-color: var-get($_theme, 'thumb-border-hover-color');
+            }
+        }
+    }
+
+    @include themed-block(igx-slider-thumb-label-#{$t}, indigo) {
+        top: calc((var(--thumb-label-height) + rem(18px)) * -1);
+
+        @include e(container) {
+            @include type-style(subtitle-2);
+
+            border-radius: rem(3px);
+
+            &::after {
+                top: rem(16px);
+                border-top: rem(12px) solid var-get($_theme, 'label-background-color');
+            }
+        }
+    }
+}

@@ -1,0 +1,81 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
+
+@include themed-block(igx-button-group, bootstrap) {
+    %item-overlay {
+        &::before {
+            content: '';
+            z-index: -1;
+            position: absolute;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            background: var-get($_theme, 'item-focused-background');
+        }
+    }
+
+    @include e(item) {
+        &[igxButton] {
+            margin: 0;
+            border: none;
+        }
+
+        &:active {
+            @extend %item-overlay;
+        }
+
+        &[igxButton].igx-button--focused {
+            background: var-get($_theme, 'item-background');
+            z-index: 1;
+
+            &:hover,
+            &:active {
+                background: var-get($_theme, 'item-hover-background');
+                color: var-get($_theme, 'item-hover-text-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'item-hover-icon-color');
+                }
+            }
+        }
+    }
+
+    @include e(item, $m: selected) {
+        &:active {
+            @extend %item-overlay;
+
+            color: var-get($_theme, 'item-selected-text-color');
+            border-color: var-get($_theme, 'item-selected-border-color');
+            background: var-get($_theme, 'item-selected-hover-background');
+
+            &::before {
+                background: var-get($_theme, 'item-selected-focus-background');
+            }
+        }
+
+        &[igxButton].igx-button--focused {
+            color: var-get($_theme, 'item-selected-text-color');
+            border-color: var-get($_theme, 'item-selected-border-color');
+            background: var-get($_theme, 'item-selected-background');
+
+            igx-icon {
+                color: var-get($_theme, 'item-selected-icon-color');
+            }
+
+            &:hover,
+            &:active {
+                background: var-get($_theme, 'item-selected-hover-background');
+                color: var-get($_theme, 'item-selected-hover-text-color');
+                border-color: var-get($_theme, 'item-selected-hover-border-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'item-selected-hover-icon-color');
+                }
+            }
+        }
+    }
+}

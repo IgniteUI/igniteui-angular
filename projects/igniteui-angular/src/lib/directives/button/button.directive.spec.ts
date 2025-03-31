@@ -10,7 +10,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 const BUTTON_COMFORTABLE = 'igx-button';
 
 describe('IgxButton', () => {
-    configureTestSuite();
+    configureTestSuite({ checkLeaks: true });
 
     const baseClass = BUTTON_COMFORTABLE;
     const classes = {

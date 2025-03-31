@@ -114,8 +114,6 @@
     $not-material-theme: $variant != 'material';
 
     $card-heading-padding: rem(16px, 16px);
-    $card-content-padding: rem(16px);
-    $card-actions-padding: rem(8px);
 
     $card-tgroup-margin: 0 em(16px);
 
@@ -159,7 +157,7 @@
     %igx-card-header {
         display: flex;
         flex-flow: row wrap;
-        align-content: flex-start;
+        align-items: center;
         width: 100%;
         padding: $card-heading-padding;
         color: var-get($theme, 'header-text-color');
@@ -167,10 +165,6 @@
         &:empty {
             display: block;
             padding: 0;
-        }
-
-        @if $variant == 'fluent' {
-            padding: rem(16px) rem(8px);
         }
     }
 
@@ -195,7 +189,6 @@
     }
 
     %igx-card-header-thumbnail {
-        align-self: flex-start;
         margin-inline-end: rem(16px);
 
         @if $variant == 'indigo' {
@@ -235,7 +228,7 @@
     %igx-card-content {
         display: block;
         width: 100%;
-        padding: $card-content-padding;
+        padding: rem(16px);
         color: var-get($theme, 'content-text-color');
         overflow: auto;
     }
@@ -259,6 +252,14 @@
     }
 
     %igx-card-actions {
+        $card-actions-padding: map.get((
+            'material': rem(8px) rem(16px),
+            'fluent': rem(8px) rem(16px),
+            'bootstrap': rem(16px),
+            'indigo': rem(16px),
+        ), $variant);
+
+
         display: flex;
         flex-flow: row wrap;
         justify-content: space-between;
@@ -283,29 +284,26 @@
 
     @if $variant == 'bootstrap' {
         %igx-card-content {
-            @if $variant == 'bootstrap' {
-                padding-block: rem(16px) rem(24px);
-                padding-inline: rem(24px);
-            }
-        }
-
-        %igx-card-actions {
-            padding: rem(16px);
+            padding-block-end: rem(24px);
         }
     }
 
     @if $variant == 'indigo' {
-        %igx-card-content,
-        %igx-card-actions {
-            padding: rem(16px);
+        %igx-card-content {
+            padding-block-end: rem(8px);
         }
 
-        %igx-card-content + %igx-card-actions {
-            padding-block-start: rem(8px);
+        %igx-card-content:last-child {
+            padding-block-end: rem(16px);
         }
 
-        %igx-card-header + %igx-card-content {
-            padding-block-start: 0;
+        %igx-card-header {
+            padding-block-end: 0;
+        }
+
+        %igx-card-header:last-child,
+        %igx-card-header:first-child {
+            padding-block-end: rem(16px);
         }
     }
 

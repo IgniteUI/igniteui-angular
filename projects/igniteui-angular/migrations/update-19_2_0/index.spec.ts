@@ -13,7 +13,7 @@ describe(`Update to ${version}`, () => {
         appTree = setupTestTree();
     });
 
-    const migrationName = 'migration-44';
+    const migrationName = 'migration-45';
 
     it('should remove igx-caroursel property `keyboardSupport` in template', async () => {
         appTree.create(`/testSrc/appPrefix/component/test.component.html`,
@@ -32,6 +32,30 @@ describe(`Update to ${version}`, () => {
         <igx-carousel></igx-carousel>
         <igx-carousel></igx-carousel>
         `
+        );
+    });
+
+    it('should remove the properties related to invalid state from the switch theme', async () => {
+        const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
+
+        appTree.create(
+            testFilePath,
+            `$invalid-switch-theme: switch-theme(
+                $label-color: orange,
+                $label-invalid-color: red,
+                $track-error-color: red,
+                $thumb-on-error-color: darkred,
+                $error-color: red,
+                $error-color-hover: darkred,
+            );`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent(testFilePath)).toEqual(
+            `$invalid-switch-theme: switch-theme(
+                $label-color: orange,
+            );`
         );
     });
 });

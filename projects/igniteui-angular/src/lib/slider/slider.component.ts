@@ -1,6 +1,6 @@
 import {
     AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter,
-    HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren, booleanAttribute
+    HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewEncapsulation, booleanAttribute
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { animationFrameScheduler, fromEvent, interval, merge, noop, Observable, Subject, timer } from 'rxjs';
@@ -38,6 +38,8 @@ let NEXT_ID = 0;
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: 'igx-slider',
     templateUrl: 'slider.component.html',
+    styleUrl: 'slider.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxTicksComponent, IgxThumbLabelComponent, IgxSliderThumbComponent, IgxTickLabelsPipe]
 })
 export class IgxSliderComponent implements

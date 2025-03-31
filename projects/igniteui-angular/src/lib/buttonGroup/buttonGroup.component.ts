@@ -12,7 +12,8 @@ import {
     ViewChildren,
     OnDestroy,
     ElementRef,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IgxButtonDirective } from '../directives/button/button.directive';
@@ -57,6 +58,8 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-buttongroup',
     templateUrl: 'buttongroup-content.component.html',
+    styleUrl: 'buttongroup-content.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
@@ -77,11 +80,31 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     @Input()
     public id = `igx-buttongroup-${NEXT_ID++}`;
 
+    /** @hidden @internal */
+    @HostBinding('class.igx-button-group')
+    public cssClass = 'igx-button-group';
+
+    /** @hidden @internal */
+
     /**
      * @hidden
      */
     @HostBinding('style.zIndex')
     public zIndex = 0;
+
+    /**
+     * Sets/gets the role attribute value.
+     *
+     * @example
+     * ```typescript
+     * @ViewChild("MyButtonGroup", { read: IgxButtonGroupComponent })
+     * public badge: IgxButtonGroupComponent;
+     *
+     * buttonGroup.role = 'group';
+     * ```
+     */
+    @HostBinding('attr.role')
+    public role = 'group';
 
     /**
      * Allows you to set a style using the `itemContentCssClass` input.
@@ -286,6 +309,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
      * }
      * ```
      */
+    @HostBinding('class.igx-button-group--vertical')
     public get isVertical(): boolean {
         return this._isVertical;
     }

@@ -48,36 +48,9 @@ $_theme: $material;
         }
     }
 
-    @include m(invalid) {
-        @include e(composite) {
-            border-color: var-get($_theme, 'track-error-color');
-            background: var-get($_theme, 'track-error-color');
-        }
-    }
-
-    @include mx(invalid, checked) {
-        @include e(composite) {
-            background: var-get($_theme, 'track-on-color');
-            border-color: var-get($_theme, 'border-on-color');
-        }
-    }
-
     @include m(disabled) {
         @include e(thumb) {
             box-shadow: var-get($_theme, 'disabled-elevation');
-        }
-    }
-
-    @include mx(disabled, invalid) {
-        @include e(composite) {
-            background: var-get($_theme, 'track-disabled-color');
-            border-color: var-get($_theme, 'border-disabled-color');
-        }
-    }
-
-    @include mx(disabled, invalid, checked) {
-        @include e(composite) {
-            background: var-get($_theme, 'track-on-disabled-color');
         }
     }
 }

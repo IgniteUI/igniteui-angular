@@ -40,9 +40,9 @@
     // @include banner-typography();
     // @include bottom-nav-typography();
     @include button-typography();
-    @include button-group-typography($categories: (
-        text: 'body-2',
-    ));
+    // @include button-group-typography($categories: (
+    //     text: 'body-2',
+    // ));
     //@include calendar-typography($categories: (
     //    header-year: 'body-2',
     //    header-date: 'h5',
@@ -95,10 +95,10 @@
     @include radio-typography($categories: (
         label: 'body-2'
     ));
-    @include slider-typography($categories: (
-        ticks-label: 'body-2',
-        thumb-label: 'subtitle-2',
-    ));
+    // @include slider-typography($categories: (
+    //     ticks-label: 'body-2',
+    //     thumb-label: 'subtitle-2',
+    // ));
     // @include snackbar-typography();
     @include switch-typography($categories: (
         label: 'body-2'
@@ -112,17 +112,17 @@
         header-hour: 'h5',
         selected-time: 'h6'
     ));
-    @include stepper-typography($categories: (
-        title: 'body-2',
-        subtitle: 'caption',
-        indicator: 'button',
-        body-content: 'body-2'
-    ));
+    //@include stepper-typography($categories: (
+    //    title: 'body-2',
+    //    subtitle: 'caption',
+    //    indicator: 'button',
+    //    body-content: 'body-2'
+    //));
     // @include toast-typography();
     @include tooltip-typography($categories: (
         tooltip-text: 'subtitle-2'
     ));
-    @include tree-typography();
+    //@include tree-typography();
     @include label-typography($categories: (
         label: 'caption'
     ));

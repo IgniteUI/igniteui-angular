@@ -39,7 +39,7 @@
     // @include banner-typography();
     // @include bottom-nav-typography();
     @include button-typography();
-    @include button-group-typography();
+    // @include button-group-typography();
     //@include calendar-typography($categories: (
     //    header-year: 'body-2',
     //    header-date: 'h4',
@@ -97,7 +97,7 @@
     @include radio-typography($categories: (
         label: 'body-1'
     ));
-    @include slider-typography();
+    // @include slider-typography();
     @include snackbar-typography();
     @include switch-typography($categories: (
         label: 'body-1'
@@ -107,10 +107,10 @@
         header-hour: 'h4',
         selected-time: 'h4'
     ));
-    @include stepper-typography();
+    //@include stepper-typography();
     // @include toast-typography();
     @include tooltip-typography();
-    @include tree-typography();
+    //@include tree-typography();
     @include label-typography($categories: (
         label: 'body-1'
     ));
