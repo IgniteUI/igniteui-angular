@@ -176,13 +176,13 @@
         @include button($button-theme-map);
     }
 
-    @if is-used('igx-button-group', $exclude) {
-        $button-group-theme-map: button-group-theme(
-            $schema: $schema,
-        );
-        $button-group-theme-map: meta.call($theme-handler, $button-group-theme-map);
-        @include button-group($button-group-theme-map);
-    }
+    // @if is-used('igx-button-group', $exclude) {
+    //     $button-group-theme-map: button-group-theme(
+    //         $schema: $schema,
+    //     );
+    //     $button-group-theme-map: meta.call($theme-handler, $button-group-theme-map);
+    //     @include button-group($button-group-theme-map);
+    // }
 
     // @if is-used('igx-banner', $exclude) {
     //     $banner-theme-map: banner-theme(
