@@ -155,4 +155,13 @@ export class IgxYearsViewComponent extends IgxCalendarViewDirective implements C
             year: this.yearFormat,
         });
     }
+
+    /**
+     * @hidden
+     */
+    protected onMouseDown() {
+        if (this.tabIndex !== -1) {
+            this.el.nativeElement.focus();
+        }
+    }
 }

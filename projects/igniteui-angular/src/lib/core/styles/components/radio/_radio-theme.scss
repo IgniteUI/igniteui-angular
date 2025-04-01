@@ -87,6 +87,7 @@
         error-color: $error-color,
         error-color-hover: $error-color-hover,
         focus-outline-color-error: $focus-outline-color-error,
+        theme: map.get($schema, '_meta', 'theme'),
         _meta: map.merge(if($meta, $meta, ()), (
             variant: map.get($schema, '_meta', 'theme'),
             theme-variant: map.get($schema, '_meta', 'variant')
@@ -211,7 +212,6 @@
         height: $size;
         min-width: $size;
         line-height: $size;
-        cursor: pointer;
         color: var-get($theme, 'label-color');
         user-select: none;
 
@@ -399,7 +399,6 @@
 
     %radio-label {
         color: var-get($theme, 'label-color');
-        cursor: pointer;
         user-select: none;
         word-wrap: break-all;
 

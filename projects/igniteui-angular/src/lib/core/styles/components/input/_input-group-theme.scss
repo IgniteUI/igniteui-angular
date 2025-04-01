@@ -340,14 +340,14 @@
     );
 
     $hint-spacing-block: map.get((
-        'material': rem(5px),
+        'material': rem(4px),
         'fluent': rem(5px),
         'bootstrap': rem(4px),
         'indigo': rem(4px),
     ), $variant);
 
     $hint-spacing-inline: map.get((
-        'material': rem(16px),
+        'material': sizable(rem(14px), rem(16px), rem(18px)),
         'fluent': 0,
         'bootstrap': 0,
         'indigo': 0,
@@ -422,10 +422,13 @@
         }
 
         input,
-        textarea,
-        span {
+        textarea {
             font: inherit;
             margin: 0;
+        }
+
+        span {
+            font-family: inherit;
         }
 
         input[type='file'] {
@@ -1386,7 +1389,7 @@
         position: relative;
         display: flex;
         padding-block-start: $hint-spacing-block;
-        padding-inline-start: $hint-spacing-inline;
+        padding-inline: $hint-spacing-inline;
 
         justify-content: space-between;
 

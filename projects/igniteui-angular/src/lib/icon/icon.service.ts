@@ -1,4 +1,4 @@
-import { Injectable, SecurityContext, Inject, Optional } from "@angular/core";
+import { DestroyRef, Inject, Injectable, Optional, SecurityContext } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { DOCUMENT } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
@@ -7,7 +7,7 @@ import { PlatformUtil } from "../core/utils";
 import { iconReferences } from './icon.references'
 import { IconFamily, IconMeta, FamilyMeta } from "./types";
 import type { IconType, IconReference } from './types';
-import { IgxTheme } from "../services/theme/theme.service";
+import { IgxTheme, THEME_TOKEN, ThemeToken } from "../services/theme/theme.token";
 import { IndigoIcons } from "./icons.indigo";
 
 /**
@@ -59,16 +59,24 @@ export class IgxIconService {
     private _cachedIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
     private _domParser: DOMParser;
-    private theme!: IgxTheme;
 
     constructor(
         @Optional() private _sanitizer: DomSanitizer,
         @Optional() private _httpClient: HttpClient,
         @Optional() private _platformUtil: PlatformUtil,
+        @Optional() @Inject(THEME_TOKEN) private _themeToken: ThemeToken,
+        @Optional() @Inject(DestroyRef) private _destroyRef: DestroyRef,
         @Optional() @Inject(DOCUMENT) protected document: Document,
     ) {
+
         this.iconLoaded = this._iconLoaded.asObservable();
         this.setFamily(this._defaultFamily.name, this._defaultFamily.meta);
+
+        const { unsubscribe } = this._themeToken?.onChange((theme) => {
+            this.setRefsByTheme(theme);
+        });
+
+        this._destroyRef.onDestroy(() => unsubscribe);
 
         if (this._platformUtil?.isBrowser) {
             this._domParser = new DOMParser();
@@ -133,13 +141,21 @@ export class IgxIconService {
 
     /** @hidden @internal */
     public setRefsByTheme(theme: IgxTheme) {
-        if (this.theme !== theme) {
-            this.theme = theme;
+        for (const { alias, target } of iconReferences) {
+            const external = this._iconRefs.get(alias.family)?.get(alias.name)?.external;
 
-            for (const { alias, target } of iconReferences) {
-                const icon = target.get(theme) ?? target.get('default')!;
-                this.addIconRef(alias.name, alias.family, icon);
-            }
+            const _ref = this._iconRefs.get('default')?.get(alias.name) ?? {};
+            const _target = target.get(theme) ?? target.get('default')!;
+
+            const icon = target.get(theme) ?? target.get('default')!;
+            const overwrite = !external && !(JSON.stringify(_ref) === JSON.stringify(_target));
+
+            this._setIconRef(
+                alias.name,
+                alias.family,
+                icon,
+                overwrite
+            );
         }
     }
 
@@ -169,6 +185,15 @@ export class IgxIconService {
         }
     }
 
+    private _setIconRef(name: string, family: string, icon: IconMeta, overwrite = false) {
+        if (overwrite) {
+            this.setIconRef(name, family, {
+                ...icon,
+                external: false
+            });
+        }
+    }
+
     /**
      *  Similar to addIconRef, but always sets the icon reference meta for an icon in a meta family.
      * ```typescript
@@ -183,8 +208,9 @@ export class IgxIconService {
             this._iconRefs.set(family, familyRef);
         }
 
+        const external = icon.external ?? true;
         const familyType = this.familyType(icon?.family);
-        familyRef.set(name, { ...icon, type: icon.type ?? familyType });
+        familyRef.set(name, { ...icon, type: icon.type ?? familyType, external });
 
         this._iconLoaded.next({ name, family });
     }

@@ -510,7 +510,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.filterValues = this.generateFilterValues();
         this.generateListData();
         this.expressionsList.forEach(expr => {
-            if (this.column.dataType === GridColumnDataType.String && this.column.filteringIgnoreCase && expr.expression.searchVal) {
+            if (this.column.dataType === GridColumnDataType.String && this.column.filteringIgnoreCase
+                && expr.expression.searchVal && expr.expression.searchVal instanceof Set) {
                 this.modifyExpression(expr);
             }
         });
@@ -548,7 +549,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const lowerCaseFilterValues = new Set(Array.from(expr.expression.searchVal).map((value: string) => value.toLowerCase()));
 
         this.grid.data.forEach(item => {
-            if (lowerCaseFilterValues.has(item[this.column.field]?.toLowerCase())) {
+            if (typeof item[this.column.field] === "string" && lowerCaseFilterValues.has(item[this.column.field]?.toLowerCase())) {
                 expr.expression.searchVal.add(item[this.column.field]);
             }
         });

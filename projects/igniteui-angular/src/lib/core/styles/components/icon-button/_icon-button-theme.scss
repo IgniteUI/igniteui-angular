@@ -118,6 +118,7 @@
                 disabled-foreground: $disabled-foreground,
                 disabled-border-color: $disabled-border-color,
                 size: $size,
+                theme: map.get($schema, '_meta', 'theme'),
             ))
         ));
     }
@@ -369,7 +370,6 @@
                 content: '';
                 inset: 0;
                 box-shadow: inset 0 0 0 rem(1px) var-get($outlined-theme, 'border-color');
-                z-index: -1;
                 border-radius: inherit;
             }
 
