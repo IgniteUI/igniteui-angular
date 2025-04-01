@@ -41,9 +41,11 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
         if (expr.searchTree) {
             const records = rec[expr.searchTree.entity];
+            const shouldMatchRecords = expr.conditionName === 'inQuery';
             for (let index = 0; index < records.length; index++) {
                 const record = records[index];
-                if (this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity)) {
+                if ((shouldMatchRecords && this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity)) ||
+                    (!shouldMatchRecords && !this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity))) {
                     return true;
                 }
             }
