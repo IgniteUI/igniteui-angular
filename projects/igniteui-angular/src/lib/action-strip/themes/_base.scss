@@ -49,7 +49,7 @@ $_theme: $material;
         z-index: 9999;
 
         [igxIconButton] {
-            --component-size: var(--action-strip-size) !important;
+            --component-size: var(--action-strip-size);
 
             width: var(--button-size);
             height: var(--button-size);
