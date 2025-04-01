@@ -119,6 +119,16 @@ describe('IgxQueryBuilder', () => {
       expect(mainEntityContainer.children[1].children[1].tagName).toBe('IGX-COMBO');
       expect(nestedEntityContainer.children[1].children[1].tagName).toBe('IGX-SELECT');
     }));
+
+    it('Should return proper fields collection without additional props.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+
+      queryBuilder.entities[0].fields.forEach(field => {
+        expect(field.filters).toBeUndefined();
+        expect(field.pipeArgs).toBeUndefined();
+      });
+    }));
   });
 
   describe('Interactions', () => {
@@ -3195,8 +3205,7 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
                 <p class="selectedField">{{selectedField.field}}</p>
                 <p class="selectedCondition">{{selectedCondition}}</p>
             } @else if (selectedField?.field === 'OrderId' && selectedCondition === 'equals') {
-                <igx-combo [data]="comboData" [(ngModel)]="searchValue.value"
-                    (selectionChanging)="handleChange($event, selectedField, searchValue)" [displayKey]="'field'">
+                <igx-combo [data]="comboData" [(ngModel)]="searchValue.value" [displayKey]="'field'">
                 </igx-combo>
             } @else {
                 <ng-container #defaultTemplate *ngTemplateOutlet="defaultSearchValueTemplate"></ng-container>
@@ -3225,6 +3234,7 @@ export class IgxQueryBuilderCustomTemplateSampleTestComponent implements OnInit 
 
   public ngOnInit(): void {
     this.entities = SampleEntities.map(a => ({ ...a }));
+    this.entities[1].fields[0].formatter = (value: any, rowData: any) => rowData === 'equals' ? (Array.from(value)[0] as any).id : value;
 
     const tree = new FilteringExpressionsTree(FilteringLogic.And, null, 'Orders', ['*']);
     tree.filteringOperands.push({
@@ -3241,12 +3251,5 @@ export class IgxQueryBuilderCustomTemplateSampleTestComponent implements OnInit 
       { id: 0, field: 'A' },
       { id: 1, field: 'B' }
     ];
-  }
-
-  public handleChange(ev, selectedField, searchVal) {
-    if (selectedField.field === 'OrderId') {
-      searchVal.value = ev.newValue[0];
-      selectedField.formatter = (value: any, rowData: any) => rowData === 'equals' ? (Array.from(value)[0] as any).id : value;
-    }
   }
 }
