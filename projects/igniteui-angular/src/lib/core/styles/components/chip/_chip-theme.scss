@@ -378,9 +378,12 @@
         }
 
         igx-avatar,
-        igx-circular-bar,
         igx-icon {
             --component-size: var(--chip-size);
+        }
+
+        igx-circular-bar {
+            --diameter: #{sizable(rem(14px), rem(18px), rem(24px))};
         }
 
         @if $variant == 'indigo' {
@@ -389,8 +392,7 @@
             }
         }
 
-        igx-avatar,
-        igx-circular-bar {
+        igx-avatar {
             max-height: 100%;
             width: sizable(rem(14px), rem(18px), rem(24px));
             max-width: sizable(rem(14px), rem(18px), rem(24px));
