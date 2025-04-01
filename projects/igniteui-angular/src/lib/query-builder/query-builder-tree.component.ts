@@ -516,7 +516,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     /** @hidden */
     protected isAdvancedFiltering(): boolean {
-        return this.entities?.length === 1 && !this.entities[0]?.name;
+        return (this.entities?.length === 1 && !this.entities[0]?.name) ||
+            this.entities.find(e => e.childEntities?.length > 0) !== undefined;
     }
 
     /** @hidden */
@@ -699,6 +700,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public get selectedField(): FieldType {
         if (this._selectedField && !this._selectedField.filters) {
             this._selectedField.filters = this.getFilters(this._selectedField);
+        }
+
+        if (this._selectedField && this._selectedField.pipeArgs) {
+            this._selectedField.pipeArgs = this.getPipeArgs(this._selectedField);
         }
 
         return this._selectedField;
