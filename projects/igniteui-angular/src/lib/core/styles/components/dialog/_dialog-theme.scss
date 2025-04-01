@@ -49,13 +49,11 @@
     $meta: map.get($theme, '_meta');
 
     @if not($title-color) and $background{
-        $title-color: text-contrast($background);
+        $title-color: adaptive-contrast(var(--background));
     }
 
     @if not($message-color) and $background{
-        @if meta.type-of($background) == 'color' {
-            $message-color: rgba(text-contrast($background), .8);
-        }
+        $message-color: hsla(from adaptive-contrast(var(--background)) h s l / .8);
     }
 
     @if not($shadow) {
