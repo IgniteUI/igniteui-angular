@@ -82,6 +82,8 @@ $_theme: $material;
             }
 
             [igxIconButton] {
+                border-radius: var-get($_theme, 'actions-border-radius');
+
                 igx-icon {
                     color: var-get($_theme, 'icon-color');
                 }
