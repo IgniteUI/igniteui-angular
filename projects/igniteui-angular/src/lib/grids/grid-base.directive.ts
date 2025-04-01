@@ -3367,8 +3367,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this.platform.isBrowser ? this.calcWidth : undefined;
     }
 
-    protected get renderData(){
-        return this.platform.isBrowser ? this.data : undefined;
+    protected get renderData() {
+        // omit data if not in the browser and size is %
+        return !this.platform.isBrowser && this.isPercentHeight ? undefined : this.data;
     }
 
     @HostBinding('style.display')
