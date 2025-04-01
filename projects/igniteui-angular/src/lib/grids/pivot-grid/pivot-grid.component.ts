@@ -2510,8 +2510,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.theadRow.nativeElement.offsetHeight;
     }
 
-    protected override updateDefaultRowHeight() {
-        super.updateDefaultRowHeight();
+    protected override updateDefaultSizes() {
+        super.updateDefaultSizes();
         if (this.hasHorizontalLayout) {
             // Trigger pipes to recalc heights for the horizontal layout mrl rows.
             this.regroupTrigger++;

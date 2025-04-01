@@ -63,6 +63,7 @@ const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
 const DEFAULT_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_DIGITS_INFO = '1.0-3';
+const CELL_CONTENT_MIN = 32;
 
 /* blazorElement */
 /* contentParent: ColumnGroup */
@@ -1206,14 +1207,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (!this.grid) {
             return '80';
         }
-        switch (this.grid.gridSize) {
-            case Size.Medium:
-                return '64';
-            case Size.Small:
-                return '56';
-            default:
-                return '80';
-        }
+        // the paddings + the min allowed cell content
+        return this.grid.defaultHeaderGroupMinWidth + CELL_CONTENT_MIN;
     }
     /**
      * Returns a reference to the `summaryTemplate`.
