@@ -15,12 +15,14 @@ import {
     IgxGridAdvancedFilteringComponent,
     IgxGridExternalAdvancedFilteringComponent,
     IgxGridAdvancedFilteringBindingComponent,
-    IgxGridAdvancedFilteringDynamicColumnsComponent
+    IgxGridAdvancedFilteringDynamicColumnsComponent,
+    IgxGridAdvancedFilteringSerializedTreeComponent,
+    IgxGridAdvancedFilteringWithToolbarComponent
 } from '../../test-utils/grid-samples.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
-import { IFilteringEventArgs } from '../public_api';
+import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { QueryBuilderFunctions } from '../../query-builder/query-builder-functions.spec';
 import { By } from '@angular/platform-browser';
@@ -37,7 +39,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxGridExternalAdvancedFilteringComponent,
                 IgxGridAdvancedFilteringBindingComponent,
                 IgxHierGridExternalAdvancedFilteringComponent,
-                IgxGridAdvancedFilteringDynamicColumnsComponent
+                IgxGridAdvancedFilteringDynamicColumnsComponent,
+                IgxGridAdvancedFilteringWithToolbarComponent
             ]
         });
     }));
@@ -1194,6 +1197,65 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
     });
 
+    describe('Advanced filtering with toolbar', () => {
+        let fix: ComponentFixture<IgxGridAdvancedFilteringWithToolbarComponent>;
+        let grid: IgxGridComponent;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridAdvancedFilteringWithToolbarComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('Should update toolbar when advancedFilteringExpressionsTreeChange emits a new value', fakeAsync(() => {
+            // Set initial filtering expressions tree
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'ProductName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'angular',
+                ignoreCase: true
+            });
+
+            // Apply the initial filtering tree
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Create a new filtering tree with more filters
+            const updatedTree = new FilteringExpressionsTree(FilteringLogic.And);
+            updatedTree.filteringOperands.push({
+                fieldName: 'Downloads',
+                condition: IgxStringFilteringOperand.instance().condition('equals'),
+                searchVal: 10,
+                ignoreCase: true
+            });
+            updatedTree.filteringOperands.push({
+                fieldName: 'ProductName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'angular',
+                ignoreCase: true
+            });
+            updatedTree.filteringOperands.push({
+                fieldName: 'Category',
+                condition: IgxStringFilteringOperand.instance().condition('equals'),
+                searchVal: 'electronics',
+                ignoreCase: false
+            });
+
+            // Update the filtering expressions tree
+            grid.advancedFilteringExpressionsTree = updatedTree;
+            fix.detectChanges();
+
+            // Verify the correct number of filters
+            const toolbarDebugElement = fix.debugElement.query(By.directive(IgxGridToolbarAdvancedFilteringComponent));
+            const toolbarComponent = toolbarDebugElement.componentInstance as IgxGridToolbarAdvancedFilteringComponent;
+            const numberOfFilters = (toolbarComponent as any).numberOfColumns;
+
+            expect(grid.advancedFilteringExpressionsTree.filteringOperands.length).toEqual(3);
+            expect(numberOfFilters).toEqual(3);
+        }));
+    })
+
     describe('Localization - ', () => {
         it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
@@ -1388,6 +1450,52 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify no filtered data
             expect(grid.filteredData).toBe(null);
+        }));
+
+    });
+
+    describe('Expression tree rehydration - ', () => {
+        it('should correctly filter with a deserialized expression tree.', fakeAsync(() => {
+            const errorSpy = spyOn(console, 'error');
+            let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
+            fix.detectChanges();
+            let grid = fix.componentInstance.grid;
+
+            expect(errorSpy).not.toHaveBeenCalled();
+
+            // Verify filtered data
+            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.rowList.length).toBe(3);
+        }));
+
+        it('should correctly filter with a declared IFilteringExpressionsTree object.', fakeAsync(() => {
+            const errorSpy = spyOn(console, 'error');
+            let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
+            fix.detectChanges();
+            fix.componentInstance.grid.advancedFilteringExpressionsTree = fix.componentInstance.filterTreeObject;
+            fix.detectChanges();
+            let grid = fix.componentInstance.grid;
+
+            expect(errorSpy).not.toHaveBeenCalled();
+
+            // Verify filtered data
+            expect(grid.filteredData.length).toEqual(2);
+            expect(grid.rowList.length).toBe(2);
+        }));
+
+        it('should correctly filter when binding to a declared IFilteringExpressionsTree object.', fakeAsync(() => {
+            const errorSpy = spyOn(console, 'error');
+            let fix = TestBed.createComponent(IgxGridAdvancedFilteringSerializedTreeComponent);
+            fix.detectChanges();
+            fix.componentInstance.filterTree = fix.componentInstance.filterTreeObject;
+            fix.detectChanges();
+            let grid = fix.componentInstance.grid;
+
+            expect(errorSpy).not.toHaveBeenCalled();
+
+            // Verify filtered data
+            expect(grid.filteredData.length).toEqual(2);
+            expect(grid.rowList.length).toBe(2);
         }));
     });
 });

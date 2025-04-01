@@ -38,7 +38,17 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromeWithGC'],
+    customLaunchers: {
+        ChromeWithGC: {
+            base: 'Chrome',
+            flags: [
+                '--js-flags="--expose-gc"',
+                '--disable-backgrounding-occluded-windows', // don't throttle when window is fully hidden behind others
+            ],
+            debug: false
+        }
+    },
     singleRun: false
   });
 };

@@ -1,9 +1,9 @@
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { ChangeDetectorRef, EventEmitter, Inject, InjectionToken } from '@angular/core';
+import { ChangeDetectorRef, Directive, EventEmitter, Inject, OnDestroy } from '@angular/core';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationPlayer, AnimationService } from '../services/animation/animation';
 import { fadeIn, slideInLeft } from 'igniteui-angular/animations';
-import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
+import { CarouselAnimationType } from './enums';
 
 export enum Direction { NONE, NEXT, PREV }
 
@@ -12,37 +12,6 @@ export interface CarouselAnimationSettings {
     leaveAnimation: AnimationReferenceMetadata;
 }
 
-export interface ICarouselComponentBase {
-    id: string;
-    role: string;
-    cssClass: string;
-    loop: boolean;
-    pause: boolean;
-    navigation: boolean;
-    indicators: boolean;
-    vertical: boolean;
-    keyboardSupport: boolean;
-    gesturesSupport: boolean;
-    maximumIndicatorsCount: number;
-    indicatorsOrientation: CarouselIndicatorsOrientation;
-    animationType: CarouselAnimationType;
-    total: number;
-    current: number;
-    interval: number;
-    slideChanged: EventEmitter<any>;
-    slideAdded: EventEmitter<any>;
-    slideRemoved: EventEmitter<any>;
-    carouselPaused: EventEmitter<any>;
-    carouselPlaying: EventEmitter<any>;
-    next(): void;
-    prev(): void;
-    play(): void;
-    stop(): void
-}
-
-/** @hidden */
-export const IGX_CAROUSEL_COMPONENT = /*@__PURE__*/new InjectionToken<ICarouselComponentBase>('IgxCarouselToken');
-
 /** @hidden */
 export interface IgxSlideComponentBase {
     direction: Direction;
@@ -50,7 +19,8 @@ export interface IgxSlideComponentBase {
 }
 
 /** @hidden */
-export abstract class IgxCarouselComponentBase {
+@Directive()
+export abstract class IgxCarouselComponentBase implements OnDestroy {
     /** @hidden */
     public animationType: CarouselAnimationType = CarouselAnimationType.slide;
 
@@ -79,6 +49,11 @@ export abstract class IgxCarouselComponentBase {
     constructor(
         @Inject(IgxAngularAnimationService) private animationService: AnimationService,
         protected cdr: ChangeDetectorRef) {
+    }
+
+    public ngOnDestroy(): void {
+        this.enterAnimationPlayer?.destroy();
+        this.leaveAnimationPlayer?.destroy();
     }
 
     /** @hidden */
@@ -177,7 +152,7 @@ export abstract class IgxCarouselComponentBase {
         this.enterAnimationPlayer.animationEnd.subscribe(() => {
             // TODO: animation may never end. Find better way to clean up the player
             if (this.enterAnimationPlayer) {
-                this.enterAnimationPlayer.reset();
+                this.enterAnimationPlayer.destroy();
                 this.enterAnimationPlayer = null;
             }
             this.animationPosition = 0;
@@ -200,7 +175,7 @@ export abstract class IgxCarouselComponentBase {
         this.leaveAnimationPlayer.animationEnd.subscribe(() => {
             // TODO: animation may never end. Find better way to clean up the player
             if (this.leaveAnimationPlayer) {
-                this.leaveAnimationPlayer.reset();
+                this.leaveAnimationPlayer.destroy();
                 this.leaveAnimationPlayer = null;
             }
             this.animationPosition = 0;
