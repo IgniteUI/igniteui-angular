@@ -698,11 +698,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get selectedField(): FieldType {
+        console.log('get selectedField');
         if (this._selectedField && !this._selectedField.filters) {
             this._selectedField.filters = this.getFilters(this._selectedField);
         }
 
-        if (this._selectedField && this._selectedField.pipeArgs) {
+        if (this._selectedField && !this._selectedField.pipeArgs) {
             this._selectedField.pipeArgs = this.getPipeArgs(this._selectedField);
         }
 
