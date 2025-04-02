@@ -1,9 +1,8 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { expect, vi } from 'vitest';
+import { Component, OnInit, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from '../../grids/grid/public_api';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalGridActionStripComponent } from '../../test-utils/hierarchical-grid-components.spec';
@@ -18,14 +17,11 @@ import { IRowDataCancelableEventArgs, IgxColumnComponent } from '../../grids/pub
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('igxGridEditingActions #grid ', () => {
-    let fixture;
     let actionStrip: IgxActionStripComponent;
     let grid: IgxGridComponent;
-    configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxHierarchicalGridActionStripComponent,
                 IgxTreeGridEditActionsComponent,
                 IgxActionStripTestingComponent,
@@ -38,11 +34,13 @@ describe('igxGridEditingActions #grid ', () => {
     }));
 
     describe('Base ', () => {
+        let fixture: ComponentFixture<IgxActionStripTestingComponent>;
+
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
-            grid = fixture.componentInstance.grid;
+            actionStrip = fixture.componentInstance.actionStrip();
+            grid = fixture.componentInstance.grid();
         });
 
         it('should allow editing and deleting row', () => {
@@ -57,7 +55,7 @@ describe('igxGridEditingActions #grid ', () => {
             expect(grid.rowList.first.inEditMode).toBe(true);
 
             expect(grid.rowList.first.data['ID']).toBe('ALFKI');
-            const dataLenght = grid.dataLength;
+            const dataLength = grid.dataLength;
             actionStrip.show(grid.rowList.first);
             fixture.detectChanges();
             deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
@@ -72,12 +70,12 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.hide();
             fixture.detectChanges();
             expect(grid.rowList.first.data['ID']).toBe('ANATR');
-            expect(dataLenght - 1).toBe(grid.dataLength);
+            expect(dataLength - 1).toBe(grid.dataLength);
         });
 
         it('should focus the first cell when editing mode is cell', () => {
             fixture.detectChanges();
-            grid.selectRange({rowStart: 0, rowEnd: 0, columnStart: 'ContactName', columnEnd: 'ContactName'});
+            grid.selectRange({ rowStart: 0, rowEnd: 0, columnStart: 'ContactName', columnEnd: 'ContactName' });
             fixture.detectChanges();
             grid.actionStrip.show(grid.rowList.first);
             fixture.detectChanges();
@@ -91,32 +89,34 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should allow hiding/showing the edit/delete actions via the related property.', () => {
-           const editActions = fixture.componentInstance.actionStrip.actionButtons.first;
-           editActions.editRow = false;
-           fixture.detectChanges();
+            const editActions = fixture.componentInstance.actionStrip().actionButtons.first as IgxGridEditingActionsComponent;
+            editActions.editRow = false;
+            fixture.detectChanges();
 
-           grid.actionStrip.show(grid.rowList.first);
-           fixture.detectChanges();
-           let icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
-           let iconsText = icons.map(x => x.nativeElement.innerText);
-           expect(iconsText).toEqual(['delete']);
+            grid.actionStrip.show(grid.rowList.first);
+            fixture.detectChanges();
+            let icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
+            let iconsText = icons.map(x => x.nativeElement.innerText);
+            expect(iconsText).toEqual(['delete']);
 
-           editActions.editRow = true;
-           editActions.deleteRow = false;
-           fixture.detectChanges();
+            editActions.editRow = true;
+            editActions.deleteRow = false;
+            fixture.detectChanges();
 
-           icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
-           iconsText = icons.map(x => x.nativeElement.innerText);
-           expect(iconsText).toEqual(['edit']);
+            icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
+            iconsText = icons.map(x => x.nativeElement.innerText);
+            expect(iconsText).toEqual(['edit']);
         });
     });
 
     describe('Menu ', () => {
+        let fixture: ComponentFixture<IgxActionStripEditMenuComponent>
+
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripEditMenuComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
-            grid = fixture.componentInstance.grid;
+            actionStrip = fixture.componentInstance.actionStrip();
+            grid = fixture.componentInstance.grid();
         });
         it('should allow editing and deleting row via menu', async () => {
             const row = grid.rowList.toArray()[0];
@@ -132,7 +132,7 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.menu.selectItem(editMenuItem);
             fixture.detectChanges();
 
-            expect(row.inEditMode).toBeTrue();
+            expect(row.inEditMode).toBe(true);
 
             grid.gridAPI.crudService.endEdit();
             fixture.detectChanges();
@@ -149,8 +149,8 @@ describe('igxGridEditingActions #grid ', () => {
         it('should not auto-hide on mouse leave of row if action strip is menu', () => {
             fixture = TestBed.createComponent(IgxActionStripMenuOneRowComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
-            grid = fixture.componentInstance.grid;
+            actionStrip = fixture.componentInstance.actionStrip();
+            grid = fixture.componentInstance.grid();
 
             const row = grid.getRowByIndex(0);
             row.pin();
@@ -166,16 +166,18 @@ describe('igxGridEditingActions #grid ', () => {
             UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
         });
     });
 
     describe('integration with pinning actions ', () => {
+        let fixture: ComponentFixture<IgxActionStripPinEditComponent>;
+
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripPinEditComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
-            grid = fixture.componentInstance.grid;
+            actionStrip = fixture.componentInstance.actionStrip();
+            grid = fixture.componentInstance.grid();
         });
         it('should remove editing actions on disabled rows', () => {
             grid.rowList.first.pin();
@@ -190,7 +192,7 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should emit correct rowPinning arguments with pinning actions', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            const rowPinningSpy = vi.spyOn(grid.rowPinning, 'emit');
             const row = grid.getRowByIndex(1);
 
             actionStrip.show(grid.rowList.toArray()[1]);
@@ -200,9 +202,9 @@ describe('igxGridEditingActions #grid ', () => {
             pinningIcon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
 
-            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
-            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
-                rowID : row.key,
+            expect(rowPinningSpy).toHaveBeenCalledTimes(1);
+            expect(rowPinningSpy).toHaveBeenCalledWith({
+                rowID: row.key,
                 rowKey: row.key,
                 insertAtIndex: 0,
                 isPinned: true,
@@ -218,9 +220,9 @@ describe('igxGridEditingActions #grid ', () => {
             pinningIcon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
 
-            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
-            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
-                rowID : row5.key,
+            expect(rowPinningSpy).toHaveBeenCalledTimes(2);
+            expect(rowPinningSpy).toHaveBeenCalledWith({
+                rowID: row5.key,
                 rowKey: row5.key,
                 insertAtIndex: 1,
                 isPinned: true,
@@ -231,11 +233,13 @@ describe('igxGridEditingActions #grid ', () => {
     });
 
     describe('auto show/hide', () => {
+        let fixture: ComponentFixture<IgxActionStripPinEditComponent>;
+
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripPinEditComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
-            grid = fixture.componentInstance.grid;
+            actionStrip = fixture.componentInstance.actionStrip();
+            grid = fixture.componentInstance.grid();
         });
         it('should auto-show on mouse enter of row.', () => {
             const row = grid.gridAPI.get_row_by_index(0);
@@ -244,13 +248,13 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
 
             expect(actionStrip.context).toBe(row);
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
         });
         it('should auto-hide on mouse leave of row.', async () => {
             fixture = TestBed.createComponent(IgxActionStripOneRowComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
-            grid = fixture.componentInstance.grid;
+            actionStrip = fixture.componentInstance.actionStrip();
+            grid = fixture.componentInstance.grid();
 
             const row = grid.getRowByIndex(0);
             row.pin();
@@ -259,27 +263,32 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.show(row);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
             UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeTrue();
+            expect(actionStrip.hidden).toBe(true);
         });
         it('should auto-hide on mouse leave of grid.', () => {
             const row = grid.getRowByIndex(0);
             actionStrip.show(row);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
             UIInteractions.simulateMouseEvent('mouseleave', grid.nativeElement, 0, 0);
             fixture.detectChanges();
 
-            expect(actionStrip.hidden).toBeTrue();
+            expect(actionStrip.hidden).toBe(true);
         });
     });
 
     describe('auto show/hide in HierarchicalGrid', () => {
-        let actionStripRoot; let actionStripChild; let hierarchicalGrid: IgxHierarchicalGridComponent;
+        let fixture: ComponentFixture<IgxHierarchicalGridActionStripComponent>;
+
+        let actionStripRoot: IgxActionStripComponent;
+        let actionStripChild: IgxActionStripComponent;
+        let hierarchicalGrid: IgxHierarchicalGridComponent;
+
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridActionStripComponent);
             fixture.detectChanges();
@@ -295,7 +304,7 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
 
             expect(actionStripRoot.context).toBe(row);
-            expect(actionStripRoot.hidden).toBeFalse();
+            expect(actionStripRoot.hidden).toBe(false);
             expect(actionStripChild.context).toBeUndefined();
         });
 
@@ -312,7 +321,7 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
 
             expect(actionStripChild.context).toBe(childRow);
-            expect(actionStripChild.hidden).toBeFalse();
+            expect(actionStripChild.hidden).toBe(false);
 
             expect(actionStripRoot.context).toBeUndefined();
         });
@@ -332,13 +341,15 @@ describe('igxGridEditingActions #grid ', () => {
             UIInteractions.simulateMouseEvent('mouseleave', hierarchicalGrid.nativeElement, 0, 0);
             fixture.detectChanges();
 
-            expect(actionStripRoot.hidden).toBeTrue();
-            expect(actionStripChild.hidden).toBeTrue();
+            expect(actionStripRoot.hidden).toBe(true);
+            expect(actionStripChild.hidden).toBe(true);
         });
     });
 
     describe('TreeGrid - action strip', () => {
+        let fixture: ComponentFixture<IgxTreeGridEditActionsComponent>;
         let treeGrid: IgxTreeGridComponent;
+
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxTreeGridEditActionsComponent);
             fixture.detectChanges();
@@ -347,8 +358,9 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should allow deleting row', () => {
-            spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
-            spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
+            const rowDeleteSpy = vi.spyOn(treeGrid.rowDelete, 'emit');
+            const rowDeletedSpy = vi.spyOn(treeGrid.rowDeleted, 'emit');
+
             const row = treeGrid.rowList.toArray()[0];
             actionStrip.show(row);
             fixture.detectChanges();
@@ -380,8 +392,8 @@ describe('igxGridEditingActions #grid ', () => {
             deleteChildBtn.actionClick.emit();
             fixture.detectChanges();
 
-            expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
-            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnceWith(rowDeletedArgs);
+            expect(rowDeleteSpy).toHaveBeenCalledExactlyOnceWith(rowDeleteArgs);
+            expect(rowDeletedSpy).toHaveBeenCalledExactlyOnceWith(rowDeletedArgs);
             expect(treeGrid.rowList.first.data['ID']).toBe(6);
         });
     });
@@ -389,7 +401,7 @@ describe('igxGridEditingActions #grid ', () => {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+    <igx-grid [data]="data" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
         @for (c of columns; track c.field) {
             <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
@@ -397,7 +409,7 @@ describe('igxGridEditingActions #grid ', () => {
             </igx-column>
         }
 
-        <igx-action-strip #actionStrip>
+        <igx-action-strip>
             <igx-grid-editing-actions></igx-grid-editing-actions>
         </igx-action-strip>
     </igx-grid>
@@ -405,11 +417,8 @@ describe('igxGridEditingActions #grid ', () => {
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 class IgxActionStripTestingComponent implements OnInit {
-    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
-    public actionStrip: IgxActionStripComponent;
-
-    @ViewChild('grid', { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
+    public actionStrip = viewChild.required(IgxActionStripComponent);
+    public grid = viewChild.required(IgxGridComponent);
 
     public data: any[];
     public dataOneRow: any[];
@@ -440,7 +449,7 @@ class IgxActionStripTestingComponent implements OnInit {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+    <igx-grid [data]="data" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
         @for (c of columns; track c.field) {
             <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
@@ -448,7 +457,7 @@ class IgxActionStripTestingComponent implements OnInit {
             </igx-column>
         }
 
-        <igx-action-strip #actionStrip>
+        <igx-action-strip>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
             <igx-grid-editing-actions></igx-grid-editing-actions>
         </igx-action-strip>
@@ -462,7 +471,7 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+    <igx-grid [data]="data" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
         @for (c of columns; track c.field) {
             <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
@@ -470,7 +479,7 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
             </igx-column>
         }
 
-        <igx-action-strip #actionStrip>
+        <igx-action-strip>
             <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
         </igx-action-strip>
     </igx-grid>
@@ -483,7 +492,7 @@ class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
+    <igx-grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
         @for (c of columns; track c.field) {
             <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
@@ -491,7 +500,7 @@ class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
             </igx-column>
         }
 
-        <igx-action-strip #actionStrip>
+        <igx-action-strip>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
             <igx-grid-editing-actions></igx-grid-editing-actions>
         </igx-action-strip>
@@ -505,7 +514,7 @@ class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
+    <igx-grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
         @for (c of columns; track c.field) {
             <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
@@ -513,7 +522,7 @@ class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
             </igx-column>
         }
 
-        <igx-action-strip #actionStrip>
+        <igx-action-strip>
             <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
         </igx-action-strip>
     </igx-grid>

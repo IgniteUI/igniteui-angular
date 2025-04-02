@@ -1,9 +1,8 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { expect } from 'vitest';
+import { Component, OnInit, viewChild } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
-import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from '../../grids/grid/public_api';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
@@ -12,14 +11,11 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 
 describe('igxGridPinningActions #grid ', () => {
-    let fixture;
     let actionStrip: IgxActionStripComponent;
     let grid: IgxGridComponent;
-    configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxActionStripTestingComponent,
                 IgxActionStripPinMenuComponent
             ]
@@ -27,11 +23,13 @@ describe('igxGridPinningActions #grid ', () => {
     }));
 
     describe('Base ', () => {
+        let fixture: ComponentFixture<IgxActionStripTestingComponent>;
+
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
-            grid = fixture.componentInstance.grid;
+            actionStrip = fixture.componentInstance.actionStrip();
+            grid = fixture.componentInstance.grid();
         });
 
         it('should allow pinning and unpinning rows in a grid', () => {
@@ -76,11 +74,13 @@ describe('igxGridPinningActions #grid ', () => {
     });
 
     describe('Menu ', () => {
+        let fixture: ComponentFixture<IgxActionStripPinMenuComponent>;
+
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripPinMenuComponent);
             fixture.detectChanges();
-            actionStrip = fixture.componentInstance.actionStrip;
-            grid = fixture.componentInstance.grid;
+            actionStrip = fixture.componentInstance.actionStrip();
+            grid = fixture.componentInstance.grid();
         });
         it('should allow pinning row via menu', async () => {
             const row = grid.rowList.toArray()[0];
@@ -101,7 +101,7 @@ describe('igxGridPinningActions #grid ', () => {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+    <igx-grid [data]="data" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
         @for (c of columns; track c.field) {
             <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
@@ -109,7 +109,7 @@ describe('igxGridPinningActions #grid ', () => {
             </igx-column>
         }
 
-        <igx-action-strip #actionStrip>
+        <igx-action-strip>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
         </igx-action-strip>
     </igx-grid>
@@ -117,11 +117,8 @@ describe('igxGridPinningActions #grid ', () => {
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent]
 })
 class IgxActionStripTestingComponent implements OnInit {
-    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
-    public actionStrip: IgxActionStripComponent;
-
-    @ViewChild('grid', { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
+    public actionStrip = viewChild.required(IgxActionStripComponent);
+    public grid = viewChild.required(IgxGridComponent);
 
     private data: any[];
     private columns: any[];
@@ -147,7 +144,7 @@ class IgxActionStripTestingComponent implements OnInit {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+    <igx-grid [data]="data" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'">
         @for (c of columns; track c.field) {
             <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
@@ -155,7 +152,7 @@ class IgxActionStripTestingComponent implements OnInit {
             </igx-column>
         }
 
-        <igx-action-strip #actionStrip>
+        <igx-action-strip>
             <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
         </igx-action-strip>
     </igx-grid>

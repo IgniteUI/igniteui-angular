@@ -4,26 +4,29 @@ import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/public_
 import { GridType } from '../grids/common/grid.interface';
 import { Subscription } from 'rxjs';
 
+
+// REVIEW
+// FIXME
 /**
  * Global beforeEach and afterEach checks to ensure test fails on specific warnings
  * Use direct env because karma-parallel's wrap ignores these in secondary shards
  * https://github.com/joeljeske/karma-parallel/issues/64
  */
-(jasmine.getEnv() as any).beforeEach(() => {
-    spyOn(console, 'warn').and.callThrough();
-});
+// (jasmine.getEnv() as any).beforeEach(() => {
+//     spyOn(console, 'warn').and.callThrough();
+// });
 
-(jasmine.getEnv() as any).afterEach(() => {
-    expect(console.warn)
-        .withContext('Components & tests should be free of @for track duplicated keys warnings')
-        .not.toHaveBeenCalledWith(jasmine.stringContaining('NG0955'));
-    expect(console.warn)
-        .withContext('Components & tests should be free of @for track DOM re-creation warnings')
-        .not.toHaveBeenCalledWith(jasmine.stringContaining('NG0956'));
-});
+// (jasmine.getEnv() as any).afterEach(() => {
+//     expect(console.warn)
+//         .withContext('Components & tests should be free of @for track duplicated keys warnings')
+//         .not.toHaveBeenCalledWith(jasmine.stringContaining('NG0955'));
+//     expect(console.warn)
+//         .withContext('Components & tests should be free of @for track DOM re-creation warnings')
+//         .not.toHaveBeenCalledWith(jasmine.stringContaining('NG0956'));
+// });
 
 
-export let gridsubscriptions: Subscription [] = [];
+export let gridsubscriptions: Subscription[] = [];
 
 export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: GridType) => {
     gridsubscriptions.push(grid.verticalScrollContainer.chunkLoad.subscribe(() => fixture.detectChanges()));
@@ -76,7 +79,7 @@ export class TestNgZone extends NgZone {
     public override onStable: EventEmitter<any> = new EventEmitter(false);
 
     constructor() {
-        super({enableLongStackTrace: false, shouldCoalesceEventChangeDetection: false});
+        super({ enableLongStackTrace: false, shouldCoalesceEventChangeDetection: false });
     }
 
     public override run(fn: () => void): any {

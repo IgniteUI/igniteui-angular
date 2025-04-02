@@ -25,6 +25,7 @@ export default defineConfig(({ mode }) => {
             setupFiles: ['src/test-setup.ts'],
             include: [
                 'src/lib/accordion/**/*.spec.ts',
+                'src/lib/action-strip/**/*.spec.ts',
                 'src/lib/avatar/**/*.spec.ts',
                 'src/lib/badge/**/*.spec.ts',
                 'src/lib/banner/**/*.spec.ts',
@@ -34,7 +35,7 @@ export default defineConfig(({ mode }) => {
             browser: {
                 enabled: true,
                 provider: 'playwright',
-                headless: false,
+                headless: true,
                 viewport: { height: 800, width: 600 },
                 instances: [
                     {
