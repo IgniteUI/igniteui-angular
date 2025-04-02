@@ -32,6 +32,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
     const FILTERING_ROW_CLASS = 'igx-grid-filtering-row';
     const FILTERING_CELL_CLASS = 'igx-grid-filtering-cell';
+    const DEFAULT_SUMMARY_HEIGHT = 36;
 
     configureTestSuite();
 
@@ -497,8 +498,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             let tFoot = hierarchicalGrid.nativeElement.querySelector('.igx-grid__tfoot');
             let childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
 
-            expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
-            expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
+            expect(tFoot.getBoundingClientRect().height).toBe(DEFAULT_SUMMARY_HEIGHT);
+            expect(childTFoot.getBoundingClientRect().height).toBe(DEFAULT_SUMMARY_HEIGHT);
 
 
             setElementSize(hierarchicalGrid.nativeElement, Size.Medium)
@@ -510,8 +511,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             tFoot = hierarchicalGrid.nativeElement.querySelectorAll('.igx-grid__tfoot')[1];
             childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
 
-            expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
-            expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
+            expect(tFoot.getBoundingClientRect().height).toBe(DEFAULT_SUMMARY_HEIGHT);
+            expect(childTFoot.getBoundingClientRect().height).toBe(DEFAULT_SUMMARY_HEIGHT);
 
             setElementSize(hierarchicalGrid.nativeElement, Size.Small)
             hierarchicalGrid.summaryRowHeight = 0;
@@ -522,8 +523,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             tFoot = hierarchicalGrid.nativeElement.querySelectorAll('.igx-grid__tfoot')[1];
             childTFoot = childGrid.nativeElement.querySelector('.igx-grid__tfoot');
 
-            expect(tFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
-            expect(childTFoot.getBoundingClientRect().height).toBe(hierarchicalGrid.defaultSummaryHeight);
+            expect(tFoot.getBoundingClientRect().height).toBe(DEFAULT_SUMMARY_HEIGHT);
+            expect(childTFoot.getBoundingClientRect().height).toBe(DEFAULT_SUMMARY_HEIGHT);
         })
 
         it('should render summaries for column inside a column group.', fakeAsync(() => {

@@ -33,7 +33,6 @@ export class IgxGridSummaryPipe implements PipeTransform {
     private addSummaryRows(gridId: string, collection: IGroupByResult, summaryPosition: GridSummaryPosition, showSummary): any[] {
         const recordsWithSummary = [];
         const lastChildMap = new Map<any, IGroupByRecord[]>();
-        const maxSummaryHeight = this.grid.summaryService.calcMaxSummaryHeight();
 
         if (collection.metadata.length && !this.grid.isGroupByRecord(collection.data[0]) &&
             this.grid.isGroupByRecord(collection.metadata[0]) && summaryPosition === GridSummaryPosition.bottom) {
@@ -67,8 +66,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 const records = this.removeDeletedRecord(this.grid, groupByRecord.records.slice());
                 const summaries = this.grid.summaryService.calculateSummaries(recordId, records);
                 const summaryRecord: ISummaryRecord = {
-                    summaries,
-                    max: maxSummaryHeight
+                    summaries
                 };
                 recordsWithSummary.push(summaryRecord);
             }
@@ -80,8 +78,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
                     const records = this.removeDeletedRecord(this.grid, groupRecord.records.slice());
                     const summaries = this.grid.summaryService.calculateSummaries(groupRecordId, records, groupRecord);
                     const summaryRecord: ISummaryRecord = {
-                        summaries,
-                        max: maxSummaryHeight
+                        summaries
                     };
                     recordsWithSummary.push(summaryRecord);
                 }
@@ -96,8 +93,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 const records = this.removeDeletedRecord(this.grid, groupByRecord.records.slice());
                 const summaries = this.grid.summaryService.calculateSummaries(recordId, records, groupByRecord);
                 const summaryRecord: ISummaryRecord = {
-                    summaries,
-                    max: maxSummaryHeight
+                    summaries
                 };
                 recordsWithSummary.push(summaryRecord);
             } else if (summaryPosition === GridSummaryPosition.bottom) {

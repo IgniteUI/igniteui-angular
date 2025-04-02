@@ -947,7 +947,6 @@ export interface GridType extends IGridDataBindable {
     readonly transactions: TransactionService<Transaction, State>;
     /** Represents the validation service for the grid. The type contains properties and methods (logic) for validating records */
     readonly validation: IgxGridValidationService;
-    defaultSummaryHeight: number;
     summaryRowHeight: number;
     rowEditingOverlay: IgxToggleDirective;
     totalRowsCountAfterFilter: number;
