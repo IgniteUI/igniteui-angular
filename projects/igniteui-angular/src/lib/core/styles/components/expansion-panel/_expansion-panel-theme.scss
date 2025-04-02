@@ -53,7 +53,6 @@
     }
 
     $theme: digest-schema($expansion-panel-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($header-title-color) and $header-background {
         $header-title-color: adaptive-contrast(var(--header-background));
@@ -96,10 +95,6 @@
         disabled-text-color: $disabled-text-color,
         disabled-description-color: $disabled-description-color,
         expanded-margin: $expanded-margin,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -108,7 +103,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin expansion-panel($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
 
     $panel-padding: rem(16px) rem(24px);
     $panel-padding-header-indigo: rem(10px) rem(16px);
