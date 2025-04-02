@@ -21,27 +21,17 @@
               "base": "dist/igniteui-dev-demos"
             },
             "index": "src/index.html",
-            "polyfills": [
-                "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "src/tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/web.config"
-            ],
-            "styles": [
-              "src/styles/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets", "src/web.config"],
+            "styles": ["src/styles/styles.scss"],
             "scripts": [],
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules"
-              ]
+              "includePaths": ["node_modules"]
             },
             "browser": "./src/main.ts"
           },
@@ -106,29 +96,18 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles/styles.scss"
-            ],
+            "styles": ["src/styles/styles.scss"],
             "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ]
+            "assets": ["src/favicon.ico", "src/assets"]
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         },
         "cypress-run": {
@@ -184,16 +163,7 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing",
-              "hammerjs"
-            ],
-            "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
-            "karmaConfig": "projects/igniteui-angular/karma.conf.js"
-          }
+          "builder": "@analogjs/vitest-angular:test"
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
@@ -271,15 +241,19 @@
               "projects/igniteui-angular-elements/src/index.js",
               "projects/igniteui-angular-elements/src/index.bundle.js"
             ],
-            "styles": [
-              "projects/igniteui-angular-elements/src/styles.scss"
-            ],
+            "styles": ["projects/igniteui-angular-elements/src/styles.scss"],
             "scripts": [
-                { "input": "./node_modules/lit-html/lit-html.js", "inject": false },
-                { "input": "./node_modules/lit-html/development/directive.js", "inject": false }
+              {
+                "input": "./node_modules/lit-html/lit-html.js",
+                "inject": false
+              },
+              {
+                "input": "./node_modules/lit-html/development/directive.js",
+                "inject": false
+              }
             ],
             "stylePreprocessorOptions": {
-                "includePaths": ["node_modules"]
+              "includePaths": ["node_modules"]
             },
             "browser": "projects/igniteui-angular-elements/src/main.ts"
           },
@@ -320,8 +294,8 @@
               "namedChunks": true
             },
             "dev-app": {
-                "browser": "projects/igniteui-angular-elements/src/main.app.ts",
-                "tsConfig": "projects/igniteui-angular-elements/tsconfig.app.json"
+              "browser": "projects/igniteui-angular-elements/src/main.app.ts",
+              "tsConfig": "projects/igniteui-angular-elements/tsconfig.app.json"
             }
           },
           "defaultConfiguration": "production"
@@ -356,11 +330,9 @@
               "projects/igniteui-angular-elements/src/favicon.ico",
               "projects/igniteui-angular-elements/src/assets"
             ],
-            "styles": [
-              "projects/igniteui-angular-elements/src/styles.scss"
-            ],
+            "styles": ["projects/igniteui-angular-elements/src/styles.scss"],
             "stylePreprocessorOptions": {
-                "includePaths": ["node_modules"]
+              "includePaths": ["node_modules"]
             },
             "scripts": []
           }
@@ -384,19 +356,13 @@
             "outputPath": "dist/bundle-test",
             "index": "projects/bundle-test/src/index.html",
             "browser": "projects/bundle-test/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/bundle-test/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "styles": [
-              "projects/bundle-test/src/styles.scss"
-            ],
+            "styles": ["projects/bundle-test/src/styles.scss"],
             "scripts": [],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules"
-              ]
+              "includePaths": ["node_modules"]
             },
             "server": "projects/bundle-test/src/main.server.ts",
             "ssr": {
@@ -450,15 +416,10 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/bundle-test/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
-            "styles": [
-              "projects/bundle-test/src/styles.scss"
-            ],
+            "styles": ["projects/bundle-test/src/styles.scss"],
             "scripts": []
           }
         }

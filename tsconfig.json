@@ -1,55 +1,44 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-      "baseUrl": "./",
-      "importHelpers": true,
-      "module": "es2022",
-      "outDir": "./dist/out-tsc",
-      "sourceMap": true,
-      "declaration": false,
-      "moduleResolution": "node",
-      "experimentalDecorators": true,
-      "forceConsistentCasingInFileNames": true,
-      "esModuleInterop": true,
-      "target": "ES2022",
-      "skipLibCheck": true,
-      "typeRoots": [
-        "node_modules/@types"
-      ],
-      "lib": [
-        "es2022",
-        "dom"
-      ],
-      "paths": {
-        "igniteui-angular": [
-          "projects/igniteui-angular/src/public_api.ts"
-        ],
-        "igniteui-angular/*": [
-          "projects/igniteui-angular/*"
-        ],
-        "igniteui-angular-i18n": [
-          "projects/igniteui-angular-i18n/src/index.ts"
-        ]
-      },
-      "rootDir": ".",
-      "useDefineForClassFields": false,
-      "noImplicitOverride": true
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "importHelpers": true,
+    "module": "es2022",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "target": "ES2022",
+    "skipLibCheck": true,
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2022", "dom"],
+    "paths": {
+      "igniteui-angular": ["projects/igniteui-angular/src/public_api.ts"],
+      "igniteui-angular-i18n": ["projects/igniteui-angular-i18n/src/index.ts"],
+      "igniteui-angular/*": ["projects/igniteui-angular/*"]
     },
-    "exclude": [
-        "dist",
-        "projects/igniteui-angular/migrations/",
-        "projects/igniteui-angular/schematics/",
-        "projects/igniteui-angular/cypress/",
-        "cypress",
-        "./cypress.config.ts"
-    ],
-    "angularCompilerOptions": {
-        "generateDeepReexports": true,
-        "strictTemplates": true,
-        "extendedDiagnostics": {
-            "defaultCategory": "error"
-        },
-        "strictInjectionParameters": true,
-        "strictInputAccessModifiers": true,
-    }
+    "rootDir": ".",
+    "useDefineForClassFields": false,
+    "noImplicitOverride": true
+  },
+  "exclude": [
+    "dist",
+    "projects/igniteui-angular/migrations/",
+    "projects/igniteui-angular/schematics/",
+    "projects/igniteui-angular/cypress/",
+    "cypress",
+    "./cypress.config.ts"
+  ],
+  "angularCompilerOptions": {
+    "generateDeepReexports": true,
+    "strictTemplates": true,
+    "extendedDiagnostics": {
+      "defaultCategory": "error"
+    },
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true
+  }
 }

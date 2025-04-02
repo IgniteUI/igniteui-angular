@@ -2,14 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
-    "types": [
-      "jasmine",
-      "node",
-      "hammerjs"
-    ]
+    "types": ["jasmine", "node", "hammerjs", "vitest/globals"],
+    "target": "es2016"
   },
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
+  "include": ["**/*.spec.ts", "**/*.d.ts"],
+  "files": ["src/test-setup.ts"]
 }

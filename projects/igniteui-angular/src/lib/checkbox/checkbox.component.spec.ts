@@ -1,18 +1,14 @@
-import { Component, ViewChild } from '@angular/core';
+import { expect } from 'vitest';
+import { Component, viewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from './checkbox.component';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-
 describe('IgxCheckbox', () => {
-    configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 InitCheckboxComponent,
                 CheckboxSimpleComponent,
                 CheckboxReadonlyComponent,
@@ -24,7 +20,7 @@ describe('IgxCheckbox', () => {
                 CheckboxFormComponent,
                 CheckboxFormGroupComponent,
                 IgxCheckboxComponent
-            ]
+            ],
         }).compileComponents();
     }));
 
@@ -32,7 +28,7 @@ describe('IgxCheckbox', () => {
         const fixture = TestBed.createComponent(InitCheckboxComponent);
         fixture.detectChanges();
 
-        const checkbox = fixture.componentInstance.cb;
+        const checkbox = fixture.componentInstance.checkbox();
         const nativeCheckbox = checkbox.nativeInput.nativeElement;
         const nativeLabel = checkbox.nativeLabel.nativeElement;
         const placeholderLabel = fixture.debugElement.query(By.css('.igx-checkbox__label')).nativeElement;
@@ -62,7 +58,7 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
 
         const testInstance = fixture.componentInstance;
-        const checkboxInstance = testInstance.cb;
+        const checkboxInstance = testInstance.checkbox();
         const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
 
         fixture.detectChanges();
@@ -89,7 +85,7 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
 
         const testInstance = fixture.componentInstance;
-        const checkboxInstance = testInstance.cb;
+        const checkboxInstance = testInstance.checkbox();
         const form = testInstance.myForm;
 
         form.setValue({ checkbox: true });
@@ -102,7 +98,7 @@ describe('IgxCheckbox', () => {
 
     it('Initializes with external label', () => {
         const fixture = TestBed.createComponent(CheckboxExternalLabelComponent);
-        const checkboxInstance = fixture.componentInstance.cb;
+        const checkboxInstance = fixture.componentInstance.checkbox();
         const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         const externalLabel = fixture.debugElement.query(By.css('#my-label')).nativeElement;
         fixture.detectChanges();
@@ -113,7 +109,7 @@ describe('IgxCheckbox', () => {
 
     it('Initializes with invisible label', () => {
         const fixture = TestBed.createComponent(CheckboxInvisibleLabelComponent);
-        const checkboxInstance = fixture.componentInstance.cb;
+        const checkboxInstance = fixture.componentInstance.checkbox();
         const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         fixture.detectChanges();
 
@@ -122,7 +118,7 @@ describe('IgxCheckbox', () => {
 
     it('Positions label before and after checkbox', () => {
         const fixture = TestBed.createComponent(CheckboxSimpleComponent);
-        const checkboxInstance = fixture.componentInstance.cb;
+        const checkboxInstance = fixture.componentInstance.checkbox();
         const placeholderLabel = checkboxInstance.placeholderLabel.nativeElement;
         const labelStyles = window.getComputedStyle(placeholderLabel);
         fixture.detectChanges();
@@ -138,7 +134,7 @@ describe('IgxCheckbox', () => {
     it('Indeterminate state', fakeAsync(() => {
         const fixture = TestBed.createComponent(CheckboxIndeterminateComponent);
         const testInstance = fixture.componentInstance;
-        const checkboxInstance = testInstance.cb;
+        const checkboxInstance = testInstance.checkbox();
         const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement;
 
@@ -219,7 +215,7 @@ describe('IgxCheckbox', () => {
     it('Readonly state', () => {
         const fixture = TestBed.createComponent(CheckboxReadonlyComponent);
         const testInstance = fixture.componentInstance;
-        const checkboxInstance = testInstance.cb;
+        const checkboxInstance = testInstance.checkbox();
         const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement;
         const placeholderLabel = checkboxInstance.placeholderLabel.nativeElement;
@@ -252,14 +248,14 @@ describe('IgxCheckbox', () => {
     it('Should be able to enable/disable CSS transitions', () => {
         const fixture = TestBed.createComponent(CheckboxDisabledTransitionsComponent);
         const testInstance = fixture.componentInstance;
-        const checkboxInstance = testInstance.cb;
+        const checkboxInstance = testInstance.checkbox();
         const checkboxHost = fixture.debugElement.query(By.css('igx-checkbox')).nativeElement;
         fixture.detectChanges();
 
         expect(checkboxInstance.disableTransitions).toBe(true);
         expect(checkboxHost.classList).toContain('igx-checkbox--plain');
 
-        testInstance.cb.disableTransitions = false;
+        testInstance.checkbox().disableTransitions = false;
         fixture.detectChanges();
         expect(checkboxHost.classList).not.toContain('igx-checkbox--plain');
     });
@@ -267,7 +263,7 @@ describe('IgxCheckbox', () => {
     it('Required state', () => {
         const fixture = TestBed.createComponent(CheckboxRequiredComponent);
         const testInstance = fixture.componentInstance;
-        const checkboxInstance = testInstance.cb;
+        const checkboxInstance = testInstance.checkbox();
         const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         fixture.detectChanges();
 
@@ -285,7 +281,7 @@ describe('IgxCheckbox', () => {
     it('Event handling', () => {
         const fixture = TestBed.createComponent(CheckboxSimpleComponent);
         const testInstance = fixture.componentInstance;
-        const checkboxInstance = testInstance.cb;
+        const checkboxInstance = testInstance.checkbox();
         const cbxEl = fixture.debugElement.query(By.directive(IgxCheckboxComponent)).nativeElement;
         const nativeCheckbox = checkboxInstance.nativeInput.nativeElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement;
@@ -321,7 +317,7 @@ describe('IgxCheckbox', () => {
         const fixture = TestBed.createComponent(CheckboxRequiredComponent);
         fixture.detectChanges();
 
-        const checkboxInstance = fixture.componentInstance.cb;
+        const checkboxInstance = fixture.componentInstance.checkbox();
         const domCheckbox = fixture.debugElement.query(By.css('igx-checkbox')).nativeElement;
 
         expect(domCheckbox.classList.contains('igx-checkbox--invalid')).toBe(false);
@@ -360,13 +356,13 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
         tick();
 
-        const checkbox = fixture.componentInstance.checkbox;
+        const checkbox = fixture.componentInstance.checkbox();
         expect(checkbox.invalid).toEqual(false);
 
         checkbox.onBlur();
         expect(checkbox.invalid).toEqual(true);
 
-        fixture.componentInstance.ngForm.resetForm();
+        fixture.componentInstance.ngForm().resetForm();
         tick();
         expect(checkbox.invalid).toEqual(false);
     }));
@@ -375,7 +371,7 @@ describe('IgxCheckbox', () => {
         const fixture = TestBed.createComponent(CheckboxFormGroupComponent);
         fixture.detectChanges();
 
-        const checkbox = fixture.componentInstance.cb;
+        const checkbox = fixture.componentInstance.checkbox();
         const cbxEl = fixture.debugElement.query(By.directive(IgxCheckboxComponent)).nativeElement;
         expect(checkbox.required).toBe(true);
         expect(checkbox.invalid).toBe(false);
@@ -404,7 +400,7 @@ describe('IgxCheckbox', () => {
             const fixture = TestBed.createComponent(CheckboxSimpleComponent);
             fixture.detectChanges();
 
-            const instance = fixture.componentInstance.cb;
+            const instance = fixture.componentInstance.checkbox();
             const editElement = fixture.debugElement.query(By.css('.igx-checkbox__input')).nativeElement;
 
             expect(instance.getEditElement()).toBe(editElement);
@@ -413,23 +409,25 @@ describe('IgxCheckbox', () => {
 });
 
 @Component({
-    template: `<igx-checkbox #cb>Init</igx-checkbox>`,
+    template: `<igx-checkbox>Init</igx-checkbox>`,
     imports: [IgxCheckboxComponent]
 })
 class InitCheckboxComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    public checkbox = viewChild.required(IgxCheckboxComponent);
 }
 
 @Component({
-    template: `<igx-checkbox #cb (change)="onChange()" (click)="onClick()"
+    template: `<igx-checkbox (change)="onChange()" (click)="onClick()"
                             [(ngModel)]="subscribed">Simple</igx-checkbox>`,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxSimpleComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    public checkbox = viewChild.required(IgxCheckboxComponent);
+
     public changeEventCalled = false;
     public subscribed = false;
     public clickCounter = 0;
+
     public onChange() {
         this.changeEventCalled = true;
     }
@@ -438,28 +436,27 @@ class CheckboxSimpleComponent {
     }
 }
 @Component({
-    template: `<igx-checkbox #cb
+    template: `<igx-checkbox
                                 [(ngModel)]="subscribed"
                                 [indeterminate]="true"
                                 >Indeterminate</igx-checkbox>`,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxIndeterminateComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
-
+    public checkbox = viewChild.required(IgxCheckboxComponent);
     public subscribed = false;
 }
 
 @Component({
-    template: `<igx-checkbox #cb required>Required</igx-checkbox>`,
+    template: `<igx-checkbox required>Required</igx-checkbox>`,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxRequiredComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    public checkbox = viewChild.required(IgxCheckboxComponent);
 }
 
 @Component({
-    template: `<igx-checkbox #cb
+    template: `<igx-checkbox
                                 [(ngModel)]="subscribed"
                                 [checked]="subscribed"
                                 [indeterminate]="true"
@@ -467,48 +464,47 @@ class CheckboxRequiredComponent {
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxReadonlyComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
-
+    public checkbox = viewChild.required(IgxCheckboxComponent);
     public subscribed = false;
 }
 
 @Component({
     template: `<p id="my-label">{{label}}</p>
-    <igx-checkbox #cb aria-labelledby="my-label"></igx-checkbox>`,
+    <igx-checkbox aria-labelledby="my-label"></igx-checkbox>`,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxExternalLabelComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    public checkbox = viewChild.required(IgxCheckboxComponent);
     public label = 'My Label';
 }
 
 @Component({
-    template: `<igx-checkbox #cb [aria-label]="label"></igx-checkbox>`,
+    template: `<igx-checkbox [aria-label]="label"></igx-checkbox>`,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxInvisibleLabelComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    public checkbox = viewChild.required(IgxCheckboxComponent);
     public label = 'Invisible Label';
 }
 
 @Component({
-    template: `<igx-checkbox #cb [disableTransitions]="true"></igx-checkbox>`,
+    template: `<igx-checkbox [disableTransitions]="true"></igx-checkbox>`,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxDisabledTransitionsComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    public checkbox = viewChild.required(IgxCheckboxComponent);
 }
 
 @Component({
-    template: `<form [formGroup]="myForm"><igx-checkbox #cb formControlName="checkbox">Form Group</igx-checkbox></form>`,
+    template: `<form [formGroup]="myForm"><igx-checkbox formControlName="checkbox">Form Group</igx-checkbox></form>`,
     imports: [IgxCheckboxComponent, ReactiveFormsModule]
 })
 class CheckboxFormGroupComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    public checkbox = viewChild.required(IgxCheckboxComponent);
 
     public myForm = this.fb.group({ checkbox: ['', Validators.required] });
 
-    constructor(private fb: UntypedFormBuilder) {}
+    constructor(private fb: UntypedFormBuilder) { }
 }
 @Component({
     template: `
@@ -519,10 +515,8 @@ class CheckboxFormGroupComponent {
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxFormComponent {
-    @ViewChild('checkbox', { read: IgxCheckboxComponent, static: true })
-    public checkbox: IgxCheckboxComponent;
-    @ViewChild(NgForm, { static: true })
-    public ngForm: NgForm;
+    public checkbox = viewChild.required(IgxCheckboxComponent);
+    public ngForm = viewChild.required(NgForm);
     public subscribed: string;
 }
 
