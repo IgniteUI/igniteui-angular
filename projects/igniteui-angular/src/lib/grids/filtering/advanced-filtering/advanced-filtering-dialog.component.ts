@@ -227,7 +227,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         let childEntities;
         if (!rowIsland.autoGenerate) {
             fields = rowIsland.columnList.map(f => ({ field: f.field, dataType: f.dataType })) as FieldType[];
-        } else {
+        } else if (firstRowData) {
             const rowIslandFields = Object.keys(firstRowData).map(key => {
                 if (firstRowData[key] instanceof Array) {
                     return null;
@@ -242,10 +242,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
 
         const rowIslandChildEntities = rowIsland.childLayoutList.reduce((acc, childRowIsland) => {
+            if (!firstRowData) {
+                return null;
+            }
             return acc.concat(this.generateChildEntity(childRowIsland, firstRowData[childRowIsland.key][0]));
         }, []);
 
-        if (rowIslandChildEntities.length > 0) {
+        if (rowIslandChildEntities?.length > 0) {
             childEntities = rowIslandChildEntities;
         } 
 
