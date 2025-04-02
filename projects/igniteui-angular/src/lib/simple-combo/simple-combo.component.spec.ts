@@ -18,12 +18,10 @@ import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from 
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IGX_GRID_DIRECTIVES } from '../grids/grid/public_api';
 
-
 const CSS_CLASS_COMBO = 'igx-combo';
 const SIMPLE_COMBO_ELEMENT = 'igx-simple-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
 const CSS_CLASS_DROPDOWN = 'igx-drop-down';
-const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_CONTENT = 'igx-combo__content';
 const CSS_CLASS_CONTAINER = 'igx-display-container';
@@ -37,8 +35,6 @@ const CSS_CLASS_COMBO_INPUTGROUP = 'igx-input-group__input';
 const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
-const CSS_CLASS_ITEM = 'igx-drop-down__item';
-const CSS_CLASS_HEADER_ITEM = 'igx-drop-down__header';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const defaultDropdownItemHeight = 40;
@@ -601,12 +597,11 @@ describe('IgxSimpleCombo', () => {
 
             const dropDownElement = comboWrapper.children[1];
             expect(dropDownElement.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
-            expect(dropDownElement.classList.contains(CSS_CLASS_DROPDOWN)).toBeTruthy();
             expect(dropDownElement.childElementCount).toEqual(1);
 
             const dropDownList = dropDownElement.children[0];
             const dropDownScrollList = dropDownElement.children[0].children[0];
-            expect(dropDownList.classList.contains(CSS_CLASS_DROPDOWNLIST)).toBeTruthy();
+            expect(dropDownList.classList.contains(CSS_CLASS_DROPDOWN)).toBeTruthy();
             expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
             expect(dropDownScrollList.childElementCount).toEqual(0);
         });
@@ -2850,7 +2845,7 @@ describe('IgxSimpleCombo', () => {
             UIInteractions.simulateClickEvent(comboToggleButton);
             fixture.detectChanges();
 
-            const comboDropDownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST}`));
+            const comboDropDownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWN}`));
             const firstItem = comboDropDownList.nativeElement.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
 
             UIInteractions.simulateClickEvent(firstItem);

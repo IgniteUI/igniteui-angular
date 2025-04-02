@@ -263,9 +263,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public override width: string;
 
-    // /** @hidden @internal do not use the drop-down container class */
-    // public override cssClass = false;
-
     /** @hidden @internal */
     public override allowItemsFocus = false;
 
