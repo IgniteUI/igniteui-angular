@@ -1,0 +1,58 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $material;
+
+@include themed-block(igx-calendar-view-item, material) {
+    @include m('current') {
+        @include e(inner) {
+            box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-current-outline-color');
+
+            &:hover {
+                box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-current-outline-hover-color');
+            }
+        }
+    }
+
+    @include mx('current', 'active') {
+        @include e(inner) {
+            box-shadow: inset 0 0 0 rem(1px) var(--content-background),
+            0 0 0 rem(1px) var-get($_theme, 'ym-current-outline-focus-color');
+        }
+    }
+
+    @include m('selected') {
+        @include e(inner) {
+            box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-selected-outline-color');
+
+            &:hover {
+                box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-selected-hover-outline-color');
+            }
+        }
+    }
+
+    @include mx('selected', 'active') {
+        @include e(inner) {
+            box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-selected-focus-outline-color');
+        }
+    }
+
+    @include mx('selected', 'current') {
+        @include e(inner) {
+            box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-selected-current-outline-color');
+
+            &:hover {
+                box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-selected-current-outline-hover-color');
+            }
+        }
+    }
+
+    @include mx('selected', 'current', 'active') {
+        @include e(inner) {
+            box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'ym-selected-current-outline-focus-color');
+        }
+    }
+}
