@@ -1,0 +1,83 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$_theme: $material;
+
+@include layer(base) {
+    @include b(igx-paginator) {
+        @include sizable();
+
+        --component-size: var(--ig-size, var(--ig-size-large));
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var-get($_theme, 'text-color');
+        background: var-get($_theme, 'background-color');
+        font-size: rem(12px);
+        border-top: rem(1px) solid var-get($_theme, 'border-color');
+        z-index: 1;
+        padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+        padding-block: 0;
+        height: var-get($_theme, 'size');
+        width: 100%;
+
+        &:empty {
+            padding: 0;
+        }
+    }
+
+    @include b(igx-page-nav) {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex: 1;
+
+        > * {
+            margin-inline-start: rem(8px);
+        }
+
+        [dir='rtl'] & {
+            igx-icon {
+                transform: scaleX(-1);
+            }
+        }
+
+        @include e(text) {
+            display: flex;
+        }
+    }
+
+    @include b(igx-page-size) {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex: 1;
+
+        @include e(label) {
+            @include ellipsis();
+
+            margin-inline-end: rem(8px);
+        }
+
+        @include e(select) {
+            display: flex;
+            max-width: rem(114px);
+            min-width: rem(100px);
+
+            igx-select {
+                --ig-size: 1;
+            }
+        }
+    }
+
+    @include b(igx-paginator-content) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+}
