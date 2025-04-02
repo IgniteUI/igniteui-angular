@@ -2,6 +2,7 @@
 @use 'sass:meta';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use '../../../styles/themes/standalone' as *;
 
 ////
 /// @group themes
@@ -48,25 +49,27 @@
 /// @see {mixin} css-vars
 /// @param {Map} $theme - The theme used to style the component.
 @mixin rating($theme) {
-    @include css-vars($theme: $theme);
+    @include layer(base) {
+        @include css-vars($theme: $theme);
 
-    igc-rating::part(label) {
-        color: var-get($theme, 'label-color');
-    }
+        igc-rating::part(label) {
+            color: var-get($theme, 'label-color');
+        }
 
-    igc-rating::part(value-label) {
-        color: var-get($theme, 'value-label');
-    }
+        igc-rating::part(value-label) {
+            color: var-get($theme, 'value-label');
+        }
 
-    igc-rating[disabled]::part(label),
-    igc-rating[disabled]::part(value-label) {
-        color: var-get($theme, 'disabled-label-color');
-    }
+        igc-rating[disabled]::part(label),
+        igc-rating[disabled]::part(value-label) {
+            color: var-get($theme, 'disabled-label-color');
+        }
 
-    igc-rating[disabled] {
-        --symbol-empty-color: #{var-get($theme, 'disabled-empty-symbol-color')};
-        --symbol-full-color: #{var-get($theme, 'disabled-full-symbol-color')};
-        --disabled-symbol-empty-filter: #{var-get($theme, 'symbol-empty-filter')};
-        --disabled-symbol-full-filter: #{var-get($theme, 'symbol-full-filter')};
+        igc-rating[disabled] {
+            --symbol-empty-color: #{var-get($theme, 'disabled-empty-symbol-color')};
+            --symbol-full-color: #{var-get($theme, 'disabled-full-symbol-color')};
+            --disabled-symbol-empty-filter: #{var-get($theme, 'symbol-empty-filter')};
+            --disabled-symbol-full-filter: #{var-get($theme, 'symbol-full-filter')};
+        }
     }
 }
