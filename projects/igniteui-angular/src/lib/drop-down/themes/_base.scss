@@ -7,6 +7,12 @@
 $_theme: $material;
 
 @include layer(base) {
+    igx-select,
+    igx-combo {
+        display: block;
+        position: relative;
+    }
+
     %item {
         display: flex;
         justify-content: flex-start;
@@ -120,7 +126,7 @@ $_theme: $material;
             &:hover {
                 background: var-get($_theme, 'selected-hover-item-background');
                 color: var-get($_theme, 'selected-hover-item-text-color');
-    
+
                 igx-icon {
                     color: var-get($_theme, 'selected-hover-item-icon-color');
                 }
@@ -134,7 +140,7 @@ $_theme: $material;
             &:hover {
                 background: var-get($_theme, 'selected-hover-item-background');
                 color: var-get($_theme, 'selected-hover-item-text-color');
-    
+
                 igx-icon {
                     color: var-get($_theme, 'selected-hover-item-icon-color');
                 }
@@ -146,7 +152,7 @@ $_theme: $material;
             color: var-get($_theme, 'disabled-item-text-color');
             cursor: default;
             pointer-events: none;
-    
+
             igx-icon {
                 color: var-get($_theme, 'disabled-item-text-color');
             }

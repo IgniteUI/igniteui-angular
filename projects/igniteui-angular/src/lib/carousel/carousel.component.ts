@@ -80,11 +80,6 @@ export class CarouselHammerConfig extends HammerGestureConfig {
     ],
     selector: 'igx-carousel',
     templateUrl: 'carousel.component.html',
-    styles: [`
-    :host {
-        display: block;
-        outline-style: none;
-    }`],
     styleUrl: 'carousel.component.css',
     encapsulation: ViewEncapsulation.None,
     imports: [IgxButtonDirective, IgxIconComponent, NgClass, NgTemplateOutlet]

@@ -1,5 +1,7 @@
 import {
-    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute
+    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute,
+    ViewEncapsulation,
+    HostBinding
 } from '@angular/core';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
@@ -17,6 +19,8 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 @Component({
     selector: 'igx-combo-drop-down',
     templateUrl: '../drop-down/drop-down.component.html',
+    styleUrl: '../drop-down/drop-down.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }],
     imports: [IgxToggleDirective]
 })
