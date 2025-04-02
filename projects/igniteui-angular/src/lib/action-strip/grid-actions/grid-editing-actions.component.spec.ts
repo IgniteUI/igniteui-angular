@@ -19,6 +19,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 describe('igxGridEditingActions #grid ', () => {
     let actionStrip: IgxActionStripComponent;
     let grid: IgxGridComponent;
+
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -32,6 +33,8 @@ describe('igxGridEditingActions #grid ', () => {
             ]
         }).compileComponents();
     }));
+
+    afterEach(() => vi.restoreAllMocks());
 
     describe('Base ', () => {
         let fixture: ComponentFixture<IgxActionStripTestingComponent>;

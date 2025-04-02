@@ -29,6 +29,7 @@ export default defineConfig(({ mode }) => {
                 'src/lib/avatar/**/*.spec.ts',
                 'src/lib/badge/**/*.spec.ts',
                 'src/lib/banner/**/*.spec.ts',
+                'src/lib/buttonGroup/**/*.spec.ts',
                 'src/lib/checkbox/**/*.spec.ts'
             ],
             reporters: ['default'],

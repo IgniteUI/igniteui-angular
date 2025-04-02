@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { expect, vi } from 'vitest';
+import { Component, OnInit, viewChild } from '@angular/core';
 import { TestBed, fakeAsync, flushMicrotasks, waitForAsync } from '@angular/core/testing';
 import { ButtonGroupAlignment, IgxButtonGroupComponent } from './buttonGroup.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxRadioGroupDirective } from '../directives/radio/radio-group.directive';
@@ -46,106 +45,106 @@ class Button {
 
 
 describe('IgxButtonGroup', () => {
-    configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 InitButtonGroupComponent,
                 InitButtonGroupWithValuesComponent,
                 TemplatedButtonGroupComponent,
-                TemplatedButtonGroupDesplayDensityComponent,
+                TemplatedButtonGroupDisplayDensityComponent,
                 ButtonGroupWithSelectedButtonComponent,
                 ButtonGroupButtonWithBoundSelectedOutputComponent,
             ]
         }).compileComponents();
     }));
 
-   it('should initialize buttonGroup with default values', () => {
+    afterEach(() => vi.restoreAllMocks())
+
+    it('should initialize buttonGroup with default values', () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
         fixture.detectChanges();
 
         const instance = fixture.componentInstance;
-        const buttongroup = fixture.componentInstance.buttonGroup;
+        const buttonGroup = fixture.componentInstance.buttonGroup();
 
         expect(instance.buttonGroup).toBeDefined();
-        expect(buttongroup instanceof IgxButtonGroupComponent).toBe(true);
-        expect(instance.buttonGroup.id).toContain('igx-buttongroup-');
-        expect(buttongroup.disabled).toBeFalsy();
-        expect(buttongroup.alignment).toBe(ButtonGroupAlignment.horizontal);
-        expect(buttongroup.selectionMode).toBe('single');
-        expect(buttongroup.itemContentCssClass).toBeUndefined();
-        expect(buttongroup.selectedIndexes.length).toEqual(1);
-        expect(buttongroup.selectedButtons.length).toEqual(1);
+        expect(buttonGroup instanceof IgxButtonGroupComponent).toBe(true);
+        expect(instance.buttonGroup().id).toContain('igx-buttongroup-');
+        expect(buttonGroup.disabled).toBeFalsy();
+        expect(buttonGroup.alignment).toBe(ButtonGroupAlignment.horizontal);
+        expect(buttonGroup.selectionMode).toBe('single');
+        expect(buttonGroup.itemContentCssClass).toBeUndefined();
+        expect(buttonGroup.selectedIndexes.length).toEqual(1);
+        expect(buttonGroup.selectedButtons.length).toEqual(1);
     });
 
-   it('should initialize buttonGroup with passed values', () => {
+    it('should initialize buttonGroup with passed values', () => {
         const fixture = TestBed.createComponent(InitButtonGroupWithValuesComponent);
         fixture.detectChanges();
 
         const instance = fixture.componentInstance;
-        const buttongroup = fixture.componentInstance.buttonGroup;
+        const buttonGroup = fixture.componentInstance.buttonGroup();
 
         expect(instance.buttonGroup).toBeDefined();
-        expect(buttongroup instanceof IgxButtonGroupComponent).toBe(true);
-        expect(buttongroup.disabled).toBeFalsy();
-        expect(buttongroup.alignment).toBe(ButtonGroupAlignment.vertical);
-        expect(buttongroup.selectionMode).toBe('multi');
-        expect(buttongroup.itemContentCssClass).toEqual('customContentStyle');
-        expect(buttongroup.selectedIndexes.length).toEqual(0);
-        expect(buttongroup.selectedButtons.length).toEqual(0);
+        expect(buttonGroup instanceof IgxButtonGroupComponent).toBe(true);
+        expect(buttonGroup.disabled).toBeFalsy();
+        expect(buttonGroup.alignment).toBe(ButtonGroupAlignment.vertical);
+        expect(buttonGroup.selectionMode).toBe('multi');
+        expect(buttonGroup.itemContentCssClass).toEqual('customContentStyle');
+        expect(buttonGroup.selectedIndexes.length).toEqual(0);
+        expect(buttonGroup.selectedButtons.length).toEqual(0);
     });
 
     it('should fire the selected event when a button is selected by user interaction, not on initial or programmatic selection', () => {
         const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
         fixture.detectChanges();
 
-        const btnGroupInstance = fixture.componentInstance.buttonGroup;
-        spyOn(btnGroupInstance.selected, 'emit');
+        const btnGroupInstance = fixture.componentInstance.buttonGroup();
+        const selectedSpy = vi.spyOn(btnGroupInstance.selected, 'emit');
 
         btnGroupInstance.ngAfterViewInit();
         fixture.detectChanges();
 
-        expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
+        expect(selectedSpy).not.toHaveBeenCalled();
 
         btnGroupInstance.buttons[1].select();
         fixture.detectChanges();
 
-        expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
+        expect(selectedSpy).not.toHaveBeenCalled();
 
         const button = fixture.debugElement.nativeElement.querySelector('button');
         button.click();
         // The first button is already selected, so it should not fire the selected event, but the deselected one.
-        expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
+        expect(selectedSpy).not.toHaveBeenCalled();
 
         const unselectedButton = fixture.debugElement.nativeElement.querySelector('#unselected');
         unselectedButton.click();
-        expect(btnGroupInstance.selected.emit).toHaveBeenCalled();
+        expect(selectedSpy).toHaveBeenCalled();
     });
 
     it('should fire the deselected event when a button is deselected by user interaction, not on programmatic deselection', () => {
         const fixture = TestBed.createComponent(ButtonGroupWithSelectedButtonComponent);
         fixture.detectChanges();
 
-        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        const btnGroupInstance = fixture.componentInstance.buttonGroup();
         btnGroupInstance.buttons[0].select();
         btnGroupInstance.buttons[1].select();
-        spyOn(btnGroupInstance.deselected, 'emit');
+        const deselectedSpy = vi.spyOn(btnGroupInstance.deselected, 'emit');
 
         btnGroupInstance.ngAfterViewInit();
         fixture.detectChanges();
 
-        expect(btnGroupInstance.deselected.emit).not.toHaveBeenCalled();
+        expect(deselectedSpy).not.toHaveBeenCalled();
 
         btnGroupInstance.buttons[1].deselect();
         fixture.detectChanges();
 
-        expect(btnGroupInstance.deselected.emit).not.toHaveBeenCalled();
+        expect(deselectedSpy).not.toHaveBeenCalled();
 
         const button = fixture.debugElement.nativeElement.querySelector('button');
         button.click();
 
-        expect(btnGroupInstance.deselected.emit).toHaveBeenCalled();
+        expect(deselectedSpy).toHaveBeenCalled();
     });
 
     it('should should reset its current selection state on selectionMode runtime change', async () => {
@@ -154,7 +153,7 @@ describe('IgxButtonGroup', () => {
         await wait();
         fixture.detectChanges();
 
-        const buttonGroup = fixture.componentInstance.buttonGroup;
+        const buttonGroup = fixture.componentInstance.buttonGroup();
 
         buttonGroup.selectionMode = 'multi';
 
@@ -179,23 +178,23 @@ describe('IgxButtonGroup', () => {
         expect(buttonGroup.selectedButtons.length).toBe(0);
     });
 
-   it('Button Group single selection', async () => {
+    it('Button Group single selection', async () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
 
         await wait();
         fixture.detectChanges();
 
-        const buttongroup = fixture.componentInstance.buttonGroup;
+        const buttonGroup = fixture.componentInstance.buttonGroup();
 
-        buttongroup.selectButton(0);
+        buttonGroup.selectButton(0);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(1);
-        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(0);
+        expect(buttonGroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.buttons.indexOf(buttonGroup.selectedButtons[0])).toBe(0);
 
-        buttongroup.selectButton(2);
+        buttonGroup.selectButton(2);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(1);
-        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(2);
+        expect(buttonGroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.buttons.indexOf(buttonGroup.selectedButtons[0])).toBe(2);
     });
 
     it('Button Group single required selection', async () => {
@@ -203,51 +202,52 @@ describe('IgxButtonGroup', () => {
         await wait();
         fixture.detectChanges();
 
-        const buttongroup = fixture.componentInstance.buttonGroup;
-        buttongroup.selectionMode = 'singleRequired';
+        const buttonGroup = fixture.componentInstance.buttonGroup();
+        buttonGroup.selectionMode = 'singleRequired';
         await wait();
-        spyOn(buttongroup.deselected, 'emit');
 
-        buttongroup.selectButton(0);
+        const deselectedSpy = vi.spyOn(buttonGroup.deselected, 'emit');
+
+        buttonGroup.selectButton(0);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(1);
-        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(0);
+        expect(buttonGroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.buttons.indexOf(buttonGroup.selectedButtons[0])).toBe(0);
 
         const button = fixture.debugElement.nativeElement.querySelector('button');
         button.click();
         await wait();
 
-        expect(buttongroup.selectedButtons.length).toBe(1);
-        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(0);
-        expect(buttongroup.deselected.emit).not.toHaveBeenCalled();
+        expect(buttonGroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.buttons.indexOf(buttonGroup.selectedButtons[0])).toBe(0);
+        expect(deselectedSpy).not.toHaveBeenCalled();
     });
 
-   it('Button Group multiple selection', async () => {
+    it('Button Group multiple selection', async () => {
         const fixture = TestBed.createComponent(InitButtonGroupWithValuesComponent);
         await wait();
         fixture.detectChanges();
 
-        const buttongroup = fixture.componentInstance.buttonGroup;
-        expect(buttongroup.selectionMode).toBe('multi');
+        const buttonGroup = fixture.componentInstance.buttonGroup();
+        expect(buttonGroup.selectionMode).toBe('multi');
 
-        buttongroup.selectButton(1);
+        buttonGroup.selectButton(1);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.selectedButtons.length).toBe(1);
 
-        buttongroup.selectButton(2);
+        buttonGroup.selectButton(2);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(2);
+        expect(buttonGroup.selectedButtons.length).toBe(2);
 
-        buttongroup.deselectButton(2);
-        buttongroup.deselectButton(1);
+        buttonGroup.deselectButton(2);
+        buttonGroup.deselectButton(1);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(0);
+        expect(buttonGroup.selectedButtons.length).toBe(0);
 
-        buttongroup.selectButton(0);
-        buttongroup.selectButton(3);
+        buttonGroup.selectButton(0);
+        buttonGroup.selectButton(3);
         await wait();
         // Button 3 is disabled, but it can be selected
-        expect(buttongroup.selectedButtons.length).toBe(2);
+        expect(buttonGroup.selectedButtons.length).toBe(2);
     });
 
     it('Button Group multiple selection with mouse click', async () => {
@@ -255,27 +255,27 @@ describe('IgxButtonGroup', () => {
         await wait();
         fixture.detectChanges();
 
-        const buttongroup = fixture.componentInstance.buttonGroup;
-        expect(buttongroup.selectionMode).toBe('multi');
+        const buttonGroup = fixture.componentInstance.buttonGroup();
+        expect(buttonGroup.selectionMode).toBe('multi');
 
-        UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
+        UIInteractions.simulateClickEvent(buttonGroup.buttons[0].nativeElement);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.selectedButtons.length).toBe(1);
 
-        UIInteractions.simulateClickEvent(buttongroup.buttons[1].nativeElement);
+        UIInteractions.simulateClickEvent(buttonGroup.buttons[1].nativeElement);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(2);
+        expect(buttonGroup.selectedButtons.length).toBe(2);
 
-        UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
-        UIInteractions.simulateClickEvent(buttongroup.buttons[1].nativeElement);
+        UIInteractions.simulateClickEvent(buttonGroup.buttons[0].nativeElement);
+        UIInteractions.simulateClickEvent(buttonGroup.buttons[1].nativeElement);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(0);
+        expect(buttonGroup.selectedButtons.length).toBe(0);
 
-        buttongroup.buttons[0].nativeElement.click();
-        buttongroup.buttons[3].nativeElement.click();
+        buttonGroup.buttons[0].nativeElement.click();
+        buttonGroup.buttons[3].nativeElement.click();
         await wait();
         // Button 3 is disabled, and it should not be selected with mouse click
-        expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.selectedButtons.length).toBe(1);
     });
 
     it('Button Group - templated buttons with multiple selection', async () => {
@@ -283,32 +283,32 @@ describe('IgxButtonGroup', () => {
         await wait();
         fixture.detectChanges();
 
-        const buttongroup = fixture.componentInstance.buttonGroup;
-        expect(buttongroup.buttons.length).toBe(4);
-        expect(buttongroup.selectionMode).toBe('multi');
+        const buttonGroup = fixture.componentInstance.buttonGroup();
+        expect(buttonGroup.buttons.length).toBe(4);
+        expect(buttonGroup.selectionMode).toBe('multi');
 
-        buttongroup.selectButton(1);
+        buttonGroup.selectButton(1);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.selectedButtons.length).toBe(1);
 
-        buttongroup.selectButton(2);
+        buttonGroup.selectButton(2);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(2);
+        expect(buttonGroup.selectedButtons.length).toBe(2);
 
-        buttongroup.deselectButton(1);
-        buttongroup.deselectButton(2);
+        buttonGroup.deselectButton(1);
+        buttonGroup.deselectButton(2);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(0);
+        expect(buttonGroup.selectedButtons.length).toBe(0);
 
-        buttongroup.selectButton(0);
-        buttongroup.selectButton(3);
+        buttonGroup.selectButton(0);
+        buttonGroup.selectButton(3);
         await wait();
         // It should be possible to select disabled buttons
-        expect(buttongroup.selectedButtons.length).toBe(2);
+        expect(buttonGroup.selectedButtons.length).toBe(2);
 
-        buttongroup.deselectButton(3);
+        buttonGroup.deselectButton(3);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.selectedButtons.length).toBe(1);
     });
 
     it('Button Group - templated buttons with single selection', async () => {
@@ -316,48 +316,48 @@ describe('IgxButtonGroup', () => {
         await wait();
         fixture.detectChanges();
 
-        const buttongroup = fixture.componentInstance.buttonGroup;
-        buttongroup.selectionMode = 'single';
+        const buttonGroup = fixture.componentInstance.buttonGroup();
+        buttonGroup.selectionMode = 'single';
         await wait();
-        expect(buttongroup.buttons.length).toBe(4);
-        expect(buttongroup.selectionMode).toBe('single');
+        expect(buttonGroup.buttons.length).toBe(4);
+        expect(buttonGroup.selectionMode).toBe('single');
 
-        buttongroup.selectButton(1);
+        buttonGroup.selectButton(1);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(1);
-        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(1);
+        expect(buttonGroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.buttons.indexOf(buttonGroup.selectedButtons[0])).toBe(1);
 
-        buttongroup.selectButton(2);
+        buttonGroup.selectButton(2);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(1);
-        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(2);
+        expect(buttonGroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.buttons.indexOf(buttonGroup.selectedButtons[0])).toBe(2);
 
-        buttongroup.deselectButton(2);
+        buttonGroup.deselectButton(2);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(0);
+        expect(buttonGroup.selectedButtons.length).toBe(0);
 
-        buttongroup.selectButton(0);
-        buttongroup.selectButton(2);
-        buttongroup.selectButton(3);
+        buttonGroup.selectButton(0);
+        buttonGroup.selectButton(2);
+        buttonGroup.selectButton(3);
         await wait();
-        expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttonGroup.selectedButtons.length).toBe(1);
         // Button 3 is disabled, but it can be selected
-        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(3);
+        expect(buttonGroup.buttons.indexOf(buttonGroup.selectedButtons[0])).toBe(3);
     });
 
     it('Button Group - selection handles wrong indexes gracefully', () => {
         const fixture = TestBed.createComponent(TemplatedButtonGroupComponent);
         fixture.detectChanges();
 
-        const buttongroup = fixture.componentInstance.buttonGroup;
+        const buttonGroup = fixture.componentInstance.buttonGroup();
         let error = '';
 
         try {
-            buttongroup.selectButton(-1);
-            buttongroup.selectButton(3000);
+            buttonGroup.selectButton(-1);
+            buttonGroup.selectButton(3000);
 
-            buttongroup.deselectButton(-1);
-            buttongroup.deselectButton(3000);
+            buttonGroup.deselectButton(-1);
+            buttonGroup.deselectButton(3000);
         } catch (ex) {
             error = ex.message;
         }
@@ -369,8 +369,8 @@ describe('IgxButtonGroup', () => {
         const fixture = TestBed.createComponent(InitButtonGroupWithValuesComponent);
         fixture.detectChanges();
 
-        const buttongroup = fixture.componentInstance.buttonGroup;
-        const groupChildren = buttongroup.buttons;
+        const buttonGroup = fixture.componentInstance.buttonGroup();
+        const groupChildren = buttonGroup.buttons;
 
         for (let i = 0; i < groupChildren.length; i++) {
             const button = groupChildren[i];
@@ -388,7 +388,7 @@ describe('IgxButtonGroup', () => {
         const fixture = TestBed.createComponent(ButtonGroupButtonWithBoundSelectedOutputComponent);
         fixture.detectChanges();
 
-        const btnGroupInstance = fixture.componentInstance.buttonGroup;
+        const btnGroupInstance = fixture.componentInstance.buttonGroup();
 
         expect(btnGroupInstance.selectedButtons.length).toBe(1);
         expect(btnGroupInstance.buttons[1].selected).toBe(true);
@@ -406,8 +406,8 @@ describe('IgxButtonGroup', () => {
         const fixture = TestBed.createComponent(ButtonGroupSelectionBoundToAnotherComponent);
         fixture.detectChanges();
 
-        const radioGroup = fixture.componentInstance.radioGroup;
-        const buttonGroup = fixture.componentInstance.buttonGroup;
+        const radioGroup = fixture.componentInstance.radioGroup();
+        const buttonGroup = fixture.componentInstance.buttonGroup();
         expect(radioGroup.radioButtons.last.checked).toBe(true);
         expect(buttonGroup.buttons[1].selected).toBe(true);
         expect(buttonGroup.buttons[1].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(true);
@@ -433,14 +433,13 @@ describe('IgxButtonGroup', () => {
         expect(buttonGroup.buttons[0].nativeElement.classList.contains('igx-button-group__item--selected')).toBe(false);
     });
 
-    it('should emit selected event only once per selection', async() => {
+    it('should emit selected event only once per selection', async () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);
         fixture.detectChanges();
         await wait();
 
-        const buttonGroup = fixture.componentInstance.buttonGroup;
-
-        spyOn(buttonGroup.selected, 'emit').and.callThrough();
+        const buttonGroup = fixture.componentInstance.buttonGroup();
+        const selectedSpy = vi.spyOn(buttonGroup.selected, 'emit');
 
         buttonGroup.selectButton(0);
         await wait();
@@ -451,13 +450,13 @@ describe('IgxButtonGroup', () => {
         await wait();
         fixture.detectChanges();
 
-        expect(buttonGroup.selected.emit).toHaveBeenCalledTimes(1);
+        expect(selectedSpy).toHaveBeenCalledTimes(1);
 
         buttons[0].click();
         await wait();
         fixture.detectChanges();
 
-        expect(buttonGroup.selected.emit).toHaveBeenCalledTimes(2);
+        expect(selectedSpy).toHaveBeenCalledTimes(2);
     });
 });
 
@@ -466,11 +465,11 @@ describe('IgxButtonGroup', () => {
     imports: [IgxButtonGroupComponent]
 })
 class InitButtonGroupComponent implements OnInit {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    public buttonGroup = viewChild.required(IgxButtonGroupComponent);
 
     public buttons: Button[];
 
-    constructor() {}
+    constructor() { }
 
     public ngOnInit(): void {
         this.buttons = [
@@ -500,13 +499,13 @@ class InitButtonGroupComponent implements OnInit {
     imports: [IgxButtonGroupComponent]
 })
 class InitButtonGroupWithValuesComponent implements OnInit {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    public buttonGroup = viewChild.required(IgxButtonGroupComponent);
 
     public cities: Button[];
 
     public alignment = ButtonGroupAlignment.vertical;
 
-    constructor() {}
+    constructor() { }
 
     public ngOnInit(): void {
 
@@ -549,7 +548,7 @@ class InitButtonGroupWithValuesComponent implements OnInit {
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class TemplatedButtonGroupComponent {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    public buttonGroup = viewChild.required(IgxButtonGroupComponent);
 
     public alignment = ButtonGroupAlignment.vertical;
 }
@@ -563,8 +562,8 @@ class TemplatedButtonGroupComponent {
     `,
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
-class TemplatedButtonGroupDesplayDensityComponent {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+class TemplatedButtonGroupDisplayDensityComponent {
+    public buttonGroup = viewChild.required(IgxButtonGroupComponent);
 }
 
 @Component({
@@ -578,7 +577,7 @@ class TemplatedButtonGroupDesplayDensityComponent {
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class ButtonGroupWithSelectedButtonComponent {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    public buttonGroup = viewChild.required(IgxButtonGroupComponent);
 }
 
 @Component({
@@ -592,7 +591,7 @@ class ButtonGroupWithSelectedButtonComponent {
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class ButtonGroupButtonWithBoundSelectedOutputComponent {
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    public buttonGroup = viewChild.required(IgxButtonGroupComponent);
 
     public items = [
         { key: 0, value: 'Button 1' },
@@ -629,8 +628,8 @@ class ButtonGroupButtonWithBoundSelectedOutputComponent {
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxRadioGroupDirective, IgxRadioComponent]
 })
 class ButtonGroupSelectionBoundToAnotherComponent {
-    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
-    @ViewChild('buttonGroup', { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    public radioGroup = viewChild.required(IgxRadioGroupDirective);
+    public buttonGroup = viewChild.required(IgxButtonGroupComponent);
 
     public selectedValue = 'Bar';
 
