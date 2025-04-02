@@ -528,13 +528,13 @@
         @include overlay($overlay-theme-map);
     }
 
-    @if is-used('igx-paginator', $exclude) {
-        $paginator-theme-map: paginator-theme(
-            $schema: $schema,
-        );
-        $paginator-theme-map: meta.call($theme-handler, $paginator-theme-map);
-        @include paginator($paginator-theme-map);
-    }
+    // @if is-used('igx-paginator', $exclude) {
+    //     $paginator-theme-map: paginator-theme(
+    //         $schema: $schema,
+    //     );
+    //     $paginator-theme-map: meta.call($theme-handler, $paginator-theme-map);
+    //     @include paginator($paginator-theme-map);
+    // }
 
     @if is-used('igx-circular-bar', $exclude) {
         $progress-circular-theme-map: progress-circular-theme(
