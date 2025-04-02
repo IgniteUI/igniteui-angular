@@ -196,8 +196,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      */
     public ngOnInit() {
         const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
+        const childGridData = this.data.childGridsData[this.layout.key];
         this.hGrid = ref.instance;
-        this.hGrid.setDataInternal(this.data.childGridsData[this.layout.key]);
+        this.hGrid.setDataInternal(childGridData);
         this.hGrid.nativeElement["__componentRef"] = ref;
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
@@ -214,7 +215,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.layout.gridCreated.emit({
             owner: this.layout,
             parentID: this.data.rowID,
-            grid: this.hGrid
+            grid: this.hGrid,
+            parentRowData: !childGridData?.length ? this.data.parentRowData : undefined,
         });
     }
 
@@ -231,7 +233,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.layout.gridInitialized.emit({
             owner: this.layout,
             parentID: this.data.rowID,
-            grid: this.hGrid
+            grid: this.hGrid,
+            parentRowData: !this.hGrid.data.length ? this.data.parentRowData : undefined,
         });
 
         this.hGrid.cdr.detectChanges();
