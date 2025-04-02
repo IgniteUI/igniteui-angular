@@ -40,21 +40,16 @@ $_theme: $material;
     }
 
     @include b(igx-drop-down) {
-        position: absolute;
+        @include sizable();
 
-        @include e(list) {
-            @include sizable();
-
-            --component-size: var(--ig-size, #{var-get($_theme, 'default-size')});
-            --dropdown-size: var(--component-size);
-
-            overflow: hidden;
-            border-radius: var-get($_theme, 'border-radius');
-            background: var-get($_theme, 'background-color');
-            box-shadow: var-get($_theme, 'elevation');
-            min-width: rem(128px);
-            border: var-get($_theme, 'border-width') solid var-get($_theme, 'border-color');
-        }
+        --component-size: var(--ig-size, #{var-get($_theme, 'default-size')});
+        --dropdown-size: var(--component-size);
+        overflow: hidden;
+        border-radius: var-get($_theme, 'border-radius');
+        background: var-get($_theme, 'background-color');
+        box-shadow: var-get($_theme, 'elevation');
+        min-width: rem(128px);
+        border: var-get($_theme, 'border-width') solid var-get($_theme, 'border-color');
 
         @include e(list-scroll) {
             overflow-y: auto;

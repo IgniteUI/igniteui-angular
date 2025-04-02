@@ -18,25 +18,17 @@ $_theme: $indigo;
         }
     }
 
-    @include e(list) {
-        padding: rem(3px);
-
-        igx-drop-down-item {
-            margin-block: rem(2px);
-
-            &:first-of-type,
-            &:last-of-type {
-                margin-block: initial;
-            }
-
-            &.igx-drop-down__header {
-                margin-block-end: rem(2px);
-            }
-        }
-    }
+    padding: rem(3px);
 
     @include e(item) {
         @extend %item;
+
+        margin-block: rem(2px);
+
+        &:first-of-type,
+        &:last-of-type {
+            margin-block: initial;
+        }
     }
 
     @include e(item, $m: focused) {
@@ -47,6 +39,7 @@ $_theme: $indigo;
     @include e(header) {
         @extend %item;
 
+        margin-block-end: rem(2px);
         padding-block: pad-inline(rem(4px), rem(6px), rem(8px));
     }
 }
