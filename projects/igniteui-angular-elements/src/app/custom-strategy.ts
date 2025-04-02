@@ -1,7 +1,7 @@
-import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
-import { NgElement } from '@angular/elements';
-import { fromEvent } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, EventEmitter, Injector, OnChanges, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { NgElement, NgElementStrategyEvent } from '@angular/elements';
+import { fromEvent, Observable } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { ComponentConfig, ContentQueryMeta } from './component-config';
 
 import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes, isFunction } from './ng-element-strategy';
@@ -388,6 +388,65 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             super.disconnect();
         }
     }
+
+    //#region Handle event args that return reference to components, since they return angular ref and not custom elements.
+    /** Sets up listeners for the component's outputs so that the events stream emits the events. */
+    protected override initializeOutputs(componentRef: ComponentRef<any>): void {
+        const eventEmitters: Observable<NgElementStrategyEvent>[] = this._componentFactory.outputs.map(
+            ({ propName, templateName }) => {
+                const emitter: EventEmitter<any> = componentRef.instance[propName];
+                return emitter.pipe(map((value: any) => ({ name: templateName, value: this.patchOutputComponents(value) })));
+            },
+        );
+
+        (this as any).eventEmitters.next(eventEmitters);
+    }
+
+    protected patchOutputComponents(eventArgs: any) {
+        let componentConfig: ComponentConfig = this.findConfig(eventArgs);
+        if (componentConfig?.templateProps) {
+            // The event return directly reference to a component, so directly return a proxy of it.
+            eventArgs = this.createElementsComponentProxy(eventArgs, componentConfig);
+        } else if (!componentConfig) {
+            // Check if the event args have property with component reference and replace it with proxy as well.
+            for (const [key, value] of Object.entries(eventArgs)) {
+                componentConfig = this.findConfig(value);
+                if (componentConfig?.templateProps) {
+                    eventArgs[key] = this.createElementsComponentProxy(value, componentConfig);
+                }
+            }
+        }
+        return eventArgs;
+    }
+
+    /** Find config for a component, assuming the provided object is correct. Otherwise will return undefined. */
+    protected findConfig(component: any) {
+        // Make sure we match the correct type(first half) and not the one it inherits(second half of check).
+        return this.config.find((info: ComponentConfig) => component instanceof info.component && !(component.__proto__ instanceof info.component));
+    }
+
+    /** Create proxy for a component that handles setting template props, making sure it provides correct TemplateRef and not Lit template */
+    protected createElementsComponentProxy(component: any, config: ComponentConfig) {
+        const parentThis = this;
+        return new Proxy(component, {
+            set(target: any, prop: string, newValue: any) {
+                // For now handle only template props
+                if (config.templateProps.includes(prop)) {
+                    const oldRef = target[prop];
+                    const oldValue = oldRef && parentThis.templateWrapper.getTemplateFunction(oldRef);
+                    if (oldValue === newValue) {
+                        newValue = oldRef;
+                    } else {
+                        newValue = parentThis.templateWrapper.addTemplate(newValue);
+                    }
+                }
+                target[prop] = newValue;
+
+                return true;
+            }
+        });
+    }
+    //#endregion
 }
 
 /**
