@@ -13,7 +13,7 @@ import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } 
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
 
-const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
+const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_DROP_DOWN_ITEM_FOCUSED = 'igx-drop-down__item--focused';

@@ -408,13 +408,13 @@
         @include rating($rating-theme-map);
     }
 
-    @if is-used('igx-drop-down', $exclude) {
-        $drop-down-theme-map: drop-down-theme(
-            $schema: $schema,
-        );
-        $drop-down-theme-map: meta.call($theme-handler, $drop-down-theme-map);
-        @include drop-down($drop-down-theme-map);
-    }
+    // @if is-used('igx-drop-down', $exclude) {
+    //     $drop-down-theme-map: drop-down-theme(
+    //         $schema: $schema,
+    //     );
+    //     $drop-down-theme-map: meta.call($theme-handler, $drop-down-theme-map);
+    //     @include drop-down($drop-down-theme-map);
+    // }
 
     // @if is-used('igx-expansion-panel', $exclude) {
     //     $expansion-panel-theme-map: expansion-panel-theme(

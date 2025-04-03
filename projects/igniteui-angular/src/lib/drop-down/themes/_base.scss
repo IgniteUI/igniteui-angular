@@ -1,0 +1,174 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/tokens' as *;
+
+$_theme: $material;
+
+@include layer(base) {
+    igx-select,
+    igx-combo {
+        display: block;
+        position: relative;
+    }
+
+    %item {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        white-space: nowrap;
+        position: relative;
+        height: var-get($_theme, 'size');
+        color: var-get($_theme, 'item-text-color');
+
+        igx-divider {
+            position: absolute;
+            width: 100%;
+            inset-inline-start: 0;
+            bottom: 0;
+        }
+
+        igx-icon {
+            --component-size: 1;
+
+            justify-content: center;
+        }
+    }
+
+    %header {
+        @include type-style(overline);
+
+        color: var-get($_theme, 'header-text-color');
+        pointer-events: none;
+        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+    }
+
+    @include b(igx-drop-down) {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($_theme, 'default-size')});
+        --dropdown-size: var(--component-size);
+        overflow: hidden;
+        border-radius: var-get($_theme, 'border-radius');
+        background: var-get($_theme, 'background-color');
+        box-shadow: var-get($_theme, 'elevation');
+        min-width: rem(128px);
+        border: var-get($_theme, 'border-width') solid var-get($_theme, 'border-color');
+
+        @include e(list-scroll) {
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+        }
+
+        @include e(item) {
+            @include type-style(body-2);
+            @extend %item;
+
+            @include sizable();
+            --component-size: var(--dropdown-size);
+
+            cursor: pointer;
+            padding-inline: pad-inline(rem(16px), rem(20px), rem(24px));
+            border-radius: var-get($_theme, 'item-border-radius');
+
+            igx-icon {
+                color: var-get($_theme, 'item-icon-color');
+            }
+
+            &:hover {
+                background: var-get($_theme, 'hover-item-background');
+                color: var-get($_theme, 'hover-item-text-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'hover-item-icon-color');
+                }
+            }
+
+            &:focus {
+                outline: 0;
+                outline-color: transparent;
+                background: var-get($_theme, 'focused-item-background');
+                color: var-get($_theme, 'focused-item-text-color');
+            }
+        }
+
+        @include e(inner) {
+            @include ellipsis();
+
+            display: block;
+            margin-inline-end: auto;
+        }
+
+        @include e(content) {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: rem(8px);
+        }
+
+        @include e(item, $m: focused) {
+            background: var-get($_theme, 'focused-item-background');
+            color: var-get($_theme, 'focused-item-text-color');
+        }
+
+        @include e(item, $m: selected) {
+            background: var-get($_theme, 'selected-item-background');
+            color: var-get($_theme, 'selected-item-text-color');
+
+            igx-icon {
+                color: var-get($_theme, 'selected-item-icon-color');
+            }
+
+            &:hover {
+                background: var-get($_theme, 'selected-hover-item-background');
+                color: var-get($_theme, 'selected-hover-item-text-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'selected-hover-item-icon-color');
+                }
+            }
+        }
+
+        @include e(item, $mods: (selected, focused)) {
+            background: var-get($_theme, 'selected-focus-item-background');
+            color: var-get($_theme, 'selected-focus-item-text-color');
+
+            &:hover {
+                background: var-get($_theme, 'selected-hover-item-background');
+                color: var-get($_theme, 'selected-hover-item-text-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'selected-hover-item-icon-color');
+                }
+            }
+        }
+
+        @include e(item, $m: disabled) {
+            background: var-get($_theme, 'disabled-item-background');
+            color: var-get($_theme, 'disabled-item-text-color');
+            cursor: default;
+            pointer-events: none;
+
+            igx-icon {
+                color: var-get($_theme, 'disabled-item-text-color');
+            }
+        }
+
+        @include e(header) {
+            @extend %item;
+            @extend %header;
+        }
+
+        @include e(group) {
+            pointer-events: auto;
+
+            label {
+                @extend %header;
+            }
+        }
+    }
+}
