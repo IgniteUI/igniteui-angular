@@ -432,13 +432,13 @@
         @include grid($grid-theme-map);
     }
 
-    @if is-used('igx-grid-summary', $exclude) {
-        $grid-summary-theme-map: grid-summary-theme(
-            $schema: $schema,
-        );
-        $grid-summary-theme-map: meta.call($theme-handler, $grid-summary-theme-map);
-        @include grid-summary($grid-summary-theme-map);
-    }
+    // @if is-used('igx-grid-summary', $exclude) {
+    //     $grid-summary-theme-map: grid-summary-theme(
+    //         $schema: $schema,
+    //     );
+    //     $grid-summary-theme-map: meta.call($theme-handler, $grid-summary-theme-map);
+    //     @include grid-summary($grid-summary-theme-map);
+    // }
 
     @if is-used('igx-grid-toolbar', $exclude) {
         $grid-toolbar-theme-map: grid-toolbar-theme(
