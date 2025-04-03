@@ -69,13 +69,16 @@ describe(`Update to ${version}`, () => {
                 $date-selected-current-outline: orange,
                 $date-selected-current-hover-outline: orange,
                 $date-selected-current-focus-outline: orange,
+                $content-background: black
             );`
         );
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent(testFilePath)).toEqual(
-            `$calendar-theme: calendar-theme();`
+            `$calendar-theme: calendar-theme(
+                $content-background: black
+            );`
         );
     });
 });
