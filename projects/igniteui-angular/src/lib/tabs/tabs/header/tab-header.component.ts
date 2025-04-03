@@ -1,34 +1,51 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, NgZone, OnDestroy } from '@angular/core';
-import { IgxTabItemDirective } from '../tab-item.directive';
-import { IgxTabHeaderDirective } from '../tab-header.directive';
-import { IgxTabHeaderBase } from '../tabs.base';
-import { IgxTabsComponent } from './tabs.component';
-import { getResizeObserver } from '../../core/utils';
-import { PlatformUtil } from '../../core/utils';
-import { IgxDirectionality } from '../../services/direction/directionality';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    HostBinding,
+    HostListener,
+    NgZone,
+    OnDestroy,
+    ViewEncapsulation
+} from '@angular/core';
+import { IgxTabItemDirective } from '../../tab-item.directive';
+import { IgxTabHeaderDirective } from '../../tab-header.directive';
+import { IgxTabHeaderBase } from '../../tabs.base';
+import { IgxTabsComponent } from '../tabs.component';
+import { getResizeObserver } from '../../../core/utils';
+import { PlatformUtil } from '../../../core/utils';
+import { IgxDirectionality } from '../../../services/direction/directionality';
 
 @Component({
     selector: 'igx-tab-header',
     templateUrl: 'tab-header.component.html',
+    styleUrl: 'tab-header.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabHeaderBase, useExisting: IgxTabHeaderComponent }],
     standalone: true
 })
 export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements AfterViewInit, OnDestroy {
 
     /** @hidden @internal */
-    @HostBinding('class.igx-tabs__header-item--selected')
+    @HostBinding('class.igx-tab-header--selected')
     public get provideCssClassSelected(): boolean {
         return this.tab.selected;
     }
 
     /** @hidden @internal */
-    @HostBinding('class.igx-tabs__header-item--disabled')
+    @HostBinding('class.igx-tab-header--disabled')
     public get provideCssClassDisabled(): boolean {
         return this.tab.disabled;
     }
 
     /** @hidden @internal */
-    @HostBinding('class.igx-tabs__header-item')
+    @HostBinding('class.igx-tab-header--justify')
+    public get applyJustifyClass(): boolean {
+        return this.tabs.tabAlignment === 'justify'; // Correctly accessing tabsAlignment
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-tab-header')
     public cssClass = true;
 
     private _resizeObserver: ResizeObserver;

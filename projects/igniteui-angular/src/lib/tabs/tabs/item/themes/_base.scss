@@ -1,0 +1,120 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'styles/themes/standalone' as *;
+@use '../../themes/light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
+
+    @include b(igx-tabs-header) {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        flex: 0 0 auto;
+        background: var-get($theme, 'item-background');
+        z-index: 1;
+
+        @include e(content) {
+            display: flex;
+            align-items: center;
+            flex: 1 1 auto;
+            overflow: hidden;
+            scroll-behavior: smooth;
+        }
+
+        @include e(wrapper) {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        @include e(active-indicator) {
+            position: absolute;
+            bottom: 0;
+            // We need to explicitly set the default for IE 11
+            left: 0;
+            transform: translateX(0);
+            height: rem(2px);
+            min-width: rem(90px);
+            background: var-get($theme, 'indicator-color');
+            transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
+        }
+    }
+
+    @include b(igx-tabs-header-button) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        border: none;
+        padding: 0;
+        min-width: rem(48px);
+        width: rem(48px);
+        cursor: pointer;
+        position: relative;
+        background: var-get($theme, 'button-background');
+        color: var-get($theme, 'button-color');
+        outline: 0;
+        align-self: stretch;
+        height: auto;
+        transition: none;
+        border-radius: border-radius(0);
+
+        &:hover {
+            background: var-get($theme, 'button-hover-background');
+            color: var-get($theme, 'button-hover-color');
+        }
+
+        &:focus {
+            outline: 0;
+        }
+
+        &::-moz-focus-inner {
+            // remove focus dotted border in firefox
+            border: 0;
+        }
+
+        &:disabled {
+            color: var-get($theme, 'button-disabled-color');
+            cursor: default;
+            pointer-events: none;
+        }
+
+        &--none {
+            display: none;
+        }
+
+        igx-icon {
+            $icon-size: rem(24px);
+
+            --size: #{$icon-size};
+        }
+
+        [dir='rtl'] & {
+            transform: scaleX(-1);
+        }
+    }
+
+    @include b(igx-tabs-header-scroll) {
+        display: flex;
+        height: 100%;
+
+        @include m(start) {
+            justify-content: flex-start;
+        }
+
+        @include m(end) {
+            justify-content: flex-end;
+            min-width: max-content;
+        }
+
+        @include m(center) {
+            justify-content: center;
+            min-width: max-content;
+        }
+    }
+}

@@ -102,7 +102,7 @@
     @include switch-typography($categories: (
         label: 'body-1'
     ));
-    @include tabs-typography();
+    //@include tabs-typography();
     @include time-picker-typography($categories: (
         header-hour: 'h4',
         selected-time: 'h4'
