@@ -27,6 +27,12 @@ describe('IgxCircularProgressBarComponent', () => {
         circularBar = fixture.debugElement.nativeElement;
     });
 
+    afterEach(() => {
+        // Remove elements manually from DOM, because CircularBar overrides the id the TestBed uses
+        fixture.elementRef.nativeElement.remove();
+        fixture.destroy();
+    });
+
     it('should initialize with default attributes', () => {
         expect(progress.cssClass).toBe('igx-circular-bar');
         expect(progress.textVisibility).toBe(true);
