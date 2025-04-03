@@ -1,6 +1,6 @@
 @for (templateFunc of templateFunctions; track templateFunc) {
     <ng-template let-context="context">
-        <div #container style="display: contents;"></div>
+        <div #container style="display: contents;" [attr.tmpl_owner]="owner?.id"></div>
         {{ litRender(container, templateFunc, context) }}
     </ng-template>
 }

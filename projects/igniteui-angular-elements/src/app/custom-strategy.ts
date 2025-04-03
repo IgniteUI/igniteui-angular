@@ -44,6 +44,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             const componentRef = (this as any).componentRef as ComponentRef<any>;
             const viewRef = componentRef.injector.get(ViewContainerRef);
             this._templateWrapper = viewRef.createComponent(TemplateWrapperComponent).instance;
+            this._templateWrapper.owner = componentRef.instance;
         }
         return this._templateWrapper;
     }
@@ -79,6 +80,13 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             .map(parentType => this.config.find(x => x.component === parentType))
             .filter(x => x.selector);
 
+        const template = (element as any).getRootNode().querySelector('[tmpl_owner]');
+        if (template) {
+            const parentOfTmlp = element.closest<IgcNgElement>('#' + template.getAttribute("tmpl_owner"));
+            if ((parentOfTmlp?.ngElementStrategy as any)?.componentRef) {
+                this.angularParent = (parentOfTmlp.ngElementStrategy as any).componentRef;
+            }
+        }
         if (configParents?.length) {
             let node = element as IgcNgElement;
             while (node?.parentElement) {

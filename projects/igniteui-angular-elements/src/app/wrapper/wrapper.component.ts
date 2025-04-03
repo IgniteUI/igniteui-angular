@@ -13,6 +13,8 @@ type TemplateFunction = (arg: any) => TemplateResult;
 })
 export class TemplateWrapperComponent {
 
+    public owner: any;
+
     public templateFunctions: TemplateFunction[] = [];
 
     /**
