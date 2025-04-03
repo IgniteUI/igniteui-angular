@@ -22,6 +22,12 @@ describe('IgxLinearProgressBarComponent', () => {
         linearBar = fixture.debugElement.nativeElement;
     });
 
+    afterEach(() => {
+        // Remove elements manually from DOM, because LinearBar overrides the id the TestBed uses
+        fixture.elementRef.nativeElement.remove();
+        fixture.destroy();
+    });
+
     it('should initialize with default attributes', () => {
         expect(progress.valueMin).toBe(0);
         expect(progress.cssClass).toBe('igx-linear-bar');
