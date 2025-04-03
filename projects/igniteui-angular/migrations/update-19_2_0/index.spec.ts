@@ -58,4 +58,24 @@ describe(`Update to ${version}`, () => {
             );`
         );
     });
+
+    it('should remove unused properties from the calendar theme', async () => {
+        const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
+
+        appTree.create(
+            testFilePath,
+            `$calendar-theme: calendar-theme(
+                $date-special-current-border-color: orange,
+                $date-selected-current-outline: orange,
+                $date-selected-current-hover-outline: orange,
+                $date-selected-current-focus-outline: orange,
+            );`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent(testFilePath)).toEqual(
+            `$calendar-theme: calendar-theme();`
+        );
+    });
 });
