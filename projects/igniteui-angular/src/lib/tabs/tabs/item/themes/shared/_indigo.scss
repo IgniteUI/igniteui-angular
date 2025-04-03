@@ -1,0 +1,36 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../../../themes/light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-tabs, indigo) {
+    @include b(igx-tabs-header) {
+        @include e(active-indicator) {
+            height: rem(3px);
+        }
+    }
+
+    @include b(igx-tabs-header-button) {
+        min-width: rem(40px);
+        width: rem(40px);
+
+        igx-icon {
+            $icon-size: rem(16px);
+
+            --ig-icon-size: #{$icon-size};
+            --igx-icon-size: #{$icon-size};
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            border-bottom: rem(1px) solid var(--nav-btn-border-color);
+        }
+    }
+}
+

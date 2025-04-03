@@ -1,0 +1,123 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'styles/themes/standalone' as *;
+@use '../../themes/light/tokens' as *;
+
+$theme: $material;
+
+$variant: map.get($theme, '_meta', 'variant');
+$not-bootstrap-theme: $variant != 'bootstrap';
+$bootstrap-theme: $variant == 'bootstrap';
+$indigo-theme: $variant == 'indigo';
+$theme-variant: map.get($theme, '_meta', 'theme-variant');
+
+@include layer(base) {
+    @include b(igx-tab-header) {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        min-width: rem(90px);
+        max-width: rem(360px);
+        word-wrap: break-word;
+        // Flex basis & shrink are Needed for IE11
+        flex-basis: auto;
+        flex-shrink: 0;
+        padding: rem(11px) rem(16px);
+        overflow: hidden;
+        cursor: pointer;
+        position: relative;
+        user-select: none;
+        background: var-get($theme, 'item-background');
+        color: var-get($theme, 'item-text-color');
+        outline: 0;
+
+        igx-icon {
+            color: var-get($theme, 'item-icon-color');
+        }
+
+        &::-moz-focus-inner {
+            border: 0;
+        }
+
+        &:focus {
+            background: var-get($theme, 'item-active-background');
+            color: var-get($theme, 'item-hover-color');
+            border-bottom-color: transparent;
+        }
+
+        &:hover {
+            background: var-get($theme, 'item-hover-background');
+            color: var-get($theme, 'item-hover-color');
+        }
+
+        &:hover,
+        &:focus {
+            igx-icon {
+                color: var-get($theme, 'item-hover-icon-color');
+            }
+        }
+
+        @include m(justify) {
+            flex-basis: 0;
+            flex-grow: 1;
+            max-width: 100%;
+        }
+
+        @include m(selected) {
+            outline: 0;
+            color: var-get($theme, 'item-active-color');
+
+            &:hover,
+            &:focus {
+                background: var-get($theme, 'item-active-background');
+                color: if($variant == 'fluent', var-get($theme, 'item-hover-color'), var-get($theme, 'item-active-color'));
+
+                igx-icon {
+                    color: var-get($theme, 'item-active-icon-color');
+                }
+            }
+
+            igx-icon {
+                color: var-get($theme, 'item-active-icon-color');
+            }
+        }
+
+        @include m(disabled) {
+            outline: 0;
+            color: var-get($theme, 'item-disabled-color');
+            cursor: default;
+            pointer-events: none;
+
+            igx-icon {
+                color: var-get($theme, 'item-disabled-icon-color');
+            }
+        }
+
+        @include e(inner) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+
+            > [igxtabheaderlabel] {
+                @include type-style(button) {
+                    margin: 0;
+                }
+
+                @include line-clamp(2, true, true);
+            }
+
+            > [igxtabheadericon] {
+                margin-bottom: rem(8px);
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}
