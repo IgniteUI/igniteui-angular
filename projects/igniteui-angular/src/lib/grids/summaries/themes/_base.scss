@@ -1,0 +1,91 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/tokens' as *;
+
+$_theme: $material;
+
+@include layer(base) {
+    $cell-pin: (
+        style: var-get($_theme, 'pinned-border-width') var-get($_theme, 'pinned-border-style'),
+        color: var-get($_theme, 'pinned-border-color')
+    );
+
+    @include b(igx-grid-summary) {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0%;
+        padding-block: 0;
+        padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
+        background: var-get($_theme, 'background-color', inherit);
+        overflow: hidden;
+        outline-style: none;
+
+        &::after {
+            position: absolute;
+            inset: 0;
+        }
+
+        &:focus::after {
+            background: var-get($_theme, 'focus-background-color');
+        }
+
+        @include e(item) {
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-block: pad(rem(0), rem(2px), rem(6px));
+            padding-inline: 0;
+            font-size: rem(12px);
+        }
+
+        @include e(label) {
+            @include ellipsis();
+
+            color: var-get($_theme, 'label-color');
+            min-width: rem(30px);
+            margin-inline-end: rem(3px);
+
+            &:hover {
+                color: var-get($_theme, 'label-hover-color');
+            }
+        }
+
+        @include e(result) {
+            @include ellipsis();
+
+            color: var-get($_theme, 'result-color');
+            font-weight: 600;
+            flex: 1 1 auto;
+            text-align: end;
+        }
+
+        @include m(pinned) {
+            position: relative;
+            z-index: 1;
+        }
+
+        @include m(pinned-last) {
+            border-inline-end: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
+
+            @media print {
+                border-inline-end: map.get($cell-pin, 'style') #999;
+            }
+        }
+
+        @include m(pinned-first) {
+            border-inline-start: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
+
+            @media print {
+                border-inline-start: map.get($cell-pin, 'style') #999;
+            }
+        }
+
+        @include m(fw) {
+            flex-grow: 0;
+        }
+    }
+}
