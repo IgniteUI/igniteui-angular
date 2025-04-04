@@ -1,6 +1,7 @@
 import {
     Directive, EmbeddedViewRef, Input, OnChanges, ChangeDetectorRef,
-    SimpleChange, SimpleChanges, TemplateRef, ViewContainerRef, NgZone, Output, EventEmitter
+    SimpleChange, SimpleChanges, TemplateRef, ViewContainerRef, NgZone, Output, EventEmitter,
+    OnDestroy,
 } from '@angular/core';
 
 import { IBaseEventArgs } from '../../core/utils';
@@ -12,7 +13,7 @@ import { IBaseEventArgs } from '../../core/utils';
     selector: '[igxTemplateOutlet]',
     standalone: true
 })
-export class IgxTemplateOutletDirective implements OnChanges {
+export class IgxTemplateOutletDirective implements OnChanges, OnDestroy {
     @Input() public igxTemplateOutletContext !: any;
 
     @Input() public igxTemplateOutlet !: TemplateRef<any>;
@@ -51,6 +52,10 @@ export class IgxTemplateOutletDirective implements OnChanges {
         }
     }
 
+    public ngOnDestroy(): void {
+        this.cleanCache();
+    }
+
     public cleanCache() {
         this._embeddedViewsMap.forEach((collection) => {
             collection.forEach((item => {
@@ -61,15 +66,6 @@ export class IgxTemplateOutletDirective implements OnChanges {
             collection.clear();
         });
         this._embeddedViewsMap.clear();
-    }
-
-    public cleanView(tmplID) {
-        const embViewCollection = this._embeddedViewsMap.get(tmplID.type);
-        const embView = embViewCollection?.get(tmplID.id);
-        if (embView) {
-            embView.destroy();
-            this._embeddedViewsMap.get(tmplID.type).delete(tmplID.id);
-        }
     }
 
     private _recreateView() {
@@ -88,12 +84,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
                 // if context contains a template id, check if we have a view for that template already stored in the cache
                 // if not create a copy and add it to the cache in detached state.
                 // Note: Views in detached state do not appear in the DOM, however they remain stored in memory.
-                const resCollection = this._embeddedViewsMap.get(this.igxTemplateOutletContext['templateID'].type);
-                const res = resCollection?.get(this.igxTemplateOutletContext['templateID'].id);
-                if (!res) {
-                    this._embeddedViewsMap.set(this.igxTemplateOutletContext['templateID'].type,
-                        new Map([[this.igxTemplateOutletContext['templateID'].id, this._viewRef]]));
-                }
+                this.cacheView(tmplId, this._viewRef);
             }
         }
     }
@@ -105,7 +96,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
         if (view !== this._viewRef) {
             if (owner._viewContainerRef.indexOf(view) !== -1) {
                 // detach in case view it is attached somewhere else at the moment.
-                this.beforeViewDetach.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
+                this.beforeViewDetach.emit({ owner: this, view, context: this.igxTemplateOutletContext });
                 owner._viewContainerRef.detach(owner._viewContainerRef.indexOf(view));
             }
             if (this._viewRef && this._viewContainerRef.indexOf(this._viewRef) !== -1) {
@@ -196,6 +187,26 @@ export class IgxTemplateOutletDirective implements OnChanges {
             // has context, update context
             return TemplateOutletAction.UpdateViewContext;
         }
+    }
+
+    private cacheView(tmplID: { type: string, id: unknown } | undefined, viewRef: EmbeddedViewRef<any>) {
+        if (!tmplID) {
+            return;
+        }
+
+        const hasUniqueId = tmplID.id !== undefined && tmplID.id !== null;
+        if (hasUniqueId) {
+            // Don't cache locally unique id views, they're handled by the parent component by using moveview instead of cache
+            return;
+        }
+
+        let resCollection = this._embeddedViewsMap.get(tmplID.type);
+        if (!resCollection) {
+            resCollection = new Map();
+            this._embeddedViewsMap.set(tmplID.type, resCollection);
+        }
+
+        resCollection.set(tmplID.id, viewRef);
     }
 }
 enum TemplateOutletAction {
