@@ -440,13 +440,13 @@
         @include grid-summary($grid-summary-theme-map);
     }
 
-    @if is-used('igx-grid-toolbar', $exclude) {
-        $grid-toolbar-theme-map: grid-toolbar-theme(
-            $schema: $schema,
-        );
-        $grid-toolbar-theme-map: meta.call($theme-handler, $grid-toolbar-theme-map);
-        @include grid-toolbar($grid-toolbar-theme-map);
-    }
+    // @if is-used('igx-grid-toolbar', $exclude) {
+    //     $grid-toolbar-theme-map: grid-toolbar-theme(
+    //         $schema: $schema,
+    //     );
+    //     $grid-toolbar-theme-map: meta.call($theme-handler, $grid-toolbar-theme-map);
+    //     @include grid-toolbar($grid-toolbar-theme-map);
+    // }
 
     @if is-used('igx-pivot-data-selector', $exclude) {
         $pivot-data-selector-theme-map: pivot-data-selector-theme(
