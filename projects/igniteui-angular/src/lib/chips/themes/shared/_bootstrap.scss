@@ -9,11 +9,11 @@ $_theme: $bootstrap;
 @include themed-block(igx-chip, bootstrap) {
     &:focus {
         @include e(item) {
-            box-shadow: 0 0 0 rem(2px) var-get($_theme, 'focus-outline-color');
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focus-outline-color');
         }
 
         @include e(item, $m: 'selected') {
-            box-shadow: 0 0 0 rem(2px) var-get($_theme, 'focus-selected-outline-color');
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'focus-selected-outline-color');
         }
     }
 
@@ -24,7 +24,10 @@ $_theme: $bootstrap;
 
         &:focus {
             @include e(item) {
-                box-shadow: 0 0 0 rem(2px) color($color: 'primary', $variant: 200);
+                color: contrast-color($color: 'primary', $variant: 500);
+                background: color($color: 'primary', $variant: 500);
+                border-color: color($color: 'primary', $variant: 500);
+                box-shadow: 0 0 0 rem(4px) color($color: 'primary', $variant: 500, $opacity: .38);
             }
         }
     }
@@ -32,7 +35,10 @@ $_theme: $bootstrap;
     @include m(info) {
         &:focus {
             @include e(item) {
-                box-shadow: 0 0 0 rem(2px) color($color: 'info', $variant: 200);
+                color: contrast-color($color: 'info', $variant: 500);
+                background: color($color: 'info', $variant: 500);
+                border-color: color($color: 'info', $variant: 500);
+                box-shadow: 0 0 0 rem(4px) color($color: 'info', $variant: 500, $opacity: .38);
             }
         }
     }
@@ -44,7 +50,10 @@ $_theme: $bootstrap;
 
         &:focus {
             @include e(item) {
-                box-shadow: 0 0 0 rem(2px) color($color: 'success', $variant: 200);
+                color: contrast-color($color: 'success', $variant: 600);
+                background: color($color: 'success', $variant: 500);
+                border-color: color($color: 'success', $variant: 500);
+                box-shadow: 0 0 0 rem(4px) color($color: 'success', $variant: 500, $opacity: .38);
             }
         }
     }
@@ -52,7 +61,10 @@ $_theme: $bootstrap;
     @include m(warning) {
         &:focus {
             @include e(item) {
-                box-shadow: 0 0 0 rem(2px) color($color: 'warn', $variant: 200);
+                color: contrast-color($color: 'warn', $variant: 900);
+                background: color($color: 'warn', $variant: 500);
+                border-color: color($color: 'warn', $variant: 500);
+                box-shadow: 0 0 0 rem(4px) color($color: 'warn', $variant: 500, $opacity: .38);
             }
         }
     }
@@ -64,7 +76,10 @@ $_theme: $bootstrap;
 
         &:focus {
             @include e(item) {
-                box-shadow: 0 0 0 rem(2px) color($color: 'error', $variant: 200);
+                background: color($color: 'error', $variant: 500);
+                border-color: color($color: 'error', $variant: 500);
+                color: contrast-color($color: 'error', $variant: 600);
+                box-shadow: 0 0 0 rem(4px) color($color: 'error', $variant: 500, $opacity: .38);
             }
         }
     }
