@@ -1,85 +1,92 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
     IGridCreatedEventArgs,
-    GridSelectionMode,
-    IGX_HIERARCHICAL_GRID_DIRECTIVES
+    IGX_HIERARCHICAL_GRID_DIRECTIVES,
+    FilteringExpressionsTree,
+    IgxStringFilteringOperand
 } from 'igniteui-angular';
-import { RemoteService } from '../shared/remote.service';
+import { HttpClient } from '@angular/common/http';
+
+const API_ENDPOINT = 'https://data-northwind.indigo.design';
 
 @Component({
     selector: 'app-hierarchical-grid-remote-sample',
     templateUrl: 'hierarchical-grid-remote.sample.html',
     styleUrls: ['hierarchical-grid-remote.sample.scss'],
-    providers: [RemoteService],
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
-export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
-    @ViewChild('rowIsland1', { static: true })
-    private rowIsland1: IgxRowIslandComponent;
-
+export class HierarchicalGridRemoteSampleComponent implements OnInit {
     @ViewChild('hGrid', { static: true })
     private hGrid: IgxHierarchicalGridComponent;
 
     public selectionMode;
     public remoteData = [];
     public primaryKeys = [
-        { name: 'CustomerID', type: 'string', level: 0 },
-        { name: 'OrderID', type: 'number', level: 1 },
-        { name: 'EmployeeID', type: 'number', level: 2 },
-        { name: 'ProductID', type: 'number', level: 2 }
+        { name: 'Customers', type: 'string', level: 0 },
+        { name: 'Orders', type: 'number', level: 1 },
+        { name: 'Details', type: 'number', level: 2 }
     ];
 
-    constructor(private remoteService: RemoteService) {
-        remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/';
+    constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
-        this.remoteService.urlBuilder = (dataState) => this.buildUrl(dataState);
-        this.selectionMode = GridSelectionMode.none;
-    }
+    public ngOnInit() {
+        const ordersTree = new FilteringExpressionsTree(0, undefined, 'Orders', ['shipVia']);
+        ordersTree.filteringOperands.push({
+            fieldName: 'shipVia',
+            ignoreCase: false,
+            conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
+            searchVal: 'AirCargo'
+        });
 
-    public buildUrl(dataState) {
-        let qS = '';
-        if (dataState) {
-            qS += `${dataState.key}?`;
-
-            const level = dataState.level;
-            if (level > 0) {
-                const parentKey = this.primaryKeys.find((key) => key.level === level - 1);
-                const parentID = typeof dataState.parentID !== 'object' ? dataState.parentID : dataState.parentID[parentKey.name];
-
-                if (parentKey.type === 'string') {
-                    qS += `$filter=${parentKey.name} eq '${parentID}'`;
-                } else {
-                    qS += `$filter=${parentKey.name} eq ${parentID}`;
-                }
-            }
-        }
-        return `${this.remoteService.url}${qS}`;
+        const customersTree = new FilteringExpressionsTree(0, undefined, 'Customers', ['customerId', 'companyName', 'contactName', 'contactTitle']);
+        // customersTree.filteringOperands.push({
+        //     fieldName: 'customerId',
+        //     conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
+        //     ignoreCase: false,
+        //     searchTree: ordersTree
+        // });
+        customersTree.filteringOperands.push({
+            fieldName: 'customerId',
+            ignoreCase: false,
+            conditionName: IgxStringFilteringOperand.instance().condition('startsWith').name,
+            searchVal: 'A'
+        });
+        this.hGrid.advancedFilteringExpressionsTree = customersTree;
     }
 
     public ngAfterViewInit() {
-        this.remoteService.getData({ parentID: null, level: 0, key: 'Customers' }, (data) => {
-            this.remoteData = data['value'];
+        this.hGrid.isLoading = true;
+        this.http.post(`${API_ENDPOINT}/QueryBuilder/ExecuteQuery`, this.hGrid.advancedFilteringExpressionsTree).subscribe(data =>{
+            console.log('data', data);
+            this.remoteData = Object.values(data)[0];
             this.hGrid.isLoading = false;
+            this.cdr.detectChanges();
+            this.calculateColsInView();
         });
     }
 
-    public setterChange() {
-        this.rowIsland1.rowSelection = this.rowIsland1.rowSelection === GridSelectionMode.multiple
-        ? GridSelectionMode.none : GridSelectionMode.multiple;
-    }
-
-    public setterBindingChange() {
-        this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
+    private calculateColsInView() {
+        this.hGrid.columns.forEach(column =>
+            column.hidden = !this.hGrid.advancedFilteringExpressionsTree.returnFields.includes(column.field));
     }
 
     public gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
         event.grid.isLoading = true;
-        this.remoteService.getData({ parentID: event.parentID, level: rowIsland.level, key: rowIsland.key }, (data) => {
-            event.grid.data = data['value'];
+        const url = this.buildUrl(event, rowIsland);
+        this.http.get(url).subscribe(data => {
+            console.log('data', data);
+            event.grid.data = Object.values(data);
             event.grid.isLoading = false;
-            event.grid.cdr.detectChanges();
+            this.cdr.detectChanges(); 
         });
+    }
+
+    private buildUrl(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
+        const rowIslandKey = this.primaryKeys.find(key => key.level === rowIsland.level).name;
+        const parentKey = (event.grid.parent as any).key ?? event.grid.parent.advancedFilteringExpressionsTree.entity;
+        const url = `${API_ENDPOINT}/${parentKey}/${event.parentID}/${rowIslandKey}`;
+        return url;
     }
 }

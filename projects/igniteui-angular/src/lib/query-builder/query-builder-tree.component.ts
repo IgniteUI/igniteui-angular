@@ -516,7 +516,13 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     /** @hidden */
     protected isAdvancedFiltering(): boolean {
-        return this.entities?.length === 1 && !this.entities[0]?.name;
+        return (this.entities?.length === 1 && !this.entities[0]?.name) ||
+            this.entities.find(e => e.childEntities?.length > 0) !== undefined;
+    }
+
+    /** @hidden */
+    protected isHierarchicalGridNestedQuery(): boolean {
+        return this.queryBuilder.entities !== this.entities
     }
 
     /** @hidden */
@@ -692,6 +698,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get selectedField(): FieldType {
+        if (this._selectedField && !this._selectedField.filters) {
+            this._selectedField.filters = this.getFilters(this._selectedField);
+        }
+
+        if (this._selectedField && !this._selectedField.pipeArgs) {
+            this._selectedField.pipeArgs = this.getPipeArgs(this._selectedField);
+        }
+
         return this._selectedField;
     }
 
@@ -928,7 +942,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
                 ) ||
                 (
-                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery.selectedReturnFields?.length > 0
+                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && 
+                    (innerQuery.selectedReturnFields?.length > 0 || (innerQuery.selectedReturnFields?.length === 0 && this.isAdvancedFiltering()))
                 ) ||
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
@@ -1353,7 +1368,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public getConditionList(): string[] {
         if (!this.selectedField) return [];
 
-        if (this.entities?.length === 1 && !this.entities[0].name) {
+        if ((this.isAdvancedFiltering() && !this.entities[0].childEntities) ||
+            (this.isHierarchicalGridNestedQuery() && this.selectedEntity.name && !this.selectedEntity.childEntities)) {
             return this.selectedField.filters.conditionList();
         }
 
