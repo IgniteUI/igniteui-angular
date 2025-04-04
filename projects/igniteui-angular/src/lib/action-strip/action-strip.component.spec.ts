@@ -1,7 +1,6 @@
 import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './action-strip.component';
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
-import { configureTestSuite } from '../test-utils/configure-suite';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,8 +16,8 @@ describe('igxActionStrip', () => {
     let parentContainer: ElementRef;
     let innerContainer: ViewContainerRef;
 
-    configureTestSuite(() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxActionStripComponent,
@@ -26,8 +25,8 @@ describe('igxActionStrip', () => {
                 IgxActionStripMenuTestingComponent,
                 IgxActionStripCombinedMenuTestingComponent
             ]
-        });
-    });
+        }).compileComponents();
+    }));
 
     describe('Unit tests: ', () => {
 

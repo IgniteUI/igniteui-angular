@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,7 +7,6 @@ import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ICellPosition } from '../common/events';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
@@ -18,14 +17,15 @@ const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
 
 describe('IgxGrid - multi-row-layout #grid', () => {
     const DEBOUNCE_TIME = 60;
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ColumnLayoutTestComponent,
                 ColumnLayoutAndGroupsTestComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     it('should initialize a grid with 1 column group', fakeAsync(() => {

@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid/public_api';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
@@ -11,7 +11,6 @@ import { IgxBooleanFilteringOperand } from '../data-operations/filtering-conditi
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { GridSelectionMode } from './common/enums';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
@@ -21,15 +20,15 @@ import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, 
 import { IColumnState, IGridState } from './state-base.directive';
 
 describe('IgxGridState - input properties #grid', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridStateComponent,
                 IgxGridStateWithOptionsComponent,
                 IgxGridStateWithDetailsComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     it('should initialize an IgxGridState with default options object', () => {

@@ -1,7 +1,6 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { DefaultSortingStrategy, FormattedValuesSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent, SortOnInitComponent, IgxGridFormattedValuesSortingComponent } from '../../test-utils/grid-samples.spec';
@@ -16,8 +15,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     let fixture;
     let grid: IgxGridComponent;
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 GridDeclaredColumnsComponent,
                 SortByParityComponent,
@@ -25,7 +24,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
                 NoopAnimationsModule,
                 IgxGridFormattedValuesSortingComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     beforeEach(() => {
@@ -630,7 +629,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             // Verify that the grid is NOT sorted.
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
-             
+
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
 
             expect(GridFunctions.getColumnSortingIndex(firstHeaderCell)).toEqual(1);
@@ -647,7 +646,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             // Verify that the grid is NOT sorted.
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
-             
+
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
 
             expect(GridFunctions.getColumnSortingIndex(firstHeaderCell)).toEqual(1);
