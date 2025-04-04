@@ -6,7 +6,8 @@ import {
     Output,
     Directive,
     ContentChild,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 
 import { IgxIconComponent } from '../icon/icon.component';
@@ -54,6 +55,8 @@ let NEXT_ID = 0;
         }
     `
     ],
+    styleUrl: 'navbar.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxIconComponent]
 })
 

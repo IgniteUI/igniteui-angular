@@ -8,7 +8,8 @@ import {
     OnInit,
     OnChanges,
     SimpleChanges,
-    booleanAttribute
+    booleanAttribute,
+    ViewEncapsulation
 } from '@angular/core';
 
 import { mkenum } from '../core/utils';
@@ -197,6 +198,8 @@ export class IgxCardFooterDirective {
 @Component({
     selector: 'igx-card',
     templateUrl: 'card.component.html',
+    encapsulation: ViewEncapsulation.None,
+    styleUrl: 'card.component.css',
     standalone: true
 })
 export class IgxCardComponent {

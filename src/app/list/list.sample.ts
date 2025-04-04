@@ -5,6 +5,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HAMMER_GESTURE_CONFIG, HammerModule } from '@angular/platform-browser';
 import {
     IGX_LIST_DIRECTIVES,
     IgxAvatarComponent,
@@ -30,6 +31,7 @@ import {
     PropertyChangeService,
     PropertyPanelConfig,
 } from '../properties-panel/property-change.service';
+import Hammer from 'hammerjs';
 
 defineComponents(
     IgcListComponent,
@@ -78,8 +80,20 @@ interface Employee {
         IgxCheckboxComponent,
         IgxAvatarComponent,
         IgxButtonModule,
+        IgxButtonModule,
         IgxButtonDirective,
-        IgSizeDirective
+        IgSizeDirective,
+        HammerModule
+    ],
+    providers: [
+        {
+            provide: HAMMER_GESTURE_CONFIG,
+            useClass: class {
+                public overrides = {
+                    pan: { direction: Hammer.DIRECTION_HORIZONTAL }
+                }
+            }
+        }
     ]
 })
 export class ListSampleComponent {
@@ -87,7 +101,8 @@ export class ListSampleComponent {
         size: {
             control: {
                 type: 'button-group',
-                options: ['small', 'medium', 'large']
+                options: ['small', 'medium', 'large'],
+                defaultValue: 'medium'
             }
         },
         hideTitle: {
@@ -141,6 +156,13 @@ export class ListSampleComponent {
         },
         addContainedButton: {
             label: 'Add Contained Button',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
+        enablePanning: {
+            label: 'Item Panning',
             control: {
                 type: 'boolean',
                 defaultValue: false

@@ -17,7 +17,7 @@ import {
     SkipSelf,
     TemplateRef,
     ViewChild,
-    booleanAttribute
+    booleanAttribute, ViewEncapsulation
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ITreeResourceStrings, TreeResourceStringsEN } from '../../core/i18n/tree-resources';
@@ -151,6 +151,8 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
 @Component({
     selector: 'igx-tree-node',
     templateUrl: 'tree-node.component.html',
+    styleUrl: 'tree-node.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: IGX_TREE_NODE_COMPONENT, useExisting: IgxTreeNodeComponent }
     ],

@@ -27,7 +27,7 @@
 /// @param {Color} $indicator-border-color [null] - The idle indicator border color.
 /// @param {Color} $indicator-active-dot-color [null] - The active indicator dot color.
 /// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
-/// @param {Color} $indicator-active-hover-dot-color [null] - The active indicator dot color on hover.
+/// @param {Color} $indicator-active-hover-dot-color [null] - The active indicator dot color on hover in the indigo theme.
 /// @param {box-shadow} $button-shadow [null] - Shadow underneath the previous/next buttons.
 ///
 /// @param {List} $border-radius [null] - The border radius used for carousel component.
@@ -103,7 +103,7 @@
         slide-background: $slide-background,
 
         border-radius: $border-radius,
-        button-shadow: $button-shadow,
+        button-elevation: $button-shadow,
 
         button-background: $button-background,
         button-disabled-background: $button-disabled-background,
@@ -172,7 +172,7 @@
         outline-style: none;
         transition: all .15s ease-in-out;
         background: var-get($theme, 'button-background');
-        box-shadow: var-get($theme, 'button-shadow');
+        box-shadow: var-get($theme, 'button-elevation');
         border: rem(1px) solid var-get($theme, 'button-border-color');
         border-radius: var(--nav-btn-border-radius);
 
@@ -305,7 +305,7 @@
         inset-inline-start: 50%;
         transform: translateX(-50%);
         background: var-get($theme, 'indicator-background');
-        box-shadow: var-get($theme, 'button-shadow');
+        box-shadow: var-get($theme, 'button-elevation');
         border-radius: var-get($theme, 'border-radius');
 
         [dir='rtl'] & {

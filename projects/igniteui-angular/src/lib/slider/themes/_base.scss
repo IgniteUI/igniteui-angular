@@ -1,0 +1,332 @@
+@use 'igniteui-theming/sass/animations/easings' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use './light/tokens' as *;
+
+$_theme: $material;
+
+@include layer(base) {
+    @include b(igx-slider) {
+        --thumb-radius: #{calc(var(--thumb-size) / 2)};
+        --tick-height: #{rem(8px)};
+        --tick-height--tall: #{calc(var(--tick-height) * 2)};
+
+        display: flex;
+        position: relative;
+        // Z-index 0 is needed to set the stacking context for the inner elements with z-index.
+        // https://github.com/IgniteUI/igniteui-angular/issues/11597
+        z-index: 0;
+        height: rem(48px);
+        flex-grow: 1;
+        align-items: center;
+        transition: all .2s $out-quad;
+        touch-action: pan-y pinch-zoom;
+
+        &:hover {
+            @include e(track-inactive) {
+                background: var-get($_theme, 'base-track-hover-color');
+            }
+
+            @include e(track-fill) {
+                background: var-get($_theme, 'track-hover-color');
+            }
+        }
+
+        @include e(track) {
+            position: relative;
+            width: 100%;
+            height: var(--track-height);
+            overflow: hidden;
+            border-radius: border-radius(rem(32px));
+        }
+
+        @include e(track-inactive) {
+            position: absolute;
+            width: 100%;
+            height: inherit;
+            background: var-get($_theme, 'base-track-color');
+            transition: background .2s $out-quad;
+            border-radius: inherit;
+        }
+
+        @include e(track-fill) {
+            position: absolute;
+            width: 100%;
+            background: var-get($_theme, 'track-color');
+            transform-origin: left center;
+            transform: scaleX(0);
+            border-radius: inherit;
+            height: inherit;
+
+            [dir='rtl'] & {
+                transform-origin: right center;
+            }
+        }
+
+        @include e(thumbs) {
+            position: absolute;
+            width: 100%;
+            height: 0;
+            cursor: default;
+            z-index: 1;
+            inset-inline-start: 0;
+        }
+
+        @include e(track-steps) {
+            position: absolute;
+            display: flex;
+            width: 100%;
+            height: rem(4px);
+            opacity: .85;
+            transition: opacity .2s ease-out;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var-get($_theme, 'track-step-color');
+
+            svg {
+                clip-path: inset(0 rem(3px) 0 rem(3px));
+            }
+
+            line {
+                stroke: currentColor;
+                stroke-width: var-get($_theme, 'track-step-size');
+                stroke-linecap: round;
+            }
+        }
+
+        @include m(disabled) {
+            pointer-events: none;
+
+            @include e(track-inactive) {
+                background: var-get($_theme, 'disabled-base-track-color');
+            }
+
+            @include e(track-fill) {
+                background: var-get($_theme, 'disabled-fill-track-color');
+            }
+
+            @include e(ticks-tick) {
+                background: var-get($_theme, 'disabled-base-track-color');
+            }
+
+            @include e(ticks-label) {
+                color: var-get($_theme, 'disabled-base-track-color');
+            }
+        }
+    }
+
+    @include b(igx-ticks) {
+        width: 100%;
+        display: flex;
+        position: absolute;
+        bottom: 0;
+        justify-content: space-between;
+
+        @include e(group) {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+
+            &:first-of-type {
+                margin-inline-start: rem(-1px);
+            }
+
+            &:last-of-type {
+                margin-inline-end: rem(-1px);
+            }
+        }
+
+        @include e(label) {
+            @include type-style(caption);
+
+            color: var-get($_theme, 'tick-label-color');
+            position: absolute;
+            top: var(--tick-height--tall);
+            transform: translate(-50%);
+            opacity: 1;
+            transition: opacity .2s $in-out-quad;
+
+            [dir='rtl'] & {
+                left: 100%;
+            }
+        }
+
+        @include e(label, $m: tall) {
+            top: calc(var(--tick-height--tall) + var(--tick-height));
+        }
+
+        @include e(label, $m: hidden) {
+            opacity: 0;
+        }
+
+        @include e(tick) {
+            background: var-get($_theme, 'tick-color');
+            height: var(--tick-height);
+            width: rem(2px);
+        }
+
+        @include e(tick, $m: tall) {
+            height: var(--tick-height--tall);
+        }
+
+        @include m(tall) {
+            @include e(label) {
+                top: calc(var(--tick-height--tall) + var(--tick-height));
+            }
+        }
+
+        @include m(top) {
+            bottom: auto;
+            top: 0;
+            align-items: flex-end;
+
+            @include e(label) {
+                bottom: calc(var(--tick-height) * 2);
+                top: auto;
+            }
+
+            @include e(label, $m: tall) {
+                bottom: calc(var(--tick-height--tall) + var(--tick-height));
+                top: auto;
+            }
+        }
+
+        @include mx(top, tall) {
+            @include e(label) {
+                bottom: calc(var(--tick-height--tall) + var(--tick-height));
+                top: auto;
+            }
+        }
+
+        @include m(top-bottom) {
+            @include e(group) {
+                display: block;
+            }
+
+            @include e(label) {
+                writing-mode: vertical-rl;
+                transform: translate(-50%) rotate(0deg);
+            }
+        }
+
+        @include m(bottom-top) {
+            @include e(group) {
+                display: block;
+            }
+
+            @include e(label) {
+                writing-mode: vertical-rl;
+                transform: translate(-50%) rotate(180deg);
+            }
+        }
+    }
+
+    $_igx-slider-thumbs: 'from' 'to';
+
+    @each $t in $_igx-slider-thumbs {
+        @include b(igx-slider-thumb-#{$t}) {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: var(--thumb-size);
+            height: var(--thumb-size);
+            outline-style: none;
+            top: calc(var(--thumb-radius) * -1);
+            margin-inline-start: calc(var(--thumb-radius) * -1);
+
+            &:focus div::before {
+                box-shadow: 0 0 0 var(--outline-width) var-get($_theme, 'thumb-focus-color');
+            }
+
+            @include e(dot) {
+                position: relative;
+                inset-inline-start: 0;
+                pointer-events: none;
+
+                &::before {
+                    position: absolute;
+                    content: '';
+                    width: var(--thumb-size);
+                    height: var(--thumb-size);
+                    inset-inline-start: 0;
+                    top: calc((var(--thumb-size) - var(--thumb-radius)) * -1);
+                    margin-inline-start: calc((var(--thumb-size) - var(--thumb-radius)) * -1);
+                    background: var-get($_theme, 'thumb-color');
+                    border: var(--thumb-border-width) solid var-get($_theme, 'thumb-border-color');
+                    transition: transform .1s $out-quad, border-radius .1s $out-quad;
+                    border-radius: var(--thumb-radius);
+                }
+            }
+
+            @include m(disabled) {
+                &:focus div::before {
+                    box-shadow: none;
+                }
+        
+                &:focus div::after {
+                    transform: scale(0);
+                }
+
+                @include e(dot){
+                    pointer-events: none;
+
+                    &::before {
+                        background: var-get($_theme, 'disabled-thumb-color');
+                        border-color: var-get($_theme, 'thumb-disabled-border-color');
+                        border-radius: var(--thumb-radius);
+                    }
+                }
+            }
+        }
+
+        @include b(igx-slider-thumb-label-#{$t}) {
+            position: absolute;
+            pointer-events: none;
+            display: flex;
+            top: calc((var(--thumb-label-height) + rem(20px)) * -1);
+            height: var(--thumb-label-height);
+
+            @include e(container) {
+                @include type-style(caption);
+
+                border-radius: rem(2px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                white-space: nowrap;
+                margin-inline-start: -50%;
+                padding: 0 rem(8px);
+                background: var-get($_theme, 'label-background-color');
+                color: var-get($_theme, 'label-text-color');
+                min-width: var(--thumb-label-width);
+                opacity: 0;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 85%;
+                    border-inline-start: rem(10px) solid transparent;
+                    border-inline-end: rem(10px) solid transparent;
+                    border-top: rem(10px) solid var-get($_theme, 'label-background-color');
+                }
+            }
+
+            @include m(pressed) {
+                @include e(container){
+                    z-index: 1;
+                }
+            }
+
+            @include m(active) {
+                @include e(container){
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}

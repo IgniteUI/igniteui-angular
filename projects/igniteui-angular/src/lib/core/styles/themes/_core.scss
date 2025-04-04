@@ -112,6 +112,12 @@
         }
     }
 
+    @property --_transition-delay {
+        syntax: '<time>';
+        initial-value: -1s;
+        inherits: true;
+    }
+
     @property --_progress-integer {
         syntax: '<integer>';
         initial-value: 0;
@@ -121,6 +127,18 @@
     @property --_progress-fraction {
         syntax: '<integer>';
         initial-value: 0;
+        inherits: true;
+    }
+
+    @property --ig-theme {
+        syntax: 'material | indigo | fluent | bootstrap';
+        initial-value: material;
+        inherits: true;
+    }
+
+    @property --ig-theme-variant {
+        syntax: 'light | dark';
+        initial-value: light;
         inherits: true;
     }
 
@@ -197,5 +215,10 @@
     @if $print-layout == true {
         @include print.layout();
     }
-}
 
+    @keyframes enable-transitions {
+      to {
+            --_transition-delay: 0s;
+        }
+    }
+}
