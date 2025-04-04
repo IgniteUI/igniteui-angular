@@ -2389,6 +2389,12 @@
         }
     }
 
+    %date-range-preview-inactive {
+        %date-inner {
+            color: var-get($theme, 'inactive-color');
+        }
+    }
+
     %date-range-preview-current {
         %date-inner {
             color: var-get($theme, 'date-selected-current-range-foreground');
