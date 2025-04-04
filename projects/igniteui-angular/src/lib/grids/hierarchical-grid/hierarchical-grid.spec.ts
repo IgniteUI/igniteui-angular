@@ -686,14 +686,12 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
             const childGrids = hierarchicalGrid.gridAPI.getChildGrids(false);
             const childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
-            expect(childGrids.length).toBe(3);
-            expect(childRows.length).toBe(3);
+            expect(childGrids.length).toBe(2);
+            expect(childRows.length).toBe(2);
             const ri1 = fixture.componentInstance.rowIsland1;
             const ri2 = fixture.componentInstance.rowIsland2;
-            const ri3 = fixture.componentInstance.rowIsland3;
             expect(childRows[0].componentInstance.layout).toBe(ri1);
             expect(childRows[1].componentInstance.layout).toBe(ri2);
-            expect(childRows[2].componentInstance.layout).toBe(ri3);
         });
 
         it('should display correct data for sibling row islands', () => {
@@ -867,13 +865,11 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
 
             const children = hierarchicalGrid.gridAPI.getChildGrids(true);
-            expect(children.length).toBe(3);
+            expect(children.length).toBe(2);
             const child1 = children[0] as IgxHierarchicalGridComponent;
             const child2 = children[1] as IgxHierarchicalGridComponent;
-            const child3 = children[2] as IgxHierarchicalGridComponent;
             expect(child1._destroyed).toBeFalsy();
             expect(child2._destroyed).toBeFalsy();
-            expect(child3._destroyed).toBeFalsy();
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
             await wait();
             fixture.detectChanges();
@@ -881,7 +877,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             // check that we have child is not destroyed
             expect(child1._destroyed).toBeFalsy();
             expect(child2._destroyed).toBeFalsy();
-            expect(child3._destroyed).toBeFalsy();
 
             // destroy hgrid
             fixture.destroy();
@@ -1125,30 +1120,20 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(summaryCell.textContent.trim()).toEqual('');
         }));
 
-        it('should verify gridCreated and gridInitialized events emit correct parentRowData for grids with and without data.', () => {
+        it('should verify gridCreated and gridInitialized events emit correct parentRowData', () => {
             const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
-            const ri1 = fixture.componentInstance.rowIsland1;
-            const ri3 = fixture.componentInstance.rowIsland3;
+            const rowIsland = fixture.componentInstance.rowIsland1;
 
-            spyOn(ri1.gridCreated, 'emit').and.callThrough();
-            spyOn(ri1.gridInitialized, 'emit').and.callThrough();
-            spyOn(ri3.gridCreated, 'emit').and.callThrough();
-            spyOn(ri3.gridInitialized, 'emit').and.callThrough();
+            spyOn(rowIsland.gridCreated, 'emit').and.callThrough();
+            spyOn(rowIsland.gridInitialized, 'emit').and.callThrough();
 
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
 
-            // Verify parentRowData is undefined for grids with existing data
-            expect(ri1.gridCreated.emit).toHaveBeenCalledTimes(1);
-            expect(ri1.gridCreated.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: undefined }));
-            expect(ri1.gridInitialized.emit).toHaveBeenCalledTimes(1);
-            expect(ri1.gridInitialized.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: undefined }));
-
-            // Verify parentRowData is defined for grids without data
-            expect(ri3.gridCreated.emit).toHaveBeenCalledTimes(1);
-            expect(ri3.gridCreated.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
-            expect(ri3.gridInitialized.emit).toHaveBeenCalledTimes(1);
-            expect(ri3.gridInitialized.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
+            expect(rowIsland.gridCreated.emit).toHaveBeenCalledTimes(1);
+            expect(rowIsland.gridCreated.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
+            expect(rowIsland.gridInitialized.emit).toHaveBeenCalledTimes(1);
+            expect(rowIsland.gridInitialized.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
         });
     });
 
@@ -2015,14 +2000,12 @@ export class IgxHierarchicalGridTestBaseComponent {
             <igx-column field="Col2"></igx-column>
             <igx-column field="Col3"></igx-column>
         </igx-row-island>
-        <igx-row-island [key]="'noData'" #rowIsland3></igx-row-island>
     </igx-hierarchical-grid>`,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public override rowIsland2: IgxRowIslandComponent;
-    @ViewChild('rowIsland3', { read: IgxRowIslandComponent, static: true }) public rowIsland3: IgxRowIslandComponent;
     public height = '100px';
     public toggleColumns = true;
 }

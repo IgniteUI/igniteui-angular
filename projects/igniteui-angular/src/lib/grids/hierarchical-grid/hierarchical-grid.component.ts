@@ -216,7 +216,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
             owner: this.layout,
             parentID: this.data.rowID,
             grid: this.hGrid,
-            parentRowData: !childGridData?.length ? this.data.parentRowData : undefined,
+            parentRowData: this.data.parentRowData,
         });
     }
 
@@ -234,7 +234,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
             owner: this.layout,
             parentID: this.data.rowID,
             grid: this.hGrid,
-            parentRowData: !this.hGrid.data.length ? this.data.parentRowData : undefined,
+            parentRowData: this.data.parentRowData,
         });
 
         this.hGrid.cdr.detectChanges();
