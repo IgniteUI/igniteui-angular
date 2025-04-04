@@ -233,6 +233,18 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             }
             value = this.templateWrapper.addTemplate(value);
             // TODO: discard oldValue
+
+            // check template for any angular-element components
+            this.templateWrapper.templateRendered.subscribe((element) => {
+                const igComponents = this.config.flatMap(x => [
+                    x.selector,
+                    reflectComponentType(x.component).selector
+                ]).join(',');
+                const children = element.querySelectorAll(igComponents);
+                children?.forEach((c) => {
+                    c.ngElementStrategy.angularParent = componentRef;
+                });
+            });
         }
         if (componentRef && componentConfig?.boolProps?.includes(property)) {
             // bool coerce:
