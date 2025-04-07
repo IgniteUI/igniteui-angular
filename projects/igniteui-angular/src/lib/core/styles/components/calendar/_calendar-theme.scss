@@ -2392,7 +2392,6 @@
             }
 
             &::before {
-                //inset-inline-end: calc($date-size / 2 - #{$border-size});
                 border-inline-end-color: transparent;
                 border-start-start-radius: var-get($theme, 'date-range-border-radius');
                 border-end-start-radius: var-get($theme, 'date-range-border-radius');
@@ -2406,7 +2405,6 @@
             }
 
             &::before {
-                //inset-inline-start: calc($date-size / 2 - #{$border-size});
                 border-inline-start-color: transparent;
                 border-start-end-radius: var-get($theme, 'date-range-border-radius');
                 border-end-end-radius: var-get($theme, 'date-range-border-radius');
