@@ -206,7 +206,17 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         const entities: EntityType[] = [
             {
                 name: null,
-                fields: this.filterableFields.map(f => ({ field: f.field, dataType: f.dataType })) as FieldType[]
+                fields: this.filterableFields.map(f => ({
+                     field: f.field,
+                     dataType: f.dataType,
+                    //  label: f.label,
+                    //  header: f.header,
+                     editorOptions: f.editorOptions,
+                     filters: f.filters,
+                     pipeArgs: f.pipeArgs,
+                     defaultTimeFormat: f.defaultTimeFormat,
+                     defaultDateTimeFormat: f.defaultDateTimeFormat
+                    })) as FieldType[]
             }
         ];
     
