@@ -673,6 +673,7 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            jasmine.getEnv().allowRespy(true);
             const warnSpy = spyOn(console, 'warn');
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
@@ -700,6 +701,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
+            jasmine.getEnv().allowRespy(false);
         });
     });
 
