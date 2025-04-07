@@ -7,7 +7,6 @@ import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { By } from '@angular/platform-browser';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
@@ -28,11 +27,11 @@ const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid-thead__group';
 
 
 describe('IgxGrid - multi-column headers #grid', () => {
-    let fixture: ComponentFixture<any>; let grid: IgxGridComponent; let componentInstance;
+    let fixture: ComponentFixture<any>;
+    let grid: IgxGridComponent;
+    let componentInstance;
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
