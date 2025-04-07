@@ -19,8 +19,7 @@ $_theme: $indigo;
         igx-icon {
             $icon-size: rem(16px);
 
-            --ig-icon-size: #{$icon-size};
-            --igx-icon-size: #{$icon-size};
+            --size: #{$icon-size};
         }
 
         &::after {

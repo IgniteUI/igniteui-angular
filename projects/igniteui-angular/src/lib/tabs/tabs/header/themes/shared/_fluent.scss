@@ -9,6 +9,8 @@ $_theme: $fluent;
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
 
     @include b(igx-tab-header) {
+        --ig-button-font-weight: 500;
+
         min-height: rem(44px);
         transition: all .3s $tabs-animation-function;
         border: rem(1px) solid var-get($_theme, 'border-color');
@@ -16,6 +18,10 @@ $_theme: $fluent;
         &:hover,
         &:focus {
             border: rem(1px) solid var-get($_theme, 'border-color--hover');
+        }
+
+        @include m(selected) {
+            --ig-button-font-weight: 600;
         }
     }
 }

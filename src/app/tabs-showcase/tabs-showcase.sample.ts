@@ -14,7 +14,7 @@ import {
 import {
     IgxButtonDirective,
     IgxIconComponent,
-    IGX_TABS_DIRECTIVES,
+    IGX_TABS_DIRECTIVES, IgxRippleDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -47,7 +47,7 @@ icons.forEach((icon) => {
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [IgxButtonDirective, IgxIconComponent, IGX_TABS_DIRECTIVES]
+    imports: [IgxButtonDirective, IgxIconComponent, IGX_TABS_DIRECTIVES, IgxRippleDirective]
 })
 export class TabsShowcaseSampleComponent implements OnInit {
     @ViewChild('angularTabs', { static: false })
@@ -109,6 +109,13 @@ export class TabsShowcaseSampleComponent implements OnInit {
                     defaultValue: false
                 },
             },
+            disabled: {
+                label: 'Disable items',
+                control: {
+                    type: 'boolean',
+                    defaultValue: false
+                },
+            }
         });
 
         const propertyChange = this.pcs.propertyChanges.subscribe(

@@ -27,7 +27,7 @@ $_theme: $bootstrap;
 
     @include b(igx-tabs-header-button) {
         igx-icon {
-            $icon-size: rem(18px);
+            $icon-size: rem(24px);
 
             --size: #{$icon-size};
         }

@@ -7,8 +7,8 @@
             [activation]="properties.activation">
 
             @for (contact of contacts; track contact.id) {
-                <igx-tab-item [selected]="contact.id === selectedTabId">
-                    <igx-tab-header>
+                <igx-tab-item [selected]="contact.id === selectedTabId" [disabled]="properties.disabled">
+                    <igx-tab-header igxRipple>
                         @if(!properties.hideIcon) {
                             <igx-icon igxTabHeaderIcon>folder</igx-icon>
                         }
@@ -31,7 +31,7 @@
             [activation]="properties.activation">
 
             @for (contact of contacts; track contact.id) {
-                <igc-tab [selected]="contact.id === selectedTabId" [panel]="contact.i">
+                <igc-tab [disabled]="properties.disabled" [selected]="contact.id === selectedTabId" [panel]="contact.i">
                     @if(!properties.hideIcon) {
                         <igc-icon name="folder"></igc-icon>
                     }

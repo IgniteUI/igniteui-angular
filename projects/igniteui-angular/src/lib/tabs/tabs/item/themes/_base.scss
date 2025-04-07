@@ -46,6 +46,8 @@ $theme: $material;
     }
 
     @include b(igx-tabs-header-button) {
+        --igx-ripple-color: var(--button-ripple-color);
+
         display: flex;
         align-items: center;
         justify-content: center;
@@ -86,12 +88,6 @@ $theme: $material;
 
         &--none {
             display: none;
-        }
-
-        igx-icon {
-            $icon-size: rem(24px);
-
-            --size: #{$icon-size};
         }
 
         [dir='rtl'] & {

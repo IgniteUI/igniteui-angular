@@ -13,8 +13,6 @@ $_theme: $indigo;
 
         igx-icon {
             --ig-size: 2;
-
-            color: var-get($_theme, 'item-icon-color');
         }
 
         transition: all .3s $tabs-animation-function;

@@ -16,6 +16,8 @@ $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
 @include layer(base) {
     @include b(igx-tab-header) {
+        --igx-ripple-color: var(--tab-ripple-color);
+
         display: inline-flex;
         justify-content: center;
         align-items: center;

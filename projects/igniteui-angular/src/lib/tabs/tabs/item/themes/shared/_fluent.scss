@@ -10,6 +10,12 @@ $_theme: $fluent;
         &:focus {
             background: var-get($_theme, 'button-hover-background');
         }
+
+        igx-icon {
+            $icon-size: rem(24px);
+
+            --size: #{$icon-size};
+        }
     }
 }
 
