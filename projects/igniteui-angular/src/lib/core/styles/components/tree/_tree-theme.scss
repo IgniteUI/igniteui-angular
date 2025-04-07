@@ -288,9 +288,7 @@
         }
 
         igx-circular-bar {
-            --circular-bar: #{sizable(#{map.get($circular-bar-size, 'compact')}, #{map.get($circular-bar-size, 'cosy')}, #{map.get($circular-bar-size, 'comfortable')})};
-            width: var(--circular-bar);
-            height: var(--circular-bar);
+            --diameter: #{sizable(#{map.get($circular-bar-size, 'compact')}, #{map.get($circular-bar-size, 'cosy')}, #{map.get($circular-bar-size, 'comfortable')})};
         }
     }
 
