@@ -1,0 +1,49 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../../../themes/light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-tabs, indigo) {
+    $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
+
+    @include b(igx-tab-header) {
+        min-height: rem(40px);
+
+        igx-icon {
+            --ig-size: 2;
+        }
+
+        transition: all .3s $tabs-animation-function;
+        border: rem(1px) solid var-get($_theme, 'border-color');
+
+        border-top: rem(1px) solid transparent;
+        border-inline: none;
+
+        &:hover,
+        &:focus {
+            border-top: rem(1px) solid transparent;
+            border-inline: none;
+            border-bottom: rem(1px) solid var-get($_theme, 'border-color');
+        }
+
+        @include m(selected) {
+            &:hover,
+            &:focus-visible {
+                background: var-get($_theme, 'item-hover-background');
+            }
+        }
+
+        @include e(inner) {
+            > [igxtabheaderlabel] {
+                @include type-style(subtitle-2) {
+                    --ig-subtitle-2-font-weight: 600;
+
+                    margin: 0;
+                }
+            }
+        }
+    }
+}
+
