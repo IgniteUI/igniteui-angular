@@ -32,9 +32,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
     const DEBOUNCETIME = 30;
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
