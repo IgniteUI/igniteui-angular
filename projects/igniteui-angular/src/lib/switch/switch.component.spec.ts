@@ -4,13 +4,11 @@ import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgFor
 import { By } from '@angular/platform-browser';
 import { IgxSwitchComponent } from './switch.component';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxSwitch', () => {
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

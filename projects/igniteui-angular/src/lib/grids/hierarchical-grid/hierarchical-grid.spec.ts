@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridCreatedEventArgs } from './public_api';
@@ -24,9 +23,8 @@ import { getComponentSize } from '../../core/utils';
 import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

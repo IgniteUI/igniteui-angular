@@ -5,7 +5,6 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, WEEKDAYS } from '../calendar/public_api';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';

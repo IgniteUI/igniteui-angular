@@ -7,7 +7,6 @@ import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { IgxIconComponent } from '../icon/icon.component';
 import { getComponentSize } from '../core/utils';
@@ -103,8 +102,7 @@ describe('IgxChip', () => {
     let fix: ComponentFixture<TestChipComponent | TestChipsLabelAndSuffixComponent>;
     let chipArea;
 
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [TestChipComponent, TestChipsLabelAndSuffixComponent]
         }).compileComponents();

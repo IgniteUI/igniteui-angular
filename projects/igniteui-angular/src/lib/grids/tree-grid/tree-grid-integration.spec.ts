@@ -13,7 +13,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
@@ -28,11 +27,10 @@ const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
 
 describe('IgxTreeGrid - Integration #tGrid', () => {
-    configureTestSuite();
     let fix: ComponentFixture<any>;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -81,7 +79,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
     });
 
     describe('Child Collection', () => {
-        // configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();

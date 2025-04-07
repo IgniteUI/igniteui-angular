@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, DebugElement} from '@angular/core';
@@ -21,7 +20,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let baseHGridContent: DebugElement;
     const defaultTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-    configureTestSuite();
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

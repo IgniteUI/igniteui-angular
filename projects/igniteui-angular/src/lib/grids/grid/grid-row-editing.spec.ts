@@ -149,7 +149,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.cellEdit, 'emit').and.callThrough();
             spyOn(grid.cellEditDone, 'emit').and.callThrough();
             spyOn(grid.cellEditExit, 'emit').and.callThrough();
-            spyOn(grid.cellEditExit, 'emit').and.callThrough();
             spyOn(grid.rowEditEnter, 'emit').and.callThrough();
             spyOn(grid.rowEdit, 'emit').and.callThrough();
             spyOn(grid.rowEditExit, 'emit').and.callThrough();

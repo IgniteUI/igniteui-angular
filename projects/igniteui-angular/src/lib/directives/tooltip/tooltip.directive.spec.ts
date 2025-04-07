@@ -3,7 +3,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
@@ -12,13 +11,12 @@ const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
 
 describe('IgxTooltip', () => {
-    configureTestSuite();
     let fix;
     let tooltipNativeElement;
     let tooltipTarget: IgxTooltipTargetDirective;
     let button;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -36,7 +34,6 @@ describe('IgxTooltip', () => {
     });
 
     describe('Single target with single tooltip', () => {
-        // configureTestSuite();
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTooltipSingleTargetComponent);
             fix.detectChanges();
@@ -272,7 +269,6 @@ describe('IgxTooltip', () => {
         }));
 
         describe('Tooltip events', () => {
-            // configureTestSuite();
             it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
                 spyOn(tooltipTarget.tooltipShow, 'emit');
                 spyOn(tooltipTarget.tooltipHide, 'emit');
@@ -379,7 +375,6 @@ describe('IgxTooltip', () => {
         });
 
         describe('Tooltip touch', () => {
-            // configureTestSuite();
             it('IgxTooltip is shown/hidden when touching/untouching its target', fakeAsync(() => {
                 touchElement(button);
                 flush();
@@ -447,7 +442,6 @@ describe('IgxTooltip', () => {
     });
 
     describe('Plain string tooltip input', () => {
-        // configureTestSuite();
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTooltipPlainStringComponent);
             fix.detectChanges();
@@ -476,7 +470,6 @@ describe('IgxTooltip', () => {
     });
 
     describe('Multiple targets with single tooltip', () => {
-        // configureTestSuite();
         let targetOne: IgxTooltipTargetDirective;
         let targetTwo: IgxTooltipTargetDirective;
         let buttonOne;

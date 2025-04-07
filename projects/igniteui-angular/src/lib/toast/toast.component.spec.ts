@@ -9,7 +9,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxToastComponent
 } from './toast.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular';
 
 describe('IgxToast', () => {
@@ -29,9 +28,7 @@ describe('IgxToast', () => {
         verticalStartPoint: VerticalAlignment.Middle
     };
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxToastComponent]
         }).compileComponents();

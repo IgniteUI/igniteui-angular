@@ -1203,7 +1203,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
     });
 
     describe('Column moving ', () => {
-        // configureTestSuite();
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnGroupTestComponent);
             fixture.detectChanges();

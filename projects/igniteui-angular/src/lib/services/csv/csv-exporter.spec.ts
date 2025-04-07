@@ -5,10 +5,7 @@ import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
-
 describe('CSV exporter', () => {
-    configureTestSuite();
     let exporter: IgxCsvExporterService;
     const fileTypes = [ CsvFileTypes.CSV, CsvFileTypes.TSV, CsvFileTypes.TAB ];
 

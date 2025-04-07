@@ -19,17 +19,15 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('CSV Grid Exporter', () => {
-    configureTestSuite();
     let exporter: IgxCsvExporterService;
     let options: IgxCsvExporterOptions;
     const data = SampleTestData.personJobData();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

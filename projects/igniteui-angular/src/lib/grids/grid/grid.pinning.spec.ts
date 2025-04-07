@@ -2,7 +2,6 @@
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, GridSelectionMode } from '../common/enums';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import {

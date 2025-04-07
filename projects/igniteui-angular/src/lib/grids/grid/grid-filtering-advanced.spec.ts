@@ -2,7 +2,6 @@ import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     IgxNumberFilteringOperand,
     IgxStringFilteringOperand

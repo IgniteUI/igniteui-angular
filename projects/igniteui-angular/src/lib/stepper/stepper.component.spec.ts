@@ -7,7 +7,6 @@ import { take } from 'rxjs/operators';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputDirective, IgxInputGroupComponent } from '../input-group/public_api';
 import { Direction } from '../services/direction/directionality';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import {
@@ -75,11 +74,10 @@ const testAnimationBehvior = (
 };
 
 describe('Rendering Tests', () => {
-    configureTestSuite();
     let fix: ComponentFixture<IgxStepperSampleTestComponent>;
     let stepper: IgxStepperComponent;
 
-    beforeAll(
+    beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
@@ -917,7 +915,6 @@ describe('Rendering Tests', () => {
 });
 
 describe('Stepper service unit tests', () => {
-    configureTestSuite();
 
     let stepperService: IgxStepperService;
     let mockElement: any;
