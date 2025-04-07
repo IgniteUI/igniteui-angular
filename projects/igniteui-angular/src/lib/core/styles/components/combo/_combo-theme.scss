@@ -60,6 +60,7 @@
     }
 
     $theme: digest-schema($combo-schema);
+    $variant: map.get($theme, '_meta', 'theme');
 
     @if not($empty-list-placeholder-color) and $empty-list-background {
         $empty-list-placeholder-color: adaptive-contrast(var(--empty-list-background));
@@ -69,8 +70,14 @@
         $toggle-button-foreground: adaptive-contrast(var(--toggle-button-background));
     }
 
-    @if not($toggle-button-background-focus) and $toggle-button-background {
-        $toggle-button-background-focus: var(--toggle-button-background);
+    @if $variant == 'material' {
+        @if not($toggle-button-background-focus) and $toggle-button-background {
+            $toggle-button-background-focus: hsl(from var(--toggle-button-background) h s calc(l * 0.9));
+        }
+    } @else {
+        @if not($toggle-button-background-focus) and $toggle-button-background {
+            $toggle-button-background-focus: var(--toggle-button-background);
+        }
     }
 
     @if not($toggle-button-foreground-focus) and $toggle-button-background-focus {
