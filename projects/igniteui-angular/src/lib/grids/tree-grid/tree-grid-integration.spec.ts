@@ -256,6 +256,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
             treeGrid.moving = true;
+            fix.detectChanges();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
