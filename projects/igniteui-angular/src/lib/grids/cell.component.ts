@@ -926,6 +926,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 this.highlight.lastSearchInfo.caseSensitive = this.grid.lastSearchInfo.caseSensitive;
                 this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
             }
+            if (this.formControl && this.formControl.value !== changes.value.currentValue) {
+                this.formControl.setValue(changes.value.currentValue);
+            }
         }
     }
 
