@@ -8,6 +8,7 @@ export enum FilteringExpressionsTreeType {
     Advanced
 }
 
+/* marshalByValue */
 export declare interface IExpressionTree {
     filteringOperands: (IExpressionTree | IFilteringExpression)[];
     operator: FilteringLogic;
