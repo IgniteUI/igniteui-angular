@@ -1179,7 +1179,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             grid.data[0].fullName = "Test";
-            fixture.detectChanges();
+            grid.cdr.detectChanges();
 
             cell.editMode = true;
             fixture.detectChanges();
