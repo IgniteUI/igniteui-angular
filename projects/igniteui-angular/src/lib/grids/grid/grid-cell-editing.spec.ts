@@ -1165,6 +1165,27 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).not.toEqual(cellValue);
             expect(cell.value).toEqual(newValue);
         });
+
+        it('should update editValue when externally changing grid data.', () => {
+            const cell = grid.getCellByColumn(0, 'fullName');
+            cell.editMode = true;
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBeTruthy();
+            expect(cell.editValue).toBe('John Brown');
+
+            fixture.detectChanges();
+            cell.editMode = false;
+            fixture.detectChanges();
+
+            grid.data[0].fullName = "Test";
+            fixture.detectChanges();
+
+            cell.editMode = true;
+            fixture.detectChanges();
+            expect(cell.editMode).toBeTruthy();
+            expect(cell.editValue).toBe('Test');
+        });
     });
 
     describe('Integration tests', () => {
