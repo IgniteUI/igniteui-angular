@@ -108,10 +108,6 @@
 /// @param {Color} $date-selected-current-range-focus-foreground [null] - The :focus foreground of the current date in the selected range.
 /// @param {Color} $date-selected-current-range-focus-background [null] - The :focus background of the current date in the selected range.
 ///
-/// @param {Color} $date-selected-current-outline [null] - The outline of the current selected date.
-/// @param {Color} $date-selected-current-hover-outline [null] - The :hover outline of the current selected date.
-/// @param {Color} $date-selected-current-focus-outline [null] - The :focus outline of the current selected date.
-///
 /// @param {Color} $date-selected-special-border-color: [null] - The border color of the selected special date,
 /// @param {Color} $date-selected-special-hover-border-color: [null] - The :hover border color of the selected special date,
 /// @param {Color} $date-selected-special-focus-border-color: [null] - The :focus border color of the selected special date,
@@ -136,8 +132,6 @@
 /// @param {Color} $date-special-range-focus-background [null] - The :focus background of the dates inside a range and marked as special.
 /// @param {Color} $date-special-range-foreground [null] - The foreground of the dates inside a range and marked as special.
 /// @param {Color} $date-special-range-border-color [null] - The outline of the dates inside a range and marked as special.
-///
-/// @param {Color} $date-special-current-border-color [null] - The outline color of a special current date.
 ///
 /// @param {Color} $border-color [null] - The calendar border color.
 ///
@@ -282,10 +276,6 @@
     $date-selected-current-hover-border-color: null,
     $date-selected-current-focus-border-color: null,
 
-    $date-selected-current-outline: null,
-    $date-selected-current-hover-outline: null,
-    $date-selected-current-focus-outline: null,
-
     $date-selected-special-border-color: null,
     $date-selected-special-hover-border-color: null,
     $date-selected-special-focus-border-color: null,
@@ -310,7 +300,6 @@
     $date-special-range-focus-background: null,
     $date-special-range-foreground: null,
     $date-special-range-border-color: null,
-    $date-special-current-border-color: null,
     $date-disabled-foreground: null,
     $date-disabled-range-foreground: null,
 
@@ -396,26 +385,6 @@
         @if not($date-current-foreground) and $content-background {
             @if meta.type-of($content-background) == 'color' {
                 $date-current-foreground: text-contrast($content-background);
-            }
-        }
-    }
-
-    @if $variant == 'material' or $variant == 'indigo' {
-        @if not($date-selected-current-outline) and $content-background {
-            @if meta.type-of($content-background) == 'color' {
-                $date-selected-current-outline: $content-background;
-            }
-        }
-
-        @if not($date-selected-current-hover-outline) and $content-background {
-            @if meta.type-of($content-background) == 'color' {
-                $date-selected-current-hover-outline: $content-background;
-            }
-        }
-
-        @if not($date-selected-current-focus-outline) and $content-background {
-            @if meta.type-of($content-background) == 'color' {
-                $date-selected-current-focus-outline: $content-background;
             }
         }
     }
@@ -639,10 +608,6 @@
         date-selected-current-foreground: $date-selected-current-foreground,
         date-selected-current-hover-foreground: $date-selected-current-hover-foreground,
         date-selected-current-focus-foreground: $date-selected-current-focus-foreground,
-
-        date-selected-current-outline: $date-selected-current-outline,
-        date-selected-current-hover-outline: $date-selected-current-hover-outline,
-        date-selected-current-focus-outline: $date-selected-current-focus-outline,
 
         date-selected-special-border-color: $date-selected-special-border-color,
         date-selected-special-hover-border-color: $date-selected-special-hover-border-color,
