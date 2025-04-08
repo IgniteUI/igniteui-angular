@@ -179,6 +179,10 @@
             @extend %date-range-preview !optional;
         }
 
+        @include e(date, $mods: ('range-preview', 'inactive')) {
+            @extend %date-range-preview-inactive !optional;
+        }
+
         @include e(date, $mods: ('range-preview', 'current')) {
             @extend %date-range-preview-current !optional;
         }
