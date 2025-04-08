@@ -180,6 +180,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
+import { getUUID } from './common/random';
 
 interface IMatchInfoCache {
     row: any;
@@ -3801,7 +3802,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const primaryColumn = this._columns.find(col => col.field === this.primaryKey);
         const idType = this.data.length ?
             this.resolveDataTypes(this.data[0][this.primaryKey]) : primaryColumn ? primaryColumn.dataType : 'string';
-        return idType === 'string' ? crypto.randomUUID() : FAKE_ROW_ID--;
+        return idType === 'string' ? getUUID() : FAKE_ROW_ID--;
     }
 
     /**

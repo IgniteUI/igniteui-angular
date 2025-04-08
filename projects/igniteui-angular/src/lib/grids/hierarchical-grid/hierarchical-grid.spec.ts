@@ -1119,6 +1119,22 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(getterSpy).toHaveBeenCalledTimes(7);
             expect(summaryCell.textContent.trim()).toEqual('');
         }));
+
+        it('should verify gridCreated and gridInitialized events emit correct parentRowData', () => {
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            const rowIsland = fixture.componentInstance.rowIsland1;
+
+            spyOn(rowIsland.gridCreated, 'emit').and.callThrough();
+            spyOn(rowIsland.gridInitialized, 'emit').and.callThrough();
+
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+
+            expect(rowIsland.gridCreated.emit).toHaveBeenCalledTimes(1);
+            expect(rowIsland.gridCreated.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
+            expect(rowIsland.gridInitialized.emit).toHaveBeenCalledTimes(1);
+            expect(rowIsland.gridInitialized.emit).toHaveBeenCalledWith(jasmine.objectContaining({ parentRowData: row.data }));
+        });
     });
 
     describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {

@@ -49,7 +49,7 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
                 childGridsData[childKey] = childData;
             });
             if (grid.gridAPI.get_row_expansion_state(v)) {
-                result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridsData });
+                result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridsData, parentRowData: v });
             }
         });
         return result;
