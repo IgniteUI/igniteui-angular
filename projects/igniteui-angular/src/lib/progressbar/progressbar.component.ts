@@ -15,7 +15,7 @@ import {
     booleanAttribute,
     inject,
     ChangeDetectorRef,
-    NgZone,
+    NgZone, ViewEncapsulation,
 } from '@angular/core';
 import {
     IgxProgressBarTextTemplateDirective,
@@ -368,7 +368,9 @@ let NEXT_CIRCULAR_ID = 0;
 let NEXT_GRADIENT_ID = 0;
 @Component({
     selector: 'igx-linear-bar',
-    templateUrl: 'templates/linear-bar.component.html',
+    templateUrl: 'linear/linear-bar.component.html',
+    styleUrl: 'linear/linear-bar.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [NgClass]
 })
 export class IgxLinearProgressBarComponent extends BaseProgressDirective implements AfterContentInit {

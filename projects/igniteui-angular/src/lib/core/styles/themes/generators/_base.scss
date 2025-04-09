@@ -536,21 +536,21 @@
     //     @include paginator($paginator-theme-map);
     // }
 
-    @if is-used('igx-circular-bar', $exclude) {
-        $progress-circular-theme-map: progress-circular-theme(
-            $schema: $schema,
-        );
-        $progress-circular-theme-map: meta.call($theme-handler, $progress-circular-theme-map);
-        @include progress-circular($progress-circular-theme-map);
-    }
+    //@if is-used('igx-circular-bar', $exclude) {
+    //    $progress-circular-theme-map: progress-circular-theme(
+    //        $schema: $schema,
+    //    );
+    //    $progress-circular-theme-map: meta.call($theme-handler, $progress-circular-theme-map);
+    //    @include progress-circular($progress-circular-theme-map);
+    //}
 
-    @if is-used('igx-linear-bar', $exclude) {
-        $progress-linear-theme-map: progress-linear-theme(
-            $schema: $schema,
-        );
-        $progress-linear-theme-map: meta.call($theme-handler, $progress-linear-theme-map);
-        @include progress-linear($progress-linear-theme-map);
-    }
+    //@if is-used('igx-linear-bar', $exclude) {
+    //    $progress-linear-theme-map: progress-linear-theme(
+    //        $schema: $schema,
+    //    );
+    //    $progress-linear-theme-map: meta.call($theme-handler, $progress-linear-theme-map);
+    //    @include progress-linear($progress-linear-theme-map);
+    //}
 
     // @if is-used('igx-radio', $exclude) {
     //     $radio-theme-map: radio-theme(
