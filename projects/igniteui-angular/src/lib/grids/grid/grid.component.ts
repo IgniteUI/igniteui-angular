@@ -23,7 +23,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
-import { FilterMode } from '../common/enums';
+import { FilterMode, GridPagingMode } from '../common/enums';
 import { CellType, GridType, IgxGridMasterDetailContext, IgxGroupByRowSelectorTemplateContext, IgxGroupByRowTemplateContext, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
@@ -1126,7 +1126,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
 
-        if (this.pagingMode === 1 && this.page !== 0) {
+        if (this.pagingMode === GridPagingMode.Local && this.page !== 0) {
             row.index = index + this.perPage * this.page;
         }
         return row;
@@ -1160,7 +1160,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public allRows(): RowType[] {
         return this.dataView.map((rec, index) => {
-            this.pagingMode === 1 && this.page !== 0 ? index = index + this.perPage * this.page : index = this.dataRowList.first.index + index;
+            this.pagingMode === GridPagingMode.Local && this.page !== 0 ?
+                index = index + this.perPage * this.page : index = this.dataRowList.first.index + index;
             return this.createRow(index);
         });
     }
@@ -1201,7 +1202,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByIndex(rowIndex);
         const column = this._columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
-            if (this.pagingMode === 1 && this.page !== 0) {
+            if (this.pagingMode === GridPagingMode.Local && this.page !== 0) {
                 row.index = rowIndex + this.perPage * this.page;
             }
             return new IgxGridCell(this, row.index, column);

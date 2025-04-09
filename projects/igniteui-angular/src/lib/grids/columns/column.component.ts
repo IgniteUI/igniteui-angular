@@ -56,7 +56,7 @@ import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPi
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { Size } from '../common/enums';
+import { GridPagingMode, Size } from '../common/enums';
 import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
@@ -1422,7 +1422,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this.grid.dataView
             .map((rec, index) => {
                 if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
-                    this.grid.pagingMode === 1 && this.grid.page !== 0 ? index = index + this.grid.perPage * this.grid.page : index = this.grid.dataRowList.first.index + index;
+                    this.grid.pagingMode === GridPagingMode.Local && this.grid.page !== 0 ?
+                        index = index + this.grid.perPage * this.grid.page : index = this.grid.dataRowList.first.index + index;
                     const cell = new IgxGridCell(this.grid as any, index, this);
                     return cell;
                 }
