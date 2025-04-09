@@ -3,12 +3,21 @@
 @use 'styles/themes/standalone' as *;
 
 @include themed-block(igx-navbar, bootstrap) {
+    [igxButton],
+    [igxIconButton] {
+        --ig-size: 2;
+    }
+
     @include e(title) {
-        @include type-style(h5);
+        @include type-style(h5) {
+            margin: 0;
+        };
     }
 
     igx-navbar-title,
     [igxNavbarTitle] {
-        @include type-style(h5);
+        @include type-style(h5) {
+            margin: 0;
+        };
     }
 }
