@@ -42,6 +42,7 @@ describe('IgxCircularProgressBarComponent', () => {
         expect(progress.id).toBe(customId);
         // For test fixture destroy
         progress.id = "root1";
+        fixture.detectChanges();
     });
 
     it('should correctly toggle the indeterminate mode', () => {

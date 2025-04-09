@@ -53,6 +53,7 @@ describe('IgxToast', () => {
         expect(toast.element.id).toContain('customToast');
         // For test fixture destroy
         toast.id = "root1";
+        fixture.detectChanges();
     });
 
     it('should properly toggle and emit isVisibleChange', fakeAsync(() => {

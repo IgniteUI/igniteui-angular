@@ -142,6 +142,7 @@ describe('IgxLinearProgressBarComponent', () => {
         expect(linearBar.id).toBe(customId);
         // For test fixture destroy
         progress.id = "root1";
+        fixture.detectChanges();
     });
 
     it('should apply type-specific classes correctly', () => {
