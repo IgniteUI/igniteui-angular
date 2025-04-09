@@ -1,0 +1,135 @@
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use 'light/tokens' as *;
+
+$theme: $material;
+
+@include layer(base) {
+    @include b(igx-calendar) {
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --dropdown-size: var(--component-size);
+
+        display: flex;
+        flex-flow: column nowrap;
+        width: 100%;
+        color: var-get($theme, 'content-foreground');
+        background: var-get($theme, 'content-background');
+        box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
+        border-radius: var-get($theme, 'border-radius');
+        min-width: sizable(rem(290px), rem(314px), rem(360px));
+        overflow: hidden;
+        outline: none;
+
+        .igx-days-view,
+        .igx-calendar-view {
+            background: inherit;
+            color: inherit;
+            box-shadow: none;
+        }
+
+        .igx-days-view,
+        .igx-calendar-view,
+        .igx-calendar-picker {
+            border-radius: 0;
+        }
+
+        @include e(header) {
+            display: flex;
+            flex-direction: column;
+            color: var-get($theme, 'header-foreground');
+            background: var-get($theme, 'header-background');
+            position: relative;
+        }
+
+        @include e(wrapper) {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            outline-style: none;
+        }
+
+        @include e(wrapper, $m: 'vertical') {
+            display: grid;
+            grid-template-rows: repeat(#{calc(var(--calendar-months) * 2)}, auto);
+
+            .igx-days-view {
+                grid-row: var(--calendar-row-start);
+            }
+        }
+
+        @include e(pickers) {
+            display: flex;
+            flex-grow: 1;
+            grid-row: var(--calendar-row-start);
+
+            &:focus-visible {
+                outline: none;
+            }
+
+            > * {
+                flex-grow: 1;
+            }
+        }
+
+        @include e(pickers, $m: 'days') {
+            display: grid;
+            grid-template-columns: repeat(var(--calendar-months), 1fr);
+        }
+
+        @include e(pickers, $m: 'vertical') {
+            display: contents;
+        }
+
+        @include e(body) {
+            display: grid;
+            grid-template-columns: repeat(var(--calendar-months), 1fr);
+        }
+
+        @include e(body, $m: 'vertical') {
+            display: contents;
+        }
+
+        @include e(header-year) {
+            color: currentColor;
+        }
+
+        @include e(header-date) {
+            display: flex;
+
+            > span {
+                @include ellipsis();
+            }
+        }
+
+        @include m(vertical) {
+            flex-flow: row nowrap;
+
+            @include e(header-date) {
+                flex-wrap: wrap;
+            }
+        }
+
+        @include e(aria-off-screen) {
+            position: absolute !important;
+            border: none !important;
+            height: 1px !important;
+            width: 1px !important;
+            inset-inline-start: 0 !important;
+            top: 0 !important;
+            overflow: hidden !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            user-select: none;
+            pointer-events: none;
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}
