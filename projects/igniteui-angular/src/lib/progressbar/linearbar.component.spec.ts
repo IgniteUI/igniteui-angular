@@ -16,6 +16,8 @@ describe('IgxLinearProgressBarComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxLinearProgressBarComponent);
         progress = fixture.componentInstance;
+        // For test fixture destroy
+        progress.id = "root1";
         fixture.detectChanges();
         linearBar = fixture.debugElement.nativeElement;
     });
@@ -138,6 +140,8 @@ describe('IgxLinearProgressBarComponent', () => {
 
         expect(progress.id).toBe(customId);
         expect(linearBar.id).toBe(customId);
+        // For test fixture destroy
+        progress.id = "root1";
     });
 
     it('should apply type-specific classes correctly', () => {

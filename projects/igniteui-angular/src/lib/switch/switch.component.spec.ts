@@ -154,6 +154,7 @@ describe('IgxSwitch', () => {
     it('Disabled state', () => {
         const fixture = TestBed.createComponent(IgxSwitchComponent);
         const switchInstance = fixture.componentInstance;
+        switchInstance.id = "root1";
         switchInstance.disabled = true;
         const nativeCheckbox = switchInstance.nativeInput.nativeElement as HTMLInputElement;
         const nativeLabel = switchInstance.nativeLabel.nativeElement;

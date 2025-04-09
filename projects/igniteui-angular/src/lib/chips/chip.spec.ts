@@ -140,6 +140,8 @@ describe('IgxChip', () => {
         it('should change chip variant', () => {
             const fixture = TestBed.createComponent(IgxChipComponent);
             const igxChip = fixture.componentInstance;
+            // For test fixture destroy
+            igxChip.id = "root1";
 
             igxChip.variant = 'danger';
 
@@ -368,6 +370,7 @@ describe('IgxChip', () => {
 
             expect(secondChipComp.selectedChanging.emit).not.toHaveBeenCalled();
             expect(secondChipComp.selectedChanged.emit).not.toHaveBeenCalled();
+            console.log('id', secondChipComp.id);
         });
     });
 

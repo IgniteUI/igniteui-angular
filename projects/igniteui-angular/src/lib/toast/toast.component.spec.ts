@@ -37,6 +37,8 @@ describe('IgxToast', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxToastComponent);
         toast = fixture.componentInstance;
+        // For test fixture destroy
+        toast.id = "root1";
         fixture.detectChanges();
     });
 
@@ -49,6 +51,8 @@ describe('IgxToast', () => {
 
         expect(toast.id).toBe('customToast');
         expect(toast.element.id).toContain('customToast');
+        // For test fixture destroy
+        toast.id = "root1";
     });
 
     it('should properly toggle and emit isVisibleChange', fakeAsync(() => {

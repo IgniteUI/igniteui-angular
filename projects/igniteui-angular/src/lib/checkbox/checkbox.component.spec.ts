@@ -196,6 +196,8 @@ describe('IgxCheckbox', () => {
         const fixture = TestBed.createComponent(IgxCheckboxComponent);
 
         const checkboxInstance = fixture.componentInstance;
+        // For test fixture destroy
+        checkboxInstance.id = "root1";
         checkboxInstance.disabled = true;
         const nativeCheckbox = checkboxInstance.nativeInput.nativeElement as HTMLInputElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement as HTMLLabelElement;
