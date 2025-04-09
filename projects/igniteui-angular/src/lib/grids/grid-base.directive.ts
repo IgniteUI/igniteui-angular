@@ -5494,7 +5494,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let sum = 0;
         for (const col of fc) {
             if (col.level === 0) {
-                sum += parseInt(col.calcWidth, 10);
+                sum += parseFloat(col.calcWidth);
             }
         }
         if (this.isPinningToStart) {
@@ -6235,7 +6235,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public hasHorizontalScroll() {
-        return this.totalWidth - this.unpinnedWidth > 0 && this.width !== null;
+        return Math.round(this.totalWidth - this.unpinnedWidth) > 0 && this.width !== null;
     }
 
     /**
