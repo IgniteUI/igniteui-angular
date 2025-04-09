@@ -98,10 +98,13 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit {
     }
 
     public advancedFilteringExprTreeChange() {
-        if (!this.hGrid.advancedFilteringExpressionsTree) return;
+        let tree = this.hGrid.advancedFilteringExpressionsTree;
+        if (!tree) {
+            tree = new FilteringExpressionsTree(0, undefined, this.remoteEntities[0].name, this.remoteEntities[0].fields.map(f => f.field));
+        }
 
         this.hGrid.isLoading = true;
-        this.http.post(`${API_ENDPOINT}/QueryBuilder/ExecuteQuery`, this.hGrid.advancedFilteringExpressionsTree).subscribe(data =>{
+        this.http.post(`${API_ENDPOINT}/QueryBuilder/ExecuteQuery`, tree).subscribe(data =>{
             console.log('data', data);
             this.remoteData = Object.values(data)[0];
             this.hGrid.isLoading = false;
