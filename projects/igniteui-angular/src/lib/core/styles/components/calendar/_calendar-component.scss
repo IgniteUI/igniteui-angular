@@ -393,6 +393,18 @@
             @extend %date-last-preview-special !optional;
         }
 
+        @include e(date, $mods: ('first', 'range-preview', 'active')) {
+            @extend %date-first-preview-active !optional;
+        }
+
+        @include e(date, $mods: ('last', 'range-preview', 'active')) {
+            @extend %date-last-preview-active !optional;
+        }
+
+        @include e(date, $mods: ('first', 'last', 'selected')) {
+            @extend %date-first-last-selected !optional;
+        }
+
         @include e(date, $mods: ('first', 'range-preview', 'special', 'current')) {
             @extend %date-first-preview-special-current !optional;
         }
