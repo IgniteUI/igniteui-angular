@@ -1648,6 +1648,14 @@
         [igxPrefix] {
             overflow: hidden;
         }
+
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            background: transparent;
+            color: var(--ig-primary-500);
+        }
     }
 
     %igx-input-group-fluent-search--focused {
@@ -1731,6 +1739,10 @@
     %form-group-bundle--fluent--focus {
         border-color: var-get($theme, 'focused-border-color');
         border-width: rem(2px);
+
+        &:hover {
+            border-color: var-get($theme, 'focused-border-color');
+        }
     }
 
     %form-group-bundle-error--fluent,
@@ -1846,7 +1858,6 @@
     }
 
     %fluent-label-focused {
-        color: color(null, 'gray', 800);
         transform: translateY(0) scale(1);
     }
 
