@@ -57,18 +57,26 @@ $_theme: $fluent;
             content: '';
             position: absolute;
             height: $date-size;
-            width: calc($date-size / 2 + #{$border-size});
+            width: $date-size;
             border: $border-size solid var-get($_theme, 'date-range-border-color');
-            inset-inline-end: calc(50% - #{$border-size});
-            border-inline-end-color: transparent;
             z-index: 3;
-            pointer-events: none;
+	        pointer-events: none;
+	        border-inline-end-color: transparent;
+	        border-start-start-radius: var-get($_theme, 'date-range-border-radius');
+	        border-end-start-radius: var-get($_theme, 'date-range-border-radius');
+	        border-start-end-radius: 0;
+	        border-end-end-radius: 0;
         }
 
         &::after {
             border-block-color: var-get($_theme, 'date-range-border-color');
             border-width: $border-size;
         }
+	    
+	    @include e(inner) {
+		    border-start-end-radius: var-get($_theme, 'date-border-radius');
+		    border-end-end-radius: var-get($_theme, 'date-border-radius');
+	    }
     }
 
     @include mx('range', 'selected', 'last') {
@@ -76,23 +84,32 @@ $_theme: $fluent;
             content: '';
             position: absolute;
             height: $date-size;
-            width: calc($date-size / 2 + #{$border-size});
+            width: $date-size;
             border: $border-size solid var-get($_theme, 'date-range-border-color');
-            inset-inline-start: calc(50% - #{$border-size});
-            border-inline-start-color: transparent;
             z-index: 3;
-            pointer-events: none;
+	        pointer-events: none;
+	        border-inline-start-color: transparent;
+	        border-start-end-radius: var-get($_theme, 'date-range-border-radius');
+	        border-end-end-radius: var-get($_theme, 'date-range-border-radius');
+	        border-start-start-radius: 0;
+	        border-end-start-radius: 0;
         }
 
         &::after {
             border-block-color: var-get($_theme, 'date-range-border-color');
             border-width: $border-size;
         }
+	    
+	    @include e(inner) {
+		    border-start-start-radius: var-get($_theme, 'date-border-radius');
+		    border-end-start-radius: var-get($_theme, 'date-border-radius');
+	    }
     }
 
     @include mx('first', 'last') {
         @include e(inner) {
             background: transparent;
+	        border-radius: var-get($_theme, 'date-range-border-radius');
         }
     }
 
@@ -129,12 +146,6 @@ $_theme: $fluent;
                 height: sizable(rem(22px), rem(24px), rem(28px));
                 border-color: var-get($_theme, 'date-current-foreground');
             }
-        }
-    }
-
-    @include mx('range', 'selected', 'current', 'special', 'active', ('not': 'first')) {
-        @include e(inner) {
-            color: var-get($_theme, 'date-special-focus-foreground');
         }
     }
 
@@ -222,6 +233,10 @@ $_theme: $fluent;
             background: transparent;
             border-color: var-get($_theme, 'date-range-preview-border-color');
             border-inline-end-color: transparent;
+	        border-start-start-radius: var-get($_theme, 'date-range-border-radius');
+	        border-end-start-radius: var-get($_theme, 'date-range-border-radius');
+	        border-start-end-radius: 0;
+	        border-end-end-radius: 0;
         }
     }
 
@@ -237,6 +252,10 @@ $_theme: $fluent;
             background: transparent;
             border-color: var-get($_theme, 'date-range-preview-border-color');
             border-inline-start-color: transparent;
+	        border-start-end-radius: var-get($_theme, 'date-range-border-radius');
+	        border-end-end-radius: var-get($_theme, 'date-range-border-radius');
+	        border-start-start-radius: 0;
+	        border-end-start-radius: 0;
         }
     }
 
