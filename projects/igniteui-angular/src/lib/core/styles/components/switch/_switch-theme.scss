@@ -101,7 +101,93 @@
     }
 
     $theme: digest-schema($switch-schema);
-    $meta: map.get($theme, '_meta');
+    $variant: map.get($theme, '_meta', 'theme');
+
+    @if $variant == 'material' {
+        @if not($track-off-color) and $thumb-off-color {
+            $track-off-color: hsl(from var(--thumb-off-color) h s calc(l * 0.5));
+        }
+
+        @if not($thumb-off-color) and $track-off-color {
+            $thumb-off-color: hsl(from var(--track-off-color) h s calc(l * 1.3));
+        }
+
+        @if not($thumb-disabled-color) and $thumb-off-color {
+            $thumb-disabled-color: hsl(from var(--thumb-off-color) h s calc(l + 20));
+        }
+
+        @if not($track-disabled-color) and $track-off-color {
+            $track-disabled-color: hsla(from var(--track-off-color) h s l / 0.5);
+        }
+
+        @if not($track-on-color) and $thumb-on-color {
+            $track-on-color: hsl(from var(--thumb-on-color) h s calc(l * 1.3));
+        }
+
+        @if not($track-on-hover-color) and $track-on-color {
+            $track-on-hover-color: var(--track-on-color);
+        }
+
+        @if not($thumb-on-color) and $track-on-color {
+            $thumb-on-color: hsl(from var(--track-on-color) h s calc(l * 0.6));
+        }
+
+        @if not($thumb-on-disabled-color) and $thumb-on-color {
+            $thumb-on-disabled-color: hsl(from var(--thumb-on-color) h s calc(l + 20));
+        }
+
+        @if not($track-on-disabled-color) and $track-on-color {
+            $track-on-disabled-color: hsla(from var(--track-on-color) h s l / 0.5);
+        }
+    } @else {
+        @if not($border-color) and $thumb-off-color {
+            $border-color: var(--thumb-off-color)
+        }
+
+        @if not($border-hover-color) and $border-color {
+            $border-hover-color: hsl(from var(--border-color) h s calc(l * 0.8));
+        }
+
+        @if not($thumb-on-color) and $track-on-color {
+            $thumb-on-color: adaptive-contrast(var(--track-on-color));
+        }
+
+        @if not($track-on-hover-color) and $track-on-color {
+            $track-on-hover-color: hsl(from var(--track-on-color) h s calc(l * 0.9));
+        }
+
+        @if not($border-on-color) and $track-on-color {
+            $border-on-color: var(--track-on-color);
+        }
+
+        @if not($border-on-hover-color) and $border-on-color {
+            $border-on-hover-color: hsl(from var(--border-on-color) h s calc(l * 0.9));
+        }
+
+        @if $variant == 'bootstrap' {
+            @if not($focus-fill-color) and $track-on-color {
+                $focus-fill-color: hsl(from var(--track-on-color) h s calc(l * 1.2));
+            }
+
+            @if not($focus-outline-color) and $focus-fill-color {
+                $focus-outline-color: hsla(from var(--focus-fill-color) h s l / 0.5);
+            }
+
+            @if not($focus-fill-hover-color) and $focus-fill-color {
+                $focus-fill-hover-color: hsl(from var(--focus-fill-color) h s calc(l * 0.9));
+            }
+        }
+
+        @if $variant == 'indigo' {
+            @if not($focus-outline-color) and $border-color {
+                $focus-outline-color: hsla(from var(--border-color) h s l / 0.5);
+            }
+
+            @if not($focus-outline-color-focused) and $border-on-color {
+                $focus-outline-color-focused: hsla(from var(--border-on-color) h s l / 0.5);
+            }
+        }
+    }
 
     @if not($resting-shadow) {
         $resting-elevation: map.get($switch-schema, 'resting-elevation');
@@ -170,11 +256,6 @@
         thumb-on-error-color: $thumb-on-error-color,
         error-color: $error-color,
         error-color-hover: $error-color-hover,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
     ));
 }
 
@@ -185,8 +266,8 @@
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
-    $variant: map.get($theme, '_meta', 'variant');
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
+    $variant: map.get($theme, '_meta', 'theme');
+    $theme-variant: map.get($theme, '_meta', 'variant');
 
     $switch-width: map.get((
         'material': 36px,
