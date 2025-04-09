@@ -8,7 +8,21 @@
 $theme: $material;
 
 @include layer(base) {
-    %actions {
+    %h-actions {
+        display: flex;
+        align-items: center; 
+        gap: rem(8px);
+
+        [igxIconButton] {
+            color: var-get($theme, 'actions-text-color');
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    %v-actions {
         flex-direction: column;
 
         [igxButton] ~ [igxButton] {
@@ -155,19 +169,14 @@ $theme: $material;
         }
 
         @include e(start) {
-            display: flex;
-            align-items: center;
-            order: 0;
-            gap: rem(8px);
+            @extend %h-actions;
 
-            &:empty {
-                display: none;
-            }
+            order: 0;
         }
 
         @include e(end) {
-            display: flex;
-            align-items: center;
+            @extend %h-actions;
+
             order: 1;
             color: var-get($theme, 'actions-text-color');
             margin-inline-start: auto;
@@ -176,29 +185,6 @@ $theme: $material;
             &:empty {
                 display: none;
             }
-        }
-
-        @include e(igroup) {
-            display: flex;
-            flex-flow: row nowrap;
-
-            .igx-icon-button {
-                color: var-get($theme, 'actions-text-color');
-            }
-        }
-
-        @include e(igroup, $m: start) {
-            margin-inline-end: auto;
-        }
-
-        @include e(igroup, $m: end) {
-            margin-inline-start: auto;
-        }
-
-        @include e(bgroup) {
-            display: flex;
-            flex-flow: row nowrap;
-            gap: rem(8px);
         }
 
         @include m(vertical) {
@@ -213,11 +199,11 @@ $theme: $material;
             }
 
             @include e(start) {
-                @extend %actions;
+                @extend %v-actions;
             }
 
             @include e(end) {
-                @extend %actions;
+                @extend %v-actions;
 
                 margin-top: auto;
                 margin-inline-start: 0;
