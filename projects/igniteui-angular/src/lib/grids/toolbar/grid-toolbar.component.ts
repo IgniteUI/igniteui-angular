@@ -6,6 +6,7 @@ import {
     Inject,
     Input,
     OnDestroy,
+    ViewEncapsulation,
     booleanAttribute
 } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -37,6 +38,8 @@ import { NgTemplateOutlet } from '@angular/common';
 @Component({
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html',
+    styleUrl: 'grid-toolbar.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxToolbarToken, useExisting: IgxGridToolbarComponent }],
     imports: [IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, NgTemplateOutlet, IgxLinearProgressBarComponent]
 })
