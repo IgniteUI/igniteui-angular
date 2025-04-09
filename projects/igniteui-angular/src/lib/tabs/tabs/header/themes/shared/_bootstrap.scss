@@ -1,0 +1,69 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../../../themes/light/tokens' as *;
+
+$_theme: $bootstrap;
+
+@include themed-block(igx-tabs, bootstrap) {
+    %igx-tab-header--focus {
+        border: none;
+        box-shadow: inset 0 0 0 rem(2px) var-get($_theme, 'item-hover-color');
+        border-radius: rem(4px);
+        z-index: 1;
+
+        &::after {
+            display: none;
+        }
+    }
+
+    @include b(igx-tab-header) {
+        min-height: rem(48px);
+        padding-block: rem(12px);
+        border-start-start-radius: var-get($_theme, 'border-radius');
+        border-start-end-radius: var-get($_theme, 'border-radius');
+
+        &:hover {
+            box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'border-color--hover');
+        }
+
+        &:focus {
+            @extend %igx-tab-header--focus;
+        }
+
+        @include m(selected) {
+            background: var-get($_theme, 'item-active-background');
+            position: relative;
+            box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'border-color');
+            z-index: 1;
+
+            &:focus {
+                @extend %igx-tab-header--focus;
+            }
+
+            &:not(:focus) {
+                &::before {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    inset-inline-start: 0;
+                    width: 100%;
+                    height: rem(1px);
+                    background: linear-gradient(
+                            to right,
+                            var-get($_theme, 'border-color') 1px,
+                            var-get($_theme, 'item-active-background') 1px,
+                            var-get($_theme, 'item-active-background') calc(100% - 1px),
+                            var-get($_theme, 'border-color') calc(100% - 1px)
+                    );
+                    z-index: -1;
+                }
+            }
+
+            &:hover {
+                box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'border-color');
+            }
+        }
+    }
+}
+

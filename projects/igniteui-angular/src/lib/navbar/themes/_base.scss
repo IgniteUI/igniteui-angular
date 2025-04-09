@@ -24,7 +24,7 @@ $_theme: $material;
 
         igx-icon,
         igc-icon {
-            --component-size: 3;
+            --component-size: var(--ig-size, var(--ig-size-large));
             cursor: pointer;
         }
 
@@ -55,29 +55,28 @@ $_theme: $material;
     }
 
     @include b(igx-navbar) {
-        display: flex;
-        align-items: center;
-        position: relative;
-        flex-flow: row nowrap;
-        gap: rem(16px);
+        display: block;
         width: 100%;
-        min-height: rem(56px);
-        max-height: rem(128px);
-        padding-inline: rem(16px);
         background: var-get($_theme, 'background');
         color: var-get($_theme, 'text-color');
         box-shadow: var-get($_theme, 'elevation');
-        z-index: 4;
-        overflow: hidden;
-        border-bottom: rem(1px) solid var-get($_theme, 'border-color');
+
+        nav {
+            display: flex;
+            align-items: center;
+            position: relative;
+            flex-flow: row nowrap;
+            gap: rem(16px);
+            min-height: rem(56px);
+            padding-inline: rem(16px);
+            max-height: rem(128px);
+            z-index: 4;
+            overflow: hidden;
+            border-bottom: rem(1px) solid var-get($_theme, 'border-color');
+        }
 
         igx-avatar {
             --ig-size: 1;
-        }
-
-        [igxButton],
-        [igxIconButton] {
-            --ig-size: 2;
         }
 
         @include e(title) {

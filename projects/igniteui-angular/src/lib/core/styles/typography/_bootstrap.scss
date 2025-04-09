@@ -64,11 +64,11 @@
         content: 'body-1'
     ));
     @include dock-manager-typography();
-    @include drop-down-typography($categories: (
-        header: 'overline',
-        item: 'body-2',
-        select-item: 'body-2'
-    ));
+    // @include drop-down-typography($categories: (
+    //     header: 'overline',
+    //     item: 'body-2',
+    //     select-item: 'body-2'
+    // ));
     // @include expansion-panel-typography($categories: (
     //     title: 'h5',
     //     description: 'subtitle-2',
@@ -102,7 +102,7 @@
     @include switch-typography($categories: (
         label: 'body-1'
     ));
-    @include tabs-typography();
+    //@include tabs-typography();
     @include time-picker-typography($categories: (
         header-hour: 'h4',
         selected-time: 'h4'

@@ -8,7 +8,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from '../icon/icon.component';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
-const DROP_DOWN_LIST = 'igx-drop-down__list';
+const DROP_DOWN_LIST = 'igx-drop-down';
 
 describe('igxActionStrip', () => {
     let fixture;

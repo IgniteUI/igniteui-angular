@@ -47,7 +47,7 @@
     @include date-range-typography();
     @include dialog-typography();
     @include dock-manager-typography();
-    @include drop-down-typography();
+    // @include drop-down-typography();
     // @include expansion-panel-typography();
     @include excel-filtering-typography();
     @include icon-button-typography();
@@ -60,7 +60,7 @@
     // @include slider-typography();
     // @include snackbar-typography();
     @include switch-typography();
-    @include tabs-typography();
+    //@include tabs-typography();
     @include time-picker-typography();
     //@include stepper-typography();
     // @include toast-typography();

@@ -408,13 +408,13 @@
         @include rating($rating-theme-map);
     }
 
-    @if is-used('igx-drop-down', $exclude) {
-        $drop-down-theme-map: drop-down-theme(
-            $schema: $schema,
-        );
-        $drop-down-theme-map: meta.call($theme-handler, $drop-down-theme-map);
-        @include drop-down($drop-down-theme-map);
-    }
+    // @if is-used('igx-drop-down', $exclude) {
+    //     $drop-down-theme-map: drop-down-theme(
+    //         $schema: $schema,
+    //     );
+    //     $drop-down-theme-map: meta.call($theme-handler, $drop-down-theme-map);
+    //     @include drop-down($drop-down-theme-map);
+    // }
 
     // @if is-used('igx-expansion-panel', $exclude) {
     //     $expansion-panel-theme-map: expansion-panel-theme(
@@ -528,13 +528,13 @@
         @include overlay($overlay-theme-map);
     }
 
-    @if is-used('igx-paginator', $exclude) {
-        $paginator-theme-map: paginator-theme(
-            $schema: $schema,
-        );
-        $paginator-theme-map: meta.call($theme-handler, $paginator-theme-map);
-        @include paginator($paginator-theme-map);
-    }
+    // @if is-used('igx-paginator', $exclude) {
+    //     $paginator-theme-map: paginator-theme(
+    //         $schema: $schema,
+    //     );
+    //     $paginator-theme-map: meta.call($theme-handler, $paginator-theme-map);
+    //     @include paginator($paginator-theme-map);
+    // }
 
     @if is-used('igx-circular-bar', $exclude) {
         $progress-circular-theme-map: progress-circular-theme(
@@ -600,13 +600,13 @@
     //     @include switch($switch-theme-map);
     // }
 
-    @if is-used('igx-tabs', $exclude) {
-        $tabs-theme-map: tabs-theme(
-            $schema: $schema,
-        );
-        $tabs-theme-map: meta.call($theme-handler, $tabs-theme-map);
-        @include tabs($tabs-theme-map);
-    }
+    //@if is-used('igx-tabs', $exclude) {
+    //    $tabs-theme-map: tabs-theme(
+    //        $schema: $schema,
+    //    );
+    //    $tabs-theme-map: meta.call($theme-handler, $tabs-theme-map);
+    //    @include tabs($tabs-theme-map);
+    //}
 
     //@if is-used('igx-stepper', $exclude) {
     //    $stepper-theme-map: stepper-theme(

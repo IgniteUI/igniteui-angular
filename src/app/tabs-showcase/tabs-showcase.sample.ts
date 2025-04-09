@@ -14,13 +14,13 @@ import {
 import {
     IgxButtonDirective,
     IgxIconComponent,
-    IGX_TABS_DIRECTIVES,
+    IGX_TABS_DIRECTIVES, IgxRippleDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
     IgcTabsComponent,
     IgcTabComponent,
-    IgcTabPanelComponent,
+    IgcTabPanelComponent, registerIconFromText,
 } from 'igniteui-webcomponents';
 import {
     PropertyChangeService,
@@ -29,6 +29,17 @@ import {
 
 defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
 
+const icons = [
+    {
+        name: 'folder',
+        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h240l80 80h320q33 0 56.5 23.5T880-640v400q0 33-23.5 56.5T800-160H160Z"/></svg>'
+    }
+];
+
+icons.forEach((icon) => {
+    registerIconFromText(icon.name, icon.url);
+});
+
 @Component({
     selector: 'app-tabs-showcase-sample',
     styleUrls: ['tabs-showcase.sample.scss'],
@@ -36,7 +47,7 @@ defineComponents(IgcTabsComponent, IgcTabComponent, IgcTabPanelComponent);
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [IgxButtonDirective, IgxIconComponent, IGX_TABS_DIRECTIVES]
+    imports: [IgxButtonDirective, IgxIconComponent, IGX_TABS_DIRECTIVES, IgxRippleDirective]
 })
 export class TabsShowcaseSampleComponent implements OnInit {
     @ViewChild('angularTabs', { static: false })
@@ -91,6 +102,20 @@ export class TabsShowcaseSampleComponent implements OnInit {
                     defaultValue: false
                 },
             },
+            disableAnimation: {
+                label: 'Disable animation (Angular)',
+                control: {
+                    type: 'boolean',
+                    defaultValue: false
+                },
+            },
+            disabled: {
+                label: 'Disable items',
+                control: {
+                    type: 'boolean',
+                    defaultValue: false
+                },
+            }
         });
 
         const propertyChange = this.pcs.propertyChanges.subscribe(
