@@ -1,4 +1,13 @@
-<igx-hierarchical-grid #grid1 [data]="remoteData" [isLoading]="true" [primaryKey]="'customerId'" [autoGenerate]="true" [height]="'800px'" [width]="'100%'" #hGrid [allowAdvancedFiltering]="true">
+<igx-hierarchical-grid #hGrid
+                       [data]="remoteData"
+                       [isLoading]="true"
+                       [primaryKey]="'customerId'"
+                       [autoGenerate]="true"
+                       [height]="'800px'"
+                       [width]="'100%'"
+                       [allowAdvancedFiltering]="true"
+                       [remoteEntities]="remoteEntities"
+                       (advancedFilteringExpressionsTreeChange)="advancedFilteringExprTreeChange()">
     <igx-grid-toolbar>
         <igx-grid-toolbar-title>Customers</igx-grid-toolbar-title>
     </igx-grid-toolbar>

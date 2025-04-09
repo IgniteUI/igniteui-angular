@@ -7,7 +7,7 @@
 </ng-template>
 
 <ng-template #selectFromTemplate>
-    <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && !this.isAdvancedFiltering()) ? 'flex' : 'none'">
+    <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && (!this.isAdvancedFiltering() || this.isHierarchicalGridNestedQuery())) ? 'flex' : 'none'">
         <div class="igx-filter-tree__inputs-field">
             <span class="igx-query-builder__label">From</span>
             <igx-select #entitySelect

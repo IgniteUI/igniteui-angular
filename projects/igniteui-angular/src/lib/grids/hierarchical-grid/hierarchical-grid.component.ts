@@ -35,7 +35,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
+import { CellType, EntityType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
@@ -559,6 +559,26 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public get expandChildren(): boolean {
         return this._defaultExpandState;
+    }
+
+    /**
+     * Gets/Sets the entities used for advanced filtering.
+     *
+     * @remarks
+     * This property is required in remote data scenarios.
+     * @example
+     * ```typescript
+     * const remoteEntities = this.grid.remoteEntities;
+     * this.grid.remoteEntities = [];
+     * ```
+     */
+    @Input()
+    public set remoteEntities(entities: EntityType[]) {
+        this._hGridRemoteEntities = entities;
+    }
+
+    public get remoteEntities() {
+        return this._hGridRemoteEntities;
     }
 
     /**

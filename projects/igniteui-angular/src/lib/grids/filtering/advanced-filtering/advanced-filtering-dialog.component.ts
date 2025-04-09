@@ -219,9 +219,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                     })) as FieldType[]
             }
         ];
-    
+
         if (isHierarchicalGrid) {
             const hierarchicalGrid = this.grid as IgxHierarchicalGridComponent;
+            if (hierarchicalGrid.remoteEntities) {
+                return hierarchicalGrid.remoteEntities;
+            }
+
             entities[0].childEntities = hierarchicalGrid.childLayoutList.reduce((acc, rowIsland) => {
                 return acc.concat(this.generateChildEntity(rowIsland, hierarchicalGrid.data[0][rowIsland.key][0]));
             }

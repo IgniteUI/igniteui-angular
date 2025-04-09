@@ -5,7 +5,8 @@ import {
     IGridCreatedEventArgs,
     IGX_HIERARCHICAL_GRID_DIRECTIVES,
     FilteringExpressionsTree,
-    IgxStringFilteringOperand
+    IgxStringFilteringOperand,
+    EntityType
 } from 'igniteui-angular';
 import { HttpClient } from '@angular/common/http';
 
@@ -28,35 +29,77 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit {
         { name: 'Orders', type: 'number', level: 1 },
         { name: 'Details', type: 'number', level: 2 }
     ];
+    public remoteEntities: EntityType[] = [
+        {
+            name: 'Customers',
+            fields: [
+                { field: 'customerId', dataType: 'string' },
+                { field: 'companyName', dataType: 'string' },
+                { field: 'contactName', dataType: 'string' },
+                { field: 'contactTitle', dataType: 'string' }
+            ],
+            childEntities: [
+                {
+                    name: 'Orders',
+                    fields: [
+                        { field: 'orderId', dataType: 'number' },
+                        { field: 'customerId', dataType: 'string' },
+                        { field: 'employeeId', dataType: 'number' },
+                        { field: 'shipVia', dataType: 'string' }
+                    ],
+                    childEntities: [
+                        {
+                            name: 'Details',
+                            fields: [
+                                { field: 'orderId', dataType: 'number' },
+                                { field: 'productId', dataType: 'number' },
+                                { field: 'unitPrice', dataType: 'number' },
+                                { field: 'quantity', dataType: 'number' },
+                                { field: 'discount', dataType: 'number' }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ];
 
     constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
     public ngOnInit() {
-        const ordersTree = new FilteringExpressionsTree(0, undefined, 'Orders', ['shipVia']);
+        const ordersTree = new FilteringExpressionsTree(0, undefined, 'Orders', ['customerId']);
         ordersTree.filteringOperands.push({
             fieldName: 'shipVia',
             ignoreCase: false,
+            condition: IgxStringFilteringOperand.instance().condition('equals'),
             conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
             searchVal: 'AirCargo'
         });
 
         const customersTree = new FilteringExpressionsTree(0, undefined, 'Customers', ['customerId', 'companyName', 'contactName', 'contactTitle']);
-        // customersTree.filteringOperands.push({
-        //     fieldName: 'customerId',
-        //     conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
-        //     ignoreCase: false,
-        //     searchTree: ordersTree
-        // });
         customersTree.filteringOperands.push({
             fieldName: 'customerId',
+            condition: IgxStringFilteringOperand.instance().condition('notInQuery'),
+            conditionName: IgxStringFilteringOperand.instance().condition('notInQuery').name,
             ignoreCase: false,
-            conditionName: IgxStringFilteringOperand.instance().condition('startsWith').name,
-            searchVal: 'A'
+            searchTree: ordersTree
         });
+        // customersTree.filteringOperands.push({
+        //     fieldName: 'customerId',
+        //     ignoreCase: false,
+        //     conditionName: IgxStringFilteringOperand.instance().condition('startsWith').name,
+        //     searchVal: 'A'
+        // });
         this.hGrid.advancedFilteringExpressionsTree = customersTree;
     }
 
     public ngAfterViewInit() {
+        this.advancedFilteringExprTreeChange();
+    }
+
+    public advancedFilteringExprTreeChange() {
+        if (!this.hGrid.advancedFilteringExpressionsTree) return;
+
         this.hGrid.isLoading = true;
         this.http.post(`${API_ENDPOINT}/QueryBuilder/ExecuteQuery`, this.hGrid.advancedFilteringExpressionsTree).subscribe(data =>{
             console.log('data', data);

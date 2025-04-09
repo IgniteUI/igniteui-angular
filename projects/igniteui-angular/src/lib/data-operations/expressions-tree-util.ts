@@ -180,6 +180,7 @@ export function isTree(entry: IExpressionTree | IFilteringExpression): entry is 
  */
 export function recreateTree(tree: IExpressionTree, entities: EntityType[]): IExpressionTree {
     const entity = entities.find(e => e.name === tree.entity);
+    if (!entity) return tree;
 
     for (let i = 0; i < tree.filteringOperands.length; i++) {
         const operand = tree.filteringOperands[i];
@@ -187,7 +188,7 @@ export function recreateTree(tree: IExpressionTree, entities: EntityType[]): IEx
             tree.filteringOperands[i] = recreateTree(operand, entities);
         } else {
             if (operand.searchTree) {
-                operand.searchTree = recreateTree(operand.searchTree, entities);
+                operand.searchTree = recreateTree(operand.searchTree, entities[0].childEntities ?? entities);
             }
             tree.filteringOperands[i] = recreateExpression(operand, entity?.fields);
         }

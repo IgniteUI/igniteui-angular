@@ -554,6 +554,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.addExpressionDropDownOverlaySettings.outlet = this.overlayOutlet;
         this.groupContextMenuDropDownOverlaySettings.outlet = this.overlayOutlet;
+        
+        if (this.isAdvancedFiltering() && this.entities?.length === 1) {
+            this._selectedEntity = this.entities[0];
+        }
+
         // Trigger additional change detection cycle
         this.cdr.detectChanges();
     }
@@ -1528,6 +1533,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 default:
                     return IgxStringFilteringOperand.instance();
             }
+        } else {
+            return field.filters;
         }
     }
 
