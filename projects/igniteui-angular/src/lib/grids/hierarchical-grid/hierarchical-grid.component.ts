@@ -568,17 +568,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * This property is required in remote data scenarios.
      * @example
      * ```typescript
-     * const remoteEntities = this.grid.remoteEntities;
-     * this.grid.remoteEntities = [];
+     * const schema = this.grid.schema;
+     * this.grid.schema = [];
      * ```
      */
     @Input()
-    public set filteringEntities(entities: EntityType[]) {
-        this._hGridFilteringEntities = entities;
+    public set schema(entities: EntityType[]) {
+        this._hGridSchema = entities;
     }
 
-    public get filteringEntities() {
-        return this._hGridFilteringEntities;
+    public get schema() {
+        return this._hGridSchema;
     }
 
     /**
@@ -709,8 +709,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.showExpandAll = this.parentIsland ?
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
 
-        if (!this._hGridFilteringEntities) {
-            this._hGridFilteringEntities = this.generateFilteringEntities();
+        if (!this._hGridSchema) {
+            this._hGridSchema = this.generateSchema();
         }
 
     }
@@ -1217,7 +1217,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         });
     }
 
-    private generateFilteringEntities() {
+    private generateSchema() {
         const filterableFields = this.columns.filter((column) => !column.columnGroup && column.filterable);
         const entities: EntityType[] = [
             {

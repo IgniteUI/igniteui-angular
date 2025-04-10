@@ -834,7 +834,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             if (innerQuery && this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery) {
                 innerQuery.exitEditAddMode();
                 this._editedExpression.expression.searchTree = this.getExpressionTreeCopy(innerQuery.expressionTree);
-                this._editedExpression.expression.searchTree.returnFields = innerQuery.selectedReturnFields;
+                const returnFields = innerQuery.selectedReturnFields.length > 0 ?
+                                        innerQuery.selectedReturnFields :
+                                        [innerQuery.fields[0].field];
+                this._editedExpression.expression.searchTree.returnFields = returnFields;
             } else {
                 this._editedExpression.expression.searchTree = null;
             }

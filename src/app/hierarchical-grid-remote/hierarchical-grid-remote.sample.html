@@ -6,17 +6,15 @@
                        [height]="'800px'"
                        [width]="'100%'"
                        [allowAdvancedFiltering]="true"
-                       [filteringEntities]="remoteEntities"
+                       [schema]="remoteEntities"
                        (advancedFilteringExpressionsTreeChange)="advancedFilteringExprTreeChange()">
     <igx-grid-toolbar>
         <igx-grid-toolbar-title>Customers</igx-grid-toolbar-title>
     </igx-grid-toolbar>
-    <!-- <igx-column field="customerId"></igx-column>
-    <igx-column field="CompanyName"></igx-column>
-    <igx-column field="ContactName"></igx-column>
-    <igx-column field="ContactTitle"></igx-column>
-    <igx-column field="Country"></igx-column>
-    <igx-column field="Phone"></igx-column> -->
+        <!-- <igx-column field="customerId" [dataType]="'string'"></igx-column>
+        <igx-column field="companyName" [dataType]="'string'"></igx-column>
+        <igx-column field="contactName" [dataType]="'string'"></igx-column>
+        <igx-column field="contactTitle" [dataType]="'string'"></igx-column> -->
     <igx-row-island #rowIsland1 [key]="'Orders'" [primaryKey]="'orderId'" [autoGenerate]="false" (gridCreated)="gridCreated($event, rowIsland1)">
         <igx-grid-toolbar *igxGridToolbar>
             <igx-grid-toolbar-title>Orders</igx-grid-toolbar-title>

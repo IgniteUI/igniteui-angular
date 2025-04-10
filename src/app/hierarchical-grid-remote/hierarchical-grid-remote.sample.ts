@@ -25,9 +25,9 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit {
     public selectionMode;
     public remoteData = [];
     public primaryKeys = [
-        { name: 'Customers', type: 'string', level: 0 },
-        { name: 'Orders', type: 'number', level: 1 },
-        { name: 'Details', type: 'number', level: 2 }
+        { name: 'Customers', key: 'customerId' },
+        { name: 'Orders', key: 'orderId' },
+        { name: 'Details', key: 'orderId' }
     ];
     public remoteEntities: EntityType[] = [
         {
@@ -42,8 +42,8 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit {
                 {
                     name: 'Orders',
                     fields: [
+                        { field: 'customerId', dataType: 'string' }, // first field will be treated as foreign key
                         { field: 'orderId', dataType: 'number' },
-                        { field: 'customerId', dataType: 'string' },
                         { field: 'employeeId', dataType: 'number' },
                         { field: 'shipVia', dataType: 'string' }
                     ],
@@ -51,7 +51,7 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit {
                         {
                             name: 'Details',
                             fields: [
-                                { field: 'orderId', dataType: 'number' },
+                                { field: 'orderId', dataType: 'number' }, // first field will be treated as foreign key
                                 { field: 'productId', dataType: 'number' },
                                 { field: 'unitPrice', dataType: 'number' },
                                 { field: 'quantity', dataType: 'number' },
@@ -132,7 +132,7 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit {
     }
 
     private buildUrl(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
-        const rowIslandKey = this.primaryKeys.find(key => key.level === rowIsland.level).name;
+        const rowIslandKey = this.primaryKeys.find(key => key.name === rowIsland.key).name;
         const parentKey = (event.grid.parent as any).key ?? event.grid.parent.advancedFilteringExpressionsTree.entity;
         const url = `${API_ENDPOINT}/${parentKey}/${event.parentID}/${rowIslandKey}`;
         return url;

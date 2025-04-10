@@ -3139,7 +3139,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         matchCount: 0,
         content: ''
     };
-    protected _hGridFilteringEntities: EntityType[];
+    protected _hGridSchema: EntityType[];
     protected gridComputedStyles;
 
     /** @hidden @internal */
@@ -7926,8 +7926,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     private getRecreatedTree(value: IFilteringExpressionsTree): IFilteringExpressionsTree {
-        if (this._hGridFilteringEntities) {
-            return recreateTree(value, this._hGridFilteringEntities, true) as IFilteringExpressionsTree;
+        if (this._hGridSchema) {
+            return recreateTree(value, this._hGridSchema, true) as IFilteringExpressionsTree;
         } else {
             return recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
         }

@@ -200,7 +200,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         if (this.queryBuilder?.entities) {
             return this.queryBuilder?.entities;
         } else if (this.grid.type === 'hierarchical') {
-            return (this.grid as IgxHierarchicalGridComponent).filteringEntities;
+            return (this.grid as IgxHierarchicalGridComponent).schema;
         } else {
             const entities: EntityType[] = [
                 {
