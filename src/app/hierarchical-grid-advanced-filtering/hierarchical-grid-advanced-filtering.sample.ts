@@ -30,14 +30,12 @@ export class HierarchicalGridAdvancedFilteringSampleComponent implements AfterVi
         const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Albums', ['Artist']);
         innerTree.filteringOperands.push({
             fieldName: 'USBillboard200',
-            condition: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'),
             conditionName: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo').name,
             searchVal: 5
         });
         const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Artists', ['*']);
         tree.filteringOperands.push({
             fieldName: 'Artist',
-            condition: IgxStringFilteringOperand.instance().condition('inQuery'),
             conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
             searchTree: innerTree
         });

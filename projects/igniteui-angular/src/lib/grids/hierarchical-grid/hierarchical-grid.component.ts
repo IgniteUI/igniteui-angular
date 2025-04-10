@@ -35,7 +35,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { CellType, EntityType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
+import { CellType, EntityType, FieldType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
@@ -573,12 +573,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * ```
      */
     @Input()
-    public set remoteEntities(entities: EntityType[]) {
-        this._hGridRemoteEntities = entities;
+    public set filteringEntities(entities: EntityType[]) {
+        this._hGridFilteringEntities = entities;
     }
 
-    public get remoteEntities() {
-        return this._hGridRemoteEntities;
+    public get filteringEntities() {
+        return this._hGridFilteringEntities;
     }
 
     /**
@@ -708,6 +708,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.rootGrid.hasChildrenKey;
         this.showExpandAll = this.parentIsland ?
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
+
+        if (!this._hGridFilteringEntities) {
+            this._hGridFilteringEntities = this.generateFilteringEntities();
+        }
+
     }
 
     /**
@@ -1210,5 +1215,70 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             grid.highlightedRowID = null;
             grid.cdr.markForCheck();
         });
+    }
+
+    private generateFilteringEntities() {
+        const filterableFields = this.columns.filter((column) => !column.columnGroup && column.filterable);
+        const entities: EntityType[] = [
+            {
+                name: null,
+                fields: filterableFields.map(f => ({
+                        field: f.field,
+                        dataType: f.dataType,
+                    //  label: f.label,
+                    //  header: f.header,
+                        editorOptions: f.editorOptions,
+                        filters: f.filters,
+                        pipeArgs: f.pipeArgs,
+                        defaultTimeFormat: f.defaultTimeFormat,
+                        defaultDateTimeFormat: f.defaultDateTimeFormat
+                    })) as FieldType[]
+            }
+        ];
+
+        entities[0].childEntities = this.childLayoutList.reduce((acc, rowIsland) => {
+            return acc.concat(this.generateChildEntity(rowIsland, this.data[0][rowIsland.key][0]));
+        }
+        , []);
+
+        return entities;
+    }
+
+    private generateChildEntity(rowIsland: IgxRowIslandComponent, firstRowData: any[]): EntityType {
+        const entityName = rowIsland.key;
+        let fields = [];
+        let childEntities;
+        if (!rowIsland.autoGenerate) {
+            fields = rowIsland.columnList.map(f => ({ field: f.field, dataType: f.dataType })) as FieldType[];
+        } else if (firstRowData) {
+            const rowIslandFields = Object.keys(firstRowData).map(key => {
+                if (firstRowData[key] instanceof Array) {
+                    return null;
+                }
+
+                return {
+                    field: key,
+                    dataType: this.resolveDataTypes(firstRowData[key])
+                }
+            });
+            fields = rowIslandFields.filter(f => f !== null) as FieldType[];
+        }
+
+        const rowIslandChildEntities = rowIsland.childLayoutList.reduce((acc, childRowIsland) => {
+            if (!firstRowData) {
+                return null;
+            }
+            return acc.concat(this.generateChildEntity(childRowIsland, firstRowData[childRowIsland.key][0]));
+        }, []);
+
+        if (rowIslandChildEntities?.length > 0) {
+            childEntities = rowIslandChildEntities;
+        } 
+
+        return {
+            name: entityName,
+            fields: fields,
+            childEntities: childEntities
+        }
     }
 }

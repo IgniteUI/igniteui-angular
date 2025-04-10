@@ -193,83 +193,32 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.closeDialog();
     }
 
-
     /**
      * @hidden @internal
      */
     public generateEntity() {
         if (this.queryBuilder?.entities) {
             return this.queryBuilder?.entities;
-        }
-
-        const isHierarchicalGrid = this.grid.type === 'hierarchical';
-        const entities: EntityType[] = [
-            {
-                name: null,
-                fields: this.filterableFields.map(f => ({
-                     field: f.field,
-                     dataType: f.dataType,
-                    //  label: f.label,
-                    //  header: f.header,
-                     editorOptions: f.editorOptions,
-                     filters: f.filters,
-                     pipeArgs: f.pipeArgs,
-                     defaultTimeFormat: f.defaultTimeFormat,
-                     defaultDateTimeFormat: f.defaultDateTimeFormat
-                    })) as FieldType[]
-            }
-        ];
-
-        if (isHierarchicalGrid) {
-            const hierarchicalGrid = this.grid as IgxHierarchicalGridComponent;
-            if (hierarchicalGrid.remoteEntities) {
-                return hierarchicalGrid.remoteEntities;
-            }
-
-            entities[0].childEntities = hierarchicalGrid.childLayoutList.reduce((acc, rowIsland) => {
-                return acc.concat(this.generateChildEntity(rowIsland, hierarchicalGrid.data[0][rowIsland.key][0]));
-            }
-            , []);
-        }
-
-        return entities;
-    }
-
-    private generateChildEntity(rowIsland: IgxRowIslandComponent, firstRowData: any[]): EntityType {
-        const entityName = rowIsland.key;
-        let fields = [];
-        let childEntities;
-        if (!rowIsland.autoGenerate) {
-            fields = rowIsland.columnList.map(f => ({ field: f.field, dataType: f.dataType })) as FieldType[];
-        } else if (firstRowData) {
-            const rowIslandFields = Object.keys(firstRowData).map(key => {
-                if (firstRowData[key] instanceof Array) {
-                    return null;
+        } else if (this.grid.type === 'hierarchical') {
+            return (this.grid as IgxHierarchicalGridComponent).filteringEntities;
+        } else {
+            const entities: EntityType[] = [
+                {
+                    name: null,
+                    fields: this.filterableFields.map(f => ({
+                            field: f.field,
+                            dataType: f.dataType,
+                        //  label: f.label,
+                        //  header: f.header,
+                            editorOptions: f.editorOptions,
+                            filters: f.filters,
+                            pipeArgs: f.pipeArgs,
+                            defaultTimeFormat: f.defaultTimeFormat,
+                            defaultDateTimeFormat: f.defaultDateTimeFormat
+                        })) as FieldType[]
                 }
-
-                return {
-                    field: key,
-                    dataType: (this.grid as IgxHierarchicalGridComponent).resolveDataTypes(firstRowData[key])
-                }
-            });
-            fields = rowIslandFields.filter(f => f !== null) as FieldType[];
-        }
-
-        const rowIslandChildEntities = rowIsland.childLayoutList.reduce((acc, childRowIsland) => {
-            if (!firstRowData) {
-                return null;
-            }
-            return acc.concat(this.generateChildEntity(childRowIsland, firstRowData[childRowIsland.key][0]));
-        }, []);
-
-        if (rowIslandChildEntities?.length > 0) {
-            childEntities = rowIslandChildEntities;
-        } 
-
-        return {
-            name: entityName,
-            fields: fields,
-            childEntities: childEntities
+            ];
+            return entities;
         }
     }
 

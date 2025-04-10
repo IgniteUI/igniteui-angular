@@ -178,8 +178,8 @@ export function isTree(entry: IExpressionTree | IFilteringExpression): entry is 
  * @param entities An array of entities to use for recreating the tree.
  * @returns The recreated expression tree.
  */
-export function recreateTree(tree: IExpressionTree, entities: EntityType[]): IExpressionTree {
-    const entity = entities.find(e => e.name === tree.entity);
+export function recreateTree(tree: IExpressionTree, entities: EntityType[], isRoot: boolean = false): IExpressionTree {
+    const entity = isRoot ? entities[0] : entities.find(e => e.name === tree.entity);
     if (!entity) return tree;
 
     for (let i = 0; i < tree.filteringOperands.length; i++) {

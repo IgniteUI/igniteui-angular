@@ -114,8 +114,10 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit {
     }
 
     private calculateColsInView() {
-        this.hGrid.columns.forEach(column =>
-            column.hidden = !this.hGrid.advancedFilteringExpressionsTree.returnFields.includes(column.field));
+        if (this.hGrid.advancedFilteringExpressionsTree) {
+            this.hGrid.columns.forEach(column =>
+                column.hidden = !this.hGrid.advancedFilteringExpressionsTree.returnFields.includes(column.field));
+        }
     }
 
     public gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
