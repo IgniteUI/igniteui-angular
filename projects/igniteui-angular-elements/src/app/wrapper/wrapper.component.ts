@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { TemplateRefWrapper } from './template-ref-wrapper';
 
 import { render, TemplateResult } from 'lit-html';
@@ -14,6 +14,7 @@ type TemplateFunction = (arg: any) => TemplateResult;
 export class TemplateWrapperComponent {
 
     public templateFunctions: TemplateFunction[] = [];
+    public templateRendered = new EventEmitter<any>();
 
     /**
      * All template refs
@@ -27,6 +28,7 @@ export class TemplateWrapperComponent {
 
     public litRender(container: HTMLElement, templateFunc: (arg: any) => TemplateResult, arg: any) {
         render(templateFunc(arg), container);
+        this.templateRendered.emit(container);
     }
 
     public addTemplate(templateFunc: TemplateFunction): TemplateRef<any> {
