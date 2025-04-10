@@ -1650,11 +1650,15 @@
         }
 
         igx-prefix,
-        [igxPrefix],
+        [igxPrefix] {
+            background: var(--igx-input-group-input-prefix-background, transparent);
+            color: var(--igx-input-group-input-prefix-color, var(--ig-primary-500));
+        }
+
         igx-suffix,
         [igxSuffix] {
-            background: transparent;
-            color: var(--ig-primary-500);
+            background: var(--igx-input-group-input-suffix-background, transparent);
+            color: var(--igx-input-group-input-suffix-color, var(--ig-primary-500));
         }
     }
 
