@@ -599,7 +599,7 @@ export class IgxBannerSampleComponent {
                         <igx-avatar
                             src="https://www.infragistics.com/angular-demos/assets/images/card/avatars/brad_stanley.jpg">
                         </igx-avatar>
-                        <h3 class="igx-card-header__title--small">Brad Stanley</h3>
+                        <h3 class="igx-card-header__title igx-card-header__title--small">Brad Stanley</h3>
                         <h5 class="igx-card-header__subtitle">Audi AG</h5>
                     </igx-card-header>
                     <igx-card-content>

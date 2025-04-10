@@ -1,3 +1,21 @@
 .sample-title {
     text-align: center;
 }
+
+.pan {
+    display: flex;
+    color: white;
+    width: 100%;
+    padding-left: 10px;
+    align-items: center;
+}
+
+.pan--left {
+    flex-direction: row-reverse;
+    background-color:orange;
+}
+
+.pan--right {
+    flex-direction: row;
+    background-color:limegreen;
+}
