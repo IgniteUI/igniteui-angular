@@ -200,5 +200,11 @@
         igx-icon {
             color: var-get($theme, 'delete-action');
         }
+
+        [igxIconButton] {
+            igx-icon {
+                color: var-get($theme, 'delete-action');
+            }
+        }
     }
 }
