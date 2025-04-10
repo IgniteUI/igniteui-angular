@@ -4,13 +4,11 @@ import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, Validator
 import { By } from '@angular/platform-browser';
 import { IgxRadioComponent } from './radio.component';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxRadio', () => {
-    configureTestSuite();
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

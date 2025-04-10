@@ -9,7 +9,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxToastComponent
 } from './toast.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular';
 
 describe('IgxToast', () => {
@@ -29,9 +28,7 @@ describe('IgxToast', () => {
         verticalStartPoint: VerticalAlignment.Middle
     };
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxToastComponent]
         }).compileComponents();
@@ -40,6 +37,8 @@ describe('IgxToast', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxToastComponent);
         toast = fixture.componentInstance;
+        // For test fixture destroy
+        toast.id = "root1";
         fixture.detectChanges();
     });
 
@@ -52,6 +51,9 @@ describe('IgxToast', () => {
 
         expect(toast.id).toBe('customToast');
         expect(toast.element.id).toContain('customToast');
+        // For test fixture destroy
+        toast.id = "root1";
+        fixture.detectChanges();
     });
 
     it('should properly toggle and emit isVisibleChange', fakeAsync(() => {

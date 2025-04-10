@@ -1,4 +1,3 @@
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from './splitter.component';
@@ -6,22 +5,22 @@ import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
-
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';
 const SPLITTERBAR_DIV_CLASS = '.igx-splitter-bar';
 const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
 const COLLAPSIBLE_CLASS = 'igx-splitter-bar--collapsible';
 
 describe('IgxSplitter', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
-    imports: [
-        SplitterTestComponent
-    ]
-}).compileComponents()));
+    beforeEach(waitForAsync(() =>
+        TestBed.configureTestingModule({
+            imports: [
+                SplitterTestComponent
+            ]
+        }).compileComponents()
+    ));
     let fixture: ComponentFixture<SplitterTestComponent>;
     let splitter: IgxSplitterComponent;
-    
+
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SplitterTestComponent);
         fixture.detectChanges();
@@ -326,8 +325,7 @@ describe('IgxSplitter', () => {
 });
 
 describe('IgxSplitter pane toggle', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
         imports: [
             SplitterTogglePaneComponent
         ]
@@ -430,8 +428,7 @@ describe('IgxSplitter pane toggle', () => {
 });
 
 describe('IgxSplitter pane collapse', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
         imports: [
             SplitterCollapsedPaneComponent
         ]

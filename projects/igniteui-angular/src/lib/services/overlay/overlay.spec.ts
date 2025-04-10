@@ -15,7 +15,6 @@ import { first } from 'rxjs/operators';
 import { IgxAvatarComponent } from '../../avatar/avatar.component';
 import { IgxCalendarComponent } from '../../calendar/public_api';
 import { IgxCalendarContainerComponent } from '../../date-common/calendar-container/calendar-container.component';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { AnimationService } from '../animation/animation';
@@ -215,7 +214,6 @@ describe('igxOverlay', () => {
     };
 
     describe('Pure Unit Test', () => {
-        configureTestSuite({ checkLeaks: true });
         let mockElement: any;
         let mockElementRef: any;
         let mockApplicationRef: any;
@@ -368,7 +366,6 @@ describe('igxOverlay', () => {
     });
 
     describe('Unit Tests: ', () => {
-        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -1415,7 +1412,6 @@ describe('igxOverlay', () => {
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
-        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -1590,7 +1586,6 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests: ', () => {
-        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -3578,7 +3573,6 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests - Scroll Strategies: ', () => {
-        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
@@ -4443,7 +4437,6 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests p3 (IgniteUI components): ', () => {
-        configureTestSuite({ checkLeaks: true });
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]

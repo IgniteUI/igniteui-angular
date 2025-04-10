@@ -9,7 +9,6 @@ import {
     ColumnPinningWithTemplateTestComponent
 } from '../../test-utils/grid-base-components.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { wait } from '../../test-utils/ui-interactions.spec';
@@ -23,9 +22,7 @@ describe('Column Pinning UI #grid', () => {
     const verifyCheckbox = ControlsFunction.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

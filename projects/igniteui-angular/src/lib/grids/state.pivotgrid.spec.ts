@@ -3,7 +3,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first, take } from 'rxjs/operators';
 import { NoopPivotDimensionsStrategy } from '../data-operations/pivot-strategy';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxPivotGridPersistanceComponent } from '../test-utils/pivot-grid-samples.spec';
 import { IgxPivotNumericAggregate } from './pivot-grid/pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
@@ -11,10 +10,9 @@ import { IPivotDimension, IPivotGridRecord } from './pivot-grid/pivot-grid.inter
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-grid/pivot-row-dimension-header.component';
 
 describe('IgxPivotGridState #pivotGrid :', () => {
-    configureTestSuite();
     let fixture;
     let pivotGrid;
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxPivotGridPersistanceComponent]
         }).compileComponents();

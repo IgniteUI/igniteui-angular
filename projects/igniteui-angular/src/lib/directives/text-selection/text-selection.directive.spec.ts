@@ -2,12 +2,10 @@ import { Component, DebugElement, Directive, ElementRef, HostListener, ViewChild
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTextSelectionDirective } from './text-selection.directive';
 
 describe('IgxSelection', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 TriggerTextSelectionComponent,

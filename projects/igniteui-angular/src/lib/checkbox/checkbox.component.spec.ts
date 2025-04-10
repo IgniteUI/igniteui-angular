@@ -4,12 +4,10 @@ import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgFor
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from './checkbox.component';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxCheckbox', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -198,6 +196,8 @@ describe('IgxCheckbox', () => {
         const fixture = TestBed.createComponent(IgxCheckboxComponent);
 
         const checkboxInstance = fixture.componentInstance;
+        // For test fixture destroy
+        checkboxInstance.id = "root1";
         checkboxInstance.disabled = true;
         const nativeCheckbox = checkboxInstance.nativeInput.nativeElement as HTMLInputElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement as HTMLLabelElement;

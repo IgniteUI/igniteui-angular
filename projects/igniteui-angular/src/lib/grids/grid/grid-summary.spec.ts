@@ -1,11 +1,10 @@
 ﻿import { Component, DebugElement, ViewChild } from '@angular/core';
-import { fakeAsync, TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, ComponentFixture, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     ProductsComponent,
     SummaryColumnComponent,
@@ -32,8 +31,8 @@ describe('IgxGrid - Summaries #grid', () => {
     const EMPTY_SUMMARY_CLASS = 'igx-grid-summary--empty';
     const DEBOUNCETIME = 30;
 
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CustomSummariesComponent,
@@ -43,7 +42,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 SummariesGroupByComponent,
                 SummariesGroupByTransactionsComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Base tests: ', () => {

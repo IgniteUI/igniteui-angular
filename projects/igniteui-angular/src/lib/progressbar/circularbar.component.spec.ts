@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxCircularProgressBarComponent } from './progressbar.component';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { hasClass } from "../test-utils/helper-utils.spec";
 
 describe('IgxCircularProgressBarComponent', () => {
@@ -8,9 +7,7 @@ describe('IgxCircularProgressBarComponent', () => {
     let progress: IgxCircularProgressBarComponent;
     let circularBar: HTMLElement;
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [IgxCircularProgressBarComponent]
         }).compileComponents();
@@ -23,6 +20,8 @@ describe('IgxCircularProgressBarComponent', () => {
 
         fixture = TestBed.createComponent(IgxCircularProgressBarComponent);
         progress = fixture.componentInstance;
+        // For test fixture destroy
+        progress.id = "root1";
         fixture.detectChanges();
         circularBar = fixture.debugElement.nativeElement;
     });
@@ -41,6 +40,9 @@ describe('IgxCircularProgressBarComponent', () => {
         fixture.detectChanges();
 
         expect(progress.id).toBe(customId);
+        // For test fixture destroy
+        progress.id = "root1";
+        fixture.detectChanges();
     });
 
     it('should correctly toggle the indeterminate mode', () => {

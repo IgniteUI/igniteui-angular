@@ -5,7 +5,6 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, WEEKDAYS } from '../calendar/public_api';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
@@ -26,7 +25,6 @@ import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 
-const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
 const DATE_PICKER_TOGGLE_ICON = 'calendar_today';
@@ -37,8 +35,7 @@ const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 
 describe('IgxDatePicker', () => {
     describe('Integration tests', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,

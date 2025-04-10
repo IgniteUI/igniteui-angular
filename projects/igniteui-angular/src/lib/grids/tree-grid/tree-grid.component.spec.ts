@@ -1,7 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import {
     IgxTreeGridWrappedInContComponent,
@@ -20,12 +19,11 @@ import { setElementSize } from '../../test-utils/helper-utils.spec';
 
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
-    configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     let fix;
     let grid: IgxTreeGridComponent;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -154,6 +152,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         });
 
         it('should throw a warning when primaryKey is set to a non-existing data field', () => {
+            jasmine.getEnv().allowRespy(true);
             const warnSpy = spyOn(console, 'warn');
             grid.primaryKey = 'testField';
             fix.detectChanges();
@@ -178,6 +177,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(console.warn).toHaveBeenCalledWith(
                 `Field "${grid.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`
             );
+            jasmine.getEnv().allowRespy(false);
         });
     });
 

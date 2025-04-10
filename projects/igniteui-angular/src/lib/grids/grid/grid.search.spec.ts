@@ -7,7 +7,6 @@ import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSe
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridColumnDataType } from '../../data-operations/data-util';
@@ -23,9 +22,7 @@ describe('IgxGrid - search API #grid', () => {
     let fix: ComponentFixture<any>;
     let component; let grid: IgxGridComponent; let fixNativeElement;
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

@@ -4,7 +4,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxCalendarComponent } from '../../calendar/public_api';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxPickerActionsDirective } from '../picker-icons.common';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 
@@ -12,8 +11,7 @@ import { IgxCalendarContainerComponent } from './calendar-container.component';
 describe('Calendar Container', () => {
     let fixture: ComponentFixture<IgxDatePickerTestComponent>;
     let container: IgxCalendarContainerComponent;
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxDatePickerTestComponent]
         }).compileComponents();

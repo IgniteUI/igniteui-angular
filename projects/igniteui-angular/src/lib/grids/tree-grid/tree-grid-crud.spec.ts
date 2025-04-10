@@ -7,7 +7,6 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
@@ -16,11 +15,10 @@ const CELL_CSS_CLASS = '.igx-grid__td';
 
 
 describe('IgxTreeGrid - CRUD #tGrid', () => {
-    configureTestSuite();
     let treeGrid: IgxTreeGridComponent;
     let gridContent: DebugElement;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

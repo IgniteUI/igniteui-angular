@@ -5,11 +5,9 @@ import { IgxIconService } from "./icon.service";
 import { IconFamily } from './types';
 import type { IconType } from './types';
 
-import { configureTestSuite } from "../test-utils/configure-suite";
 import { By } from "@angular/platform-browser";
 
 describe("Icon", () => {
-    configureTestSuite();
 
     describe("Component", () => {
         let fixture: ComponentFixture<IconTestComponent>;

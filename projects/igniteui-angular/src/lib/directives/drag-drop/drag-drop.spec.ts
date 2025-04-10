@@ -2,7 +2,6 @@ import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef,
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
 import {
@@ -22,8 +21,7 @@ describe('General igxDrag/igxDrop', () => {
     let dropAreaRects = { top: 0, left: 0, right: 0, bottom: 0};
     let dragDirsRects = [{ top: 0, left: 0, right: 0, bottom: 0}];
 
-    configureTestSuite({ checkLeaks: true });
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [TestDragDropComponent]
         })
@@ -1393,8 +1391,7 @@ describe('General igxDrag/igxDrop', () => {
 });
 
 describe('Linked igxDrag/igxDrop ', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 TestDragDropLinkedSingleComponent,
@@ -1876,8 +1873,7 @@ describe('Linked igxDrag/igxDrop ', () => {
 });
 
 describe('Nested igxDrag elements', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [TestDragDropNestedComponent]
         })

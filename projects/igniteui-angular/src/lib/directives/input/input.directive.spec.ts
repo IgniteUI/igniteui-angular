@@ -4,7 +4,6 @@ import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, Untyp
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxLabelDirective } from '../label/label.directive';
 import { IgxSuffixDirective } from '../suffix/suffix.directive';
@@ -25,8 +24,7 @@ const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
 describe('IgxInput', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 InputComponent,

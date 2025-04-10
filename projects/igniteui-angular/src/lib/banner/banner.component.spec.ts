@@ -3,7 +3,6 @@ import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from '../card/card.component';
@@ -24,8 +23,7 @@ describe('igxBanner', () => {
     let bannerTextElement: DebugElement = null;
     let bannerActionsElement: DebugElement = null;
 
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

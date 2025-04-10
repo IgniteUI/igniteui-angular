@@ -10,7 +10,6 @@ import { IgxNumberFilteringOperand } from '../data-operations/filtering-conditio
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { GridSelectionMode } from './common/enums';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid/public_api';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
@@ -20,10 +19,9 @@ import { IgxColumnComponent } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 
 describe('IgxTreeGridState - input properties #tGrid', () => {
-    configureTestSuite();
     let fix;
     let grid;
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxTreeGridTreeDataTestComponent]
         }).compileComponents();

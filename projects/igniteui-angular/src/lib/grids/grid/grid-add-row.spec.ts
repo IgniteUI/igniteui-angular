@@ -1,7 +1,6 @@
 import { IgxGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { configureTestSuite } from '../../test-utils/configure-suite';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
@@ -38,8 +37,9 @@ describe('IgxGrid - Row Adding #grid', () => {
           const endEvent = new AnimationEvent('animationend');
           animationElem.dispatchEvent(endEvent);
     };
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxAddRowComponent,
@@ -48,7 +48,7 @@ describe('IgxGrid - Row Adding #grid', () => {
                 ColumnLayoutTestComponent,
                 DefaultGridMasterDetailComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('General tests', () => {

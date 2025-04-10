@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgcFormControlDirective } from './form-control.directive';
 
 describe('IgcFormControlDirective - ', () => {
@@ -16,8 +15,7 @@ describe('IgcFormControlDirective - ', () => {
 
     describe('Unit tests: ', () => {
 
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             defineComponents(IgcRatingComponent);
         }));
 
@@ -62,8 +60,7 @@ describe('IgcFormControlDirective - ', () => {
     });
 
     describe('ngModel two-way binding tests: ', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     IgxFormsControlComponent

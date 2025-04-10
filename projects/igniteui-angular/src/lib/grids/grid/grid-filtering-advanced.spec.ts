@@ -1,8 +1,7 @@
-import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     IgxNumberFilteringOperand,
     IgxStringFilteringOperand
@@ -30,8 +29,8 @@ import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/da
 import { QueryBuilderSelectors } from '../../query-builder/query-builder.common';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridAdvancedFilteringColumnGroupComponent,
@@ -42,7 +41,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxGridAdvancedFilteringDynamicColumnsComponent,
                 IgxGridAdvancedFilteringWithToolbarComponent
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('General tests - ', () => {

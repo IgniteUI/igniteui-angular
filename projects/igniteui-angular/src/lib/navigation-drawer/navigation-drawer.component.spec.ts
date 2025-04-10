@@ -12,13 +12,10 @@ import { IgxNavbarComponent } from '../navbar/navbar.component';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare let Simulator: any;
-// const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
 describe('Navigation Drawer', () => {
     let widthSpyOverride: jasmine.Spy;
-    // configureTestSuite();
     beforeEach(waitForAsync(() => {
-        // jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
             imports: [
                 TestComponentPinComponent,
@@ -33,14 +30,6 @@ describe('Navigation Drawer', () => {
         widthSpyOverride = spyOn(IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
             .and.returnValue(915 /* chosen at random by fair dice roll*/);
     }));
-
-    // afterEach(() => {
-    //     jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
-    // });
-
-    // afterAll(() => {
-    //     TestBed.resetTestingModule();
-    // });
 
     it('should initialize without DI service', waitForAsync(() => {
         TestBed.compileComponents().then(() => {

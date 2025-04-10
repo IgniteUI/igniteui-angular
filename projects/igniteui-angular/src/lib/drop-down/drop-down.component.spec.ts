@@ -9,7 +9,6 @@ import { ISelectionEventArgs } from './drop-down.common';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../tabs/tabs/public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs } from '../core/utils';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -182,8 +181,7 @@ describe('IgxDropDown ', () => {
     });
     describe('User interaction tests', () => {
         describe('Selection & key navigation', () => {
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -836,8 +834,7 @@ describe('IgxDropDown ', () => {
             }));
         });
         describe('Other', () => {
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -929,8 +926,7 @@ describe('IgxDropDown ', () => {
     describe('Virtualization tests', () => {
         let scroll: IgxForOfDirective<any>;
         let items;
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
@@ -1039,8 +1035,7 @@ describe('IgxDropDown ', () => {
     });
     describe('Rendering', () => {
         describe('Grouped items', () => {
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -1102,8 +1097,7 @@ describe('IgxDropDown ', () => {
             });
         });
         describe('Style and display density', () => {
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -1136,8 +1130,7 @@ describe('IgxDropDown ', () => {
         });
         describe('Input properties', () => {
             const customDDId = 'test-id-list';
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
@@ -1206,8 +1199,7 @@ describe('IgxDropDown ', () => {
             });
         });
         describe('Anchor element', () => {
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,

@@ -10,7 +10,6 @@ import {
     IgxTreeGridCustomExpandersTemplateComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -21,11 +20,10 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { CellType } from '../public_api';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
-    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

@@ -3,7 +3,6 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from '../../grids/grid/public_api';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalGridActionStripComponent } from '../../test-utils/hierarchical-grid-components.spec';
@@ -21,8 +20,7 @@ describe('igxGridEditingActions #grid ', () => {
     let fixture;
     let actionStrip: IgxActionStripComponent;
     let grid: IgxGridComponent;
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

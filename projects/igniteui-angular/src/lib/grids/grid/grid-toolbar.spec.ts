@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, ComponentFixture, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridComponent } from './public_api';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from "../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
 import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
@@ -35,8 +34,9 @@ const DATA = [
 ];
 
 describe('IgxGrid - Grid Toolbar #grid - ', () => {
-    configureTestSuite((() => {
-        return TestBed.configureTestingModule({
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 DefaultToolbarComponent,
@@ -46,7 +46,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
                 IgxExcelExporterService,
                 IgxCsvExporterService
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Basic Tests - ', () => {

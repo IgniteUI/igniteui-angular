@@ -6,7 +6,6 @@ import {
     IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridSummariesScrollingComponent } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
@@ -15,12 +14,11 @@ const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
 
 describe('IgxTreeGrid - search API #tGrid', () => {
-    configureTestSuite();
     let fix;
     let fixNativeElement;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeAll(waitForAsync(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
