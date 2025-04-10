@@ -1422,7 +1422,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this.grid.dataView
             .map((rec, index) => {
                 if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
-                    this.grid.pagingMode === GridPagingMode.Local && this.grid.page !== 0 ?
+                    this.grid.pagingMode === GridPagingMode.Remote && this.grid.page !== 0 ?
                         index = index + this.grid.perPage * this.grid.page : index = this.grid.dataRowList.first.index + index;
                     const cell = new IgxGridCell(this.grid as any, index, this);
                     return cell;

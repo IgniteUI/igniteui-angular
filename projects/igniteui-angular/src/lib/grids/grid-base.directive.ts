@@ -4609,7 +4609,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected _getDataViewIndex(index: number): number {
         let newIndex = index;
-        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === GridPagingMode.Local && this.page !== 0) {
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === GridPagingMode.Remote && this.page !== 0) {
             newIndex = index - this.perPage * this.page;
         } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
             newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
