@@ -3,7 +3,6 @@ import {
     IGX_HIERARCHICAL_GRID_DIRECTIVES,
     IgxHierarchicalGridComponent
 } from 'igniteui-angular';
-import { RemoteService } from '../shared/remote.service';
 import { HierarchicalRemoteService } from './hierarchical-remote.service';
 import { debounceTime } from 'rxjs/operators';
 
@@ -11,7 +10,7 @@ import { debounceTime } from 'rxjs/operators';
     selector: 'app-hierarchical-grid-remote-virtualization-sample',
     templateUrl: 'hierarchical-grid-remote-virtualization.html',
     styleUrls: ['hierarchical-grid-remote-virtualization.scss'],
-    providers: [RemoteService],
+    providers: [HierarchicalRemoteService],
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
 export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewInit {
