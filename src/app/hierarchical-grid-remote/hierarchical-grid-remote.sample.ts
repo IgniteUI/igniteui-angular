@@ -78,7 +78,7 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit {
 
         const customersTree = new FilteringExpressionsTree(0, undefined, 'Customers', ['customerId', 'companyName', 'contactName', 'contactTitle']);
         customersTree.filteringOperands.push({
-            fieldName: 'customerId',
+            fieldName: 'Orders',
             condition: IgxStringFilteringOperand.instance().condition('notInQuery'),
             conditionName: IgxStringFilteringOperand.instance().condition('notInQuery').name,
             ignoreCase: false,
