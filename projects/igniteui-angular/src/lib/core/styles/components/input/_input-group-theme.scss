@@ -1648,6 +1648,18 @@
         [igxPrefix] {
             overflow: hidden;
         }
+
+        igx-prefix,
+        [igxPrefix] {
+            background: var(--igx-input-group-input-prefix-background, transparent);
+            color: var(--igx-input-group-input-prefix-color, var(--ig-primary-500));
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            background: var(--igx-input-group-input-suffix-background, transparent);
+            color: var(--igx-input-group-input-suffix-color, var(--ig-primary-500));
+        }
     }
 
     %igx-input-group-fluent-search--focused {
@@ -1731,6 +1743,10 @@
     %form-group-bundle--fluent--focus {
         border-color: var-get($theme, 'focused-border-color');
         border-width: rem(2px);
+
+        &:hover {
+            border-color: var-get($theme, 'focused-border-color');
+        }
     }
 
     %form-group-bundle-error--fluent,
@@ -1846,7 +1862,6 @@
     }
 
     %fluent-label-focused {
-        color: color(null, 'gray', 800);
         transform: translateY(0) scale(1);
     }
 
