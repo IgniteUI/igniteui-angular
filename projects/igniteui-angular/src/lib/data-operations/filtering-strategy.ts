@@ -42,9 +42,10 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         if (expr.searchTree) {
             const records = rec[expr.searchTree.entity];
             const shouldMatchRecords = expr.conditionName === 'inQuery';
-            // if records is empty, it means that the child grid is not created yet
-            if (!records || !records.length) {
+            if (!records) { // child grid is not yet created
                 return true;
+            } else if (records.length === 0) { // child grid is empty
+                return false;
             }
 
             for (let index = 0; index < records.length; index++) {

@@ -27,21 +27,28 @@ export class HierarchicalGridAdvancedFilteringSampleComponent implements AfterVi
     }
 
     public ngAfterViewInit() {
-        const innerTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Albums', ['Artist']);
-        innerTree.filteringOperands.push({
+        const albumsTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Albums', ['Artist']);
+        albumsTree.filteringOperands.push({
             fieldName: 'USBillboard200',
             condition: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'),
             conditionName: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo').name,
             searchVal: 5
         });
-        const tree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Artists', ['*']);
-        tree.filteringOperands.push({
+        // const toursTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Tours', ['TouredBy']);
+        // toursTree.filteringOperands.push({
+        //     fieldName: 'Headliner',
+        //     condition: IgxStringFilteringOperand.instance().condition('equals'),
+        //     conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
+        //     searchVal: 'YES'
+        // });
+        const artistsTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Artists', ['*']);
+        artistsTree.filteringOperands.push({
             fieldName: 'Artist',
             condition: IgxStringFilteringOperand.instance().condition('inQuery'),
             conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
-            searchTree: innerTree
+            searchTree: albumsTree
         });
-        this.hierarchicalGrid.advancedFilteringExpressionsTree = tree;
+        this.hierarchicalGrid.advancedFilteringExpressionsTree = artistsTree;
         this.cdr.detectChanges();
     }
 }
