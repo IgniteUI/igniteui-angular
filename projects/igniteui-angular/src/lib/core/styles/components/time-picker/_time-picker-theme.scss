@@ -71,36 +71,57 @@
     }
 
     $theme: digest-schema($time-picker-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($text-color) and $background-color {
-        $text-color: text-contrast($background-color);
+        $text-color: hsla(from adaptive-contrast(var(--background-color)) h s l / 0.7);
+    }
+
+    @if not($hover-text-color) and $text-color {
+        $hover-text-color: hsla(from var(--text-color) h s l / 1);
+    }
+
+    @if not($header-background) and $selected-text-color {
+        $header-background: var(--selected-text-color);
+    }
+
+    @if not($header-background) and $background-color {
+        $header-background: var(--background-color);
     }
 
     @if not($header-hour-text-color) and $header-background {
-        $header-hour-text-color: text-contrast($header-background);
+        $header-hour-text-color: adaptive-contrast(var(--header-background));
     }
 
     @if not($selected-text-color) and $active-item-background {
-        $selected-text-color: text-contrast($active-item-background);
+        $selected-text-color: var(--active-item-background);
+    }
+
+    @if not($active-item-background) and $selected-text-color {
+        $active-item-background: var(--selected-text-color);
     }
 
     @if not($active-item-background) and $background-color {
-        @if meta.type-of($background-color) == 'color' {
-            $active-item-background: rgba(text-contrast($background-color), .12);
-        }
+        $active-item-background: hsla(from adaptive-contrast(var(--background-color)) h s l / .5);
+    }
+
+    @if not($active-item-foreground) and $active-item-background {
+        $active-item-foreground: hsla(from adaptive-contrast(var(--active-item-background)) h s l / 1);
+    }
+
+    @if not($selected-text-color) and $background-color {
+        $selected-text-color: adaptive-contrast(var(--background-color));
     }
 
     @if not($disabled-text-color) and $disabled-item-background {
-        @if meta.type-of($disabled-item-background) == 'color' {
-            $disabled-text-color: rgba(text-contrast($disabled-item-background), .6);
-        }
+        $disabled-text-color: hsla(from adaptive-contrast(var(--disabled-item-background)) h s l / .6);
+    }
+
+    @if not($border-color) and $background-color {
+        $border-color: hsla(from adaptive-contrast(var(--background-color)) h s l / .6);
     }
 
     @if not($divider-color) and $border-color {
-        @if meta.type-of($border-color) == 'color' {
-            $divider-color: $border-color;
-        }
+        $divider-color: var(--border-color);
     }
 
     @if not($modal-shadow) {
@@ -133,10 +154,6 @@
         divider-color: $divider-color,
         time-item-size: $time-item-size,
         active-item-border-radius: $active-item-border-radius,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -146,7 +163,7 @@
 @mixin time-picker($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     $picker-buttons-padding: map.get((
