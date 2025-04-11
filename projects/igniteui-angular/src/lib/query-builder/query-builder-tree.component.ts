@@ -634,7 +634,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
         this.fields = this._entityNewValue ? this._entityNewValue.fields : [];
 
-        if (this.entities[0].fields.find(f => f.field === this.expectedReturnField)) {
+        if (this._selectedEntity.fields.find(f => f.field === this.expectedReturnField)) {
             this._selectedReturnFields = [this.expectedReturnField];
         } else {
             this._selectedReturnFields = this.parentExpression ? [] : this._entityNewValue.fields?.map(f => f.field);
