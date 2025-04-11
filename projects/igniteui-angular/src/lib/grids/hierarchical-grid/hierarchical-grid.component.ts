@@ -1219,27 +1219,32 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     private generateSchema() {
         const filterableFields = this.columns.filter((column) => !column.columnGroup && column.filterable);
-        const entities: EntityType[] = [
-            {
-                name: null,
-                fields: filterableFields.map(f => ({
-                        field: f.field,
-                        dataType: f.dataType,
-                    //  label: f.label,
-                    //  header: f.header,
-                        editorOptions: f.editorOptions,
-                        filters: f.filters,
-                        pipeArgs: f.pipeArgs,
-                        defaultTimeFormat: f.defaultTimeFormat,
-                        defaultDateTimeFormat: f.defaultDateTimeFormat
-                    })) as FieldType[]
-            }
-        ];
+        let entities: EntityType[];  
+      
+        if(filterableFields.length !== 0) {
+            entities = [
+                {
+                    name: null,
+                    fields: filterableFields.map(f => ({
+                            field: f.field,
+                            dataType: f.dataType,
+                        //  label: f.label,
+                        //  header: f.header,
+                            editorOptions: f.editorOptions,
+                            filters: f.filters,
+                            pipeArgs: f.pipeArgs,
+                            defaultTimeFormat: f.defaultTimeFormat,
+                            defaultDateTimeFormat: f.defaultDateTimeFormat
+                        })) as FieldType[]
+                }
+            ];
 
-        entities[0].childEntities = this.childLayoutList.reduce((acc, rowIsland) => {
-            return acc.concat(this.generateChildEntity(rowIsland, this.data[0][rowIsland.key][0]));
+            entities[0].childEntities = this.childLayoutList.reduce((acc, rowIsland) => {
+                return acc.concat(this.generateChildEntity(rowIsland, this.data[0][rowIsland.key][0]));
+            }
+            , []);
+    
         }
-        , []);
 
         return entities;
     }

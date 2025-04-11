@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
@@ -18,7 +18,7 @@ const API_ENDPOINT = 'https://data-northwind.indigo.design';
     styleUrls: ['hierarchical-grid-remote.sample.scss'],
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
-export class HierarchicalGridRemoteSampleComponent implements OnInit {
+export class HierarchicalGridRemoteSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('hGrid', { static: true })
     private hGrid: IgxHierarchicalGridComponent;
 
@@ -71,7 +71,6 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit {
         ordersTree.filteringOperands.push({
             fieldName: 'shipVia',
             ignoreCase: false,
-            condition: IgxStringFilteringOperand.instance().condition('equals'),
             conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
             searchVal: 'AirCargo'
         });
@@ -79,7 +78,6 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit {
         const customersTree = new FilteringExpressionsTree(0, undefined, 'Customers', ['customerId', 'companyName', 'contactName', 'contactTitle']);
         customersTree.filteringOperands.push({
             fieldName: 'customerId',
-            condition: IgxStringFilteringOperand.instance().condition('notInQuery'),
             conditionName: IgxStringFilteringOperand.instance().condition('notInQuery').name,
             ignoreCase: false,
             searchTree: ordersTree

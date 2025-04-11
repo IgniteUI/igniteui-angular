@@ -28,6 +28,7 @@ import { QueryBuilderFunctions } from '../../query-builder/query-builder-functio
 import { By } from '@angular/platform-browser';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { QueryBuilderSelectors } from '../../query-builder/query-builder.common';
+import { IgxHGridRemoteOnDemandComponent } from '../hierarchical-grid/hierarchical-grid.spec';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     configureTestSuite((() => {
@@ -1602,6 +1603,10 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(100);
             fix.detectChanges();
 
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, 1);
+            fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, 0);
+            fix.detectChanges();
             // Close Advanced Filtering dialog.
             hgrid.closeAdvancedFilteringDialog(true);
             tick(200);
@@ -1611,6 +1616,45 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(hgrid.filteredData.length).toEqual(5);
             expect(hgrid.rowList.length).toBe(5);
         }));
+
+        it('Should correctly apply filtering expressions tree to the hgrid component through API.', fakeAsync(() => {
+            // Close Advanced Filtering dialog.
+            hgrid.closeAdvancedFilteringDialog(false);
+            tick(200);
+            fix.detectChanges(); 
+            // Spy for error messages in the console
+            const consoleSpy = spyOn(console, 'error');
+            // Apply advanced filter through API.
+            const innerTree = new FilteringExpressionsTree(0, undefined, 'childData', ['ID']);
+            innerTree.filteringOperands.push({
+                fieldName: 'ID',
+                ignoreCase: false,
+                conditionName: IgxStringFilteringOperand.instance().condition('contains').name,
+                searchVal: '1'
+            });
+    
+            const tree = new FilteringExpressionsTree(0, undefined, 'rootData', ['ID']);
+            tree.filteringOperands.push({
+                fieldName: 'ID',
+                conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
+                ignoreCase: false,
+                searchTree: innerTree
+            });
+            tree.filteringOperands.push(innerTree);
+            hgrid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Check for error messages in the console
+            expect(consoleSpy).not.toHaveBeenCalled();
+        }));
+
+        // fit('Should be able to filter hierarchicaly with load on demand through API.', fakeAsync(() => {
+        //     const fixture = TestBed.createComponent(IgxHGridRemoteOnDemandComponent);
+        //     const hierarchicalGrid = fixture.componentInstance.hgrid;
+        //     hierarchicalGrid.allowAdvancedFiltering = true;
+        //     fixture.detectChanges();
+
+        // }));
     });
 });
 
