@@ -518,7 +518,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     protected isAdvancedFiltering(): boolean {
         return (this.entities?.length === 1 && !this.entities[0]?.name) ||
             this.entities?.find(e => e.childEntities?.length > 0) !== undefined ||
-            this.entities !== this.queryBuilder.entities;
+            this.entities !== this.queryBuilder?.entities;
     }
 
     /** @hidden */
