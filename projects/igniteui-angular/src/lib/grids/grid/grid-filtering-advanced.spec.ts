@@ -1520,7 +1520,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
         }));
 
-        it(`Should NOT have 'In'/'Not-In' operators for not chilld entities fields.`, fakeAsync(() => {
+        it(`Should have 'In'/'Not-In' operators for fields with chilld entities.`, fakeAsync(() => {
             // Populate edit inputs.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
 
@@ -1530,39 +1530,75 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
             const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
             const expectedValues = ['Contains', 'Does Not Contain', 'Starts With', 'Ends With', 'Equals',
+                'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null', 'In', 'Not In'];;
+            expect(dropdownValues).toEqual(expectedValues);
+
+            // Close Advanced Filtering dialog.
+            hgrid.closeAdvancedFilteringDialog(false);
+            tick(200);
+            fix.detectChanges();
+        }));
+
+        it(`Should NOT have 'In'/'Not-In' operators for fields without chilld entities.`, fakeAsync(() => {
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+
+            // Select entity in nested level
+            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 1);
+            // Populate edit inputs on level 1.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1); // Select 'ID' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11, 1); // Select 'Not In' operator. 
+
+            // Select entity in nested level
+            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 2);
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 2); // Select 'ID' column.
+            // Open the operator dropdown and verify they are 'string' specific + 'In'/'Not In'.
+            QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix, 2);
+            fix.detectChanges();
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[2].nativeElement;
+            const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
+            const expectedValues = ['Contains', 'Does Not Contain', 'Starts With', 'Ends With', 'Equals',
                 'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null'];;
             expect(dropdownValues).toEqual(expectedValues);
 
             // Close Advanced Filtering dialog.
             hgrid.closeAdvancedFilteringDialog(false);
             tick(200);
-            fix.detectChanges();
+            fix.detectChanges();                                  
         }));
 
-        it(`Should have 'In'/'Not-In' operators for chilld entities fields.`, fakeAsync(() => {
+        it('Should have correct entities depending on the hierarchy level.', fakeAsync(() => {
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3); // Select 'Child Data'.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
-            // Open the operator dropdown and verify they are only 'In'/'Not In'.
-            QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
+            QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix, 1);
             fix.detectChanges();
-            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
+            const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[1].nativeElement;
             const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
-            const expectedValues = ['In', 'Not In'];;
-            expect(dropdownValues).toEqual(expectedValues);
-
+            const expectedValues = ['childData'];
+            expect(dropdownValues).toEqual(expectedValues);  
+            
             // Close Advanced Filtering dialog.
             hgrid.closeAdvancedFilteringDialog(false);
             tick(200);
-            fix.detectChanges();
+            fix.detectChanges(); 
         }));
 
         it(`Should apply 'In'/'Not-In' operators for each level properly.`, fakeAsync(() => {
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3); // Select 'childData' entity.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'In' operator.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
-            // Click the initial 'Add Condition' button.
+            // Select entity in nested level
+            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 1);
+            // Select return field
+            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
+            tick(100);
+            fix.detectChanges();
+
+            // Click the initial 'Add Condition' button of the query builder.
             QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 1);
             tick(100);
             fix.detectChanges();
