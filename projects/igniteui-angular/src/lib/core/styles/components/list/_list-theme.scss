@@ -425,7 +425,6 @@
         justify-content: center;
         border-radius: var-get($theme, 'item-border-radius');
         color: var-get($theme, 'item-text-color');
-        background: var-get($theme, 'item-background');
 
         @if $bootstrap-theme or $variant == 'fluent' {
             border-bottom: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
@@ -436,9 +435,6 @@
         }
 
         &:hover {
-            color: var-get($theme, 'item-text-color-hover');
-            background: var-get($theme, 'item-background-hover');
-
             %igx-list__item-lines {
                 color: currentColor;
             }
@@ -544,9 +540,15 @@
         align-items: center;
         position: relative;
         border-radius: var-get($theme, 'item-border-radius');
-        background: inherit;
+        background: var-get($theme, 'item-background');
         z-index: 2;
         gap: if($variant == 'indigo', rem(8px), rem(16px));
+
+        &:hover,
+        &:focus-within {
+            color: var-get($theme, 'item-text-color-hover');
+            background: var-get($theme, 'item-background-hover');
+        }
     }
 
     %igx-list-header,
