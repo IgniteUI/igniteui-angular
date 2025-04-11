@@ -1,42 +1,37 @@
-<!-- <button (click)='setterBindingChange()'>Set rowSelection via binding</button>
-<button (click)='setterChange()'>Set rowSelection via setter on 1st row island</button> -->
-<igx-hierarchical-grid #grid1 [data]="remoteData" [isLoading]="true" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'800px'" [width]="'100%'" #hGrid [emptyGridMessage]="''">
+<igx-hierarchical-grid #hGrid
+                       [data]="remoteData"
+                       [isLoading]="true"
+                       [primaryKey]="'customerId'"
+                       [autoGenerate]="true"
+                       [height]="'800px'"
+                       [width]="'100%'"
+                       [allowAdvancedFiltering]="true"
+                       [schema]="remoteEntities"
+                       (advancedFilteringExpressionsTreeChange)="advancedFilteringExprTreeChange()">
     <igx-grid-toolbar>
-        <igx-grid-toolbar-title>Parent Toolbar</igx-grid-toolbar-title>
-        <igx-grid-toolbar-actions>
-            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-        </igx-grid-toolbar-actions>
+        <igx-grid-toolbar-title>Customers</igx-grid-toolbar-title>
     </igx-grid-toolbar>
-    <igx-column field="CustomerID"></igx-column>
-    <igx-column field="CompanyName"></igx-column>
-    <igx-column field="ContactName"></igx-column>
-    <igx-column field="ContactTitle"></igx-column>
-    <igx-column field="Country"></igx-column>
-    <igx-column field="Phone"></igx-column>
-    <igx-row-island #rowIsland1 [key]="'Orders'" [primaryKey]="'OrderID'" [autoGenerate]="false" [rowSelection]='selectionMode' (gridCreated)="gridCreated($event, rowIsland1)" [emptyGridMessage]="''">
+        <!-- <igx-column field="customerId" [dataType]="'string'"></igx-column>
+        <igx-column field="companyName" [dataType]="'string'"></igx-column>
+        <igx-column field="contactName" [dataType]="'string'"></igx-column>
+        <igx-column field="contactTitle" [dataType]="'string'"></igx-column> -->
+    <igx-row-island #rowIsland1 [key]="'Orders'" [primaryKey]="'orderId'" [autoGenerate]="false" (gridCreated)="gridCreated($event, rowIsland1)">
         <igx-grid-toolbar *igxGridToolbar>
-            <igx-grid-toolbar-title>Child Toolbar - Level 2</igx-grid-toolbar-title>
-            <igx-grid-toolbar-actions>
-                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-            </igx-grid-toolbar-actions>
+            <igx-grid-toolbar-title>Orders</igx-grid-toolbar-title>
         </igx-grid-toolbar>
-        <igx-column field="OrderID"></igx-column>
-        <igx-column field="OrderDate"></igx-column>
-        <igx-column field="ShipCountry"></igx-column>
-        <igx-column field="ShipCity"></igx-column>
-        <igx-column field="ShipAddress"></igx-column>
-        <igx-row-island #rowIsland2 [key]="'Order_Details'" [primaryKey]="'ProductID'" [autoGenerate]="false" [rowSelection]='selectionMode' (gridCreated)="gridCreated($event, rowIsland2)" [emptyGridMessage]="''">
+        <igx-column field="orderId"></igx-column>
+        <igx-column field="customerId"></igx-column>
+        <igx-column field="shipVia"></igx-column>
+        <igx-column field="freight"></igx-column>
+        <igx-row-island #rowIsland2 [key]="'Details'" [primaryKey]="'orderId'" [autoGenerate]="false" (gridCreated)="gridCreated($event, rowIsland2)">
             <igx-grid-toolbar *igxGridToolbar>
-                <igx-grid-toolbar-title>Child Toolbar - Level 3</igx-grid-toolbar-title>
-                <igx-grid-toolbar-actions>
-                    <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-                    <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-                </igx-grid-toolbar-actions>
+                <igx-grid-toolbar-title>Order Details</igx-grid-toolbar-title>
             </igx-grid-toolbar>
-            <igx-column field="ProductID"></igx-column>
-            <igx-column field="UnitPrice"></igx-column>
-            <igx-column field="Quantity"></igx-column>
-            <igx-column field="Discount"></igx-column>
+            <igx-column field="orderId"></igx-column>
+            <igx-column field="productId"></igx-column>
+            <igx-column field="unitPrice"></igx-column>
+            <igx-column field="quantity"></igx-column>
+            <igx-column field="discount"></igx-column>
         </igx-row-island>
     </igx-row-island>
 </igx-hierarchical-grid>

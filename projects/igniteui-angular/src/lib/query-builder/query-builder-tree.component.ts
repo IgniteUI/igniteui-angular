@@ -243,6 +243,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
+     * Gets/sets the expected return field.
+     */
+    @Input() public expectedReturnField: string = null;
+
+    /**
      * Event fired as the expression tree is changed.
      */
     @Output()
@@ -516,7 +521,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
     /** @hidden */
     protected isAdvancedFiltering(): boolean {
-        return this.entities?.length === 1 && !this.entities[0]?.name;
+        return (this.entities?.length === 1 && !this.entities[0]?.name) ||
+            this.entities?.find(e => e.childEntities?.length > 0) !== undefined ||
+            this.entities !== this.queryBuilder?.entities;
+    }
+
+    /** @hidden */
+    protected isHierarchicalGridNestedQuery(): boolean {
+        return this.queryBuilder.entities !== this.entities
     }
 
     /** @hidden */
@@ -548,6 +560,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.returnFieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.addExpressionDropDownOverlaySettings.outlet = this.overlayOutlet;
         this.groupContextMenuDropDownOverlaySettings.outlet = this.overlayOutlet;
+        
+        if (this.isAdvancedFiltering() && this.entities?.length === 1) {
+            this.selectedEntity = this.entities[0].name;
+        }
+
         // Trigger additional change detection cycle
         this.cdr.detectChanges();
     }
@@ -617,7 +634,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
         this.fields = this._entityNewValue ? this._entityNewValue.fields : [];
 
-        this._selectedReturnFields = this.parentExpression ? [] : this._entityNewValue.fields?.map(f => f.field);
+        if (this._selectedEntity.fields.find(f => f.field === this.expectedReturnField)) {
+            this._selectedReturnFields = [this.expectedReturnField];
+        } else {
+            this._selectedReturnFields = this.parentExpression ? [] : this._entityNewValue.fields?.map(f => f.field);
+        }
 
         if (this._expressionTree) {
             this._expressionTree.entity = this._entityNewValue.name;
@@ -680,6 +701,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         if (this._selectedField !== value) {
             this._selectedField = value;
+            if (this._selectedField && !this._selectedField.dataType) {
+                this._selectedField.filters = this.getFilters(this._selectedField);
+            }
+
             this.selectDefaultCondition();
             if (oldValue && this._selectedField && this._selectedField.dataType !== oldValue.dataType) {
                 this.searchValue.value = null;
@@ -823,7 +848,10 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             if (innerQuery && this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery) {
                 innerQuery.exitEditAddMode();
                 this._editedExpression.expression.searchTree = this.getExpressionTreeCopy(innerQuery.expressionTree);
-                this._editedExpression.expression.searchTree.returnFields = innerQuery.selectedReturnFields;
+                const returnFields = innerQuery.selectedReturnFields.length > 0 ?
+                                        innerQuery.selectedReturnFields :
+                                        [innerQuery.fields[0].field];
+                this._editedExpression.expression.searchTree.returnFields = returnFields;
             } else {
                 this._editedExpression.expression.searchTree = null;
             }
@@ -920,7 +948,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public operandCanBeCommitted(): boolean {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
-
         return this.selectedField && this.selectedCondition &&
             (
                 (
@@ -933,7 +960,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
     }
-
+    
     /**
      * @hidden @internal
      */
@@ -1353,7 +1380,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public getConditionList(): string[] {
         if (!this.selectedField) return [];
 
-        if (this.entities?.length === 1 && !this.entities[0].name) {
+        if (!this.selectedField.filters) {
+            this.selectedField.filters = this.getFilters(this.selectedField);
+        }
+
+        if ((this.isAdvancedFiltering() && !this.entities[0].childEntities) ||
+            (this.isHierarchicalGridNestedQuery() && this.selectedEntity.name && !this.selectedEntity.childEntities)) {
             return this.selectedField.filters.conditionList();
         }
 
@@ -1520,6 +1552,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                 default:
                     return IgxStringFilteringOperand.instance();
             }
+        } else {
+            return field.filters;
         }
     }
 
