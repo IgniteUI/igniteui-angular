@@ -147,7 +147,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
                 item.value = key ? new Date(key) : key;
             } else if (column.dataType === GridColumnDataType.Time) {
                 const date = key ? new Date(key) : key;
-                key = date ? new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds()) : key;
+                key = date ? new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()) : key;
                 item.value = key ? new Date(key) : key;
             } else if (column.dataType === GridColumnDataType.Date) {
                 const date = key ? new Date(key) : key;
