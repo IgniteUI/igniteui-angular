@@ -6,7 +6,8 @@ import {
     IGX_HIERARCHICAL_GRID_DIRECTIVES,
     FilteringExpressionsTree,
     IgxStringFilteringOperand,
-    EntityType
+    EntityType,
+    IgxNumberFilteringOperand
 } from 'igniteui-angular';
 import { HttpClient } from '@angular/common/http';
 
@@ -45,7 +46,8 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit, AfterViewI
                         { field: 'customerId', dataType: 'string' }, // first field will be treated as foreign key
                         { field: 'orderId', dataType: 'number' },
                         { field: 'employeeId', dataType: 'number' },
-                        { field: 'shipVia', dataType: 'string' }
+                        { field: 'shipVia', dataType: 'string' },
+                        { field: 'freight', dataType: 'number' }
                     ],
                     childEntities: [
                         {
@@ -69,16 +71,18 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit, AfterViewI
     public ngOnInit() {
         const ordersTree = new FilteringExpressionsTree(0, undefined, 'Orders', ['customerId']);
         ordersTree.filteringOperands.push({
-            fieldName: 'shipVia',
+            fieldName: 'freight',
             ignoreCase: false,
-            conditionName: IgxStringFilteringOperand.instance().condition('equals').name,
-            searchVal: 'AirCargo'
+            condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'),
+            conditionName: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo').name,
+            searchVal: '500'
         });
 
         const customersTree = new FilteringExpressionsTree(0, undefined, 'Customers', ['customerId', 'companyName', 'contactName', 'contactTitle']);
         customersTree.filteringOperands.push({
             fieldName: 'customerId',
-            conditionName: IgxStringFilteringOperand.instance().condition('notInQuery').name,
+            condition: IgxStringFilteringOperand.instance().condition('inQuery'),
+            conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
             ignoreCase: false,
             searchTree: ordersTree
         });
@@ -100,6 +104,8 @@ export class HierarchicalGridRemoteSampleComponent implements OnInit, AfterViewI
         if (!tree) {
             tree = new FilteringExpressionsTree(0, undefined, this.remoteEntities[0].name, this.remoteEntities[0].fields.map(f => f.field));
         }
+
+        console.log(tree);
 
         this.hGrid.isLoading = true;
         this.http.post(`${API_ENDPOINT}/QueryBuilder/ExecuteQuery`, tree).subscribe(data =>{

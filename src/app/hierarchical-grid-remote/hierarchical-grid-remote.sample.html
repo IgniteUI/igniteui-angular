@@ -22,6 +22,7 @@
         <igx-column field="orderId"></igx-column>
         <igx-column field="customerId"></igx-column>
         <igx-column field="shipVia"></igx-column>
+        <igx-column field="freight"></igx-column>
         <igx-row-island #rowIsland2 [key]="'Details'" [primaryKey]="'orderId'" [autoGenerate]="false" (gridCreated)="gridCreated($event, rowIsland2)">
             <igx-grid-toolbar *igxGridToolbar>
                 <igx-grid-toolbar-title>Order Details</igx-grid-toolbar-title>

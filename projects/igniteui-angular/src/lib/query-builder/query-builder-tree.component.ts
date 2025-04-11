@@ -556,7 +556,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.addExpressionDropDownOverlaySettings.outlet = this.overlayOutlet;
         this.groupContextMenuDropDownOverlaySettings.outlet = this.overlayOutlet;
         
-        console.log('ngAfterViewInit', this._expressionTree);
         if (this.isAdvancedFiltering() && this.entities?.length === 1) {
             this._selectedEntity = this.entities[0];
         }
@@ -577,7 +576,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public set selectedEntity(value: string) {
-        console.log('selectedEntity', value);
         this._selectedEntity = this.entities?.find(el => el.name === value);
     }
 
@@ -1379,12 +1377,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
             this.selectedField.filters = this.getFilters(this.selectedField);
         }
 
-        if (this.isAdvancedFiltering()) {
-            if (!this.selectedField.dataType) { // field was generated for child entity
-                return this.selectedField.filters.nestedConditionList();
-            } else {
-                return this.selectedField.filters.conditionList();
-            }
+        if ((this.isAdvancedFiltering() && !this.entities[0].childEntities) ||
+            (this.isHierarchicalGridNestedQuery() && this.selectedEntity.name && !this.selectedEntity.childEntities)) {
+            return this.selectedField.filters.conditionList();
         }
 
         return this.selectedField.filters.extendedConditionList();
@@ -1448,16 +1443,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (!expressionItem.inEditMode) {
             this.enterExpressionEdit(expressionItem);
         }
-    }
-
-    public determineEntities(): EntityType[] {
-        // TODO: FIX, not working correctly for every scenario
-
-        if (this.entities.length === 1 && this.entities[0].childEntities && this.selectedField) {
-            return this.entities[0].childEntities.filter(e => e.name === this.selectedField.field);
-        }
-
-        return (this.selectedEntity ? this.selectedEntity.childEntities : this.entities[0].childEntities) ?? this.entities;
     }
 
     public getExpressionTreeCopy(expressionTree: IExpressionTree, shouldAssignInnerQueryExprTree?: boolean): IExpressionTree {
@@ -1536,12 +1521,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     private selectDefaultCondition() {
-        if (this.selectedField) {
-            if (!this.selectedField.dataType) {
-                this.selectedCondition = 'inQuery';
-            } else {
-                this.selectedCondition = this.selectedField.filters.conditionList().indexOf('equals') >= 0 ? 'equals' : this.selectedField.filters.conditionList()[0];
-            }
+        if (this.selectedField && this.selectedField.filters) {
+            this.selectedCondition = this.selectedField.filters.conditionList().indexOf('equals') >= 0 ? 'equals' : this.selectedField.filters.conditionList()[0];
         }
     }
 

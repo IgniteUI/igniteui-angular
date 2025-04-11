@@ -64,10 +64,6 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     @Input()
     public set entities(entities: EntityType[]) {
-        if (entities) {
-            this.updateEntities(entities) // add field for every child entity recursively
-        }
-
         if (entities !== this._entities) {
             if (entities && this.expressionTree) {
                 this._expressionTree = recreateTree(this._expressionTree, entities);
@@ -272,20 +268,6 @@ export class IgxQueryBuilderComponent implements OnDestroy {
         if (this._shouldEmitTreeChange) {
             this.expressionTreeChange.emit(tree);
         }
-    }
-
-    private updateEntities(entities: EntityType[]) {
-        entities.forEach((entity) => {
-            if (entity.childEntities) {
-                entity.childEntities.forEach((childEntity) => {
-                    if (entity.fields.find((f) => f.field === childEntity.name)) {
-                        return;
-                    }
-                    entity.fields.push({ field: childEntity.name, dataType: null });
-                });
-                this.updateEntities(entity.childEntities);
-            }
-        });
     }
 
     private registerSVGIcons(): void {
