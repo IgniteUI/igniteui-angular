@@ -444,7 +444,7 @@ export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGrid
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [height]="'300px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'">
+    <igx-hierarchical-grid #hierarchicalGrid [data]="data" [height]="'300px'" [width]="'700px'" [primaryKey]="'ID'">
         <igx-column field="ID" ></igx-column>
         <igx-column field="ChildLevels"></igx-column>
         <igx-column field="ProductName"></igx-column>
@@ -459,13 +459,13 @@ export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGrid
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>
-    <igx-advanced-filtering-dialog [grid]="grid1">
+    <igx-advanced-filtering-dialog [grid]="hierarchicalGrid">
     </igx-advanced-filtering-dialog>`,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxAdvancedFilteringDialogComponent]
 })
 export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchicalGridTestBaseComponent {
-    // @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
-    // public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public override hgrid: IgxHierarchicalGridComponent;
 
     public override data = SampleTestData.generateHGridData(5, 3);
 }

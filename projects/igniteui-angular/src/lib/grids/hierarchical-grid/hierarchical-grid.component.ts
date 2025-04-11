@@ -579,6 +579,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     public get schema() {
+        if (!this._hGridSchema) {
+            this._hGridSchema = this.generateSchema();
+        }
+
         return this._hGridSchema;
     }
 
@@ -709,11 +713,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.rootGrid.hasChildrenKey;
         this.showExpandAll = this.parentIsland ?
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
-
-        if (!this._hGridSchema) {
-            this._hGridSchema = this.generateSchema();
-        }
-
     }
 
     /**
