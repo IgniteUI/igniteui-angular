@@ -948,7 +948,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public operandCanBeCommitted(): boolean {
         const innerQuery = this.innerQueries.filter(q => q.isInEditMode())[0];
-
         return this.selectedField && this.selectedCondition &&
             (
                 (
@@ -956,13 +955,12 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     !(this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery)
                 ) ||
                 (
-                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && 
-                    (innerQuery.selectedReturnFields?.length > 0 || (innerQuery.selectedReturnFields?.length === 0 && this.isAdvancedFiltering()))
+                    this.selectedField?.filters?.condition(this.selectedCondition)?.isNestedQuery && innerQuery && !!innerQuery.expressionTree && innerQuery.selectedReturnFields?.length > 0
                 ) ||
                 this.selectedField.filters.condition(this.selectedCondition)?.isUnary
             );
     }
-
+    
     /**
      * @hidden @internal
      */
