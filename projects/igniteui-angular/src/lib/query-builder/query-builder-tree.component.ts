@@ -243,6 +243,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
+     * Gets/sets the expected return field.
+     */
+    @Input() public expectedReturnField: string = null;
+
+    /**
      * Event fired as the expression tree is changed.
      */
     @Output()
@@ -557,7 +562,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this.groupContextMenuDropDownOverlaySettings.outlet = this.overlayOutlet;
         
         if (this.isAdvancedFiltering() && this.entities?.length === 1) {
-            this._selectedEntity = this.entities[0];
+            this.selectedEntity = this.entities[0].name;
         }
 
         // Trigger additional change detection cycle
@@ -629,7 +634,11 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
         this.fields = this._entityNewValue ? this._entityNewValue.fields : [];
 
-        this._selectedReturnFields = this.parentExpression ? [] : this._entityNewValue.fields?.map(f => f.field);
+        if (this.entities[0].fields.find(f => f.field === this.expectedReturnField)) {
+            this._selectedReturnFields = [this.expectedReturnField];
+        } else {
+            this._selectedReturnFields = this.parentExpression ? [] : this._entityNewValue.fields?.map(f => f.field);
+        }
 
         if (this._expressionTree) {
             this._expressionTree.entity = this._entityNewValue.name;

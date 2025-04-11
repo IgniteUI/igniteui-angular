@@ -469,6 +469,7 @@
                         [entities]="(this.selectedEntity ? this.selectedEntity.childEntities : entities[0].childEntities) ?? entities"
                         [queryBuilder]="this.queryBuilder"
                         [parentExpression]="expressionItem"
+                        [expectedReturnField]="this.selectedField?.field"
                         [expressionTree]="expressionItem.inEditMode ? (innerQueryNewExpressionTree ?? getExpressionTreeCopy(expressionItem.expression.searchTree, true)) : expressionItem.expression.searchTree"
                         (inEditModeChange)="onInEditModeChanged($event)"
                         [searchValueTemplate]="searchValueTemplate">
