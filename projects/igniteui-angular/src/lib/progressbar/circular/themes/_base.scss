@@ -204,11 +204,11 @@ $circumference: calc(#{$radius} * 2 * 3.1416);
         transform-origin: center;
 
         @include e(gradient-start) {
-            stop-color: var(--fill-color-default-end);
+            stop-color: var(--igx-circular-bar-fill-color-default-end, var(--fill-color-default-end));
         }
 
         @include e(gradient-end) {
-            stop-color: var(--fill-color-default-start);
+            stop-color: var(--igx-circular-bar-fill-color-default-start, var(--fill-color-default-start));
         }
 
         @include e(inner) {
