@@ -31,5 +31,13 @@ $_theme: $fluent;
             animation: 2s linear 0s infinite normal none running igx-indeterminate-circular-fluent;
             stroke-dasharray: 289;
         }
+
+        &:dir(rtl) {
+            animation-direction: reverse;
+
+            @include e(outer) {
+                animation-direction: reverse;
+            }
+        }
     }
 }

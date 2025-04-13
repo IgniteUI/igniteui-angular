@@ -19,19 +19,24 @@ $_theme: $indigo;
         animation: igx-initial-dashoffset var(--_transition-duration) linear;
     }
 
-    &:dir(rtl) {
-        @include e(outer) {
-            animation-direction: reverse;
-        }
-    }
-
     @include m(indeterminate) {
+        $radius: calc(var(--circular-size) / 2 - var(--stroke-thickness) * .5);
+        $circumference: calc(#{$radius} * 2 * 3.1416);
+
         animation: 3s linear 0s infinite normal none running igx-rotate-center;
         transform-origin: 50% 50%;
 
         @include e(outer) {
             animation: igx-indeterminate-accordion 1.5s cubic-bezier(0, 0.085, 0.68, 0.53) normal infinite;
-            stroke-dasharray: 289;
+            stroke-dasharray: #{$circumference} #{$circumference};
+        }
+
+        &:dir(rtl) {
+            animation-direction: reverse;
+
+            @include e(outer) {
+                animation-direction: reverse;
+            }
         }
     }
 }

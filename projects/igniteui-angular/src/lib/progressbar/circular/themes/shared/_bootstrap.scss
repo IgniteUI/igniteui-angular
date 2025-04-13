@@ -24,15 +24,13 @@ $_theme: $bootstrap;
         stroke-width: var(--stroke-thickness);
     }
 
-    &:dir(rtl) {
-        @include e(outer) {
-            animation-direction: reverse;
-        }
-    }
-
     @include m(indeterminate) {
         animation: 3s linear 0s infinite normal none running igx-rotate-center;
         animation-duration: .75s;
+
+        &:dir(rtl) {
+            animation-direction: reverse;
+        }
 
         @include e(inner) {
             stroke: transparent;

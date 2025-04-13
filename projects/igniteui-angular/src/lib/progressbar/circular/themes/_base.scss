@@ -21,7 +21,6 @@ $circumference: calc(#{$radius} * 2 * 3.1416);
     transform-origin: center;
 }
 
-
 @keyframes igx-indeterminate-accordion {
     0% {
         stroke-dashoffset: calc(#{$circumference} * 2);
@@ -205,11 +204,11 @@ $circumference: calc(#{$radius} * 2 * 3.1416);
         transform-origin: center;
 
         @include e(gradient-start) {
-            stop-color: var('fill-color-default-end');
+            stop-color: var(--fill-color-default-end);
         }
 
         @include e(gradient-end) {
-            stop-color: var('fill-color-default-start');
+            stop-color: var(--fill-color-default-start);
         }
 
         @include e(inner) {
@@ -231,22 +230,16 @@ $circumference: calc(#{$radius} * 2 * 3.1416);
             stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
         }
 
-        &:dir(rtl) {
-            animation-direction: reverse;
-
-            @include e(inner) {
-                animation-direction: reverse;
-            }
-
-            @include e(outer) {
-                stroke-dashoffset: calc(#{$circumference} + var(--_progress-percentage) * #{$circumference});
-            }
-        }
-
         @include m(indeterminate) {
             @include e(outer) {
                 stroke-dashoffset: calc(#{$circumference} * 2);
                 animation: igx-indeterminate-accordion 1.5s cubic-bezier(0, 0.085, 0.68, 0.53) normal infinite;
+            }
+
+            &:dir(rtl) {
+                @include e(outer) {
+                    stroke-dashoffset: calc(#{$circumference} + var(--_progress-percentage) * #{$circumference});
+                }
             }
         }
     }
