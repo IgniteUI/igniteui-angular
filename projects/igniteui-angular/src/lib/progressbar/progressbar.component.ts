@@ -518,7 +518,9 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 
 @Component({
     selector: 'igx-circular-bar',
-    templateUrl: 'templates/circular-bar.component.html',
+    templateUrl: 'circular/circular-bar.component.html',
+    styleUrl: 'circular/circular-bar.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [NgTemplateOutlet, NgClass]
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterContentInit {

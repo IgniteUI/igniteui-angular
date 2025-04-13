@@ -1,0 +1,37 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-circular-bar, indigo) {
+    // Do not use rem values here
+    // This will break the component in Safari
+    // https://github.com/IgniteUI/igniteui-webcomponents/issues/377
+    --stroke-thickness: 3px;
+    --scale-factor: 3.4;
+}
+
+@include themed-block(igx-circular-svg, indigo) {
+    @include e(outer) {
+        stroke-width: var(--stroke-thickness);
+        animation: igx-initial-dashoffset var(--_transition-duration) linear;
+    }
+
+    &:dir(rtl) {
+        @include e(outer) {
+            animation-direction: reverse;
+        }
+    }
+
+    @include m(indeterminate) {
+        animation: 3s linear 0s infinite normal none running igx-rotate-center;
+        transform-origin: 50% 50%;
+
+        @include e(outer) {
+            animation: igx-indeterminate-accordion 1.5s cubic-bezier(0, 0.085, 0.68, 0.53) normal infinite;
+            stroke-dasharray: 289;
+        }
+    }
+}
