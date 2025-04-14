@@ -14,7 +14,7 @@ All notable changes for each version of this project will be documented in this 
     - In SSR mode grid with height 100% or with no height will render on the server with % size and with no data. The grid will show either the empty grid template or the loading indicator (if isLoading is true).
     - In SSR mode grid with width 100% or with no width will render on the server with % size and with all columns.
 - `IgxHierarchicalGrid`
-    - New advanced filtering functionality is implemented.
+    - Introduced a new advanced filtering capability that enables top-level records to be dynamically refined based on the attributes or data of their associated child records.
     - Added a new `schema` input property that can be used to pass collection of `EntityType` objects. This property is required for remote data scenarios.
 - `IgxQueryBuilderComponent`, `IgxAdvancedFilteringDialogComponent`
     - Added support for entities with hierarchical structure.
