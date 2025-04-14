@@ -53,3 +53,45 @@
         }
     }
 }
+
+/// Splits a map into two separate maps based on a list of keys
+///
+/// @author Your Name
+///
+/// @param {Map} $map - The original map to split
+/// @param {List} $pick-keys - List of keys to include in the first returned map
+///
+/// @return {List} A list containing two maps:
+///   - First map contains key-value pairs where keys are in $pick-keys
+///   - Second map contains all remaining key-value pairs
+///
+/// @example scss
+///   $colors: (
+///     primary: blue,
+///     secondary: green,
+///     tertiary: yellow,
+///     quaternary: purple
+///   );
+///
+///   $result: split-map($colors, (primary, secondary));
+///   // $result[1] = (primary: blue, secondary: green)
+///   // $result[2] = (tertiary: yellow, quaternary: purple)
+@function split-map($map, $pick-keys) {
+  $map-1: ();
+  $map-2: ();
+
+  @each $key, $value in $map {
+    $id: list.index($pick-keys, $key);
+
+    @if $id {
+      $map-1: map.merge($map-1, ($key: $value));
+    } @else {
+      $map-2: map.merge($map-2, ($key: $value));
+    }
+  }
+
+  @return (
+    $map-1,
+    $map-2
+  );
+}
