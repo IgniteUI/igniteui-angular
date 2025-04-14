@@ -2,7 +2,17 @@
     <section class="sample-content" [igSize]="properties.size">
         <article class="sample-column">
             <h5 class="sample-title">Angular List</h5>
-            <igx-list>
+            <igx-list [allowLeftPanning]="properties.enablePanning" [allowRightPanning]="properties.enablePanning">
+                <ng-template igxListItemLeftPanning>
+                    <div class="pan pan--left">
+                        <igx-icon>delete</igx-icon>Delete
+                    </div>
+                </ng-template>
+                <ng-template igxListItemRightPanning>
+                    <div class="pan pan--right">
+                        <igx-icon>call</igx-icon>Dial
+                    </div>
+                </ng-template>
                 <igx-list-item [isHeader]="true" selected>Employees List</igx-list-item>
                 @for (employee of employeeItems; track employee) {
                     <igx-list-item [selected]="employee.selected">
