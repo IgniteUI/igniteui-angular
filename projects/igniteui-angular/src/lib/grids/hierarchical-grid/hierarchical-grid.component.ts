@@ -67,6 +67,7 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxActionStripToken } from '../../action-strip/token';
 import { flatten } from '../../core/utils';
+import { IFilteringExpressionsTree } from 'igniteui-angular';
 
 let NEXT_ID = 0;
 
@@ -447,6 +448,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /** @hidden @internal */
     public override get actionStrip() {
         return this.parentIsland ? this.parentIsland.actionStrip : super.actionStrip;
+    }
+
+    public override get advancedFilteringExpressionsTree(): IFilteringExpressionsTree {
+        return super.advancedFilteringExpressionsTree;
+    }
+
+    public override set advancedFilteringExpressionsTree(value: IFilteringExpressionsTree) {
+        if (!this._hGridSchema) {
+            this._hGridSchema = this.generateSchema();
+        }
+        super.advancedFilteringExpressionsTree = value;
     }
 
     private _data;
@@ -1243,7 +1255,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                 return acc.concat(this.generateChildEntity(rowIsland, this.data[0][rowIsland.key][0]));
             }
             , []);
-    
         }
 
         return entities;
