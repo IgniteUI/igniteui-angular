@@ -20,7 +20,7 @@ import {
     IgxGridAdvancedFilteringWithToolbarComponent
 } from '../../test-utils/grid-samples.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IgxHierarchicalGridTestBaseComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
+import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent, IgxHierarchicalGridTestCustomToolbarComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -1590,18 +1590,14 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Populate edit inputs.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
-
-            // Select entity in nested level
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 1);
-            // Select return field
-            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
             tick(100);
             fix.detectChanges();
 
-            // Click the initial 'Add Condition' button of the query builder.
-            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 1);
-            tick(100);
-            fix.detectChanges();
+            const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 1).querySelector('input');
+            expect(entityInputGroup.value).toBe('childData');
+
+            const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 1).querySelector('input');
+            expect(fieldInputGroup.value).toBe('ID');
             // Populate edit inputs on level 1.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1); // Select 'ID' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1); // Select 'Contains' operator. 
@@ -1624,6 +1620,33 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Veify grid data
             expect(hgrid.filteredData.length).toEqual(5);
             expect(hgrid.rowList.length).toBe(5);
+        }));
+
+        it(`Should have correct return fields in the child query when there are multiple child entities.`, fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxHierarchicalGridExportComponent);
+            const hierarchicalGrid = fixture.componentInstance.hGrid;
+            hierarchicalGrid.allowAdvancedFiltering = true;
+            fixture.detectChanges();
+
+            hierarchicalGrid.openAdvancedFilteringDialog();
+            fixture.detectChanges();
+
+             // Click the initial 'Add Condition' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fixture, 0);
+            tick(100);
+            fixture.detectChanges();
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'Artist' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 10); // Select 'In' operator.
+            tick(100);
+            fixture.detectChanges();
+
+            QueryBuilderFunctions.selectEntityInEditModeExpression(fixture, 0, 1);
+            tick(100);
+            fixture.detectChanges();
+
+            const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fixture, 1).querySelector('input');
+            expect(fieldInputGroup.value).toBe('Artist');
         }));
 
         it('Should correctly apply filtering expressions tree to the hgrid component through API.', fakeAsync(() => {

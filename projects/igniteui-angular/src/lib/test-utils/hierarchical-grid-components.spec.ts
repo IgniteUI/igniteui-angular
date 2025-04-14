@@ -484,6 +484,7 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
             <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
             <igx-column field="BillboardReview" header="Billboard Review"></igx-column>
             <igx-column field="USBillboard200" header="US Billboard 200"></igx-column>
+            <igx-column field="Artist"></igx-column>
             <igx-row-island [key]="'Songs'" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [autoGenerate]="false">
                 <igx-column field="Number" header="No."></igx-column>
                 <igx-column field="Title"></igx-column>
