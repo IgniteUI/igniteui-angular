@@ -1543,7 +1543,9 @@
     %date-selected-special-active {
         %date-inner {
             &::after {
-                border-color: var-get($theme, 'date-selected-special-focus-border-color');
+                @if $variant != 'fluent' {
+                    border-color: var-get($theme, 'date-selected-special-focus-border-color');
+                }
             }
         }
     }
@@ -1606,7 +1608,9 @@
     %date-selected-special-current-first-last {
         %date-inner {
             &::after {
-                border-color: var-get($theme, 'date-selected-special-border-color');
+                @if $variant != 'fluent' {
+                    border-color: var-get($theme, 'date-selected-special-border-color');
+                }
             }
         }
     }
@@ -1779,7 +1783,9 @@
     %date-special-current-selected-active {
         %date-inner {
             &::after {
-                border-color: var-get($theme, 'date-selected-special-border-color');
+                @if $variant != 'fluent' {
+                    border-color: var-get($theme, 'date-selected-special-border-color');
+                }
             }
         }
     }
@@ -1847,6 +1853,16 @@
             %date-inner {
                 &::after {
                     border-color: var-get($theme, 'date-selected-special-focus-border-color');
+                }
+            }
+        }
+    }
+
+    @if $variant == 'fluent' {
+        %date-selected-current-special {
+            %date-inner {
+                &::after {
+                    border-color: var-get($theme, 'date-selected-current-background');
                 }
             }
         }
@@ -2007,7 +2023,7 @@
     %date-selected-current-range-special-active:not(%date-selected-current-range-special-first),
     %date-selected-current-range-special-active:not(%date-selected-current-range-special-last) {
         %date-inner {
-            @if not $bootstrap-theme {
+            @if not $bootstrap-theme and not $variant == 'fluent' {
                 color: var-get($theme, 'date-special-focus-foreground');
             }
 
@@ -2157,7 +2173,6 @@
             position: absolute;
             height: $date-size;
             width: $date-size;
-            border-radius: var-get($theme, 'date-border-radius');
         }
     }
 
@@ -2183,7 +2198,32 @@
             &::after {
                 width: $date-inner-size;
                 height: $date-inner-size;
-                border-color: var-get($theme, 'date-selected-special-border-color');
+
+                @if $variant != 'fluent' {
+                    border-color: var-get($theme, 'date-selected-special-border-color');
+                }
+            }
+        }
+    }
+
+    @if $variant == 'fluent' {
+        %date-first-preview-active {
+            %date-inner {
+                background: transparent;
+                border-inline-end-color: transparent;
+            }
+        }
+
+        %date-last-preview-active {
+            %date-inner {
+                background: transparent;
+                border-inline-start-color: transparent;
+            }
+        }
+
+        %date-first-last-selected {
+            %date-inner {
+                background: transparent;
             }
         }
     }
@@ -2303,7 +2343,7 @@
                 content: '';
                 position: absolute;
                 height: $date-size;
-                width: calc($date-size / 2 + #{$border-size});
+                width: $date-size;
                 border: rem(1px) solid var-get($theme, 'date-range-border-color');
                 z-index: 3;
                 pointer-events: none;
@@ -2311,16 +2351,53 @@
         }
 
         %date-range-selected-first {
+            %date-inner {
+                border-start-end-radius: var-get($theme, 'date-border-radius');
+                border-end-end-radius: var-get($theme, 'date-border-radius');
+            }
+
             &::before {
-                inset-inline-end: calc(50% - #{$border-size});
                 border-inline-end-color: transparent;
+                border-start-start-radius: var-get($theme, 'date-range-border-radius');
+                border-end-start-radius: var-get($theme, 'date-range-border-radius');
             }
         }
 
         %date-range-selected-last {
+            %date-inner {
+                border-start-start-radius: var-get($theme, 'date-border-radius');
+                border-end-start-radius: var-get($theme, 'date-border-radius');
+            }
+
             &::before {
-                inset-inline-start: calc(50% - #{$border-size});
                 border-inline-start-color: transparent;
+                border-start-end-radius: var-get($theme, 'date-range-border-radius');
+                border-end-end-radius: var-get($theme, 'date-range-border-radius');
+            }
+        }
+
+
+        %date-first-preview {
+            %date-inner {
+                border-start-start-radius: var-get($theme, 'date-range-border-radius');
+                border-end-start-radius: var-get($theme, 'date-range-border-radius');
+                border-start-end-radius: 0;
+                border-end-end-radius: 0;
+            }
+        }
+
+        %date-last-preview {
+            %date-inner {
+                border-start-end-radius: var-get($theme, 'date-range-border-radius');
+                border-end-end-radius: var-get($theme, 'date-range-border-radius');
+                border-start-start-radius: 0;
+                border-end-start-radius: 0;
+            }
+        }
+
+        %date-first-last {
+            %date-inner {
+                border-radius: var-get($theme, 'date-range-border-radius');
             }
         }
     }
@@ -2351,6 +2428,12 @@
                     color: var-get($theme, 'date-selected-foreground');
                 }
             }
+        }
+    }
+
+    %date-range-preview-inactive {
+        %date-inner {
+            color: var-get($theme, 'inactive-color');
         }
     }
 
