@@ -67,7 +67,7 @@ import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 import { IgxActionStripToken } from '../../action-strip/token';
 import { flatten } from '../../core/utils';
-import { IFilteringExpressionsTree } from 'igniteui-angular';
+import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 
 let NEXT_ID = 0;
 
