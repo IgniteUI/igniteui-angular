@@ -1593,11 +1593,17 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(100);
             fix.detectChanges();
 
+            // When there is one entity, it should be selected by default
             const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 1).querySelector('input');
             expect(entityInputGroup.value).toBe('childData');
 
             const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 1).querySelector('input');
             expect(fieldInputGroup.value).toBe('ID');
+
+            // Click the initial 'Add Condition' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, 0);
+            tick(100);
+            fix.detectChanges();
             // Populate edit inputs on level 1.
             QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1); // Select 'ID' column.
             QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1); // Select 'Contains' operator. 
@@ -1625,13 +1631,14 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         it(`Should have correct return fields in the child query when there are multiple child entities.`, fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxHierarchicalGridExportComponent);
             const hierarchicalGrid = fixture.componentInstance.hGrid;
+            fixture.componentInstance.shouldDisplayArtist = true;
             hierarchicalGrid.allowAdvancedFiltering = true;
             fixture.detectChanges();
 
             hierarchicalGrid.openAdvancedFilteringDialog();
             fixture.detectChanges();
 
-             // Click the initial 'Add Condition' button.
+            // Click the initial 'Add Condition' button.
             QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fixture, 0);
             tick(100);
             fixture.detectChanges();

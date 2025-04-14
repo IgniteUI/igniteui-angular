@@ -563,6 +563,9 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         
         if (this.isAdvancedFiltering() && this.entities?.length === 1) {
             this.selectedEntity = this.entities[0].name;
+            if (this._selectedEntity.fields.find(f => f.field === this.expectedReturnField)) {
+                this._selectedReturnFields = [this.expectedReturnField];
+            }
         }
 
         // Trigger additional change detection cycle
