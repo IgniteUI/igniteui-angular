@@ -477,7 +477,7 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
         splitter = fixture.componentInstance.splitter;
     }));
 
-    xit('should set the correct sizes when the user drags one pane to the end of another', () => {
+    it('should set the correct sizes when the user drags one pane to the end of another', () => {
         const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
         const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
