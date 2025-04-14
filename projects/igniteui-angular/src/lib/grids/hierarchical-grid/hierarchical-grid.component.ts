@@ -563,14 +563,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * Gets/Sets the entities used for advanced filtering.
+     * Gets/Sets the collection of `EntityType` objects represented in hierarchical structure, which will be used in the advanced filtering dialog.
      *
      * @remarks
      * This property is required in remote data scenarios.
      * @example
      * ```typescript
      * const schema = this.grid.schema;
-     * this.grid.schema = [];
+     * this.grid.schema = [{ name: 'Products', fields: [...], childEntities: [...] }];
      * ```
      */
     @Input()
