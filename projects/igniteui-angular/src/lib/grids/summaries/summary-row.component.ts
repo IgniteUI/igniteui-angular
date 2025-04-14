@@ -9,7 +9,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     DoCheck,
-    Inject
+    Inject,
+    ViewEncapsulation
 } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { IgxSummaryCellComponent } from './summary-cell.component';
@@ -25,6 +26,8 @@ import { trackByIdentity } from '../../core/utils';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-summary-row',
     templateUrl: './summary-row.component.html',
+    styleUrl: 'grid-summary.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [IgxForOfSyncService],
     imports: [NgTemplateOutlet, IgxGridForOfDirective, IgxSummaryCellComponent, IgxGridNotGroupedPipe]
 })

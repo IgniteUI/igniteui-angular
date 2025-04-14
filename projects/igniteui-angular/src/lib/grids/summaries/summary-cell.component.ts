@@ -1,4 +1,4 @@
-import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, TemplateRef, booleanAttribute } from '@angular/core';
+import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, TemplateRef, booleanAttribute, ViewEncapsulation } from '@angular/core';
 import {
     IgxSummaryOperand,
     IgxSummaryResult
@@ -13,6 +13,8 @@ import { trackByIdentity } from '../../core/utils';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-summary-cell',
     templateUrl: './summary-cell.component.html',
+    styleUrl: 'grid-summary.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [NgTemplateOutlet]
 })
 export class IgxSummaryCellComponent {
