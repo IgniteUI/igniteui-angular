@@ -1685,15 +1685,80 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Check for error messages in the console
             expect(consoleSpy).not.toHaveBeenCalled();
+            expect(hgrid.filteredData.length).toBe(13);
         }));
 
-        // fit('Should be able to filter hierarchicaly with load on demand through API.', fakeAsync(() => {
-        //     const fixture = TestBed.createComponent(IgxHGridRemoteOnDemandComponent);
-        //     const hierarchicalGrid = fixture.componentInstance.hgrid;
-        //     hierarchicalGrid.allowAdvancedFiltering = true;
-        //     fixture.detectChanges();
+        it('Should have proper fields in UI when schema is defined with load on demand.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxHGridRemoteOnDemandComponent);
+            const hierarchicalGrid = fixture.componentInstance.instance;
+            hierarchicalGrid.allowAdvancedFiltering = true;
+            hierarchicalGrid.schema = [
+                {
+                    name: 'rootLevel',
+                    fields: [
+                        { field: 'ID', dataType: 'string' },
+                        { field: 'ChildLevels', dataType: 'number' },
+                        { field: 'ProductName', dataType: 'string' },
+                        { field: 'Col1', dataType: 'number' },
+                        { field: 'Col2', dataType: 'number' },
+                        { field: 'Col3', dataType: 'number' }
+                    ],
+                    childEntities: [
+                        {
+                            name: 'childData',
+                            fields: [
+                                { field: 'ID', dataType: 'string' },
+                                { field: 'ProductName', dataType: 'string' }
+                            ],
+                            childEntities: [
+                                {
+                                    name: 'childData2',
+                                    fields: [
+                                        { field: 'ID', dataType: 'string' },
+                                        { field: 'ProductName', dataType: 'string' }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+            fixture.detectChanges();
 
-        // }));
+            hierarchicalGrid.openAdvancedFilteringDialog();
+            fixture.detectChanges();
+
+            // Click the initial 'Add Condition' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fixture, 0);
+            tick(100);
+            fixture.detectChanges();
+            // Populate edit inputs.
+            QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'ID' column.
+            QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 10); // Select 'In' operator.
+            tick(100);
+            fixture.detectChanges();
+
+            const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fixture, 1).querySelector('input');
+            expect(entityInputGroup.value).toBe('childData');
+
+            const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fixture, 1).querySelector('input');
+            expect(fieldInputGroup.value).toBe('ID');
+
+            // Verify entities
+            QueryBuilderFunctions.clickQueryBuilderEntitySelect(fixture, 1);
+            fixture.detectChanges();
+            const queryBuilderElement: HTMLElement = fixture.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[1].nativeElement;
+            let dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
+            let expectedValues = ['childData'];
+            expect(dropdownValues).toEqual(expectedValues);
+
+            // Verify return fileds
+            QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fixture, 1);
+            fixture.detectChanges();
+            dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement, 1).map((x: any) => x.innerText);
+            expectedValues = ['ID', 'ProductName'];
+            expect(dropdownValues).toEqual(expectedValues);
+        }));
     });
 });
 
