@@ -20,7 +20,7 @@ import {
     IgxGridAdvancedFilteringWithToolbarComponent
 } from '../../test-utils/grid-samples.spec';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent, IgxHierarchicalGridTestCustomToolbarComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
+import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IFilteringEventArgs, IgxGridToolbarAdvancedFilteringComponent } from '../public_api';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -42,7 +42,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxHierGridExternalAdvancedFilteringComponent,
                 IgxGridAdvancedFilteringDynamicColumnsComponent,
                 IgxGridAdvancedFilteringWithToolbarComponent,
-                IgxHierarchicalGridTestBaseComponent
+                IgxHierarchicalGridTestBaseComponent,
+                IgxHierarchicalGridExportComponent,
+                IgxHGridRemoteOnDemandComponent
             ]
         });
     }));
