@@ -94,6 +94,12 @@ $_theme: $material;
             igx-icon {
                 color: var-get($_theme, 'delete-action');
             }
+
+            [igxIconButton] {
+                igx-icon {
+                    color: var-get($_theme, 'delete-action');
+                }
+            }
         }
 
         @include e(editing-actions) {
