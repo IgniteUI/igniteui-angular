@@ -13,6 +13,13 @@ All notable changes for each version of this project will be documented in this 
     - A column's `minWidth` and `maxWidth` constrain the user-specified `width` so that it cannot go outside their bounds.
     - In SSR mode grid with height 100% or with no height will render on the server with % size and with no data. The grid will show either the empty grid template or the loading indicator (if isLoading is true).
     - In SSR mode grid with width 100% or with no width will render on the server with % size and with all columns.
+- `IgxHierarchicalGrid`
+    - New advanced filtering functionality is implemented.
+    - Added a new `schema` input property that can be used to pass collection of `EntityType` objects. This property is required for remote data scenarios.
+- `IgxQueryBuilderComponent`, `IgxAdvancedFilteringDialogComponent`
+    - Added support for entities with hierarchical structure.
+- `EntityType`
+    - A new optional property called `childEntities` has been introduced that can be used to create nested entities.
 
 ## 19.1.1
 ### New Features
