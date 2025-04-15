@@ -225,7 +225,6 @@
     }
 
     $theme: digest-schema($grid-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         $ghost-header-icon-color: hsla(from adaptive-contrast(var(--ghost-header-background)) h s l / .07);
@@ -593,12 +592,6 @@
 
         cell-selected-within-background: $cell-selected-within-background,
         cell-selected-within-text-color: $cell-selected-within-text-color,
-
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme'),
-            theme-variant: map.get($schema, '_meta', 'variant')
-        )),
     ));
 }
 
@@ -620,8 +613,8 @@
 
     @include scale-in-ver-center();
 
-    $variant: map.get($theme, '_meta', 'variant');
-    $theme-variant: map.get($theme, '_meta', 'theme-variant');
+    $variant: map.get($theme, '_meta', 'theme');
+    $theme-variant: map.get($theme, '_meta', 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
