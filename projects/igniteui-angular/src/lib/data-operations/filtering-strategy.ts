@@ -101,7 +101,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
                     dataType = column?.dataType;
                 } else if (grid.type === 'hierarchical') {
                     const schema = (grid as IgxHierarchicalGridComponent).schema;
-                    const entityMatch = this.findEntityByName(schema, 'entity');
+                    const entityMatch = this.findEntityByName(schema, entity);
                     dataType = entityMatch?.fields.find(f => f.field === expression.fieldName)?.dataType;
                 }
 
