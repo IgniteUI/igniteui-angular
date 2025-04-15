@@ -320,7 +320,9 @@
   <igc-pivot-grid id="pivotgrid1" default-expand-state="true" row-selection="single"></igc-pivot-grid>
 
   <script src="assets/data/pivot-data.js"></script>
-  <script>
+  <script type="module">
+    import { html, nothing } from "/lit-html.js";
+
     document.addEventListener('DOMContentLoaded', () => {
         const clear = (el) => el === 0 || Boolean(el);
         pivotgrid1.pivotConfiguration = {
@@ -409,6 +411,10 @@
         };
     });
     pivotgrid1.data = pivotData;
+    pivotgrid1.addEventListener("columnInit", (args) => {
+        const col = args.detail;
+        col.headerTemplate = (ctx) => html`<span>${col.field}_</span>`;
+    });
   </script>
   <!-- END IgxPivotGridComponent -->
 
