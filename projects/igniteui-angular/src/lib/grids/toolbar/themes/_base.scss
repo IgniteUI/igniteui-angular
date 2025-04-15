@@ -3,9 +3,11 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
 @use 'styles/themes/standalone' as *;
-@use './light/tokens' as *;
+@use './light/list/tokens' as *;
+@use './light/toolbar/tokens' as *;
 
-$_theme: $material;
+$_theme: $material-toolbar;
+$_theme-dd: $material-list;
 
 @include layer(base) {
     @include b(igx-grid-toolbar) {
@@ -126,7 +128,7 @@ $_theme: $material;
 
         @include e(dd-list){
             list-style: none;
-            background: var-get($_theme, 'dropdown-background');
+            background: var-get($_theme-dd, 'dropdown-background');
             margin: 0;
             padding: 0;
             box-shadow: var(--ig-elevation-8);
@@ -136,17 +138,17 @@ $_theme: $material;
             cursor: pointer;
             position: relative;
             padding: rem(8px) rem(16px);
-            color: var-get($_theme, 'item-text-color');
+            color: var-get($_theme-dd, 'item-text-color');
             white-space: nowrap;
 
             &:hover {
-                background: var-get($_theme, 'item-hover-background');
-                color: var-get($_theme, 'item-hover-text-color');
+                background: var-get($_theme-dd, 'item-hover-background');
+                color: var-get($_theme-dd, 'item-hover-text-color');
             }
 
             &:focus {
-                background: var-get($_theme, 'item-focus-background');
-                color: var-get($_theme, 'item-focus-text-color');
+                background: var-get($_theme-dd, 'item-focus-background');
+                color: var-get($_theme-dd, 'item-focus-text-color');
             }
         }
     }
