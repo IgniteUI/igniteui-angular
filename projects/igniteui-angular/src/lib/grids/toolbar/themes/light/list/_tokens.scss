@@ -5,8 +5,8 @@
 
 $props: ('background-color', 'title-text-color');
 
-$base-list: list.nth(split-map(digest-schema($light-grid-toolbar), $props), 2);
-$material-list: list.nth(split-map(digest-schema($material-grid-toolbar), $props), 2);
-$bootstrap-list: list.nth(split-map(digest-schema($bootstrap-grid-toolbar), $props), 2);
-$fluent-list: list.nth(split-map(digest-schema($fluent-grid-toolbar), $props), 2);
-$indigo-list: list.nth(split-map(digest-schema($indigo-grid-toolbar), $props), 2);
+$base: list.nth(split-map(digest-schema($light-grid-toolbar), $props), 2);
+$material: list.nth(split-map(digest-schema($material-grid-toolbar), $props), 2);
+$bootstrap: list.nth(split-map(digest-schema($bootstrap-grid-toolbar), $props), 2);
+$fluent: list.nth(split-map(digest-schema($fluent-grid-toolbar), $props), 2);
+$indigo: list.nth(split-map(digest-schema($indigo-grid-toolbar), $props), 2);

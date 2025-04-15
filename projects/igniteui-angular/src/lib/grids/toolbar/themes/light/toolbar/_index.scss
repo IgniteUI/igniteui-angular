@@ -1,6 +1,7 @@
 @use 'sass:meta';
+@use 'sass:map';
 @use 'tokens';
 @use 'styles/themes/standalone' as *;
 
-$tokens: meta.module-variables(tokens);
-@include themes(igx-grid-toolbar, $tokens, light);
+$toolbar-tokens: map.remove(meta.module-variables(tokens), 'props');
+@include themes(igx-grid-toolbar, $toolbar-tokens, light);
