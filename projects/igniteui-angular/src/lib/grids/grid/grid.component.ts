@@ -1126,7 +1126,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
 
-        if (this.pagingMode === GridPagingMode.Remote && this.page !== 0) {
+        if (this.pagingMode === 'remote' && this.page !== 0) {
             row.index = index + this.perPage * this.page;
         }
         return row;
@@ -1160,7 +1160,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public allRows(): RowType[] {
         return this.dataView.map((rec, index) => {
-            this.pagingMode === GridPagingMode.Remote && this.page !== 0 ?
+            this.pagingMode === 'remote' && this.page !== 0 ?
                 index = index + this.perPage * this.page : index = this.dataRowList.first.index + index;
             return this.createRow(index);
         });
@@ -1202,7 +1202,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByIndex(rowIndex);
         const column = this._columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
-            if (this.pagingMode === GridPagingMode.Remote && this.page !== 0) {
+            if (this.pagingMode === 'remote' && this.page !== 0) {
                 row.index = rowIndex + this.perPage * this.page;
             }
             return new IgxGridCell(this, row.index, column);

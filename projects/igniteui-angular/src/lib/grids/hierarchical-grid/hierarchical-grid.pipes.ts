@@ -68,7 +68,7 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], enabled: boolean, page = 0, perPage = 15, _id: string, _pipeTrigger: number): any[] {
-        if (!enabled || this.grid.pagingMode !== GridPagingMode.Local) {
+        if (!enabled || this.grid.pagingMode !== 'local') {
             return collection;
         }
 

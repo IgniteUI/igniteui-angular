@@ -233,7 +233,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: ITreeGridRecord[], enabled: boolean, page = 0, perPage = 15, _: number): ITreeGridRecord[] {
-        if (!enabled || this.grid.pagingMode !== GridPagingMode.Local) {
+        if (!enabled || this.grid.pagingMode !== 'local') {
             return collection;
         }
 

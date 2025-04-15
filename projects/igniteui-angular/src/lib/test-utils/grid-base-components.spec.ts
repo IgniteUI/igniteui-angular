@@ -123,7 +123,7 @@ export class PagingComponent extends GridWithSizeComponent {
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class RemotePagingComponent extends GridWithSizeComponent {
-    public pagingMode = GridPagingMode.Remote;
+    public pagingMode = 'remote';
     public perPage = 3;
     public totalRecords = 10;
     public override data = SampleTestData.personJobDataFull();
