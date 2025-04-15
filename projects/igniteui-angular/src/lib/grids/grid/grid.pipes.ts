@@ -7,7 +7,6 @@ import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { GridPagingMode } from '../common/enums';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy';
 

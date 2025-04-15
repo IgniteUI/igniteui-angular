@@ -23,7 +23,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
-import { FilterMode, GridPagingMode } from '../common/enums';
+import { FilterMode } from '../common/enums';
 import { CellType, GridType, IgxGridMasterDetailContext, IgxGroupByRowSelectorTemplateContext, IgxGroupByRowTemplateContext, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';

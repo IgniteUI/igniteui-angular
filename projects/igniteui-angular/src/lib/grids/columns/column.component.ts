@@ -56,7 +56,7 @@ import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPi
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { GridPagingMode, Size } from '../common/enums';
+import { Size } from '../common/enums';
 import { ExpressionsTreeUtil } from '../../data-operations/expressions-tree-util';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';

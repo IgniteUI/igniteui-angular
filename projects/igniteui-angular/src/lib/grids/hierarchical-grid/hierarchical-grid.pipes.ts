@@ -1,7 +1,6 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
-import { GridPagingMode } from '../common/enums';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 /**
