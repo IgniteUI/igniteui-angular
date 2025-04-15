@@ -28,6 +28,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     /** Cached child instances per query prop. Used for dynamic components's child templates that normally persist in Angular runtime */
     protected cachedChildComponents: Map<string, ComponentRef<any>[]> = new Map();
     private setComponentRef: (value: ComponentRef<any>) => void;
+    /** The maximum depth at which event arguments are processed and angular components wrapped with Proxies, that handle template set */
+    private maxEventProxyDepth = 3;
 
     /**
      * Resolvable component reference.
@@ -403,26 +405,33 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     protected patchOutputComponents(eventArgs: any) {
-        let componentConfig: ComponentConfig = this.findConfig(eventArgs);
-        if (componentConfig?.templateProps) {
-            // The event return directly reference to a component, so directly return a proxy of it.
-            eventArgs = this.createElementsComponentProxy(eventArgs, componentConfig);
-        } else if (!componentConfig) {
-            // Check if the event args have property with component reference and replace it with proxy as well.
-            for (const [key, value] of Object.entries(eventArgs)) {
-                componentConfig = this.findConfig(value);
-                if (componentConfig?.templateProps) {
-                    eventArgs[key] = this.createElementsComponentProxy(value, componentConfig);
-                }
-            }
-        }
-        return eventArgs;
+        return this.createProxyForComponentValue(eventArgs, 0);
     }
 
-    /** Find config for a component, assuming the provided object is correct. Otherwise will return undefined. */
-    protected findConfig(component: any) {
-        // Make sure we match the correct type(first half) and not the one it inherits(second half of check).
-        return this.config.find((info: ComponentConfig) => component instanceof info.component && !(component.__proto__ instanceof info.component));
+    /**
+     * Nested search of event args that contain angular components and replace them with proxies.
+     * If event args are array of angular component instances should return array of proxies of each of those instances.
+     * If event args are object that has a single property being angular component should return same object except the angular component being a proxy of itself.
+     */
+    protected createProxyForComponentValue(value: any, depth: number) {
+        if (depth > this.maxEventProxyDepth) {
+            return value;
+        }
+
+        if (value?.constructor?.name.startsWith("_Igx")) {
+            const componentConfig = this.config.find((info: ComponentConfig) => value.constructor === info.component);
+            if (componentConfig?.templateProps) {
+                return this.createElementsComponentProxy(value, componentConfig);
+            }
+        } else if (Array.isArray(value)) {
+            return value.map(item => this.createProxyForComponentValue(item, depth + 1))
+        } else if (typeof value === "object" && Object.entries(value).length) {
+            for (const [key, item] of Object.entries(value)) {
+                value[key] = this.createProxyForComponentValue(item, depth + 1);
+            }
+        }
+
+        return value;
     }
 
     /** Create proxy for a component that handles setting template props, making sure it provides correct TemplateRef and not Lit template */
