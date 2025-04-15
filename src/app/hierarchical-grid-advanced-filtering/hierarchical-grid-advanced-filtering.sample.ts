@@ -4,8 +4,8 @@ import {
     IGX_HIERARCHICAL_GRID_DIRECTIVES,
     FilteringExpressionsTree,
     FilteringLogic,
-    IgxNumberFilteringOperand,
-    IgxStringFilteringOperand
+    IgxStringFilteringOperand,
+    IgxDateFilteringOperand
 } from 'igniteui-angular';
 import { SINGERS } from './data';
 
@@ -29,10 +29,10 @@ export class HierarchicalGridAdvancedFilteringSampleComponent implements AfterVi
     public ngAfterViewInit() {
         const albumsTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Albums', ['Artist']);
         albumsTree.filteringOperands.push({
-            fieldName: 'USBillboard200',
-            condition: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'),
-            conditionName: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo').name,
-            searchVal: 5
+            fieldName: 'LaunchDate',
+            condition: IgxDateFilteringOperand.instance().condition('after'),
+            conditionName: IgxDateFilteringOperand.instance().condition('after').name,
+            searchVal: new Date(2018, 1, 1)
         });
         // const toursTree = new FilteringExpressionsTree(FilteringLogic.And, undefined, 'Tours', ['TouredBy']);
         // toursTree.filteringOperands.push({
