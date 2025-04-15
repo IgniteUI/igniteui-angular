@@ -11,6 +11,8 @@ All notable changes for each version of this project will be documented in this 
     - **Deprecation** - `tabIndex` has been deprecated and will be removed in a future version.
 - `IgxGrid`, `IgxHierarchicalGrid`, `IgxTreeGrid`
     - A column's `minWidth` and `maxWidth` constrain the user-specified `width` so that it cannot go outside their bounds.
+    - In SSR mode grid with height 100% or with no height will render on the server with % size and with no data. The grid will show either the empty grid template or the loading indicator (if isLoading is true).
+    - In SSR mode grid with width 100% or with no width will render on the server with % size and with all columns.
 
 ## 19.1.1
 ### New Features
