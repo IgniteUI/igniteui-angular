@@ -1671,7 +1671,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fieldName: 'ID',
                 ignoreCase: false,
                 conditionName: IgxStringFilteringOperand.instance().condition('contains').name,
-                searchVal: '1'
+                searchVal: '39'
             });
     
             const tree = new FilteringExpressionsTree(0, undefined, 'rootData', ['ID']);
@@ -1681,13 +1681,45 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 ignoreCase: false,
                 searchTree: innerTree
             });
-            tree.filteringOperands.push(innerTree);
+
             hgrid.advancedFilteringExpressionsTree = tree;
             fix.detectChanges();
 
             // Check for error messages in the console
             expect(consoleSpy).not.toHaveBeenCalled();
-            expect(hgrid.filteredData.length).toBe(13);
+            expect(hgrid.filteredData.length).toBe(5);
+        }));
+
+        it('Should correctly apply JSON filtering expressions tree to the hgrid correctly.', fakeAsync(() => {
+            // Close Advanced Filtering dialog.
+            hgrid.closeAdvancedFilteringDialog(false);
+            tick(200);
+            fix.detectChanges(); 
+            // Spy for error messages in the console
+            const consoleSpy = spyOn(console, 'error');
+
+            const innerTree = new FilteringExpressionsTree(0, undefined, 'childData', ['ID']);
+            innerTree.filteringOperands.push({
+                fieldName: 'ID',
+                ignoreCase: false,
+                conditionName: IgxStringFilteringOperand.instance().condition('contains').name,
+                searchVal: '39'
+            });
+    
+            const tree = new FilteringExpressionsTree(0, undefined, 'rootData', ['ID']);
+            tree.filteringOperands.push({
+                fieldName: 'ID',
+                conditionName: IgxStringFilteringOperand.instance().condition('inQuery').name,
+                ignoreCase: false,
+                searchTree: innerTree
+            });
+
+            hgrid.advancedFilteringExpressionsTree = JSON.parse(JSON.stringify(tree));
+            fix.detectChanges();
+
+            // Check for error messages in the console
+            expect(consoleSpy).not.toHaveBeenCalled();
+            expect(hgrid.filteredData.length).toBe(5);
         }));
 
         it('Should have proper fields in UI when schema is defined with load on demand.', fakeAsync(() => {
