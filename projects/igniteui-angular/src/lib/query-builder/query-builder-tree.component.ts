@@ -527,7 +527,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     /** @hidden */
-    protected isHierarchicalGridNestedQuery(): boolean {
+    protected isHierarchicalNestedQuery(): boolean {
         return this.queryBuilder.entities !== this.entities
     }
 
@@ -1392,7 +1392,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         if ((this.isAdvancedFiltering() && !this.entities[0].childEntities) ||
-            (this.isHierarchicalGridNestedQuery() && this.selectedEntity.name && !this.selectedEntity.childEntities)) {
+            (this.isHierarchicalNestedQuery() && this.selectedEntity.name && !this.selectedEntity.childEntities)) {
             return this.selectedField.filters.conditionList();
         }
 
