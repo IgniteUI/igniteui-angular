@@ -194,8 +194,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     public set expressionTree(expressionTree: IExpressionTree) {
         this._expressionTree = expressionTree;
         if (!expressionTree) {
-            this._selectedEntity = this.isAdvancedFiltering() ? this.entities[0] : null;
-            this._selectedReturnFields = this._selectedEntity?.fields?.map(f => f.field);
+            this._selectedEntity = this.isAdvancedFiltering() && this.entities.length === 1 ? this.entities[0] : null;
+            this._selectedReturnFields = this._selectedEntity ? this._selectedEntity.fields?.map(f => f.field) : [];
         }
 
         if (!this._preventInit) {
@@ -835,7 +835,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public commitOperandEdit() {
-        console.log('commitOperandEdit');
         const actualSearchValue = this.searchValue.value;
         if (this._editedExpression) {
             this._editedExpression.expression.fieldName = this.selectedField.field;
