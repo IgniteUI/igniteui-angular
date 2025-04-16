@@ -310,7 +310,6 @@ export class DefaultToolbarComponent {
         IgxGridComponent,
         IgxGridToolbarComponent,
         IgxGridToolbarActionsComponent,
-        IgxGridToolbarTitleComponent,
         IgxGridToolbarPinningComponent,
         IgxGridToolbarHidingComponent,
         IgxGridToolbarAdvancedFilteringComponent,

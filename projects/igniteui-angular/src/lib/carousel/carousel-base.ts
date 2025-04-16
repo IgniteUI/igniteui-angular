@@ -1,5 +1,5 @@
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { ChangeDetectorRef, EventEmitter, Inject } from '@angular/core';
+import { ChangeDetectorRef, Directive, EventEmitter, Inject, OnDestroy } from '@angular/core';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationPlayer, AnimationService } from '../services/animation/animation';
 import { fadeIn, slideInLeft } from 'igniteui-angular/animations';
@@ -19,7 +19,8 @@ export interface IgxSlideComponentBase {
 }
 
 /** @hidden */
-export abstract class IgxCarouselComponentBase {
+@Directive()
+export abstract class IgxCarouselComponentBase implements OnDestroy {
     /** @hidden */
     public animationType: CarouselAnimationType = CarouselAnimationType.slide;
 
@@ -48,6 +49,11 @@ export abstract class IgxCarouselComponentBase {
     constructor(
         @Inject(IgxAngularAnimationService) private animationService: AnimationService,
         protected cdr: ChangeDetectorRef) {
+    }
+
+    public ngOnDestroy(): void {
+        this.enterAnimationPlayer?.destroy();
+        this.leaveAnimationPlayer?.destroy();
     }
 
     /** @hidden */
@@ -146,7 +152,7 @@ export abstract class IgxCarouselComponentBase {
         this.enterAnimationPlayer.animationEnd.subscribe(() => {
             // TODO: animation may never end. Find better way to clean up the player
             if (this.enterAnimationPlayer) {
-                this.enterAnimationPlayer.reset();
+                this.enterAnimationPlayer.destroy();
                 this.enterAnimationPlayer = null;
             }
             this.animationPosition = 0;
@@ -169,7 +175,7 @@ export abstract class IgxCarouselComponentBase {
         this.leaveAnimationPlayer.animationEnd.subscribe(() => {
             // TODO: animation may never end. Find better way to clean up the player
             if (this.leaveAnimationPlayer) {
-                this.leaveAnimationPlayer.reset();
+                this.leaveAnimationPlayer.destroy();
                 this.leaveAnimationPlayer = null;
             }
             this.animationPosition = 0;

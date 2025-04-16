@@ -22,7 +22,7 @@ module.exports = function (config) {
       '@angular-devkit/build-angular/plugins/karma'
     ],
     parallelOptions: {
-      executors: 2,
+      executors: 3,
       shardStrategy: 'round-robin'
     },
     client: {
@@ -52,7 +52,7 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-gpu', '--window-size=820,800'],
+        flags: ['--no-sandbox', '--disable-gpu', '--window-size=820,800', '--js-flags="--expose-gc"'],
         debug: false
       }
     },
