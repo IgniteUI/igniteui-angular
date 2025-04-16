@@ -7,6 +7,6 @@
 
     @include e(title) {
         // should be fixed
-        @extend .ig-typography__h6 !optional;
+        @include type-style(h6);
     }
 }
