@@ -3053,7 +3053,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      */
-    protected _pagingMode = GridPagingMode.Local;
+    protected _pagingMode: GridPagingMode = 'local';
     /**
      * @hidden
      */
@@ -4625,7 +4625,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected _getDataViewIndex(index: number): number {
         let newIndex = index;
-        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.page !== 0) {
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 'remote' && this.page !== 0) {
             newIndex = index - this.perPage * this.page;
         } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
             newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
@@ -7270,7 +7270,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paginator && (this.pagingMode === GridPagingMode.Local && source === this.filteredSortedData) ? row + (this.perPage * this.page) : row;
+            row = this.paginator && (this.pagingMode === 'local' && source === this.filteredSortedData) ? row + (this.perPage * this.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
