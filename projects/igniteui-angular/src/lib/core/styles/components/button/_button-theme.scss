@@ -799,7 +799,7 @@
     $fab-theme: null;
     $variant: 'material';
 
-    $required-themes: ('flat', 'contained', 'outlined', 'fab');
+    $required: ('flat', 'contained', 'outlined', 'fab');
     $added: ();
     $missing: ();
 
@@ -822,7 +822,7 @@
         @include css-vars($theme);
     }
 
-    @each $item in $required-themes {
+    @each $item in $required {
         @if not(list.index($added, $item)) {
             $missing: list.append($missing, '$#{$item}', $separator: comma);
         }
