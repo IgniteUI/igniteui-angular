@@ -3,7 +3,6 @@ import { cloneArray, cloneHierarchicalArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
-import { GridPagingMode } from '../common/enums';
 import { TransactionType } from '../../services/public_api';
 import { IgxAddRow } from '../common/crud.service';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
@@ -233,7 +232,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: ITreeGridRecord[], enabled: boolean, page = 0, perPage = 15, _: number): ITreeGridRecord[] {
-        if (!enabled || this.grid.pagingMode !== GridPagingMode.Local) {
+        if (!enabled || this.grid.pagingMode !== 'local') {
             return collection;
         }
 

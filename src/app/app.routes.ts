@@ -146,6 +146,7 @@ import { GridDockManagerSampleComponent } from './dockmanager-grid/dockmanager-g
 import { HoundComponent } from './hound/hound.component';
 import { LabelSampleComponent } from "./label/label.sample";
 import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sample';
+import { HierarchicalGridAdvancedFilteringSampleComponent } from './hierarchical-grid-advanced-filtering/hierarchical-grid-advanced-filtering.sample';
 
 export const appRoutes: Routes = [
     {
@@ -616,6 +617,9 @@ export const appRoutes: Routes = [
     }, {
         path: 'hierarchicalGrid',
         component: HierarchicalGridSampleComponent
+    }, {
+        path: 'hierarchicalGridAdvancedFiltering',
+        component: HierarchicalGridAdvancedFilteringSampleComponent
     }, {
         path: 'hierarchicalGridRemote',
         component: HierarchicalGridRemoteSampleComponent

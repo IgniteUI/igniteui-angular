@@ -3,12 +3,11 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Input,
     Output,
     Renderer2,
     booleanAttribute,
-    AfterContentInit,
-    OnDestroy
 } from '@angular/core';
 import { mkenum } from '../../core/utils';
 import { IBaseEventArgs } from '../../core/utils';
@@ -47,7 +46,7 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
     selector: '[igxButton]',
     standalone: true
 })
-export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterContentInit, OnDestroy {
+export class IgxButtonDirective extends IgxButtonBaseDirective {
     private static ngAcceptInputType_type: IgxButtonType | '';
 
     /**
@@ -93,7 +92,8 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
      */
     private _selected = false;
 
-    private emitSelected() {
+    @HostListener('click')
+    protected emitSelected() {
         this.buttonSelected.emit({
             button: this
         });
@@ -125,14 +125,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective implements AfterC
         private _renderer: Renderer2,
     ) {
         super(element);
-    }
-
-    public ngAfterContentInit() {
-        this.nativeElement.addEventListener('click', this.emitSelected.bind(this));
-    }
-
-    public ngOnDestroy(): void {
-        this.nativeElement.removeEventListener('click', this.emitSelected);
     }
 
     /**
