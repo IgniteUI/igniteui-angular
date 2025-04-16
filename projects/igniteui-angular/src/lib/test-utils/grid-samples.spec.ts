@@ -1192,7 +1192,7 @@ export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridCo
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarAdvancedFilteringComponent]
 })
 export class IgxGridAdvancedFilteringOverlaySettingsComponent extends BasicGridComponent {
     public customFilter = CustomFilter.instance();
@@ -1748,7 +1748,7 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
             <input name="fullName" [value]="cell.editValue" (change)="onChange($event,cell)"  [igxFocus]="true"/>
         </ng-template>
     `,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxFocusDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellEditorTemplateDirective, IgxFocusDirective]
 })
 export class CellEditingCustomEditorTestComponent extends BasicGridComponent {
     @ViewChild('cellEdit', { read: TemplateRef }) public templateCell;
@@ -2070,6 +2070,7 @@ export class IgxGridFilteringBindingComponent extends BasicGridComponent impleme
 }
 
 @Component({
+    selector: 'test-grid-advanced-filtering-binding',
     template: `
     <igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [(advancedFilteringExpressionsTree)]="filterTree">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
@@ -2101,6 +2102,7 @@ export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent
 }
 
 @Component({
+    selector: 'test-grid-advanced-filtering-serialized-tree',
     template: `
     <igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [(advancedFilteringExpressionsTree)]="filterTree">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
@@ -2120,7 +2122,7 @@ export class IgxGridAdvancedFilteringSerializedTreeComponent extends BasicGridCo
     public override data = SampleTestData.excelFilteringData();
 
     public ngOnInit(): void {
-        this.filterTree = JSON.parse(`{ 
+        this.filterTree = JSON.parse(`{
             "filteringOperands":  [
                 {
                     "conditionName": "greaterThan",
@@ -2626,6 +2628,7 @@ class CustomSummaryWithDate {
 }
 
 @Component({
+    selector: 'test-grid-custom-summary',
     template: `
         <igx-grid #grid1 [data]="data">
             <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
@@ -2645,6 +2648,7 @@ export class GridCustomSummaryComponent extends BasicGridComponent implements On
 }
 
 @Component({
+    selector: 'test-grid-custom-summary-with-null-and-zero',
     template: `
         <igx-grid #grid1 [data]="data">
             <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
@@ -2664,6 +2668,7 @@ export class GridCustomSummaryWithNullAndZeroComponent extends BasicGridComponen
 }
 
 @Component({
+    selector: 'test-grid-custom-summary-with-undefined-zero-and-valid-number',
     template: `
         <igx-grid #grid1 [data]="data">
             <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
@@ -2683,6 +2688,7 @@ export class GridCustomSummaryWithUndefinedZeroAndValidNumberComponent extends B
 }
 
 @Component({
+    selector: 'test-grid-custom-summary-with-undefined-and-null',
     template: `
         <igx-grid #grid1 [data]="data">
             <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>
@@ -2702,6 +2708,7 @@ export class GridCustomSummaryWithUndefinedAndNullComponent extends BasicGridCom
 }
 
 @Component({
+    selector: 'test-grid-custom-summary-with-date',
     template: `
         <igx-grid #grid1 [data]="data">
             <igx-column field="ProductID" header="Product ID" [hasSummary]="true" [summaries]="customSummary"></igx-column>

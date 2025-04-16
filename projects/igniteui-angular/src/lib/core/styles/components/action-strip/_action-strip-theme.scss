@@ -41,10 +41,9 @@
     }
 
     $theme: digest-schema($action-strip-schema);
-    $meta: map.get($theme, '_meta');
 
     @if not($icon-color) and $actions-background {
-        $icon-color: text-contrast($actions-background);
+        $icon-color: adaptive-contrast(var(--actions-background));
     }
 
     @if not($actions-border-radius) {
@@ -58,10 +57,6 @@
         icon-color: $icon-color,
         delete-action: $delete-action,
         actions-border-radius: $actions-border-radius,
-        theme: map.get($schema, '_meta', 'theme'),
-        _meta: map.merge(if($meta, $meta, ()), (
-            variant: map.get($schema, '_meta', 'theme')
-        )),
     ));
 }
 
@@ -71,7 +66,7 @@
 @mixin action-strip($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, '_meta', 'variant');
+    $variant: map.get($theme, '_meta', 'theme');
     $icon-button-size: map.get((
         'material': rem(36px),
         'fluent': rem(32px),
@@ -199,6 +194,12 @@
     %igx-action-strip__delete {
         igx-icon {
             color: var-get($theme, 'delete-action');
+        }
+
+        [igxIconButton] {
+            igx-icon {
+                color: var-get($theme, 'delete-action');
+            }
         }
     }
 }
