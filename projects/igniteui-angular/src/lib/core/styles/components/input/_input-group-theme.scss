@@ -913,6 +913,14 @@
         background: var-get($theme, 'search-disabled-background');
         box-shadow: var-get($theme, 'search-disabled-shadow');
         border-color: var-get($theme, 'disabled-border-color');
+
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            background: inherit;
+            color: var-get($theme, 'disabled-text-color');
+        }
     }
 
     %form-group-bundle-main--border {
