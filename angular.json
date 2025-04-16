@@ -194,9 +194,6 @@
             "styles": [
               "src/styles/styles.scss"
             ],
-            "assets": [
-              "src/assets"
-            ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules"
