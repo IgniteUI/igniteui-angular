@@ -50,12 +50,13 @@
 /// @requires $light-material-schema
 ///
 /// @example scss Change the background and text colors in contained buttons
-///   $my-button-theme: flat-button-theme(
-///     $foreground: black,
+///   $my-button-theme: fab-button-theme(
+///     $foreground: white,
+///     $background: black
 ///   );
 ///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-button-theme);
-@function flat-button-theme(
+@function fab-button-theme(
     $schema: $light-material-schema,
 
     $background: null,
@@ -99,14 +100,13 @@
     $disabled-border-color: null,
     $size: null
 ) {
-    $name: 'igx-flat-button';
+    $name: 'igx-fab-button';
     $button-schema: ();
 
     @if map.has-key($schema, 'button') {
         $button-schema: map.get($schema, 'button');
-
-        @if map.has-key($button-schema, 'flat') {
-            $button-schema: map.get($button-schema, 'flat');
+        @if map.has-key($button-schema, 'fab') {
+            $button-schema: map.get($button-schema, 'fab');
         } @else {
             $button-schema: $schema;
         }
@@ -115,141 +115,109 @@
     $theme: digest-schema($button-schema);
     $variant: map.get($schema, '_meta', 'theme');
 
-    @if $variant == 'material' or $variant == 'fluent' {
-        @if not($hover-background) and $foreground {
-            $hover-background: hsla(from var(--foreground) h s l / 0.08);
+    @if not($foreground) and $background {
+        $foreground: adaptive-contrast(var(--background));
+    }
+
+    @if not($icon-color) and $background {
+        $icon-color: adaptive-contrast(var(--background));
+    }
+
+    @if $variant == 'indigo' {
+        @if not($hover-background) and $background {
+            $hover-background: hsl(from var(--background) h s calc(l * 1.08));
         }
-
-        @if not($focus-background) and $foreground {
-            $focus-background: hsla(from var(--foreground) h s l / 0.32);
-        }
-
-        @if not($focus-hover-background) and $foreground {
-            $focus-hover-background: hsla(from var(--foreground) h s l / 0.24);
-        }
-
-        @if not($active-background) and $foreground {
-            $active-background: hsla(from var(--foreground) h s l / 0.16);
-        }
-
-        @if not($hover-foreground) and $hover-background {
-            $hover-foreground: hsla(from var(--hover-background) h s l / 1);
-        }
-
-        @if not($focus-foreground) and $focus-background {
-            $focus-foreground: hsla(from var(--focus-background) h s l / 1);
-        }
-
-        @if not($focus-hover-foreground) and $focus-hover-background {
-            $focus-hover-foreground: hsla(
-                from var(--focus-hover-background) h s l / 1
-            );
-        }
-
-        @if not($active-foreground) and $active-background {
-            $active-foreground: hsla(from var(--active-background) h s l / 1);
-        }
-
-        @if $variant == 'material' {
-            @if not($focus-visible-background) and $foreground {
-                $focus-visible-background: hsla(
-                    from var(--foreground) h s l / 0.16
-                );
-            }
-
-            @if not($focus-visible-foreground) and $focus-visible-background {
-                $focus-visible-foreground: hsla(
-                    from var(--focus-visible-background) h s l / 1
-                );
-            }
-        } @else {
-            @if not($focus-visible-foreground) and $focus-foreground {
-                $focus-visible-foreground: var(--focus-foreground);
-            }
-        }
-
-        @if $variant == 'fluent' {
-            @if not($focus-visible-border-color) and $focus-visible-foreground {
-                $focus-visible-border-color: var(--focus-visible-foreground);
-            }
+    } @else {
+        @if not($hover-background) and $background {
+            $hover-background: hsl(from var(--background) h s calc(l * 1.05));
         }
     }
 
     @if $variant == 'indigo' {
-        @if not($hover-background) and $foreground {
-            $hover-background: hsla(from var(--foreground) h s l / 0.08);
+        @if not($focus-background) and $background {
+            $focus-background: var(--background);
         }
-
-        @if not($focus-background) and $foreground {
-            $focus-background: hsla(from var(--foreground) h s l / 0.08);
-        }
-
-        @if not($focus-hover-background) and $foreground {
-            $focus-hover-background: hsla(from var(--foreground) h s l / 0.08);
-        }
-
-        @if not($active-background) and $foreground {
-            $active-background: hsla(from var(--foreground) h s l / 0.08);
+    } @else {
+        @if not($focus-background) and $background {
+            $focus-background: hsl(from var(--background) h s calc(l * 1.1));
         }
     }
 
+    @if not($hover-foreground) and $hover-background {
+        $hover-foreground: if(
+            $foreground,
+            var(--foreground),
+            adaptive-contrast(var(--hover-background))
+        );
+    }
+
+    @if not($icon-color-hover) and $hover-background {
+        $icon-color-hover: if(
+            $icon-color,
+            var(--icon-color),
+            adaptive-contrast(var(--hover-background))
+        );
+    }
+
+    @if not($focus-foreground) and $focus-background {
+        $focus-foreground: if(
+            $foreground,
+            var(--foreground),
+            adaptive-contrast(var(--focus-background))
+        );
+    }
+
+    @if not($focus-hover-background) and $hover-background {
+        $focus-hover-background: var(--hover-background);
+    }
+
+    @if not($focus-hover-foreground) and $focus-hover-background {
+        $focus-hover-foreground: if(
+            $foreground,
+            var(--foreground),
+            adaptive-contrast(var(--focus-hover-background))
+        );
+    }
+
+    @if not($focus-visible-background) and $focus-background {
+        $focus-visible-background: var(--focus-background);
+    }
+
+    @if not($focus-visible-foreground) and $focus-visible-background {
+        $focus-visible-foreground: adaptive-contrast(
+            var(--focus-visible-background)
+        );
+    }
+
+    @if $variant == 'fluent' {
+        @if not($focus-visible-border-color) and $focus-visible-foreground {
+            $focus-visible-border-color: var(--focus-visible-foreground);
+        }
+    }
+
+    @if $variant == 'fluent' or $variant == 'bootstrap' {
+        @if not($active-background) and $background {
+            $active-background: hsl(from var(--background) h s calc(l * 0.9));
+        }
+    } @else if $variant == 'material' {
+        @if not($active-background) and $focus-background {
+            $active-background: var(--focus-background);
+        }
+    } @else {
+        @if not($active-background) and $hover-background {
+            $active-background: var(--hover-background);
+        }
+    }
+
+    @if not($active-foreground) and $active-background {
+        $active-foreground: adaptive-contrast(var(--active-background));
+    }
+
     @if $variant == 'bootstrap' or $variant == 'indigo' {
-        @if not($hover-foreground) and $foreground {
-            $hover-foreground: hsl(from var(--foreground) h s calc(l * 0.9));
-        }
-
-        @if $variant == 'bootstrap' {
-            @if not($focus-foreground) and $foreground {
-                $focus-foreground: hsl(
-                    from var(--foreground) h s calc(l * 0.7)
-                );
-            }
-        } @else {
-            @if not($focus-foreground) and $foreground {
-                $focus-foreground: hsl(
-                    from var(--foreground) h s calc(l * 0.9)
-                );
-            }
-        }
-
-        @if not($focus-hover-foreground) and $foreground {
-            $focus-hover-foreground: hsl(
-                from var(--foreground) h s calc(l * 0.9)
+        @if not($shadow-color) and $focus-visible-background {
+            $shadow-color: hsla(
+                from var(--focus-visible-background) h s l / 0.5
             );
-        }
-
-        @if not($focus-visible-foreground) and $foreground {
-            $focus-visible-foreground: var(--foreground);
-        }
-
-        @if not($disabled-foreground) and $foreground {
-            $disabled-foreground: hsl(from (var(--foreground) h s l / 0.5));
-        }
-
-        @if $variant == 'bootstrap' {
-            @if not($active-foreground) and $foreground {
-                $active-foreground: hsl(
-                    from var(--foreground) h s calc(l * 0.7)
-                );
-            }
-
-            @if not($shadow-color) and $focus-visible-foreground {
-                $shadow-color: hsla(
-                    from var(--focus-visible-foreground) h s l / 0.5
-                );
-            }
-        } @else {
-            @if not($active-foreground) and $foreground {
-                $active-foreground: hsl(
-                    from var(--foreground) h s calc(l * 0.9)
-                );
-            }
-
-            @if not($shadow-color) and $focus-visible-foreground {
-                $shadow-color: hsla(
-                    from var(--focus-visible-foreground) h s l / 0.2
-                );
-            }
         }
     }
 
