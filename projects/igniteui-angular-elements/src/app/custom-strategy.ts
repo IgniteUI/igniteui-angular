@@ -418,7 +418,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             return value;
         }
 
-        if (value?.constructor?.name.startsWith("_Igx")) {
+        if (value?.__ngContext__) {
             const componentConfig = this.config.find((info: ComponentConfig) => value.constructor === info.component);
             if (componentConfig?.templateProps) {
                 return this.createElementsComponentProxy(value, componentConfig);
