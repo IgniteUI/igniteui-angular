@@ -99,6 +99,14 @@
         $foreground-active-selected: adaptive-contrast(var(--background-active-selected));
     }
 
+    @if not($background-disabled) and $background {
+        $background-disabled: color-mix(in hsl, var(--background), transparent 50%);
+    }
+
+    @if not($foreground-disabled) and $background-disabled {
+        $foreground-disabled: adaptive-contrast(var(--background-disabled));
+    }
+
     @return extend($theme, (
         name: $name,
         selector: $selector,
