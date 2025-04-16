@@ -1885,10 +1885,7 @@ describe('IgxQueryBuilder', () => {
       tick(100);
       fix.detectChanges();
 
-      commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
-      ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, true);
-
-      // Select return field
+      // Change return field from preselected 'OrderId' to 'Id'
       QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
       tick(100);
       fix.detectChanges();
@@ -1899,7 +1896,7 @@ describe('IgxQueryBuilder', () => {
       QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
       QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
       fix.detectChanges();
-
+      
       //Verify that expressionTree is correct
       const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
       expect(exprTree).toBe(`{

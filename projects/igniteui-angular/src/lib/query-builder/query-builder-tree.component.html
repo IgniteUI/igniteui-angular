@@ -7,7 +7,7 @@
 </ng-template>
 
 <ng-template #selectFromTemplate>
-    <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && !this.isAdvancedFiltering()) ? 'flex' : 'none'">
+    <div class="igx-filter-tree__inputs" [style.display]="(isInEditMode() && (!this.isAdvancedFiltering() || this.isHierarchicalNestedQuery())) ? 'flex' : 'none'">
         <div class="igx-filter-tree__inputs-field">
             <span class="igx-query-builder__label">From</span>
             <igx-select #entitySelect
@@ -29,7 +29,9 @@
         </div>
 
         <div class="igx-filter-tree__inputs-field">
-            <span class="igx-query-builder__label">Select</span>
+            @if (!this.isHierarchicalNestedQuery()) {
+                <span class="igx-query-builder__label">Select</span>
+            }
             @if (!parentExpression) {
                 <igx-combo
                     #returnFieldsCombo
@@ -464,9 +466,10 @@
                 <ng-container>
                     <igx-query-builder-tree
                         [style.display]="expressionItem.inEditMode || expressionItem.expanded ? 'block' : 'none'"
-                        [entities]="entities"
+                        [entities]="(this.selectedEntity ? this.selectedEntity.childEntities : entities[0].childEntities) ?? entities"
                         [queryBuilder]="this.queryBuilder"
                         [parentExpression]="expressionItem"
+                        [expectedReturnField]="this.selectedField?.field"
                         [expressionTree]="expressionItem.inEditMode ? (innerQueryNewExpressionTree ?? getExpressionTreeCopy(expressionItem.expression.searchTree, true)) : expressionItem.expression.searchTree"
                         (inEditModeChange)="onInEditModeChanged($event)"
                         [searchValueTemplate]="searchValueTemplate">

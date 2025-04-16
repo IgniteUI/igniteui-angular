@@ -147,7 +147,8 @@ import {
     ISizeInfo,
     RowType,
     IPinningConfig,
-    IClipboardOptions
+    IClipboardOptions,
+    EntityType
 } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -179,7 +180,7 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
-import { isTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
+import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 
 interface IMatchInfoCache {
@@ -1859,7 +1860,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
             value.type = FilteringExpressionsTreeType.Regular;
             if (value && this._columns?.length > 0) {
-                this._filteringExpressionsTree = recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
+                this._filteringExpressionsTree = this.getRecreatedTree(value);
             } else {
                 this._filteringExpressionsTree = value;
             }
@@ -1909,7 +1910,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (value && isTree(value)) {
             value.type = FilteringExpressionsTreeType.Advanced;
             if (this._columns && this._columns.length > 0) {
-                this._advancedFilteringExpressionsTree = recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
+                this._advancedFilteringExpressionsTree = this.getRecreatedTree(value);
             } else {
                 this._advancedFilteringExpressionsTree = value;
             }
@@ -3052,7 +3053,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      */
-    protected _pagingMode = GridPagingMode.Local;
+    protected _pagingMode: GridPagingMode = 'local';
     /**
      * @hidden
      */
@@ -3138,6 +3139,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         matchCount: 0,
         content: ''
     };
+    protected _hGridSchema: EntityType[];
     protected gridComputedStyles;
 
     /** @hidden @internal */
@@ -3364,12 +3366,26 @@ export abstract class IgxGridBaseDirective implements GridType,
     private get hasZeroResultFilter(): boolean {
         return this.filteredData && this.filteredData.length === 0;
     }
+    protected get totalCalcWidth() {
+        return this.platform.isBrowser ? this.calcWidth : undefined;
+    }
+
+    protected get renderData() {
+        // omit data if not in the browser and size is %
+        return !this.platform.isBrowser && this.isPercentHeight ? undefined : this.data;
+    }
+
+    @HostBinding('style.display')
+    protected displayStyle = 'grid';
+
+    @HostBinding('style.grid-template-rows')
+    protected templateRows = 'auto auto auto 1fr auto auto';
 
     /**
      * @hidden @internal
      */
     private get hasNoData(): boolean {
-        return !this.data || this.dataLength === 0;
+        return !this.data || this.dataLength === 0 || !this.platform.isBrowser;
     }
 
     /**
@@ -4609,7 +4625,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected _getDataViewIndex(index: number): number {
         let newIndex = index;
-        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.page !== 0) {
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 'remote' && this.page !== 0) {
             newIndex = index - this.perPage * this.page;
         } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
             newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
@@ -5169,7 +5185,8 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /** @hidden @internal */
     public get totalHeight() {
-        return this.calcHeight ? this.calcHeight + this.pinnedRowHeight : this.calcHeight;
+        const height = this.calcHeight ? this.calcHeight + this.pinnedRowHeight : this.calcHeight;
+        return this.platform.isBrowser ? height : undefined;
     }
 
     /**
@@ -6623,10 +6640,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._unpinnedColumns = newColumns.filter((c) => !c.pinned);
         this._columns = newColumns;
         if (this._columns && this._columns.length && this._filteringExpressionsTree) {
-            this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
+            this._filteringExpressionsTree = this.getRecreatedTree(this._filteringExpressionsTree);
         }
         if (this._columns && this._columns.length && this._advancedFilteringExpressionsTree) {
-            this._advancedFilteringExpressionsTree = recreateTreeFromFields(this._advancedFilteringExpressionsTree, this.columns) as IFilteringExpressionsTree;
+            this._advancedFilteringExpressionsTree = this.getRecreatedTree(this._advancedFilteringExpressionsTree);
         }
         this.resetCaches();
     }
@@ -6691,10 +6708,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._columns = this.getColumnList();
         }
         if (this._columns && this._columns.length && this._filteringExpressionsTree) {
-            this._filteringExpressionsTree = recreateTreeFromFields(this._filteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
+            this._filteringExpressionsTree = this.getRecreatedTree(this._filteringExpressionsTree);
         }
         if (this._columns && this._columns.length && this._advancedFilteringExpressionsTree) {
-            this._advancedFilteringExpressionsTree = recreateTreeFromFields(this._advancedFilteringExpressionsTree, this._columns) as IFilteringExpressionsTree;
+            this._advancedFilteringExpressionsTree = this.getRecreatedTree(this._advancedFilteringExpressionsTree);
         }
 
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
@@ -7253,7 +7270,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paginator && (this.pagingMode === GridPagingMode.Local && source === this.filteredSortedData) ? row + (this.perPage * this.page) : row;
+            row = this.paginator && (this.pagingMode === 'local' && source === this.filteredSortedData) ? row + (this.perPage * this.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
@@ -7906,5 +7923,13 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.navigation.lastActiveNode = this.navigation.activeNode;
         this.navigation.activeNode = {} as IActiveNode;
         this.notifyChanges();
+    }
+
+    private getRecreatedTree(value: IFilteringExpressionsTree): IFilteringExpressionsTree {
+        if (this._hGridSchema) {
+            return recreateTree(value, this._hGridSchema, true) as IFilteringExpressionsTree;
+        } else {
+            return recreateTreeFromFields(value, this._columns) as IFilteringExpressionsTree;
+        }
     }
 }
