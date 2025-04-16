@@ -1,12 +1,13 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate, formatDate, formatCurrency } from '../core/utils';
-import { ColumnType, GridType } from '../grids/common/grid.interface';
+import { ColumnType, EntityType, GridType } from '../grids/common/grid.interface';
 import { GridColumnDataType } from './data-util';
 import { SortingDirection } from './sorting-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import { IFilteringState } from './filtering-state.interface';
 import { isTree } from './expressions-tree-util';
+import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
@@ -39,13 +40,34 @@ export interface IgxFilterItem {
 export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
-        const cond = expr.condition;
+        if (expr.searchTree) {
+            const records = rec[expr.searchTree.entity];
+            const shouldMatchRecords = expr.conditionName === 'inQuery';
+            if (!records) { // child grid is not yet created
+                return true;
+            } else if (records.length === 0) { // child grid is empty
+                return false;
+            }
+
+            for (let index = 0; index < records.length; index++) {
+                const record = records[index];
+                if ((shouldMatchRecords && this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity)) ||
+                    (!shouldMatchRecords && !this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity))) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         const val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
-        return cond.logic(val, expr.searchVal, expr.ignoreCase);
+        if (expr.condition?.logic) {
+            return expr.condition.logic(val, expr.searchVal, expr.ignoreCase);
+        }
     }
 
     // protected
-    public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType): boolean {
+    public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType, entity?: string): boolean {
         if (expressions) {
             if (isTree(expressions)) {
                 const expressionsTree = expressions;
@@ -54,7 +76,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 
                 if (expressionsTree.filteringOperands && expressionsTree.filteringOperands.length) {
                     for (const operand of expressionsTree.filteringOperands) {
-                        matchOperand = this.matchRecord(rec, operand, grid);
+                        matchOperand = this.matchRecord(rec, operand, grid, entity);
 
                         // Return false if at least one operand does not match and the filtering logic is And
                         if (!matchOperand && operator === FilteringLogic.And) {
@@ -73,14 +95,40 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
                 return true;
             } else {
                 const expression = expressions;
-                const column = grid && grid.getColumnByName(expression.fieldName);
-                const isDate = column ? column.dataType === DateType || column.dataType === DateTimeType : false;
-                const isTime = column ? column.dataType === TimeType : false;
+                let dataType = null;
+                if (!entity) {
+                    const column = grid && grid.getColumnByName(expression.fieldName);
+                    dataType = column?.dataType;
+                } else if (grid.type === 'hierarchical') {
+                    const schema = (grid as IgxHierarchicalGridComponent).schema;
+                    const entityMatch = this.findEntityByName(schema, entity);
+                    dataType = entityMatch?.fields.find(f => f.field === expression.fieldName)?.dataType;
+                }
+
+                const isDate = dataType ? dataType === DateType || dataType === DateTimeType : false;
+                const isTime = dataType ? dataType === TimeType : false;
+
                 return this.findMatchByExpression(rec, expression, isDate, isTime, grid);
             }
         }
 
         return true;
+    }
+
+    private findEntityByName(schema: EntityType[], name: string): EntityType | null {
+        for (const entity of schema) {
+            if (entity.name === name) {
+                return entity;
+            }
+
+            if (entity.childEntities && entity.childEntities.length > 0) {
+                const found = this.findEntityByName(entity.childEntities, name);
+                if (found) {
+                    return found;
+                }
+            }
+        }
+        return null;
     }
 
     public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
