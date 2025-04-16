@@ -1497,4 +1497,5 @@ export interface IClipboardOptions {
 export interface EntityType {
     name: string;
     fields: FieldType[];
+    childEntities?: EntityType[];
 }
