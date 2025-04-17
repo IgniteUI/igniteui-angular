@@ -94,7 +94,7 @@ export class ButtonGroupSampleComponent {
         selection: {
             control: {
                 type: 'select',
-                options: ['single', 'single-required', 'multi'],
+                options: ['single', 'singleRequired', 'multi'],
                 defaultValue: 'single'
             }
         },
@@ -127,7 +127,7 @@ export class ButtonGroupSampleComponent {
     private selectionMap = new Map<string, string>(
         Object.entries({
             single: 'single',
-            'single-required': 'singleRequired',
+            'singleRequired': 'single-required',
             multi: 'multiple',
         })
     );

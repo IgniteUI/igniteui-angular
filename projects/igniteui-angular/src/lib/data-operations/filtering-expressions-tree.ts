@@ -8,6 +8,7 @@ export enum FilteringExpressionsTreeType {
     Advanced
 }
 
+/* marshalByValue */
 export declare interface IExpressionTree {
     filteringOperands: (IExpressionTree | IFilteringExpression)[];
     operator: FilteringLogic;
@@ -16,6 +17,7 @@ export declare interface IExpressionTree {
     returnFields?: string[] | null;
 }
 
+/* alternateBaseType: ExpressionTree */
 /* marshalByValue */
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpressionTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
