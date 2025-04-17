@@ -1,0 +1,310 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
+@use '../light/tokens' as *;
+
+$_theme: $material;
+$transition-timing: .25s $out-cubic;
+$bundle-start-end-min-width: pad(rem(10px), rem(12px), rem(14px));
+$input-inline-padding: rem(4px);
+$input-top-padding: rem(20px);
+$input-bottom-padding: rem(6px);
+
+%box-floating-label {
+    @include type-style(caption);
+    transform: translateY(-73%);
+}
+
+%box-floating-text-area-label {
+    transform: translateY(0);
+    inset-block-start: calc(#{$input-top-padding} / 4);
+    position: absolute;
+}
+
+@include themed-block(igx-input-group, material) {
+    row-gap: rem(4px);
+
+    igx-prefix,
+    [igxPrefix],
+    igx-suffix,
+    [igxSuffix] {
+        &:not(:empty) {
+            padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
+        }
+    }
+
+    @include e(input) {
+        padding-block-start: $input-top-padding;
+        padding-block-end: $input-bottom-padding;
+        padding-inline: 0;
+    }
+
+    @include e(label) {
+        will-change: font-size, color, transform;
+        transition: all $transition-timing;
+        --igx-label-color: #{var-get($_theme, 'idle-secondary-color')};
+    }
+
+    @include e(bundle-start) {
+        overflow: clip;
+        min-width: $bundle-start-end-min-width;
+
+        border: {
+            start: {
+                start-radius: calc(var-get($_theme, 'box-border-radius') - rem(1px));
+            };
+        }
+    }
+
+    @include e(bundle-end) {
+        overflow: clip;
+        min-width: $bundle-start-end-min-width;
+
+        border: {
+            start: {
+                end-radius: calc(var-get($_theme, 'box-border-radius') - rem(1px));
+            }
+        }
+    }
+
+    @include m(box) {
+        @include e(bundle) {
+            --_input-template-rows: var-get($_theme, 'size');
+
+            background: var-get($_theme, 'box-background');
+            border-block-end: rem(1px) solid var-get($_theme, 'idle-bottom-line-color');
+            transition: border-bottom-color $transition-timing;
+            align-items: center;
+
+            // The animated bottom line of the LINE and BOX input types.
+            &::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                inset-inline-end: 0;
+                inset-block-end: rem(-1px);
+                height: rem(2px);
+                align-self: end;
+                transform: scaleX(0);
+                transform-origin: center;
+                background: var-get($_theme, 'focused-secondary-color');
+                z-index: 1;
+            }
+
+            > * {
+                grid-row: 1;
+            }
+
+            &:hover {
+                background: var-get($_theme, 'box-background-hover');
+                border-block-end-color: var-get($_theme, 'hover-bottom-line-color');
+            }
+        }
+
+        @include e(bundle-main) {
+            padding-inline: $input-inline-padding;
+            grid-column: 2;
+        }
+
+        @include e(label) {
+            padding-inline: $input-inline-padding;
+            grid-column: 2;
+        }
+
+        @include e(wrapper) {
+            border-start-start-radius: var-get($_theme, 'box-border-radius');
+            border-start-end-radius: var-get($_theme, 'box-border-radius');
+            border-end-start-radius: 0;
+            border-end-end-radius: 0;
+            overflow: clip;
+        }
+    }
+
+    @include mx(box, focused) {
+        @include e(bundle) {
+            background: var-get($_theme, 'box-background-focus');
+
+            &::after {
+                transform: scaleX(1);
+                transition: transform $transition-timing;
+            }
+        }
+
+        @include e(label) {
+            @extend %box-floating-label;
+
+            --igx-label-color: #{var-get($_theme, 'focused-secondary-color')};
+        }
+
+        igx-prefix, [igxPrefix] {
+            color: var-get($_theme, 'input-prefix-color--focused');
+            background: var-get($_theme, 'input-prefix-background--focused');
+        }
+
+        igx-suffix, [igxSuffix] {
+            color: var-get($_theme, 'input-suffix-color--focused');
+            background: var-get($_theme, 'input-suffix-background--focused');
+        }
+    }
+
+    @include mx(box, valid) {
+        @include e(label) {
+            --igx-label-color: #{var-get($_theme, 'success-secondary-color')};
+        }
+
+        @include e(bundle) {
+            border-block-end-color: var-get($_theme, 'success-secondary-color');
+
+            &::after {
+                background: var-get($_theme, 'success-secondary-color');
+            }
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'success-secondary-color');
+        }
+    }
+
+    @include mx(box, warning) {
+        @include e(label) {
+            --igx-label-color: #{var-get($_theme, 'warning-secondary-color')};
+        }
+
+        @include e(bundle) {
+            border-block-end-color: var-get($_theme, 'warning-secondary-color');
+
+            &::after {
+                background: var-get($_theme, 'warning-secondary-color');
+            }
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'warning-secondary-color');
+        }
+    }
+
+    @include mx(box, invalid) {
+        @include e(label) {
+            --igx-label-color: #{var-get($_theme, 'error-secondary-color')};
+        }
+
+        @include e(bundle) {
+            border-block-end-color: var-get($_theme, 'error-secondary-color');
+
+            &::after {
+                background: var-get($_theme, 'error-secondary-color');
+            }
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'error-secondary-color');
+        }
+    }
+
+    @include mx(box, placeholder) {
+        @include e(label) {
+            @extend %box-floating-label;
+        }
+    }
+
+    @include mx(box, filled) {
+        @include e(label) {
+            @extend %box-floating-label;
+        }
+    }
+
+    @include mx(box, textarea-group) {
+        textarea {
+            overflow: auto;
+        }
+
+        @include e(label) {
+            top: calc($input-top-padding - #{rem(1px)});
+            margin-block-end: auto;
+        }
+
+        @include e(bundle-main) {
+            padding-block-start: $input-top-padding;
+        }
+    }
+
+    @include mx(box, textarea-group, placeholder) {
+        @include e(label) {
+            @extend %box-floating-text-area-label;
+        }
+    }
+
+    @include mx(box, textarea-group, filled) {
+        @include e(label) {
+            @extend %box-floating-text-area-label;
+        }
+    }
+
+    @include mx(box, textarea-group, focused) {
+        @include e(label) {
+            @extend %box-floating-text-area-label;
+        }
+    }
+
+    @include m(border) {
+        --_input-template-rows: var-get($_theme, 'size');
+        --_input-template-columns: auto auto 1fr auto;
+
+        @include e(inut) {
+            width: 100%;
+            height: 100%;
+            padding-block: 0;
+            border: none;
+            outline-style: none;
+            z-index: 1;
+        }
+
+        @include e(bundle-start) {
+            grid-area: 1 / 1;
+        }
+
+        @include e(bundle-main) {
+            padding-inline: $input-inline-padding;
+        }
+
+        @include e(notch) {
+            padding-inline: $input-inline-padding;
+            grid-area: 1 / 2;
+            grid-row:  1 / -1;
+        }
+
+        @include e(filler) {
+            grid-area: 1 / 3;
+            grid-row: 2;
+        }
+
+        @include e(bundle-end) {
+            grid-area: 1 / 4;
+        }
+    }
+
+    @include mx(file, border) {
+        --_input-template-columns: auto auto auto 1fr auto;
+    }
+
+    @include e(hint) {
+        min-height: rem(18px);
+        padding-inline: sizable(rem(14px), rem(16px), rem(18px));
+    }
+
+    @include m(disabled) {
+        @include e(label) {
+            --igx-label-color: #{var-get($_theme, 'disabled-text-color')};
+        }
+
+        @include e(bundle) {
+            border-block-end-color: var-get($_theme, 'disabled-bottom-line-color');
+            border-block-end-style: dashed;
+        }
+
+        @include e(hint) {
+            color: var-get($_theme, 'disabled-text-color');
+        }
+    }
+}
