@@ -100,7 +100,7 @@
     }
 
     @if not($disabled-indeterminate-color) and $fill-color {
-        $disabled-indeterminate-color: hsl(from var(--fill-color) h calc(s * 1.25) calc(l * 1.65))
+        $disabled-indeterminate-color: hsla(from var(--fill-color) h s l / 0.5);
     }
 
     @if not($error-color-hover) and $error-color {
