@@ -23,7 +23,6 @@
                 formControlName="field"
                 [type]="getNativeInputType()"
                 [readOnly]="isReadonly()"
-                [attr.placeholder]="getPlaceholder()"
                 igxInput
             />
             <igx-suffix [hidden]="hideSuffix()">
@@ -43,9 +42,7 @@
             <igx-icon igxPrefix [hidden]="hidePrefix()">face</igx-icon>
             <textarea
                 formControlName="fieldTextarea"
-                [required]="isRequired()"
                 [readOnly]="isReadonly()"
-                [attr.placeholder]="getPlaceholder()"
                 igxInput>
             </textarea>
             <igx-suffix [hidden]="hideSuffix()">

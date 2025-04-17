@@ -1,0 +1,320 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
+@use './light/tokens' as *;
+
+$theme: $base;
+
+$variant: map.get($theme, 'variant');
+$transition-timing: .25s $out-cubic;
+$material-theme: $variant == 'material';
+$indigo-theme: $variant == 'indigo';
+$fluent-theme: $variant == 'fluent';
+$bootstrap-theme: $variant == 'bootstrap';
+$NOT-material-theme: $variant != 'material';
+$NOT-indigo-theme: $variant != 'indigo';
+$NOT-fluent-theme: $variant != 'fluent';
+$NOT-bootstrap-theme: $variant != 'bootstrap';
+
+$required-symbol: '*';
+$required-symbol-margin: rem(2px);
+
+// This creates an inverse relationship
+// between the value of the base scale size and
+// the sizing of all inner elements.
+// i.e. the bigger the scale size,
+// the smaller the padding of the inner items.
+$base-scale-size: (
+    'comfortable': 16px,
+    'cosy': 19px,
+    'compact': 22px
+);
+
+$bootstrap-inline-padding: (
+    'comfortable': rem(16px),
+    'cosy': rem(12px),
+    'compact': rem(8px)
+);
+
+$bootstrap-block-padding: (
+    'comfortable': rem(8px),
+    'cosy': rem(6px),
+    'compact': rem(4px)
+);
+
+$bootstrap-font-size: (
+    'comfortable': rem(20px),
+    'cosy': rem(16px),
+    'compact': rem(14px),
+);
+
+$bundle-padding-top: (
+    'comfortable': rem(18px, map.get($base-scale-size, 'comfortable')),
+    'cosy': rem(18px, map.get($base-scale-size, 'cosy')),
+    'compact': rem(18px, map.get($base-scale-size, 'compact')),
+);
+
+$hint-spacing-block: map.get((
+    'material': rem(4px),
+    'fluent': rem(5px),
+    'bootstrap': rem(4px),
+    'indigo': rem(4px),
+), $variant);
+
+$hint-spacing-inline: map.get((
+    'material': sizable(rem(14px), rem(16px), rem(18px)),
+    'fluent': 0,
+    'bootstrap': 0,
+    'indigo': 0,
+), $variant);
+
+@include layer(base) {
+    %bundle-start-end {
+        display: flex;
+        min-width: 0;
+        min-height: 100%;
+        grid-row: 2;
+    }
+
+    @include b(igx-input-group) {
+        @include sizable();
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+        --input-size: var(--component-size);
+        --input-icon: #{sizable(rem(14px), rem(16px), rem(18px))};
+        --_input-template-columns: auto 1fr auto;
+        --_input-template-rows: auto var-get($theme, 'size');
+
+        display: grid;
+        position: relative;
+        color: var-get($theme, 'idle-text-color');
+
+        igx-suffix:not(igx-icon),
+        [igxSuffix]:not(igx-icon),
+        igx-prefix:not(igx-icon),
+        [igxPrefix]:not(igx-icon) {
+            // The :not(igx-icon) makes sure that we don't override the icon font if the prefix/suffix is set on igx-icon
+            @include type-style(subtitle-1);
+        }
+
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+
+            // !important is needed, otherwise the icon overrides the width set by the prefix/suffix
+            width: max-content !important;
+            height: auto !important;
+            min-height: 100%;
+            outline-style: none;
+            transition: color $transition-timing, background $transition-timing;
+
+            &:not(:empty) {
+                @if $material-theme {
+                    padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
+                } @else if $indigo-theme {
+                    padding-inline: pad-inline(rem(2px), rem(4px), rem(6px));
+                } @else {
+                    padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+                }
+            }
+        }
+
+        igx-prefix,
+        [igxPrefix] {
+            color: var-get($theme, 'input-prefix-color');
+            background: var-get($theme, 'input-prefix-background');
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            color: var-get($theme, 'input-suffix-color');
+            background: var-get($theme, 'input-suffix-background');
+        }
+
+        @include e(bundle) {
+            display: grid;
+            grid-template-columns: var(--_input-template-columns);
+            position: relative;
+            max-width: 100%;
+            font-size: rem(16px);
+            height: var-get($theme, 'size');
+            grid-template-rows: var(--_input-template-rows);
+        }
+
+        @include e(label) {
+            grid-row: 1;
+            grid-column: 1 / -1;
+        }
+
+        @include e(bundle-start) {
+            @extend %bundle-start-end;
+            grid-column: 1;
+        }
+
+        @include e(bundle-end) {
+            @extend %bundle-start-end;
+            grid-column: 3;
+        }
+
+        @include e(bundle-main) {
+            grid-row: 2;
+        }
+
+        %input-textarea-common {
+            position: relative;
+            display: block;
+            border: none;
+            width: 100%;
+            min-width: 0;
+            background: transparent;
+            color: var-get($theme, 'filled-text-color');
+            outline-style: none;
+            box-shadow: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &::-webkit-input-placeholder {
+                line-height: normal;
+            }
+
+            &::placeholder {
+                color: var-get($theme, 'placeholder-color');
+                opacity: 1;
+
+                /* Fix placeholder position in Safari */
+                line-height: normal;
+            }
+
+            &:hover {
+                color: var-get($theme, 'filled-text-hover-color');
+
+                &::placeholder {
+                    color: var-get($theme, 'hover-placeholder-color');
+                }
+            }
+
+            &:focus {
+                cursor: text;
+                color: var-get($theme, 'focused-text-color');
+
+                &::placeholder {
+                    color: var-get($theme, 'hover-placeholder-color');
+                }
+            }
+        }
+
+        @include e(input) {
+            @extend %input-textarea-common;
+            height: calc(var-get($theme, 'size') - 1px);
+
+            &:not([type='date']) {
+                /* Reset typography */
+                line-height: 0 !important;
+            }
+
+            &[type='file'] {
+                @include hide-default();
+            }
+        }
+
+        @include e(textarea) {
+            --textarea-size: #{sizable(
+                rem(82px, map.get($base-scale-size, 'compact')),
+                rem(82px, map.get($base-scale-size, 'cosy')),
+                rem(82px, map.get($base-scale-size, 'comfortable'))
+            )};
+
+            @extend %input-textarea-common;
+
+            min-height: var(--textarea-size);
+            resize: vertical;
+            z-index: 1;
+            //line-height: normal !important;
+
+            @if $material-theme {
+                padding: 0;
+                inset-block-start: rem(-3px);
+            }
+
+            &:not([type='*']) {
+                //line-height: normal !important;
+            }
+        }
+
+        @include e(hint) {
+            color: var-get($theme, 'helper-text-color');
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        @include e(file-input) {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            height: calc(var-get($theme, 'size') - 2px);
+            color: var-get($theme, 'filled-text-color');
+
+            span {
+                @include ellipsis();
+                position: relative;
+                display: inline-block;
+                width: inherit;
+                max-width: inherit;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+
+        @include m(textarea-group) {
+            @include e(bundle) {
+                height: auto;
+            }
+        }
+
+        @include m(required) {
+            @include e(label) {
+                &::after {
+                    content: '*';
+                    font-size: inherit;
+                    vertical-align: top;
+                    margin-inline-start: rem(2px);
+                    display: inline-block;
+                }
+            }
+        }
+
+        @include m(disabled) {
+            igx-prefix,
+            [igxPrefix],
+            igx-suffix,
+            [igxSuffix] {
+                color: var-get($theme, 'disabled-text-color');
+            }
+
+            @include e(label) {
+                color: var-get($theme, 'disabled-text-color')
+            }
+
+            @include e(input) {
+                cursor: default;
+
+                color: var-get($theme, 'disabled-text-color');
+
+                &::placeholder {
+                    color: var-get($theme, 'disabled-placeholder-color');
+                }
+            }
+        }
+    }
+}

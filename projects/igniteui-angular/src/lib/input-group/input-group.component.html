@@ -6,43 +6,29 @@
     <ng-container *ngTemplateOutlet="bundle"></ng-container>
 }
 
-<div class="igx-input-group__hint" (click)="hintClickHandler($event)">
-    <ng-content select="igx-hint, [igxHint]"></ng-content>
-</div>
-
 <ng-template #label>
     <ng-content select="[igxLabel]"></ng-content>
 </ng-template>
 
-<ng-template #input>
-    <ng-content select="[igxInput]"></ng-content>
-</ng-template>
-
-<ng-template #prefix>
-    <ng-content select="igx-prefix, [igxPrefix]"></ng-content>
-</ng-template>
-
 <ng-template #uploadButton>
     @if (isFileType) {
-        <igx-prefix class="igx-input-group__upload-button">
-            <button
+        <button
                 igxButton="contained"
                 type="button"
                 (click)="uploadButtonHandler()"
                 [disabled]="disabled"
                 [ngClass]="{ 'igx-input-group__upload-button': isTypeLine }"
-            >
-                {{ resourceStrings.igx_input_upload_button }}
-            </button>
-        </igx-prefix>
+        >
+            {{ resourceStrings.igx_input_upload_button }}
+        </button>
     }
 </ng-template>
 
 <ng-template #files>
     @if (isFileType) {
         <div
-            class="igx-input-group__file-input"
-            [title]="fileNames"
+                class="igx-input-group__file-input"
+                [title]="fileNames"
         >
             <span>{{ fileNames }}</span>
         </div>
@@ -52,110 +38,58 @@
 <ng-template #clear>
     @if (isFileType && isFilled) {
         <igx-suffix
-            class="igx-input-group__clear-icon"
-            (click)="clearValueHandler()"
-            (keydown.Enter)="clearValueHandler()"
-            title="clear files"
-            tabindex="0"
+                class="igx-input-group__clear-icon"
+                (click)="clearValueHandler()"
+                (keydown.Enter)="clearValueHandler()"
+                title="clear files"
+                tabindex="0"
         >
             <igx-icon family="default" name="input_clear"></igx-icon>
         </igx-suffix>
     }
 </ng-template>
 
-<ng-template #suffix>
-    <ng-content select="igx-suffix, [igxSuffix]"></ng-content>
-</ng-template>
-
-<ng-template #materialBundle>
+<ng-template #bundle>
     <div class="igx-input-group__bundle">
         <div class="igx-input-group__bundle-start">
-            <ng-container *ngTemplateOutlet="prefix"></ng-container>
-            <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
+            <ng-content select="igx-prefix, [igxPrefix]"></ng-content>
+
+            @if (isFileType) {
+                <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
+            }
         </div>
 
-        <ng-container>
+        @if (isTypeBorder) {
             <div class="igx-input-group__notch">
                 <ng-container *ngTemplateOutlet="label"></ng-container>
+
             </div>
-        </ng-container>
+        } @else {
+            <ng-container *ngTemplateOutlet="label"></ng-container>
+        }
 
         <div class="igx-input-group__bundle-main">
-            <ng-container *ngTemplateOutlet="input"></ng-container>
-            <ng-container *ngTemplateOutlet="files"></ng-container>
+            <ng-content select="[igxInput]"></ng-content>
+
+            @if (isFileType) {
+                <ng-container *ngTemplateOutlet="files"></ng-container>
+            }
         </div>
 
-        <div class="igx-input-group__filler"></div>
-
-        <div class="igx-input-group__bundle-end">
-            <ng-container *ngTemplateOutlet="clear"></ng-container>
-            <ng-container *ngTemplateOutlet="suffix"></ng-container>
-        </div>
-
-        @if (hasBorder) {
-            <div class="igx-input-group__line"></div>
+        @if (isTypeBorder) {
+            <div class="igx-input-group__filler"></div>
         }
-    </div>
-</ng-template>
-
-<ng-template #fluentBundle>
-    <ng-container *ngTemplateOutlet="label"></ng-container>
-
-    <div class="igx-input-group__bundle">
-        <div class="igx-input-group__bundle-start">
-            <ng-container *ngTemplateOutlet="prefix"></ng-container>
-            <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
-        </div>
-
-
-        <div class="igx-input-group__bundle-main">
-            <ng-container *ngTemplateOutlet="input"></ng-container>
-            <ng-container *ngTemplateOutlet="files"></ng-container>
-        </div>
 
         <div class="igx-input-group__bundle-end">
-            <ng-container *ngTemplateOutlet="clear"></ng-container>
-            <ng-container *ngTemplateOutlet="suffix"></ng-container>
-        </div>
+            @if (isFileType && isFilled) {
+                <ng-container *ngTemplateOutlet="clear"></ng-container>
 
-        @if (hasBorder) {
-            <div class="igx-input-group__line"></div>
-        }
-    </div>
-</ng-template>
-
-<ng-template #bootstrapBundle>
-    <ng-container *ngTemplateOutlet="label"></ng-container>
-
-    <div class="igx-input-group__bundle">
-        <div class="igx-input-group__bundle-start">
-            <ng-container *ngTemplateOutlet="prefix"></ng-container>
-            <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
-        </div>
-
-        <ng-container *ngTemplateOutlet="input"></ng-container>
-        <ng-container *ngTemplateOutlet="files"></ng-container>
-
-        <div class="igx-input-group__bundle-end">
-            <ng-container *ngTemplateOutlet="clear"></ng-container>
-            <ng-container *ngTemplateOutlet="suffix"></ng-container>
+            }
+            <ng-content select="igx-suffix, [igxSuffix]"></ng-content>
         </div>
     </div>
 </ng-template>
 
-<ng-template #bundle>
-    @switch (theme) {
-        @case ('bootstrap') {
-            <ng-container *ngTemplateOutlet="bootstrapBundle"></ng-container>
-        }
-        @case ('fluent') {
-            <ng-container *ngTemplateOutlet="fluentBundle"></ng-container>
-        }
-        @case ('indigo') {
-            <ng-container *ngTemplateOutlet="fluentBundle"></ng-container>
-        }
-        @default {
-            <ng-container *ngTemplateOutlet="materialBundle"></ng-container>
-        }
-    }
-</ng-template>
+<div class="igx-input-group__hint" (click)="hintClickHandler($event)">
+    <ng-content select="igx-hint, [igxHint]"></ng-content>
+</div>
