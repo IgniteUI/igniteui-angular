@@ -140,9 +140,7 @@
 
     @if $variant != 'indigo' and $variant != 'fluent' {
         @if not($selected-background) and $background {
-            @if not($selected-background) and $background {
-                $selected-background: var(--background);
-            }
+            $selected-background: var(--background);
         }
     } @else {
         @if not($selected-background) and $background {
