@@ -99,6 +99,7 @@
     $disabled-border-color: null,
     $size: null
 ) {
+    $name: 'igx-flat-button';
     $button-schema: ();
 
     @if map.has-key($schema, 'button') {
