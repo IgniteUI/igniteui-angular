@@ -98,7 +98,7 @@ export class TabsTestComponent {
     template: `
     <div #wrapperDiv style="display: flex;">
         <igx-tabs>
-            @for (tab of collection; track tab) {
+            @for (tab of collection; track trackByItemRef(tab)) {
                 <igx-tab-item>
                     <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
                     <igx-tab-content></igx-tab-content>
@@ -112,7 +112,7 @@ export class TabsTestComponent {
 export class TabsTest2Component {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
-    public collection: any[];
+    protected collection: any[];
 
     constructor() {
         this.resetCollectionThreeTabs();
@@ -151,6 +151,9 @@ export class TabsTest2Component {
     public resetToEmptyCollection() {
         this.collection = [];
     }
+
+    /** Explicitly track object so collection changes entirely for index logic test */
+    protected trackByItemRef = (x: any) => x;
 }
 
 @Component({
@@ -198,7 +201,7 @@ export class TemplatedTabsTestComponent {
     template: `
     <div>
         <igx-tabs [selectedIndex]="2">
-            @for (tab of collection; track tab) {
+            @for (tab of collection; track tab.name) {
                 <igx-tab-item>
                     <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
                 </igx-tab-item>
@@ -210,7 +213,7 @@ export class TemplatedTabsTestComponent {
 })
 export class TabsTestSelectedTabComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
-    public collection: any[];
+    protected collection: any[];
 
     constructor() {
         this.collection =
@@ -377,29 +380,6 @@ export class TabsTabsOnlyModeTest1Component {
 @Component({
     template: `
     <div #wrapperDiv>
-        <igx-tabs [selectedIndex]="2">
-            <igx-tab-item>
-                <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
-            </igx-tab-item>
-            <igx-tab-item>
-                <igx-tab-header><span igxTabHeaderLabel>Tab 2</span></igx-tab-header>
-            </igx-tab-item>
-            <igx-tab-item>
-                <igx-tab-header><span igxTabHeaderLabel>Tab 3</span></igx-tab-header>
-            </igx-tab-item>
-        </igx-tabs>
-    </div>
-    `,
-    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabHeaderLabelDirective]
-})
-export class TabsTabsOnlyModeTest2Component {
-    @ViewChild(IgxTabsComponent, { static: true })
-    public tabs: IgxTabsComponent;
-}
-
-@Component({
-    template: `
-    <div #wrapperDiv>
         <igx-tabs>
             <igx-tab-item [disabled]="true">
                 <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
@@ -525,7 +505,7 @@ export class TabsWithPrefixSuffixTestComponent extends TabsTestComponent {
     template: `
     <div #wrapperDiv>
         <igx-tabs>
-            @for (contact of contacts; track contact) {
+            @for (contact of contacts; track contact.Name) {
                 <igx-tab-item>
                     <igx-tab-header>
                         <span igxTabHeaderLabel>{{contact.Name}}</span>
@@ -547,7 +527,7 @@ export class TabsContactsComponent extends TabsTestComponent {
     template: `
     <div #wrapperDiv style="display: flex;">
         <igx-tabs>
-            @for (tab of collection; track tab) {
+            @for (tab of collection; track tab.name) {
                 <igx-tab-item [(selected)]="tab.selected">
                     <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
                     <igx-tab-content></igx-tab-content>
@@ -560,7 +540,7 @@ export class TabsContactsComponent extends TabsTestComponent {
 })
 export class AddingSelectedTabComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
-    public collection: any[];
+    protected collection: any[];
     constructor() {
         this.collection = [
             { name: 'tab1', selected: true },
@@ -568,9 +548,9 @@ export class AddingSelectedTabComponent {
         ];
     }
 
-    public addTab(num: number) {
+    public addTab() {
         this.collection.forEach(t => t.selected = false);
-        this.collection.push({ name: 'tab' + num, selected: true });
+        this.collection.push({ name: 'tab' + (this.collection.length + 1), selected: true });
     }
 }
 
@@ -578,7 +558,7 @@ export class AddingSelectedTabComponent {
     template: `
     <div #wrapperDiv>
         <igx-tabs>
-            @for (tab of collection; track tab) {
+            @for (tab of collection; track tab.name) {
                 <igx-tab-item>
                     <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
                     <igx-tab-content></igx-tab-content>
@@ -592,18 +572,15 @@ export class AddingSelectedTabComponent {
 export class TabsRtlComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
-    public collection: any[];
-    constructor() {
-        this.collection = [
-            { name: 'tab1', selected: true },
-            { name: 'tab2', selected: false },
-            { name: 'tab3', selected: false },
-            { name: 'tab4', selected: false },
-            { name: 'tab5', selected: false },
-            { name: 'tab6', selected: false },
-            { name: 'tab7', selected: false },
-            { name: 'tab8', selected: false },
-            { name: 'tab9', selected: false },
-        ];
-    }
+    protected collection = [
+        { name: 'tab1', selected: true },
+        { name: 'tab2', selected: false },
+        { name: 'tab3', selected: false },
+        { name: 'tab4', selected: false },
+        { name: 'tab5', selected: false },
+        { name: 'tab6', selected: false },
+        { name: 'tab7', selected: false },
+        { name: 'tab8', selected: false },
+        { name: 'tab9', selected: false },
+    ];
 }

@@ -15,7 +15,6 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `navigation` | boolean | Controls should the carousel render the left/right navigation buttons. Defaults to `true`. |
 | `indicators` | boolean | Controls should the carousel render the indicators. Defaults to `true`. |
 | `vertical` | boolean | Controls should the carousel be rendered in vertical alignment. Defaults to `false`. |
-| `keyboardSupport` | boolean | Controls should the keyboard navigation should be supported. Defaults to `false`. |
 | `gesturesSupport` | boolean | Controls should the gestures should be supported. Defaults to `true`. |
 | `maximumIndicatorsCount` | number | The number of visible indicators. Defaults to `10`. |
 | `indicatorsOrientation` | CarouselIndicatorsOrientation | Controls the orientation of the indicators. Defaults to `end`. |
@@ -39,10 +38,14 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `select(slide: IgxSlide, direction: Direction)`| void | Selects the slide and the direction to transition to. Emits `slideChanged` event. |
 
 ### Keyboard navigation
-Keyboard navigation will be enabled when the **IgxCarousel** component is focused and `keyboardSupport` property is set to `true`:
-- Arrow keys will navigate through the slides.
-- `Home` will focus the first slide inside the carousel view.
-- `End` will focus the last slide inside the carousel view.
+
+- Navigation buttons
+  - `Space`/`Enter` key - navigates to the next/previous slide.
+- Indicators
+  - `ArrowLeft` key - navigates to the previous (next in Right-to-Left mode) slide.
+  - `ArrowRight` key - navigates to the next (previous in Right-to-Left mode) slide.
+  - `Home` key - navigates to the first (last in Right-to-Left mode) slide.
+  - `End` key - navigates to the last (first in Right-to-Left mode) slide.
 
 ### Templates
 The **IgxCarousel** supports templating indicators and navigation buttons

@@ -1,7 +1,6 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
-import { GridPagingMode } from '../common/enums';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 /**
@@ -49,7 +48,7 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
                 childGridsData[childKey] = childData;
             });
             if (grid.gridAPI.get_row_expansion_state(v)) {
-                result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridsData });
+                result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridsData, parentRowData: v });
             }
         });
         return result;
@@ -68,7 +67,7 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
     public transform(collection: any[], enabled: boolean, page = 0, perPage = 15, _id: string, _pipeTrigger: number): any[] {
-        if (!enabled || this.grid.pagingMode !== GridPagingMode.Local) {
+        if (!enabled || this.grid.pagingMode !== 'local') {
             return collection;
         }
 

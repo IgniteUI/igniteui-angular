@@ -22,7 +22,7 @@
     <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
-        [style.height.px]="totalHeight" [style.width.px]="pivotContentCalcWidth || null" #tbody [attr.aria-activedescendant]="activeDescendant">
+        [style.height.px]="totalHeight" [style.width.px]="pivotContentCalcWidth || null" [style.width]="!platform.isBrowser ? '100%' : undefined" #tbody [attr.aria-activedescendant]="activeDescendant">
         @if (hasMovableColumns && columnInDrag && pinnedColumns.length <= 0) {
             <span [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-left"></span>
@@ -31,7 +31,7 @@
             <span [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         }
-        <ng-template igxGridFor let-rowData [igxGridForOf]="data
+        <ng-template igxGridFor let-rowData [igxGridForOf]="renderData
         | pivotGridFilter:pivotConfiguration:filterStrategy:advancedFilteringExpressionsTree:filteringPipeTrigger:pipeTrigger
         | pivotGridSort:pivotConfiguration:sortStrategy:pipeTrigger
         | pivotGridRow:pivotConfiguration:pivotValueCloneStrategy:expansionStates:pipeTrigger:sortingExpressions
@@ -157,6 +157,7 @@
                     [width]="rowDimensionWidthToPixels(dim)">
                 </igx-pivot-row-dimension-content>
             </ng-template>
+            <ng-container *ngTemplateOutlet="emptyRowDimensionFill; context: { $implicit: this, widthPx: rowDimensionWidthToPixels(dim) }"></ng-container>
         </div>
     }
 </ng-template>
@@ -175,26 +176,39 @@
                 <igx-pivot-row-dimension-mrl-row [rowIndex]="rowIndex" [rowGroup]="rowGroup" [groupedData]="groupedData" [style.height.px]="renderedRowHeight * rowGroup.length"></igx-pivot-row-dimension-mrl-row>
             </ng-template>
         }
+        <ng-container *ngTemplateOutlet="emptyRowDimensionFill; context: { $implicit: this, widthPx: pivotRowWidths }"></ng-container>
     </div>
 </ng-template>
 
 <ng-template #emptyRowDimensionsTemplate>
-    @if (columnDimensions.length > 0 || values.length > 0) {
-        <div tabindex="0" #rowDimensionContainer role="rowgroup" class="igx-grid__tbody-pivot-dimension" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+    <div tabindex="0" #rowDimensionContainer role="rowgroup" class="igx-grid__tbody-pivot-dimension" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+        @if ((columnDimensions.length > 0 || values.length > 0) && data.length > 0) {
             <igx-pivot-row-dimension-content role="row" class="igx-grid-thead" [grid]="this"
                 [dimension]="emptyRowDimension"
                 [rootDimension]="emptyRowDimension"
                 [rowIndex]="0" [rowData]="dataView[0]"
                 [width]="rowDimensionWidthToPixels(emptyRowDimension)">
             </igx-pivot-row-dimension-content>
-        </div>
-    }
+        }
+        <ng-container *ngTemplateOutlet="emptyRowDimensionFill; context: { $implicit: this, widthPx: rowDimensionWidthToPixels(emptyRowDimension) }"></ng-container>
+    </div>
 </ng-template>
 
 <ng-template #emptyPivotGridTemplate>
     <span class="igx-grid__tbody-message" role="cell">
         <span>{{resourceStrings.igx_grid_pivot_empty_message}}</span>
     </span>
+</ng-template>
+
+<ng-template #emptyRowDimensionFill let-width="widthPx">
+    @if (emptyBottomSize > 0) {
+        <div class="igx-pivot-grid-row-filler__wrapper" [style.height.px]="emptyBottomSize" [style.width.px]="width">
+            <!-- Reuse header styles to keep visuals consistent -->
+            <div class="igx-grid-thead__wrapper">
+                <div class="igx-grid-th"></div>
+            </div>
+        </div>
+    }
 </ng-template>
 
 <div [hidden]="true">

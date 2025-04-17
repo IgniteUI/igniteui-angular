@@ -382,7 +382,7 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
         </igx-row-island>
 
     </igx-hierarchical-grid>`,
-    imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxRowIslandComponent, IgxButtonDirective]
+    imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestInputToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
 
@@ -444,7 +444,7 @@ export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGrid
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [height]="'300px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'">
+    <igx-hierarchical-grid #hierarchicalGrid [data]="data" [height]="'300px'" [width]="'700px'" [primaryKey]="'ID'">
         <igx-column field="ID" ></igx-column>
         <igx-column field="ChildLevels"></igx-column>
         <igx-column field="ProductName"></igx-column>
@@ -459,13 +459,13 @@ export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGrid
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>
-    <igx-advanced-filtering-dialog [grid]="grid1">
+    <igx-advanced-filtering-dialog [grid]="hierarchicalGrid">
     </igx-advanced-filtering-dialog>`,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxAdvancedFilteringDialogComponent]
 })
 export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchicalGridTestBaseComponent {
-    // @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
-    // public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public override hgrid: IgxHierarchicalGridComponent;
 
     public override data = SampleTestData.generateHGridData(5, 3);
 }
@@ -484,6 +484,9 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
             <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
             <igx-column field="BillboardReview" header="Billboard Review"></igx-column>
             <igx-column field="USBillboard200" header="US Billboard 200"></igx-column>
+            @if(shouldDisplayArtist) {
+                <igx-column field="Artist"></igx-column>
+            }
             <igx-row-island [key]="'Songs'" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [autoGenerate]="false">
                 <igx-column field="Number" header="No."></igx-column>
                 <igx-column field="Title"></igx-column>
@@ -510,6 +513,7 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
 export class IgxHierarchicalGridExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
     public data = SampleTestData.hierarchicalGridExportData();
+    public shouldDisplayArtist = false;
 }
 
 
