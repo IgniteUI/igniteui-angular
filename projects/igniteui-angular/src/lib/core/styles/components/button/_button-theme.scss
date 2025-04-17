@@ -105,7 +105,6 @@
     $disabled-border-color: null,
     $size: null,
 ) {
-    $name: 'igx-button';
     $button-schema: ();
 
     @if map.has-key($schema, 'button') {
