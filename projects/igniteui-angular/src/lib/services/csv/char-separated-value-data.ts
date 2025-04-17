@@ -1,6 +1,6 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { yieldingLoop } from '../../core/utils';
-import { IColumnInfo } from '../exporter-common/base-export-service';
+import { ExportHeaderType, IColumnInfo } from '../exporter-common/base-export-service';
 
 /**
  * @hidden
@@ -43,7 +43,8 @@ export class CharSeparatedValueData {
     }
 
     public prepareDataAsync(done: (result: string) => void) {
-        const columns = this.columns?.filter(c => !c.skip)
+        const columns = this.columns?.filter(c => c.headerType !== ExportHeaderType.MultiColumnHeader)
+                        .filter(c => !c.skip)
                         .sort((a, b) => a.startIndex - b.startIndex)
                         .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
         const keys = columns && columns.length ? columns.map(c => c.field) : ExportUtilities.getKeysFromData(this._data);
@@ -52,7 +53,10 @@ export class CharSeparatedValueData {
         this._escapeCharacters.push(this._delimiter);
 
         const headers = columns && columns.length ?
-                        columns.map(c => c.header ?? c.field) :
+                        /* When column groups are present, always use the field as it indicates the group the column belongs to.
+                        * Otherwise, in PivotGrid scenarios we can end up with many duplicated columns.
+                        */
+                        columns.map(c => c.columnGroupParent ? c.field : c.header ?? c.field) :
                         keys;
 
         this._headerRecord = this.processHeaderRecord(headers, this._data.length);
