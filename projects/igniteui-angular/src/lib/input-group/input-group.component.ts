@@ -7,9 +7,15 @@ import {
     DestroyRef,
     ElementRef,
     HostBinding,
-    HostListener, Inject, Input,
-    Optional, QueryList, booleanAttribute,
-    inject
+    HostListener,
+    Inject,
+    Input,
+    Optional,
+    QueryList,
+    booleanAttribute,
+    inject,
+    ViewEncapsulation,
+    AfterContentChecked
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from '../core/i18n/input-resources';
 import { PlatformUtil, getComponentTheme } from '../core/utils';
@@ -31,10 +37,12 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from '../services/theme/theme.token
 @Component({
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
+    styleUrl: 'input-group.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
-    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent]
 })
-export class IgxInputGroupComponent implements IgxInputGroupBase {
+export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentChecked {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -315,6 +323,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase {
      * }
      * ```
      */
+    @HostBinding('class.igx-input-group--line')
     public get isTypeLine(): boolean {
         return this.type === 'line' && this._theme === 'material';
     }
