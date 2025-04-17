@@ -136,6 +136,10 @@
         $item-selected-hover-background: hsl(from var(--item-selected-background) h s calc(l * 1.1));
     }
 
+    @if not($item-selected-focus-background) and $item-selected-background {
+        $item-selected-focus-background: var(--item-selected-background);
+    }
+
     @if not($item-selected-focus-hover-background) and $item-selected-hover-background {
         $item-selected-focus-hover-background: var(--item-selected-hover-background);
     }
