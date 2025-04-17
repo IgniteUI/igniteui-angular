@@ -106,10 +106,6 @@
             $thumb-disabled-color: hsl(from var(--thumb-off-color) h s calc(l + 20));
         }
 
-        @if not($track-disabled-color) and $track-off-color {
-            $track-disabled-color: hsla(from var(--track-off-color) h s l / 0.5);
-        }
-
         @if not($track-on-color) and $thumb-on-color {
             $track-on-color: hsl(from var(--thumb-on-color) h s calc(l * 1.3));
         }
@@ -125,13 +121,20 @@
         @if not($thumb-on-disabled-color) and $thumb-on-color {
             $thumb-on-disabled-color: hsl(from var(--thumb-on-color) h s calc(l + 20));
         }
-
-        @if not($track-on-disabled-color) and $track-on-color {
-            $track-on-disabled-color: hsla(from var(--track-on-color) h s l / 0.5);
-        }
     } @else {
+        @if not($thumb-off-color) and $track-off-color {
+            $thumb-off-color: hsla(from adaptive-contrast(var(--track-off-color)) h s l / 0.8);
+        }
         @if not($border-color) and $thumb-off-color {
-            $border-color: var(--thumb-off-color)
+            $border-color: var(--thumb-off-color);
+        }
+
+        @if not($thumb-off-color) and $border-color {
+            $thumb-off-color: var(--border-color);
+        }
+
+        @if not($border-hover-color) and $track-off-color {
+            $border-hover-color: hsla(from var(--thumb-off-color) h s l / 0.9);
         }
 
         @if not($border-hover-color) and $border-color {
@@ -152,6 +155,18 @@
 
         @if not($border-on-hover-color) and $border-on-color {
             $border-on-hover-color: hsl(from var(--border-on-color) h s calc(l * 0.9));
+        }
+
+        @if not($thumb-disabled-color) and $thumb-off-color {
+            $thumb-disabled-color: hsla(from var(--thumb-off-color) h s l / 0.3);
+        }
+
+        @if not($border-disabled-color) and $border-color {
+            $border-disabled-color: hsla(from var(--border-color) h s l / 0.3);
+        }
+
+        @if not($thumb-on-disabled-color) and $thumb-on-color {
+            $thumb-on-disabled-color: hsla(from var(--thumb-on-color) h s l / 0.3);
         }
 
         @if $variant == 'bootstrap' {
@@ -177,6 +192,14 @@
                 $focus-outline-color-focused: hsla(from var(--border-on-color) h s l / 0.5);
             }
         }
+    }
+
+    @if not($track-disabled-color) and $track-off-color {
+        $track-disabled-color: hsla(from var(--track-off-color) h s l / 0.5);
+    }
+
+    @if not($track-on-disabled-color) and $track-on-color {
+        $track-on-disabled-color: hsla(from var(--track-on-color) h s l / 0.5);
     }
 
     @if not($resting-shadow) {
