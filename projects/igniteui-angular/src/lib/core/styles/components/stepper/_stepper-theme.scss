@@ -396,6 +396,10 @@
         $disabled-subtitle-color: hsla(from (adaptive-contrast(var(--step-background)) h s l / 0.3));
     }
 
+    @if not($step-separator-color) and $step-background {
+        $step-separator-color: var(--step-background);
+    }
+
     @if not($step-separator-color) and $indicator-background {
         $step-separator-color: var(--indicator-background);
     }
