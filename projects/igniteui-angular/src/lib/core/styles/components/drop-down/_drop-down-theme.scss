@@ -94,7 +94,7 @@
     $variant: map.get($theme, '_meta', 'theme');
 
     @if not($item-text-color) and $background-color {
-        $item-text-color: text-contrast($background-color);
+        $item-text-color: adaptive-contrast(var(--background-color));
     }
 
     @if not($item-icon-color) and $item-text-color {
@@ -154,7 +154,7 @@
     }
 
     @if not($selected-focus-item-text-color) and $selected-focus-item-background {
-        $selected-focus-item-text-color: text-contrast($selected-focus-item-background);
+        $selected-focus-item-text-color: adaptive-contrast(var(--selected-focus-item-background));
     }
 
     @if $variant == 'indigo' {
