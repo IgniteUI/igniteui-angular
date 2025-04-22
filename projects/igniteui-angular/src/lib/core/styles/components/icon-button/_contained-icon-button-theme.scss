@@ -59,6 +59,10 @@
             $focus-background: var(--background);
         }
 
+        @if not($focus-foreground) and $foreground {
+            $focus-foreground: var(--foreground);
+        }
+
         @if not($focus-hover-background) and $focus-background {
             $focus-hover-background: hsl(from var(--focus-background) h s calc(l * 1.1));
         }
@@ -83,6 +87,10 @@
             }
         }
 
+        @if not($focus-foreground) and $focus-background {
+            $focus-foreground: hsla(from adaptive-contrast(var(--focus-background)) h s l / 1);
+        }
+
         @if not($focus-hover-background) and $focus-background {
             $focus-hover-background: hsl(from var(--focus-background) h s calc(l * 0.9));
         }
@@ -96,10 +104,6 @@
         $hover-foreground: hsla(from adaptive-contrast(var(--hover-background)) h s l / 1);
     }
 
-    @if not($focus-foreground) and $focus-background {
-        $focus-foreground: hsla(from adaptive-contrast(var(--focus-background)) h s l / 1);
-    }
-
     @if not($focus-hover-foreground) and $focus-hover-background {
         $focus-hover-foreground: hsla(from adaptive-contrast(var(--focus-hover-background)) h s l / 1);
     }
@@ -108,26 +112,40 @@
         $active-foreground: hsla(from adaptive-contrast(var(--active-background)) h s l / 1);
     }
 
-    @if not($focus-border-color) and $border-color {
-        $focus-border-color: hsl(from var(--border-color) h s calc(l * 0.8));
-    }
-
     @if not($shadow-color) and $focus-background {
         $shadow-color: hsla(from var(--focus-background) h s l / 0.5);
     }
 
-    @if $variant == 'indigo' {
-        @if not($focus-border-color) and $focus-background {
-            $focus-border-color: hsla(from var(--focus-background) h s l / 0.5);
+    @if $variant == 'fluent' {
+        @if not($focus-border-color) and $foreground {
+            $focus-border-color: var(--foreground);
+        }
+    } @else {
+        @if not($focus-border-color) and $border-color {
+            $focus-border-color: hsl(from var(--border-color) h s calc(l * 0.8));
         }
     }
 
-    @if not($disabled-background) and $background {
-        $disabled-background: hsla(from var(--background) h s l / 0.5);
-    }
+    @if $variant == 'indigo' {
+        @if not($disabled-background) and $background {
+            $disabled-background: hsla(from var(--background) h s l / 0.4);
+        }
 
-    @if not($disabled-foreground) and $disabled-background {
-        $disabled-foreground: hsla(from var(--disabled-background) h s l / 0.8);
+        @if not($disabled-foreground) and $foreground {
+            $disabled-foreground: hsla(from var(--foreground) h s l / 0.5);
+        }
+
+        @if not($focus-border-color) and $focus-background {
+            $focus-border-color: hsla(from var(--focus-background) h s l / 0.3);
+        }
+    } @else {
+        @if not($disabled-background) and $background {
+            $disabled-background: hsla(from var(--background) h s l / 0.2);
+        }
+
+        @if not($disabled-foreground) and $disabled-background {
+            $disabled-foreground: hsla(from var(--disabled-background) h s l / 0.7);
+        }
     }
 
     @return extend(

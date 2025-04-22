@@ -67,12 +67,18 @@
             $hover-background: hsla(from var(--foreground) h s l / 0.08);
         }
 
-        @if not($focus-background) and $foreground {
-            $focus-background: hsla(from var(--foreground) h s l / 0.16);
-        }
+        @if $variant == 'material' {
+            @if not($focus-background) and $foreground {
+                $focus-background: hsla(from var(--foreground) h s l / 0.16);
+            }
 
-        @if not($focus-hover-background) and $foreground {
-            $focus-hover-background: hsla(from var(--foreground) h s l / 0.24);
+            @if not($focus-hover-background) and $foreground {
+                $focus-hover-background: hsla(from var(--foreground) h s l / 0.24);
+            }
+        } @else {
+            @if not($focus-hover-background) and $hover-background {
+                $focus-hover-background: var(--hover-background);
+            }
         }
 
         @if not($active-background) and $foreground {
@@ -124,14 +130,20 @@
                 $active-foreground: var(--hover-foreground);
             }
 
-            @if not($shadow-color) and $foreground {
-                $shadow-color: hsla(from var(--foreground) h s l / 0.2);
+            @if not($focus-border-color) and $foreground {
+                $focus-border-color: hsla(from var(--foreground) h s l / 0.3);
             }
         }
     }
 
     @if not($disabled-foreground) and $foreground {
         $disabled-foreground: hsla(from var(--foreground) h s l / 0.5);
+    }
+
+    @if $variant == 'fluent' {
+        @if not($disabled-background) and $foreground {
+            $disabled-background: hsla(from var(--foreground) h s l / 0.1);
+        }
     }
 
     @return extend(
