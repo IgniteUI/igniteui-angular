@@ -686,6 +686,10 @@
         position: relative;
 
         grid-area: 1 / 2;
+
+        %form-group-label {
+            color: var-get($theme, 'idle-secondary-color');
+        }
     }
 
     %igx-input-group__notch--border {
