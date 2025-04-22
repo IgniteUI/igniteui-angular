@@ -66,13 +66,17 @@
         }
     }
 
-    @if not($toggle-button-foreground-focus) and $toggle-button-background-focus {
-        $toggle-button-foreground-focus: adaptive-contrast(var(--toggle-button-background-focus));
-    }
-
     @if $variant == 'bootstrap' or $variant == 'indigo' {
         @if not($toggle-button-background-focus--border) and $toggle-button-background {
             $toggle-button-background-focus--border: var(--toggle-button-background)
+        }
+
+        @if not($toggle-button-foreground-focus) and $toggle-button-background-focus--border {
+            $toggle-button-foreground-focus: adaptive-contrast(var(--toggle-button-background-focus--border));
+        }
+    } @else {
+        @if not($toggle-button-foreground-focus) and $toggle-button-background-focus {
+            $toggle-button-foreground-focus: adaptive-contrast(var(--toggle-button-background-focus));
         }
     }
 
