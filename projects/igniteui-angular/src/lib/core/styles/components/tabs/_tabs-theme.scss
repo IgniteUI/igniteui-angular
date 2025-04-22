@@ -98,11 +98,11 @@
         }
     } @else {
         @if not($item-text-color) and $item-background {
-            $item-text-color: hsla(from adaptive-contrast(var(--item-background)) h s l / 0.7);
+            $item-text-color: hsla(from adaptive-contrast(var(--item-background)) h s l / 0.9);
          }
 
          @if not($item-icon-color) and $item-background {
-             $item-icon-color: hsla(from adaptive-contrast(var(--item-background) h s l / 0.7));
+             $item-icon-color: hsla(from adaptive-contrast(var(--item-background) h s l / 0.9));
          }
     }
 
@@ -172,26 +172,10 @@
             $button-background: var(--item-background);
         }
 
-        @if not($button-color) and $button-background {
-            $button-color: adaptive-contrast(var(--button-background));
-        }
-
         @if not($button-hover-background) and $item-background {
             $button-hover-background: hsl(from var(--item-background) h s calc(l * 0.9));
         }
-
-        @if not($button-hover-color) and $button-hover-background {
-            $button-hover-color: adaptive-contrast(var(--button-hover-background));
-        }
-
-        @if not($button-disabled-color) and $button-color {
-            $button-disabled-color: hsla(from var(--button-color) h s l / 0.4);
-        }
-
-        @if not($button-ripple-color) and $button-color {
-            $button-ripple-color: var(--button-color);
-        }
-    } @else {
+    } @else if not($button-background) {
         @if $variant != 'material' {
             @if not($button-color) and $item-text-color {
                 $button-color: var(--item-text-color);
@@ -206,6 +190,29 @@
             }
         }
     }
+
+    @if $button-background {
+        @if not($button-hover-background) and $button-background {
+            $button-hover-background: hsl(from var(--button-background) h s calc(l * 0.9));
+        }
+    }
+
+    @if not($button-color) and $button-background {
+        $button-color: adaptive-contrast(var(--button-background));
+    }
+
+    @if not($button-hover-color) and $button-hover-background {
+        $button-hover-color: adaptive-contrast(var(--button-hover-background));
+    }
+
+    @if not($button-ripple-color) and $button-color {
+        $button-ripple-color: var(--button-color);
+    }
+
+    @if not($button-disabled-color) and $button-color {
+        $button-disabled-color: hsla(from var(--button-color) h s l / 0.4);
+    }
+
     // Button end
 
     @if not($tab-ripple-color) and $item-active-background {
