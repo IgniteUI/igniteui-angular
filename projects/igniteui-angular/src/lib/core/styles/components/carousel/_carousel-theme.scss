@@ -174,9 +174,7 @@
         @if not($button-focus-border-color) and $indicator-active-dot-color {
             $button-focus-border-color: var(--indicator-active-dot-color);
         }
-    }
 
-    @if $variant == 'indigo' {
         @if not($indicator-focus-color) and $indicator-active-hover-dot-color {
             $indicator-focus-color: hsla(from var(--indicator-active-hover-dot-color) h s l / .5);
         }
