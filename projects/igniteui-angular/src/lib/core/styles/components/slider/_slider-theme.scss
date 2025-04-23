@@ -78,6 +78,10 @@
             $thumb-border-color: var(--track-color);
         }
 
+        @if not($track-color) and $thumb-border-color {
+            $track-color: var(--thumb-border-color);
+        }
+
         @if not($thumb-border-hover-color) and $thumb-border-color {
             $thumb-border-hover-color: hsl(from var(--thumb-border-color) h s calc(l * 1.1));
         }
@@ -96,6 +100,10 @@
     @if $variant == 'material' {
         @if not($thumb-color) and $track-color {
             $thumb-color: var(--track-color);
+        }
+
+        @if not($track-color) and $thumb-color {
+            $track-color: var(--thumb-color);
         }
 
         @if not($base-track-color) and $track-color {
