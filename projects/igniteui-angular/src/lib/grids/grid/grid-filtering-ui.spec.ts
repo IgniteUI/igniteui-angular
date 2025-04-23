@@ -1281,7 +1281,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             const calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-            const sundayLabel = calendar.querySelectorAll('.igx-days-view__label')[0].textContent;
+            const sundayLabel = calendar.querySelectorAll('.igx-day-label')[0].textContent;
 
             expect(sundayLabel.trim()).toEqual('Mo');
         }));
@@ -2121,13 +2121,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Select the first year
-            const firstYear: HTMLElement = calendar.querySelectorAll('.igx-calendar-view__item')[0] as HTMLElement;
+            const firstYear: HTMLElement = calendar.querySelectorAll('.igx-calendar-view-item')[0] as HTMLElement;
             firstYear.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
 
             // Select the first month
-            const firstMonth: HTMLElement = calendar.querySelectorAll('.igx-calendar-view__item')[0] as HTMLElement;
+            const firstMonth: HTMLElement = calendar.querySelectorAll('.igx-calendar-view-item')[0] as HTMLElement;
             firstMonth.dispatchEvent(new Event('mousedown'));
             tick(100);
             fix.detectChanges();
@@ -5078,7 +5078,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Get Calendar component.
             const calendar = document.querySelector('igx-calendar');
 
-            const daysOfWeek = calendar.querySelector('.igx-days-view__row');
+            const daysOfWeek = calendar.querySelector('.igx-days-row');
             const weekStart = daysOfWeek.firstElementChild as HTMLSpanElement;
 
             expect(weekStart.innerText).toMatch('Fri');

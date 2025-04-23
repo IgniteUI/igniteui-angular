@@ -1,0 +1,35 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/typography/index' as *;
+@use 'igniteui-theming/sass/animations/index' as *;
+@use 'igniteui-theming/sass/themes/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-calendar-picker, indigo) {
+    height: rem(50px);
+    padding-inline: rem(16px);
+
+    igx-icon {
+        --size: #{rem(14px)};
+    }
+
+    @include e(dates) {
+        @include type-style(subtitle-2) {
+            margin: 0;
+        }
+    }
+
+    @include e(nav) {
+        gap: rem(8px);
+    }
+
+    @include e(prev) {
+        padding: rem(5px);
+    }
+
+    @include e(next) {
+        padding: rem(5px);
+    }
+}

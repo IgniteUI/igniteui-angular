@@ -1,0 +1,7 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/date-picker' as *;
+
+$material: digest-schema($material-date-picker);
+$bootstrap: digest-schema($bootstrap-date-picker);
+$fluent: digest-schema($fluent-date-picker);
+$indigo: digest-schema($indigo-date-picker);
